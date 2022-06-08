@@ -9,7 +9,6 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.customer.Username;
-import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
 public class CustomerService {
@@ -36,10 +35,9 @@ public class CustomerService {
         customerDao.updatePassword(customer.getId(), encryptedPassword.getValue());
     }
 
-    public CustomerResponse changeGeneralInfo(Customer customer, String username) {
+    public Customer changeGeneralInfo(Customer customer, String username) {
         customerDao.updateGeneralInfo(customer.getId(), username);
-        final Customer updatedCustomer = customerDao.findByEmail(customer.getEmail().getValue());
-        return new CustomerResponse(updatedCustomer.getEmail().getValue(), updatedCustomer.getUsername().getValue());
+        return customerDao.findByEmail(customer.getEmail().getValue());
     }
 
     public void delete(Customer customer, String password) {

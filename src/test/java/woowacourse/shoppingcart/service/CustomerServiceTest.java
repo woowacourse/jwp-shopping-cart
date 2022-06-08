@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.exception.LoginException;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -23,10 +24,14 @@ public class CustomerServiceTest {
     private final String email = "test@gmail.com";
     private final String password = "password0!";
     private final String username = "루나";
-    @Autowired
     private CustomerService customerService;
-    @Autowired
     private CustomerDao customerDao;
+
+    @Autowired
+    public CustomerServiceTest(final JdbcTemplate jdbcTemplate) {
+        this.customerDao = new CustomerDao(jdbcTemplate);
+        this.customerService = new CustomerService(customerDao);
+    }
 
     @DisplayName("회원가입")
     @Test

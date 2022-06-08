@@ -22,9 +22,9 @@ public class ProductResponse {
         this.thumbnailImage = thumbnailImage;
     }
 
-    public static ProductResponse of(Long productId, Product product) {
+    public static ProductResponse of(Product product) {
         final Image image = product.getImage();
-        return new ProductResponse(productId, product.getName(), product.getPrice(),
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
                 product.getStockQuantity(), new ImageDto(image.getUrl(), image.getAlt()));
     }
 

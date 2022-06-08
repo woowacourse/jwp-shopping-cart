@@ -18,8 +18,7 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CartItemIds;
 import woowacourse.shoppingcart.dto.ImageDto;
-import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.addProductRequest;
+import woowacourse.shoppingcart.dto.ProductRequest;
 
 @SpringBootTest
 @Sql(scripts = "classpath:truncate.sql")
@@ -43,9 +42,8 @@ public class CartItemServiceTest {
     @BeforeEach
     void setUp() {
         customer = customerService.register("test@gmail.com", "password0!", "루나");
-        ProductResponse productResponse = productService.addProduct(new addProductRequest("치킨", 10_000,
-                        20, new ImageDto("IMAGE_URL", "IMAGE_ALT")));
-        productId = productResponse.getId();
+        productId = productService.addProduct(new ProductRequest("치킨", 10_000,
+                20, new ImageDto("IMAGE_URL", "IMAGE_ALT")));
     }
 
     @DisplayName("장바구니에 물품을 추가한다.")
@@ -93,13 +91,13 @@ public class CartItemServiceTest {
     @Test
     void findCartItemsByCustomer() {
         // given
-        ProductResponse response1 = productService.addProduct(new addProductRequest("콜라", 10_000,
-                        20, new ImageDto("IMAGE_URL", "IMAGE_ALT")));
-        ProductResponse response2 = productService.addProduct(new addProductRequest("피자", 10_000,
-                        20, new ImageDto("IMAGE_URL", "IMAGE_ALT")));
+        Long productId1 = productService.addProduct(new ProductRequest("콜라", 10_000,
+                20, new ImageDto("IMAGE_URL", "IMAGE_ALT")));
+        Long productId2 = productService.addProduct(new ProductRequest("피자", 10_000,
+                20, new ImageDto("IMAGE_URL", "IMAGE_ALT")));
         Long cartItemId1 = cartItemService.addCart(customer, productId);
-        Long cartItemId2 = cartItemService.addCart(customer, response1.getId());
-        Long cartItemId3 = cartItemService.addCart(customer, response2.getId());
+        Long cartItemId2 = cartItemService.addCart(customer, productId1);
+        Long cartItemId3 = cartItemService.addCart(customer, productId2);
 
         // when
         List<CartItem> cartItems = cartItemService.findCartItemsByCustomer(customer);
@@ -115,16 +113,16 @@ public class CartItemServiceTest {
     @Test
     void deleteCart() {
         // given
-        ProductResponse response1 = productService.addProduct(new addProductRequest("콜라", 10_000,
+        Long productId1 = productService.addProduct(new ProductRequest("콜라", 10_000,
                 20, new ImageDto("IMAGE_URL", "IMAGE_ALT")));
-        ProductResponse response2 = productService.addProduct(new addProductRequest("피자", 10_000,
+        Long productId2 = productService.addProduct(new ProductRequest("피자", 10_000,
                 20, new ImageDto("IMAGE_URL", "IMAGE_ALT")));
         Long cartItemId1 = cartItemService.addCart(customer, productId);
-        Long cartItemId2 = cartItemService.addCart(customer, response1.getId());
-        Long cartItemId3 = cartItemService.addCart(customer, response2.getId());
+        Long cartItemId2 = cartItemService.addCart(customer, productId1);
+        Long cartItemId3 = cartItemService.addCart(customer, productId2);
 
         // when
-        cartItemService.deleteCart(customer, new CartItemIds(List.of(cartItemId1)));
+        cartItemService.deleteCartItems(customer, new CartItemIds(List.of(cartItemId1)));
 
         // then
         List<CartItem> cartItems = cartItemService.findCartItemsByCustomer(customer);

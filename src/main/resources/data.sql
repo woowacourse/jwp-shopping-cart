@@ -43,7 +43,6 @@ VALUES ('Apple Watch Series 5', '120', '5'),
        ('Bluetooth Headphones', '100', '5'),
        ('Jabra Wireless Stereo Headset', '80', '5'),
        ('Beats On-Ear Headphone', '100', '5'),
-       ('Beats On-Ear Headphone', '100', '5'),
        ('Digital Alarm Clock', '30', '5'),
        ('Mkay Bluetooth Headphones', '150', '5'),
        ('Wireless Bluetooth Headphones', '60', '5')

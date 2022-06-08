@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import woowacourse.shoppingcart.domain.Product;
 
 public class OrderedProducts {
@@ -8,6 +9,7 @@ public class OrderedProducts {
     private int quantity;
     private int price;
     private String name;
+    @JsonProperty("thumbnailImage")
     private ImageDto thumbnailImage;
 
     public OrderedProducts() {

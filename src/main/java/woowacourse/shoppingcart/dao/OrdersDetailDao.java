@@ -14,7 +14,7 @@ public class OrdersDetailDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsertInOrdersDetail;
 
-    public OrdersDetailDao(final JdbcTemplate jdbcTemplate, final ProductDao productDao) {
+    public OrdersDetailDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsertInOrdersDetail = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("orders_detail")

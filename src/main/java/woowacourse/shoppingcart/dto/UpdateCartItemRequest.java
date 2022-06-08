@@ -1,14 +1,14 @@
 package woowacourse.shoppingcart.dto;
 
-public class updateCartItemRequest {
+public class UpdateCartItemRequest {
 
     private Long cartItemId;
     private int quantity;
 
-    public updateCartItemRequest() {
+    public UpdateCartItemRequest() {
     }
 
-    public updateCartItemRequest(Long cartItemId, int quantity) {
+    public UpdateCartItemRequest(Long cartItemId, int quantity) {
         this.cartItemId = cartItemId;
         this.quantity = quantity;
     }

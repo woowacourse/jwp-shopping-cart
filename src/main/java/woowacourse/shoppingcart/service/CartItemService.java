@@ -7,11 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CartItemIds;
-import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.entity.CartItemEntity;
 import woowacourse.shoppingcart.exception.AlreadyExistCartItemException;
 import woowacourse.shoppingcart.exception.NotExistCartItemException;
@@ -50,7 +48,7 @@ public class CartItemService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void deleteCart(final Customer customer, final CartItemIds cartItemIds) {
+    public void deleteCartItems(final Customer customer, final CartItemIds cartItemIds) {
         for (Long cartItemId : cartItemIds.getCartItemIds()) {
             validateCustomerCartItem(customer, cartItemId);
             cartItemDao.deleteCartItem(cartItemId);
@@ -72,13 +70,7 @@ public class CartItemService {
     }
 
     private CartItem toCartItem(CartItemEntity entity) {
-        ProductResponse response = productService.findProductById(entity.getProductId());
-        return new CartItem(entity.getId(), toProduct(response), entity.getQuantity());
-    }
-
-    private Product toProduct(ProductResponse response) {
-        return new Product(response.getId(), response.getName(),
-                response.getPrice(), response.getStockQuantity(),
-                new Image(response.getThumbnailImage().getUrl(), response.getThumbnailImage().getAlt()));
+        Product product = productService.findProductById(entity.getProductId());
+        return new CartItem(entity.getId(), product, entity.getQuantity());
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.ImageDto;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.addProductRequest;
+import woowacourse.shoppingcart.dto.ProductRequest;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
@@ -64,11 +64,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, int quantity, String imageUrl, String imageAlt) {
-        final addProductRequest addProductRequest = new addProductRequest(name, price, quantity,
+        final ProductRequest ProductRequest = new ProductRequest(name, price, quantity,
                 new ImageDto(imageUrl, imageAlt));
 
         return RestAssured.given().log().all()
-                .body(addProductRequest)
+                .body(ProductRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/api/products")

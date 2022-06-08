@@ -55,9 +55,9 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> changeGeneral(
             @AuthenticationPrincipal Customer customer,
             @RequestBody ChangeGeneralInfoRequest changeGeneralInfoRequest) {
-        final CustomerResponse customerResponse = customerService
-                .changeGeneralInfo(customer, changeGeneralInfoRequest.getUsername());
-        return ResponseEntity.ok().body(customerResponse);
+        Customer updatedCustomer = customerService.changeGeneralInfo(customer,
+                changeGeneralInfoRequest.getUsername());
+        return ResponseEntity.ok().body(CustomerResponse.of(updatedCustomer));
     }
 
     @DeleteMapping("/me")
