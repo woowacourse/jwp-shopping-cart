@@ -4,9 +4,12 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -16,6 +19,27 @@ public class CartItemDao {
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<Cart> findAllJoinProductByCustomerId(final Long customerId) {
+        final String sql =
+                "SELECT c.id, c.quantity, c.product_id, p.name, p.price, p.image_url FROM cart_item AS c "
+                        + "INNER JOIN product AS p ON p.id = c.product_id "
+                        + "WHERE c.customer_id = ?";
+
+        return jdbcTemplate.query(sql, rowMapper(), customerId);
+    }
+
+    private RowMapper<Cart> rowMapper() {
+        return (rs, rowNum) -> {
+            Long id = rs.getLong("id");
+            final int quantity = rs.getInt("quantity");
+            final long product_id = rs.getLong("product_id");
+            final String productName = rs.getString("name");
+            final int productPrice = rs.getInt("price");
+            final String productImageUrl = rs.getString("image_url");
+            return new Cart(id, quantity, new Product(product_id, productName, productPrice, productImageUrl));
+        };
     }
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
@@ -40,13 +64,14 @@ public class CartItemDao {
     }
 
     public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
+        final String sql = "INSERT INTO cart_item(quantity, customer_id, product_id) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
+            preparedStatement.setInt(1, 1);
+            preparedStatement.setLong(2, customerId);
+            preparedStatement.setLong(3, productId);
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
