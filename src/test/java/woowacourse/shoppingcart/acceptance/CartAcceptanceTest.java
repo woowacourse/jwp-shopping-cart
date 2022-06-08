@@ -29,7 +29,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.dto.response.ErrorResponse;
 import woowacourse.member.dto.response.LoginResponse;
 import woowacourse.shoppingcart.dto.CartItemAddRequest;
@@ -37,7 +36,6 @@ import woowacourse.shoppingcart.dto.CartItemQuantityUpdateRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @DisplayName("장바구니 관련 기능")
-@Sql(scripts = {"/schema.sql", "/product_data.sql"})
 class CartAcceptanceTest extends AcceptanceTest {
 
     private String token;

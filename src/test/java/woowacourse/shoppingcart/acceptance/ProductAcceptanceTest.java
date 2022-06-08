@@ -11,12 +11,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.util.HttpRequestUtil;
 
 @DisplayName("상품 관련 기능")
-@Sql({"classpath:schema.sql", "classpath:product_data.sql"})
 class ProductAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("상품 목록을 조회한다")

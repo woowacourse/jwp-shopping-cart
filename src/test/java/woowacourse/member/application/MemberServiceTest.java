@@ -23,7 +23,7 @@ import woowacourse.member.dto.response.LoginResponse;
 import woowacourse.member.dto.response.MemberResponse;
 
 @SpringBootTest
-@Sql("file:src/test/java/woowacourse/resources/memberTest.sql")
+@Sql("file:src/test/resources/test_member.sql")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class MemberServiceTest {
 

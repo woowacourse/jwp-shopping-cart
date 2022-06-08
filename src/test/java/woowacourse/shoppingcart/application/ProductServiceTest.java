@@ -9,12 +9,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.ShoppingCartTest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:product_data.sql"})
-class ProductServiceTest {
+class ProductServiceTest extends ShoppingCartTest {
 
     @Autowired
     private ProductService productService;

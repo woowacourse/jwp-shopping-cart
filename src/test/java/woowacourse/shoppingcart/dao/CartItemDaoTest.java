@@ -14,16 +14,15 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
+import woowacourse.shoppingcart.ShoppingCartTest;
 import woowacourse.shoppingcart.domain.CartItem;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:product_data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class CartItemDaoTest {
+class CartItemDaoTest extends ShoppingCartTest {
 
     private final CartItemDao cartItemDao;
     private final MemberDao memberDao;

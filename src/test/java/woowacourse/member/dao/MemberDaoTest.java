@@ -17,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.domain.Member;
 
 @JdbcTest
-@Sql("file:src/test/java/woowacourse/resources/memberTest.sql")
+@Sql("file:src/test/resources/test_member.sql")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class MemberDaoTest {
 

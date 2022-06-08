@@ -17,4 +17,4 @@ values ('캠핑 의자', 35000, 100, 'https://thawing-fortress-83192.herokuapp.c
        ('불꽃놀이', 5000, 100, 'https://thawing-fortress-83192.herokuapp.com/static/images/firecracker.jpg'),
        ('더치오븐 삼각대', 100000, 100, 'https://thawing-fortress-83192.herokuapp.com/static/images/tripod.jpg'),
        ('스위스 칼', 26700, 100, 'https://thawing-fortress-83192.herokuapp.com/static/images/swiss-knife.jpg'),
-       ('테이블', 55000, 100, 'https://thawing-fortress-83192.herokuapp.com/static/images/table.jpg'),
+       ('테이블', 55000, 100, 'https://thawing-fortress-83192.herokuapp.com/static/images/table.jpg');

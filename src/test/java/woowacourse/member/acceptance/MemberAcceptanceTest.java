@@ -31,7 +31,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.member.dto.request.MemberCreateRequest;
 import woowacourse.member.dto.request.MemberUpdateRequest;
@@ -44,7 +43,6 @@ import woowacourse.member.dto.response.PasswordCheckResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
-@Sql("classpath:schema.sql")
 class MemberAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("이메일, 비밀번호, 닉네임으로 회원 가입에 성공하면 201를 응답한다.")
