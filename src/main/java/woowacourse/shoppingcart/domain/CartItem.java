@@ -4,11 +4,11 @@ import java.util.Objects;
 
 public class CartItem {
     private final Product product;
-    private final int quantity;
+    private final Quantity quantity;
 
     public CartItem(Product product, int quantity) {
         this.product = product;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
     }
 
     public Product getProduct() {
@@ -20,7 +20,7 @@ public class CartItem {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 
     @Override

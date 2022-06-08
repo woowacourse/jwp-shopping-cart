@@ -117,6 +117,7 @@
     - {cartItems: [{product: {id, name, price, thumbnail}, quantity}]}
 - 장바구니 상품 수량 변경 `PUT /cart/{productId}/quantity` -> `200 OK`
   - request body {quantity}
+  - [예외] 입력값이 0 이하일 때 `400 Bad Request`
 - 장바구니 상품 제거 `DELETE /cart/products` -> `204 No Content`
   - request body {productIds: []}
 - 장바구니 비우기 `DELETE /cart` -> `204 No Content`
