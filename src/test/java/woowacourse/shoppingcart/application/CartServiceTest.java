@@ -33,7 +33,7 @@ class CartServiceTest {
         CartRequest updatingCartItem = new CartRequest(1L, 10);
         cartService.updateCartQuantity(1L, updatingCartItem);
 
-        List<ProductResponse> cartProductsByCustomerId = cartService.findCartProductByCustomerId(1L);
+        List<ProductResponse> cartProductsByCustomerId = cartService.findCartProductsByCustomerId(1L);
 
         assertThat(cartProductsByCustomerId.size()).isEqualTo(1);
         cartProductsByCustomerId.forEach(product -> assertThat(product.getSavedQuantity()).isEqualTo(10));

@@ -29,7 +29,7 @@ public class CartItemController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getCartItems(@AuthenticationPrincipal Long customerId) {
-        return cartService.findCartProductByCustomerId(customerId);
+        return cartService.findCartProductsByCustomerId(customerId);
     }
 
     @PostMapping

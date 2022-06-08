@@ -18,6 +18,8 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
+    private static final int POSITIVE_DIGIT_STANDARD = 0;
+
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
@@ -28,7 +30,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<ProductResponse> findCartProductByCustomerId(final Long customerId) {
+    public List<ProductResponse> findCartProductsByCustomerId(final Long customerId) {
         checkExistById(customerId);
         final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
 
@@ -61,7 +63,7 @@ public class CartService {
     }
 
     private void validateQuantity(Integer quantity) {
-        if (quantity <= 0) {
+        if (quantity <= POSITIVE_DIGIT_STANDARD) {
             throw new IllegalArgumentException("올바르지 않은 상품 수량 형식입니다.");
         }
     }
