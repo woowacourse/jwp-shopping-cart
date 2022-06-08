@@ -30,7 +30,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/check-email")
+    @GetMapping("/email-check")
     public ResponseEntity<EmailUniqueCheckResponse> checkDuplicateEmail(@RequestParam final String email) {
         final EmailUniqueCheckResponse emailUniqueCheckResponse =
                 new EmailUniqueCheckResponse(customerService.isUniqueEmail(email));
