@@ -17,20 +17,24 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public Long addProduct(final Product product) {
         return productDao.save(product);
     }
 
+    @Transactional(readOnly = true)
     public Product findProductById(final Long productId) {
         return productDao.findProductById(productId);
     }
 
+    @Transactional(readOnly = true)
     public List<Product> findProducts(long size, long page) {
         validateSizeAndPage(size, page);
 
         return productDao.findProducts(size, page);
     }
 
+    @Transactional
     public void deleteProductById(final Long productId) {
         productDao.delete(productId);
     }

@@ -33,6 +33,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartResponse> findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
@@ -58,6 +59,7 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
+    @Transactional
     public Long addCart(final AddCartItemRequest updateCartItemRequest, final String customerName) {
         final Long customerId = customerDao.findByUsername(customerName).getId();
         try {
@@ -75,6 +77,7 @@ public class CartService {
         }
     }
 
+    @Transactional
     public List<CartResponse> updateCartItems(UpdateCartItemRequests updateCartItemRequests, String customerName) {
         List<CartResponse> responses = new ArrayList<>();
 
@@ -100,6 +103,7 @@ public class CartService {
         return responses;
     }
 
+    @Transactional
     public void deleteCart(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);
@@ -113,11 +117,13 @@ public class CartService {
         throw new NotInCustomerCartItemException();
     }
 
+    @Transactional
     public void deleteAllCart(String customerName) {
         Long customerId = customerDao.findByUsername(customerName).getId();
         cartItemDao.deleteAllByCustomerId(customerId);
     }
 
+    @Transactional
     public void deleteAllCartByProducts(String customerName, DeleteCartItemRequests deleteCartItemRequests) {
         List<DeleteCartItemRequest> cartItems = deleteCartItemRequests.getCartItems();
         for (DeleteCartItemRequest cartItem : cartItems) {
