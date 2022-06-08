@@ -58,6 +58,16 @@ class CartItemDaoTest {
     }
 
     @Test
+    @DisplayName("주문 수량을 수정할때 존재하지 않는 품목이면 예외가 발생한다.")
+    void updateCartItem_NotFoundException() {
+        cartItemDao.addCartItem(customerId, productId, 1);
+
+        assertThatThrownBy(() -> cartItemDao.updateCartItem(customerId, 2L, 2))
+                .isInstanceOf(NotFoundProductException.class)
+                .hasMessage("존재하지 않는 상품 ID입니다.");
+    }
+
+    @Test
     @DisplayName("장바구니에 담긴 물건을 삭제한다.")
     void deleteCartItem() {
         cartItemDao.addCartItem(customerId, productId, 1);
@@ -70,7 +80,7 @@ class CartItemDaoTest {
     void deleteCartItem_NotFoundException() {
         cartItemDao.addCartItem(customerId, productId, 1);
 
-        Assertions.assertThatThrownBy(() -> cartItemDao.deleteCartItem(customerId, 2L))
+        assertThatThrownBy(() -> cartItemDao.deleteCartItem(customerId, 2L))
                         .isInstanceOf(NotFoundProductException.class)
                         .hasMessage("존재하지 않는 상품 ID입니다.");
     }
