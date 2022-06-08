@@ -6,14 +6,8 @@ import org.springframework.http.MediaType;
 
 public class SimpleRestAssured {
 
-    public static SimpleResponse getWithBody(String path) {
+    public static SimpleResponse get(String path) {
         return new SimpleResponse(given()
-                .when().get(path));
-    }
-
-    public static SimpleResponse getWithBody(String path, Object params) {
-        return new SimpleResponse(given()
-                .body(params)
                 .when().get(path));
     }
 

@@ -84,7 +84,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe_unauthorized() {
         //given & when
-        SimpleResponse response = SimpleRestAssured.getWithBody("/customers/me");
+        SimpleResponse response = SimpleRestAssured.get("/customers/me");
 
         //then
         response.assertStatus(HttpStatus.UNAUTHORIZED);

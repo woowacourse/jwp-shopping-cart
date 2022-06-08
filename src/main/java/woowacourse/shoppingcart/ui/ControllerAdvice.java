@@ -49,7 +49,7 @@ public class ControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleInvalidResourceAccess(final InvalidProductException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler

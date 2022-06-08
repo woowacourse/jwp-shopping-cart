@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.hamcrest.Matcher;
 import org.springframework.http.HttpStatus;
 import woowacourse.shoppingcart.dto.response.ErrorResponse;
 
@@ -44,6 +45,11 @@ public class SimpleResponse {
     public void assertHeader(String name, String value) {
         response.then()
                 .header(name, equalTo(value));
+    }
+
+    public void assertHeader(String name, Matcher<String> matcher) {
+        response.then()
+                .header(name, matcher);
     }
 
     public void assertBody(String path, Object value) {
