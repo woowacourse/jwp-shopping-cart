@@ -7,15 +7,17 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.cartitem.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.cartitem.CartItemAddResponse;
 import woowacourse.shoppingcart.dto.cartitem.CartItemCreateRequest;
 import woowacourse.shoppingcart.dto.cartitem.CartItemCreateResponse;
 import woowacourse.shoppingcart.dto.cartitem.CartItemDeleteRequest;
 import woowacourse.shoppingcart.dto.cartitem.CartItemResponse;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -25,10 +27,12 @@ public class CartItemService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
+    private final ProductDao productDao;
 
-    public CartItemService(final CartItemDao cartItemDao, final CustomerDao customerDao) {
+    public CartItemService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
+        this.productDao = productDao;
     }
 
     @Transactional
@@ -36,12 +40,16 @@ public class CartItemService {
                                                         final List<CartItemCreateRequest> cartItemCreateRequests) {
         Customer customer = customerDao.findById(tokenRequest.getId());
         return cartItemCreateRequests.stream()
-                .map(cartItemCreateRequest -> createCartItemResponse(customer, cartItemCreateRequest.getProductId()))
+                .map(cartItemCreateRequest -> createCartItemResponse(customer, createProduct(cartItemCreateRequest)))
                 .collect(Collectors.toList());
     }
 
-    private CartItemCreateResponse createCartItemResponse(final Customer customer, final Long productId) {
-        return new CartItemCreateResponse(createCartItem(customer.getId(), productId), CREATE_CART_ITEM_QUANTITY);
+    private CartItemCreateResponse createCartItemResponse(final Customer customer, final Product product) {
+        return new CartItemCreateResponse(createCartItem(customer.getId(), product.getId()), CREATE_CART_ITEM_QUANTITY);
+    }
+
+    private Product createProduct(final CartItemCreateRequest cartItemCreateRequest) {
+        return productDao.findById(cartItemCreateRequest.getProductId());
     }
 
     private Long createCartItem(final Long customerId, final Long productId) {
@@ -61,7 +69,7 @@ public class CartItemService {
 
     private void validateExistCartItem(final Long cartItemId) {
         if (!cartItemDao.existCartItemById(cartItemId)) {
-            throw new InvalidProductException("카트에 선택한 상품중 존재하지 않는 상품이 있습니다.");
+            throw new InvalidCartItemException("선택한 장바구니의 상품중 존재하지 않는 상품이 있습니다.");
         }
     }
 

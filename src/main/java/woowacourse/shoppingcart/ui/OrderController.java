@@ -11,18 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
 @Validated
 @RestController
 @RequestMapping("/auth/customer/orders")
 public class OrderController {
-    private final OrderService orderService;
-
-    public OrderController(final OrderService orderService) {
-        this.orderService = orderService;
-    }
 
     @PostMapping
     public ResponseEntity<Void> createOrder(@AuthenticationPrincipal TokenRequest tokenRequest,

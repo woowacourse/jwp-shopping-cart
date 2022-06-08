@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.datanotfound.DataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
@@ -36,7 +37,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             DataNotFoundException.class,
-            InvalidProductException.class
+            InvalidProductException.class,
+            InvalidCartItemException.class
     })
     public ResponseEntity<ErrorResponse> handleDataNotFound(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.from(e));

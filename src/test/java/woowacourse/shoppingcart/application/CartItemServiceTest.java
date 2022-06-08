@@ -40,7 +40,7 @@ public class CartItemServiceTest {
 
     @BeforeEach
     void setUp() {
-        cartItemService = new CartItemService(cartItemDao, customerDao);
+        cartItemService = new CartItemService(cartItemDao, customerDao, productDao);
         productDao.save(new Product("banana", 1_000, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, "woowa2.com"));
         productDao.save(new Product("cheeze", 3_000, "woowa2.com"));
