@@ -23,8 +23,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createCustomer(
-            @Valid @RequestBody CustomerRequest customerRequest) {
+    public ResponseEntity<Void> createCustomer(@Valid @RequestBody CustomerRequest customerRequest) {
         Long id = customerService.signUp(customerRequest);
 
         return ResponseEntity.created(URI.create("/api/customers/" + id)).build();

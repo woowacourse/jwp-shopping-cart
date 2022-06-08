@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -8,10 +9,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.application.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Customer;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CartItemDao {
@@ -83,5 +84,15 @@ public class CartItemDao {
     public void updateQuantity(final Long cartId, final int quantity) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, quantity, cartId);
+    }
+
+    public Optional<Cart> findIdAndQuantityByProductId(final Long productId, final Long customerId) {
+        final String sql = "SELECT id, quantity FROM cart_item WHERE product_id = ? AND customer_id = ?";
+        final List<Cart> carts = jdbcTemplate.query(sql, ((rs, rowNum) -> {
+            Long id = rs.getLong("id");
+            int quantity = rs.getInt("quantity");
+            return new Cart(id, productId, null, 0, null, quantity);
+        }), productId, customerId);
+        return Optional.ofNullable(DataAccessUtils.singleResult(carts));
     }
 }

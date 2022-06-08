@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
@@ -107,7 +106,7 @@ public class CartItemDaoTest {
 
     @DisplayName("quantity에 따라 수량이 업데이트 된다.")
     @Test
-    void updateQuantity(){
+    void updateQuantity() {
         // given
         final Long customerId = 1L;
         final Long cartId = 1L;
@@ -122,5 +121,17 @@ public class CartItemDaoTest {
                 .get();
 
         assertThat(findCart.getQuantity()).isEqualTo(30);
+    }
+
+    @DisplayName("Cart에 productId를 기준으로 cartId와 quantity를 찾는다.")
+    @Test
+    void findIdAndQuantityByProductId() {
+        final Long productId = 1L;
+        final Long customerId = 1L;
+        Cart cart = cartItemDao.findIdAndQuantityByProductId(productId, customerId).get();
+        assertAll(
+                () -> assertThat(cart.getQuantity()).isEqualTo(5),
+                () -> assertThat(cart.getId()).isEqualTo(1L)
+        );
     }
 }

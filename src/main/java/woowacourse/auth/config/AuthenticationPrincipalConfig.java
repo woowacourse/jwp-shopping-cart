@@ -7,27 +7,37 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.JwtTokenInterceptor;
 import woowacourse.auth.support.AuthenticationPrincipalArgumentResolver;
+import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.CustomerArgumentResolver;
 
 import java.util.List;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final JwtTokenInterceptor jwtTokenInterceptor;
 
-    public AuthenticationPrincipalConfig(final AuthService authService, final JwtTokenInterceptor jwtTokenInterceptor) {
+    public AuthenticationPrincipalConfig(final AuthService authService, final JwtTokenProvider jwtTokenProvider, final JwtTokenInterceptor jwtTokenInterceptor) {
         this.authService = authService;
+        this.jwtTokenProvider = jwtTokenProvider;
         this.jwtTokenInterceptor = jwtTokenInterceptor;
     }
 
     @Override
     public void addArgumentResolvers(List argumentResolvers) {
         argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
+        argumentResolvers.add(customerArgumentResolver());
     }
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
         return new AuthenticationPrincipalArgumentResolver(authService);
+    }
+
+    @Bean
+    public CustomerArgumentResolver customerArgumentResolver(){
+        return new CustomerArgumentResolver(jwtTokenProvider);
     }
 
     @Override
