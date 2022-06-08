@@ -59,6 +59,7 @@ public class CartService {
 
     @Transactional
     public void delete(final Long customerId, final CartDeleteServiceRequest request) {
+        getCustomer(customerId);
         validateExistInCart(customerId, request.getCartIds());
         cartItemDao.deleteAllById(request.getCartIds());
     }
@@ -74,11 +75,7 @@ public class CartService {
     }
 
     private void validateExistInCart(final Long customerId, final List<Long> ids) {
-        getCustomer(customerId);
-        final List<Long> cartIds = findAllByCustomerId(customerId).stream()
-                .mapToLong(CartResponse::getId)
-                .boxed()
-                .collect(Collectors.toList());
+        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
 
         if (!cartIds.containsAll(ids)) {
             throw new NotInCustomerCartItemException();
