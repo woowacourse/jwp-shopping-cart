@@ -27,7 +27,7 @@ public class AuthService {
             throw new InvalidCustomerException();
         }
         String token = tokenProvider.createToken(tokenRequest.getLoginId());
-        return new TokenResponse(token);
+        return new TokenResponse(token, customer.getName());
     }
 
     public LoginCustomer getCustomerByToken(String token) {
