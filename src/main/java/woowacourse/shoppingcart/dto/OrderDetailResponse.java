@@ -6,17 +6,11 @@ import woowacourse.shoppingcart.domain.Product;
 
 public class OrderDetailResponse {
 
-    @JsonProperty(value = "order_detail_id")
+    @JsonProperty(value = "orderDetailId")
     private Long id;
-
-    @JsonProperty(value = "product_id")
     private Long productId;
     private String name;
-
-    @JsonProperty(value = "total_price")
     private int totalPrice;
-
-    @JsonProperty(value = "image_url")
     private String imageUrl;
     private int quantity;
 

@@ -1,24 +1,15 @@
 package woowacourse.shoppingcart.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 
 public class CartResponse {
 
     private Long id;
-
-    @JsonProperty(value = "product_id")
     private Long productId;
-
     private String name;
-
-    @JsonProperty(value = "image_url")
     private String imageUrl;
-
-    @JsonProperty(value = "total_price")
     private int totalPrice;
-
     private int quantity;
 
     private CartResponse() {

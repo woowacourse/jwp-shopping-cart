@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 public class CartRequest {
 
     @NotNull(message = "product id를 입력하세요.")
-    @JsonProperty(value = "product_id")
     private Long productId;
 
     @Min(value = 1, message = "장바구니 물품 개수를 1개 이상 입력해주세요.")

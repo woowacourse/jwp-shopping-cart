@@ -59,10 +59,10 @@ public class CartControllerTest extends RestDocsTest {
                 ),
                 responseFields(
                         fieldWithPath("[].id").type(NUMBER).description("id"),
-                        fieldWithPath("[].product_id").type(NUMBER).description("제품 id"),
+                        fieldWithPath("[].productId").type(NUMBER).description("제품 id"),
                         fieldWithPath("[].name").type(STRING).description("제품명"),
-                        fieldWithPath("[].image_url").type(STRING).description("제품이미지"),
-                        fieldWithPath("[].total_price").type(NUMBER).description("제품 총 가격"),
+                        fieldWithPath("[].imageUrl").type(STRING).description("제품이미지"),
+                        fieldWithPath("[].totalPrice").type(NUMBER).description("제품 총 가격"),
                         fieldWithPath("[].quantity").type(NUMBER).description("제품 양")
                 )));
     }
@@ -89,7 +89,7 @@ public class CartControllerTest extends RestDocsTest {
                         headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
                 ),
                 requestFields(
-                        fieldWithPath("product_id").type(NUMBER).description("제품 id"),
+                        fieldWithPath("productId").type(NUMBER).description("제품 id"),
                         fieldWithPath("quantity").type(NUMBER).description("개수")
                 )));
     }

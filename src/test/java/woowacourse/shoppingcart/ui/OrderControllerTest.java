@@ -59,7 +59,7 @@ public class OrderControllerTest extends RestDocsTest {
                         headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
                 ),
                 requestFields(
-                        fieldWithPath("[].cart_id").type(NUMBER).description("카트 id")
+                        fieldWithPath("[].cartId").type(NUMBER).description("카트 id")
                 )));
 
     }
@@ -101,11 +101,11 @@ public class OrderControllerTest extends RestDocsTest {
                 ),
                 responseFields(
                         fieldWithPath("id").type(NUMBER).description("주문 id"),
-                        fieldWithPath("orderDetails[].order_detail_id").type(NUMBER).description("주문 디테일 id"),
-                        fieldWithPath("orderDetails[].product_id").type(NUMBER).description("제품 id"),
+                        fieldWithPath("orderDetails[].orderDetailId").type(NUMBER).description("주문 디테일 id"),
+                        fieldWithPath("orderDetails[].productId").type(NUMBER).description("제품 id"),
                         fieldWithPath("orderDetails[].name").type(STRING).description("제품 명"),
-                        fieldWithPath("orderDetails[].total_price").type(NUMBER).description("제품 총 가격"),
-                        fieldWithPath("orderDetails[].image_url").type(STRING).description("제품 이미지"),
+                        fieldWithPath("orderDetails[].totalPrice").type(NUMBER).description("제품 총 가격"),
+                        fieldWithPath("orderDetails[].imageUrl").type(STRING).description("제품 이미지"),
                         fieldWithPath("orderDetails[].quantity").type(NUMBER).description("제품 양")
                 )));
     }
@@ -131,11 +131,11 @@ public class OrderControllerTest extends RestDocsTest {
                 ),
                 responseFields(
                         fieldWithPath("[].id").type(NUMBER).description("주문 id"),
-                        fieldWithPath("[].orderDetails[].order_detail_id").type(NUMBER).description("주문 디테일 id"),
-                        fieldWithPath("[].orderDetails[].product_id").type(NUMBER).description("제품 id"),
+                        fieldWithPath("[].orderDetails[].orderDetailId").type(NUMBER).description("주문 디테일 id"),
+                        fieldWithPath("[].orderDetails[].productId").type(NUMBER).description("제품 id"),
                         fieldWithPath("[].orderDetails[].name").type(STRING).description("제품 명"),
-                        fieldWithPath("[].orderDetails[].total_price").type(NUMBER).description("제품 총 가격"),
-                        fieldWithPath("[].orderDetails[].image_url").type(STRING).description("제품 이미지"),
+                        fieldWithPath("[].orderDetails[].totalPrice").type(NUMBER).description("제품 총 가격"),
+                        fieldWithPath("[].orderDetails[].imageUrl").type(STRING).description("제품 이미지"),
                         fieldWithPath("[].orderDetails[].quantity").type(NUMBER).description("제품 양")
                 )));
     }
