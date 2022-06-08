@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.service;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static woowacourse.fixture.Fixture.*;
@@ -68,7 +70,13 @@ class CartServiceTest {
     }
 
     @Test
+    @DisplayName("장바구니 내의 품목을 장바구니에서 제거한다.")
     void deleteCart() {
-    }
+        cartItemDao.addCartItem(customerId, productId, 1);
 
+        cartService.deleteCart(customerId, productId);
+
+        final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
+        assertThat(cartItems.size()).isEqualTo(0);
+    }
 }
