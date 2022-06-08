@@ -52,7 +52,7 @@
 
 > [API 명세서](https://copper-tartan-cd6.notion.site/b9faa19b47f74d28af0ae7432aeacf5b)
 
-- [ ] 레거시 API URL 수정
-  - [ ] 기존 API의 `{customer_name}` 제거
-  - [ ] 액세스 토큰을 이용해 사용자 구분
-- [ ] 레거시 API 리팩터링
+- [x] 레거시 API URL 수정
+  - [x] 기존 API의 `{customer_name}` 제거
+  - [x] 액세스 토큰을 이용해 사용자 구분
+- [x] 레거시 API 리팩터링
