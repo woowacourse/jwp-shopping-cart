@@ -18,26 +18,24 @@ import woowacourse.shoppingcart.dto.CartItemDto;
 import woowacourse.shoppingcart.dto.CartItemIds;
 import woowacourse.shoppingcart.dto.addCartItemRequest;
 import woowacourse.shoppingcart.dto.updateCartItemRequest;
-import woowacourse.shoppingcart.service.CartService;
+import woowacourse.shoppingcart.service.CartItemService;
 
 @RestController
 @RequestMapping("/api/mycarts")
 public class CartItemController {
 
-    private final CartService cartService;
+    private final CartItemService cartItemService;
 
-    public CartItemController(final CartService cartService) {
-        this.cartService = cartService;
+    public CartItemController(final CartItemService cartItemService) {
+        this.cartItemService = cartItemService;
     }
 
     @PostMapping
     public ResponseEntity<CartItemDto> addCartItem(@AuthenticationPrincipal Customer customer,
             @RequestBody final addCartItemRequest request) {
         final Long productId = request.getProductId();
-        final int quantity = request.getQuantity();
-
-        final Long cartItemId = cartService.addCart(customer, productId, quantity);
-        final CartItem cartItem = cartService.findById(customer, cartItemId);
+        final Long cartItemId = cartItemService.addCart(customer, productId);
+        final CartItem cartItem = cartItemService.findById(customer, cartItemId);
         return ResponseEntity.created(URI.create("/api/mycarts/" + cartItemId)).body(CartItemDto.of(cartItem));
     }
 
@@ -46,28 +44,28 @@ public class CartItemController {
             @RequestBody final updateCartItemRequest request) {
         final Long cartItemId = request.getCartItemId();
         final int quantity = request.getQuantity();
-        cartService.updateQuantity(customer, cartItemId, quantity);
+        cartItemService.updateQuantity(customer, cartItemId, quantity);
 
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
     public ResponseEntity<List<CartItemDto>> getCartItems(@AuthenticationPrincipal Customer customer) {
-        final List<CartItem> cartItems = cartService.findCartItemsByCustomer(customer);
+        final List<CartItem> cartItems = cartItemService.findCartItemsByCustomer(customer);
         return ResponseEntity.ok().body(CartItemDto.of(cartItems));
     }
 
     @GetMapping("/{cartItemId}")
     public ResponseEntity<CartItemDto> getCartItem(@AuthenticationPrincipal Customer customer,
             @PathVariable Long cartItemId) {
-        final CartItem cartItem = cartService.findById(customer, cartItemId);
+        final CartItem cartItem = cartItemService.findById(customer, cartItemId);
         return ResponseEntity.ok().body(CartItemDto.of(cartItem));
     }
 
     @DeleteMapping()
     public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal Customer customer,
             @RequestBody final CartItemIds cartItemIds) {
-        cartService.deleteCart(customer, cartItemIds);
+        cartItemService.deleteCart(customer, cartItemIds);
         return ResponseEntity.noContent().build();
     }
 }

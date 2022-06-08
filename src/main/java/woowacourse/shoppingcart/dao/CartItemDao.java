@@ -7,50 +7,49 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.exception.dto.ErrorResponse;
-import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.entity.CartItemEntity;
 import woowacourse.shoppingcart.exception.NotExistCartItemException;
 
 @Repository
 public class CartItemDao {
 
+    private static final int INIT_QUANTITY = 1;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final ProductDao productDao;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate, final ProductDao productDao) {
+    public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id");
-        this.productDao = productDao;
     }
 
-    public Long addCartItem(final Customer customer, final Long productId, final int quantity) {
+    public Long addCartItem(final Customer customer, final Long productId) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("customer_id", customer.getId());
         parameterSource.addValue("product_id", productId);
         parameterSource.addValue("product_id", productId);
-        parameterSource.addValue("quantity", quantity);
+        parameterSource.addValue("quantity", INIT_QUANTITY);
 
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<CartItem> findCartItemsByCustomerId(final Long customerId) {
+    public List<CartItemEntity> findCartItemsByCustomerId(final Long customerId) {
         final String sql = "SELECT id, product_id, quantity FROM cart_item WHERE customer_id = ?";
 
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new CartItem(
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new CartItemEntity(
                 resultSet.getLong("id"),
-                productDao.findProductById(resultSet.getLong("product_id")),
+                resultSet.getLong("product_id"),
                 resultSet.getInt("quantity")), customerId);
     }
 
-    public CartItem findById(final Long customerId, final Long cartItemId) {
+    public CartItemEntity findById(final Long customerId, final Long cartItemId) {
         try {
             final String sql = "SELECT id, product_id, quantity FROM cart_item WHERE customer_id = ? AND id = ?";
-            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new CartItem(
+            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new CartItemEntity(
                     resultSet.getLong("id"),
-                    productDao.findProductById(resultSet.getLong("product_id")),
+                    resultSet.getLong("product_id"),
                     resultSet.getInt("quantity")), customerId, cartItemId);
         } catch (EmptyResultDataAccessException e) {
             throw new NotExistCartItemException("장바구니에 없는 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
@@ -66,13 +65,18 @@ public class CartItemDao {
         }
     }
 
-    public boolean validateCustomerCartItem(final Long customerId, final Long cartItemId) {
+    public void updateQuantity(final Long customerId, final Long cartItemId, final int quantity) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? AND id = ?";
+        jdbcTemplate.update(sql, quantity, customerId, cartItemId);
+    }
+
+    public boolean hasCustomerCartItem(final Long customerId, final Long cartItemId) {
         final String sql = "SELECT exists(SELECT * FROM cart_item WHERE customer_id = ? AND id = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, customerId, cartItemId);
     }
 
-    public void updateQuantity(final Long customerId, final Long cartItemId, final int quantity) {
-        final String sql = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? AND id = ?";
-        jdbcTemplate.update(sql, quantity, customerId, cartItemId);
+    public boolean hasCustomerProductItem(final Long customerId, final Long productId) {
+        final String sql = "SELECT exists(SELECT * FROM cart_item WHERE customer_id = ? AND product_id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId);
     }
 }

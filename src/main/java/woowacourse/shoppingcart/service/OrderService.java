@@ -16,9 +16,9 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CartItemIds;
 import woowacourse.shoppingcart.dto.OrdersDto;
+import woowacourse.shoppingcart.entity.CartItemEntity;
 import woowacourse.shoppingcart.entity.OrderDetailEntity;
 import woowacourse.shoppingcart.exception.NotExistOrderException;
-import woowacourse.shoppingcart.exception.OutOfStockException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -47,22 +47,14 @@ public class OrderService {
         final Long customerId = customer.getId();
         Long ordersId = orderDao.addOrders(customerId);
         for (final Long cartItemId : cartItemIds.getCartItemIds()) {
-            CartItem cartItem = cartItemDao.findById(customerId, cartItemId);
-            validateOutOfStock(cartItem);
+            CartItemEntity cartItemEntity = cartItemDao.findById(customerId, cartItemId);
+            CartItem cartItem = toCartItem(cartItemEntity);
+            cartItem.validateOutOfStock();
             ordersDetailDao.addOrdersDetail(ordersId, cartItem);
             cartItemDao.deleteCartItem(cartItem.getId());
         }
 
         return ordersId;
-    }
-
-    private void validateOutOfStock(CartItem cartItem) {
-        Product product = cartItem.getProduct();
-        int quantity = cartItem.getQuantity();
-        int stock = product.getStockQuantity();
-        if (quantity > stock) {
-            throw new OutOfStockException("주문한 수량이 재고보다 더 많습니다.", ErrorResponse.OUT_OF_STOCK);
-        }
     }
 
     public List<OrdersDto> findOrdersByCustomer(final Customer customer) {
@@ -98,5 +90,11 @@ public class OrderService {
             orderDetails.add(orderDetail);
         }
         return orderDetails;
+    }
+
+    private CartItem toCartItem(CartItemEntity entity) {
+        return new CartItem(entity.getId(),
+                productDao.findProductById(entity.getProductId()),
+                entity.getQuantity());
     }
 }
