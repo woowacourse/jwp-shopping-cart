@@ -1,13 +1,13 @@
 package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrdersResponse;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -31,9 +31,9 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal final Customer customer,
-                                            @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(customer.getUserName(), orderId);
+    public ResponseEntity<OrdersResponse> findOrder(@AuthenticationPrincipal final Customer customer,
+                                                    @PathVariable final Long orderId) {
+        final OrdersResponse order = orderService.findOrderById(customer.getUserName(), orderId);
         return ResponseEntity.ok(order);
     }
 
