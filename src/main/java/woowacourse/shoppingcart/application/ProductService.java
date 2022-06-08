@@ -21,14 +21,6 @@ public class ProductService {
         this.thumbnailImageDao = thumbnailImageDao;
     }
 
-    public List<ProductResponse> findProducts() {
-        List<Product> products = productDao.getAll();
-
-        return products.stream()
-                .map(ProductResponse::new)
-                .collect(Collectors.toUnmodifiableList());
-    }
-
     public Product addProduct(final ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(),
                 productRequest.getStockQuantity(), productRequest.getThumbnailImage());
@@ -38,6 +30,14 @@ public class ProductService {
 
         return new Product(productId, productRequest.getName(), productRequest.getPrice(),
                 product.getStockQuantity(), product.getThumbnailImage());
+    }
+
+    public List<ProductResponse> findProducts() {
+        List<Product> products = productDao.getAll();
+
+        return products.stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public ProductResponse findProductById(final Long productId) {

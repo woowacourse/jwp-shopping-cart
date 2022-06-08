@@ -27,6 +27,16 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    public CartItemResponse addCart(final Long productId, final int quantity, final String email) {
+        final Long customerId = customerDao.getIdByEmail(email);
+        validateProductExist(productId);
+        validateProductAlreadyExistInCart(productId, customerId);
+
+        Long cartItemId = cartItemDao.save(customerId, quantity, productId);
+        CartItem cartItem = cartItemDao.getById(cartItemId);
+        return new CartItemResponse(cartItem);
+    }
+
     public List<CartItemResponse> findCartsByEmail(final String email) {
         final List<CartItem> cartItems = findCartIdsByEmail(email);
 
@@ -42,16 +52,6 @@ public class CartService {
 
     public CartItemResponse findCart(Long cartId) {
         CartItem cartItem = cartItemDao.getById(cartId);
-        return new CartItemResponse(cartItem);
-    }
-
-    public CartItemResponse addCart(final Long productId, final int quantity, final String email) {
-        final Long customerId = customerDao.getIdByEmail(email);
-        validateProductExist(productId);
-        validateProductAlreadyExistInCart(productId, customerId);
-
-        Long cartItemId = cartItemDao.save(customerId, quantity, productId);
-        CartItem cartItem = cartItemDao.getById(cartItemId);
         return new CartItemResponse(cartItem);
     }
 

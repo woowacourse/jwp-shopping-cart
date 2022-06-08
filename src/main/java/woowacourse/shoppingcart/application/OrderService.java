@@ -60,12 +60,12 @@ public class OrderService {
     }
 
     public OrderResponse findOrderById(final String email, final Long orderId) {
-        validateOrderIdByCustomerName(email, orderId);
+        validateOrderIdByCustomerEmail(email, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.getIdByEmail(customerName);
+    private void validateOrderIdByCustomerEmail(final String email, final Long orderId) {
+        final Long customerId = customerDao.getIdByEmail(email);
 
         if (!orderDao.existByOrderIdAndCustomerId(customerId, orderId)) {
             throw new NotFoundException("해당 주문은 존재하지 않습니다", ErrorResponse.NOT_EXIST_ORDER);
@@ -77,8 +77,8 @@ public class OrderService {
         return new OrderResponse(orderId, orderedProducts);
     }
 
-    public List<OrderResponse> findOrdersByCustomerEmail(final String customerName) {
-        final Long customerId = customerDao.getIdByEmail(customerName);
+    public List<OrderResponse> findOrdersByCustomerEmail(final String email) {
+        final Long customerId = customerDao.getIdByEmail(email);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
