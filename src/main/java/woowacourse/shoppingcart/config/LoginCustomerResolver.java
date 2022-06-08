@@ -33,10 +33,10 @@ public class LoginCustomerResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = AuthorizationExtractor.extract(request);
 
-        boolean isValidToken = jwtTokenProvider.validateToken(token);
-        if (!isValidToken) {
-            throw new UnauthorizedTokenException();
-        }
+//        boolean isValidToken = jwtTokenProvider.validateToken(token);
+//        if (!isValidToken) {
+//            throw new UnauthorizedTokenException();
+//        }
 
         String email = jwtTokenProvider.getPayload(token);
 
