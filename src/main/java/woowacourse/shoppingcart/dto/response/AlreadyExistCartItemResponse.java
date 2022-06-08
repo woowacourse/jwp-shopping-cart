@@ -11,7 +11,7 @@ public class AlreadyExistCartItemResponse {
         this.redirect = redirect;
     }
 
-    public boolean isRedirect() {
+    public boolean getRedirect() {
         return redirect;
     }
 

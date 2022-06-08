@@ -24,3 +24,4 @@ spring.config.activate.on-profile: test
 security.jwt.token:
   secret-key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   expire-length: 3600000
+
