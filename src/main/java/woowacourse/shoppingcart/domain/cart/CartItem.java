@@ -29,7 +29,7 @@ public class CartItem {
         }
     }
 
-    public void checkCanOrder(ProductStock productStock) {
+    public void checkStock(ProductStock productStock) {
         if (productStock.getStockQuantity() < getQuantity()) {
             throw new OutOfStockException();
         }

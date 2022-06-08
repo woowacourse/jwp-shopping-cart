@@ -6,6 +6,7 @@ public class Quantity {
     private final int quantity;
 
     public Quantity(int quantity) {
+        validate(quantity);
         this.quantity = quantity;
     }
 
@@ -17,5 +18,9 @@ public class Quantity {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public Quantity reduce(int quantity) {
+        return new Quantity(this.quantity - quantity);
     }
 }

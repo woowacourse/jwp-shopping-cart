@@ -22,6 +22,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 
 @DisplayName("주문 관련 기능")
@@ -84,6 +85,29 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         List<OrderResponse> orders = response.jsonPath().getList(".", OrderResponse.class);
         assertThat(orders.size()).isEqualTo(1);
         assertThat(orders.get(0).getOrderedProducts().size()).isEqualTo(2);
+    }
+
+    @DisplayName("주문 후에 재고가 차감이 되는 지 확인한다.")
+    @Test
+    void reduceStock() {
+        // given
+        CartItemRequest cartItemRequest1 = new CartItemRequest(productId1, 8);
+        CartItemRequest cartItemRequest2 = new CartItemRequest(productId2, 10);
+        CartItemResponse cartItemResponse1 = extractCartItem(
+            AcceptanceFixture.post(cartItemRequest1, "/api/mycarts", header));
+        CartItemResponse cartItemResponse2 = extractCartItem(
+            AcceptanceFixture.post(cartItemRequest2, "/api/mycarts", header));
+
+        // when
+        OrderRequest orderRequest = new OrderRequest(
+            List.of(cartItemResponse1.getId()));
+        AcceptanceFixture.post(orderRequest, "/api/myorders", header);
+
+        // then
+        ProductResponse productResponse = AcceptanceFixture.get("/api/products/" + productId1)
+            .jsonPath()
+            .getObject(".", ProductResponse.class);
+        assertThat(productResponse.getStockQuantity()).isEqualTo(2);
     }
 
     private Header getTokenHeader() {

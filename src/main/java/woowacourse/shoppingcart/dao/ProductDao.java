@@ -89,4 +89,9 @@ public class ProductDao {
             throw new InvalidProductException();
         }
     }
+
+    public void update(ProductStock reducedProductStock) {
+        final String query = "UPDATE product SET stock_quantity = ? WHERE id = ?";
+        jdbcTemplate.update(query, reducedProductStock.getStockQuantity(), reducedProductStock.getProduct().getId());
+    }
 }

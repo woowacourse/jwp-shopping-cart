@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain.product;
 
 import woowacourse.shoppingcart.domain.Quantity;
+import woowacourse.shoppingcart.domain.cart.CartItem;
 
 public class ProductStock {
     private final Product product;
@@ -9,6 +10,10 @@ public class ProductStock {
     public ProductStock(Product product, Quantity stockQuantity) {
         this.product = product;
         this.stockQuantity = stockQuantity;
+    }
+
+    public ProductStock reduce(CartItem cartItem) {
+        return new ProductStock(cartItem.getProduct(), stockQuantity.reduce(cartItem.getQuantity()));
     }
 
     public Long getId() {

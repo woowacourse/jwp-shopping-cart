@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.domain.order.OrderRepository;
 import woowacourse.shoppingcart.domain.order.Orders;
+import woowacourse.shoppingcart.domain.product.ProductStock;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 
@@ -46,9 +47,12 @@ public class OrderService {
         CartItems cartItems = cartItemRepository.findByCustomer(customerId);
         for (Long cartItemId : cartItemIds) {
             CartItem cartItem = cartItemRepository.findById(cartItemId);
+            ProductStock productStock = productDao.findProductStockById(cartItem.getProductId());
 
             cartItems.checkContain(cartItem);
-            cartItem.checkCanOrder(productDao.findProductStockById(cartItem.getProductId()));
+            cartItem.checkStock(productStock);
+
+            productDao.update(productStock.reduce(cartItem));
 
             cartItemRepository.delete(cartItem);
             orderDetails.add(new OrderDetail(cartItem.getProduct(), new Quantity(cartItem.getQuantity())));
