@@ -8,7 +8,7 @@ public class Cart {
     private int price;
     private String imageUrl;
     private int quantity;
-    private int total_price;
+    private int totalPrice;
 
     public Cart() {
     }
@@ -24,7 +24,7 @@ public class Cart {
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
-        this.total_price = price * quantity;
+        this.totalPrice = price * quantity;
     }
 
     public long getId() {
@@ -51,7 +51,7 @@ public class Cart {
         return quantity;
     }
 
-    public int getTotal_price() {
-        return total_price;
+    public int getTotalPrice() {
+        return totalPrice;
     }
 }
