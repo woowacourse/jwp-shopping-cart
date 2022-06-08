@@ -52,9 +52,15 @@ public class ProductDao {
         }
     }
 
-    public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url, stock FROM product";
-        return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
+    public List<Product> findProducts(final int limit, final int offset) {
+        final String query = "SELECT id, name, price, image_url, stock FROM product"
+                + " LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER, limit, (offset - 1) * limit);
+    }
+
+    public int findTotalCount() {
+        final String sql = "SELECT COUNT(*) FROM product";
+        return jdbcTemplate.queryForObject(sql, int.class);
     }
 
     public void delete(final Long productId) {

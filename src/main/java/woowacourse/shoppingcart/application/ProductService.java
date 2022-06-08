@@ -1,8 +1,6 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -21,18 +19,13 @@ public class ProductService {
     }
 
     public List<Product> findProducts(final ProductsRequest productsRequest) {
-        final List<Product> products = productDao.findProducts();
         final int page = productsRequest.getPage();
         final int limit = productsRequest.getLimit();
-
-        return products.stream()
-                .filter(getProductInRange(page, limit))
-                .collect(Collectors.toList());
+        return productDao.findProducts(limit, page);
     }
 
-    private Predicate<Product> getProductInRange(int page, int limit) {
-        return product -> (long) (page - 1) * limit < product.getId()
-                && product.getId() <= (long) page * limit;
+    public int findTotalCount() {
+        return productDao.findTotalCount();
     }
 
     public Long addProduct(final ProductRequest productRequest) {

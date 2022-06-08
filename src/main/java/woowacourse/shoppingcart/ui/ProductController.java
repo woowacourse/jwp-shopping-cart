@@ -38,7 +38,7 @@ public class ProductController {
                 .map(ProductResponse::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok()
-                .header("x-total-count", String.valueOf(productResponses.size()))
+                .header("x-total-count", String.valueOf(productService.findTotalCount()))
                 .body(productResponses);
     }
 

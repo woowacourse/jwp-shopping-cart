@@ -67,7 +67,7 @@ public class ProductDaoTest {
         final int size = 0;
 
         // when
-        final List<Product> products = productDao.findProducts();
+        final List<Product> products = productDao.findProducts(1, 1);
 
         // then
         assertThat(products).size().isEqualTo(size);
@@ -83,13 +83,13 @@ public class ProductDaoTest {
         final int stock = 100;
 
         final Long productId = productDao.save(new Product(name, price, imageUrl, stock));
-        final int beforeSize = productDao.findProducts().size();
+        final int beforeSize = productDao.findProducts(1, 1).size();
 
         // when
         productDao.delete(productId);
 
         // then
-        final int afterSize = productDao.findProducts().size();
+        final int afterSize = productDao.findProducts(1, 1).size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
     }
 }
