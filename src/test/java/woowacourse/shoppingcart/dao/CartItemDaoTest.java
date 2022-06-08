@@ -68,5 +68,4 @@ public class CartItemDaoTest {
             .extracting("id", "customerId", "productId", "quantity")
             .containsExactly(1L, 1L, 1L, 10);
     }
-
 }
