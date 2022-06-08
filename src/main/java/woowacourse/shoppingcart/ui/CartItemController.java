@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartAdditionRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartUpdateRequest;
 
 @RestController
@@ -39,16 +41,21 @@ public class CartItemController {
     }
 
     @PatchMapping("/products")
-    public ResponseEntity<List<Cart>> updateCartItem(@AuthenticationPrincipal final String email,
+    public ResponseEntity<List<CartResponse>> updateCartItem(@AuthenticationPrincipal final String email,
                                                      @RequestBody final CartUpdateRequest cartUpdateRequest) {
         cartService.updateCartItem(email, cartUpdateRequest);
-        return ResponseEntity.ok().body(cartService.findCartsByEmail(email));
+        List<CartResponse> responses = cartService.findCartsByEmail(email).stream()
+                .map(CartResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(responses);
     }
 
     @DeleteMapping("/products")
-    public ResponseEntity<List<Cart>> deleteCartItem(@AuthenticationPrincipal final String email,
-                                               @RequestParam final Long productId) {
+    public ResponseEntity<List<CartResponse>> deleteCartItem(@AuthenticationPrincipal final String email,
+                                                             @RequestParam final Long productId) {
         cartService.deleteCartItem(email, productId);
-        return ResponseEntity.ok().body(cartService.findCartsByEmail(email));
-    }
+        List<CartResponse> responses = cartService.findCartsByEmail(email).stream()
+                .map(CartResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(responses);    }
 }
