@@ -94,9 +94,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, new CartItemSaveRequest(productId1, 5));
+        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, new CartItemSaveRequest(productId1, 5));
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, cartId);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, cartItemId);
 
         장바구니_삭제됨(response);
     }
@@ -133,12 +133,12 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String accessToken, Long cartId) {
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(String accessToken, Long cartItemId) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + accessToken)
-                .when().delete("/api/cartItems/{cartId}", cartId)
+                .when().delete("/api/cartItems/{cartId}",cartItemId)
                 .then().log().all()
                 .extract();
     }

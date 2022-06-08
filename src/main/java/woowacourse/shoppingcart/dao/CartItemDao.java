@@ -56,10 +56,10 @@ public class CartItemDao {
         }
     }
 
-    public Long findProductIdById(final Long cartId) {
+    public Long findProductIdById(final Long cartItemId) {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartItemId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException("존재하지 않는 장바구니입니다.");
         }

@@ -44,8 +44,8 @@ public class OrderService {
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderSaveRequest orderSaveRequest : orderSaveRequests) {
-            final Long cartId = orderSaveRequest.getCartItemId();
-            final CartItem cartItem = cartItemDao.findById(cartId);
+            final Long cartItemId = orderSaveRequest.getCartItemId();
+            final CartItem cartItem = cartItemDao.findById(cartItemId);
             final Long productId = cartItem.getProductId();
             final int quantity = cartItem.getQuantity();
             final Product purchaseProduct = productDao.findProductById(productId)
@@ -53,7 +53,7 @@ public class OrderService {
             productDao.updateProductStock(purchaseProduct);
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+            cartItemDao.deleteCartItem(cartItemId);
         }
 
         return ordersId;

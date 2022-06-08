@@ -26,8 +26,8 @@ import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
     private String accessToken;
-    private Long cartId1;
-    private Long cartId2;
+    private Long cartItemId1;
+    private Long cartItemId2;
 
     @Override
     @BeforeEach
@@ -38,14 +38,14 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, 20, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, 30, "http://example.com/beer.jpg");
 
-        cartId1 = 장바구니_아이템_추가되어_있음(accessToken, new CartItemSaveRequest(productId1, 5));
-        cartId2 = 장바구니_아이템_추가되어_있음(accessToken, new CartItemSaveRequest(productId2, 6));
+        cartItemId1 = 장바구니_아이템_추가되어_있음(accessToken, new CartItemSaveRequest(productId1, 5));
+        cartItemId2 = 장바구니_아이템_추가되어_있음(accessToken, new CartItemSaveRequest(productId2, 6));
     }
 
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        List<OrderSaveRequest> orderRequests = Stream.of(cartId1, cartId2)
+        List<OrderSaveRequest> orderRequests = Stream.of(cartItemId1, cartItemId2)
                 .map(OrderSaveRequest::new)
                 .collect(Collectors.toList());
 
@@ -57,8 +57,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderSaveRequest(cartId1)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderSaveRequest(cartId2)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderSaveRequest(cartItemId1)));
+        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderSaveRequest(cartItemId2)));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(accessToken);
 
@@ -70,8 +70,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Test
     void getOrder() {
         Long orderId = 주문하기_요청_성공되어_있음(accessToken, Arrays.asList(
-                new OrderSaveRequest(cartId1),
-                new OrderSaveRequest(cartId2)
+                new OrderSaveRequest(cartItemId1),
+                new OrderSaveRequest(cartItemId2)
         ));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(accessToken, orderId);

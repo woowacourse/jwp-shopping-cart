@@ -59,7 +59,7 @@ public class CartItemService {
     }
 
     @Transactional
-    public void deleteCart(final String customerName, final Long cartItemId) {
+    public void deleteCartItem(final String customerName, final Long cartItemId) {
         validateCustomerHasCartItem(cartItemId, customerName);
         cartItemDao.deleteCartItem(cartItemId);
     }
@@ -75,8 +75,8 @@ public class CartItemService {
     }
 
     private void validateCustomerHasCartItem(final Long cartItemId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartItemId)) {
+        final List<Long> cartItemIds = findCartIdsByCustomerName(customerName);
+        if (cartItemIds.contains(cartItemId)) {
             return;
         }
         throw new NotInCustomerCartItemException();

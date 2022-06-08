@@ -60,11 +60,11 @@ public class OrderControllerTest {
     @Test
     void addOrder() throws Exception {
         // given
-        final Long cartId = 1L;
-        final Long cartId2 = 1L;
+        final Long cartItemId = 1L;
+        final Long cartItemId2 = 1L;
         final String customerName = "pobi";
         final List<OrderSaveRequest> requestDtos =
-                Arrays.asList(new OrderSaveRequest(cartId), new OrderSaveRequest(cartId2));
+                Arrays.asList(new OrderSaveRequest(cartItemId), new OrderSaveRequest(cartItemId2));
 
         final Long expectedOrderId = 1L;
         when(authenticationContext.getPrincipal()).thenReturn(customerName);

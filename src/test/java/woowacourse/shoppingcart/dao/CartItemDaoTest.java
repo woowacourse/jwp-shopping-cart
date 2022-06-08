@@ -49,10 +49,10 @@ public class CartItemDaoTest {
         final int quantity = 20;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId, quantity);
+        final Long cartItemId = cartItemDao.addCartItem(customerId, productId, quantity);
 
         // then
-        assertThat(cartId).isEqualTo(3L);
+        assertThat(cartItemId).isEqualTo(3L);
     }
 
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
@@ -77,10 +77,10 @@ public class CartItemDaoTest {
         final Long customerId = 1L;
 
         // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        final List<Long> cartItemIds = cartItemDao.findIdsByCustomerId(customerId);
 
         // then
-        assertThat(cartIds).containsExactly(1L, 2L);
+        assertThat(cartItemIds).containsExactly(1L, 2L);
     }
 
     @DisplayName("장바구니 정보를 반환한다.")
@@ -88,15 +88,15 @@ public class CartItemDaoTest {
     void findById() {
 
         // given
-        final Long cartId = 1L;
+        final Long cartItemId = 1L;
 
         // when
-        final CartItem cartItem = cartItemDao.findById(cartId);
+        final CartItem cartItem = cartItemDao.findById(cartItemId);
 
         // then
         assertThat(cartItem)
                 .usingRecursiveComparison()
-                .isEqualTo(new CartItem(cartId, 1L, "banana", 1_000, 10, "woowa1.com"));
+                .isEqualTo(new CartItem(cartItemId, 1L, "banana", 1_000, 10, "woowa1.com"));
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
@@ -104,10 +104,10 @@ public class CartItemDaoTest {
     void deleteCartItem() {
 
         // given
-        final Long cartId = 1L;
+        final Long cartItemId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteCartItem(cartItemId);
 
         // then
         final Long customerId = 1L;
