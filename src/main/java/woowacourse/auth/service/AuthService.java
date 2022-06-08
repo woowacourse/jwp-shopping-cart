@@ -2,8 +2,8 @@ package woowacourse.auth.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -27,11 +27,11 @@ public class AuthService {
         this.customerDao = customerDao;
     }
 
-    public TokenResponse login(final TokenRequest request) {
+    public LoginResponse login(final LoginRequest request) {
         final Password password = encryptor.encrypt(new PlainPassword(request.getPassword()));
         if (customerDao.existsByNameAndPassword(new UserName(request.getUserName()), password)) {
             final String token = jwtTokenProvider.createToken(request.getUserName());
-            return new TokenResponse(token);
+            return new LoginResponse(token);
         }
         throw new AuthorizationException("로그인에 실패했습니다😤");
     }

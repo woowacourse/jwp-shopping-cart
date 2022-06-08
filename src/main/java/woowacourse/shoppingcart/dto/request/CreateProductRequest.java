@@ -13,7 +13,7 @@ public class CreateProductRequest {
     @NotBlank(message = "상품 이미지를 입력해주세요😉")
     private String imageUrl;
 
-    public CreateProductRequest() {
+    private CreateProductRequest() {
     }
 
     public CreateProductRequest(final String name, final Integer price, final String imageUrl) {

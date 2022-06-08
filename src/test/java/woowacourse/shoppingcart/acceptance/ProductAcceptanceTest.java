@@ -13,17 +13,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.shoppingcart.dto.request.CreateProductRequest;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
 
-    @DisplayName("상품을 추가한다")
     @Test
-    void addProduct() {
+    void 상품_추가() {
         ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
 
         상품_추가됨(response);
@@ -123,13 +122,24 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("상품을 삭제한다")
     @Test
-    void deleteProduct() {
+    void 존재하지_않는_상품_조회() {
+        // when
+        ExtractableResponse<Response> response = 로그인하지_않고_상품_조회_요청(1L);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    void 상품_삭제() {
+        // given
         Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
 
+        // when
         ExtractableResponse<Response> response = 상품_삭제_요청(productId);
 
+        // then
         상품_삭제됨(response);
     }
 
@@ -192,12 +202,12 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     private String 로그인_및_토큰_발급(String name, String password) {
         return RestAssured
                 .given().log().all()
-                .body(new TokenRequest(name, password))
+                .body(new LoginRequest(name, password))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
                 .then().log().all().extract()
-                .as(TokenResponse.class).getAccessToken();
+                .as(LoginResponse.class).getAccessToken();
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId, int quantity) {

@@ -4,7 +4,7 @@ public class ExistsCustomerResponse {
 
     private Boolean isDuplicate;
 
-    public ExistsCustomerResponse() {
+    private ExistsCustomerResponse() {
     }
 
     public ExistsCustomerResponse(final boolean duplicated) {

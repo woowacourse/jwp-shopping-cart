@@ -14,7 +14,7 @@ public class ProductResponse {
     private Long cartId;
     private int quantity;
 
-    public ProductResponse() {
+    private ProductResponse() {
     }
 
     public ProductResponse(final Product product) {

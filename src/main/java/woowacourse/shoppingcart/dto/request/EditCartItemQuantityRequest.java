@@ -7,7 +7,7 @@ public class EditCartItemQuantityRequest {
     @NotNull(message = "제품 수량을 입력해주세요😉")
     private int quantity;
 
-    public EditCartItemQuantityRequest() {
+    private EditCartItemQuantityRequest() {
     }
 
     public EditCartItemQuantityRequest(final int quantity) {

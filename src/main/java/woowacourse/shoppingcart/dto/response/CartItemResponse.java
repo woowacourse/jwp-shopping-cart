@@ -12,7 +12,7 @@ public class CartItemResponse {
     private String imageUrl;
     private int quantity;
 
-    public CartItemResponse() {
+    private CartItemResponse() {
     }
 
     public CartItemResponse(final CartItem cartItem, final Product product) {

@@ -16,17 +16,22 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
+                             final Object handler) {
         if (isPreflight(request)) {
             return true;
         }
-        final String token = AuthorizationExtractor.extract(request);
-        authService.validateToken(token);
-        request.setAttribute("userName", authService.getUserNameFormToken(token));
+        validateTokenAndPassUserName(request);
         return true;
     }
 
     private boolean isPreflight(final HttpServletRequest request) {
         return request.getMethod().equals(HttpMethod.OPTIONS.toString());
+    }
+
+    private void validateTokenAndPassUserName(final HttpServletRequest request) {
+        final String token = AuthorizationExtractor.extract(request);
+        authService.validateToken(token);
+        request.setAttribute("userName", authService.getUserNameFormToken(token));
     }
 }

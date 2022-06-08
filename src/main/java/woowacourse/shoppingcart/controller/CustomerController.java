@@ -15,8 +15,8 @@ import woowacourse.auth.support.UserNameResolver;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.response.ExistsCustomerResponse;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.ExistsCustomerResponse;
 import woowacourse.shoppingcart.service.CustomerService;
 
 @RestController
@@ -43,18 +43,18 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> customer(@UserNameResolver final UserName userName) {
-        return ResponseEntity.ok(customerService.findCustomerByName(userName));
+    public ResponseEntity<CustomerResponse> customer(@UserNameResolver final UserName customerName) {
+        return ResponseEntity.ok(customerService.findCustomerByName(customerName));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> withDraw(@UserNameResolver final UserName userName) {
-        customerService.deleteCustomerByName(userName);
+    public ResponseEntity<Void> withDraw(@UserNameResolver final UserName customerName) {
+        customerService.deleteCustomerByName(customerName);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/exists")
-    public ResponseEntity<ExistsCustomerResponse> exists(@RequestParam(name = "userName") final String userName) {
-        return ResponseEntity.ok(customerService.existsByName(userName));
+    public ResponseEntity<ExistsCustomerResponse> exists(@RequestParam(name = "userName") final String customerName) {
+        return ResponseEntity.ok(customerService.existsByName(customerName));
     }
 }

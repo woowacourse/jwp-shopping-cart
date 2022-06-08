@@ -7,7 +7,8 @@ public class PlainPassword {
 
     private static final int MIN_LENGTH = 8;
     private static final int MAX_LENGTH = 16;
-    private static final Pattern PATTERN = Pattern.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*_-])[A-Za-z0-9!@#$%^&*_-]*$");
+    private static final Pattern PATTERN = Pattern.compile(
+            "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*_-])[A-Za-z0-9!@#$%^&*_-]*$");
 
     private final String value;
 

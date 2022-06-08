@@ -7,8 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
@@ -225,7 +225,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     private ExtractableResponse<Response> 로그인(String name, String password) {
         return RestAssured
                 .given().log().all()
-                .body(new TokenRequest(name, password))
+                .body(new LoginRequest(name, password))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
@@ -233,7 +233,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     private String 로그인_및_토큰_발급(String name, String password) {
-        return 로그인(name, password).as(TokenResponse.class).getAccessToken();
+        return 로그인(name, password).as(LoginResponse.class).getAccessToken();
     }
 
     private ExtractableResponse<Response> 내_정보_조회(String accessToken) {

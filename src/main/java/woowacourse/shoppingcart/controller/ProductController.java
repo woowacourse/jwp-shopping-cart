@@ -49,7 +49,8 @@ public class ProductController {
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> get(@OptionalUserNameResolver final Optional<UserName> customerName,
                                                @PathVariable final Long productId) {
-        return customerName.map(userName -> ResponseEntity.ok(productService.findProductByIdAndCustomerName(productId, userName)))
+        return customerName.map(
+                        userName -> ResponseEntity.ok(productService.findProductByIdAndCustomerName(productId, userName)))
                 .orElseGet(() -> ResponseEntity.ok(productService.findProductById(productId)));
     }
 

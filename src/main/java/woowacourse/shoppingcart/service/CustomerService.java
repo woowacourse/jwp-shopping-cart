@@ -9,8 +9,8 @@ import woowacourse.shoppingcart.domain.customer.PlainPassword;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.response.ExistsCustomerResponse;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.ExistsCustomerResponse;
 import woowacourse.shoppingcart.exception.duplicate.DuplicateCustomerException;
 import woowacourse.shoppingcart.support.Encryptor;
 

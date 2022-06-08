@@ -7,7 +7,7 @@ public class CreateCartItemRequest {
     @NotNull(message = "상품 ID를 입력해주세요😉")
     private Long id;
 
-    public CreateCartItemRequest() {
+    private CreateCartItemRequest() {
     }
 
     public CreateCartItemRequest(final Long id) {

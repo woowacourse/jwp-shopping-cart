@@ -16,8 +16,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.shoppingcart.dto.response.CartItemResponse;
 
 @DisplayName("장바구니 관련 기능")
@@ -121,12 +121,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
     private String 로그인_및_토큰_발급(String name, String password) {
         return RestAssured
                 .given().log().all()
-                .body(new TokenRequest(name, password))
+                .body(new LoginRequest(name, password))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
                 .then().log().all().extract()
-                .as(TokenResponse.class).getAccessToken();
+                .as(LoginResponse.class).getAccessToken();
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
