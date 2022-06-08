@@ -10,7 +10,7 @@ public class ExistCustomerResponse {
         this.isDuplicate = isDuplicate;
     }
 
-    public Boolean getDuplicated() {
+    public Boolean getIsDuplicate() {
         return isDuplicate;
     }
 }
