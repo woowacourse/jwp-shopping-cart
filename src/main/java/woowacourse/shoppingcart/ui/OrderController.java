@@ -14,7 +14,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/customer/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -22,7 +22,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/customer/orders")
+    @PostMapping
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final Long customerId,
                                    @RequestBody @Valid final List<OrderRequest> orderDetails) {
         final Long orderId = orderService.addOrder(orderDetails, customerId);
@@ -30,14 +30,14 @@ public class OrderController {
                 URI.create("/api/" + customerId + "/orders/" + orderId)).build();
     }
 
-    @GetMapping("/customer/orders/{orderId}")
+    @GetMapping("/{orderId}")
     public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal final Long customerId,
                                             @PathVariable final Long orderId) {
         final Orders order = orderService.findOrderById(customerId, orderId);
         return ResponseEntity.ok(order);
     }
 
-    @GetMapping("/customer/orders")
+    @GetMapping
     public ResponseEntity<List<Orders>> findOrders(@AuthenticationPrincipal final Long customerId) {
         final List<Orders> orders = orderService.findOrdersByCustomerId(customerId);
         return ResponseEntity.ok(orders);

@@ -24,7 +24,7 @@ import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/customer/carts")
 public class CartItemController {
     private final CartService cartService;
 
@@ -32,12 +32,12 @@ public class CartItemController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/customer/carts")
+    @GetMapping
     public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal final Long id) {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerName(id));
     }
 
-    @PostMapping("/customer/carts")
+    @PostMapping
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final Long id,
                                             @Valid @RequestBody final AddCartItemRequest request) {
         final Long cartId = cartService.addCart(id, request.getProductId());
@@ -49,14 +49,14 @@ public class CartItemController {
         return ResponseEntity.created(responseLocation).build();
     }
 
-    @DeleteMapping("/customer/carts")
+    @DeleteMapping
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final Long customerId,
                                                @Valid @RequestBody DeleteCartItemRequest request) {
         cartService.deleteCart(customerId, request.getCartIds());
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/customer/carts")
+    @PutMapping
     public ResponseEntity<Void> updateCartItem(@AuthenticationPrincipal final Long customerId,
                                                @Valid @RequestBody UpdateCartItemRequest request) {
         cartService.update(customerId, request.getProductId(), request.getQuantity());
