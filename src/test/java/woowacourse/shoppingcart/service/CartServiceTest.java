@@ -25,7 +25,9 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.CartItemResponseDto;
+import woowacourse.shoppingcart.dto.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.exception.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 import woowacourse.shoppingcart.exception.OverQuantityException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -91,5 +93,36 @@ class CartServiceTest {
 
         final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
         assertThat(cartItems.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("장바구니 내의 품목의 수량을 수정한다.")
+    void updateCart() {
+        cartItemDao.addCartItem(customerId, productId, 1);
+
+        cartService.updateCart(customerId, productId, new UpdateCartItemCountItemRequest(2));
+
+        final CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
+        assertThat(cartItem.getCount()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("장바구니 내의 품목 수량을 수정할때 존재하지 않는 품목이면 예외가 발생한다.")
+    void updateCart_NotFoundProductException() {
+        cartItemDao.addCartItem(customerId, productId, 1);
+
+        assertThatThrownBy(() -> cartService.updateCart(customerId, 2L, new UpdateCartItemCountItemRequest(2)))
+                .isInstanceOf(NotFoundProductException.class)
+                .hasMessage("존재하지 않는 상품 ID입니다.");
+    }
+
+    @Test
+    @DisplayName("장바구니 내의 품목 수량을 수정할때 재고가 주문수량보다 적을 경우 예외가 발생한다.")
+    void updateCart_() {
+        cartItemDao.addCartItem(customerId, productId, 1);
+
+        assertThatThrownBy(() -> cartService.updateCart(customerId, productId, new UpdateCartItemCountItemRequest(11)))
+                .isInstanceOf(OverQuantityException.class)
+                .hasMessage("재고가 부족합니다.");
     }
 }
