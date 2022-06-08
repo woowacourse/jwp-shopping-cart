@@ -21,12 +21,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public ProductsResponse findProducts() {
+    public List<ProductResponse> findProducts() {
         final List<Product> products = productRepository.findProducts();
-        final List<ProductResponse> productResponses = products.stream()
+        return products.stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
-        return ProductsResponse.from(productResponses);
     }
 
     public Long addProduct(final ProductDto productDto) {

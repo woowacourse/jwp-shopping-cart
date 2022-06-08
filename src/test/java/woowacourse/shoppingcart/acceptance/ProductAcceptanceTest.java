@@ -18,7 +18,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
-        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
+        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000,
+                "http://example.com/chicken.jpg", "description", 1);
 
         상품_추가됨(response);
     }
@@ -26,8 +27,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg",  "description", 1);
+        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg", "description", 1);
 
         ExtractableResponse<Response> response = 상품_목록_조회_요청();
 
@@ -38,7 +39,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg",  "description", 1);
 
         ExtractableResponse<Response> response = 상품_조회_요청(productId);
 
@@ -49,15 +50,16 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 삭제한다")
     @Test
     void deleteProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg",  "description", 1);
 
         ExtractableResponse<Response> response = 상품_삭제_요청(productId);
 
         상품_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl,
+                                                         String description, int stock) {
+        Product productRequest = new Product(name, price, imageUrl, description, stock);
 
         return RestAssured
                 .given().log().all()
@@ -100,8 +102,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {
-        ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl);
+    public static Long 상품_등록되어_있음(String name, int price, String imageUrl, String description, int stock) {
+        ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl, description, stock);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 
