@@ -42,12 +42,21 @@ public class CustomerController {
         return ResponseEntity.ok(customerResponse);
     }
 
-    @PatchMapping
-    public ResponseEntity<CustomerUpdateResponse> updateCustomer(
+    @PatchMapping("/profile")
+    public ResponseEntity<CustomerUpdateResponse> updateCustomerNickname(
             @AuthenticationPrincipal final Long id,
             @RequestBody final CustomerUpdateRequest customerUpdateRequest) {
-        final CustomerUpdateResponse customerUpdateResponse = customerService.updateCustomer(id, customerUpdateRequest);
+        final CustomerUpdateResponse customerUpdateResponse = customerService.updateCustomerNickName(id,
+                customerUpdateRequest);
         return ResponseEntity.ok(customerUpdateResponse);
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updateCustomerPassword(
+            @AuthenticationPrincipal final Long id,
+            @RequestBody final CustomerUpdateRequest customerUpdateRequest) {
+        customerService.updateCustomerPassword(id, customerUpdateRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping

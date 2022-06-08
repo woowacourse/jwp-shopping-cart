@@ -39,13 +39,21 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerUpdateResponse updateCustomer(final Long customerId,
-                                                 final CustomerUpdateRequest customerUpdateRequest) {
+    public CustomerUpdateResponse updateCustomerNickName(final Long customerId,
+                                                         final CustomerUpdateRequest customerUpdateRequest) {
         final Customer customer = getById(customerId);
-        validatePassword(customer, customerUpdateRequest.getPassword());
-        customer.update(customerUpdateRequest.getNickname(), customerUpdateRequest.getNewPassword());
+        customer.updateNickname(customerUpdateRequest.getNickname());
         customerDao.update(customer);
         return new CustomerUpdateResponse(customer.getNickname());
+    }
+
+    @Transactional
+    public void updateCustomerPassword(final Long customerId,
+                                       final CustomerUpdateRequest customerUpdateRequest) {
+        final Customer customer = getById(customerId);
+        validatePassword(customer, customerUpdateRequest.getPassword());
+        customer.updatePassword(customerUpdateRequest.getNewPassword());
+        customerDao.update(customer);
     }
 
     @Transactional

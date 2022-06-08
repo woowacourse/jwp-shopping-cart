@@ -94,14 +94,13 @@ class CustomerDaoTest {
 
         final String newNickname = "Guest1234";
         final String newPassword = "qwer1234!@#$";
-        customer.update(newNickname, newPassword);
+        customer.updateNickname(newNickname);
 
         customerDao.update(customer);
 
         Optional<Customer> actual = customerDao.findById(customer.getId());
 
         assertThat(actual).isPresent();
-        assertThat(actual.get()).extracting("nickname", "password")
-                .containsExactly(newNickname, newPassword);
+        assertThat(actual.get().getNickname()).isEqualTo(newNickname);
     }
 }

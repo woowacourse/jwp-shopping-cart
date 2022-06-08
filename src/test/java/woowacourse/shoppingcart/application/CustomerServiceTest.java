@@ -80,7 +80,7 @@ class CustomerServiceTest {
 
         final String newNickname = "Guest123";
         final String newPassword = "qwer1234!@#$";
-        customerService.updateCustomer(customerId,
+        customerService.updateCustomerNickName(customerId,
                 new CustomerUpdateRequest(newNickname, CUSTOMER_PASSWORD, newPassword));
 
         CustomerResponse actual = customerService.findById(customerId);
@@ -97,7 +97,7 @@ class CustomerServiceTest {
         final String newNickname = "Guest123123";
         final String newPassword = "anotherqwer1234!@#$";
 
-        assertThatThrownBy(() -> customerService.updateCustomer(
+        assertThatThrownBy(() -> customerService.updateCustomerPassword(
                 customerId, new CustomerUpdateRequest(newNickname, newPassword, newPassword)))
                 .isInstanceOf(WrongPasswordException.class);
     }
