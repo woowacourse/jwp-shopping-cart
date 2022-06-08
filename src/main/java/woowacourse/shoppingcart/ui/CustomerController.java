@@ -57,7 +57,7 @@ public class CustomerController {
     public ResponseEntity<Void> updateProfile(final @AuthenticationPrincipal TokenRequest tokenRequest,
                                               final @RequestBody CustomerUpdateRequest customerUpdateRequest) {
         customerService.update(tokenRequest, customerUpdateRequest);
-        return ResponseEntity.ok().header("Access-Control-Allow-Origin", "*").build();
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/auth/customers/profile/password")
