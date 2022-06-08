@@ -112,4 +112,13 @@ public class CartItemDao {
             return Optional.empty();
         }
     }
+
+    public void updateCartItem(final Long customerId, final Long productId, final Integer count) {
+        final String sql = "UPDATE cart_item SET count = ? WHERE customer_id = ? AND product_id = ?";
+
+        final int rowCount = jdbcTemplate.update(sql, count, customerId, productId);
+        if (rowCount == 0) {
+            throw new NotFoundProductException();
+        }
+    }
 }

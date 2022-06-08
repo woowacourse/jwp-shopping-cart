@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.CartItemResponseDto;
 import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.service.CartService;
 
 @RestController
@@ -60,5 +62,16 @@ public class CartItemController {
 
         cartService.deleteCart(customerId, productId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping
+    public ResponseEntity<Void> updateCartItem(@PathVariable final Long customerId,
+                                               @RequestParam final Long productId,
+                                               @RequestBody final UpdateCartItemCountItemRequest updateCartItemCountItemRequest,
+                                               @AuthenticationPrincipal LoginCustomer loginCustomer) {
+        authService.checkAuthorization(customerId, loginCustomer.getEmail());
+
+        cartService.updateCart(customerId, productId,updateCartItemCountItemRequest);
+        return ResponseEntity.ok().build();
     }
 }

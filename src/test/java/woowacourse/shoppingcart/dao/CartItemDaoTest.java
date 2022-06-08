@@ -77,4 +77,27 @@ public class CartItemDaoTest {
                 .isInstanceOf(NotFoundProductException.class)
                 .hasMessage("존재하지 않는 상품 ID입니다.");
     }
+
+    @Test
+    @DisplayName("주문 수량을 수정한다.")
+    void updateCartItem() {
+
+        final int expected = 2;
+        cartItemDao.addCartItem(customerId, productId, 1);
+
+        cartItemDao.updateCartItem(customerId, productId, expected);
+
+        final CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
+        assertThat(cartItem.getCount()).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("주문 수량을 수정할때 존재하지 않는 품목이면 예외가 발생한다.")
+    void updateCartItem_NotFoundException() {
+        cartItemDao.addCartItem(customerId, productId, 1);
+
+        assertThatThrownBy(() -> cartItemDao.updateCartItem(customerId, 2L, 2))
+                .isInstanceOf(NotFoundProductException.class)
+                .hasMessage("존재하지 않는 상품 ID입니다.");
+    }
 }

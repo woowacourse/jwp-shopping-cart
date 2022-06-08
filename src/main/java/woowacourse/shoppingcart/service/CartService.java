@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.CartItemResponseDto;
+import woowacourse.shoppingcart.dto.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.exception.DuplicateCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
@@ -82,5 +83,10 @@ public class CartService {
 
     public void deleteCart(final Long customerId, final Long productId) {
         cartItemDao.deleteCartItem(customerId, productId);
+    }
+
+    public void updateCart(final Long customerId, final Long productId ,final UpdateCartItemCountItemRequest updateCartItemCountItemRequest){
+        compareCountAndQuantity(updateCartItemCountItemRequest.getCount(), productId);
+        cartItemDao.updateCartItem(customerId, productId, updateCartItemCountItemRequest.getCount());
     }
 }
