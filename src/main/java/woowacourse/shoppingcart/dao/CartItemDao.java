@@ -79,6 +79,16 @@ public class CartItemDao {
         }
     }
 
+    public void updateQuantity(final Long customerId, final Long productId, final int quantity) {
+        final String sql = "UPDATE cart_item SET quantity=:quantity WHERE customer_id=:customerId AND product_id=:productId";
+        final SqlParameterSource parameterSource = new MapSqlParameterSource(Map.ofEntries(
+                Map.entry("quantity", quantity),
+                Map.entry("customerId", customerId),
+                Map.entry("productId", productId)
+        ));
+        namedJdbcTemplate.update(sql, parameterSource);
+    }
+
     public void deleteCartItem(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = :id";
         final int rowCount = namedJdbcTemplate.update(sql, Map.of("id", id));

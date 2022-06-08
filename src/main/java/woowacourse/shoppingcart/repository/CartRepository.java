@@ -56,6 +56,11 @@ public class CartRepository {
         }
     }
 
+    public void updateQuantity(final Email email, final Long productId, final int quantity) {
+        final Long customerId = customerDao.findIdByUserEmail(email);
+        cartItemDao.updateQuantity(customerId, productId, quantity);
+    }
+
     public boolean hasProduct(final Email email, final Long productId) {
         try {
             final Long customerId = customerDao.findIdByUserEmail(email);

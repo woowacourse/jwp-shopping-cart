@@ -43,6 +43,10 @@ public class CartService {
         return cartRepository.hasProduct(new Email(emailDto.getEmail()), productId);
     }
 
+    public void updateQuantity(final EmailDto emailDto, final CartDto cartDto) {
+        cartRepository.updateQuantity(new Email(emailDto.getEmail()), cartDto.getProductId(), cartDto.getQuantity());
+    }
+
     private void validateCustomerCart(final Long cartId, final EmailDto emailDto) {
         final List<Long> cartIds = cartRepository.findCartIdsByCustomerEmail(new Email(emailDto.getEmail()));
         if (cartIds.contains(cartId)) {

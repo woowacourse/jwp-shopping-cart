@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,6 +56,13 @@ public class CartItemController {
                                                              @PathVariable final Long productId) {
         final boolean hasProduct = cartService.hasProduct(EmailDto.from(emailAuthentication), productId);
         return ResponseEntity.ok().body(new ExistedProductResponse(hasProduct));
+    }
+
+    @PutMapping("/{cartItemId}")
+    public ResponseEntity<Void> changeQuantity(@AuthenticationPrincipal final EmailAuthentication emailAuthentication,
+                                               @RequestBody final CartRequest cartRequest) {
+        cartService.updateQuantity(EmailDto.from(emailAuthentication), CartDto.from(cartRequest));
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{cartId}")
