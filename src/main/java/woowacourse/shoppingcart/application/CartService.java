@@ -55,7 +55,7 @@ public class CartService {
                 productId,
                 product.getName(),
                 product.getPrice(),
-                product.getStock(),
+                stock,
                 product.getImageUrl()
             );
         } catch (Exception e) {

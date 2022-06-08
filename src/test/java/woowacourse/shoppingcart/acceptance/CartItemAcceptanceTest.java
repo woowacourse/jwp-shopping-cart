@@ -161,6 +161,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
             () -> assertThat(cartItemResponse.getProductId()).isEqualTo(productId1),
             () -> assertThat(cartItemResponse.getName()).isEqualTo("치킨"),
             () -> assertThat(cartItemResponse.getPrice()).isEqualTo(10_000),
+            () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(5),
             () -> assertThat(cartItemResponse.getImageURL()).isEqualTo("http://example.com/chicken.jpg")
         );
     }
