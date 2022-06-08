@@ -28,7 +28,7 @@ class OrderDaoTest {
         final Long customerId = 1L;
 
         //when
-        final Long orderId = orderDao.addOrders(customerId);
+        final Long orderId = orderDao.addOrder(customerId);
 
         //then
         assertThat(orderId).isNotNull();
@@ -54,7 +54,7 @@ class OrderDaoTest {
     void isValidOrderId() {
         // given
         final Long customerId = 1L;
-        final Long orderId = orderDao.addOrders(customerId);
+        final Long orderId = orderDao.addOrder(customerId);
 
         // when
         final boolean isValid = orderDao.isValidOrderId(customerId, orderId);

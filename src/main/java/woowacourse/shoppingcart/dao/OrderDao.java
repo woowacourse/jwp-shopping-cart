@@ -8,6 +8,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.shoppingcart.domain.order.Order;
+
 @Repository
 public class OrderDao {
 
@@ -17,7 +19,7 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrders(final Long customerId) {
+    public Long addOrder(final Long customerId) {
         final String sql = "INSERT INTO orders (customer_id) VALUES (?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 

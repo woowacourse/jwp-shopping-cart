@@ -10,7 +10,12 @@ import woowacourse.shoppingcart.application.dto.OrderResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrderDetailDao;
+import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.order.Order;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.exception.domain.CartItemNotFoundException;
 import woowacourse.shoppingcart.exception.domain.InvalidOrderException;
 import woowacourse.shoppingcart.ui.dto.OrderDetailRequest;
 
@@ -22,8 +27,7 @@ public class OrderService {
     private final OrderDetailDao orderDetailDao;
     private final CartItemDao cartItemDao;
 
-    public OrderService(OrderDao orderDao, OrderDetailDao orderDetailDao,
-        CartItemDao cartItemDao) {
+    public OrderService(OrderDao orderDao, OrderDetailDao orderDetailDao, CartItemDao cartItemDao) {
         this.orderDao = orderDao;
         this.orderDetailDao = orderDetailDao;
         this.cartItemDao = cartItemDao;
@@ -31,18 +35,31 @@ public class OrderService {
 
     @Transactional
     public Long addOrder(final List<OrderDetailRequest> orderDetailRequests, final Long customerId) {
-        final Long orderId = orderDao.addOrders(customerId);
-
-        for (final OrderDetailRequest request : orderDetailRequests) {
-            moveCartItemToOrderDetail(orderId, request.getCartId(), request.getQuantity());
-        }
-
-        return orderId;
+        Order order = new Order(mapToOrderDetails(orderDetailRequests, customerId));
+        return addOrderAndDetails(order, customerId);
     }
 
-    private void moveCartItemToOrderDetail(Long orderId, Long cartId, int quantity) {
-        orderDetailDao.addOrderDetail(orderId, cartItemDao.findProductIdById(cartId), quantity);
-        cartItemDao.deleteById(cartId);
+    private List<OrderDetail> mapToOrderDetails(List<OrderDetailRequest> orderDetailRequests, Long customerId) {
+        final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
+        return orderDetailRequests.stream()
+            .map(request -> new OrderDetail(request.getQuantity(), findProduct(request.getCartId(), cartItems)))
+            .collect(Collectors.toList());
+    }
+
+    private Product findProduct(Long cartId, List<CartItem> cartItems) {
+        return cartItems.stream()
+            .filter(item -> item.getId().equals(cartId))
+            .map(CartItem::getProduct)
+            .findAny()
+            .orElseThrow(CartItemNotFoundException::new);
+    }
+
+    private Long addOrderAndDetails(Order order, Long customerId) {
+        final Long orderId = orderDao.addOrder(customerId);
+        for (OrderDetail orderDetail : order.getOrderDetails()) {
+            orderDetailDao.addOrderDetail(orderId, orderDetail);
+        }
+        return orderId;
     }
 
     public OrderResponse findOrderById(final Long customerId, final Long orderId) {

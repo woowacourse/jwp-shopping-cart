@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.support.test.ExtendedJdbcTest;
 
 @ExtendedJdbcTest
@@ -41,11 +42,11 @@ class OrderDetailDaoTest {
     @Test
     void addOrdersDetail() {
         //given
-        int quantity = 5;
+        final OrderDetail orderDetail = new OrderDetail(5,
+            new Product(1L, "productname", 1000, "http://example.com", "some-description"));
 
         //when
-        Long orderDetailId = orderDetailDao
-            .addOrderDetail(orderId, productId, quantity);
+        Long orderDetailId = orderDetailDao.addOrderDetail(orderId, orderDetail);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);

@@ -9,6 +9,10 @@ public class OrderDetail {
     private final Quantity quantity;
     private final Product product;
 
+    public OrderDetail(int quantity, Product product) {
+        this(null, new Quantity(quantity), product);
+    }
+
     public OrderDetail(Long id, Quantity quantity, Product product) {
         this.id = id;
         this.quantity = quantity;
