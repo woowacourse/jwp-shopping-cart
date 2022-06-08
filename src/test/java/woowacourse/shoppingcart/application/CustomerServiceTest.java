@@ -21,7 +21,7 @@ import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @JdbcTest
-@Sql({"/datadelete.sql"})
+@Sql("/data.sql")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class CustomerServiceTest {
 

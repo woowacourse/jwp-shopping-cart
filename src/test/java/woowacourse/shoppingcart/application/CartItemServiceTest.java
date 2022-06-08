@@ -24,8 +24,7 @@ import woowacourse.shoppingcart.dto.ChangeCartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @JdbcTest
-@Sql({"/datadelete.sql"})
-@Transactional
+@Sql("/data.sql")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class CartItemServiceTest {
 
@@ -74,16 +73,17 @@ public class CartItemServiceTest {
         String nickname = "beomWhale";
         String password = "Password1234!";
         Long customerId = createCustomer(email, nickname, password);
-        Long productId = createProduct("치킨", 10000, "imageUrl");
+        String productName = "치킨";
+        Long productId = createProduct(productName, 10000, "imageUrl");
         Customer customer = new Customer(customerId, email, nickname, password);
-        Long cartItemId = cartService.addCart(customer, productId);
+        cartService.addCart(customer, productId);
 
         // when
         List<CartItemResponse> cartItemResponses = cartService.showCartItems(customer);
 
         // then
         CartItemResponse cartItemResponse = cartItemResponses.get(0);
-        assertThat(cartItemResponse.getId()).isEqualTo(cartItemId);
+        assertThat(cartItemResponse.getName()).isEqualTo(productName);
     }
 
     @DisplayName("LoginCustomer, CartItemChangeQuantityRequest, productId를 입력 받아, Customer의 CartItem 수량을 수정한다.")
