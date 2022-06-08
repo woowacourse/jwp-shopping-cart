@@ -8,16 +8,18 @@ public class ProductResponse {
     private String name;
     private Integer price;
     private String imageUrl;
+    private String description;
 
     private ProductResponse() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
 
-    private ProductResponse(Long id, String name, Integer price, String imageUrl) {
+    private ProductResponse(Long id, String name, Integer price, String imageUrl, String description) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     public static ProductResponse from(Product product) {
@@ -25,7 +27,8 @@ public class ProductResponse {
             product.getId(),
             product.getName(),
             product.getPrice(),
-            product.getImageUrl()
+            product.getImageUrl(),
+            product.getDescription()
         );
     }
 
@@ -43,5 +46,9 @@ public class ProductResponse {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
