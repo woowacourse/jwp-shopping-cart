@@ -31,13 +31,7 @@ public class OrderController {
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final int customerId,
                                          @RequestBody List<CartRequest> orderRequest) {
         final Long orderId = orderService.addOrders(customerId, orderRequest);
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{orderId}")
-                .buildAndExpand(orderId)
-                .toUri();
-
-        return ResponseEntity.created(responseLocation).build();
+        return ResponseEntity.created(URI.create("/api/customers/orders/" + orderId)).build();
     }
 
     @GetMapping
