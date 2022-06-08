@@ -1,15 +1,15 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.order;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartDeleteRequest {
+public class OrderSaveRequest {
     private List<Long> productIds;
 
-    public CartDeleteRequest() {
+    public OrderSaveRequest() {
     }
 
-    public CartDeleteRequest(List<Long> productIds) {
+    public OrderSaveRequest(List<Long> productIds) {
         this.productIds = new ArrayList<>(productIds);
     }
 

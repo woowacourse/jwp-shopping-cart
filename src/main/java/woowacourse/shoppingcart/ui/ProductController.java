@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.dto.ProductFindResponse;
-import woowacourse.shoppingcart.dto.ProductSaveRequest;
-import woowacourse.shoppingcart.dto.ProductSaveResponse;
+import woowacourse.shoppingcart.dto.product.ProductFindResponse;
+import woowacourse.shoppingcart.dto.product.ProductSaveRequest;
+import woowacourse.shoppingcart.dto.product.ProductSaveResponse;
 
 @RestController
 @RequestMapping("/products")

@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static woowacourse.utils.Fixture.email;
+import static woowacourse.utils.Fixture.치킨;
 
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -14,9 +16,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cart.Cart;
-import woowacourse.shoppingcart.dto.CartSetRequest;
-import woowacourse.shoppingcart.dto.CartSetResponse;
+import woowacourse.shoppingcart.dto.cart.CartSetRequest;
+import woowacourse.shoppingcart.dto.cart.CartSetResponse;
 
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
@@ -25,6 +28,8 @@ class CartServiceTest {
     private CartDao cartDao;
     @Mock
     private CustomerDao customerDao;
+    @Mock
+    private ProductDao productDao;
     @InjectMocks
     private CartService cartService;
     @InjectMocks
@@ -41,12 +46,18 @@ class CartServiceTest {
                 .willReturn(Optional.empty());
         given(cartDao.save(any(Cart.class)))
                 .willReturn(cart);
-        CartSetRequest cartSetRequest = new CartSetRequest(1000);
+        given(productDao.findProductById(any(Long.class)))
+                .willReturn(Optional.of(치킨));
+
         // when
-        CartSetResponse saved = cartService.setCart(cartSetRequest, email, 1L);
+        CartSetResponse saved = cartService.setCart(new CartSetRequest(1000), email, 1L);
 
         // then
-        assertThat(saved).isEqualTo(cart);
+        assertAll(
+                () -> assertThat(saved.getName()).isEqualTo(치킨.getName()),
+                () -> assertThat(saved.getPrice()).isEqualTo(치킨.getPrice()),
+                () -> assertThat(saved.getImage()).isEqualTo(치킨.getImage())
+        );
     }
 
     @Test
@@ -58,14 +69,21 @@ class CartServiceTest {
                 .willReturn(1L);
         given(cartDao.findByCustomerIdAndProductId(1L, cart.getProductId()))
                 .willReturn(Optional.of(cart));
+        given(productDao.findProductById(any(Long.class)))
+                .willReturn(Optional.of(치킨));
         given(cartDao.update(any(Cart.class)))
-                .willReturn(cart);
-        CartSetRequest cartSetRequest = new CartSetRequest(1000);
+                .willReturn(new Cart(cart.getId(), cart.getCustomerId(), 2000));
+        CartSetRequest cartSetRequest = new CartSetRequest(2000);
         // when
         CartSetResponse updated = cartService.setCart(cartSetRequest, email, 1L);
 
         // then
-        assertThat(updated).isEqualTo(cart);
+        assertAll(
+                () -> assertThat(updated.getName()).isEqualTo(치킨.getName()),
+                () -> assertThat(updated.getPrice()).isEqualTo(치킨.getPrice()),
+                () -> assertThat(updated.getImage()).isEqualTo(치킨.getImage()),
+                () -> assertThat(updated.getQuantity()).isEqualTo(2000)
+        );
     }
 
     @Test

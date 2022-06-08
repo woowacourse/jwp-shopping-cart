@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.product;
 
 import lombok.Getter;
 import woowacourse.shoppingcart.domain.product.Product;

@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.dto.ProductFindResponse;
-import woowacourse.shoppingcart.dto.ProductSaveRequest;
-import woowacourse.shoppingcart.dto.ProductSaveResponse;
+import woowacourse.shoppingcart.dto.product.ProductFindResponse;
+import woowacourse.shoppingcart.dto.product.ProductSaveRequest;
+import woowacourse.shoppingcart.dto.product.ProductSaveResponse;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 @Service

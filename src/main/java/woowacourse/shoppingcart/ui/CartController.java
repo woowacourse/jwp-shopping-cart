@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.Login;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.dto.CartDeleteRequest;
-import woowacourse.shoppingcart.dto.CartProduct;
-import woowacourse.shoppingcart.dto.CartSetRequest;
-import woowacourse.shoppingcart.dto.CartSetResponse;
+import woowacourse.shoppingcart.dto.cart.CartDeleteRequest;
+import woowacourse.shoppingcart.dto.cart.CartProduct;
+import woowacourse.shoppingcart.dto.cart.CartSetRequest;
+import woowacourse.shoppingcart.dto.cart.CartSetResponse;
 
 @RestController
 @RequestMapping("/cart")

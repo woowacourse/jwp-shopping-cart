@@ -19,8 +19,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.shoppingcart.dto.CartProduct;
-import woowacourse.shoppingcart.dto.CartSetRequest;
+import woowacourse.shoppingcart.dto.cart.CartProduct;
+import woowacourse.shoppingcart.dto.cart.CartSetRequest;
 import woowacourse.utils.AcceptanceTest;
 
 public class CartControllerTest extends AcceptanceTest {

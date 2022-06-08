@@ -10,10 +10,10 @@ import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.dto.CartDeleteRequest;
-import woowacourse.shoppingcart.dto.CartProduct;
-import woowacourse.shoppingcart.dto.CartSetResponse;
-import woowacourse.shoppingcart.dto.CartSetRequest;
+import woowacourse.shoppingcart.dto.cart.CartDeleteRequest;
+import woowacourse.shoppingcart.dto.cart.CartProduct;
+import woowacourse.shoppingcart.dto.cart.CartSetResponse;
+import woowacourse.shoppingcart.dto.cart.CartSetRequest;
 
 @Service
 @Transactional(readOnly = true)
