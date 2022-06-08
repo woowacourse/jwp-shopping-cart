@@ -30,6 +30,6 @@ public class CartItem {
     }
 
     public boolean matchId(Long id) {
-        return this.id.equals(id);
+        return this.productId.equals(id);
     }
 }
