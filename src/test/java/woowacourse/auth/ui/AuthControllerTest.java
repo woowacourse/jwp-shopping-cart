@@ -38,7 +38,7 @@ class AuthControllerTest {
         ResponseEntity<TokenResponse> response = authController.login(tokenRequest);
 
         HttpStatus statusCode = response.getStatusCode();
-        String accessToken = Objects.requireNonNull(response.getBody()).getAccessToken();
+        String accessToken = Objects.requireNonNull(response.getBody()).getToken();
         String payload = jwtTokenProvider.getPayload(accessToken);
 
         assertAll(

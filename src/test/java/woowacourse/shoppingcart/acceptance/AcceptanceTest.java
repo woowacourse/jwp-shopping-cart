@@ -56,7 +56,7 @@ public class AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
                 .then().log().all()
-                .extract().as(TokenResponse.class).getAccessToken();
+                .extract().as(TokenResponse.class).getToken();
     }
 
     private ExtractableResponse<Response> 비밀번호_확인(final String accessToken, final PasswordRequest passwordRequest) {
