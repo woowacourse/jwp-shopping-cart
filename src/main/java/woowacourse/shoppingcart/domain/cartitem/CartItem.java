@@ -6,14 +6,14 @@ public class CartItem {
 
     private static final int DEFAULT_QUANTITY = 1;
 
-    private Long id;
-    private Long productId;
+    private long id;
+    private long productId;
     private String name;
     private int price;
     private String imageUrl;
     private Quantity quantity;
 
-    public CartItem(Long id, Long productId, String name, int price, String imageUrl, int quantity) {
+    public CartItem(long id, long productId, String name, int price, String imageUrl, int quantity) {
         this.id = id;
         this.productId = productId;
         this.name = name;
@@ -25,19 +25,19 @@ public class CartItem {
     public CartItem() {
     }
 
-    public CartItem(final Long id, final Product product) {
+    public CartItem(final long id, final Product product) {
         this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), DEFAULT_QUANTITY);
     }
 
-    public CartItem(Long id, Product product, int quantity) {
+    public CartItem(long id, Product product, int quantity) {
         this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 

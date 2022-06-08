@@ -34,7 +34,7 @@ public class OrderDao {
     }
 
     public boolean isValidOrderId(final Long customerId, final Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = :customerid AND id = :orderid)";
+        final String query = "SELECT EXISTS (SELECT * FROM orders WHERE customer_id = :customerid AND id = :orderid)";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource("customerid", customerId);
         parameterSource.addValue("orderid", orderId);
         return namedParameterJdbcTemplate.queryForObject(query, parameterSource, Boolean.class);

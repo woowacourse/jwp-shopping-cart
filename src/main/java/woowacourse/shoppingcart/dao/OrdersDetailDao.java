@@ -35,17 +35,17 @@ public class OrdersDetailDao {
     }
 
 
-    private RowMapper<OrderDetail> rowMapper() {
-        return (rs, rowNum) -> new OrderDetail(
-                rs.getLong("product_id"),
-                rs.getInt("quantity")
-        );
-    }
-
     public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
         final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = :orderid";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource("orderid", orderId);
 
         return namedParameterJdbcTemplate.query(sql, parameterSource, rowMapper());
+    }
+
+    private RowMapper<OrderDetail> rowMapper() {
+        return (rs, rowNum) -> new OrderDetail(
+                rs.getLong("product_id"),
+                rs.getInt("quantity")
+        );
     }
 }

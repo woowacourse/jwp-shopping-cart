@@ -34,15 +34,6 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    private RowMapper<Product> rowMapper() {
-        return (resultSet, rowNumber) -> new Product(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("price"),
-                resultSet.getString("image_url")
-        );
-    }
-
     public Product findProductById(final Long productId) {
         try {
             final String query = "SELECT id, name, price, image_url FROM product WHERE id = :productid";
@@ -57,6 +48,15 @@ public class ProductDao {
     public List<Product> findProducts() {
         final String query = "SELECT id, name, price, image_url FROM product";
         return namedParameterJdbcTemplate.query(query, rowMapper());
+    }
+
+    private RowMapper<Product> rowMapper() {
+        return (resultSet, rowNumber) -> new Product(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getInt("price"),
+                resultSet.getString("image_url")
+        );
     }
 
     public void delete(final Long productId) {
