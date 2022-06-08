@@ -20,7 +20,8 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+    public ResponseEntity<ErrorResponse> handleUnhandledException(RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity.internalServerError()
                 .body(new ErrorResponse("서버에 문제가 발생했습니다."));
     }
