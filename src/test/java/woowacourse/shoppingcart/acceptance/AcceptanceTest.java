@@ -29,9 +29,9 @@ public class AcceptanceTest {
     protected ExtractableResponse createSignInResult(SignInRequest signInRequest, HttpStatus httpStatus) {
         return  RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -45,9 +45,9 @@ public class AcceptanceTest {
     protected ExtractableResponse createSignUpResult(SignUpRequest signUpRequest) {
         return RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .body(signUpRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -60,9 +60,9 @@ public class AcceptanceTest {
     protected ExtractableResponse createCustomerInformation(String accessToken, HttpStatus httpStatus) {
         return RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -74,9 +74,9 @@ public class AcceptanceTest {
     protected ExtractableResponse createChangePasswordResult(String accessToken, ChangePasswordRequest changePasswordRequest, HttpStatus httpStatus) {
         return RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -92,9 +92,9 @@ public class AcceptanceTest {
     protected ExtractableResponse createDeleteCustomerResult(String accessToken, DeleteCustomerRequest deleteCustomerRequest, HttpStatus httpStatus) {
         return RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -109,9 +109,9 @@ public class AcceptanceTest {
     protected ExtractableResponse createOneProductResult(Long productId, HttpStatus httpStatus) {
         return RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -124,9 +124,9 @@ public class AcceptanceTest {
     protected ExtractableResponse createPagedProductResult(int page, int perPage, HttpStatus httpStatus) {
         return RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -139,9 +139,9 @@ public class AcceptanceTest {
     protected ExtractableResponse findCustomerCart(String accessToken, HttpStatus httpStatus) {
         return RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -155,9 +155,9 @@ public class AcceptanceTest {
     protected ExtractableResponse createCartItem(String accessToken, AddCartItemRequest addCartItemRequest, HttpStatus httpStatus) {
         return RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -172,9 +172,9 @@ public class AcceptanceTest {
     protected ExtractableResponse updateCartItem(String accessToken, UpdateCartItemRequest updateCartItemRequest, HttpStatus httpStatus) {
         return RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -189,9 +189,9 @@ public class AcceptanceTest {
     protected ExtractableResponse deleteCartItem(String accessToken, DeleteCartItemRequest deleteCartItemRequest, HttpStatus httpStatus) {
         return RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -206,9 +206,9 @@ public class AcceptanceTest {
     protected ExtractableResponse deleteCart(String accessToken, HttpStatus httpStatus) {
         return RestAssured
                 .given()
-                .config(RestAssuredConfig.newConfig()
-                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
-                .baseUri("https://127.0.0.1")
+//                .config(RestAssuredConfig.newConfig()
+//                        .sslConfig(new SSLConfig().relaxedHTTPSValidation()))
+//                .baseUri("https://127.0.0.1")
                 .log().all()
                 .auth().oauth2(accessToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
