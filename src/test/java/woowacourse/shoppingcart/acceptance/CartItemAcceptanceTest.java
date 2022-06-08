@@ -171,6 +171,14 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         NOT_FOUND_에러(response);
     }
 
+    @DisplayName("장바구니에 이미 담긴 상품을 또 담으면 400에러 발생")
+    @Test
+    void addCartItem_addSameProduct() {
+        장바구니_아이템_추가_요청(accessToken, productId1);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1);
+        BAD_REQUEST_에러(response);
+    }
+
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {

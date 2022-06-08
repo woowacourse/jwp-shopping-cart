@@ -43,6 +43,9 @@ public class CartService {
     }
 
     public Long addCart(final CartItemRequest cartItemRequest, final Long customerId) {
+        Long productId = cartItemRequest.getProductId();
+        validateAlreadyExistingProduct(customerId, productId);
+
         Product product = productDao.findById(cartItemRequest.getProductId());
         CartItem cartItem = new CartItem(customerId, product, cartItemRequest.getQuantity());
 
@@ -50,6 +53,12 @@ public class CartService {
             return cartItemDao.save(customerId, cartItem);
         } catch (Exception e) {
             throw new InvalidProductException();
+        }
+    }
+
+    private void validateAlreadyExistingProduct(Long customerId, Long productId) {
+        if (cartItemDao.isProductExisting(customerId, productId)) {
+            throw new IllegalArgumentException("이미 장바구니에 담겨있는 제품입니다.");
         }
     }
 
