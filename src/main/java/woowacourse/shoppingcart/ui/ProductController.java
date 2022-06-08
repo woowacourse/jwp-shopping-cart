@@ -24,7 +24,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> products(@ModelAttribute @Valid PageRequest pageRequest) {
-        List<ProductResponse> responses = productService.findProducts(pageRequest).stream()
+        List<ProductResponse> responses = productService.findByPage(pageRequest).stream()
                 .map(ProductResponse::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok()

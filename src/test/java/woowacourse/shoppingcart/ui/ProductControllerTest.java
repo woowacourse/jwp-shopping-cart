@@ -43,7 +43,7 @@ public class ProductControllerTest {
         );
         final int expectedCount = expected.size();
 
-        when(productService.findProducts(any()))
+        when(productService.findByPage(any()))
                 .thenReturn(expected);
         when(productService.findTotalCount())
                 .thenReturn(expectedCount);

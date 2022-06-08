@@ -27,7 +27,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Product findProductById(final Long productId) {
+    public Product findById(final Long productId) {
         try {
             final String query = "SELECT id, name, price, image_url, stock FROM product WHERE id = ?";
             return jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, productId);
@@ -36,7 +36,7 @@ public class ProductDao {
         }
     }
 
-    public List<Product> findProducts(final int limit, final int offset) {
+    public List<Product> findByPage(final int limit, final int offset) {
         final String query = "SELECT id, name, price, image_url, stock FROM product ORDER BY id"
                 + " LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER, limit, offset);

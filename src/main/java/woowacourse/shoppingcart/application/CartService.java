@@ -35,7 +35,7 @@ public class CartService {
 
         final List<Cart> carts = new ArrayList<>();
         for (final CartItemEntity entity : cartItemEntities) {
-            final Product product = productService.findProductById(entity.getProductId());
+            final Product product = productService.findById(entity.getProductId());
             carts.add(new Cart(product, entity.getQuantity()));
         }
         return carts;
@@ -44,7 +44,7 @@ public class CartService {
     @Transactional
     public void addCartItem(final String email, final CartAdditionRequest cartAdditionRequest) {
         final Long customerId = customerDao.findIdByEmail(new Email(email));
-        final Product product = productService.findProductById(cartAdditionRequest.getProductId());
+        final Product product = productService.findById(cartAdditionRequest.getProductId());
 
         if (cartItemDao.existCartItem(customerId, product.getId())) {
             addQuantity(cartAdditionRequest, customerId, product);
@@ -52,7 +52,7 @@ public class CartService {
         }
         validateStock(product.getStock(), cartAdditionRequest.getQuantity());
         try {
-            cartItemDao.addCartItem(customerId, cartAdditionRequest.getProductId(), cartAdditionRequest.getQuantity());
+            cartItemDao.save(customerId, cartAdditionRequest.getProductId(), cartAdditionRequest.getQuantity());
         } catch (Exception e) {
             throw new InvalidProductException();
         }
@@ -62,18 +62,18 @@ public class CartService {
         CartItemEntity cartItemEntity = cartItemDao.findByCustomerIdAndProductId(customerId, product.getId());
         int newQuantity = cartItemEntity.getQuantity() + cartAdditionRequest.getQuantity();
         validateStock(product.getStock(), newQuantity);
-        cartItemDao.updateCartItem(customerId, product.getId(), newQuantity);
+        cartItemDao.updateQuantity(customerId, product.getId(), newQuantity);
     }
 
     @Transactional
     public void updateCartItem(final String email, final CartUpdateRequest cartUpdateRequest) {
         final Long customerId = customerDao.findIdByEmail(new Email(email));
-        final Product product = productService.findProductById(cartUpdateRequest.getProductId());
+        final Product product = productService.findById(cartUpdateRequest.getProductId());
 
         validateExistProduct(customerId, product);
         validateStock(product.getStock(), cartUpdateRequest.getQuantity());
 
-        cartItemDao.updateCartItem(customerId, cartUpdateRequest.getProductId(), cartUpdateRequest.getQuantity());
+        cartItemDao.updateQuantity(customerId, cartUpdateRequest.getProductId(), cartUpdateRequest.getQuantity());
     }
 
     private void validateExistProduct(Long customerId, Product product) {
@@ -91,7 +91,7 @@ public class CartService {
     @Transactional
     public void deleteCartItem(final String email, final Long productId) {
         List<CartItemEntity> cartItemEntities = findCartItemEntitiesByEmail(email);
-        cartItemDao.deleteCartItem(findCartId(cartItemEntities, productId));
+        cartItemDao.delete(findCartId(cartItemEntities, productId));
     }
 
     private List<CartItemEntity> findCartItemEntitiesByEmail(final String email) {

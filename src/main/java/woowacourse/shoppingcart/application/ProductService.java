@@ -18,16 +18,16 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts(final PageRequest pageRequest) {
-        List<Product> products = productDao.findProducts(pageRequest.getLimit(), pageRequest.calculateOffset());
+    public List<Product> findByPage(final PageRequest pageRequest) {
+        List<Product> products = productDao.findByPage(pageRequest.getLimit(), pageRequest.calculateOffset());
         if (products.isEmpty()) {
             throw new EmptyResultDataAccessException("잘못된 페이지입니다.", 1);
         }
         return products;
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public Product findById(final Long productId) {
+        return productDao.findById(productId);
     }
 
     public int findTotalCount() {

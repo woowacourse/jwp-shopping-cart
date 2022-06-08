@@ -26,7 +26,7 @@ class ProductServiceTest {
     void products() {
         final PageRequest pageRequest = new PageRequest(3, 2);
 
-        assertThat(productService.findProducts(pageRequest))
+        assertThat(productService.findByPage(pageRequest))
                 .hasSize(2)
                 .extracting(Product::getId)
                 .contains(5L, 6L);

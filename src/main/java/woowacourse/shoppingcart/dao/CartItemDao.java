@@ -96,7 +96,7 @@ public class CartItemDao {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, params, Boolean.class));
     }
 
-    public Long addCartItem(final Long customerId, final Long productId, final int quantity) {
+    public Long save(final Long customerId, final Long productId, final int quantity) {
         final Map<String, Object> params = new HashMap<>();
         params.put("customer_id", customerId);
         params.put("product_id", productId);
@@ -105,7 +105,7 @@ public class CartItemDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public void updateCartItem(final Long customerId, final Long productId, final int quantity) {
+    public void updateQuantity(final Long customerId, final Long productId, final int quantity) {
         final String query = "UPDATE cart_item set quantity = :quantity"
                 + " WHERE customer_id = :customer_id AND product_id = :product_id";
 
@@ -117,7 +117,7 @@ public class CartItemDao {
         jdbcTemplate.update(query, params);
     }
 
-    public void deleteCartItem(final Long id) {
+    public void delete(final Long id) {
         final String query = "DELETE FROM cart_item WHERE id = :id";
 
         final Map<String, Object> params = new HashMap<>();

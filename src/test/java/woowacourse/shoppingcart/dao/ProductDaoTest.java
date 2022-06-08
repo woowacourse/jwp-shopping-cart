@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -29,13 +28,13 @@ public class ProductDaoTest {
 
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
     @Test
-    void findProductById() {
+    void findById() {
         // given
         Product 캠핑_의자 = new Product(1L, "캠핑 의자", 35000,
                 "https://thawing-fortress-83192.herokuapp.com/static/images/camping-chair.jpg", 10);
 
         // when
-        final Product product = productDao.findProductById(1L);
+        final Product product = productDao.findById(1L);
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(캠핑_의자);
@@ -43,12 +42,12 @@ public class ProductDaoTest {
 
     @DisplayName("상품 목록 조회")
     @Test
-    void findProducts() {
+    void findByPage() {
         // given
         final int limit = 3;
 
         // when
-        final List<Product> products = productDao.findProducts(limit, 1);
+        final List<Product> products = productDao.findByPage(limit, 1);
 
         // then
         assertThat(products).hasSize(limit)
@@ -58,12 +57,12 @@ public class ProductDaoTest {
 
     @DisplayName("상품 목록 조회 - 전체 상품 개수를 넘어가는 offset")
     @Test
-    void findProductsFail() {
+    void findByPageFail() {
         // given
         final int limit = 3;
 
         // when
-        final List<Product> products = productDao.findProducts(limit, 100);
+        final List<Product> products = productDao.findByPage(limit, 100);
 
         // then
         assertThat(products).hasSize(0);

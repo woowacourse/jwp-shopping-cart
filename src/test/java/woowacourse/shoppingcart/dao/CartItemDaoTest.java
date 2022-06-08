@@ -105,26 +105,26 @@ public class CartItemDaoTest {
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
-    void addCartItem() {
+    void save() {
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
         final int quantity = 1;
 
         // when & then
-        assertDoesNotThrow(() -> cartItemDao.addCartItem(customerId, productId, quantity));
+        assertDoesNotThrow(() -> cartItemDao.save(customerId, productId, quantity));
     }
 
     @DisplayName("장바구니에 담긴 아이템의 수량을 변경한다.")
     @Test
-    void updateCartItem() {
+    void updateQuantity() {
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
         final int quantity = 2;
 
         // when
-        cartItemDao.updateCartItem(customerId, productId, quantity);
+        cartItemDao.updateQuantity(customerId, productId, quantity);
 
         // then
         CartItemEntity cartItemEntity = cartItemDao.findByCustomerIdAndProductId(customerId, productId);
@@ -133,13 +133,13 @@ public class CartItemDaoTest {
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
-    void deleteCartItem() {
+    void delete() {
 
         // given
         final Long cartId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.delete(cartId);
 
         // then
         final Long customerId = 1L;
