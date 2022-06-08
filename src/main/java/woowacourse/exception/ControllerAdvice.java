@@ -1,7 +1,6 @@
 package woowacourse.exception;
 
 import javax.validation.ConstraintViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,14 +10,9 @@ import woowacourse.auth.dto.ExceptionResponse;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<String> handleUnhandledException() {
-//        return ResponseEntity.badRequest().body("Unhandled Exception");
-//    }
-
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<String> handle() {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleUnhandledException() {
+        return ResponseEntity.internalServerError().body("예상치 못한 에러가 발생했습니다.");
     }
 
     @ExceptionHandler({

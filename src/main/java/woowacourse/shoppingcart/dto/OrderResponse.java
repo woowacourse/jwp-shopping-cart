@@ -1,43 +1,39 @@
 package woowacourse.shoppingcart.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class OrderResponse {
 
     private Long id;
-    private List<OrderDetailResponse> orderDetailResponses;
+    private List<OrderDetailResponse> orderDetails;
     private int totalPrice;
-    private LocalDateTime localDateTime;
+    private Date orderDate;
 
     public OrderResponse() {
     }
 
-    public OrderResponse(Long id, List<OrderDetailResponse> orderDetailResponses, int totalPrice,
-                         LocalDateTime localDateTime) {
+    public OrderResponse(Long id, List<OrderDetailResponse> orderDetails, int totalPrice,
+                         Date orderDate) {
         this.id = id;
-        this.orderDetailResponses = orderDetailResponses;
+        this.orderDetails = orderDetails;
         this.totalPrice = totalPrice;
-        this.localDateTime = localDateTime;
-    }
-
-    public OrderResponse(Long id, List<OrderDetailResponse> orderDetailResponses) {
-        this(id, orderDetailResponses, 0, null);
+        this.orderDate = orderDate;
     }
 
     public Long getId() {
         return id;
     }
 
-    public List<OrderDetailResponse> getOrderDetailResponses() {
-        return orderDetailResponses;
+    public List<OrderDetailResponse> getOrderDetails() {
+        return orderDetails;
     }
 
     public int getTotalPrice() {
         return totalPrice;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public Date getOrderDate() {
+        return orderDate;
     }
 }

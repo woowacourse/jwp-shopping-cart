@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.exception.InvalidAccessException;
 import woowacourse.exception.InvalidCustomerException;
 import woowacourse.exception.InvalidOrderException;
 import woowacourse.exception.InvalidProductException;
 import woowacourse.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
@@ -53,12 +55,18 @@ public class OrderService {
 
         List<Long> productIds = orderRequest.getProductIds();
         cartItemDao.deleteCartItemsByCustomerId(customer.getId(), productIds);
-        return findOrderResponseDtoByOrderId(orderId);
+        return findOrderById(customerId, orderId);
     }
 
     public OrderResponse findOrderById(@AuthenticationPrincipal Long customerId, final Long orderId) {
         validateOrderIdByCustomerId(customerId, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+        Orders order = getByOrderId(orderId);
+        return findOrderResponse(order);
+    }
+
+    private Orders getByOrderId(Long orderId) {
+        return orderDao.findById(orderId)
+                .orElseThrow(InvalidOrderException::new);
     }
 
     private CartItem findCartItem(List<CartItem> cartItems, Long productId) {
@@ -77,19 +85,26 @@ public class OrderService {
         Customer customer = getByCustomerId(customerId);
 
         if (!orderDao.isValidOrderId(customer.getId(), orderId)) {
-            throw new InvalidOrderException();
+            throw new InvalidAccessException();
         }
     }
 
-    private OrderResponse findOrderResponseDtoByOrderId(final Long orderId) {
+    private OrderResponse findOrderResponse(final Orders order) {
         final List<OrderDetailResponse> ordersDetails = new ArrayList<>();
-        for (final OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
+        for (final OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(order.getId())) {
             final Product product = productDao.findProductById(orderDetail.getProductId())
                     .orElseThrow(InvalidProductException::new);
             ordersDetails.add(new OrderDetailResponse(product.getId(), product.getName(),
-                    orderDetail.getQuantity(), product.getImageUrl()));
+                    orderDetail.getQuantity(), product.getPrice(), product.getImage()));
         }
 
-        return new OrderResponse(orderId, ordersDetails);
+        return new OrderResponse(order.getId(), ordersDetails, calculateTotalPrice(ordersDetails),
+                order.getDate());
+    }
+
+    private int calculateTotalPrice(List<OrderDetailResponse> ordersDetails) {
+        return ordersDetails.stream()
+                .mapToInt(ordersDetail -> ordersDetail.getQuantity() * ordersDetail.getPrice())
+                .sum();
     }
 }

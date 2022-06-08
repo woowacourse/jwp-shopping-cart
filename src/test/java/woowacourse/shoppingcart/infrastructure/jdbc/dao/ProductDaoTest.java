@@ -33,7 +33,7 @@ public class ProductDaoTest {
 
         assertThat(product).isPresent();
         assertThat(product.get())
-                .extracting("name", "price", "imageUrl")
+                .extracting("name", "price", "image")
                 .containsExactly("우유", 3000, "http://example1.com");
     }
 

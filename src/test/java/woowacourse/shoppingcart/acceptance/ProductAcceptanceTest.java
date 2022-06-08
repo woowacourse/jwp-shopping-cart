@@ -35,7 +35,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getObject(".", ProductResponse.class))
-                .extracting("name", "price", "imageUrl")
+                .extracting("name", "price", "image")
                 .containsExactly("우유", 3000, "http://example1.com");
     }
 

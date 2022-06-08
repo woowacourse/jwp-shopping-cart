@@ -32,7 +32,7 @@ public class CartItemResponse {
 
     public static CartItemResponse from(CartItem cartItem) {
         Product product = cartItem.getProduct();
-        return new CartItemResponse(cartItem.getId(), product.getName(), product.getPrice(), product.getImageUrl(),
+        return new CartItemResponse(cartItem.getId(), product.getName(), product.getPrice(), product.getImage(),
                 cartItem.getQuantity());
     }
 

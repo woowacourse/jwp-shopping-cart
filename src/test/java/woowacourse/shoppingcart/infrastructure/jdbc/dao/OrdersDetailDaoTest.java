@@ -36,7 +36,7 @@
 //        ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 //
 //        jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
-//                , "name", 1000, "imageUrl");
+//                , "name", 1000, "image");
 //        productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 //    }
 //

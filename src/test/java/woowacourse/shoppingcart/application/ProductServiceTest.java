@@ -41,7 +41,7 @@ public class ProductServiceTest {
     void findProduct() {
         ProductResponse product = productService.findProductById(1L);
         assertThat(product)
-                .extracting("name", "price", "imageUrl")
+                .extracting("name", "price", "image")
                 .containsExactly("우유", 3000, "http://example1.com");
     }
 

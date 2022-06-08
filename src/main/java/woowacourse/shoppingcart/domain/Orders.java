@@ -1,22 +1,22 @@
 package woowacourse.shoppingcart.domain;
 
-import java.util.List;
+import java.sql.Date;
 
 public class Orders {
 
     private final Long id;
-    private final List<OrderDetail> orderDetails;
+    private final Date date;
 
-    public Orders(final Long id, final List<OrderDetail> orderDetails) {
+    public Orders(Long id, Date date) {
         this.id = id;
-        this.orderDetails = orderDetails;
+        this.date = date;
     }
 
     public Long getId() {
         return id;
     }
 
-    public List<OrderDetail> getOrderDetails() {
-        return orderDetails;
+    public Date getDate() {
+        return date;
     }
 }
