@@ -98,7 +98,30 @@ class CartItemControllerTest extends ControllerTest{
 
     @Test
     @DisplayName("장바구니에 담긴 물건을 삭제한다.")
-    void deleteCartItem() {
+    void deleteCartItem() throws Exception{
+        doNothing().when(authService).checkAuthorization(any(), any());
+        doNothing().when(cartService).deleteCart(any(), any());
+        when(cartService.addCart(any(), any())).thenReturn(1L);
+
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
+        mockMvc.perform(post("/api/customers/1/carts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
+                .content(objectMapper.writeValueAsString(addCartItemRequestDto)))
+                .andDo(print())
+                .andReturn()
+                .getResponse();
+
+        final MockHttpServletResponse response = mockMvc.perform(delete("/api/customers/1/carts?productId=1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken))
+                .andDo(print())
+                .andReturn()
+                .getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
