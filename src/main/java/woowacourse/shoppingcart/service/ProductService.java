@@ -18,6 +18,7 @@ public class ProductService {
 
     public List<Product> findProducts(int size, int page) {
         var products = new Products(productDao.findProducts());
+
         return products.slice(size, page);
     }
 
@@ -31,9 +32,5 @@ public class ProductService {
 
     public void deleteProductById(final Long productId) {
         productDao.delete(productId);
-    }
-
-    public List<Product> findAllProduct() {
-        return productDao.findProducts();
     }
 }

@@ -3,6 +3,7 @@ package woowacourse.auth.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -90,5 +91,25 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertThat(extract.body().jsonPath().getString("message"))
                 .isEqualTo("[ERROR] 비밀번호가 일치하지 않습니다.");
+    }
+
+    @Test
+    void 토큰_재발급() {
+        var signInRequest = new SignInRequest(VALID_EMAIL, VALID_PASSWORD);
+        var response = createSignInResult(signInRequest, HttpStatus.OK);
+        var accessToken = response.body().jsonPath().getString("token");
+
+        var signInResponse = RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .post("/token/refresh")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(SignInResponse.class);
+
+        assertAll(
+                () -> assertThat(signInResponse.getUsername()).isEqualTo(VALID_NAME),
+                () -> assertThat(signInResponse.getEmail()).isEqualTo(VALID_EMAIL)
+        );
     }
 }

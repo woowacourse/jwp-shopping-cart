@@ -66,15 +66,15 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 상품_전체_조회() {
+    void 페이지별_상품_목록_조회_size_와_page_가_없는_경우() {
         var response = RestAssured.given().log().all()
-                .get("/products/all")
+                .get("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
 
         var products = response.body().jsonPath().getList("products", Product.class);
 
-        assertThat(products.size()).isEqualTo(4);
+        assertThat(products).contains(WATER, CHEESE, PAPER, PEN);
     }
 }

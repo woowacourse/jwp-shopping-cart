@@ -11,7 +11,7 @@ public class DeleteCartItemIdsRequest {
     }
 
     public DeleteCartItemIdsRequest(DeleteCartItemRequest deleteCartItemRequest) {
-        this.cartItemIds = new ArrayList<>(deleteCartItemRequest.getProducts().values());
+        this.cartItemIds = new ArrayList<>(deleteCartItemRequest.getCartItems().values());
     }
 
     public List<Long> getCartItemIds() {

@@ -67,13 +67,13 @@ public class CartService {
     }
 
     public void update(Long customerId, UpdateCartItemRequests updateCartItemRequests) {
-        var cartIds = updateCartItemRequests.getProducts().stream()
+        var cartIds = updateCartItemRequests.getCartItems().stream()
                 .map(UpdateCartItemRequest::getCartId)
                 .collect(Collectors.toList());
 
         validateCustomerCart(customerId, cartIds);
 
-        for (UpdateCartItemRequest updateCartItemRequest : updateCartItemRequests.getProducts()) {
+        for (UpdateCartItemRequest updateCartItemRequest : updateCartItemRequests.getCartItems()) {
             cartItemDao.update(customerId, updateCartItemRequest);
         }
     }

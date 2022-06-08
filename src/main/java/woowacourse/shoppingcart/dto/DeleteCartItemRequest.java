@@ -4,16 +4,16 @@ import java.util.Map;
 
 public class DeleteCartItemRequest {
 
-    private Map<String, Long> products;
+    private Map<String, Long> cartItems;
 
     public DeleteCartItemRequest() {
     }
 
-    public DeleteCartItemRequest(Map<String, Long> products) {
-        this.products = products;
+    public DeleteCartItemRequest(Map<String, Long> cartItems) {
+        this.cartItems = cartItems;
     }
 
-    public Map<String, Long> getProducts() {
-        return products;
+    public Map<String, Long> getCartItems() {
+        return cartItems;
     }
 }

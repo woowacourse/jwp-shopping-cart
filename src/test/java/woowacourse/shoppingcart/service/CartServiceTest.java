@@ -32,7 +32,7 @@ public class CartServiceTest {
     @Test
     void 장바구니_상품_추가() {
         var findAllCartItemResponse = cartService.getAllCartItem(1L);
-        var findCartItemResponse = findAllCartItemResponse.getProducts().get(0);
+        var findCartItemResponse = findAllCartItemResponse.getCartItems().get(0);
 
         assertAll(
                 () -> assertThat(findCartItemResponse.getId()).isEqualTo(1L),
@@ -49,7 +49,7 @@ public class CartServiceTest {
         cartService.deleteCart(1L, new DeleteCartItemIdsRequest(List.of(1L)));
 
         var findAllCartItemResponse = cartService.getAllCartItem(1L);
-        assertThat(findAllCartItemResponse.getProducts().size()).isEqualTo(0);
+        assertThat(findAllCartItemResponse.getCartItems().size()).isEqualTo(0);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class CartServiceTest {
         cartService.deleteAll(1L);
 
         var findAllCartItemResponse = cartService.getAllCartItem(1L);
-        assertThat(findAllCartItemResponse.getProducts().size()).isEqualTo(0);
+        assertThat(findAllCartItemResponse.getCartItems().size()).isEqualTo(0);
 
     }
 
@@ -78,7 +78,7 @@ public class CartServiceTest {
         cartService.update(1L, updateCartItemsRequest);
 
         var allCartItem = cartService.getAllCartItem(1L);
-        var cartItem = allCartItem.getProducts().get(0);
+        var cartItem = allCartItem.getCartItems().get(0);
 
         assertAll(
                 () -> assertThat(cartItem.getId()).isEqualTo(1L),

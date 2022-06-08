@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.domain.Product;
 public class FindCartItemResponse {
 
     private Long id;
+    private Long productId;
     private String name;
     private int price;
     private String imageUrl;
@@ -17,6 +18,7 @@ public class FindCartItemResponse {
 
     public FindCartItemResponse(CartItem cartItem, Product product) {
         this.id = cartItem.getCartItemId();
+        this.productId = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();
         this.imageUrl = product.getImageUrl();
@@ -46,5 +48,9 @@ public class FindCartItemResponse {
 
     public boolean getChecked() {
         return checked;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 }

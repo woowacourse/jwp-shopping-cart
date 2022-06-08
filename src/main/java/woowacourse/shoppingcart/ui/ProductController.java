@@ -21,6 +21,8 @@ import woowacourse.shoppingcart.service.ProductService;
 @RequestMapping("/products")
 public class ProductController {
 
+    private static final String DEFAULT_SIZE = "1000";
+    private static final String DEFAULT_PAGE = "1";
     private final ProductService productService;
 
     public ProductController(final ProductService productService) {
@@ -28,17 +30,11 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<FindAllProductsResponse> products(@RequestParam("size") int size,
-                                                            @RequestParam("page") int page
+    public ResponseEntity<FindAllProductsResponse> products(
+            @RequestParam(required = false, defaultValue = DEFAULT_SIZE) int size,
+            @RequestParam(required = false, defaultValue = DEFAULT_PAGE) int page
     ) {
         var products = productService.findProducts(size, page);
-
-        return ResponseEntity.ok(new FindAllProductsResponse(products));
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<FindAllProductsResponse> productAll() {
-        var products = productService.findAllProduct();
 
         return ResponseEntity.ok(new FindAllProductsResponse(products));
     }

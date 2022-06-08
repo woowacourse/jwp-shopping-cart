@@ -7,15 +7,15 @@ import woowacourse.shoppingcart.domain.Products;
 
 public class FindAllCartItemResponse {
 
-    private final List<FindCartItemResponse> products;
+    private final List<FindCartItemResponse> cartItems;
 
     public FindAllCartItemResponse(CartItems cartItems, Products products) {
-        this.products = cartItems.getCartItems().stream()
+        this.cartItems = cartItems.getCartItems().stream()
                 .map(it -> new FindCartItemResponse(it, products.findById(it.getProductId())))
                 .collect(Collectors.toList());
     }
 
-    public List<FindCartItemResponse> getProducts() {
-        return products;
+    public List<FindCartItemResponse> getCartItems() {
+        return cartItems;
     }
 }
