@@ -18,7 +18,7 @@ public class ProductResponse {
         this.quantity = product.getQuantity();
     }
 
-    public ProductResponse() {
+    private ProductResponse() {
     }
 
     public Long getProductId() {

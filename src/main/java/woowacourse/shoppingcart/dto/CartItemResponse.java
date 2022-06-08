@@ -21,7 +21,7 @@ public class CartItemResponse {
         this.count = count;
     }
 
-    public CartItemResponse() {
+    private CartItemResponse() {
     }
 
     public CartItemResponse(CartItem cart) {

@@ -10,7 +10,7 @@ public class CartItemRequest {
         this.count = count;
     }
 
-    public CartItemRequest() {
+    private CartItemRequest() {
     }
 
     public Long getProductId() {

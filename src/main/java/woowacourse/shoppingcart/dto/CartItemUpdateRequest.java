@@ -8,7 +8,7 @@ public class CartItemUpdateRequest {
         this.count = count;
     }
 
-    public CartItemUpdateRequest() {
+    private CartItemUpdateRequest() {
     }
 
     public Integer getCount() {

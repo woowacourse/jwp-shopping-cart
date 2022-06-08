@@ -16,7 +16,7 @@ public class ProductRequest {
         this.quantity = quantity;
     }
 
-    public ProductRequest() {
+    private ProductRequest() {
     }
 
     public Product toEntity() {
