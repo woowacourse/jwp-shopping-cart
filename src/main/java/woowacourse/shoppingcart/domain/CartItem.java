@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import woowacourse.exception.ErrorCode;
+import woowacourse.exception.InvalidCartItemException;
 
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -23,10 +25,18 @@ public class CartItem {
 
     public CartItem(Product product, int quantity) {
         this(null, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
+        validateQuantity(quantity);
     }
 
     public CartItem(Long id, Product product, int quantity) {
         this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
+        validateQuantity(quantity);
+    }
+
+    private void validateQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new InvalidCartItemException(ErrorCode.QUANTITY_FORMAT, "수량 형식이 맞지 않습니다.");
+        }
     }
 
     public CartItem createWithId(Long id) {

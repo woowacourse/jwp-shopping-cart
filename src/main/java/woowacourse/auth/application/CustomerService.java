@@ -12,6 +12,7 @@ import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.customer.CustomerProfileRequest;
 import woowacourse.auth.dto.customer.CustomerRequest;
 import woowacourse.auth.dto.customer.CustomerPasswordRequest;
+import woowacourse.exception.ErrorCode;
 import woowacourse.exception.InvalidAuthException;
 import woowacourse.exception.InvalidCustomerException;
 
@@ -36,14 +37,14 @@ public class CustomerService {
 
 	private void validateEmailDuplicated(String email) {
 		if (customerDao.existByEmail(email)) {
-			throw new InvalidCustomerException("중복된 이메일 입니다.");
+			throw new InvalidCustomerException(ErrorCode.DUPLICATE_EMAIL, "중복된 이메일 입니다.");
 		}
 	}
 
 	@Transactional(readOnly = true)
 	public Customer findByEmail(String email) {
 		return customerDao.findByEmail(email)
-			.orElseThrow(() -> new InvalidCustomerException("이메일에 해당하는 회원이 존재하지 않습니다"));
+			.orElseThrow(() -> new InvalidCustomerException(ErrorCode.LOGIN, "이메일에 해당하는 회원이 존재하지 않습니다"));
 	}
 
 	public void delete(Customer customer, CustomerDeleteRequest request) {
@@ -67,7 +68,7 @@ public class CustomerService {
 	private void validatePassword(Customer customer, Password password) {
 		String encrypted = encryptionStrategy.encode(password);
 		if (customer.isInvalidPassword(encrypted)) {
-			throw new InvalidAuthException("비밀번호가 달라서 수정할 수 없습니다.");
+			throw new InvalidAuthException(ErrorCode.PASSWORD_NOT_MATCH, "비밀번호가 달라서 수정할 수 없습니다.");
 		}
 	}
 

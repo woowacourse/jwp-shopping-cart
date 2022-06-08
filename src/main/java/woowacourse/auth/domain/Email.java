@@ -4,6 +4,8 @@ import java.util.regex.Pattern;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import woowacourse.exception.ErrorCode;
+import woowacourse.exception.InvalidCustomerException;
 
 @EqualsAndHashCode
 @Getter
@@ -20,7 +22,7 @@ public class Email {
 
 	private void validate(String value) {
 		if (!Pattern.matches(REGEX, value)) {
-			throw new IllegalArgumentException("이메일 형식에 맞지 않습니다.");
+			throw new InvalidCustomerException(ErrorCode.EMAIL_FORMAT, "이메일 형식에 맞지 않습니다.");
 		}
 	}
 }

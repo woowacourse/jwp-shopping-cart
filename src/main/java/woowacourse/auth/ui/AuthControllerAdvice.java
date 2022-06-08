@@ -14,17 +14,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import woowacourse.auth.dto.ExceptionResponse;
+import woowacourse.exception.BusinessException;
+import woowacourse.exception.ErrorCodeToStatusCodeMapper;
 import woowacourse.exception.InvalidAuthException;
-import woowacourse.exception.InvalidCustomerException;
 
 @RestControllerAdvice(basePackages = "woowacourse.auth")
 public class AuthControllerAdvice {
-
-	@ExceptionHandler
-	public ResponseEntity<ExceptionResponse> loginExceptionHandler(InvalidAuthException exception) {
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-			.body(new ExceptionResponse(exception));
-	}
 
 	@ExceptionHandler({MethodArgumentNotValidException.class})
 	public ResponseEntity<ExceptionResponse> handleInvalidRequest(final BindingResult bindingResult) {
@@ -43,11 +38,9 @@ public class AuthControllerAdvice {
 			.body(new ExceptionResponse(exception));
 	}
 
-	@ExceptionHandler({
-		InvalidCustomerException.class,
-	})
-	public ResponseEntity<ExceptionResponse> handleInvalidAccess(final RuntimeException exception) {
-		return ResponseEntity.badRequest()
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<ExceptionResponse> handleInvalidAccess(BusinessException exception) {
+		return ResponseEntity.status(ErrorCodeToStatusCodeMapper.find(exception.getCode()))
 			.body(new ExceptionResponse(exception));
 	}
 

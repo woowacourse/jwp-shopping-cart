@@ -28,10 +28,4 @@ public class AuthController {
 	public ResponseEntity<TokenResponse> login(@RequestBody @Valid TokenRequest tokenRequest) {
 		return ResponseEntity.ok(authService.login(tokenRequest));
 	}
-
-	@ExceptionHandler
-	public ResponseEntity<ExceptionResponse> loginExceptionHandler(BusinessException exception) {
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-			.body(new ExceptionResponse(exception));
-	}
 }

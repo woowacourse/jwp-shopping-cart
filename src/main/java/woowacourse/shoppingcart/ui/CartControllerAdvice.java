@@ -15,17 +15,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import woowacourse.auth.dto.ExceptionResponse;
+import woowacourse.exception.ErrorCodeToStatusCodeMapper;
+import woowacourse.exception.BusinessException;
 import woowacourse.exception.InvalidAuthException;
-import woowacourse.exception.InvalidCustomerException;
+import woowacourse.exception.InvalidCartItemException;
 
 @RestControllerAdvice(basePackages = "woowacourse.shoppingcart")
 public class CartControllerAdvice {
-
-    @ExceptionHandler
-    public ResponseEntity<ExceptionResponse> loginExceptionHandler(InvalidAuthException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(new ExceptionResponse(exception));
-    }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ExceptionResponse> handleInvalidRequest(final BindingResult bindingResult) {
@@ -44,23 +40,21 @@ public class CartControllerAdvice {
             .body(new ExceptionResponse(exception));
     }
 
-    @ExceptionHandler({
-        InvalidCustomerException.class,
-    })
-    public ResponseEntity<ExceptionResponse> handleInvalidAccess(final RuntimeException exception) {
-        return ResponseEntity.badRequest()
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handleUnhandledException(InvalidCartItemException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(new ExceptionResponse(exception));
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidAccess(BusinessException exception) {
+        return ResponseEntity.status(ErrorCodeToStatusCodeMapper.find(exception.getCode()))
             .body(new ExceptionResponse(exception));
     }
 
     @ExceptionHandler
     public ResponseEntity<ExceptionResponse> handleNotFound(NoSuchElementException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(new ExceptionResponse(exception));
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ExceptionResponse> handleUnhandledException(RuntimeException exception) {
-        return ResponseEntity.badRequest()
             .body(new ExceptionResponse(exception));
     }
 }

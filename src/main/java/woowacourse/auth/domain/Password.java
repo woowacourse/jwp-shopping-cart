@@ -4,6 +4,8 @@ import java.util.regex.Pattern;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import woowacourse.exception.ErrorCode;
+import woowacourse.exception.InvalidCustomerException;
 
 @EqualsAndHashCode
 @Getter
@@ -20,7 +22,7 @@ public class Password {
 
 	private void validate(String value) {
 		if (!Pattern.matches(regex, value)) {
-			throw new IllegalArgumentException("비밀번호 형식에 맞지 않습니다.");
+			throw new InvalidCustomerException(ErrorCode.PASSWORD_FORMAT, "비밀번호 형식에 맞지 않습니다.");
 		}
 	}
 }

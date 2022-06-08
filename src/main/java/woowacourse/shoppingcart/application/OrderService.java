@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import woowacourse.exception.ErrorCode;
 import woowacourse.exception.InvalidOrderException;
 import woowacourse.shoppingcart.dao.*;
 import woowacourse.shoppingcart.domain.CartItem;
@@ -16,11 +17,11 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class OrderService {
 
-    private final OrderDao orderDao;
+	private final OrderDao orderDao;
     private final CartService cartService;
 
     public Orders order(Long customerId, List<Long> productIds) {
-        List<CartItem> cartItems = cartService.findItemInCart(customerId, productIds);
+        List<CartItem> cartItems = cartService.findItemsByProductIdsInCart(customerId, productIds);
         cartService.deleteItems(customerId, productIds);
         return orderDao.save(new Orders(customerId, cartItems));
     }
@@ -33,7 +34,7 @@ public class OrderService {
 
 	private void validateOrderOfCustomer(Long customerId, Orders order) {
 		if (!order.isSameCustomerId(customerId)) {
-			throw new InvalidOrderException("존재하지 않는 주문입니다.");
+			throw new InvalidOrderException(ErrorCode.AUTH, "인증이 필요한 접근입니다.");
 		}
 	}
 }

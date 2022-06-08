@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import woowacourse.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
@@ -123,7 +124,7 @@ class CartServiceTest {
 			));
 
 		// when
-		List<CartItem> findItems = cartService.findItemInCart(customerId, ids);
+		List<CartItem> findItems = cartService.findItemsByProductIdsInCart(customerId, ids);
 
 		// then
 		List<Long> resultIds = findItems.stream()
@@ -178,7 +179,7 @@ class CartServiceTest {
 
 		// when
 		assertThatThrownBy(() -> cartService.deleteItems(customerId, ids))
-			.isInstanceOf(NoSuchElementException.class);
+			.isInstanceOf(InvalidCartItemException.class);
 
 		// then
 		assertAll(

@@ -45,15 +45,6 @@ public class CustomerDao {
 		return jdbcTemplate.queryForObject(sql, Map.of("email", email), Boolean.class);
 	}
 
-	public Long findIdByUserName(String nickname) {
-		try {
-			final String query = "SELECT id FROM customer WHERE nickname = :nickname";
-			return jdbcTemplate.queryForObject(query, Map.of("nickname", nickname), Long.class);
-		} catch (final EmptyResultDataAccessException e) {
-			throw new InvalidCustomerException();
-		}
-	}
-
 	public Optional<Customer> findByEmail(String email) {
 		String sql = "select * from customer where email = :email";
 		try {

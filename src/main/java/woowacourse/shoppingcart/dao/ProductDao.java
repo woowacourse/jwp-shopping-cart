@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.exception.ErrorCode;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.exception.InvalidProductException;
 
@@ -33,7 +34,7 @@ public class ProductDao {
 			final String sql = "SELECT id, name, price, image_url FROM product WHERE id = :id";
 			return jdbcTemplate.queryForObject(sql, Map.of("id", id), getProductMapper());
 		} catch (EmptyResultDataAccessException exception) {
-			throw new NoSuchElementException("해당 id의 상품이 존재하지 않습니다.");
+			throw new InvalidProductException(ErrorCode.PRODUCT_NOT_FOUND, "해당 id의 상품이 존재하지 않습니다.");
 		}
 	}
 

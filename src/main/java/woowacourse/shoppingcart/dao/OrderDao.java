@@ -4,12 +4,15 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.exception.ErrorCode;
+import woowacourse.exception.InvalidOrderException;
 import woowacourse.shoppingcart.domain.Orders;
 
 @Repository
@@ -36,7 +39,11 @@ public class OrderDao {
 
     public Orders findById(Long id) {
         String sql = "select * from orders where id = :id";
-        return jdbcTemplate.queryForObject(sql, Map.of("id", id), getOrdersRowMapper(id));
+        try {
+            return jdbcTemplate.queryForObject(sql, Map.of("id", id), getOrdersRowMapper(id));
+        } catch (EmptyResultDataAccessException exception) {
+            throw new InvalidOrderException(ErrorCode.NOT_EXIST_ORDER, "존재하지 않는 주문입니다.");
+        }
     }
 
     private RowMapper<Orders> getOrdersRowMapper(Long id) {

@@ -42,7 +42,7 @@ class OrderServiceTest {
 			new CartItem(2L, 2L, "콜라", 1500, "test.jpg", 2),
 			new CartItem(3L, 3L, "피자", 15000, "test.jpg", 2)
 		);
-		given(cartService.findItemInCart(customerId, productIds))
+		given(cartService.findItemsByProductIdsInCart(customerId, productIds))
 			.willReturn(cartItems);
 		Orders order = new Orders(customerId, cartItems);
 		given(orderDao.save(order))
@@ -54,7 +54,7 @@ class OrderServiceTest {
 		// then
 		assertAll(
 			() -> assertThat(resultOrder).isEqualTo(order),
-			() -> verify(cartService).findItemInCart(customerId, productIds),
+			() -> verify(cartService).findItemsByProductIdsInCart(customerId, productIds),
 			() -> verify(orderDao).save(order)
 		);
 	}

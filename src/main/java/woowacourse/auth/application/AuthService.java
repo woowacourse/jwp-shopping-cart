@@ -9,6 +9,7 @@ import woowacourse.auth.domain.EncryptionStrategy;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;
+import woowacourse.exception.ErrorCode;
 import woowacourse.exception.InvalidAuthException;
 import woowacourse.auth.support.JwtTokenProvider;
 
@@ -30,7 +31,7 @@ public class AuthService {
 
 	private void validatePassword(Customer customer, String password) {
 		if (customer.isInvalidPassword(password)) {
-			throw new InvalidAuthException("비밀번호가 일치하지 않습니다.");
+			throw new InvalidAuthException(ErrorCode.PASSWORD_NOT_MATCH, "비밀번호가 일치하지 않습니다.");
 		}
 	}
 
@@ -40,8 +41,11 @@ public class AuthService {
 	}
 
 	private void validateToken(String token) {
-		if (token == null || !tokenProvider.validateToken(token)) {
-			throw new InvalidAuthException("유효하지 않은 토큰입니다.");
+		if (token == null) {
+			throw new InvalidAuthException(ErrorCode.AUTH, "인증이 필요한 접근입니다ㅏ.");
+		}
+		if (!tokenProvider.validateToken(token)) {
+			throw new InvalidAuthException(ErrorCode.TOKEN_INVALID, "유효하지 않은 토큰입니다.");
 		}
 	}
 }
