@@ -5,7 +5,7 @@ public class ProductResponse {
     private Long id;
     private String name;
     private int price;
-    private String image_url;
+    private String imageUrl;
 
     public ProductResponse() {
     }
@@ -14,7 +14,7 @@ public class ProductResponse {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.image_url = image_url;
+        this.imageUrl = image_url;
     }
 
     public Long getId() {
@@ -30,6 +30,6 @@ public class ProductResponse {
     }
 
     public String getImage_url() {
-        return image_url;
+        return imageUrl;
     }
 }
