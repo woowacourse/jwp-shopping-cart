@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,10 +50,23 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, imageUrl, description);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(productId).orElseThrow();
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
+    }
+
+    @DisplayName("잘못된 상품ID로 찾으면, empty를 반환한다.")
+    @Test
+    void returnEmptyOnInvalidProductId() {
+        // given
+        Long invalidProductId = 999L;
+
+        // when
+        final Optional<Product> product = productDao.findProductById(invalidProductId);
+
+        // then
+        assertThat(product).isEmpty();
     }
 
     @DisplayName("상품 목록 조회")

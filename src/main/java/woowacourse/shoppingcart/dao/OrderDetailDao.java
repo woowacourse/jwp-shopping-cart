@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.exception.domain.InvalidProductException;
 
 @Repository
 public class OrderDetailDao {
@@ -42,6 +43,8 @@ public class OrderDetailDao {
             rs.getLong("id"),
             new Quantity(rs.getInt("quantity")),
             productDao.findProductById(rs.getLong("product_id"))
+                .orElseThrow(InvalidProductException::new)
         ), orderId);
     }
+
 }

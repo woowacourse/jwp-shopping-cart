@@ -36,6 +36,20 @@ public class CustomerDaoTest {
         );
     }
 
+    @DisplayName("중복된 회원을 저장하면 empty를 얻는다.")
+    @Test
+    void throwsExceptionOnDuplicatedCustomerSave() {
+        // given
+        Customer customer = Customer.fromInput("chleeslow", "1234abc!@", "woote@email.com", "선릉역", "010-9999-1111");
+        customerDao.save(customer);
+
+        // when
+        final Optional<Long> savedId = customerDao.save(customer);
+
+        // then
+        assertThat(savedId).isEmpty();
+    }
+
     @DisplayName("ID값으로 회원을 조회한다.")
     @Test
     void findCustomerById() {

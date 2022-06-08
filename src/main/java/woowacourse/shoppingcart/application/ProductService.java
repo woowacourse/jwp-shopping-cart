@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.exception.domain.InvalidProductException;
 import woowacourse.shoppingcart.ui.dto.ProductRequest;
 
 @Service
@@ -32,7 +33,10 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
-        return ProductResponse.from(productDao.findProductById(productId));
+        return ProductResponse.from(
+            productDao.findProductById(productId)
+                .orElseThrow(InvalidProductException::new)
+        );
     }
 
     @Transactional(readOnly = true)

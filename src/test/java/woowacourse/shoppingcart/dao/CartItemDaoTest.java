@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import woowacourse.shoppingcart.domain.cart.CartItem;
+import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.exception.domain.CartItemNotFoundException;
 import woowacourse.support.test.ExtendedJdbcTest;
 
 @ExtendedJdbcTest
@@ -134,5 +136,34 @@ public class CartItemDaoTest {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);
+    }
+
+    @DisplayName("잘못된 id의 장바구니 품목을 삭제하면 예외가 발생한다.")
+    @Test
+    void throwsExceptionWithInvalidCartItemIdOnDelete() {
+        // given & when
+        final Long cartId = 99L;
+        // then
+        assertThatExceptionOfType(CartItemNotFoundException.class)
+            .isThrownBy(() -> cartItemDao.deleteById(cartId));
+    }
+
+    @DisplayName("수량을 업데이트한다.")
+    @Test
+    void updateQuantity() {
+        // given
+        final Long customerId = 1L;
+        final Long cartId = 1L;
+        final Quantity quantity = new Quantity(100);
+
+        // when
+        cartItemDao.updateQuantity(customerId, cartId, quantity);
+        final List<CartItem> items = cartItemDao.findCartItemsByCustomerId(customerId);
+        final CartItem updatedCartItem = items.stream()
+            .filter(item -> item.getId().equals(cartId))
+            .findAny()
+            .orElseThrow();
+        // then
+        assertThat(updatedCartItem.getQuantity()).isEqualTo(100);
     }
 }

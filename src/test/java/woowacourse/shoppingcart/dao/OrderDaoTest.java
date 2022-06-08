@@ -49,4 +49,18 @@ class OrderDaoTest {
         assertThat(orderIdsByCustomerId).hasSize(2);
     }
 
+    @DisplayName("특정 회원에게 주어진 주문번호인지 확인한다.")
+    @Test
+    void isValidOrderId() {
+        // given
+        final Long customerId = 1L;
+        final Long orderId = orderDao.addOrders(customerId);
+
+        // when
+        final boolean isValid = orderDao.isValidOrderId(customerId, orderId);
+
+        // then
+        assertThat(isValid).isTrue();
+    }
+
 }

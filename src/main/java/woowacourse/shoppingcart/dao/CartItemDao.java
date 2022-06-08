@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.exception.domain.CartItemNotFoundException;
+import woowacourse.shoppingcart.exception.domain.InvalidProductException;
 
 @Repository
 public class CartItemDao {
@@ -83,11 +84,12 @@ public class CartItemDao {
             rs.getLong("id"),
             new Quantity(rs.getInt("quantity")),
             productDao.findProductById(rs.getLong("product_id"))
+                .orElseThrow(InvalidProductException::new)
         ), customerId);
     }
 
     public void updateQuantity(Long customerId, Long cartId, Quantity quantity) {
-        final String query = "UPDATE cart_item SET quantity = ? WHERE customerId = ? AND cartId = ?";
+        final String query = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? AND id = ?";
         final int updatedCount = jdbcTemplate.update(query, quantity.getAmount(), customerId, cartId);
         validateUpdated(updatedCount);
     }

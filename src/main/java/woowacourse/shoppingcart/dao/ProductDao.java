@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,10 +39,10 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Optional<Product> findProductById(final Long productId) {
         try {
             final String query = "SELECT * FROM product WHERE id = ? and is_deleted = 0";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                 new Product(
                     productId,
                     resultSet.getString("name"),
@@ -49,9 +50,9 @@ public class ProductDao {
                     resultSet.getString("image_url"),
                     resultSet.getString("description")
                 ), productId
-            );
+            ));
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            return Optional.empty();
         }
     }
 
