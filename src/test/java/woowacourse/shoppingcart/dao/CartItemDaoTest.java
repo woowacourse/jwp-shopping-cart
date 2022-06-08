@@ -48,7 +48,7 @@ class CartItemDaoTest {
     @DisplayName("주문 수량을 수정한다.")
     void updateCartItem() {
 
-        int expected = 2;
+        final int expected = 2;
         cartItemDao.addCartItem(customerId, productId, 1);
 
         cartItemDao.updateCartItem(customerId, productId, expected);
@@ -73,6 +73,7 @@ class CartItemDaoTest {
         cartItemDao.addCartItem(customerId, productId, 1);
         cartItemDao.deleteCartItem(customerId, productId);
 
+        assertThat(cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId)).isEmpty();
     }
 
     @Test
