@@ -66,7 +66,7 @@ public class ProductDao {
     public List<Product> findProducts(long size, long page) {
         final String query = "SELECT id, name, price, image_url FROM product LIMIT ?,?";
         long start = (page - 1) * size;
-        long end = start + size;
+        long end = size;
         return jdbcTemplate.query(query, productRowMapper, start, end);
     }
 
