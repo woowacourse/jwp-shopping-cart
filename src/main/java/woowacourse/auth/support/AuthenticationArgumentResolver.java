@@ -6,6 +6,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import woowacourse.shoppingcart.domain.customer.UserName;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,7 +34,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
         if (token == null) {
             return null;
         }
-        String userName = jwtTokenProvider.getPayload(token);
+        UserName userName = new UserName(jwtTokenProvider.getPayload(token));
         return userName;
     }
 }

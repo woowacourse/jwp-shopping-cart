@@ -33,8 +33,7 @@ public class CustomerService {
         customerDao.save(customer);
     }
 
-    public void deleteCustomerByName(final String rawUserName) {
-        UserName userName = new UserName(rawUserName);
+    public void deleteCustomerByName(final UserName userName) {
         if (customerDao.existsByName(userName)) {
             customerDao.deleteByName(userName);
             return;
@@ -42,14 +41,12 @@ public class CustomerService {
         throw new NoExistUserException();
     }
 
-    public CustomerResponse findCustomerByName(final String rawUserName) {
-        UserName userName = new UserName(rawUserName);
+    public CustomerResponse findCustomerByName(final UserName userName) {
         final Customer customer = customerDao.findCustomerByName(userName);
         return new CustomerResponse(customer.getName().value());
     }
 
-    public void editCustomerByName(final String rawUserName, final CustomerRequest editRequest) {
-        UserName userName = new UserName(rawUserName);
+    public void editCustomerByName(final UserName userName, final CustomerRequest editRequest) {
         if (customerDao.existsByName(userName)) {
             Customer customer = customerDao.findCustomerByName(userName);
             customer.update(userName.value(), editRequest.getPassword(), encryptor);

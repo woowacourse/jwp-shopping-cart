@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.TokenProvider;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.application.OrderService;
@@ -53,13 +54,13 @@ public class OrderControllerTest {
         final int quantity = 5;
         final Long cartId2 = 1L;
         final int quantity2 = 5;
-        final String customerName = "pobi";
+        final String customerName = "pobix";
         final String customerToken = tokenProvider.createToken(new TokenRequest(customerName, null));
         final List<OrderRequest> requestDtos =
                 Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
-        when(orderService.addOrder(any(), eq(customerName)))
+        when(orderService.addOrder(any(), eq(new UserName(customerName))))
                 .thenReturn(expectedOrderId);
 
         // when // then
@@ -72,7 +73,7 @@ public class OrderControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
-                        "/api/customers/pobi/orders/" + expectedOrderId));
+                        "/api/customers/pobix/orders/" + expectedOrderId));
     }
 
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
@@ -80,13 +81,13 @@ public class OrderControllerTest {
     void findOrder() throws Exception {
 
         // given
-        final String customerName = "pobi";
+        final String customerName = "pobix";
         final String customerToken = tokenProvider.createToken(new TokenRequest(customerName, null));
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
                 Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
 
-        when(orderService.findOrderById(customerName, orderId))
+        when(orderService.findOrderById(new UserName(customerName), orderId))
                 .thenReturn(expected);
 
         // when // then
@@ -107,7 +108,7 @@ public class OrderControllerTest {
     @Test
     void findOrders() throws Exception {
         // given
-        final String customerName = "pobi";
+        final String customerName = "pobix";
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
                         new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
@@ -115,7 +116,7 @@ public class OrderControllerTest {
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
-        when(orderService.findOrdersByCustomerName(customerName))
+        when(orderService.findOrdersByCustomerName(new UserName(customerName)))
                 .thenReturn(expected);
 
         final String customerToken = tokenProvider.createToken(new TokenRequest(customerName, null));

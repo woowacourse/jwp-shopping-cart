@@ -31,8 +31,8 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<CartItem> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public List<CartItem> findCartsByCustomerName(final UserName userName) {
+        final List<Long> cartIds = findCartIdsByCustomerName(userName);
         final List<CartItem> carts = new ArrayList<>();
 
         for (final Long cartId : cartIds) {
@@ -44,14 +44,12 @@ public class CartService {
         return carts;
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final UserName userName = new UserName(customerName);
+    private List<Long> findCartIdsByCustomerName(final UserName userName) {
         final Long customerId = customerDao.findIdByUserName(userName);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final UserName userName = new UserName(customerName);
+    public Long addCart(final Long productId, final UserName userName) {
         final Long customerId = customerDao.findIdByUserName(userName);
 
         validateAlreadyExist(productId, customerId);
@@ -69,13 +67,13 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
+    public void deleteCart(final UserName userName, final Long cartId) {
+        validateCustomerCart(cartId, userName);
         cartItemDao.deleteCartItem(cartId);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    private void validateCustomerCart(final Long cartId, final UserName userName) {
+        final List<Long> cartIds = findCartIdsByCustomerName(userName);
         if (cartIds.contains(cartId)) {
             return;
         }

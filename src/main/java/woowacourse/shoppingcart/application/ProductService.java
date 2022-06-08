@@ -29,7 +29,7 @@ public class ProductService {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<ProductResponse> findProducts(String userName) {
+    public List<ProductResponse> findProducts(UserName userName) {
         List<ProductResponse> productResponses = new ArrayList<>();
         List<Product> products = productDao.findProducts();
         for (Product product : products) {
@@ -40,24 +40,24 @@ public class ProductService {
         return productResponses;
     }
 
-    private Long getCartIdByUserAndProduct(String userName, Product product) {
+    private Long getCartIdByUserAndProduct(UserName userName, Product product) {
         if (Objects.isNull(userName)) {
             return null;
         }
 
         return cartItemDao.findIdByUserAndProduct(
-                customerDao.findIdByUserName(new UserName(userName)),
+                customerDao.findIdByUserName(userName),
                 product.getId()
         );
     }
 
-    private int getQuantityByUserAndProduct(String userName, Product product) {
+    private int getQuantityByUserAndProduct(UserName userName, Product product) {
         if (Objects.isNull(userName)) {
             return 0;
         }
 
         return cartItemDao.findQuantityByUserAndProduct(
-                customerDao.findIdByUserName(new UserName(userName)),
+                customerDao.findIdByUserName(userName),
                 product.getId()
         );
     }

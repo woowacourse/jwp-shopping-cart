@@ -7,6 +7,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.Request;
 
@@ -24,7 +25,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> products(@AuthenticationPrincipal String userName) {
+    public ResponseEntity<List<ProductResponse>> products(@AuthenticationPrincipal UserName userName) {
         return ResponseEntity.ok(productService.findProducts(userName));
     }
 

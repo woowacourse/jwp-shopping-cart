@@ -8,6 +8,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.cartitem.CartItem;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.Request;
 
@@ -25,13 +26,13 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItem>> getCartItems(@AuthenticationPrincipal final String userName) {
+    public ResponseEntity<List<CartItem>> getCartItems(@AuthenticationPrincipal final UserName userName) {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerName(userName));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-                                            @AuthenticationPrincipal final String userName) {
+                                            @AuthenticationPrincipal final UserName userName) {
         final Long cartId = cartService.addCart(product.getId(), userName);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -42,7 +43,7 @@ public class CartItemController {
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final String userName,
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final UserName userName,
                                                @PathVariable final Long cartId) {
         cartService.deleteCart(userName, cartId);
         return ResponseEntity.noContent().build();

@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.application;
 
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.*;
@@ -33,8 +34,7 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        UserName userName = new UserName(customerName);
+    public Long addOrder(final List<OrderRequest> orderDetailRequests, final UserName userName) {
         final Long customerId = customerDao.findIdByUserName(userName);
         final Long ordersId = orderDao.addOrders(customerId);
 
@@ -50,13 +50,12 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
+    public Orders findOrderById(final UserName userName, final Long orderId) {
+        validateOrderIdByCustomerName(userName, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        UserName userName = new UserName(customerName);
+    private void validateOrderIdByCustomerName(final UserName userName, final Long orderId) {
         final Long customerId = customerDao.findIdByUserName(userName);
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
@@ -64,8 +63,7 @@ public class OrderService {
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        UserName userName = new UserName(customerName);
+    public List<Orders> findOrdersByCustomerName(final UserName userName) {
         final Long customerId = customerDao.findIdByUserName(userName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 

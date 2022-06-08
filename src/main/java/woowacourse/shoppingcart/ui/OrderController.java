@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
 import javax.validation.Valid;
@@ -24,23 +25,23 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final String customerName,
+    public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final UserName userName,
                                          @RequestBody @Valid final List<OrderRequest> orderDetails) {
-        final Long orderId = orderService.addOrder(orderDetails, customerName);
+        final Long orderId = orderService.addOrder(orderDetails, userName);
         return ResponseEntity.created(
-                URI.create("/api/customers/" + customerName + "/orders/" + orderId)).build();
+                URI.create("/api/customers/" + userName.value() + "/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal final String customerName,
+    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal final UserName userName,
                                             @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(customerName, orderId);
+        final Orders order = orderService.findOrderById(userName, orderId);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@AuthenticationPrincipal final String customerName) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
+    public ResponseEntity<List<Orders>> findOrders(@AuthenticationPrincipal final UserName userName) {
+        final List<Orders> orders = orderService.findOrdersByCustomerName(userName);
         return ResponseEntity.ok(orders);
     }
 }
