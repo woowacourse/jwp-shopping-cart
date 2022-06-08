@@ -77,6 +77,10 @@ public class CartService {
 
     public Long addCart2(final Long productId, final Long memberId) {
         try {
+            if (cartItemDao.isExistCartItem(memberId, productId)) {
+                cartItemDao.addOneQuantityCartItem(memberId, productId);
+                return cartItemDao.findIdByMemberIdAndProductId(memberId, productId);
+            }
             return cartItemDao.addCartItem(memberId, productId);
         } catch (Exception e) {
             throw new InvalidProductException();

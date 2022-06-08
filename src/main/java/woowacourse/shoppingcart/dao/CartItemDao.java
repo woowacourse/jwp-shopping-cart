@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -38,6 +39,26 @@ public class CartItemDao {
         }
     }
 
+    public Long findIdByMemberIdAndProductId(final Long memberId, final Long productId) {
+        try {
+            final String sql = "SELECT id FROM cart_item WHERE member_id = ? AND product_id = ?";
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"),
+                    memberId, productId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public boolean isExistCartItem(final Long memberId, final Long productId) {
+        try {
+            String sql = "SELECT COUNT(*) FROM cart_item WHERE member_id = ? AND product_id = ?";
+            return Objects.requireNonNull(jdbcTemplate.queryForObject(sql, Integer.class, memberId, productId))
+                    .compareTo(0) > 0;
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
     public Integer findProductQuantityIdById(final Long cartId) {
         try {
             final String sql = "SELECT quantity FROM cart_item WHERE id = ?";
@@ -59,6 +80,12 @@ public class CartItemDao {
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    public void addOneQuantityCartItem(final Long memberId, final Long productId) {
+        final String sql = "UPDATE cart_item SET quantity = quantity+1 WHERE member_id = ? AND product_id = ?";
+
+        jdbcTemplate.update(sql, memberId, productId);
     }
 
     public void updateCartItemQuantity(final Long cartId, final int quantity) {
