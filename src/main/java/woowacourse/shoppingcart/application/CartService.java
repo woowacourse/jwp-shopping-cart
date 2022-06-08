@@ -39,7 +39,7 @@ public class CartService {
 
     public List<Cart> getCarts(Customer customer) {
         List<Long> cartIds = cartItemDao.findIdsByCustomerId(customer.getId());
-        if (cartIds.size() == 0) {
+        if (isEmptyCart(cartIds)) {
             return Collections.emptyList();
         }
 
@@ -62,12 +62,13 @@ public class CartService {
         return carts;
     }
 
+    private boolean isEmptyCart(List<Long> cartIds) {
+        return cartIds.isEmpty();
+    }
+
     public Cart updateProductInCart(Customer customer, CartUpdationRequest request, Long productId) {
         Long updatedProductId = productService.findProductById(productId).getId();
-        boolean isExist = cartItemDao.existProduct(customer.getId(), updatedProductId);
-        if (!isExist) {
-            throw new NotExistProductInCartException();
-        }
+        validateExistProductInCart(customer, updatedProductId);
 
         cartItemDao.updateCartItem(customer.getId(), request.getQuantity(), updatedProductId);
         CartDto cartDto = cartItemDao.findCartByProductCustomer(customer.getId(), updatedProductId);
@@ -78,12 +79,15 @@ public class CartService {
 
     public void deleteProductInCart(Customer customer, Long productId) {
         Long deleteProductId = productService.findProductById(productId).getId();
+        validateExistProductInCart(customer, deleteProductId);
 
-        boolean isExist = cartItemDao.existProduct(customer.getId(), deleteProductId);
+        cartItemDao.deleteCartItem(customer.getId(), deleteProductId);
+    }
+
+    private void validateExistProductInCart(Customer customer, Long productId) {
+        boolean isExist = cartItemDao.existProduct(customer.getId(), productId);
         if (!isExist) {
             throw new NotExistProductInCartException();
         }
-
-        cartItemDao.deleteCartItem(customer.getId(), deleteProductId);
     }
 }
