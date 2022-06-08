@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.exception.DuplicatedCartProductException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -38,7 +39,9 @@ public class CartService {
 
     public CartResponse addCart(final Long productId, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
-
+        if (cartItemDao.existByProductId(productId, customerId)) {
+            throw new DuplicatedCartProductException();
+        }
         try {
             Long cartId = cartItemDao.addCartItem(customerId, productId);
             return CartResponse.of(cartItemDao.findCartById(cartId));

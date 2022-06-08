@@ -19,6 +19,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.exception.DuplicatedCartProductException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -89,11 +90,9 @@ class CartServiceTest {
 
         @Test
         void 장바구니_상품_추가_성공() {
-            cartService.addCart(productId1, customerName);
+            CartResponse cartResponse = cartService.addCart(productId1, customerName);
 
-            CartResponse actual = cartService.findCartsByCustomerName(customerName).get(0);
-
-            assertThat(actual).extracting("productId", "name", "price", "imageUrl")
+            assertThat(cartResponse).extracting("productId", "name", "price", "imageUrl")
                     .containsExactly(productId1, "치킨", 10_000, "http://example.com/chicken.jpg");
         }
 
@@ -103,6 +102,14 @@ class CartServiceTest {
 
             assertThatThrownBy(() -> cartService.addCart(invalidProductId, customerName))
                     .isInstanceOf(InvalidProductException.class);
+        }
+
+        @Test
+        void 장바구니에_상품이_이미_존재하면_예외_반환() {
+            cartService.addCart(productId1, customerName);
+
+            assertThatThrownBy(() -> cartService.addCart(productId1, customerName))
+                    .isInstanceOf(DuplicatedCartProductException.class);
         }
     }
 
