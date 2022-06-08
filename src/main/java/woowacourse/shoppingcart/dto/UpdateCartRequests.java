@@ -24,4 +24,10 @@ public class UpdateCartRequests {
                 .map(UpdateCartRequest::toCart)
                 .collect(Collectors.toList());
     }
+
+    public List<Long> cartIds() {
+        return cartItems.stream()
+                .map(UpdateCartRequest::getId)
+                .collect(Collectors.toList());
+    }
 }

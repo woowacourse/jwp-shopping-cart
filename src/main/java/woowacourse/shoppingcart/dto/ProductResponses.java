@@ -25,4 +25,11 @@ public class ProductResponses {
     public List<ProductResponse> getProducts() {
         return products;
     }
+
+    @Override
+    public String toString() {
+        return "ProductResponses{" +
+                "products=" + products +
+                '}';
+    }
 }

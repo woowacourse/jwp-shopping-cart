@@ -16,7 +16,6 @@ import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidEmailException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.InvalidUsernameException;
@@ -58,7 +57,6 @@ public class ControllerAdvice {
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
-            InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {

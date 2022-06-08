@@ -38,4 +38,14 @@ public class ProductResponse {
     public String getImageUrl() {
         return imageUrl;
     }
+
+    @Override
+    public String toString() {
+        return "ProductResponse{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }

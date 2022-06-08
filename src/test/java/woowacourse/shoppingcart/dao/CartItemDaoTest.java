@@ -81,6 +81,21 @@ public class CartItemDaoTest {
     }
 
     @Test
+    @DisplayName("장바구니 아이템을 상품 id로 수정한다.")
+    void updateCartItemByProductId() {
+        //given
+        Product product = new Product(1L, "banana", 1_000, "woowa1.com");
+        Cart cart = new Cart(product, 2, true);
+
+        // when
+        cartItemDao.updateCartItemByProductId(cart);
+        Integer quantity = jdbcTemplate.queryForObject("SELECT quantity FROM cart_item WHERE product_id = ?", Integer.class, 1L);
+
+        // then
+        assertThat(quantity).isEqualTo(2);
+    }
+
+    @Test
     @DisplayName("장바구니 아이템을 수정한다.")
     void updateCartItem() {
         // given
@@ -130,7 +145,7 @@ public class CartItemDaoTest {
     }
 
     @Test
-    @DisplayName("회원의 장바구니에 상품이 존재한다..")
+    @DisplayName("회원의 장바구니에 상품이 존재한다.")
     void existByProductIdWithTrue() {
         // given
         Long customerId = 1L;
@@ -143,13 +158,13 @@ public class CartItemDaoTest {
     }
 
     @Test
-    @DisplayName("회원의 장바구니에 상품이 존재하지 않는다..")
+    @DisplayName("회원의 장바구니에 상품이 존재하지 않는다.")
     void existByProductIdWithFalse() {
         // given
         Long customerId = 1L;
 
         // when
-        boolean result = cartItemDao.existByProductId(customerId,  10L);
+        boolean result = cartItemDao.existByProductId(customerId, 10L);
 
         // then
         assertThat(result).isFalse();

@@ -36,7 +36,7 @@ public class CartService {
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
         Product product = productDao.findProductById(cartRequest.getProductId());
         if (cartItemDao.existByProductId(customerId, cartRequest.getProductId())) {
-            cartItemDao.updateCartItem(List.of(new Cart(product, cartRequest.getQuantity() + 1, cartRequest.getChecked())));
+            cartItemDao.updateCartItemByProductId(new Cart(product, cartRequest.getQuantity() + 1, cartRequest.getChecked()));
             return 0L;
         }
 
@@ -58,8 +58,14 @@ public class CartService {
     public CartResponses updateCartItems(String username, UpdateCartRequests updateCartRequests) {
         List<Cart> carts = updateCartRequests.carts();
         cartItemDao.updateCartItem(carts);
+
+        List<Long> cartIds = updateCartRequests.cartIds();
         List<Cart> foundCarts = findCartIdsByUsername(username);
-        List<CartResponse> cartResponses = foundCarts.stream()
+        List<Cart> updateCarts = foundCarts.stream()
+                .filter(it -> cartIds.contains(it.getId()))
+                .collect(Collectors.toList());
+
+        List<CartResponse> cartResponses = updateCarts.stream()
                 .map(CartResponse::from)
                 .collect(Collectors.toList());
         return new CartResponses(cartResponses);

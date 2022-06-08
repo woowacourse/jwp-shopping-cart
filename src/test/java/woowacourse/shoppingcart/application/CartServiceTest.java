@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartIdRequest;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponses;
 import woowacourse.shoppingcart.dto.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ProductResponses;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.dto.UpdateCartRequest;
 import woowacourse.shoppingcart.dto.UpdateCartRequests;
@@ -50,18 +52,17 @@ class CartServiceTest {
 
     @Test
     @DisplayName("이미 장바구니에 추가된 상품은 수량이 증가한다.")
-    void addCartPlusProudctQuantity() {
+    void addCartPlusProductQuantity() {
         // given
+        productService.addProduct(new ProductRequest("치킨", 20_000, "example.com"));
         customerService.addCustomer(new SignUpRequest("rennon", "rennon@woowa.com", "123456"));
-        productService.addProduct(new ProductRequest("치킨", 20_000, "http://example.com/chicken.jpg"));
+        cartService.addCart("rennon", new CartRequest(1L, 1, true));
 
         // when
-        cartService.addCart("rennon", new CartRequest(1L, 1, true));
-        Long id = cartService.addCart("rennon", new CartRequest(1L, 1, true));
+        Long cartId = cartService.addCart("rennon", new CartRequest(1L, 1, true));
 
         // then
-        Long productId = cartItemDao.findProductIdById(id);
-        assertThat(productId).isEqualTo(1L);
+        assertThat(cartId).isEqualTo(0L);
     }
 
     @Test
@@ -84,8 +85,12 @@ class CartServiceTest {
     void updateCartItems() {
         // given
         customerService.addCustomer(new SignUpRequest("rennon", "rennon@woowa.com", "123456"));
-        productService.addProduct(new ProductRequest("치킨", 20_000, "http://example.com/chicken.jpg"));
+        productService.addProduct(new ProductRequest("치킨1", 10_000, "http://example.com/chicken.jpg"));
+        productService.addProduct(new ProductRequest("치킨2", 20_000, "http://example.com/chicken.jpg"));
+        productService.addProduct(new ProductRequest("치킨3", 30_000, "http://example.com/chicken.jpg"));
         cartService.addCart("rennon", new CartRequest(1L, 1, true));
+        cartService.addCart("rennon", new CartRequest(2L, 1, true));
+        cartService.addCart("rennon", new CartRequest(3L, 1, true));
 
         // when
         UpdateCartRequests updateCartRequests = new UpdateCartRequests(List.of(new UpdateCartRequest(1L, 10, true)));
@@ -93,6 +98,8 @@ class CartServiceTest {
 
         // then
         assertThat(cartService.findCartsByUsername("rennon").getCartItems().get(0).getQuantity()).isEqualTo(10);
+        assertThat(cartService.findCartsByUsername("rennon").getCartItems().get(1).getQuantity()).isEqualTo(1);
+        assertThat(cartService.findCartsByUsername("rennon").getCartItems().get(2).getQuantity()).isEqualTo(1);
     }
 
     @Test
