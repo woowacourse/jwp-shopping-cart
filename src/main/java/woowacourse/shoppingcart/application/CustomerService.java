@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.DuplicatedAccountException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.WrongPasswordException;
 
 @Service
@@ -49,11 +50,13 @@ public class CustomerService {
     }
 
     public int update(long customerId, UpdateCustomerRequest updateCustomerRequest) {
+        Customer customer = customerDao.findById(customerId).orElseThrow(InvalidCustomerException::new);
+        updateCustomer(updateCustomerRequest, customer);
         return customerDao.update(
                 customerId,
-                updateCustomerRequest.getNickname(),
-                updateCustomerRequest.getAddress(),
-                updateCustomerRequest.getPhoneNumber().appendNumbers());
+                customer.getNickname(),
+                customer.getAddress(),
+                customer.getPhoneNumber());
     }
 
     public int delete(long id, DeleteCustomerRequest deleteCustomerRequest) {
@@ -72,5 +75,10 @@ public class CustomerService {
                 passwordEncoder.encode(signupRequest.getPassword()),
                 new Address(signupRequest.getAddress()),
                 new PhoneNumber(phoneNumberFormat.appendNumbers()));
+    }
+
+    private void updateCustomer(UpdateCustomerRequest updateCustomerRequest, Customer customer) {
+        customer.updateInformation(updateCustomerRequest.getNickname(), updateCustomerRequest.getAddress(),
+                updateCustomerRequest.getPhoneNumber());
     }
 }
