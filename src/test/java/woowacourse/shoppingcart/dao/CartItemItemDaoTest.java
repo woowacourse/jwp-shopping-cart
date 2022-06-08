@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartProductResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
@@ -20,12 +21,12 @@ import javax.sql.DataSource;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemDaoTest {
+public class CartItemItemDaoTest {
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
 
-    public CartItemDaoTest(DataSource dataSource) {
+    public CartItemItemDaoTest(DataSource dataSource) {
         cartItemDao = new CartItemDao(dataSource);
         productDao = new ProductDao(dataSource);
     }
@@ -51,10 +52,10 @@ public class CartItemDaoTest {
         final Long cartItemId = cartItemDao.addCartItem(1L, product.getId(), 1L, true);
 
         // when
-        CartProductResponse cartProductResponse = cartItemDao.findCartIdById(cartItemId);
+        CartItem cartItem = cartItemDao.findCartIdById(cartItemId);
 
         // then
-        assertThat(cartProductResponse.getQuantity()).isEqualTo(1);
+        assertThat(cartItem.getQuantity()).isEqualTo(1);
     }
 
     @DisplayName("장바구니 아이템 전체 삭제")

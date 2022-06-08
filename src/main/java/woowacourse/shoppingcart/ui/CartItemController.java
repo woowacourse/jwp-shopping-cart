@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.CartProducts;
+import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.*;
 
 @RestController
@@ -25,7 +25,7 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<CartProducts> getCartItems(@AuthenticationPrincipal String userNameByToken) {
+    public ResponseEntity<CartItemsResponse> getCartItems(@AuthenticationPrincipal String userNameByToken) {
         return ResponseEntity.ok().body(cartService.getCart(userNameByToken));
     }
 
@@ -42,7 +42,7 @@ public class CartItemController {
     }
 
     @PatchMapping
-    public ResponseEntity<CartProducts> modifyCartItem(@AuthenticationPrincipal String userNameByToken, @RequestBody ModifyProductRequests modifyProductRequests) {
+    public ResponseEntity<CartItemsResponse> modifyCartItem(@AuthenticationPrincipal String userNameByToken, @RequestBody ModifyProductRequests modifyProductRequests) {
         return ResponseEntity.ok().body(cartService.modifyCartItems(modifyProductRequests));
     }
 }

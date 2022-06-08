@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @DisplayName("장바구니 관련 기능")
-public class CartAcceptanceTest extends AcceptanceTest {
+public class CartItemAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
 
     @Override
