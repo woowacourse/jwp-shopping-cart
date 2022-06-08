@@ -55,11 +55,6 @@ public class ProductDao {
         }
     }
 
-    public List<Product> findAllProducts() {
-        String sql = "SELECT id, name, price, image_url, selling, description FROM product";
-        return namedParameterJdbcTemplate.query(sql, mapToProduct());
-    }
-
     public List<Product> findSellingProducts() {
         String sql = "SELECT id, name, price, image_url, selling, description FROM product WHERE selling = true";
         return namedParameterJdbcTemplate.query(sql, mapToProduct());
