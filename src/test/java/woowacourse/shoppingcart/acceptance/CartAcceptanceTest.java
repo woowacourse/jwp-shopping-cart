@@ -14,10 +14,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -73,7 +75,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartItem() {
         장바구니_아이템_추가되어_있음(token, new CartRequest(productId1, 10));
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(token, List.of(productId1));
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(token, new ProductsRequest(List.of(productId1)));
 
         장바구니_삭제됨(response);
     }
@@ -95,14 +97,14 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token, List<Long> productIds) {
-        return requestHttpDelete(token, productIds, "/customers/carts").extract();
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token, ProductsRequest productsRequest) {
+        return requestHttpDelete(token, productsRequest, "/customers/carts").extract();
     }
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         CartResponse cart = response.as(CartResponse.class);
-        assertThat(cart).extracting("id", "quantity")
+        assertThat(cart).extracting("productId", "quantity")
                 .containsExactly(1L, 10);
     }
 
@@ -117,7 +119,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
         CartItemsResponse cartItems = response.jsonPath().getObject(".", CartItemsResponse.class);
         List<Long> resultProductIds = cartItems.getCarts().stream()
-                .map(ProductResponse::getId)
+                .map(CartItemResponse::getProductId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }

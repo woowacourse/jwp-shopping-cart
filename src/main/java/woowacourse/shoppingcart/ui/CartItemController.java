@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.ProductsRequest;
 
 @RestController
 @RequestMapping("/customers/carts")
@@ -45,7 +46,7 @@ public class CartItemController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCartItem(@MemberOnly Long customerId, @RequestBody List<Long> productIds) {
-        cartService.deleteCartItems(customerId, productIds);
+    public void deleteCartItem(@MemberOnly Long customerId, @RequestBody ProductsRequest productsRequest) {
+        cartService.deleteCartItems(customerId, productsRequest);
     }
 }

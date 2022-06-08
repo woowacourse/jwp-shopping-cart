@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @SpringBootTest
@@ -40,7 +42,7 @@ class CartServiceTest {
         CartItemsResponse cartItems = cartService.findCartItems(1L);
 
         List<Long> resultProductIds = cartItems.getCarts().stream()
-                .map(ProductResponse::getId)
+                .map(CartItemResponse::getProductId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).containsExactly(1L, 2L);
     }
@@ -52,7 +54,7 @@ class CartServiceTest {
 
         CartItemsResponse cartItems = cartService.findCartItems(1L);
         List<Integer> quantities = cartItems.getCarts().stream()
-                .map(ProductResponse::getQuantity)
+                .map(CartItemResponse::getQuantity)
                 .collect(Collectors.toList());
         assertThat(quantities).contains(7);
     }
@@ -60,11 +62,11 @@ class CartServiceTest {
     @Test
     @DisplayName("장바구니에서 아이템을 삭제한다.")
     void deleteCartItems() {
-        cartService.deleteCartItems(1L, List.of(1L));
+        cartService.deleteCartItems(1L, new ProductsRequest(List.of(1L)));
 
         CartItemsResponse cartItems = cartService.findCartItems(1L);
         List<Long> resultProductIds = cartItems.getCarts().stream()
-                .map(ProductResponse::getId)
+                .map(CartItemResponse::getProductId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).containsExactly(2L);
     }

@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -25,12 +27,12 @@ public class CartService {
 
     public CartResponse addCartItem(Long customerId, CartRequest cartRequest) {
         checkCartItemDuplication(customerId, cartRequest);
-        cartItemDao.save(customerId, cartRequest.getId(), cartRequest.getQuantity());
-        return new CartResponse(cartRequest.getId(), cartRequest.getQuantity());
+        cartItemDao.save(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
+        return new CartResponse(cartRequest.getProductId(), cartRequest.getQuantity());
     }
 
     private void checkCartItemDuplication(Long customerId, CartRequest cartRequest) {
-        if (cartItemDao.existByCustomerIdAndProductId(customerId, cartRequest.getId())) {
+        if (cartItemDao.existByCustomerIdAndProductId(customerId, cartRequest.getProductId())) {
             throw new InvalidCartItemException("장바구니에 이미 존재하는 상품입니다.");
         }
     }
@@ -40,15 +42,15 @@ public class CartService {
         return new CartItemsResponse(createCartItemResponses(carts));
     }
 
-    private List<ProductResponse> createCartItemResponses(List<Cart> carts) {
+    private List<CartItemResponse> createCartItemResponses(List<Cart> carts) {
         return carts.stream()
-                .map(cart -> ProductResponse.from(cart.getProduct(), cart.getQuantity()))
+                .map(cart -> CartItemResponse.from(cart.getProduct(), cart.getQuantity()))
                 .collect(Collectors.toList());
     }
 
     public void updateCartItemQuantity(Long customerId, CartRequest cartRequest) {
-        checkExistCartItem(customerId, cartRequest.getId());
-        cartItemDao.updateQuantityByCustomerIdAndProductId(customerId, cartRequest.getId(), cartRequest.getQuantity());
+        checkExistCartItem(customerId, cartRequest.getProductId());
+        cartItemDao.updateQuantityByCustomerIdAndProductId(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
     }
 
     private void checkExistCartItem(Long customerId, Long productId) {
@@ -57,8 +59,8 @@ public class CartService {
         }
     }
 
-    public void deleteCartItems(Long customerId, List<Long> productIds) {
-        for (Long productId : productIds) {
+    public void deleteCartItems(Long customerId, ProductsRequest productsRequest) {
+        for (Long productId : productsRequest.getProductIds()) {
             checkExistCartItem(customerId, productId);
             cartItemDao.deleteByCustomerIdAndProductId(customerId, productId);
         }
