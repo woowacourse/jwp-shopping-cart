@@ -40,7 +40,7 @@ public class ProductDao {
     public List<Product> findProducts(final int limit, final int offset) {
         final String query = "SELECT id, name, price, image_url, stock FROM product ORDER BY id"
                 + " LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER, limit, (offset - 1) * limit);
+        return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER, limit, offset);
     }
 
     public int findTotalCount() {

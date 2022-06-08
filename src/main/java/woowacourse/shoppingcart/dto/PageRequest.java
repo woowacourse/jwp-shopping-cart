@@ -17,19 +17,23 @@ public class PageRequest {
         this.limit = limit;
     }
 
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
+    public int calculateOffset() {
+        return (limit - 1) * page;
     }
 
     public int getPage() {
         return page;
     }
 
+    public void setPage(int page) {
+        this.page = page;
+    }
+
     public int getLimit() {
         return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 }

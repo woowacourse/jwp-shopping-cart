@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dto.PageRequest;
 @Service
 @Transactional(readOnly = true)
 public class ProductService {
+
     private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {
@@ -17,7 +18,7 @@ public class ProductService {
     }
 
     public List<Product> findProducts(final PageRequest pageRequest) {
-        return productDao.findProducts(pageRequest.getLimit(), pageRequest.getPage());
+        return productDao.findProducts(pageRequest.getLimit(), pageRequest.calculateOffset());
     }
 
     public Product findProductById(final Long productId) {
