@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.config.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartProductRequest;
 import woowacourse.shoppingcart.dto.CartQuantityRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.LoginCustomer;
@@ -35,11 +36,11 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<CartResponse> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
+    public ResponseEntity<CartResponse> addCartItem(@Validated(Request.id.class) @RequestBody final CartProductRequest cartProductRequest,
             @AuthenticationPrincipal final LoginCustomer loginCustomer) {
-        final CartResponse cartResponse = cartService.addCart(product.getId(), loginCustomer.getUsername());
+        final CartResponse cartResponse = cartService.addCart(cartProductRequest.getProductId(), loginCustomer.getUsername());
 
-        return ResponseEntity.ok(cartResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartResponse);
     }
 
     @DeleteMapping("/{cartId}")

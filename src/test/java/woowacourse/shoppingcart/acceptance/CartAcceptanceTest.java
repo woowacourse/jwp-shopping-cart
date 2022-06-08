@@ -108,7 +108,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(Long productId, String accessToken) {
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
+        requestBody.put("productId", productId);
 
         return RestAssured
                 .given().log().all()
@@ -162,8 +162,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-//        assertThat(response.header("Location")).isNotBlank();
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     public static CartResponse 장바구니_아이템_추가되어_있음(Long productId, String accessToken) {
