@@ -20,7 +20,6 @@ import woowacourse.fixture.SimpleRestAssured;
 import woowacourse.shoppingcart.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.dto.response.CartItemsResponse;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
-import woowacourse.shoppingcart.dto.response.RedirectErrorResponse;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {

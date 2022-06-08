@@ -38,4 +38,9 @@ public class OrdersDetailDao {
                 rs.getInt("quantity")
         ), orderId);
     }
+
+    public void deleteByOrder(final Long orderId) {
+        final String sql = "DELETE FROM orders_detail WHERE orders_id = ?";
+        jdbcTemplate.update(sql, orderId);
+    }
 }

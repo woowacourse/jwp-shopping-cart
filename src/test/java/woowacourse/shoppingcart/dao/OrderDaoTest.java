@@ -49,7 +49,7 @@ class OrderDaoTest {
         jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
 
         //when
-        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
+        final List<Long> orderIdsByCustomerId = orderDao.findIdsByCustomer(customerId);
 
         //then
         assertThat(orderIdsByCustomerId).hasSize(2);

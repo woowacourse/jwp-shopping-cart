@@ -124,7 +124,7 @@ public class CartItemDaoTest {
         final Long customerId = 1L;
 
         // when
-        cartItemDao.deleteCartItemByCustomer(customerId);
+        cartItemDao.deleteByCustomer(customerId);
 
         // then
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);

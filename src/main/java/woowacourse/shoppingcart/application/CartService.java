@@ -14,7 +14,6 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.CartItemsRequest;
 import woowacourse.shoppingcart.dto.request.QuantityRequest;
 import woowacourse.shoppingcart.dto.response.CartItemsResponse;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -66,7 +65,7 @@ public class CartService {
 
     public void deleteCart(final String username) {
         Long customerId = customerDao.getIdByUsername(username);
-        cartItemDao.deleteCartItemByCustomer(customerId);
+        cartItemDao.deleteByCustomer(customerId);
     }
 
     public void deleteCartItems(CartItemsRequest cartItemsRequest, String username) {

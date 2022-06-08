@@ -70,7 +70,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException(final RuntimeException e) {
-        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse("예상치 못한 에러가 발생했습니다.");
         return ResponseEntity.internalServerError().body(errorResponse);
     }
 }

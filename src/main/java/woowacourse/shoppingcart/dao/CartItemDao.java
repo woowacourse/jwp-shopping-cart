@@ -60,11 +60,9 @@ public class CartItemDao {
         validateRowCount(rowCount);
     }
 
-    public void deleteCartItemByCustomer(final Long customerId) {
+    public void deleteByCustomer(final Long customerId) {
         final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
-
-        final int rowCount = jdbcTemplate.update(sql, customerId);
-        validateRowCount(rowCount);
+        jdbcTemplate.update(sql, customerId);
     }
 
     public void deleteCartItem(Long productId, Long customerId) {
