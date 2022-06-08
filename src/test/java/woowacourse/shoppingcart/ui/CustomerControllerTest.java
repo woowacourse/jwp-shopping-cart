@@ -90,7 +90,7 @@ class CustomerControllerTest {
 
         final ResponseEntity<PasswordCheckResponse> response = customerController.checkPassword("email@email.com", passwordRequest);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @DisplayName("비밀번호를 확인에 실패한다.")
