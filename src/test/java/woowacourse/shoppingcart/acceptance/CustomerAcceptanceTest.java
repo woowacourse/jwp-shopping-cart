@@ -18,9 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.request.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.dto.response.ExceptionResponse;
 
 @DisplayName("회원 관련 기능")

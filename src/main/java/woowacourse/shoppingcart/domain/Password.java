@@ -1,44 +1,41 @@
 package woowacourse.shoppingcart.domain;
 
-import java.util.Objects;
-import woowacourse.exception.PasswordLengthException;
+import java.util.regex.Pattern;
+import woowacourse.exception.EncodedPasswordNotCorrectException;
+import woowacourse.exception.PasswordInValidException;
+import woowacourse.shoppingcart.application.PasswordEncoderAdapter;
 
 public class Password {
 
-    private static final int MIN_SIZE = 8;
-    private static final int MAX_SIZE = 15;
+    private static final String ENCODED_PATTERN = "\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}";
+    private static final String PLANE_PATTERN = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,15}$";
+    private static final Encoder encoder = new PasswordEncoderAdapter();
 
     private final String password;
 
-    public Password(String password) {
-        if (password.length() < MIN_SIZE || password.length() > MAX_SIZE) {
-            throw new PasswordLengthException();
-        }
+    private Password(String password) {
         this.password = password;
     }
 
-    public boolean isMatches(Password inputPassword, Encoder passwordEncoder) {
-        return passwordEncoder.matches(inputPassword.getPassword(), password);
+    public static Password planePassword(String password) {
+        if (!Pattern.matches(PLANE_PATTERN, password)) {
+            throw new PasswordInValidException();
+        }
+        return new Password(encoder.encode(password));
+    }
+
+    public static Password encodePassword(String password) {
+        if (!Pattern.matches(ENCODED_PATTERN, password)) {
+            throw new EncodedPasswordNotCorrectException();
+        }
+        return new Password(password);
+    }
+
+    public boolean isMatches(String planePassword) {
+        return encoder.matches(planePassword, password);
     }
 
     public String getPassword() {
         return password;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Password)) {
-            return false;
-        }
-        Password password1 = (Password) o;
-        return Objects.equals(password, password1.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(password);
     }
 }

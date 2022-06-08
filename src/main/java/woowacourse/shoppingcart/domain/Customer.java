@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.exception.PasswordIncorrectException;
+
 public class Customer {
     private final Long id;
     private final Email email;
@@ -17,8 +19,8 @@ public class Customer {
         this(null, email, name, password);
     }
 
-    public boolean validatePassword(Password inputPassword, Encoder passwordEncoder) {
-        return password.isMatches(inputPassword, passwordEncoder);
+    public boolean isCorrectPassword(String inputPassword) {
+        return this.password.isMatches(inputPassword);
     }
 
     public Customer changeName(String name) {

@@ -15,7 +15,7 @@ import woowacourse.exception.EmailDuplicateException;
 import woowacourse.exception.EmailFormattingException;
 import woowacourse.exception.LoginFailureException;
 import woowacourse.exception.PasswordIncorrectException;
-import woowacourse.exception.PasswordLengthException;
+import woowacourse.exception.PasswordInValidException;
 import woowacourse.exception.TokenInvalidException;
 import woowacourse.exception.UnauthorizedException;
 import woowacourse.shoppingcart.dto.response.ExceptionResponse;
@@ -30,7 +30,7 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 @RestControllerAdvice
 public class ControllerAdvice {
     @ExceptionHandler({EmailDuplicateException.class, EmailFormattingException.class,
-            PasswordLengthException.class, InvalidPageException.class})
+            PasswordInValidException.class, InvalidPageException.class})
     public ResponseEntity<ExceptionResponse> handleBadRequestException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }

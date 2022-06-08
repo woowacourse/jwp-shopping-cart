@@ -7,24 +7,21 @@ import woowacourse.exception.PasswordIncorrectException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.domain.Encoder;
 import woowacourse.shoppingcart.domain.Password;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.request.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
 @Service
 public class CustomerService {
 
     private final CustomerDao customerDao;
-    private final Encoder encoder;
 
     public CustomerService(CustomerDao customerDao) {
         this.customerDao = customerDao;
-        this.encoder = new PasswordEncoderAdapter();
     }
 
     @Transactional
@@ -33,11 +30,11 @@ public class CustomerService {
             throw new EmailDuplicateException();
         }
 
-        final String hashPassword = encoder.encode(customerRequest.getPassword());
         final Customer customer = new Customer(
                 new Email(customerRequest.getEmail()),
                 customerRequest.getName(),
-                new Password(hashPassword));
+                Password.planePassword(customerRequest.getPassword())
+        );
 
         return customerDao.save(customer);
     }
@@ -64,10 +61,9 @@ public class CustomerService {
     public Long updatePassword(Long id, CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         final Customer customer = customerDao.findById(id)
                 .orElseThrow(CustomerNotFoundException::new);
-        validatePassword(customer, customerUpdatePasswordRequest.getOldPassword());
+        validatePasswordIsCorrect(customer, customerUpdatePasswordRequest.getOldPassword());
 
-        final String hashPassword = encoder.encode(customerUpdatePasswordRequest.getNewPassword());
-        final Password newPassword = new Password(hashPassword);
+        final Password newPassword = Password.planePassword(customerUpdatePasswordRequest.getNewPassword());
         final Customer newCustomer = customer.changePassword(newPassword);
         customerDao.updatePassword(newCustomer);
         return id;
@@ -75,14 +71,14 @@ public class CustomerService {
 
     public Long delete(long id, CustomerDeleteRequest customerDeleteRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
-        validatePassword(customer, customerDeleteRequest.getPassword());
+        validatePasswordIsCorrect(customer, customerDeleteRequest.getPassword());
 
         customerDao.delete(id);
         return id;
     }
 
-    private void validatePassword(Customer customer, String inputPassword) {
-        if (!customer.validatePassword(new Password(inputPassword), encoder)) {
+    private void validatePasswordIsCorrect(Customer customer, String password) {
+        if (!customer.isCorrectPassword(password)) {
             throw new PasswordIncorrectException();
         }
     }

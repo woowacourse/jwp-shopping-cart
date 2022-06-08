@@ -20,7 +20,7 @@ public class CustomerDao {
                 rs.getLong("id"),
                 new Email(rs.getString("email")),
                 rs.getString("name"),
-                new Password(rs.getString("password"))
+                Password.encodePassword(rs.getString("password"))
         );
     };
 
@@ -68,13 +68,11 @@ public class CustomerDao {
 
     public void updateProfile(Customer customer) {
         final String sql = "UPDATE Customer SET name = ? WHERE id = ?";
-
         jdbcTemplate.update(sql, customer.getName(), customer.getId());
     }
 
     public void updatePassword(Customer customer) {
         final String sql = "UPDATE Customer SET password = ? WHERE id = ?";
-
         jdbcTemplate.update(sql, customer.getPassword(), customer.getId());
     }
 

@@ -120,7 +120,7 @@ public class AcceptanceTest {
 
     protected void signUp() {
         RestAssured.given().log().all()
-                .body(toJson(new CustomerRequest("잉", "ing@woowahan.com", "ing_woowahan")))
+                .body(toJson(잉_회원생성요청))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post(CUSTOMER_URI)
