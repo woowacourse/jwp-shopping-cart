@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.CartResponses;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequests;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
@@ -34,7 +35,7 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartResponse> findCartsByCustomerName(final String customerName) {
+    public CartResponses findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
         final List<CartResponse> responses = new ArrayList<>();
@@ -51,7 +52,7 @@ public class CartService {
                     cart.isChecked()
             ));
         }
-        return responses;
+        return new CartResponses(responses);
     }
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
@@ -78,7 +79,7 @@ public class CartService {
     }
 
     @Transactional
-    public List<CartResponse> updateCartItems(UpdateCartItemRequests updateCartItemRequests, String customerName) {
+    public CartResponses updateCartItems(UpdateCartItemRequests updateCartItemRequests, String customerName) {
         List<CartResponse> responses = new ArrayList<>();
 
         for (UpdateCartItemRequest cartItemRequest : updateCartItemRequests.getCartItems()) {
@@ -100,7 +101,7 @@ public class CartService {
             ));
         }
 
-        return responses;
+        return new CartResponses(responses);
     }
 
     @Transactional

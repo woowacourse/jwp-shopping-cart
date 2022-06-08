@@ -4,7 +4,10 @@ import java.util.List;
 
 public class UpdateCartItemRequests {
 
-    private final List<UpdateCartItemRequest> cartItems;
+    private List<UpdateCartItemRequest> cartItems;
+
+    private UpdateCartItemRequests() {
+    }
 
     public UpdateCartItemRequests(List<UpdateCartItemRequest> cartItems) {
         this.cartItems = cartItems;

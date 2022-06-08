@@ -15,6 +15,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.CartResponses;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequests;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequests;
 
@@ -28,7 +29,7 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartResponse>> getCartItems(@AuthenticationPrincipal final String customerName) {
+    public ResponseEntity<CartResponses> getCartItems(@AuthenticationPrincipal final String customerName) {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
     }
 
@@ -45,7 +46,7 @@ public class CartItemController {
     }
 
     @PatchMapping
-    public ResponseEntity<List<CartResponse>> updateCartItems(
+    public ResponseEntity<CartResponses> updateCartItems(
             @RequestBody UpdateCartItemRequests updateCartItemRequests,
             @AuthenticationPrincipal String customerName) {
         return ResponseEntity.ok().body(cartService.updateCartItems(updateCartItemRequests, customerName));
