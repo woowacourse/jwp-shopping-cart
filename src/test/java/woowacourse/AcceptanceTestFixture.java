@@ -4,8 +4,14 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.shoppingcart.dto.CustomerRequest;
 
 public class AcceptanceTestFixture {
+
+    private static final String EMAIL = "test@gmail.com";
+    private static final String PASSWORD = "password1!";
+    private static final String USER_NAME = "이스트";
 
     public static ExtractableResponse<Response> getMethodRequest(String path) {
         return RestAssured.given().log().all()
@@ -34,6 +40,17 @@ public class AcceptanceTestFixture {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> postMethodRequestWithBearerAuth(Object request, String token, String path) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post(path)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> patchMethodRequestWithBearerAuth(Object request, String token, String path) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + token)
@@ -45,10 +62,10 @@ public class AcceptanceTestFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> deleteMethodRequest(String path) {
+    public static ExtractableResponse<Response> deleteMethodRequest(Object request, String path) {
         return RestAssured.given().log().all()
-//                .body(request)
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .delete(path)
                 .then().log().all()
@@ -65,4 +82,16 @@ public class AcceptanceTestFixture {
                 .then().log().all()
                 .extract();
     }
+
+    public static void join() {
+        final CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, USER_NAME);
+        postMethodRequest(customerRequest, "/api/customers");
+    }
+
+    public static String login() {
+        final LoginRequest loginRequest = new LoginRequest(EMAIL, PASSWORD);
+        final ExtractableResponse<Response> response = postMethodRequest(loginRequest, "/api/auth/login");
+        return response.jsonPath().getString("accessToken");
+    }
+
 }
