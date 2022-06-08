@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import woowacourse.shoppingcart.dto.response.ErrorResponse;
+import woowacourse.shoppingcart.dto.response.RedirectErrorResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.IllegalCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
@@ -26,10 +27,11 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 public class ControllerAdvice {
 
     @ExceptionHandler
-    public ResponseEntity<Void> handleIllegalCartItem(final IllegalCartItemException e) {
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+    public ResponseEntity<RedirectErrorResponse> handleIllegalCartItem(final IllegalCartItemException e) {
+        RedirectErrorResponse errorResponse = new RedirectErrorResponse(e.getMessage());
+        return ResponseEntity.badRequest()
                 .header("Location", "/cart")
-                .build();
+                .body(errorResponse);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

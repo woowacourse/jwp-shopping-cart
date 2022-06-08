@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +36,7 @@ public class CartItemController {
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final String username,
                                             @PathVariable final Long productId) {
         cartService.addCart(productId, username);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(URI.create("/cart")).build();
     }
 
     @PutMapping("/{productId}/quantity")

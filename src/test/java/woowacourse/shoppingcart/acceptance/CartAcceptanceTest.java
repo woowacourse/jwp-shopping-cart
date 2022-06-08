@@ -20,6 +20,7 @@ import woowacourse.fixture.SimpleRestAssured;
 import woowacourse.shoppingcart.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.dto.response.CartItemsResponse;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
+import woowacourse.shoppingcart.dto.response.RedirectErrorResponse;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -43,6 +44,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
         SimpleResponse response = 장바구니_아이템_추가_요청(productId1);
 
         장바구니_아이템_추가됨(response);
+    }
+
+    @DisplayName("이미 담긴 아이템에 대해 추가 요청을 하면 예외가 발생한다")
+    @Test
+    void addCartItem_not_created() {
+        장바구니_아이템_추가되어_있음(productId1);
+        SimpleResponse response = 장바구니_아이템_추가_요청(productId1);
+
+        response.assertStatus(HttpStatus.BAD_REQUEST);
+        response.assertBody("redirect", true);
+        response.assertHeader("Location", "/cart");
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
@@ -134,7 +146,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_추가됨(SimpleResponse response) {
-        response.assertStatus(HttpStatus.OK);
+        response.assertStatus(HttpStatus.CREATED);
+        response.assertHeader("Location", "/cart");
     }
 
     public static void 장바구니_아이템_추가되어_있음(Long productId) {

@@ -110,7 +110,8 @@
     - {id, name, price, thumbnail}
   - [예외] 존재하지 않는 상품에 대해 요청할 경우 `404 Not Found`
 - 장바구니에 상품 추가 `POST /cart/{productId}` -> `200 OK`
-  - [예외] 이미 담은 상품일 때 `303 See Other`
+  - [예외] 이미 담은 상품일 때 `400 Bad Request`
+    - {message, redirect(boolean)}
 - 장바구니 상품 목록 조회 `GET /cart` -> `200 OK`
   - 장바구니에 담긴 상품 정보와 수량 json array로 응답
     - {cartItems: [{product: {id, name, price, thumbnail}, quantity}]}
