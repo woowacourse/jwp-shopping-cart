@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponses;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -28,10 +29,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> findProducts(long size, long page) {
+    public ProductResponses findProducts(long size, long page) {
         validateSizeAndPage(size, page);
 
-        return productDao.findProducts(size, page);
+        return new ProductResponses(productDao.findProducts(size, page));
     }
 
     @Transactional
