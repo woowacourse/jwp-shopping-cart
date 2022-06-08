@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.helper.fixture.TMember.MARU;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import woowacourse.helper.fixture.Request;
 import woowacourse.shoppingcart.domain.Cart;
 
 @DisplayName("장바구니 관련 기능")
@@ -29,6 +28,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     public void setUp() {
         super.setUp();
         MARU.register();
+        MARU.login();
         user = MARU.getName();
         productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
@@ -66,33 +66,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
+        requestBody.put("product_id", productId);
 
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", userName)
-                .then().log().all()
-                .extract();
+        return Request.postWithToken(requestBody, "/api/members/me/carts", MARU.getToken());
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", userName)
-                .then().log().all()
-                .extract();
+        return Request.getWithToken("/api/members/me/carts", MARU.getToken());
     }
 
     public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
-                .then().log().all()
-                .extract();
+        return Request.deleteWithTokenAndPathValue(cartId, "/api/members/me/carts/{cartId}", MARU.getToken());
     }
 
     public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
