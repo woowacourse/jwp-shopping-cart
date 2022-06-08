@@ -15,10 +15,10 @@ class FullAddressTest {
         // given
         String address = "서울시 강남구 선릉역";
         String detailAddress = "이디야";
-        String zoneCode = "12345";
+        String zonecode = "12345";
 
         // when
-        FullAddress actual = FullAddress.of(address, detailAddress, zoneCode);
+        FullAddress actual = FullAddress.of(address, detailAddress, zonecode);
 
         // then
         assertThat(actual).isNotNull();
@@ -27,9 +27,9 @@ class FullAddressTest {
     @DisplayName("올바르지 않은 주소 포맷을 전달하면 예외가 발생한다.")
     @CsvSource(value = {",이디야,12345", "서울시 강남구,이디야,1234", ",,"})
     @ParameterizedTest
-    void constructor_invalidFormat(String address, String detailAddress, String zoneCode) {
+    void constructor_invalidFormat(String address, String detailAddress, String zonecode) {
         // when & then
-        assertThatThrownBy(() -> FullAddress.of(address, detailAddress, zoneCode))
+        assertThatThrownBy(() -> FullAddress.of(address, detailAddress, zonecode))
                 .isInstanceOf(RuntimeException.class);
     }
 

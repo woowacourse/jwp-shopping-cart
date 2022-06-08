@@ -10,14 +10,14 @@ public class CustomerRequest {
     private String contact;
     private String address;
     private String detailAddress;
-    private String zoneCode;
+    private String zonecode;
     private boolean terms;
 
     public CustomerRequest() {
     }
 
     public CustomerRequest(String email, String password, String profileImageUrl, String name, String gender,
-                           String birthday, String contact, String address, String detailAddress, String zoneCode,
+                           String birthday, String contact, String address, String detailAddress, String zonecode,
                            boolean terms) {
         this.email = email;
         this.password = password;
@@ -28,7 +28,7 @@ public class CustomerRequest {
         this.contact = contact;
         this.address = address;
         this.detailAddress = detailAddress;
-        this.zoneCode = zoneCode;
+        this.zonecode = zonecode;
         this.terms = terms;
     }
 
@@ -68,8 +68,8 @@ public class CustomerRequest {
         return detailAddress;
     }
 
-    public String getZoneCode() {
-        return zoneCode;
+    public String getZonecode() {
+        return zonecode;
     }
 
     public boolean isTerms() {
@@ -88,7 +88,7 @@ public class CustomerRequest {
                 ", contact='" + contact + '\'' +
                 ", address='" + address + '\'' +
                 ", detailAddress='" + detailAddress + '\'' +
-                ", zoneCode='" + zoneCode + '\'' +
+                ", zonecode='" + zonecode + '\'' +
                 ", terms=" + terms +
                 '}';
     }

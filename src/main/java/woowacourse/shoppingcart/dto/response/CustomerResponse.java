@@ -9,14 +9,14 @@ public class CustomerResponse {
     private String contact;
     private String address;
     private String detailAddress;
-    private String zoneCode;
+    private String zonecode;
     private boolean terms;
 
     public CustomerResponse() {
     }
 
     public CustomerResponse(String email, String profileImageUrl, String name, String gender, String birthday,
-                            String contact, String address, String detailAddress, String zoneCode, boolean terms) {
+                            String contact, String address, String detailAddress, String zonecode, boolean terms) {
         this.email = email;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
@@ -25,7 +25,7 @@ public class CustomerResponse {
         this.contact = contact;
         this.address = address;
         this.detailAddress = detailAddress;
-        this.zoneCode = zoneCode;
+        this.zonecode = zonecode;
         this.terms = terms;
     }
 
@@ -61,8 +61,8 @@ public class CustomerResponse {
         return detailAddress;
     }
 
-    public String getZoneCode() {
-        return zoneCode;
+    public String getZonecode() {
+        return zonecode;
     }
 
     public boolean isTerms() {
@@ -80,7 +80,7 @@ public class CustomerResponse {
                 ", contact='" + contact + '\'' +
                 ", address='" + address + '\'' +
                 ", detailAddress='" + detailAddress + '\'' +
-                ", zoneCode='" + zoneCode + '\'' +
+                ", zonecode='" + zonecode + '\'' +
                 ", terms=" + terms +
                 '}';
     }

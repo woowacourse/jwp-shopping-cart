@@ -1,13 +1,13 @@
 package woowacourse.shoppingcart.domain.customer.address;
 
 import java.util.Objects;
-import woowacourse.shoppingcart.exception.format.InvalidZoneCodeFormatException;
+import woowacourse.shoppingcart.exception.format.InvalidZonecodeFormatException;
 
-public class ZoneCode {
+public class Zonecode {
     private static final String ZONE_CODE_REGEX = "\\d{5}";
     private final String value;
 
-    public ZoneCode(String value) {
+    public Zonecode(String value) {
         validateFormat(value);
         this.value = value;
     }
@@ -18,7 +18,7 @@ public class ZoneCode {
 
     private void validateFormat(String value) {
         if (Objects.isNull(value) || !value.matches(ZONE_CODE_REGEX)) {
-            throw new InvalidZoneCodeFormatException();
+            throw new InvalidZonecodeFormatException();
         }
     }
 
@@ -30,8 +30,8 @@ public class ZoneCode {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ZoneCode zoneCode = (ZoneCode) o;
-        return Objects.equals(value, zoneCode.value);
+        Zonecode zonecode = (Zonecode) o;
+        return Objects.equals(value, zonecode.value);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ZoneCode {
 
     @Override
     public String toString() {
-        return "ZoneCode{" +
+        return "Zonecode{" +
                 "value='" + value + '\'' +
                 '}';
     }

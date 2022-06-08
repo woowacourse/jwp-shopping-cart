@@ -5,16 +5,16 @@ import java.util.Objects;
 public class FullAddress {
     private final Address address;
     private final DetailAddress detailAddress;
-    private final ZoneCode zoneCode;
+    private final Zonecode zonecode;
 
-    private FullAddress(Address address, DetailAddress detailAddress, ZoneCode zoneCode) {
+    private FullAddress(Address address, DetailAddress detailAddress, Zonecode zonecode) {
         this.address = address;
         this.detailAddress = detailAddress;
-        this.zoneCode = zoneCode;
+        this.zonecode = zonecode;
     }
 
-    public static FullAddress of(String address, String detailAddress, String zoneCode) {
-        return new FullAddress(new Address(address), DetailAddress.from(detailAddress), new ZoneCode(zoneCode));
+    public static FullAddress of(String address, String detailAddress, String zonecode) {
+        return new FullAddress(new Address(address), DetailAddress.from(detailAddress), new Zonecode(zonecode));
     }
 
     public Address getAddress() {
@@ -25,8 +25,8 @@ public class FullAddress {
         return detailAddress;
     }
 
-    public ZoneCode getZoneCode() {
-        return zoneCode;
+    public Zonecode getZonecode() {
+        return zonecode;
     }
 
     @Override
@@ -39,12 +39,12 @@ public class FullAddress {
         }
         FullAddress that = (FullAddress) o;
         return Objects.equals(address, that.address) && Objects.equals(detailAddress,
-                that.detailAddress) && Objects.equals(zoneCode, that.zoneCode);
+                that.detailAddress) && Objects.equals(zonecode, that.zonecode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(address, detailAddress, zoneCode);
+        return Objects.hash(address, detailAddress, zonecode);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class FullAddress {
         return "FullAddress{" +
                 "address=" + address +
                 ", detailAddress=" + detailAddress +
-                ", zoneCode=" + zoneCode +
+                ", zonecode=" + zonecode +
                 '}';
     }
 }

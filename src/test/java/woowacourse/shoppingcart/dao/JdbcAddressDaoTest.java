@@ -56,8 +56,8 @@ class JdbcAddressDaoTest {
         AddressEntity actual = addressDao.findById(customerId);
 
         // then
-        assertThat(actual).extracting("customerId", "address", "detailAddress", "zoneCode")
-                .containsExactly(customerId, actual.getAddress(), actual.getDetailAddress(), actual.getZoneCode());
+        assertThat(actual).extracting("customerId", "address", "detailAddress", "zonecode")
+                .containsExactly(customerId, actual.getAddress(), actual.getDetailAddress(), actual.getZonecode());
     }
 
 
@@ -77,9 +77,9 @@ class JdbcAddressDaoTest {
         AddressEntity actual = addressDao.findById(customerId);
 
         // then
-        assertThat(actual).extracting("customerId", "address", "detailAddress", "zoneCode")
+        assertThat(actual).extracting("customerId", "address", "detailAddress", "zonecode")
                 .containsExactly(customerId, newAddressEntity.getAddress(), newAddressEntity.getDetailAddress(),
-                        newAddressEntity.getZoneCode());
+                        newAddressEntity.getZonecode());
     }
 
     @DisplayName("id를 전달받아 해당하는 Address를 삭제한다.")

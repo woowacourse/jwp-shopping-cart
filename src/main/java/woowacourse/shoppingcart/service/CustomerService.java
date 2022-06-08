@@ -93,7 +93,7 @@ public class CustomerService {
         Privacy privacy = Privacy.of(customerRequest.getName(), customerRequest.getGender(),
                 customerRequest.getBirthday(), customerRequest.getContact());
         FullAddress fullAddress = FullAddress.of(customerRequest.getAddress(), customerRequest.getDetailAddress(),
-                customerRequest.getZoneCode());
+                customerRequest.getZonecode());
 
         return Customer.of(customerRequest.getEmail(), customerRequest.getPassword(),
                 customerRequest.getProfileImageUrl(), privacy, fullAddress, customerRequest.isTerms());
@@ -112,7 +112,7 @@ public class CustomerService {
     private AddressEntity convertAddressToEntity(int customerId, FullAddress fullAddress) {
         return new AddressEntity(customerId, fullAddress.getAddress().getValue(),
                 fullAddress.getDetailAddress().getValue(),
-                fullAddress.getZoneCode().getValue());
+                fullAddress.getZonecode().getValue());
     }
 
     private CustomerResponse convertEntityToResponse(CustomerEntity customerEntity, PrivacyEntity privacyEntity,
@@ -120,7 +120,7 @@ public class CustomerService {
         return new CustomerResponse(customerEntity.getEmail(), customerEntity.getProfileImageUrl(),
                 privacyEntity.getName(), privacyEntity.getGender(),
                 privacyEntity.getBirthday().format(DateTimeFormatter.ISO_DATE), privacyEntity.getContact(),
-                addressEntity.getAddress(), addressEntity.getDetailAddress(), addressEntity.getZoneCode(),
+                addressEntity.getAddress(), addressEntity.getDetailAddress(), addressEntity.getZonecode(),
                 customerEntity.isTerms());
     }
 }

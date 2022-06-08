@@ -3,15 +3,15 @@ package woowacourse.shoppingcart.dto.request;
 public class AddressRequest {
     private String address;
     private String detailAddress;
-    private String zoneCode;
+    private String zonecode;
 
     public AddressRequest() {
     }
 
-    public AddressRequest(String address, String detailAddress, String zoneCode) {
+    public AddressRequest(String address, String detailAddress, String zonecode) {
         this.address = address;
         this.detailAddress = detailAddress;
-        this.zoneCode = zoneCode;
+        this.zonecode = zonecode;
     }
 
     public String getAddress() {
@@ -22,8 +22,8 @@ public class AddressRequest {
         return detailAddress;
     }
 
-    public String getZoneCode() {
-        return zoneCode;
+    public String getZonecode() {
+        return zonecode;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class AddressRequest {
         return "AddressRequest{" +
                 "address='" + address + '\'' +
                 ", detailAddress='" + detailAddress + '\'' +
-                ", zoneCode='" + zoneCode + '\'' +
+                ", zonecode='" + zonecode + '\'' +
                 '}';
     }
 }

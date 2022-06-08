@@ -7,17 +7,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.shoppingcart.exception.format.InvalidZoneCodeFormatException;
+import woowacourse.shoppingcart.exception.format.InvalidZonecodeFormatException;
 
-class ZoneCodeTest {
+class ZonecodeTest {
     @DisplayName("우편번호 문자열을 전달받아 생성된다.")
     @Test
     void constructor() {
         // given
-        String zoneCode = "12345";
+        String zonecode = "12345";
 
         // when
-        ZoneCode actual = new ZoneCode(zoneCode);
+        Zonecode actual = new Zonecode(zonecode);
 
         // then
         assertThat(actual).isNotNull();
@@ -28,7 +28,7 @@ class ZoneCodeTest {
     @ParameterizedTest
     void constructor_invalidFormat(String input) {
         // when & then
-        assertThatThrownBy(() -> new ZoneCode(input))
-                .isInstanceOf(InvalidZoneCodeFormatException.class);
+        assertThatThrownBy(() -> new Zonecode(input))
+                .isInstanceOf(InvalidZonecodeFormatException.class);
     }
 }

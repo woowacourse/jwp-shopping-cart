@@ -28,7 +28,7 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public void save(AddressEntity addressEntity) {
-        String sql = "INSERT INTO full_address (customer_id, address, detail_address, zone_code) VALUES(:customerId, :address, :detailAddress, :zoneCode)";
+        String sql = "INSERT INTO full_address (customer_id, address, detail_address, zone_code) VALUES(:customerId, :address, :detailAddress, :zonecode)";
 
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(addressEntity);
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
@@ -42,7 +42,7 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public void update(AddressEntity addressEntity) {
-        String sql = "UPDATE full_address SET address = :address, detail_address = :detailAddress, zone_code = :zoneCode WHERE customer_id = :customerId";
+        String sql = "UPDATE full_address SET address = :address, detail_address = :detailAddress, zone_code = :zonecode WHERE customer_id = :customerId";
 
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(addressEntity);
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
