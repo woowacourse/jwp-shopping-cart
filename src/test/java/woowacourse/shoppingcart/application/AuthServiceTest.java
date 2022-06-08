@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static woowacourse.shoppingcart.dao.CustomerFixture.connieDto;
+import static woowacourse.shoppingcart.fixture.CustomerFixture.connieDto;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

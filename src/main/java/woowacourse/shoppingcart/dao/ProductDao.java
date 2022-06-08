@@ -4,15 +4,12 @@ import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
@@ -22,19 +19,18 @@ public class ProductDao {
     private final SimpleJdbcInsert simpleInsert;
 
     public ProductDao(final DataSource dataSource) {
-        this.namedJdbcTemplate =new NamedParameterJdbcTemplate(dataSource);
+        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.simpleInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
     }
 
     public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
         final Map<String, Object> params = Map.ofEntries(
                 Map.entry("name", product.getName()),
                 Map.entry("price", product.getPrice()),
                 Map.entry("image_url", product.getImageUrl()),
-                Map.entry("description", product.getDescription()) ,
+                Map.entry("description", product.getDescription()),
                 Map.entry("stock", product.getStock())
         );
         return simpleInsert.executeAndReturnKey(params).longValue();

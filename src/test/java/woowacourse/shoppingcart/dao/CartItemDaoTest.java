@@ -20,23 +20,26 @@ import woowacourse.shoppingcart.fixture.ProductFixtures;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
+
     private final CartItemDao cartItemDao;
+    private final CustomerDao customerDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
+        cartItemDao = new CartItemDao(dataSource);
         productDao = new ProductDao(dataSource);
+        customerDao = new CustomerDao(dataSource);
     }
 
     @BeforeEach
     void setUp() {
         productDao.save(ProductFixtures.PRODUCT_1);
-        productDao.save(ProductFixtures.PRODUCT_2);
+        productDao.save(ProductFixtures.PRODUCT_3);
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 1);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 1);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
@@ -46,9 +49,10 @@ public class CartItemDaoTest {
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
+        final int quantity = 1;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(customerId, productId, quantity);
 
         // then
         assertThat(cartId).isEqualTo(3L);

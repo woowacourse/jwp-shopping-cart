@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import woowacourse.shoppingcart.dao.CustomerFixture;
 import woowacourse.shoppingcart.domain.address.FullAddress;
+import woowacourse.shoppingcart.fixture.CustomerFixture;
 
 @DisplayName("Customer 는")
 class CustomerTest {

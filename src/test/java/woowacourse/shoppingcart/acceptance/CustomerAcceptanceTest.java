@@ -205,6 +205,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    private TokenResponse 로그인_후_토큰_발급(TokenRequest request) {
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .post("/api/customer/authentication/sign-in")
+                .then().log().all()
+                .extract();
+        return response.body()
+                .jsonPath()
+                .getObject("", TokenResponse.class);
+    }
+
     private ExtractableResponse<Response> 회원_조회(String accessToken, Long customerId) {
         return RestAssured.given()
                 .log().all()
@@ -227,17 +239,5 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .post("/api/customer/authentication/sign-in")
                 .then().log().all()
                 .extract();
-    }
-
-    private TokenResponse 로그인_후_토큰_발급(TokenRequest request) {
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .post("/api/customer/authentication/sign-in")
-                .then().log().all()
-                .extract();
-        return response.body()
-                .jsonPath()
-                .getObject("", TokenResponse.class);
     }
 }

@@ -28,6 +28,10 @@ public class ProductFixtures {
     public static final Product PRODUCT_2 = new Product(2L, PRODUCT_REQUEST_2.getName(), PRODUCT_REQUEST_2.getPrice(),
             PRODUCT_REQUEST_2.getImageUrl(), PRODUCT_REQUEST_2.getDescription(), PRODUCT_REQUEST_2.getStock());
 
+    public static final Product PRODUCT_3 = new Product(3L, PRODUCT_REQUEST_3.getName(), PRODUCT_REQUEST_3.getPrice(),
+            PRODUCT_REQUEST_3.getImageUrl(), PRODUCT_REQUEST_3.getDescription(), PRODUCT_REQUEST_3.getStock());
+
+
     public static Map<String, Object> getProductRequestParam(ProductRequest productRequest) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", productRequest.getName());

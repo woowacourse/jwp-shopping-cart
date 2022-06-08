@@ -3,11 +3,8 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static woowacourse.shoppingcart.dao.CustomerFixture.connieDto;
+import static woowacourse.shoppingcart.fixture.CustomerFixture.connieDto;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,14 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.BadRequestException;
 import woowacourse.auth.exception.NotFoundException;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
-import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.dto.AddressRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -70,7 +64,6 @@ class CustomerServiceTest {
                     .hasMessage("이미 가입한 사용자입니다.");
         }
     }
-
 
 
     @DisplayName("회원 조회를 할 때")
