@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.global.exception.InvalidCartItemException;
 import woowacourse.global.exception.InvalidProductException;
 import woowacourse.shoppingcart.application.dto.CartResponse;
 import woowacourse.shoppingcart.application.dto.CustomerSaveRequest;
@@ -44,6 +45,21 @@ class CartServiceTest {
         // then
         assertThat(actualResponse).usingRecursiveComparison()
                 .isEqualTo(new CartResponse(1L, "치킨", 20_000, 1, "test.url.com"));
+    }
+
+    @Test
+    @DisplayName("장바구니에 이미 등록된 상품을 등록할 시 오류가 발생한다.")
+    void saveDuplicateProduct() {
+        // given
+        customerService.save(new CustomerSaveRequest("email@email.com", "password123@Q", "zero"));
+        productService.save(new ProductSaveRequest("치킨", 20_000, "test.url.com"));
+
+        // when
+        cartService.save(1L, 1L);
+
+        // then
+        assertThatThrownBy(() -> cartService.save(1L, 1L))
+                .isInstanceOf(InvalidCartItemException.class);
     }
 
     @Test

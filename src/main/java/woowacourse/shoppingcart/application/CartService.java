@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.global.exception.InvalidCartItemException;
 import woowacourse.global.exception.InvalidProductException;
 import woowacourse.shoppingcart.application.dto.CartResponse;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
@@ -34,6 +35,13 @@ public class CartService {
     private void validateSave(Long customerId, Long productId) {
         customerService.findById(customerId);
         productService.findById(productId);
+        validateCartInProductId(productId);
+    }
+
+    private void validateCartInProductId(Long productId) {
+        if (cartItemDao.existProductId(productId)) {
+            throw new InvalidCartItemException("[ERROR] 장바구니에 이미 등록된 상품입니다.");
+        }
     }
 
     public CartResponse findById(Long id) {

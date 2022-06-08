@@ -5,7 +5,7 @@ values ('캔시머 페트캔(500ml)', 30500, 'https://cdn-mart.baemin.com/seller
 INSERT INTO product (name, price, image_url)
 values ('캔시머 페트캔(650ml)', 36300, 'https://cdn-mart.baemin.com/sellergoods/main/5ede0150-620c-422d-8ced-0566746031be.jpg');
 INSERT INTO product (name, price, image_url)
-values ('아이스컵 98파이 20온스', '60700', 'https://cdn-mart.baemin.com/sellergoods/main/f2ad3aed-57d0-4f6c-a499-ed9b8fa78f06.jpg');
+values ('아이스컵 98파이 20온스', 60700, 'https://cdn-mart.baemin.com/sellergoods/main/f2ad3aed-57d0-4f6c-a499-ed9b8fa78f06.jpg');
 INSERT INTO product (name, price, image_url)
 values ('캔시머 페트캔(500ml) 큐브', 30500, 'https://cdn-mart.baemin.com/sellergoods/main/6488a856-f3cd-4d52-b0e0-59cfa2533cd8.jpg');
 INSERT INTO product (name, price, image_url)

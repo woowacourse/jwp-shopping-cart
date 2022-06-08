@@ -74,4 +74,12 @@ public class CartItemDao {
                 .addValue("product_id", productId);
         template.update(query, nameParameters);
     }
+
+    public boolean existProductId(Long productId) {
+        String query = "SELECT EXISTS (SELECT * FROM cart_item WHERE product_id=:product_id)";
+
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource("product_id", productId);
+        int count = template.queryForObject(query, nameParameters, Integer.class);
+        return count != 0;
+    }
 }
