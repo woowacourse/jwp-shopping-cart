@@ -8,11 +8,8 @@ import javax.sql.DataSource;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.shoppingcart.ProductInsertUtil;
 import woowacourse.shoppingcart.domain.Product;
@@ -50,6 +47,7 @@ public class ProductDaoTest {
     @Test
     void getProducts() {
         // given
+        int originSize = productDao.findAll().size();
         productInsertUtil.insert("초콜렛", 1_000, "www.test1.com");
         productInsertUtil.insert("치킨", 20_000, "www.test2.com");
 
@@ -57,6 +55,6 @@ public class ProductDaoTest {
         final List<Product> products = productDao.findAll();
 
         // then
-        assertThat(products).size().isEqualTo(2);
+        assertThat(products).size().isEqualTo(originSize + 2);
     }
 }
