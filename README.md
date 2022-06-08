@@ -53,5 +53,5 @@
 # 기능 목록
 - swagger 문서: http://localhost:8080/swagger-ui/
 - Application 실행
-- `schema.sql` 상품에 대한 샘플 데이터 포함.
-- `test_db.sql` 테스트용 db_상품에 대한 샘플 데이터 없음.
+- `schema.sql` 상품에 대한 샘플 데이터 포함. 배포 시마다 데이터가 롤백되지 않도록 `drop table if exists` 삭제
+- `test_db.sql` 테스트용 db_상품에 대한 샘플 데이터 없음. `drop table if exists` 문법 포함

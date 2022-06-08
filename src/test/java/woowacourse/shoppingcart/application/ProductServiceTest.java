@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest
 @Transactional
-@Sql("/test_db.sql")
+@Sql("/test_schema.sql")
 class ProductServiceTest {
     private final ProductRequest productRequest1 =
             new ProductRequest("감자", 200, "https://example.com/potato.jpg");

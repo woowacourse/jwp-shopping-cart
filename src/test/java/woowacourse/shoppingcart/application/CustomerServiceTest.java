@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional
-@Sql("/test_db.sql")
+@Sql("/test_schema.sql")
 class CustomerServiceTest {
     private final CustomerRequest customerRequest1 =
             new CustomerRequest("kth990303", "kth@@123", "케이", 23);
