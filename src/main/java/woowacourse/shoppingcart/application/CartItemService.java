@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.dto.cartitem.CartItemCreateRequest;
 import woowacourse.shoppingcart.dto.cartitem.CartItemCreateResponse;
 import woowacourse.shoppingcart.dto.cartitem.CartItemDeleteRequest;
 import woowacourse.shoppingcart.dto.cartitem.CartItemResponse;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -53,8 +54,15 @@ public class CartItemService {
     public CartItemAddResponse addCartItem(final TokenRequest tokenRequest,
                                            final CartItemAddRequest cartItemAddRequest) {
         Customer customer = customerDao.findById(tokenRequest.getId());
+        validateExistCartItem(cartItemAddRequest.getId());
         Long cartItemId = cartItemDao.addCartItemById(cartItemAddRequest.getId(), cartItemAddRequest.getQuantity());
         return new CartItemAddResponse(cartItemId, cartItemAddRequest.getQuantity());
+    }
+
+    private void validateExistCartItem(final Long cartItemId) {
+        if (!cartItemDao.existCartItemById(cartItemId)) {
+            throw new InvalidProductException("카트에 선택한 상품중 존재하지 않는 상품이 있습니다.");
+        }
     }
 
     public List<CartItemResponse> findCartItemsByCustomerId(final TokenRequest tokenRequest) {
@@ -73,6 +81,9 @@ public class CartItemService {
                                 final List<CartItemDeleteRequest> cartItemDeleteRequests) {
         Customer customer = customerDao.findById(tokenRequest.getId());
         cartItemDeleteRequests
-                .forEach(cartItemDeleteRequest -> cartItemDao.deleteCartItem(cartItemDeleteRequest.getId()));
+                .forEach(cartItemDeleteRequest -> {
+                    validateExistCartItem(cartItemDeleteRequest.getId());
+                    cartItemDao.deleteCartItem(cartItemDeleteRequest.getId());
+                });
     }
 }

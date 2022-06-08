@@ -56,4 +56,11 @@ public class ProductDao {
         final String query = "SELECT id, name, price, image_url FROM product ORDERS LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER, limitCount, startProductIndex);
     }
+
+    public boolean existProduct(final Product product) {
+        String query = "SELECT EXISTS (SELECT id FROM product WHERE name = ? AND price = ? AND image_url = ?)";
+        return Boolean.TRUE.equals(
+                jdbcTemplate.queryForObject(query, Boolean.class, product.getName(), product.getPrice(),
+                        product.getImageUrl()));
+    }
 }

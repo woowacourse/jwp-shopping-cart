@@ -92,4 +92,9 @@ public class CartItemDao {
         String query = "SELECT EXISTS (SELECT id FROM cart_item WHERE customer_id =? AND product_id = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, customerId, productId));
     }
+
+    public boolean existCartItemById(final Long cartItemId) {
+        String query = "SELECT EXISTS (SELECT id FROM cart_item WHERE id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, cartItemId));
+    }
 }
