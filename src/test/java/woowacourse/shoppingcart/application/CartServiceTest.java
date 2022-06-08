@@ -33,11 +33,34 @@ class CartServiceTest {
         assertThat(cartService.findCartsByEmail(EMAIL)).hasSize(2);
     }
 
-    @DisplayName("장바구니에 상품을 추가한다.")
+    @DisplayName("장바구니에 새로운 상품을 추가한다.")
     @Test
-    void addCartItem() {
-        final CartAdditionRequest cartAdditionRequest = new CartAdditionRequest(1L, 1);
+    void saveCartItem() {
+        final CartAdditionRequest cartAdditionRequest = new CartAdditionRequest(10L, 1);
         assertDoesNotThrow(() -> cartService.addCartItem(EMAIL, cartAdditionRequest));
+    }
+
+    @DisplayName("장바구니에 새로운 상품을 추가할 때 재고보다 많은 수량을 담으려는 경우 예외가 발생한다.")
+    @Test
+    void saveExceedQuantity() {
+        final CartAdditionRequest cartAdditionRequest = new CartAdditionRequest(1L, 100);
+        assertThatThrownBy(() -> cartService.addCartItem(EMAIL, cartAdditionRequest))
+                .isInstanceOf(InvalidCartItemException.class);
+    }
+
+    @DisplayName("장바구니에 기존에 있던 상품을 추가한다.")
+    @Test
+    void saveExistingCartItem() {
+        final CartAdditionRequest cartAdditionRequest = new CartAdditionRequest(1L, 3);
+        assertDoesNotThrow(() -> cartService.addCartItem(EMAIL, cartAdditionRequest));
+    }
+
+    @DisplayName("장바구니에 기존에 있던 상품을 추가할 때 합계 수량이 재고보다 많은 경우 예외가 발생한다.")
+    @Test
+    void saveExistingCartItemExceedQuantity() {
+        final CartAdditionRequest cartAdditionRequest = new CartAdditionRequest(1L, 10);
+        assertThatThrownBy(() -> cartService.addCartItem(EMAIL, cartAdditionRequest))
+                .isInstanceOf(InvalidCartItemException.class);
     }
 
     @DisplayName("장바구니에 상품 수량을 변경한다.")

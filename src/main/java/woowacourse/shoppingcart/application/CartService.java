@@ -43,13 +43,27 @@ public class CartService {
     }
 
     @Transactional
-    public void addCartItem(final CartAdditionRequest cartAdditionRequest, final String email) {
+    public void addCartItem(final String email, final CartAdditionRequest cartAdditionRequest) {
         final Long customerId = customerDao.findIdByEmail(new Email(email));
+        final Product product = productDao.findProductById(cartAdditionRequest.getProductId());
+
+        if (cartItemDao.existCartItem(customerId, product.getId())) {
+            addQuantity(cartAdditionRequest, customerId, product);
+            return;
+        }
+        validateStock(product.getStock(), cartAdditionRequest.getQuantity());
         try {
             cartItemDao.addCartItem(customerId, cartAdditionRequest.getProductId(), cartAdditionRequest.getQuantity());
         } catch (Exception e) {
             throw new InvalidProductException();
         }
+    }
+
+    private void addQuantity(CartAdditionRequest cartAdditionRequest, Long customerId, Product product) {
+        CartItemEntity cartItemEntity = cartItemDao.findByCustomerIdAndProductId(customerId, product.getId());
+        int newQuantity = cartItemEntity.getQuantity() + cartAdditionRequest.getQuantity();
+        validateStock(product.getStock(), newQuantity);
+        cartItemDao.updateCartItem(customerId, product.getId(), newQuantity);
     }
 
     @Transactional
