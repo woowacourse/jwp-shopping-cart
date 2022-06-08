@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,6 +9,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dto.request.CartItemsRequest;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -28,21 +30,16 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-//    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-//        final Long customerId = customerDao.getIdByUsername(customerName);
-//        final Long ordersId = orderDao.addOrders(customerId);
-//
-//        for (final OrderRequest orderDetail : orderDetailRequests) {
-//            final Long cartId = orderDetail.getCartId();
-//            final Long productId = cartItemDao.findProductIdById(cartId);
-//            final int quantity = orderDetail.getQuantity();
-//
-//            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-//            cartItemDao.deleteCartItemByCustomer(cartId);
-//        }
-//
-//        return ordersId;
-//    }
+    public Long addOrder(CartItemsRequest cartItemsRequest, String username) {
+        final Long customerId = customerDao.getIdByUsername(username);
+        Long orderId = orderDao.addOrders(customerId);
+        List<Long> productIds = cartItemsRequest.getProductIds();
+        for (Long productId : productIds) {
+            int quantity = cartItemDao.findQuantity(productId, customerId);
+            ordersDetailDao.addOrdersDetail(orderId, productId, quantity);
+        }
+        return orderId;
+    }
 //
 //    public Orders findOrderById(final String customerName, final Long orderId) {
 //        validateOrderIdByCustomerName(customerName, orderId);

@@ -32,22 +32,21 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final String username,
                                          @RequestBody @Valid final CartItemsRequest cartItemsRequest) {
-        //final Long orderId = orderService.addOrder(orderRequest, username);
+        final Long orderId = orderService.addOrder(cartItemsRequest, username);
         cartService.deleteCartItems(cartItemsRequest, username);
-        return ResponseEntity.created(
-                URI.create("/orders/" + 1)).build();
+        return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
-
-    @GetMapping("/{orderId}")
-    public ResponseEntity<Void> findOrder(@PathVariable final String customerName,
-                                          @PathVariable final Long orderId) {
-        //final Orders order = orderService.findOrderById(customerName, orderId);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping
-    public ResponseEntity<Void> findOrders(@PathVariable final String customerName) {
-        //final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
-        return ResponseEntity.ok().build();
-    }
+//
+//    @GetMapping("/{orderId}")
+//    public ResponseEntity<Void> findOrder(@PathVariable final String customerName,
+//                                          @PathVariable final Long orderId) {
+//        //final Orders order = orderService.findOrderById(customerName, orderId);
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @GetMapping
+//    public ResponseEntity<Void> findOrders(@PathVariable final String customerName) {
+//        //final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
+//        return ResponseEntity.ok().build();
+//    }
 }
