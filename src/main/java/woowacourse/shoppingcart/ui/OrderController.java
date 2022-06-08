@@ -16,6 +16,8 @@ public class OrderController {
     @PostMapping("/auth/customer/orders")
     public ResponseEntity<Void> creat(final @AuthenticationPrincipal TokenRequest tokenRequest,
                                       final @RequestBody List<OrderRequest> orderRequests) {
-        return ResponseEntity.created(URI.create("/orders/")).build();
+        return ResponseEntity.created(URI.create("/orders/"))
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 }

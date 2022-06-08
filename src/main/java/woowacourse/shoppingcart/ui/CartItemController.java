@@ -29,7 +29,9 @@ public class CartItemController {
     @GetMapping("/auth/customer/cartItems")
     public ResponseEntity<List<CartItemResponse>> getCartItems(final @AuthenticationPrincipal TokenRequest request) {
         List<CartItemResponse> responses = cartItemService.findCartItemsByCustomerId(request);
-        return ResponseEntity.ok().body(responses);
+        return ResponseEntity.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .body(responses);
     }
 
     @PostMapping("/auth/customer/cartItems")
@@ -38,7 +40,9 @@ public class CartItemController {
             final @RequestBody List<ProductIdRequest> productIdRequests
     ) {
         List<CartItemQuantityResponse> responses = cartItemService.addCartItems(tokenRequest, productIdRequests);
-        return ResponseEntity.ok().body(responses);
+        return ResponseEntity.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .body(responses);
     }
 
     @PatchMapping("/auth/customer/cartItems")
@@ -47,12 +51,16 @@ public class CartItemController {
             final @RequestBody CartItemQuantityRequest cartItemQuantityRequest
     ) {
         CartItemQuantityResponse response = cartItemService.updateCartItem(tokenRequest, cartItemQuantityRequest);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .body(response);
     }
 
     @DeleteMapping("/auth/customer/cartItems")
     public ResponseEntity<Void> delete(final @RequestBody List<CartItemIdRequest> cartItemIdRequests) {
         cartItemService.delete(cartItemIdRequests);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent()
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 }
