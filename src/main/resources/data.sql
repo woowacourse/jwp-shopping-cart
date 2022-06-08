@@ -1,4 +1,4 @@
-INSERT INTO customer (name, password, email, address, phone_number) VALUES ('halee', '$2a$10$iVjNvsW9uy2joOzETTZIPeHB3x1QgoJrsuy2PwtxfG8qLPA.MvkSa', 'example@email.com', 'some-address', '010-1234-1234');
+INSERT INTO customer (name, password, email, address, phone_number, is_deleted) VALUES ('halee', '$2a$10$iVjNvsW9uy2joOzETTZIPeHB3x1QgoJrsuy2PwtxfG8qLPA.MvkSa', 'example@email.com', 'some-address', '010-1234-1234', 0);
 
 INSERT INTO product (id, name, price, image_url, is_deleted, description)
 VALUES (1, '짱구 토끼 인형', 9900,

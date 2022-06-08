@@ -32,6 +32,7 @@ public class CustomerDao {
             resultSet.getString("address"),
             resultSet.getString("phone_number")
         );
+
     private final JdbcTemplate jdbcTemplate;
 
     public CustomerDao(final JdbcTemplate jdbcTemplate) {
@@ -39,8 +40,8 @@ public class CustomerDao {
     }
 
     public Optional<Long> save(final Customer customer) {
-        final String query = "INSERT INTO customer (name, password, email, address, phone_number) "
-            + "VALUES (?, ?, ?, ?, ?)";
+        final String query = "INSERT INTO customer (name, password, email, address, phone_number, is_deleted) "
+            + "VALUES (?, ?, ?, ?, ?, 0)";
         KeyHolder holder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update((Connection con) -> {
@@ -59,7 +60,7 @@ public class CustomerDao {
     }
 
     public Optional<Customer> findByName(final UserName userName) {
-        final String query = "SELECT * FROM customer WHERE name = ?";
+        final String query = "SELECT * FROM customer WHERE name = ? and is_deleted = 0";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, userName.getValue()));
         } catch (EmptyResultDataAccessException e) {
@@ -68,7 +69,7 @@ public class CustomerDao {
     }
 
     public Optional<Customer> findById(final Long id) {
-        final String query = "SELECT * FROM customer WHERE id = ?";
+        final String query = "SELECT * FROM customer WHERE id = ? and is_deleted = 0";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
@@ -77,7 +78,7 @@ public class CustomerDao {
     }
 
     public boolean update(Customer customer) {
-        final String query = "UPDATE customer SET address = ?, phone_number = ? WHERE id = ?";
+        final String query = "UPDATE customer SET address = ?, phone_number = ? WHERE id = ? and is_deleted = 0";
         return isUpdated(
             jdbcTemplate.update(query, customer.getAddress(), customer.getPhoneNumber(), customer.getId()));
     }
@@ -87,12 +88,12 @@ public class CustomerDao {
     }
 
     public boolean deleteById(Long id) {
-        final String query = "DELETE FROM customer WHERE id = ?";
+        final String query = "UPDATE customer SET is_deleted = 1 WHERE id = ?";
         return isUpdated(jdbcTemplate.update(query, id));
     }
 
     public boolean isDuplicated(String column, DistinctAttribute attribute) {
-        final String query = String.format("SELECT EXISTS(SELECT 1 FROM customer WHERE %s = ?)", column);
+        final String query = String.format("SELECT EXISTS(SELECT 1 FROM customer WHERE %s = ? and is_deleted = 0)", column);
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, attribute.getDistinctive()));
     }
 }
