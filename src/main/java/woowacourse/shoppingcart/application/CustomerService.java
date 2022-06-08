@@ -30,7 +30,7 @@ public class CustomerService {
         return customerDao.save(request);
     }
 
-    public Customer findById(long id) {
+    public Customer getById(long id) {
         return customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
     }
@@ -55,7 +55,7 @@ public class CustomerService {
     }
 
     private boolean isSameOriginUsername(Long id, CustomerUpdateRequest request) {
-        Customer foundCustomer = findById(id);
+        Customer foundCustomer = getById(id);
         return foundCustomer.getUsername().equals(request.getUsername());
     }
 
@@ -79,7 +79,7 @@ public class CustomerService {
     }
 
     private void validateCustomerExists(Long id) {
-        findById(id);
+        getById(id);
     }
 
     public void checkSamePassword(String savedPassword, String enteredPassword) {

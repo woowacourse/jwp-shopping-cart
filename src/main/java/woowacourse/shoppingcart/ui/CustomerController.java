@@ -50,7 +50,7 @@ public class CustomerController {
                                    @AuthenticationPrincipal Customer customer) {
         validateAuthorizedUser(id, customer);
         customerService.update(id, request);
-        Customer updatedCustomer = customerService.findById(id);
+        Customer updatedCustomer = customerService.getById(id);
 
         return new CustomerResponse(updatedCustomer);
     }

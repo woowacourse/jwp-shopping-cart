@@ -61,7 +61,7 @@ public class CustomerServiceTest {
     @Test
     void findById() {
         // when
-        Customer customer = customerService.findById(1L);
+        Customer customer = customerService.getById(1L);
 
         // then
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
@@ -104,7 +104,7 @@ public class CustomerServiceTest {
     @Test
     void findById_throwNotExistId() {
         // when then
-        assertThatThrownBy(() -> customerService.findById(100L))
+        assertThatThrownBy(() -> customerService.getById(100L))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
@@ -157,7 +157,7 @@ public class CustomerServiceTest {
         customerService.delete(savedId);
 
         // then
-        assertThatThrownBy(() -> customerService.findById(savedId))
+        assertThatThrownBy(() -> customerService.getById(savedId))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }

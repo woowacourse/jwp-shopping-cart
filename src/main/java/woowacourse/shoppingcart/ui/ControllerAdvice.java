@@ -19,6 +19,7 @@ import woowacourse.shoppingcart.dto.ErrorResponseWithField;
 import woowacourse.shoppingcart.exception.DuplicateDomainException;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
+import woowacourse.shoppingcart.exception.ExistSameProductIdException;
 import woowacourse.shoppingcart.exception.ForbiddenAccessException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -34,7 +35,6 @@ public class ControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUnhandledException(RuntimeException exception) {
-        exception.printStackTrace();
         return new ErrorResponse("Unhandled Exception");
     }
 
@@ -86,7 +86,10 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
             NotMatchPasswordException.class,
-            OutOfStockException.class
+            OutOfStockException.class,
+            ExistSameProductIdException.class,
+            IllegalArgumentException.class,
+            IllegalStateException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidAccess(final RuntimeException e) {
