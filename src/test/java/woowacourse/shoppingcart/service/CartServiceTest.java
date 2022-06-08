@@ -28,7 +28,7 @@ public class CartServiceTest {
     @Test
     void 장바구니_조회() {
         CartResponse cartResponse = cartService.findByUserName("puterism");
-        assertThat(cartResponse.getProducts().size()).isEqualTo(3);
+        assertThat(cartResponse.getCartItems().size()).isEqualTo(3);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class CartServiceTest {
                         new UpdateCartItemElement(2L, 1, true)));
         CartResponse updateCartItemResponse =
                 cartService.updateItem("puterism", updateCartItemRequest);
-        assertThat(updateCartItemResponse.getProducts().size()).isEqualTo(2);
+        assertThat(updateCartItemResponse.getCartItems().size()).isEqualTo(2);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class CartServiceTest {
                         new DeleteCartItemElement(2L)));
         cartService.deleteItem("puterism", deleteCartItemRequest);
         CartResponse cartResponse = cartService.findByUserName("puterism");
-        assertThat(cartResponse.getProducts().size()).isEqualTo(1);
+        assertThat(cartResponse.getCartItems().size()).isEqualTo(1);
     }
 
     @Test
@@ -162,6 +162,6 @@ public class CartServiceTest {
     void 장바구니를_삭제하는_경우() {
         cartService.deleteCart("puterism");
         CartResponse cartResponse = cartService.findByUserName("puterism");
-        assertThat(cartResponse.getProducts().size()).isEqualTo(0);
+        assertThat(cartResponse.getCartItems().size()).isEqualTo(0);
     }
 }

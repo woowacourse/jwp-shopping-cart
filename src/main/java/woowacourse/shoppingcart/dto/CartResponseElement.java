@@ -5,6 +5,7 @@ import woowacourse.shoppingcart.domain.Product;
 public class CartResponseElement {
 
     private Long id;
+    private Long productId;
     private String name;
     private int price;
     private String imageUrl;
@@ -18,6 +19,7 @@ public class CartResponseElement {
         this.id = id;
         this.name = product.getName();
         this.price = product.getPrice();
+        this.productId = product.getId();
         this.imageUrl = product.getImageUrl();
         this.quantity = quantity;
         this.checked = checked;
@@ -25,6 +27,10 @@ public class CartResponseElement {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public String getName() {

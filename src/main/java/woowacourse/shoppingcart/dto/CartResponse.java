@@ -5,11 +5,10 @@ import woowacourse.shoppingcart.domain.Product;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class CartResponse {
 
-    private List<CartResponseElement> products;
+    private List<CartResponseElement> cartItems;
 
     public CartResponse() {
     }
@@ -19,13 +18,13 @@ public class CartResponse {
         List<Long> ids = cart.getIds();
         List<Boolean> checks = cart.getChecks();
         List<Integer> quantities = cart.getQuantities();
-        this.products = new ArrayList<>();
+        this.cartItems = new ArrayList<>();
         for (int i = 0; i < products.size(); i++) {
-            this.products.add(new CartResponseElement(ids.get(i), products.get(i), checks.get(i), quantities.get(i)));
+            this.cartItems.add(new CartResponseElement(ids.get(i), products.get(i), checks.get(i), quantities.get(i)));
         }
     }
 
-    public List<CartResponseElement> getProducts() {
-        return products;
+    public List<CartResponseElement> getCartItems() {
+        return cartItems;
     }
 }

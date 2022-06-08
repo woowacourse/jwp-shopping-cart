@@ -5,21 +5,21 @@ import java.util.stream.Collectors;
 
 public class DeleteCartItemRequest {
 
-    private List<DeleteCartItemElement> products;
+    private List<DeleteCartItemElement> cartItems;
 
     public DeleteCartItemRequest() {
     }
 
-    public DeleteCartItemRequest(List<DeleteCartItemElement> products) {
-        this.products = products;
+    public DeleteCartItemRequest(List<DeleteCartItemElement> cartItems) {
+        this.cartItems = cartItems;
     }
 
-    public List<DeleteCartItemElement> getProducts() {
-        return products;
+    public List<DeleteCartItemElement> getCartItems() {
+        return cartItems;
     }
 
     public List<Long> getIds() {
-        return products.stream()
+        return cartItems.stream()
                 .map(DeleteCartItemElement::getId)
                 .collect(Collectors.toList());
     }
