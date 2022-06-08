@@ -220,7 +220,7 @@ public class CartItemDaoTest {
         final Long cartId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteCartItem(1L, cartId);
 
         // then
         final Long customerId = 1L;
@@ -237,7 +237,7 @@ public class CartItemDaoTest {
         final Long cartId = 3L;
 
         // when
-        assertThatThrownBy(() -> cartItemDao.deleteCartItem(cartId))
+        assertThatThrownBy(() -> cartItemDao.deleteCartItem(1L, cartId))
                 .isInstanceOf(InvalidCartItemException.class);
     }
 }

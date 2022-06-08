@@ -72,15 +72,16 @@ public class CartService {
         return findCartsByEmail(email);
     }
 
-    public List<Cart> deleteCart(final String email, final Long cartId) {
-        validateCustomerCart(cartId, email);
-        cartItemDao.deleteCartItem(cartId);
+    public List<Cart> deleteCart(final String email, final Long productId) {
+        final Long customerId = customerDao.findIdByEmail(new Email(email));
+        validateCustomerCart(customerId, productId);
+        cartItemDao.deleteCartItem(customerId, productId);
         return findCartsByEmail(email);
     }
 
-    private void validateCustomerCart(final Long cartId, final String email) {
-        final List<Long> cartIds = findCartIdsByEmail(email);
-        if (cartIds.contains(cartId)) {
+    private void validateCustomerCart(final Long customerId, final Long productId) {
+        List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        if (productIds.contains(productId)) {
             return;
         }
         throw new NotInCustomerCartItemException();
