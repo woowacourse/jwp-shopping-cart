@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.AlreadyInCartException;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -36,6 +37,7 @@ public class CartService {
     public Long add(final Long customerId, final CartSaveServiceRequest request) {
         final Customer customer = getCustomer(customerId);
         final Product product = getProduct(request.getProductId());
+        validateExistsInCart(customerId, request.getProductId());
 
         return cartItemDao.addCartItem(customer.getId(), product.getId(), request.getQuantity());
     }
@@ -72,6 +74,12 @@ public class CartService {
     private Product getProduct(final Long productId) {
         return productDao.findProductById(productId)
                 .orElseThrow(ProductNotFoundException::new);
+    }
+
+    private void validateExistsInCart(final Long customerId, final Long productId) {
+        if (cartItemDao.existsInCart(customerId, productId)) {
+            throw new AlreadyInCartException();
+        }
     }
 
     private void validateExistInCart(final Long customerId, final List<Long> ids) {

@@ -1,8 +1,10 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +18,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.*;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.exception.AlreadyInCartException;
 import woowacourse.shoppingcart.util.PasswordEncryptor;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +38,7 @@ class CartServiceTest {
     @Mock
     private ProductDao productDao;
 
+    @DisplayName("장바구니에 품목을 추가한다.")
     @Test
     void add() {
         // given
@@ -55,6 +59,28 @@ class CartServiceTest {
         assertThat(cartService.add(customer.getId(), request)).isOne();
     }
 
+    @DisplayName("이미 동일한 상품이 카트에 등록되어 있을 경우 예외가 발생한다.")
+    @Test
+    void add_duplicateCartItemExists_throwsException() {
+        // given
+        final CartSaveServiceRequest request = new CartSaveServiceRequest(1L, 5);
+        final String password = PasswordEncryptor.encrypt("12345678");
+        final Customer customer = new Customer(1L, "썬", new Email("sun@gmail.com"), new EncodedPassword(password));
+        final Product product = new Product(1L, "치킨", 3000, "www.chicken.com");
+
+        // when
+        when(customerDao.findById(1L))
+                .thenReturn(Optional.of(customer));
+        when(productDao.findProductById(1L))
+                .thenReturn(Optional.of(product));
+        when(cartItemDao.existsInCart(any(Long.class), any(Long.class)))
+                .thenReturn(true);
+
+        assertThatThrownBy(() -> cartService.add(1L, request))
+                .isInstanceOf(AlreadyInCartException.class);
+    }
+
+    @DisplayName("회원 장바구니에 존재하는 모든 상품을 불러온다.")
     @Test
     void findAllByCustomerId() {
         // given
@@ -73,6 +99,7 @@ class CartServiceTest {
                 ));
     }
 
+    @DisplayName("장바구니에 담긴 상품의 수량을 변경한다.")
     @Test
     void updateQuantity() {
         // given
@@ -92,6 +119,7 @@ class CartServiceTest {
         verify(cartItemDao, times(1)).update(cart, customer.getId());
     }
 
+    @DisplayName("장바구니에서 품목들을 삭제한다.")
     @Test
     void delete() {
         // given
