@@ -50,19 +50,6 @@ class CartServiceTest {
     }
 
     @Test
-    @DisplayName("회원 아이디가 존재하지 않으면 예외를 반환한다.")
-    void notExistCustomerId() {
-        //given
-        given(cartItemDao.findIdsByCustomerId(1L)).willReturn(new ArrayList<>());
-        //when
-
-        //then
-        assertThatThrownBy(() -> cartService.findCartsByCustomerId(1L))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessage("존재하지 않는 유저입니다.");
-    }
-
-    @Test
     @DisplayName("cart id 가 존재하지 않으면 예외를 반환한다.")
     void notExistCartId() {
         //given

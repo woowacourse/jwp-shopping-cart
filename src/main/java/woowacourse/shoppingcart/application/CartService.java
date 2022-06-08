@@ -27,9 +27,6 @@ public class CartService {
     @Transactional(readOnly = true)
     public CartResponse findCartsByCustomerId(final long customerId) {
         final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-        if (cartIds.isEmpty()) {
-            throw new InvalidCustomerException();
-        }
         return new CartResponse(cartIds.stream()
                 .map(this::findProductByCartId)
                 .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(),
