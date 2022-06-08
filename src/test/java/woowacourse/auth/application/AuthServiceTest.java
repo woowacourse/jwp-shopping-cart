@@ -14,10 +14,9 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.exception.NoSuchEmailException;
+import woowacourse.exception.WrongPasswordException;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
-import woowacourse.shoppingcart.exception.WrongPasswordException;
 
 @SpringBootTest
 @Transactional

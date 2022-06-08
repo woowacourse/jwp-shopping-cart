@@ -10,8 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.ExceptionResponse;
+import woowacourse.exception.InvalidProductException;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {

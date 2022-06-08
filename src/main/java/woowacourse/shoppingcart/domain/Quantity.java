@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
-import woowacourse.shoppingcart.exception.InvalidQuantityException;
+import woowacourse.exception.InvalidQuantityException;
 
 public class Quantity {
 
@@ -16,7 +16,7 @@ public class Quantity {
             throw new InvalidQuantityException();
         }
     }
-    
+
     public int getQuantity() {
         return quantity;
     }

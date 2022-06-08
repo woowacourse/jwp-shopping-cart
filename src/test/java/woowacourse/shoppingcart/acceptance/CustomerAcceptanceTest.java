@@ -11,12 +11,12 @@ import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.exception.DuplicatedCustomerEmailException;
+import woowacourse.exception.WrongPasswordException;
 import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRemoveRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
-import woowacourse.shoppingcart.exception.DuplicatedCustomerEmailException;
-import woowacourse.shoppingcart.exception.WrongPasswordException;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {

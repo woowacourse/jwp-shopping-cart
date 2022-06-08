@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import woowacourse.shoppingcart.exception.InvalidNicknameFormatException;
+import woowacourse.exception.InvalidNicknameFormatException;
 
 public class Nickname {
 

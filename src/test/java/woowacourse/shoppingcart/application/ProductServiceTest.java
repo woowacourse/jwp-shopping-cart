@@ -12,8 +12,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.exception.InvalidProductException;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.ProductDao;
 
 @JdbcTest

@@ -12,7 +12,7 @@ import java.util.Date;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import woowacourse.auth.exception.InvalidTokenException;
+import woowacourse.exception.InvalidTokenException;
 
 @Component
 public class JwtTokenProvider {

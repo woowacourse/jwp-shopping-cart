@@ -14,12 +14,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.exception.InvalidCustomerException;
+import woowacourse.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.cartItem.CartItemDeleteRequest;
 import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
 import woowacourse.shoppingcart.dto.cartItem.CartItemUpdateRequest;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.CartItemDao;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.CustomerDao;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.ProductDao;

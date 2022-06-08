@@ -3,9 +3,9 @@ package woowacourse.shoppingcart.application;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.exception.InvalidProductException;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.ProductDao;
 
 @Service
