@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -10,10 +9,7 @@ import woowacourse.shoppingcart.application.dto.CartItemResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -66,33 +62,7 @@ public class CartService {
         }
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            Long productId = cartItemDao.findProductIdById(cartId);
-            Product product = productDao.findById(productId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
-    }
-
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
     public void deleteCartItem(Long customerId, Long productId) {
         cartItemDao.deleteCartItem(customerId, productId);
-    }
-
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
     }
 }

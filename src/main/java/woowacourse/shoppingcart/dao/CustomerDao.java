@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
@@ -38,17 +37,6 @@ public class CustomerDao {
                 .addValue("password", customer.getPassword())
                 .addValue("nickname", customer.getNickname());
         return simpleJdbcInsert.executeAndReturnKey(sqlParameter).longValue();
-    }
-
-    public Long findIdByUserName(final String userName) {
-        try {
-            final String query = "SELECT id FROM customer WHERE username = :username";
-            SqlParameterSource nameParameters = new MapSqlParameterSource("username", userName);
-
-            return template.queryForObject(query, nameParameters, Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
     }
 
     public boolean existByEmail(String email) {
