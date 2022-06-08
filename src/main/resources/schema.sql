@@ -30,8 +30,9 @@ create table product
     id        bigint       not null auto_increment,
     name      varchar(100) not null,
     price     integer      not null,
-    image_url varchar(255),
+    image_url varchar(1024),
     selling   varchar(5)   not null,
+    description varchar(255),
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 

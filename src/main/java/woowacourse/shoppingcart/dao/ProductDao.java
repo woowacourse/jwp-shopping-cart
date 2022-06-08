@@ -34,16 +34,6 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public Product findProductById(Long productId) {
-        try {
-            String sql = "SELECT id, name, price, image_url, selling FROM product WHERE id = :id";
-            SqlParameterSource parameterSource = new MapSqlParameterSource("id", productId);
-            return namedParameterJdbcTemplate.queryForObject(sql, parameterSource, mapToProduct());
-        } catch (EmptyResultDataAccessException e) {
-            throw new NoSuchProductException();
-        }
-    }
-
     private RowMapper<Product> mapToProduct() {
         return (resultSet, rowNum) ->
                 new Product(
@@ -51,16 +41,27 @@ public class ProductDao {
                         resultSet.getString("name"),
                         resultSet.getInt("price"),
                         resultSet.getString("image_url"),
-                        resultSet.getBoolean("selling"));
+                        resultSet.getBoolean("selling"),
+                        resultSet.getString("description"));
+    }
+
+    public Product findProductById(Long productId) {
+        try {
+            String sql = "SELECT id, name, price, image_url, selling, description FROM product WHERE id = :id";
+            SqlParameterSource parameterSource = new MapSqlParameterSource("id", productId);
+            return namedParameterJdbcTemplate.queryForObject(sql, parameterSource, mapToProduct());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchProductException();
+        }
     }
 
     public List<Product> findAllProducts() {
-        String sql = "SELECT id, name, price, image_url, selling FROM product";
+        String sql = "SELECT id, name, price, image_url, selling, description FROM product";
         return namedParameterJdbcTemplate.query(sql, mapToProduct());
     }
 
     public List<Product> findSellingProducts() {
-        String sql = "SELECT id, name, price, image_url, selling FROM product WHERE selling = true";
+        String sql = "SELECT id, name, price, image_url, selling, description FROM product WHERE selling = true";
         return namedParameterJdbcTemplate.query(sql, mapToProduct());
     }
 

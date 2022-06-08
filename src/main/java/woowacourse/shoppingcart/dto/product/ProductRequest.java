@@ -17,20 +17,24 @@ public class ProductRequest {
     private final Integer price;
 
     @Pattern(regexp = "http.*", message = "상품 이미지 url 형식이 올바르지 않습니다. (형식: http로 시작)")
-    @Size(max = 255, message = "상품 이미지 url 길이가 올바르지 않습니다. (길이: 255자 이내)")
+    @Size(max = 1024, message = "상품 이미지 url 길이가 올바르지 않습니다. (길이: 1024자 이내)")
     private final String imageUrl;
 
     private final Boolean selling;
 
+    @Size(max = 225, message = "상세 설명 길이가 올바르지 않습니다. (길이: 255자 이내)")
+    private final String description;
+
     public ProductRequest() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
 
-    public ProductRequest(String name, Integer price, String imageUrl, Boolean selling) {
+    public ProductRequest(String name, Integer price, String imageUrl, Boolean selling, String description) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.selling = selling;
+        this.description = description;
     }
 
     public String getName() {
@@ -46,10 +50,14 @@ public class ProductRequest {
     }
 
     public Product toProduct() {
-        return new Product(name, price, imageUrl, selling);
+        return new Product(name, price, imageUrl, selling, description);
     }
 
     public Boolean getSelling() {
         return selling;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

@@ -35,7 +35,7 @@ public class CartItemDaoTest {
     @Test
     void addCartItem() {
         Customer yaho = customerDao.save(YAHO);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true, "상세 설명"));
 
         Long cartId = cartItemDao.addCartItem(yaho.getId(), bananaId, 10);
 
@@ -46,8 +46,8 @@ public class CartItemDaoTest {
     @Test
     void findProductIdsByCustomerId() {
         Customer mat = customerDao.save(MAT);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true));
-        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true, "상세 설명"));
+        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true, "상세 설명"));
         cartItemDao.addCartItem(mat.getId(), bananaId, 10);
         cartItemDao.addCartItem(mat.getId(), appleId, 10);
 
@@ -60,8 +60,8 @@ public class CartItemDaoTest {
     @Test
     void findIdsByCustomerId() {
         Customer yaho = customerDao.save(YAHO);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true));
-        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true, "상세 설명"));
+        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true, "상세 설명"));
         Long bananaCartId = cartItemDao.addCartItem(yaho.getId(), bananaId, 10);
         Long appleCartId = cartItemDao.addCartItem(yaho.getId(), appleId, 10);
 
@@ -74,8 +74,8 @@ public class CartItemDaoTest {
     @Test
     void deleteCartItem() {
         Customer mat = customerDao.save(MAT);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true));
-        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true, "상세 설명"));
+        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true, "상세 설명"));
         cartItemDao.addCartItem(mat.getId(), bananaId, 10);
         Long appleCartId = cartItemDao.addCartItem(mat.getId(), appleId, 10);
 
@@ -90,7 +90,7 @@ public class CartItemDaoTest {
     @Test
     void updateQuantity() {
         Customer mat = customerDao.save(MAT);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true));
+        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true, "상세 설명"));
         Long bananaCartId = cartItemDao.addCartItem(mat.getId(), bananaId, 10);
 
         cartItemDao.updateQuantity(bananaCartId, 5);

@@ -28,8 +28,8 @@ public class ImageUrl {
     }
 
     private void checkLength(String value) {
-        if (value.length() > 255) {
-            throw new IllegalArgumentException("상품 이미지 url 길이가 올바르지 않습니다. (길이: 255자 이내)");
+        if (value.length() > 1024) {
+            throw new IllegalArgumentException("상품 이미지 url 길이가 올바르지 않습니다. (길이: 1024자 이내)");
         }
     }
 

@@ -33,8 +33,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         super.setUp();
         SimpleRestAssured.saveCustomer(YAHO_SAVE_REQUEST);
 
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg", true);
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg", true);
+        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg", true, "상세 설명");
+        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg", true, "상세 설명");
     }
 
     @DisplayName("장바구니 아이템 추가")

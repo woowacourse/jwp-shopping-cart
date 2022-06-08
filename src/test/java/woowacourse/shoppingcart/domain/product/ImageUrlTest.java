@@ -15,13 +15,13 @@ class ImageUrlTest {
                 .hasMessage("상품 이미지 url 형식이 올바르지 않습니다. (형식: http로 시작)");
     }
 
-    @DisplayName("이미지 url 길이가 255보다 길면 예외를 던진다.")
+    @DisplayName("이미지 url 길이가 1024 길면 예외를 던진다.")
     @Test
     void checkLength() {
         String value = "a";
-        assertThatThrownBy(() -> new ImageUrl("http" + value.repeat(255)))
+        assertThatThrownBy(() -> new ImageUrl("http" + value.repeat(1024)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("상품 이미지 url 길이가 올바르지 않습니다. (길이: 255자 이내)");
+                .hasMessage("상품 이미지 url 길이가 올바르지 않습니다. (길이: 1024자 이내)");
     }
 
 }
