@@ -20,6 +20,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.AddCartItemRequestDto;
@@ -79,5 +80,16 @@ class CartServiceTest {
         assertThatThrownBy(() -> cartService.addCart(addCartItemRequestDto, customerId))
                 .isInstanceOf(OverQuantityException.class)
                 .hasMessage("재고가 부족합니다.");
+    }
+
+    @Test
+    @DisplayName("장바구니 내의 품목을 장바구니에서 제거한다.")
+    void deleteCart() {
+        cartItemDao.addCartItem(customerId, productId, 1);
+
+        cartService.deleteCart(customerId, productId);
+
+        final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
+        assertThat(cartItems.size()).isEqualTo(0);
     }
 }
