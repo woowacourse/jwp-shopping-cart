@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartAdditionRequest;
+import woowacourse.shoppingcart.dto.CartUpdateRequest;
 
 @RestController
 @RequestMapping("/api/carts")
@@ -34,6 +36,13 @@ public class CartItemController {
                                             @RequestBody final CartAdditionRequest cartAdditionRequest) {
         cartService.addCartItem(email, cartAdditionRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping("/products")
+    public ResponseEntity<List<Cart>> updateCartItem(@AuthenticationPrincipal final String email,
+                                                     @RequestBody final CartUpdateRequest cartUpdateRequest) {
+        cartService.updateCartItem(email, cartUpdateRequest);
+        return ResponseEntity.ok().body(cartService.findCartsByEmail(email));
     }
 
     @DeleteMapping("/products")
