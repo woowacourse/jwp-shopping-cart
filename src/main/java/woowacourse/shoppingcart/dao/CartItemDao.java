@@ -134,7 +134,7 @@ public class CartItemDao {
 
     public boolean existsInCart(final Long customerId, final Long productId) {
         final String sql = "SELECT EXISTS (SELECT * FROM cart_item " +
-                "WHERE customer_id = :customerId AND product_id = productId";
+                "WHERE customer_id = :customerId AND product_id = :productId)";
 
         final Map<String, Object> params = new HashMap<>();
         params.put("customerId", customerId);
