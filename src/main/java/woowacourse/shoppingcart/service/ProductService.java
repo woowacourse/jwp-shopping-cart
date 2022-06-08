@@ -20,8 +20,15 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public List<ProductResponseDto> findProducts() {
+        return productDao.findProducts().stream()
+                .map(product -> new ProductResponseDto(
+                        product.getId(),
+                        product.getThumbnailUrl(),
+                        product.getName(),
+                        product.getPrice(),
+                        product.getQuantity()))
+                .collect(Collectors.toList());
     }
 
     public Long addProduct(final ProductRequestDto productRequestDto) {

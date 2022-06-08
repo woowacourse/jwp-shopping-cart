@@ -30,12 +30,9 @@ class ProductServiceTest {
         productService.addProduct(product1);
         productService.addProduct(product2);
 
-        final List<Product> actual = productService.findProducts();
+        final List<ProductResponseDto> actual = productService.findProducts();
 
-        assertThat(actual).containsExactly(
-                new Product("product1", 10000, null, 10),
-                new Product("product2", 11000, null, 10)
-        );
+        assertThat(actual.size()).isEqualTo(2);
     }
 
     @Test
