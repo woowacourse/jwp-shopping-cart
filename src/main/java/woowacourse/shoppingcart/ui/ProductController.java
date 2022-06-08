@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductListResponse;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.Request;
@@ -25,12 +26,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getProducts() {
-        List<ProductResponse> productResponses = productService.findProducts()
-                .stream()
-                .map(ProductResponse::from)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(productResponses);
+    public ResponseEntity<ProductListResponse> getProducts() {
+        return ResponseEntity.ok(ProductListResponse.from(productService.findProducts()));
     }
 
     @PostMapping

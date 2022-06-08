@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductListResponse;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 상품_목록_조회_요청();
 
         조회_응답됨(response);
-        assertThat(response.jsonPath().getList(".", ProductResponse.class).size()).isZero();
+        assertThat(response.jsonPath().getList("productList", ProductResponse.class).size()).isZero();
     }
 
     @DisplayName("없는 상품을 조회할 시 404 반환")
@@ -134,7 +135,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", ProductResponse.class).stream()
+        List<Long> resultProductIds = response.jsonPath().getList("productList", ProductResponse.class).stream()
                 .map(ProductResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
