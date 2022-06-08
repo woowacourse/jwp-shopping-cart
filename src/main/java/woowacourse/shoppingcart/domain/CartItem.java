@@ -4,7 +4,7 @@ public class CartItem {
 
     private final Long id;
     private final Long productId;
-    private final int quantity;
+    private int quantity;
 
     public CartItem(final Long id, final Long productId, final int quantity) {
         this.id = id;
@@ -14,6 +14,10 @@ public class CartItem {
 
     public boolean hasSameProductId(final Long productId) {
         return this.productId.equals(productId);
+    }
+
+    public void plusQuantity(final int quantity) {
+        this.quantity += quantity;
     }
 
     public Long getId() {

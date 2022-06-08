@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
@@ -93,6 +94,28 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    void 장바구니에_이미_있는_상품을_담는_경우_하나로_합쳐짐() {
+        // given
+        String accessToken = 로그인_및_토큰_발급(USER_NAME, PASSWORD);
+
+        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1, 5);
+
+        // when
+        ExtractableResponse<Response> createResponse = 장바구니_아이템_추가_요청(accessToken, productId1, 3);
+
+        // then
+        ExtractableResponse<Response> findResponse = 장바구니_아이템_목록_조회_요청(accessToken);
+        CartItemResponse cartItemResponse = findResponse.body().jsonPath().getList("$", CartItemResponse.class).get(0);
+
+        assertAll(
+                () -> assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                () -> assertThat(cartItemResponse.getId()).isEqualTo(cartId),
+                () -> assertThat(cartItemResponse.getProductId()).isEqualTo(productId1),
+                () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(8)
+        );
     }
 
     private String 로그인_및_토큰_발급(String name, String password) {

@@ -22,13 +22,17 @@
 - [X] 장바구니, 주문 요청 URL에서 {customerName} 제거
   - Access Token을 사용해 사용자 정보를 확인할 수 있도록 한다. 
 - [X] 장바구니, 주문 관리 Controller에서 DTO 사용하도록 변경
-- [ ] 장바구니, 주문 DAO에서 SimpleInsert, NamedParameterJdbc 사용하도록 변경
 - [X] CartItem에 quantity 추가
   - quantity는 1~99개로 제한한다. 
 - [X] CartItem의 quantity 변경 API 추가
   - PATCH /api/customers/me/carts
 - [X] Product 전체 목록 조회 시 cartId, cartQuantity도 보내도록 변경
   - 토큰의 존재 여부에 따라 다르게 동작하게 해야한다. 
+
+### 리팩토링
+
+- [X] 이미 장바구니에 존재하는 상품을 또 장바구니에 담는 경우, 하나로 합치도록 변경
+- [ ] 장바구니, 주문 DAO에서 SimpleInsert, NamedParameterJdbc 사용하도록 변경
 
 <br>
 
