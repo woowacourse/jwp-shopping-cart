@@ -66,7 +66,6 @@ public class ProductDaoTest {
         // when & then
         PageRequest pageRequest = new PageRequest(12L, page);
         assertThat(productDao.findProducts(pageRequest.getPage() * pageRequest.getSize(), pageRequest.getSize())
-                .getProducts()
                 .size())
                 .isEqualTo(expectSize);
     }

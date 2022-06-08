@@ -1,14 +1,16 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.dto;
+
+import woowacourse.shoppingcart.domain.Product;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Products {
+public class ProductsResponse {
 
     private final List<Product> products;
 
-    public Products(List<Product> products) {
+    public ProductsResponse(List<Product> products) {
         this.products = new ArrayList<>(products);
     }
 

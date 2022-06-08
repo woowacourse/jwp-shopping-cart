@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.domain.Products;
-import woowacourse.shoppingcart.dto.PageRequest;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 import woowacourse.shoppingcart.dto.ProductRequest;
 
 import javax.validation.Valid;
@@ -29,7 +28,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Products> getProducts(@RequestParam(required = false) Long size, @RequestParam(required = false) Long page) {
+    public ResponseEntity<ProductsResponse> getProducts(@RequestParam(required = false) Long size, @RequestParam(required = false) Long page) {
         if (size == null && page == null) {
             return ResponseEntity.ok(productService.findAllProducts());
         }

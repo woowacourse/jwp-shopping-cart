@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.List;
 import java.util.Locale;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import javax.sql.DataSource;
@@ -40,26 +40,26 @@ public class ProductDao {
         return new Product(id, name, price, imageUrl);
     }
 
-    public Products findProducts(Long start, Long end) {
+    public List<Product> findProducts(Long start, Long end) {
         final String query = "SELECT id, name, price, image_url FROM product LIMIT ?, ?";
-        return new Products(jdbcTemplate.query(query,
+        return jdbcTemplate.query(query,
                 (resultSet, rowNumber) ->
                         new Product(
                                 resultSet.getLong("id"),
                                 resultSet.getString("name"),
                                 resultSet.getInt("price"),
-                                resultSet.getString("image_url")), start, end));
+                                resultSet.getString("image_url")), start, end);
     }
 
-    public Products findAllProducts() {
+    public List<Product> findAllProducts() {
         final String query = "SELECT id, name, price, image_url FROM product";
-        return new Products(jdbcTemplate.query(query,
+        return jdbcTemplate.query(query,
                 (resultSet, rowNumber) ->
                         new Product(
                                 resultSet.getLong("id"),
                                 resultSet.getString("name"),
                                 resultSet.getInt("price"),
-                                resultSet.getString("image_url"))));
+                                resultSet.getString("image_url")));
     }
 
     public Product findProductById(final Long productId) {
