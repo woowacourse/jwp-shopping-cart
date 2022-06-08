@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: ${DB-URL}
+    username: ${ID}
+    password: ${PASSWORD}
+    driver-class-name: ${DRIVER-CLASS-NAME}
+
+security:
+  jwt:
+    token:
+      secret-key: ${SECRET-KEY}
+      expire-length: ${EXPIRE-LENGTH}
