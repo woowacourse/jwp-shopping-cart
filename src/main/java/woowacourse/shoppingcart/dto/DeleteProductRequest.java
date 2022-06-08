@@ -6,16 +6,16 @@ import java.util.List;
 
 public class DeleteProductRequest {
 
-    private List<Id> products;
+    private List<Id> cartItems;
 
     private DeleteProductRequest() {
     }
 
-    public DeleteProductRequest(List<Id> products) {
-        this.products = products;
+    public DeleteProductRequest(List<Id> cartItems) {
+        this.cartItems = cartItems;
     }
 
-    public List<Id> getProducts() {
-        return products;
+    public List<Id> getCartItems() {
+        return cartItems;
     }
 }

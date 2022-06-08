@@ -123,9 +123,6 @@ class ProductServiceTest {
         for (int index = 0; index < allSize; index++) {
             productService.addProduct(new ProductRequest("치킨" + index, 10000, "http://example.com/chicken.jpg"));
         }
-        System.out.println("page = " + page);
-        System.out.println(productService.findAllProducts().getProducts().size());
-        System.out.println(productService.findProducts(12L, page - 1).getProducts().size());
 
         //when & then
         assertThat(productService.findProducts(12L, page)

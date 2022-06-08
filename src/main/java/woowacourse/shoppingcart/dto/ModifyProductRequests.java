@@ -4,16 +4,16 @@ import java.util.List;
 
 public class ModifyProductRequests {
 
-    private List<ModifyProductRequest> products;
+    private List<ModifyProductRequest> cartItems;
 
     private ModifyProductRequests() {
     }
 
-    public ModifyProductRequests(List<ModifyProductRequest> products) {
-        this.products = products;
+    public ModifyProductRequests(List<ModifyProductRequest> cartItems) {
+        this.cartItems = cartItems;
     }
 
-    public List<ModifyProductRequest> getProducts() {
-        return products;
+    public List<ModifyProductRequest> getCartItems() {
+        return cartItems;
     }
 }

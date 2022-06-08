@@ -57,7 +57,7 @@ class CartServiceTest {
         cartService.addCart(new CartProductRequest(product1.getId(), 1L, true), "greenlawn");
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
 
-        assertThat(cartService.getCart("greenlawn").getProducts().size()).isEqualTo(2);
+        assertThat(cartService.getCart("greenlawn").getCartItems().size()).isEqualTo(2);
     }
 
     @Test
@@ -79,7 +79,7 @@ class CartServiceTest {
         cartService.deleteAll();
 
         //then
-        assertThat(cartService.getCart("greenlawn").getProducts().size()).isEqualTo(0);
+        assertThat(cartService.getCart("greenlawn").getCartItems().size()).isEqualTo(0);
     }
 
     @Test
@@ -102,7 +102,7 @@ class CartServiceTest {
         cartService.deleteCart(new DeleteProductRequest(List.of(new Id(1L), new Id(2L))));
 
         //then
-        assertThat(cartService.getCart("greenlawn").getProducts().size()).isEqualTo(0);
+        assertThat(cartService.getCart("greenlawn").getCartItems().size()).isEqualTo(0);
     }
 
     @Test
@@ -125,6 +125,6 @@ class CartServiceTest {
         cartService.modify(new ModifyProductRequests(List.of(new ModifyProductRequest(1L, 3L, true))));
 
         //then
-        assertThat(cartService.getCart("greenlawn").getProducts().get(0).getQuantity()).isEqualTo(3L);
+        assertThat(cartService.getCart("greenlawn").getCartItems().get(0).getQuantity()).isEqualTo(3L);
     }
 }

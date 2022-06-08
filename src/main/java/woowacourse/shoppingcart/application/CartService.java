@@ -54,7 +54,7 @@ public class CartService {
     }
 
     public void deleteCart(DeleteProductRequest deleteProductRequest) {
-        for (Id id : deleteProductRequest.getProducts()) {
+        for (Id id : deleteProductRequest.getCartItems()) {
             cartItemDao.deleteCartItem(id.getId());
         }
     }
@@ -64,13 +64,13 @@ public class CartService {
     }
 
     public CartProducts modify(ModifyProductRequests modifyProductRequests) {
-        for (ModifyProductRequest request : modifyProductRequests.getProducts()) {
+        for (ModifyProductRequest request : modifyProductRequests.getCartItems()) {
             cartItemDao.update(request.getId(), request.getQuantity(), request.isChecked());
         }
 
         List<CartProductResponse> cartEntities = new ArrayList<>();
         try {
-            for (ModifyProductRequest request : modifyProductRequests.getProducts()) {
+            for (ModifyProductRequest request : modifyProductRequests.getCartItems()) {
                 cartEntities.add(cartItemDao.findCartIdById(request.getId()));
             }
             return new CartProducts(cartEntities);

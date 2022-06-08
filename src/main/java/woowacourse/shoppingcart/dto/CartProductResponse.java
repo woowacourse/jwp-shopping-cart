@@ -3,14 +3,16 @@ package woowacourse.shoppingcart.dto;
 public class CartProductResponse {
 
     private Long id;
+    private Long productId;
     private String name;
     private Long price;
     private String imageUrl;
     private Long quantity;
     private boolean checked;
 
-    public CartProductResponse(Long id, String name, Long price, String imageUrl, Long quantity, boolean checked) {
+    public CartProductResponse(Long id, Long productId, String name, Long price, String imageUrl, Long quantity, boolean checked) {
         this.id = id;
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -20,6 +22,10 @@ public class CartProductResponse {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public String getName() {

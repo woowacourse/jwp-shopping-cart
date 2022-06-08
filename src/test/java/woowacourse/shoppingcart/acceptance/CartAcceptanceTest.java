@@ -68,7 +68,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 token, "/cart", HttpStatus.CREATED.value());
 
         RestAssuredFixture.get(token, "/cart", HttpStatus.OK.value())
-                .body("products.size()", is(2));
+                .body("cartItems.size()", is(2));
     }
 
     @DisplayName("장바구니 전체 삭제")

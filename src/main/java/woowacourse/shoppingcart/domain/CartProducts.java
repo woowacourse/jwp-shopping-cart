@@ -6,13 +6,13 @@ import java.util.List;
 
 public class CartProducts {
 
-    private final List<CartProductResponse> products;
+    private final List<CartProductResponse> cartItems;
 
-    public CartProducts(List<CartProductResponse> products) {
-        this.products = products;
+    public CartProducts(List<CartProductResponse> cartItems) {
+        this.cartItems = cartItems;
     }
 
-    public List<CartProductResponse> getProducts() {
-        return products;
+    public List<CartProductResponse> getCartItems() {
+        return cartItems;
     }
 }
