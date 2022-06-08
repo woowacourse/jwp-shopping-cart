@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.OrderDetail;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +24,16 @@ public class CartItemResponse {
 			cartItem.getImageUrl(),
 			cartItem.getPrice(),
 			cartItem.getQuantity()
+		);
+	}
+
+	public static CartItemResponse from(OrderDetail orderDetail) {
+		return new CartItemResponse(
+			orderDetail.getProductId(),
+			orderDetail.getName(),
+			orderDetail.getImageUrl(),
+			orderDetail.getPrice(),
+			orderDetail.getQuantity()
 		);
 	}
 }

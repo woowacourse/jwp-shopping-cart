@@ -9,15 +9,15 @@ import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import woowacourse.exception.InvalidCartItemException;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import woowacourse.shoppingcart.domain.CartItem;
 
 @Repository
@@ -61,30 +61,11 @@ public class CartItemDao {
 		);
 	}
 
-	public Long findProductIdById(final Long cartId) {
-		try {
-			final String sql = "SELECT product_id FROM cart_item WHERE id = :cartId";
-			return jdbcTemplate.queryForObject(sql, Map.of("cartId", cartId),
-				(rs, rowNum) -> rs.getLong("product_id"));
-		} catch (EmptyResultDataAccessException e) {
-			throw new InvalidCartItemException();
-		}
-	}
-
 	public void update(CartItem cartItem) {
 		String sql = "update cart_item set "
 			+ "quantity = :quantity";
 		if (jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(cartItem)) == 0) {
 			throw new NoSuchElementException("수정하려는 장바구니 상품이 없습니다.");
-		}
-	}
-
-	public void deleteCartItem(final Long id) {
-		final String sql = "DELETE FROM cart_item WHERE id = :id";
-
-		final int rowCount = jdbcTemplate.update(sql, Map.of("id", id));
-		if (rowCount == 0) {
-			throw new InvalidCartItemException();
 		}
 	}
 
@@ -94,5 +75,13 @@ public class CartItemDao {
 			.map(id -> Map.of("id", id))
 			.collect(Collectors.toList()))
 		);
+	}
+
+	@RequiredArgsConstructor
+	@Getter
+	private static class CartItemDto {
+		private final Long customerId;
+		private final Long productId;
+		private final Integer quantity;
 	}
 }

@@ -24,4 +24,8 @@ public class ProductInsertUtil {
 			new BeanPropertySqlParameterSource(new Product(name, price, imageUrl))
 		).longValue();
 	}
+
+	public Product insertAndReturn(String name, int price, String imageUrl) {
+		return new Product(insert(name, price, imageUrl), name, price, imageUrl);
+	}
 }

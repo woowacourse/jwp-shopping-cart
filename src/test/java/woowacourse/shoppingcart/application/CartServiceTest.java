@@ -103,13 +103,40 @@ class CartServiceTest {
 		verify(cartItemDao).findByCustomerId(1L);
 	}
 
+	@DisplayName("장바구니 안에 있는 상품을 상품 id로 조회한다.")
+	@ParameterizedTest
+	@ValueSource(strings = {"1,2", "1", "2", "1,3", "1,2,3", "3"})
+	void findByProductIdsInCart(String input) {
+		// given
+		List<Long> ids = convertToLong(input);
+		long customerId = 1L;
+
+		Product product1 = new Product(1L, "치킨", 20000, "test");
+		Product product2 = new Product(2L, "콜라", 1500, "test");
+		Product product3 = new Product(3L, "피자", 15000, "test");
+		// given
+		given(cartItemDao.findByCustomerId(customerId))
+			.willReturn(List.of(
+				new CartItem(1L, product1, 2),
+				new CartItem(2L, product2, 3),
+				new CartItem(3L, product3, 4)
+			));
+
+		// when
+		List<CartItem> findItems = cartService.findItemInCart(customerId, ids);
+
+		// then
+		List<Long> resultIds = findItems.stream()
+			.map(CartItem::getProductId)
+			.collect(Collectors.toList());
+		assertThat(resultIds.containsAll(ids)).isTrue();
+	}
+
 	@DisplayName("삭제할 상품 id로 장바구니 상품을 전부 삭제한다.")
 	@ParameterizedTest
 	@ValueSource(strings = {"1,2", "1", "2"})
 	void deleteAllItems(String inputs) {
-		List<Long> ids = Arrays.stream(inputs.split(","))
-			.map(Long::parseLong)
-			.collect(Collectors.toList());
+		List<Long> ids = convertToLong(inputs);
 
 		long customerId = 1L;
 
@@ -123,7 +150,7 @@ class CartServiceTest {
 			);
 
 		// when
-		cartService.deleteItem(customerId, ids);
+		cartService.deleteItems(customerId, ids);
 
 		// then
 		assertAll(
@@ -133,8 +160,11 @@ class CartServiceTest {
 	}
 
 	@DisplayName("장바구니에 없는 상품 id로 삭제하려 하면 예외가 발생한다.")
-	@Test
-	void deleteAllItemsException() {
+	@ParameterizedTest
+	@ValueSource(strings = {"1,2,3", "3", "1,3"})
+	void deleteAllItemsException(String input) {
+		List<Long> ids = convertToLong(input);
+
 		long customerId = 1L;
 
 		Product product1 = new Product(1L, "치킨", 20000, "test");
@@ -147,7 +177,7 @@ class CartServiceTest {
 			);
 
 		// when
-		assertThatThrownBy(() -> cartService.deleteItem(customerId, List.of(3L)))
+		assertThatThrownBy(() -> cartService.deleteItems(customerId, ids))
 			.isInstanceOf(NoSuchElementException.class);
 
 		// then
@@ -155,5 +185,11 @@ class CartServiceTest {
 			() -> verify(cartItemDao).findByCustomerId(customerId),
 			() -> verify(cartItemDao, never()).deleteAll(any())
 		);
+	}
+
+	private List<Long> convertToLong(String inputs) {
+		return Arrays.stream(inputs.split(","))
+			.map(Long::parseLong)
+			.collect(Collectors.toList());
 	}
 }

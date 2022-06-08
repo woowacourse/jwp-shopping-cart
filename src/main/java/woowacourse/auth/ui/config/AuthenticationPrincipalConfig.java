@@ -22,8 +22,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor())
             .excludePathPatterns(
                 "/auth/login",
-                "/products/**",
-                "/api/customers/**"
+                "/products/**"
             );
     }
 

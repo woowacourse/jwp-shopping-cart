@@ -20,7 +20,7 @@ import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.ui.ControllerTest;
 import woowacourse.shoppingcart.ProductInsertUtil;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.dto.CartItemDeleteRequest;
+import woowacourse.shoppingcart.dto.ProductIdsRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.QuantityRequest;
 
@@ -121,7 +121,7 @@ class CartItemControllerTest extends ControllerTest {
 
 		// when
 		String request = objectMapper.writeValueAsString(
-			new CartItemDeleteRequest(List.of(productId, productId2)));
+			new ProductIdsRequest(List.of(productId, productId2)));
 
 		ResultActions result = mockMvc.perform(delete("/cart")
 			.header("Authorization", "Bearer " + token)
@@ -143,7 +143,7 @@ class CartItemControllerTest extends ControllerTest {
 
 		// when
 		String request = objectMapper.writeValueAsString(
-			new CartItemDeleteRequest(List.of(productId, productId2, productId + productId2)));
+			new ProductIdsRequest(List.of(productId, productId2, productId + productId2)));
 
 		ResultActions result = mockMvc.perform(delete("/cart")
 			.header("Authorization", "Bearer " + token)

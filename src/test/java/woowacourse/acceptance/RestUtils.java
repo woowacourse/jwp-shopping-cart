@@ -11,7 +11,7 @@ import woowacourse.auth.dto.customer.CustomerDeleteRequest;
 import woowacourse.auth.dto.customer.CustomerRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.token.TokenRequest;
-import woowacourse.shoppingcart.dto.CartItemDeleteRequest;
+import woowacourse.shoppingcart.dto.ProductIdsRequest;
 import woowacourse.shoppingcart.dto.QuantityRequest;
 
 public class RestUtils {
@@ -83,8 +83,18 @@ public class RestUtils {
 		return RestAssured.given().log().all()
 			.auth().oauth2(token)
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.body(new CartItemDeleteRequest(productIds))
+			.body(new ProductIdsRequest(productIds))
 			.when().delete("/cart")
+			.then().log().all()
+			.extract();
+	}
+
+	public static ExtractableResponse<Response> order(String token, List<Long> productIds) {
+		return RestAssured.given().log().all()
+			.auth().oauth2(token)
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.body(new ProductIdsRequest(productIds))
+			.when().post("/orders")
 			.then().log().all()
 			.extract();
 	}

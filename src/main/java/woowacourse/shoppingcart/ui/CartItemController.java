@@ -19,7 +19,7 @@ import woowacourse.auth.domain.Customer;
 import woowacourse.auth.support.Login;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.dto.CartItemDeleteRequest;
+import woowacourse.shoppingcart.dto.ProductIdsRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.QuantityRequest;
 
@@ -60,8 +60,8 @@ public class CartItemController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<Void> deleteCartItem(@Login Customer customer, @RequestBody CartItemDeleteRequest request) {
-		cartService.deleteItem(customer.getId(), request.getProductIds());
+	public ResponseEntity<Void> deleteCartItem(@Login Customer customer, @RequestBody ProductIdsRequest request) {
+		cartService.deleteItems(customer.getId(), request.getProductIds());
 		return ResponseEntity.noContent().build();
 	}
 }

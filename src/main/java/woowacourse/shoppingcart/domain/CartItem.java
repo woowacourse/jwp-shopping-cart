@@ -15,11 +15,11 @@ public class CartItem {
 
     @Include
     private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
-    private int quantity;
+    private final Long productId;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
+    private final int quantity;
 
     public CartItem(Product product, int quantity) {
         this(null, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);

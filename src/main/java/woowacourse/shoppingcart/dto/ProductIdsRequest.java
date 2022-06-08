@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class CartItemDeleteRequest {
+public class ProductIdsRequest {
 
 	private List<Long> productIds;
 }
