@@ -7,7 +7,7 @@ public class CartItemAdditionRequest {
     private CartItemAdditionRequest() {
     }
 
-    public CartItemAdditionRequest(Long productId) {
+    public CartItemAdditionRequest(final Long productId) {
         this.productId = productId;
     }
 

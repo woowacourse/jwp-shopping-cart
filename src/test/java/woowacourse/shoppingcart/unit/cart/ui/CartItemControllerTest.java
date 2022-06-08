@@ -45,7 +45,7 @@ class CartItemControllerTest extends ControllerTest {
     @DisplayName("장바구니에 상품을 추가한다.")
     void addCartItem_validProduct_204() throws Exception {
         // given
-        CartItemAdditionRequest request = new CartItemAdditionRequest(1L);
+        final CartItemAdditionRequest request = new CartItemAdditionRequest(1L);
         final String json = objectMapper.writeValueAsString(request);
 
         final String accessToken = "fake-toke";
@@ -81,7 +81,7 @@ class CartItemControllerTest extends ControllerTest {
     @DisplayName("이미 추가한 상품을 추가하면 400을 반환한다.")
     void addCartItem_alreadyAddedItem_400() throws Exception {
         // given
-        CartItemAdditionRequest request = new CartItemAdditionRequest(1L);
+        final CartItemAdditionRequest request = new CartItemAdditionRequest(1L);
         final String json = objectMapper.writeValueAsString(request);
 
         final String accessToken = "fake-toke";
@@ -122,7 +122,7 @@ class CartItemControllerTest extends ControllerTest {
     @DisplayName("존재하지 않는 상품을 추가하면 400을 반환한다.")
     void addCartItem_notExistProduct_400() throws Exception {
         // given
-        CartItemAdditionRequest request = new CartItemAdditionRequest(1L);
+        final CartItemAdditionRequest request = new CartItemAdditionRequest(1L);
         final String json = objectMapper.writeValueAsString(request);
 
         final String accessToken = "fake-toke";
@@ -163,7 +163,7 @@ class CartItemControllerTest extends ControllerTest {
     @DisplayName("장바구니에 담긴 상품 목록을 조회한다.")
     void getCartItems() throws Exception {
         // given
-        String accessToken = "fake-token";
+        final String accessToken = "fake-token";
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
         getLoginCustomerByToken(accessToken, customer);
 
@@ -217,7 +217,7 @@ class CartItemControllerTest extends ControllerTest {
     @DisplayName("장바구니에 들어있는 상품의 수량을 변경한다.")
     void changeQuantity_existProduct_200() throws Exception {
         // given
-        String accessToken = "fake-token";
+        final String accessToken = "fake-token";
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
         getLoginCustomerByToken(accessToken, customer);
 
@@ -271,7 +271,7 @@ class CartItemControllerTest extends ControllerTest {
     @DisplayName("장바구니에 없는 상품을 수정하면 400을 반환한다.")
     void changeQuantity_notExistProduct_400() throws Exception {
         // given
-        String accessToken = "fake-token";
+        final String accessToken = "fake-token";
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
         getLoginCustomerByToken(accessToken, customer);
 
@@ -321,7 +321,7 @@ class CartItemControllerTest extends ControllerTest {
     @DisplayName("변경하려는 수량이 유효하지 않으면 400을 반환한다.")
     void changeQuantity_invalidQuantity_400() throws Exception {
         // given
-        String accessToken = "fake-token";
+        final String accessToken = "fake-token";
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
         getLoginCustomerByToken(accessToken, customer);
 
@@ -372,7 +372,7 @@ class CartItemControllerTest extends ControllerTest {
     void deleteCartItem_existProduct_204() throws Exception {
         // given
         final Long productId = 1L;
-        String accessToken = "fake-token";
+        final String accessToken = "fake-token";
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
         getLoginCustomerByToken(accessToken, customer);
 
@@ -405,7 +405,7 @@ class CartItemControllerTest extends ControllerTest {
     void deleteCartItem_notExistProduct_400() throws Exception {
         // given
         final Long productId = 1L;
-        String accessToken = "fake-token";
+        final String accessToken = "fake-token";
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
         getLoginCustomerByToken(accessToken, customer);
 

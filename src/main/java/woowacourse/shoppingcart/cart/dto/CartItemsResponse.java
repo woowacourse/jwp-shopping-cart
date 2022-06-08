@@ -8,11 +8,11 @@ public class CartItemsResponse {
 
     private final List<CartItemResponse> cartList;
 
-    private CartItemsResponse(List<CartItemResponse> cartList) {
+    private CartItemsResponse(final List<CartItemResponse> cartList) {
         this.cartList = cartList;
     }
 
-    public static CartItemsResponse from(List<Cart> carts) {
+    public static CartItemsResponse from(final List<Cart> carts) {
         final List<CartItemResponse> responses = carts.stream()
                 .map(CartItemResponse::new)
                 .distinct()

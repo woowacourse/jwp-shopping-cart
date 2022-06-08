@@ -11,7 +11,7 @@ public class QuantityChangingRequest {
     private QuantityChangingRequest() {
     }
 
-    public QuantityChangingRequest(Integer quantity) {
+    public QuantityChangingRequest(final Integer quantity) {
         this.quantity = quantity;
     }
 

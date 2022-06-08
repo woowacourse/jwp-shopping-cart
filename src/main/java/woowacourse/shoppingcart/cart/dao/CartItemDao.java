@@ -71,12 +71,12 @@ public class CartItemDao {
         }
     }
 
-    public boolean existProduct(Long customerId, Long productId) {
+    public boolean existProduct(final Long customerId, final Long productId) {
         final String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE customer_id = ? AND product_id = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId);
     }
 
-    public Cart findByProductAndCustomerId(Long productId, Long customerId) {
+    public Cart findByProductAndCustomerId(final Long productId, final Long customerId) {
         try {
             final String sql = ""
                     + "SELECT ci.id, "
@@ -94,7 +94,7 @@ public class CartItemDao {
         }
     }
 
-    public void updateQuantity(Cart cart) {
+    public void updateQuantity(final Cart cart) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(sql, cart.getQuantity(), cart.getId());
     }

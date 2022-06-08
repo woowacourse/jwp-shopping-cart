@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import woowacourse.shoppingcart.auth.application.AuthService;
-import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.auth.exception.badrequest.InvalidLoginException;
+import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.customer.exception.notfound.NotFoundCustomerException;
 import woowacourse.shoppingcart.unit.ServiceMockTest;
 

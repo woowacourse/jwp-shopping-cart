@@ -103,7 +103,7 @@ class CartAcceptanceTest extends AcceptanceTest {
                 .body("cartList", hasSize(0));
     }
 
-    private ValidatableResponse postCartItem(CartItemAdditionRequest request) {
+    private ValidatableResponse postCartItem(final CartItemAdditionRequest request) {
         return RestAssured
                 .given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)

@@ -19,17 +19,18 @@ import woowacourse.shoppingcart.support.AuthorizationExtractor;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 public abstract class AcceptanceTest {
 
+    protected String token;
+
     @LocalServerPort
     int port;
-
-    protected String token;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+
         final String email = "rick@gmail.com";
         final String password = "1q2w3e4r";
-        CustomerCreationRequest signUpRequest = new CustomerCreationRequest(email, password, "rick");
+        final CustomerCreationRequest signUpRequest = new CustomerCreationRequest(email, password, "rick");
         postUser(signUpRequest);
         final LoginRequest loginRequest = new LoginRequest(email, password);
         token = postLogin(loginRequest)

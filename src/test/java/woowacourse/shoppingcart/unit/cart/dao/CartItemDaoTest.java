@@ -137,8 +137,8 @@ class CartItemDaoTest {
     @DisplayName("Customer Id와 Product Id가 일치하는 Cart를 조회한다.")
     void findByProductAndCustomerId() {
         // given
-        Long customerId = 4L;
-        Long productId = 3L;
+        final Long customerId = 4L;
+        final Long productId = 3L;
         final Long cartId = cartItemDao.addCartItem(customerId, productId);
 
         final Product product = productDao.findProductById(productId);
@@ -155,8 +155,8 @@ class CartItemDaoTest {
     @DisplayName("Customer Id와 Product Id가 일치하는 Cart가 존재하지 않으면 에외를 던진다.")
     void findByProductAndCustomerId_notMatch_ExceptionThrown() {
         // given
-        Long productId = 999L;
-        Long customerId = 777L;
+        final Long productId = 999L;
+        final Long customerId = 777L;
 
         // when, then
         assertThatThrownBy(() -> cartItemDao.findByProductAndCustomerId(productId, customerId))
@@ -167,8 +167,8 @@ class CartItemDaoTest {
     @DisplayName("Cart의 수량을 변경한다.")
     void updateQuantity() {
         // given
-        Long customerId = 9L;
-        Long productId = 5L;
+        final Long customerId = 9L;
+        final Long productId = 5L;
         final Long cartId = cartItemDao.addCartItem(customerId, productId);
 
         final int quantity = 77;

@@ -18,9 +18,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.product.dto.ProductsResponse;
+import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.unit.ControllerTest;
 
 class ProductControllerTest extends ControllerTest {

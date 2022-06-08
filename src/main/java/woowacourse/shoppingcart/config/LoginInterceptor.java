@@ -27,7 +27,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private boolean isPreflight(HttpServletRequest request) {
+    private boolean isPreflight(final HttpServletRequest request) {
         return HttpMethod.OPTIONS.matches(request.getMethod());
     }
 

@@ -87,7 +87,7 @@ class CartServiceTest extends ServiceMockTest {
         final int quantity = 7;
 
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
-        QuantityChangingRequest request = new QuantityChangingRequest(quantity);
+        final QuantityChangingRequest request = new QuantityChangingRequest(quantity);
 
         final String name = "치약";
         final int price = 1200;
@@ -115,7 +115,7 @@ class CartServiceTest extends ServiceMockTest {
         final int quantity = 7;
 
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
-        QuantityChangingRequest request = new QuantityChangingRequest(quantity);
+        final QuantityChangingRequest request = new QuantityChangingRequest(quantity);
 
         given(cartItemDao.findByProductAndCustomerId(productId, customer.getId()))
                 .willThrow(NoExistCartItemException.class);
