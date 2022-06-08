@@ -1,10 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 public class ExistCustomerResponse {
-    private Boolean isDuplicate;
-
-    public ExistCustomerResponse() {
-    }
+    private final Boolean isDuplicate;
 
     public ExistCustomerResponse(Boolean isDuplicate) {
         this.isDuplicate = isDuplicate;
