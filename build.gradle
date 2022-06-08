@@ -23,6 +23,7 @@ dependencies {
 
     runtimeOnly 'com.h2database:h2'
     testRuntimeOnly 'com.h2database:h2'
+    implementation 'mysql:mysql-connector-java'
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
@@ -30,6 +31,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
+}
+
+ext.profile = (!project.hasProperty('profile') || !profile) ? 'dev' : profile
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources", "src/main/resources-${profile}"
+        }
+    }
 }
 
 test {
