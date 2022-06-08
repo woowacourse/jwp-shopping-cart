@@ -11,8 +11,7 @@ import java.util.Objects;
 public class LoginInterceptor implements HandlerInterceptor {
 
     public static final List<RequestEndPoint> excludedEndPoint = List.of(
-            new RequestEndPoint("POST", "/api/customers"),
-            new RequestEndPoint("POST", "/api/auth/login")
+            new RequestEndPoint("POST", "/api/customers")
     );
 
     @Override
