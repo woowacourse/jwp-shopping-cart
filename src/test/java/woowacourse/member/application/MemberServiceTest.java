@@ -7,7 +7,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.member.dto.MemberInfoResponse;
+import woowacourse.member.dto.FindMemberInfoResponse;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.dto.UpdateNameRequest;
 import woowacourse.member.dto.UpdatePasswordRequest;
@@ -54,7 +54,7 @@ class MemberServiceTest {
     @DisplayName("올바른 id로 회원정보를 조회한다.")
     @Test
     void findMemberInfo() {
-        MemberInfoResponse response = memberService.findMemberInfo(1L);
+        FindMemberInfoResponse response = memberService.findMemberInfo(1L);
 
         assertAll(
                 () -> assertThat(response.getEmail()).isEqualTo("ari@wooteco.com"),

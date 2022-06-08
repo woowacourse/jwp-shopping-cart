@@ -2,19 +2,19 @@ package woowacourse.member.dto;
 
 import woowacourse.member.domain.Member;
 
-public class MemberInfoResponse {
+public class FindMemberInfoResponse {
 
     private final long id;
     private final String email;
     private final String name;
 
-    private MemberInfoResponse(long id, String email, String name) {
+    private FindMemberInfoResponse(long id, String email, String name) {
         this.id = id;
         this.email = email;
         this.name = name;
     }
 
-    public MemberInfoResponse(Member member) {
+    public FindMemberInfoResponse(Member member) {
         this(member.getId(), member.getEmail(), member.getName());
     }
 

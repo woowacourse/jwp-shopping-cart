@@ -6,7 +6,7 @@ import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.domain.password.NewPassword;
 import woowacourse.member.domain.password.Password;
-import woowacourse.member.dto.MemberInfoResponse;
+import woowacourse.member.dto.FindMemberInfoResponse;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.dto.UpdateNameRequest;
 import woowacourse.member.dto.UpdatePasswordRequest;
@@ -35,9 +35,9 @@ public class MemberService {
         memberDao.save(member);
     }
 
-    public MemberInfoResponse findMemberInfo(long id) {
+    public FindMemberInfoResponse findMemberInfo(long id) {
         Member member = validateExistMember(memberDao.findMemberById(id));
-        return new MemberInfoResponse(member);
+        return new FindMemberInfoResponse(member);
     }
 
     public void checkDuplicateEmail(String email) {

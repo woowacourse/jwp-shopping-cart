@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.member.application.MemberService;
-import woowacourse.member.dto.MemberInfoResponse;
+import woowacourse.member.dto.FindMemberInfoResponse;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.dto.UpdateNameRequest;
 import woowacourse.member.dto.UpdatePasswordRequest;
@@ -29,7 +29,7 @@ public class MemberController {
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public MemberInfoResponse findMemberInfo(@AuthenticationPrincipal Long id) {
+    public FindMemberInfoResponse findMemberInfo(@AuthenticationPrincipal Long id) {
         return memberService.findMemberInfo(id);
     }
 
