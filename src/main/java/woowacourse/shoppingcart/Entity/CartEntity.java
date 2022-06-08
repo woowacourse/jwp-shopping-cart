@@ -1,16 +1,10 @@
 package woowacourse.shoppingcart.Entity;
 
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-
 public class CartEntity {
     private final Long id;
     private final Long customerId;
     private final Long productId;
     private final int quantity;
-
-    public CartEntity(Long customerId, Long productId, int quantity) {
-        this(null, customerId, productId, quantity);
-    }
 
     public CartEntity(Long id, Long customerId, Long productId, int quantity) {
         this.id = id;
@@ -20,7 +14,7 @@ public class CartEntity {
     }
 
     public CartEntity plusQuantity() {
-        return new CartEntity(id,customerId,productId,quantity+1);
+        return new CartEntity(id, customerId, productId, quantity + 1);
     }
 
     public Long getId() {

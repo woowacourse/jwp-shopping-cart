@@ -30,9 +30,9 @@ public class Fixtures {
     public static Product 치킨 = new Product(1L, "치킨", 10000, "http://example.com/chicken.jpg");
     public static Product 피자 = new Product(2L, "맥주", 20000, "http://example.com/beer.jpg");
 
-    public static final CartEntity 헌치_치킨 = new CartEntity(헌치.getId(), 치킨.getId(), 1);
-    public static final CartEntity 헌치_치킨_2 = new CartEntity(헌치.getId(), 치킨.getId(), 2);
-    public static final CartEntity 헌치_피자 = new CartEntity(헌치.getId(), 피자.getId(), 1);
+    public static final CartEntity 헌치_치킨 = new CartEntity(1L,헌치.getId(), 치킨.getId(), 1);
+    public static final CartEntity 헌치_치킨_2 = new CartEntity(1L,헌치.getId(), 치킨.getId(), 2);
+    public static final CartEntity 헌치_피자 = new CartEntity(2L,헌치.getId(), 피자.getId(), 1);
 
     public static Long 물품추가(NamedParameterJdbcTemplate namedParameterJdbcTemplate, Product product) {
         KeyHolder keyHolder = new GeneratedKeyHolder();

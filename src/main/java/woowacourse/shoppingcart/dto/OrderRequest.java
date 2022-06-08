@@ -5,9 +5,12 @@ import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
     @NotNull
-    private final Long id;
+    private Long id;
     @Min(0)
-    private final int quantity;
+    private int quantity;
+
+    public OrderRequest() {
+    }
 
     public OrderRequest(final Long id, final int quantity) {
         this.id = id;

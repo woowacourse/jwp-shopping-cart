@@ -33,7 +33,7 @@ public class CartItemRepository {
         Optional<Long> id = cartItemDao.findIdByProductId(productId);
         if (id.isPresent()) {
             CartEntity cartItemDaoById = cartItemDao.findById(id.get());
-            cartItemDao.updateAll(List.of(cartItemDaoById.plusQuantity()));
+            cartItemDao.update(cartItemDaoById.plusQuantity());
             return id.get();
         }
         return cartItemDao.create(customerId, productId);
@@ -59,12 +59,15 @@ public class CartItemRepository {
         return toCarts(cartItemDao.findCartsByCustomerId(customerId));
     }
 
-    public List<Cart> updateAll(List<CartEntity> cartEntities) {
-        int[] updatedRowNums = cartItemDao.updateAll(cartEntities);
-        if (updatedRowNums.length != cartEntities.size()) {
+    public Cart update(CartEntity cartEntity) {
+        System.err.println("cartEntity = " + cartEntity);
+        System.err.println("cartEntity.getId() = " + cartEntity.getId());
+        System.err.println("cartEntity.getQuantity() = " + cartEntity.getQuantity());
+        int updatedRowNum = cartItemDao.update(cartEntity);
+        if (updatedRowNum == 0) {
             throw new InvalidCartItemException();
         }
-        return toCarts(cartEntities);
+        return toCart(cartEntity);
     }
 
     public void deleteById(final Long id) {

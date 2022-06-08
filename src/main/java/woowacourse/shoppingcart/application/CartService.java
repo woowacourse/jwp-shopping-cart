@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -42,20 +41,14 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public List<CartProductInfoResponse> patchCart(final List<CartProductInfoRequest> cartProductInfoRequests,
-                                                   final Long customerId) {
-        List<Cart> carts = cartItemRepository.updateAll(
-                cartProductInfoRequests.stream()
-                        .map(infoRequest -> getCartEntity(customerId, infoRequest))
-                        .collect(Collectors.toList())
-        );
-        return carts.stream()
-                .map(cart -> new CartProductInfoResponse(cart.getId(), cart.getQuantity()))
-                .collect(Collectors.toList());
+    public CartProductInfoResponse patchCart(final CartProductInfoRequest cartProductInfoRequest,
+                                             final Long customerId) {
+        Cart cart = cartItemRepository.update(getCartEntity(cartProductInfoRequest.getId(), customerId, cartProductInfoRequest));
+        return new CartProductInfoResponse(cart.getId(), cart.getQuantity());
     }
 
-    private CartEntity getCartEntity(Long customerId, CartProductInfoRequest infoRequest) {
-        return new CartEntity(customerId, infoRequest.getId(), infoRequest.getQuantity());
+    private CartEntity getCartEntity(Long id, Long customerId, CartProductInfoRequest infoRequest) {
+        return new CartEntity(id, customerId, infoRequest.getId(), infoRequest.getQuantity());
     }
 
     public void deleteCarts(final Long customerId, final List<CartIdRequest> cartIdRequests) {

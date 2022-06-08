@@ -40,9 +40,9 @@ public class CartItemController {
     }
 
     @PatchMapping
-    public ResponseEntity<List<CartProductInfoResponse>> updateCartItems(
+    public ResponseEntity<CartProductInfoResponse> updateCartItem(
             @AuthenticationPrincipal final TokenRequest tokenRequest,
-            @RequestBody final List<CartProductInfoRequest> cartProductInfoRequests) {
+            @RequestBody final CartProductInfoRequest cartProductInfoRequests) {
         return ResponseEntity.ok().body(cartService.patchCart(cartProductInfoRequests, tokenRequest.getCustomerId()));
     }
 

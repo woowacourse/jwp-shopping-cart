@@ -103,16 +103,16 @@ class CartServiceTest {
         //given
         Long 사용자아이디 = 사용자추가(jdbcTemplate, 헌치);
         물품추가(jdbcTemplate, 치킨);
-        카트추가(jdbcTemplate, 헌치_치킨);
+        Long 카트추가 = 카트추가(jdbcTemplate, 헌치_치킨);
 
         //when
-        List<CartProductInfoResponse> cartProductInfoResponses = cartService.patchCart(
-                List.of(new CartProductInfoRequest(치킨.getId(), 2)), 사용자아이디);
+        CartProductInfoResponse cartProductInfoResponses = cartService.patchCart(
+                new CartProductInfoRequest(카트추가, 2), 사용자아이디);
 
         //then
         assertThat(cartProductInfoResponses)
                 .usingRecursiveComparison()
-                .isEqualTo(List.of(new CartProductInfoResponse(헌치_치킨_2.getId(), 2)));
+                .isEqualTo(new CartProductInfoResponse(헌치_치킨_2.getId(), 2));
     }
 
     @DisplayName("해당 아이디의 카트들을 삭제한다")

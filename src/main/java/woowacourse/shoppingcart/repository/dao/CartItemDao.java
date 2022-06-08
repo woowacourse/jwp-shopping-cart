@@ -16,7 +16,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.Entity.CartEntity;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
@@ -62,15 +61,6 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, params, ROW_MAPPER);
     }
 
-    public Long findProductIdById(final Long id) {
-        final String query = "SELECT product_id FROM cart_item WHERE id = :id";
-        try {
-            return jdbcTemplate.queryForObject(query, Map.of("id", id), Long.class);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-    }
-
     public int deleteById(final Long id) {
         final String query = "DELETE FROM cart_item WHERE id = :id";
         return jdbcTemplate.update(query, Map.of("id", id));
@@ -94,17 +84,9 @@ public class CartItemDao {
         );
     }
 
-    public int[] updateAll(List<CartEntity> cartEntities) {
-        final String query =
-                "UPDATE cart_item SET customer_id = :customerId, product_id = :productId, quantity = :quantity";
-        return jdbcTemplate.batchUpdate(query, SqlParameterSourceUtils.createBatch(
-                cartEntities.stream()
-                        .map(cartEntity -> Map.of(
-                                "customerId", cartEntity.getCustomerId(),
-                                "productId", cartEntity.getProductId(),
-                                "quantity", cartEntity.getQuantity()
-                        ))
-                        .collect(Collectors.toList()))
-        );
+    public int update(CartEntity cartEntity) {
+        final String query = "UPDATE cart_item SET quantity = :quantity WHERE id = :id";
+        return jdbcTemplate.update(query, Map.of("quantity", cartEntity.getQuantity(), "id", cartEntity.getId()
+        ));
     }
 }

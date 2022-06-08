@@ -107,29 +107,30 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인 한 회원의 장바구니 정보(각 아이디 별 물품 개수)를 수정한다.")
     @Test
     void updateCartItems() {
+        장바구니_아이템_추가_요청(토큰, List.of(new ProductIdRequest(치킨아이디)));
         int quantity = 2;
-        List<CartProductInfoRequest> 물품추가요청 = List.of(new CartProductInfoRequest(치킨아이디, quantity));
-        ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(토큰, 물품추가요청);
 
-        장바구니_아이템_수정됨(response);
+        장바구니_아이템_수정됨(장바구니_아이템_수정_요청(토큰, new CartProductInfoRequest(1L, quantity)));
     }
 
     @DisplayName("없는 카트 아이디로 수정할 수 없다.")
     @Test
     void updateCartItems_cartIdError() {
+        장바구니_아이템_추가_요청(토큰, List.of(new ProductIdRequest(치킨아이디)));
         int quantity = 2;
-        ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(토큰,
-                List.of(new CartProductInfoRequest(105L, quantity)));
+        ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(토큰, new CartProductInfoRequest(105L, quantity));
 
         BAD_REQUEST(response);
-        예외메세지_검증(response, "올바르지 않은 사용자 이름이거나 상품 아이디 입니다.");
+        예외메세지_검증(response, "유효하지 않은 장바구니입니다.");
     }
 
     @DisplayName("토큰이 잘못될 경우 요청할 수 없다.")
     @Test
     void updateCartItems_tokenError() {
+        장바구니_아이템_추가_요청(토큰, List.of(new ProductIdRequest(치킨아이디)));
+
         ExtractableResponse<Response> response = 장바구니_아이템_수정_요청("1234",
-                List.of(new CartProductInfoRequest(치킨아이디, 2)));
+                new CartProductInfoRequest(1L, 2));
 
         FORBIDDEN(response);
         예외메세지_검증(response, "토큰이 유효하지 않습니다.");
@@ -180,12 +181,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_수정_요청(String accessToken,
-                                                               List<CartProductInfoRequest> productIdRequests) {
+                                                               CartProductInfoRequest cartProductInfoRequest) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
-                .body(productIdRequests)
+                .body(cartProductInfoRequest)
                 .when().patch("/auth/customer/cartItems")
                 .then().log().all()
                 .extract();
@@ -219,7 +220,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_수정됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body()).isNotNull();
+        assertThat(response.body().as(CartProductInfoResponse.class)).isNotNull();
     }
 
     public static Long 장바구니_아이템_추가되어_있음(String token, Long productId) {

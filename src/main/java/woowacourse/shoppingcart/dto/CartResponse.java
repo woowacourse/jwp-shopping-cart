@@ -15,10 +15,6 @@ public class CartResponse {
     public CartResponse() {
     }
 
-    public CartResponse(final Long id, final int quantity, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
-    }
-
     public CartResponse(Long id, Long productId, String name, int price, String imageUrl, int quantity) {
         this.id = id;
         this.productId = productId;
@@ -55,17 +51,5 @@ public class CartResponse {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    @Override
-    public String toString() {
-        return "CartResponse{" +
-                "id=" + id +
-                ", productId=" + productId +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", quantity=" + quantity +
-                '}';
     }
 }
