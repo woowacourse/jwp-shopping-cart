@@ -86,4 +86,9 @@ public class ProductDao {
                         )
         );
     }
+
+    public void updateStockQuantityById(Long id, Integer quantity) {
+        final String sql = "update product set stock_quantity = ? where id = ?";
+        jdbcTemplate.update(sql, quantity, id);
+    }
 }

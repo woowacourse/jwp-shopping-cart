@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
+import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.OrderDetail;
@@ -24,13 +25,16 @@ public class OrderService {
     private final OrdersDetailDao ordersDetailDao;
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
+    private final ProductDao productDao;
 
     public OrderService(OrderDao orderDao, OrdersDetailDao ordersDetailDao,
-                        CartItemDao cartItemDao, CustomerDao customerDao) {
+                        CartItemDao cartItemDao, CustomerDao customerDao,
+                        ProductDao productDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
+        this.productDao = productDao;
     }
 
     @Transactional
@@ -45,6 +49,8 @@ public class OrderService {
                 throw new OutOfStockException("재고가 부족합니다.", ErrorResponse.OUT_OF_STOCK);
             }
             ordersDetailDao.addOrdersDetail(ordersId, cartItem.getProduct().getId(), cartItem.getQuantity());
+            productDao.updateStockQuantityById(cartItem.getProduct().getId(),
+                    (int) (cartItem.getProduct().getStockQuantity() - cartItem.getQuantity()));
             cartItemDao.deleteCartItem(cartItem.getId());
         }
 
