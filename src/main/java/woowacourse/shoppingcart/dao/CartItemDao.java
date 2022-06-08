@@ -74,7 +74,7 @@ public class CartItemDao {
 
     public int findQuantityById(Long customerId) {
         final String query = "SELECT quantity FROM cart_item WHERE customer_id = ?";
-        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getInt("product_quantity"), customerId);
+        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getInt("quantity"), customerId);
     }
 
     public void updateProductQuantity(Long cartId, int quantity) {
