@@ -21,6 +21,8 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.DeleteCartRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -75,8 +77,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = getByToken("/customers/carts", accessToken);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        List<Cart> resultCartList = new ArrayList<>(response.jsonPath().getList(".", Cart.class));
-        assertThat(resultCartList.stream().map(Cart::getQuantity)).containsExactly(5, 3);
+        List<CartResponse> resultCartList = new ArrayList<>(response.jsonPath().getList("carts", CartResponse.class));
+        assertThat(resultCartList.stream().map(CartResponse::getQuantity)).containsExactly(5, 3);
     }
 
 
@@ -85,11 +87,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartItem() {
         CartRequest cartRequestProduct1 = new CartRequest(productId1, 5);
         CartRequest cartRequestProduct2 = new CartRequest(productId2, 3);
+        DeleteCartRequest deleteCartRequest = new DeleteCartRequest(List.of(productId1));
         postWithBodyByToken("/customers/carts", accessToken, cartRequestProduct1);
         postWithBodyByToken("/customers/carts", accessToken, cartRequestProduct2);
 
         ExtractableResponse<Response> response = deleteWithBodyByToken("/customers/carts", accessToken,
-                List.of(productId1));
+                deleteCartRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }

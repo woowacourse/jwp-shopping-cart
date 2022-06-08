@@ -2,19 +2,19 @@ package woowacourse.shoppingcart.dto;
 
 public class CartRequest {
     
-    private Long id;
+    private Long productId;
     private int quantity;
 
     public CartRequest() {
     }
 
-    public CartRequest(Long id, int quantity) {
-        this.id = id;
+    public CartRequest(Long productId, int quantity) {
+        this.productId = productId;
         this.quantity = quantity;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductId() {
+        return productId;
     }
 
     public int getQuantity() {

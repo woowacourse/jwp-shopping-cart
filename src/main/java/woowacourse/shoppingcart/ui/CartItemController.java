@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,9 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.CartsResponse;
+import woowacourse.shoppingcart.dto.DeleteCartRequest;
 
 @RestController
 @RequestMapping("/customers/carts")
@@ -27,13 +31,16 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal Long id) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(id));
+    public ResponseEntity<CartsResponse> getCartItems(@AuthenticationPrincipal Long id) {
+        List<CartResponse> carts = cartService.findCartsByCustomerId(id).stream()
+                .map(CartResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(new CartsResponse(carts));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal Long id, @RequestBody CartRequest cartRequest) {
-        final Long cartId = cartService.addCart(id, cartRequest.getId(), cartRequest.getQuantity());
+        final Long cartId = cartService.addCart(id, cartRequest.getProductId(), cartRequest.getQuantity());
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")
@@ -43,14 +50,15 @@ public class CartItemController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal Long id, @RequestBody List<Long> productIds) {
-        cartService.deleteCart(id, productIds);
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal Long id,
+                                               @RequestBody DeleteCartRequest deleteCartRequest) {
+        cartService.deleteCart(id, deleteCartRequest.getProductIds());
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping
     public ResponseEntity<Void> updateCartItem(@AuthenticationPrincipal Long id, @RequestBody CartRequest cartRequest) {
-        cartService.updateCart(id, cartRequest.getId(), cartRequest.getQuantity());
+        cartService.updateCart(id, cartRequest.getProductId(), cartRequest.getQuantity());
         return ResponseEntity.ok().build();
     }
 }

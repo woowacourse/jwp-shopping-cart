@@ -188,14 +188,14 @@
       Authorization: "Bearer 유저 토큰"
       [
           {
-            "id": "상품 ID",
-              "quantity": "상품 수량"
+            "productId": "상품 ID",
+            "quantity": "상품 수량"
           }
       ]
       ```
     - `응답`
       ```java
-      [논의 필요] HTTP/1.1 201 Created
+      HTTP/1.1 201 Created
       Content-Type: application/json
       ```
 - [x] 장바구니 삭제
@@ -204,9 +204,9 @@
       DELETE /customers/carts HTTP/1.1
       Content-Type: application/json
       Authorization: "Bearer 유저 토큰"
-      [
-          "id": "상품 ID"
-      ]
+      {
+          "productIds": [1, 2, 3]
+      }
       ```
 
     - `응답`
@@ -226,11 +226,11 @@
       Content-Type: application/json
       [
           {
-              id: '상품 ID',
-              thumbnail: '상품 이미지 url',
-              name: '상품 이름',
-              price: 상품 가격,
-              quanttiy: 장바구니 담긴 수량
+              "productId" : '상품 ID',
+              "thumbnail": '상품 이미지 url',
+              "name": '상품 이름',
+              "price": 상품 가격,
+              "quanttiy": 장바구니 담긴 수량
           }
       ]
       ```
@@ -241,7 +241,7 @@
       Content-Type: application/json
       Authorization: "Bearer 유저 토큰"
       {
-          "id": "상품 ID",
+          "productId": "상품 ID",
           "quantity": 상품 수량
       }
       ```

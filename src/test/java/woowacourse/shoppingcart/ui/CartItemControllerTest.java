@@ -33,6 +33,7 @@ import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.DeleteCartRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -46,7 +47,7 @@ public class CartItemControllerTest {
     private CartService cartService;
     @MockBean
     private AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver;
-    
+
     private Cart cartItem1;
     private Cart cartItem2;
 
@@ -105,14 +106,12 @@ public class CartItemControllerTest {
         ResultActions perform = mockMvc.perform(get("/customers/carts"));
         // then
         perform.andDo(print())
-                .andExpect(jsonPath("$[0].id").value(cartItem1.getId()))
-                .andExpect(jsonPath("$[0].productId").value(cartItem1.getProductId()))
-                .andExpect(jsonPath("$[0].name").value(cartItem1.getName()))
-                .andExpect(jsonPath("$[0].quantity").value(cartItem1.getQuantity()))
-                .andExpect(jsonPath("$[1].id").value(cartItem2.getId()))
-                .andExpect(jsonPath("$[1].productId").value(cartItem2.getProductId()))
-                .andExpect(jsonPath("$[1].name").value(cartItem2.getName()))
-                .andExpect(jsonPath("$[1].quantity").value(cartItem2.getQuantity()))
+                .andExpect(jsonPath("$.carts[0].productId").value(cartItem1.getProductId()))
+                .andExpect(jsonPath("$.carts[0].name").value(cartItem1.getName()))
+                .andExpect(jsonPath("$.carts[0].quantity").value(cartItem1.getQuantity()))
+                .andExpect(jsonPath("$.carts[1].productId").value(cartItem2.getProductId()))
+                .andExpect(jsonPath("$.carts[1].name").value(cartItem2.getName()))
+                .andExpect(jsonPath("$.carts[1].quantity").value(cartItem2.getQuantity()))
                 .andExpect(status().isOk());
     }
 
@@ -121,6 +120,7 @@ public class CartItemControllerTest {
     void deleteCartItem() throws Exception {
         // given
         Long customerId = 1L;
+        DeleteCartRequest deleteCartRequest = new DeleteCartRequest(List.of(cartItem1.getProductId(), cartItem2.getProductId()));
         List<Long> productIds = List.of(cartItem1.getProductId(), cartItem2.getProductId());
 
         when(authenticationPrincipalArgumentResolver.supportsParameter((MethodParameter) notNull()))
@@ -135,7 +135,7 @@ public class CartItemControllerTest {
         doNothing().when(cartService).deleteCart(customerId, productIds);
         ResultActions perform = mockMvc.perform(delete("/customers/carts")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(List.of(cartItem1.getProductId(), cartItem2.getProductId()))));
+                .content(objectMapper.writeValueAsString(deleteCartRequest)));
         // then
         perform.andDo(print())
                 .andExpect(status().isNoContent());
@@ -156,7 +156,7 @@ public class CartItemControllerTest {
                 (WebDataBinderFactory) notNull()))
                 .thenReturn(customerId);
         // when
-        doNothing().when(cartService).updateCart(customerId, cartRequest.getId(), cartRequest.getQuantity());
+        doNothing().when(cartService).updateCart(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
         ResultActions perform = mockMvc.perform(patch("/customers/carts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cartRequest)));
