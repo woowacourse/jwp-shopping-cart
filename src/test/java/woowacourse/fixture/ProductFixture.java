@@ -75,13 +75,13 @@ public class ProductFixture {
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 
-    public static void 상품_목록_검증(Long productId1, Long productId2, ExtractableResponse<Response> response) {
+    public static void 상품_목록_검증(Long productId1, Long productId, ExtractableResponse<Response> response) {
         List<Long> resultProductIds = covertTypeList(response, ProductResponse.class).stream()
                 .map(ProductResponse::getProductId)
                 .collect(Collectors.toList());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(resultProductIds).contains(productId1, productId2);
+        assertThat(resultProductIds).contains(productId1, productId);
     }
 
     public static void 상품_조회_검증(ExtractableResponse<Response> response, Long productId, Product product) {

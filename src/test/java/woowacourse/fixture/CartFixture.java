@@ -18,23 +18,24 @@ public class CartFixture {
     private CartFixture() {
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, String userName, Long productId) {
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, long customerId, long productId, long count) {
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
+        requestBody.put("productId", productId);
+        requestBody.put("count", count);
 
-        return Fixture.post("/api/customers/" + userName + "/carts", token, requestBody);
+        return Fixture.post("/api/customers/" + customerId + "/carts", token, requestBody);
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token, String userName) {
-        return get("/api/customers/" + userName + "/carts", token);
+    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token, long customerId) {
+        return get("/api/customers/" + customerId + "/carts", token);
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token, String userName, Long cartId) {
-        return delete("/api/customers/" + userName + "/carts/" + cartId, token);
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token, long customerId, long cartId) {
+        return delete("/api/customers/" + customerId + "/carts/" + cartId, token);
     }
 
-    public static Long 장바구니_아이템_추가_ID_반환(String token, String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, userName, productId);
+    public static Long 장바구니_아이템_추가_요청후_ID_반환(String token, long customerId, long productId, long count) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, customerId, productId, count);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 

@@ -35,22 +35,22 @@ public class CustomerDao {
         ).longValue();
     }
 
-    public Long findIdByUserName(final String userName) {
-        try {
-            final String query = "SELECT id, email, username, password FROM customer WHERE username = :username";
-            Map<String, String> params = Map.of("username", userName.toLowerCase(Locale.ENGLISH));
-            Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
-
-            return customer.getId();
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
-    }
-
     public Optional<Customer> findById(final Long id) {
         try {
             final String query = "SELECT id, email, username, password FROM customer WHERE id = :id";
             Map<String, Long> params = Map.of("id", id);
+            Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
+
+            return Optional.ofNullable(customer);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Customer> findByUsername(String username) {
+        try {
+            final String query = "SELECT id, email, username, password FROM customer WHERE username = :username";
+            Map<String, String> params = Map.of("username", username);
             Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
 
             return Optional.ofNullable(customer);
@@ -71,15 +71,15 @@ public class CustomerDao {
         }
     }
 
-    public Optional<Customer> findByUsername(String username) {
+    public Long findIdByUserName(final String userName) {
         try {
             final String query = "SELECT id, email, username, password FROM customer WHERE username = :username";
-            Map<String, String> params = Map.of("username", username);
+            Map<String, String> params = Map.of("username", userName.toLowerCase(Locale.ENGLISH));
             Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
 
-            return Optional.ofNullable(customer);
+            return customer.getId();
         } catch (final EmptyResultDataAccessException e) {
-            return Optional.empty();
+            throw new InvalidCustomerException();
         }
     }
 

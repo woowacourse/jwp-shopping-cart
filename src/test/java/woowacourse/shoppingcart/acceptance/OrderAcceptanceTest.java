@@ -1,8 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_ID_반환;
+import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_요청후_ID_반환;
 import static woowacourse.fixture.CustomFixture.로그인_요청_및_토큰발급;
-import static woowacourse.fixture.CustomFixture.회원가입_요청;
 import static woowacourse.fixture.OrderFixture.주문_내역_조회_요청;
 import static woowacourse.fixture.OrderFixture.주문_내역_포함_검증;
 import static woowacourse.fixture.OrderFixture.주문_단일_조회_요청;
@@ -24,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.fixture.CustomFixture;
 import woowacourse.global.AcceptanceTest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
@@ -32,6 +32,8 @@ import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 public class OrderAcceptanceTest extends AcceptanceTest {
 
     private static final String USER_NAME = "swcho";
+    private String token;
+    private long customerId;
     private Long cartId1;
     private Long cartId2;
 
@@ -40,13 +42,13 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     public void setUp() {
         super.setUp();
 
-        String token = getToken();
+        토큰_및_회원_ID_초기화();
 
         Long productId1 = 상품_등록되어_있음(token, "치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
         Long productId2 = 상품_등록되어_있음(token, "맥주", 20_000, "http://example.com/beer.jpg", 30_000);
 
-        cartId1 = 장바구니_아이템_추가_ID_반환(token, USER_NAME, productId1);
-        cartId2 = 장바구니_아이템_추가_ID_반환(token, USER_NAME, productId2);
+        cartId1 = 장바구니_아이템_추가_요청후_ID_반환(token, customerId, productId1, 2);
+        cartId2 = 장바구니_아이템_추가_요청후_ID_반환(token, customerId, productId2, 2);
     }
 
     @DisplayName("주문하기")
@@ -87,11 +89,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         주문_조회_검증(response, orderId);
     }
 
-
-    private String getToken() {
-        회원가입_요청(
-                new CustomerCreateRequest("philz@gmail.com", USER_NAME, "123456789"));
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("philz@gmail.com", "123456789"));
-        return token;
+    private void 토큰_및_회원_ID_초기화() {
+        CustomerCreateRequest customerRequest = new CustomerCreateRequest("roma@naver.com", "roma", "12345678");
+        this.customerId = CustomFixture.회원가입_요청_및_ID_추출(customerRequest);
+        TokenRequest tokenRequest = new TokenRequest("roma@naver.com", "12345678");
+        this.token = 로그인_요청_및_토큰발급(tokenRequest);
     }
 }

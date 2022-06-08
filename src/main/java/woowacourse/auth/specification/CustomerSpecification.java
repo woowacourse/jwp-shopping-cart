@@ -3,7 +3,6 @@ package woowacourse.auth.specification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -29,12 +28,9 @@ public class CustomerSpecification {
         }
     }
 
-    public void validateCustomerExists(Long id) {
-        findById(id);
-    }
-
-    private Customer findById(long id) {
-        return customerDao.findById(id)
+    public void validateCustomerExists(long id) {
+        customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
     }
+
 }
