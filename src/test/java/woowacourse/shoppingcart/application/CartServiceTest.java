@@ -39,6 +39,21 @@ class CartServiceTest {
         assertThat(cartId).isEqualTo(6L);
     }
 
+    @DisplayName("중복된 상품을 장바구니에 동록하면 해당 상품의 개수가 1개 증가한다.")
+    @Test
+    void addDuplicateProduct() {
+        Long memberId = 3L;
+        Long productId = 1L;
+        Long cartId = cartService.add(memberId, productId);
+        cartService.add(memberId, productId);
+
+        List<CartResponse> carts = cartService.findCarts(memberId);
+        CartResponse cart = carts.stream()
+                .filter(v -> v.getId().equals(cartId))
+                .findFirst().orElseThrow();
+        assertThat(cart.getQuantity()).isEqualTo(2);
+    }
+
     @DisplayName("등록되지 않은 회원으로 장바구니를 동록하면 예외가 발생한다.")
     @Test
     void addWithNotExistMember() {

@@ -38,9 +38,22 @@ public class CartService {
     public Long add(Long memberId, Long productId) {
         validateExistMember(memberId);
         validateExistProduct(productId);
+        Optional<Cart> existCartWithProduct = findExistCartWithProduct(memberId, productId);
+        if (existCartWithProduct.isEmpty()) {
+            EnrollCartDto enrollCartDto = new EnrollCartDto(memberId, productId);
+            return cartItemDao.save(enrollCartDto);
+        }
 
-        EnrollCartDto enrollCartDto = new EnrollCartDto(memberId, productId);
-        return cartItemDao.save(enrollCartDto);
+        Long cartId = existCartWithProduct.get().getId();
+        updateQuantity(memberId, cartId, new UpdateQuantityRequest(existCartWithProduct.get().getQuantity() + 1));
+        return cartId;
+    }
+
+    private Optional<Cart> findExistCartWithProduct(Long memberId, Long productId) {
+        List<Cart> cartItems = cartItemDao.findCartByMemberId(memberId);
+        return cartItems.stream()
+                .filter(v -> v.getProductId().equals(productId))
+                .findAny();
     }
 
     public List<CartResponse> findCarts(Long memberId) {
@@ -54,7 +67,7 @@ public class CartService {
     @Transactional
     public void updateQuantity(Long memberId, Long cartId, UpdateQuantityRequest request) {
         validateExistMember(memberId);
-        validateExistMemberCart(cartId, memberId);
+        validateExistMemberCart(memberId, cartId);
 
         if (request.getQuantity() < 1) {
             throw new InvalidCartQuantityException();
