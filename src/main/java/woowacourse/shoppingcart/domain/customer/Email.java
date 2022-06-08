@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_1001;
+
 import java.util.Objects;
 import java.util.regex.Pattern;
+import woowacourse.shoppingcart.exception.InvalidEmailFormatException;
 
 public final class Email {
     private static final String emailRegex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
@@ -19,7 +22,7 @@ public final class Email {
 
     private void validate(String value) {
         if (!Pattern.matches(emailRegex, value)) {
-            throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
+            throw new InvalidEmailFormatException(CODE_1001.getMessage());
         }
     }
 

@@ -42,14 +42,11 @@ public class OrderService {
         List<Long> productIds = orderSaveRequest.getProductIds();
         Long customerId = customerDao.findIdByEmail(email);
         List<OrderDetailDto> orderDetails = new ArrayList<>();
+        Long ordersId = orderDao.addOrders(customerId);
 
         int totalPrice = 0;
-        Long ordersId = orderDao.addOrders(customerId);
         for (Long productId : productIds) {
-            Cart cart = cartDao.findByCustomerIdAndProductId(customerId, productId)
-                    .orElseThrow(() -> new IllegalArgumentException("장바구니에 해당 물건이 존재하지 않습니다"));
-
-            ordersDetailDao.addOrdersDetail(new OrderDetail(ordersId, productId, cart.getQuantity()));
+            Cart cart = extractCart(customerId, ordersId, productId);
             Product findProduct = productDao.findProductById(cart.getProductId())
                     .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다"));
             totalPrice += cart.getQuantity() * findProduct.getPrice();
@@ -77,5 +74,12 @@ public class OrderService {
         }
 
         return new FindOrderResponse(orderId, orderDetailDtos, totalPrice, LocalDateTime.now());
+    }
+
+    private Cart extractCart(Long customerId, Long ordersId, Long productId) {
+        Cart cart = cartDao.findByCustomerIdAndProductId(customerId, productId)
+                .orElseThrow(() -> new IllegalArgumentException("장바구니에 해당 물건이 존재하지 않습니다"));
+        ordersDetailDao.addOrdersDetail(new OrderDetail(ordersId, productId, cart.getQuantity()));
+        return cart;
     }
 }

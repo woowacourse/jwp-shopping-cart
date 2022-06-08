@@ -1,6 +1,10 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import static woowacourse.shoppingcart.exception.ExceptionMessage.*;
+
 import java.util.Objects;
+import woowacourse.shoppingcart.exception.ExceptionMessage;
+import woowacourse.shoppingcart.exception.InvalidNicknameFormatException;
 
 public final class Nickname {
     private static final int MIN_LENGTH = 2;
@@ -18,7 +22,7 @@ public final class Nickname {
 
     private void validate(String value) {
         if (value.length() < MIN_LENGTH || value.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("닉네임의 길이는 2~10자이어야 합니다.");
+            throw new InvalidNicknameFormatException(CODE_2102.getMessage());
         }
     }
 

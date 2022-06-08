@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
+import static woowacourse.shoppingcart.exception.ExceptionMessage.*;
+
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,9 +14,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.InvalidAuthException;
+import woowacourse.shoppingcart.dto.exception.ExceptionDto;
+import woowacourse.shoppingcart.exception.DuplicatedEmailException;
+import woowacourse.shoppingcart.exception.ExceptionMessage;
+import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidEmailFormatException;
+import woowacourse.shoppingcart.exception.InvalidNicknameFormatException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidPasswordFormatException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
@@ -22,9 +31,29 @@ import woowacourse.shoppingcart.exception.ProductNotFoundException;
 @RestControllerAdvice(basePackages = "woowacourse.shoppingcart")
 public class CartControllerAdvice {
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<String> handle() {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+    @ExceptionHandler(InvalidEmailFormatException.class)
+    public ResponseEntity<ExceptionDto> handleInvalidEmail(ProductNotFoundException e) {
+        return ResponseEntity.badRequest().body(new ExceptionDto(CODE_1001.getCode(), CODE_1001.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidNicknameFormatException.class)
+    public ResponseEntity<ExceptionDto> handleInvalidNickname(InvalidNicknameFormatException e) {
+        return ResponseEntity.badRequest().body(new ExceptionDto(CODE_2102.getCode(), CODE_2102.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidPasswordFormatException.class)
+    public ResponseEntity<ExceptionDto> handleInvalidPassword(InvalidPasswordFormatException e) {
+        return ResponseEntity.badRequest().body(new ExceptionDto(CODE_2103.getCode(), CODE_2103.getMessage()));
+    }
+
+    @ExceptionHandler(DuplicatedEmailException.class)
+    public ResponseEntity<ExceptionDto> handleDuplicatedEmail(InvalidPasswordFormatException e) {
+        return ResponseEntity.badRequest().body(new ExceptionDto(CODE_2001.getCode(), CODE_2001.getMessage()));
+    }
+
+    @ExceptionHandler(IncorrectPasswordException.class)
+    public ResponseEntity<ExceptionDto> handleDuplicatedEmail(IncorrectPasswordException e) {
+        return ResponseEntity.badRequest().body(new ExceptionDto(CODE_2201.getCode(), CODE_2201.getMessage()));
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
@@ -69,5 +98,10 @@ public class CartControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<String> handleUnhandledException(RuntimeException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public ResponseEntity<String> handle() {
+        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
     }
 }

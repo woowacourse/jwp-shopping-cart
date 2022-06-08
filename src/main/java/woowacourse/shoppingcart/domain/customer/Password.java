@@ -1,7 +1,11 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import static woowacourse.shoppingcart.exception.ExceptionMessage.*;
+
 import java.util.Objects;
 import java.util.regex.Pattern;
+import woowacourse.shoppingcart.exception.ExceptionMessage;
+import woowacourse.shoppingcart.exception.InvalidPasswordFormatException;
 
 public final class Password {
     private static final String passwordRegex = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{4,20}";
@@ -23,7 +27,7 @@ public final class Password {
 
     private void validate(String value) {
         if (!Pattern.matches(passwordRegex, value)) {
-            throw new IllegalArgumentException(value + "비밀번호 형식이 올바르지 않습니다.");
+            throw new InvalidPasswordFormatException(CODE_2103.getMessage());
         }
     }
 

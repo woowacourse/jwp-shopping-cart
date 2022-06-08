@@ -8,7 +8,6 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 @Getter
 public class SignupRequest {
 
-    @Email(message = "이메일 형식이 올바르지 않습")
     @NotBlank(message = "이메일은 공백이 아니여야합니다")
     private String email;
     @NotBlank(message = "닉네임은 공백이 아니여야합니다")

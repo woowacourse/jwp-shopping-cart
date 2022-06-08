@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.application;
 
+import static woowacourse.shoppingcart.exception.ExceptionMessage.*;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
@@ -9,6 +11,9 @@ import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.exception.DuplicatedEmailException;
+import woowacourse.shoppingcart.exception.ExceptionMessage;
+import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 
 @Service
 @Transactional(readOnly = true)
@@ -54,13 +59,13 @@ public class CustomerService {
 
     private void validateEmailDuplicated(Customer customer) {
         if (customerDao.existByEmail(customer.getEmail())) {
-            throw new InvalidCustomerException("중복된 이메일 입니다.");
+            throw new DuplicatedEmailException(CODE_2001.getMessage());
         }
     }
 
     private void validatePassword(Customer customer, String password) {
         if (!customer.isSamePassword(password)) {
-            throw new InvalidAuthException("비밀번호가 달라서 수정할 수 없습니다.");
+            throw new IncorrectPasswordException(CODE_2202.getMessage());
         }
     }
 }
