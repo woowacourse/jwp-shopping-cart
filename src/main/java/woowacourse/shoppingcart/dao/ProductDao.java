@@ -29,7 +29,7 @@ public class ProductDao {
     public ProductDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("PRODUCT")
+                .withTableName("product")
                 .usingGeneratedKeyColumns("id");
     }
 

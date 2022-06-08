@@ -22,7 +22,6 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<Cart> cartRowMapper = (rs, rowNum) ->
             new Cart(
                     rs.getLong("id"),
@@ -41,7 +40,6 @@ public class CartItemDao {
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("CART_ITEM")
                 .usingGeneratedKeyColumns("id");
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     public Cart addCartItem(Long customerId, Cart cart) {

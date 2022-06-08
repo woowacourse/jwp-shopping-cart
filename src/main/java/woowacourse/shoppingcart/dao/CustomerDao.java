@@ -31,7 +31,7 @@ public class CustomerDao {
     public CustomerDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("CUSTOMER")
+                .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -87,7 +87,7 @@ public class CustomerDao {
 
     public void updatePassword(Long id, Password password) {
         try {
-            final String query = "UPDATE CUSTOMER SET password = ? WHERE id = ?";
+            final String query = "UPDATE customer SET password = ? WHERE id = ?";
             jdbcTemplate.update(query, password.getValue(), id);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
