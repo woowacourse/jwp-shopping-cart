@@ -45,7 +45,7 @@ public class MemberDao {
     }
 
     public boolean existsByEmail(String email) {
-        String SQL = "SELECT EXISTS (SELECT * FROM MEMBER WHERE email = ?)";
+        String SQL = "SELECT EXISTS (SELECT * FROM member WHERE email = ?)";
         return jdbcTemplate.queryForObject(SQL, Boolean.class, email);
     }
 
