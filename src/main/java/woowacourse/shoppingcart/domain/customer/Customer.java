@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.regex.Pattern;
@@ -16,9 +17,9 @@ import java.util.regex.Pattern;
 public class Customer {
 
     private final Long id;
-    private final String email;
+    private final Email email;
     private final Password password;
-    private final String nickname;
+    private final NickName nickname;
 
     public Customer(String email, String password, String nickname) {
         this(null, email, password, nickname);
@@ -26,13 +27,12 @@ public class Customer {
 
     public Customer(Long id, String email, String password, String nickname) {
         this.id = id;
-        this.email = email;
+        this.email = new Email(email);
         this.password = new Password(password);
-        this.nickname = nickname;
+        this.nickname = new NickName(nickname);
     }
-
     public String getEmail() {
-        return email;
+        return email.getValue();
     }
 
     public String getPassword() {
@@ -40,7 +40,7 @@ public class Customer {
     }
 
     public String getNickname() {
-        return nickname;
+        return nickname.getValue();
     }
 
     public Long getId() {

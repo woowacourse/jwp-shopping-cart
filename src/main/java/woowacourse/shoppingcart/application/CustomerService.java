@@ -48,7 +48,8 @@ public class CustomerService {
     public void updateCustomer(String email, CustomerUpdateRequest request) {
         Customer customer = findByEmail(email);
         String encryptPassword = PasswordEncoder.encrypt(request.getPassword());
-        customerDao.update(new Customer(customer.getId(), customer.getEmail(), encryptPassword,
-                request.getNickname()));
+        customerDao.update(
+                new Customer(
+                        customer.getId(), customer.getEmail(), encryptPassword, request.getNickname()));
     }
 }
