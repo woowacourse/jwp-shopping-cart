@@ -120,7 +120,7 @@ class CartServiceTest {
     @DisplayName("장바구니 id가 요청한 회원의 장바구니가 아닐 경우 예외가 발생한다.")
     @Test
     void deleteCartWithNotExistMemberCart() {
-        assertThatThrownBy(() -> cartService.deleteCart(1L, 2L))
+        assertThatThrownBy(() -> cartService.deleteCart(1L, 3L))
                 .isInstanceOf(NotInMemberCartItemException.class)
                 .hasMessageContaining("장바구니 아이템이 없습니다.");
     }

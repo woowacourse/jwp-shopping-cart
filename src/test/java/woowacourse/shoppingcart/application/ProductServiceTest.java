@@ -35,7 +35,7 @@ class ProductServiceTest {
         ProductRequest request = new ProductRequest(name, price, imageUrl);
         Long productId = productService.add(request);
 
-        assertThat(productId).isEqualTo(4L);
+        assertThat(productId).isEqualTo(18L);
     }
 
     @DisplayName("올바른 상품 ID로 상품을 조회한다.")
@@ -67,7 +67,7 @@ class ProductServiceTest {
     void findProducts() {
         List<ProductResponse> products = productService.findProducts();
 
-        assertThat(products.size()).isEqualTo(3);
+        assertThat(products.size()).isEqualTo(17);
     }
 
     @DisplayName("올바른 상품 ID로 상품을 삭제한다.")
