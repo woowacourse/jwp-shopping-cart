@@ -1,10 +1,5 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import java.util.regex.Pattern;
-
 /*
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
 
@@ -31,6 +26,7 @@ public class Customer {
         this.password = new Password(password);
         this.nickname = new NickName(nickname);
     }
+
     public String getEmail() {
         return email.getValue();
     }

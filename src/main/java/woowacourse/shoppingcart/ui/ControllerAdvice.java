@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.ui;
 
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -10,14 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.ShoppingCartNotFoundException;
 import woowacourse.shoppingcart.exception.ShoppingCartBadRequestException;
-import woowacourse.shoppingcart.exception.cartItem.DuplicateCartItemBadRequestException;
-import woowacourse.shoppingcart.exception.cartItem.ItemNotExistedInCartBadRequestException;
-import woowacourse.shoppingcart.exception.customer.DuplicateCustomerBadRequestException;
-import woowacourse.shoppingcart.exception.customer.InvalidCustomerBadRequestException;
-import woowacourse.shoppingcart.exception.product.InvalidProductBadRequestException;
-import woowacourse.shoppingcart.exception.product.InvalidQuantityBadRequestException;
+import woowacourse.shoppingcart.exception.ShoppingCartNotFoundException;
 
 import javax.validation.ConstraintViolationException;
 

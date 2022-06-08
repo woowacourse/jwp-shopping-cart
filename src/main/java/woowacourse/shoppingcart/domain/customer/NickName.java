@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import woowacourse.shoppingcart.exception.customer.InvalidEmailException;
 import woowacourse.shoppingcart.exception.customer.InvalidNickNameException;
 
 import java.util.regex.Matcher;

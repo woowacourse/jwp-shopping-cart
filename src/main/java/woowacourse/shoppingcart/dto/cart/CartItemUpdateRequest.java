@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto.cart;
 
-import javax.validation.constraints.Min;
-
 public class CartItemUpdateRequest {
     private int quantity;
 
