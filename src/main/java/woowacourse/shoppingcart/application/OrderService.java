@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.cartItem.CartItem;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
@@ -30,30 +31,32 @@ public class OrderService {
     }
 
     public Long addOrders(int customerId, List<CartRequest> orderRequest) {
-        final List<Long> productIds = getProductId(orderRequest);
-        checkProductIds(productIds);
-        // todo quantity까지 점검해야함 -> cart(product, quantity)를 만들기
+        final List<CartItem> cartItems = getCartItems(orderRequest);
+
         final Long orderId = orderDao.addOrders(customerId);
-        addOrdersDetail(orderId, orderRequest);
+
+        addOrdersDetail(orderId, cartItems);
 
         return orderId;
     }
 
-    private void addOrdersDetail(Long orderId, List<CartRequest> orderRequest) {
-        for (CartRequest cart : orderRequest) {
-            ordersDetailDao.addOrdersDetail(orderId, cart.getProductId(), cart.getQuantity());
-        }
-    }
-
-    private List<Long> getProductId(List<CartRequest> orderRequest) {
+    private List<CartItem> getCartItems(List<CartRequest> orderRequest) {
         return orderRequest
                 .stream()
-                .map(CartRequest::getProductId)
+                .map(cartRequest -> {
+                    final ProductEntity productEntity = productDao.findProductById(cartRequest.getProductId());
+                    return CartItem.of(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),
+                            productEntity.getImageUrl(), productEntity.getDescription(),
+                            productEntity.getStock(),
+                            cartRequest.getQuantity());
+                })
                 .collect(Collectors.toList());
     }
 
-    private void checkProductIds(List<Long> productIds) {
-        productIds.forEach(productDao::findProductById);
+    private void addOrdersDetail(Long orderId, List<CartItem> cartItems) {
+        for (CartItem cartItem : cartItems) {
+            ordersDetailDao.addOrdersDetail(orderId, cartItem.getProduct().getId(), cartItem.getQuantity().getValue());
+        }
     }
 
     public List<OrderResponse> findOrdersByCustomerId(final int customerId) {

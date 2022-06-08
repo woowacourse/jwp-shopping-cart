@@ -23,10 +23,10 @@ public class ProductFixtures {
 
 
 
-    public static final Product PRODUCT_1 = Product.of( PRODUCT_REQUEST_1.getName(), PRODUCT_REQUEST_1.getPrice(),
+    public static final Product PRODUCT_1 = Product.of(null, PRODUCT_REQUEST_1.getName(), PRODUCT_REQUEST_1.getPrice(),
             PRODUCT_REQUEST_1.getImageUrl(), PRODUCT_REQUEST_1.getDescription(), PRODUCT_REQUEST_1.getStock());
 
-    public static final Product PRODUCT_2 = Product.of(PRODUCT_REQUEST_2.getName(), PRODUCT_REQUEST_2.getPrice(),
+    public static final Product PRODUCT_2 = Product.of(null, PRODUCT_REQUEST_2.getName(), PRODUCT_REQUEST_2.getPrice(),
             PRODUCT_REQUEST_2.getImageUrl(), PRODUCT_REQUEST_2.getDescription(), PRODUCT_REQUEST_2.getStock());
 
     public static Map<String, Object> getProductRequestParam(ProductRequest productRequest) {

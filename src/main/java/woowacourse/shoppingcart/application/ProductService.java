@@ -27,7 +27,7 @@ public class ProductService {
     }
 
     private Product convertRequestToProduct(ProductRequest productRequest) {
-        return Product.of(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(),
+        return Product.of(null, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(),
                 productRequest.getDescription(), productRequest.getStock());
     }
 

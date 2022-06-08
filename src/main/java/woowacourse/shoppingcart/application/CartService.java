@@ -31,14 +31,13 @@ public class CartService {
         final List<CartItemEntity> cartItemEntities = cartItemDao.findCartByCustomerId(customerId);
 
         return cartItemEntities.stream()
-                .map(this::convertCartItemResponse)
+                .map(this::convertEntityCartItemResponse)
                 .collect(Collectors.toList());
     }
 
-    private CartItemResponse convertCartItemResponse(CartItemEntity cartItemEntity) {
+    private CartItemResponse convertEntityCartItemResponse(CartItemEntity cartItemEntity) {
         return new CartItemResponse(
-                productService.findProductById(cartItemEntity.getProductId()),
-                cartItemEntity.getQuantity()
+                productService.findProductById(cartItemEntity.getProductId()), cartItemEntity.getQuantity()
         );
     }
 

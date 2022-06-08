@@ -22,7 +22,7 @@ class ProductTest {
         final int stock = 76;
 
         //when
-        assertThatCode(() -> Product.of(name, price, imageUrl, descrtion, stock)).doesNotThrowAnyException();
+        assertThatCode(() -> Product.of(null, name, price, imageUrl, descrtion, stock)).doesNotThrowAnyException();
     }
 
     @DisplayName("상품을 생성 실패 - 잘못된 가격")
@@ -36,7 +36,7 @@ class ProductTest {
         final int stock = 76;
 
         //when
-        assertThatThrownBy(() -> Product.of(name, price, imageUrl, descrtion, stock)).isInstanceOf(
+        assertThatThrownBy(() -> Product.of(null, name, price, imageUrl, descrtion, stock)).isInstanceOf(
                 InvalidPriceException.class);
     }
 
@@ -51,7 +51,7 @@ class ProductTest {
         final int stock = -1;
 
         //when
-        assertThatThrownBy(() -> Product.of(name, price, imageUrl, descrtion, stock)).isInstanceOf(
+        assertThatThrownBy(() -> Product.of(null, name, price, imageUrl, descrtion, stock)).isInstanceOf(
                 InvalidStockException.class);
     }
 }

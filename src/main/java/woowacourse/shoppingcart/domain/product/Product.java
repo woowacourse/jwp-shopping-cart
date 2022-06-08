@@ -23,8 +23,8 @@ public class Product {
         this.stock = stock;
     }
 
-    public static Product of(String name, int price, String imageUrl, String description, int stock) {
-        return new Product(name, new Price(price), imageUrl, description, new Stock(stock));
+    public static Product of(Long id, String name, int price, String imageUrl, String description, int stock) {
+        return new Product(id, name, new Price(price), imageUrl, description, new Stock(stock));
     }
 
     public Long getId() {
