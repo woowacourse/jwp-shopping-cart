@@ -2,9 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.CartDto;
+import woowacourse.shoppingcart.domain.Cart;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -65,19 +63,6 @@ public class CartItemDaoTest {
         assertThat(isExist).isTrue();
     }
 
-    @DisplayName("productId들로 수량들을 조회한다.")
-    @Test
-    void getQuantitiesByProductIds_exist_quantities() {
-        // when
-        List<CartDto> cartDtos = cartItemDao.getCartinfosByIds(List.of(2L, 1L));
-
-        List<Integer> quantities = cartDtos.stream()
-                .map(cartDto -> cartDto.getQuantity())
-                .collect(Collectors.toList());
-        // then
-        assertThat(quantities).containsExactly(5, 3);
-    }
-
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
@@ -103,8 +88,8 @@ public class CartItemDaoTest {
         cartItemDao.updateCartItem(customerId, quantity, productId);
 
         // then
-        CartDto cartDto = cartItemDao.findCartByProductCustomer(customerId, productId);
-        assertThat(cartDto.getQuantity()).isEqualTo(quantity);
+        Cart cart = cartItemDao.getCartByProductCustomer(customerId, productId);
+        assertThat(cart.getQuantity()).isEqualTo(quantity);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
@@ -122,16 +107,19 @@ public class CartItemDaoTest {
         assertThat(cartIds.size()).isEqualTo(1);
     }
 
-    @DisplayName("장바구니에 상품이 없을 때 조회해온다.")
+    @DisplayName("cartId를 조회하여 Cart 객체들을 반환한다.")
     @Test
-    void getCartinfosByIds() {
+    void findCart() {
         // given
-        List<Long> cartIds = new ArrayList<>();
+        Long customerId = 1L;
 
         // when
-        List<CartDto> cartDtos = cartItemDao.getCartinfosByIds(cartIds);
+        List<Cart> carts = cartItemDao.findCartsByCustomerId(customerId);
+        for (Cart cart : carts) {
+            System.out.println(cart);
+        }
 
         // then
-        assertThat(cartDtos.size()).isEqualTo(0);
+        assertThat(carts.size()).isEqualTo(2);
     }
 }

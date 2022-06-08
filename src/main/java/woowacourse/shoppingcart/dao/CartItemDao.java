@@ -1,15 +1,14 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.dto.CartDto;
+import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Product;
 
 @Repository
 public class CartItemDao {
@@ -19,8 +18,13 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<CartDto> rowMapper = (rs, rowNum) -> new CartDto(rs.getLong("id"), rs.getLong("product_id"),
+    private final RowMapper<Cart> rowMapper = (rs, rowNum) -> new Cart(rs.getLong("id"),
+            toProduct(rs.getLong("product_id"), rs.getString("name"), rs.getInt("price"), rs.getString("image_url")),
             rs.getInt("quantity"));
+
+    private Product toProduct(Long productId, String name, int price, String imageUrl) {
+        return new Product(productId, name, price, imageUrl);
+    }
 
     public Long addCartItem(final Long customerId, final Long productId) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
@@ -47,35 +51,25 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public List<CartDto> getCartinfosByIds(List<Long> cartIds) {
-        if (cartIds.size() == 0) {
-            return new ArrayList<>();
-        }
-        String value = cartIds.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(", "));
-
-        final String query = String.format("SELECT id, product_id, quantity FROM cart_item WHERE id IN (%s)", value);
-        List<CartDto> cartDtos = jdbcTemplate.query(query, rowMapper);
-
-        return cartIds.stream()
-                .flatMap(id -> cartDtos.stream()
-                        .filter(cartDto -> cartDto.getProductId().equals(id)))
-                .collect(Collectors.toList());
-    }
-
     public void updateCartItem(Long customerId, int quantity, Long productId) {
         final String query = "UPDATE cart_item SET quantity =? WHERE customer_id = ? and product_id = ?";
         jdbcTemplate.update(query, quantity, customerId, productId);
     }
 
-    public CartDto findCartByProductCustomer(Long customerId, Long productId) {
-        final String query = "SELECT id, quantity, product_id FROM cart_item WHERE customer_id = ? and product_id = ?";
-        return jdbcTemplate.queryForObject(query, rowMapper, customerId, productId);
-    }
-
     public void deleteCartItem(Long customerId, final Long productId) {
         final String query = "DELETE FROM cart_item WHERE customer_id = ? and product_id = ?";
         jdbcTemplate.update(query, customerId, productId);
+    }
+
+    public List<Cart> findCartsByCustomerId(Long customerId) {
+        final String query = "SELECT c.id, c.customer_id, c.quantity, c.product_id, p.name, p.price, p.image_url "
+                + "FROM cart_item c JOIN product p ON c.product_id = p.id WHERE c.customer_id = ?";
+        return jdbcTemplate.query(query, rowMapper, customerId);
+    }
+
+    public Cart getCartByProductCustomer(Long customerId, Long productId) {
+        final String query = "SELECT c.id, c.customer_id, c.quantity, c.product_id, p.name, p.price, p.image_url "
+                + "FROM cart_item c JOIN product p ON c.product_id = p.id WHERE c.customer_id = ? and c.product_id = ?";
+        return jdbcTemplate.queryForObject(query, rowMapper, customerId, productId);
     }
 }

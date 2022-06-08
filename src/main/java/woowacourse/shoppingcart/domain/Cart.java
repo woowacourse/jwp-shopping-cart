@@ -5,22 +5,12 @@ import java.util.Objects;
 public class Cart {
 
     private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private Product product;
     private Quantity quantity;
 
     public Cart(final Long id, final Product product, final int quantity) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
-    }
-
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl, final int quantity) {
         this.id = id;
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.product = product;
         this.quantity = new Quantity(quantity);
     }
 
@@ -29,19 +19,19 @@ public class Cart {
     }
 
     public Long getProductId() {
-        return productId;
+        return product.getId();
     }
 
     public String getName() {
-        return name;
+        return product.getName();
     }
 
     public int getPrice() {
-        return price;
+        return product.getPrice();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return product.getImageUrl();
     }
 
     public int getQuantity() {
