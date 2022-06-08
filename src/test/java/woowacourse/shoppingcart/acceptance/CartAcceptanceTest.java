@@ -18,7 +18,6 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -111,10 +110,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 수량 수정")
     @Nested
     class UpdateCart {
-        @DisplayName("장바구니 수량 수정 : 정상 요청")
+
+        @DisplayName("- 정상 요청")
         @Test
         void changeCartItemCount() {
-            Long 장바구니_ID = 장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
+            long 장바구니_ID = 장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
 
             ExtractableResponse<Response> response = given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -128,25 +128,45 @@ public class CartAcceptanceTest extends AcceptanceTest {
             assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         }
 
-        @DisplayName("장바구니 수량 수정 : 비정상 요청")
+        @DisplayName("- 비정상 요청 : 존재하지 않는 상품 ID")
         @Test
-        void changeCartItemCount_ex() {
-            // 장바구니 항목 존재하지 않음
-            int 존재하지_않는_장바구니_ID = 50;
+        void changeCartItemCount_ex_non_exist() {
+            int 존재하지_않는_상품_ID = 50;
             ExtractableResponse<Response> response = given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .header("Authorization", "Bearer " + token)
                     .body(Map.of("count", 10))
                     .when()
-                    .patch("/api/customers/" + customerId + "/carts?productId=" + 존재하지_않는_장바구니_ID)
+                    .patch("/api/customers/" + customerId + "/carts?productId=" + 존재하지_않는_상품_ID)
                     .then().log().all()
                     .extract();
+            ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+            assertThat(errorResponse.getMessage()).isEqualTo("존재하지 않는 상품 ID입니다.");
+        }
+
+        @DisplayName("- 비정상 요청 : 재고보다 많은 수량 수정 시도")
+        @Test
+        void changeCartItemCount_ex_over_quantity() {
+            long 장바구니_ID = 장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
+
+            ExtractableResponse<Response> response = given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header("Authorization", "Bearer " + token)
+                    .body(Map.of("count", 20_001))
+                    .when()
+                    .patch("/api/customers/" + customerId + "/carts?productId=" + 장바구니_ID)
+                    .then().log().all()
+                    .extract();
+            ErrorResponse errorResponse = response.as(ErrorResponse.class);
 
             assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            assertThat(errorResponse.getMessage()).isEqualTo("재고가 부족합니다.");
         }
     }
 
-    @DisplayName("장바구니 삭제")
+    @DisplayName("장바구니 삭제 : 정상")
     @Test
     void deleteCartItem() {
         Long cartId = 장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
@@ -154,6 +174,19 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_상품_삭제_요청(token, customerId, cartId);
 
         장바구니_삭제_검증(response);
+    }
+
+    @DisplayName("장바구니 삭제 : 비정상 - 존재하지 않는 장바구니")
+    @Test
+    void deleteCartItem_exception_non_exist_cart() {
+        장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
+
+        long 존재하지않는_장바구니_ID = 50;
+        ExtractableResponse<Response> response = 장바구니_상품_삭제_요청(token, customerId, 존재하지않는_장바구니_ID);
+        ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(errorResponse.getMessage()).isEqualTo("존재하지 않는 상품 ID입니다.");
     }
 
     private void 토큰_및_회원_ID_초기화() {

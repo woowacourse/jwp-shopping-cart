@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.exception;
 
-public class NonExistProductException extends RuntimeException {
+public class NotExistProductException extends RuntimeException {
 
-    public NonExistProductException() {
+    public NotExistProductException() {
         super("존재하지 않는 상품 ID입니다.");
     }
 }

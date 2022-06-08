@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.NotExistProductException;
 
 @Repository
 public class CartItemDao {
@@ -61,7 +62,7 @@ public class CartItemDao {
                 "SELECT EXISTS (SELECT id FROM cart_item WHERE customer_id  = :customerId and product_id = :productId LIMIT 1 ) AS `exists`";
         final Map<String, Long> params = Map.of("customerId", customerId, "productId", productId);
 
-        return jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> rs.getBoolean("exists"));
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> rs.getBoolean("exists")));
     }
 
     public void deleteCartItemById(final Long cartId) {
@@ -75,7 +76,7 @@ public class CartItemDao {
         }
     }
 
-    public void updateCartItemDao(long customerId, int productId, int cartItemCount) {
+    public void updateCartItemDao(long customerId, int productId, long cartItemCount) {
         final String query =
                 "UPDATE cart_item SET count = :cartItemCount WHERE customer_id = :customerId and product_id = :productId";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -86,7 +87,7 @@ public class CartItemDao {
         int rowCount = jdbcTemplate.update(query, namedParameters);
 
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new NotExistProductException();
         }
     }
 }

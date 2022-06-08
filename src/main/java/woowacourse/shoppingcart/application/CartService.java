@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,11 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.specification.CustomerSpecification;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.AlreadyCartItemExistException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NonExistProductException;
+import woowacourse.shoppingcart.exception.NotExistProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.OverQuantityException;
 
@@ -25,44 +23,32 @@ public class CartService {
     private final ProductDao productDao;
     private final CustomerSpecification customerSpec;
 
-    public List<CartItem> findCartsByCustomerId(final long customerId) {
-        final List<Long> cartIds = findCartIdsByCustomerId(customerId);
-
-        final List<CartItem> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new CartItem(cartId, product));
-        }
-        return carts;
-    }
-
-    public Long addCartItem(long customerId, long productId, long count) {
+    public Long addCartItem(long customerId, long productId, long cartItemCount) {
         customerSpec.validateCustomerExists(customerId);
         validateExistProduct(productId);
         validateExistCartItem(customerId, productId);
-        validateIsOverQuantity(productId, count);
+        Product findProduct = validateExistProductAndGet(productId);
+        validateOverQuantity(findProduct, cartItemCount);
+
         try {
-            return cartItemDao.addCartItem(customerId, productId, count);
+            return cartItemDao.addCartItem(customerId, productId, cartItemCount);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
     }
 
-    private void validateIsOverQuantity(long productId, long count) {
-        Product findProduct = productDao.findProductById(productId);
-        Long quantity = findProduct.getQuantity();
-        if (quantity < count) {
-            throw new OverQuantityException();
-        }
+    public void changeCartItemCount(long customerId, int productId, long cartItemCount) {
+        Product findProduct = validateExistProductAndGet(productId);
+        validateOverQuantity(findProduct, cartItemCount);
+
+        cartItemDao.updateCartItemDao(customerId, productId, cartItemCount);
     }
 
-    private void validateExistProduct(long productId) {
-        try {
-            productDao.findProductById(productId);
-        } catch (Exception e) {
-            throw new NonExistProductException();
-        }
+    public void deleteCart(final long customerId, final Long productId) {
+        customerSpec.validateCustomerExists(customerId);
+        validateCustomerCart(customerId, productId);
+
+        cartItemDao.deleteCartItemById(productId);
     }
 
     private void validateExistCartItem(long customerId, long productId) throws AlreadyCartItemExistException {
@@ -72,19 +58,32 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final long customerId, final Long cartId) {
-        customerSpec.validateCustomerExists(customerId);
-        validateCustomerCart(cartId, customerId);
-        cartItemDao.deleteCartItemById(cartId);
+    private void validateOverQuantity(Product findProduct, long cartItemCount) {
+        Long quantity = findProduct.getQuantity();
+        if (quantity < cartItemCount) {
+            throw new OverQuantityException();
+        }
     }
 
-    public void changeCartItemCount(long customerId, int productId, int cartItemCount) {
-        cartItemDao.updateCartItemDao(customerId, productId, cartItemCount);
+    private Product validateExistProductAndGet(long productId) {
+        try {
+            return productDao.findProductById(productId);
+        } catch (Exception e) {
+            throw new NotExistProductException();
+        }
     }
 
-    private void validateCustomerCart(final Long cartId, final long customerId) {
+    private void validateExistProduct(long productId) {
+        try {
+            productDao.findProductById(productId);
+        } catch (Exception e) {
+            throw new NotExistProductException();
+        }
+    }
+
+    private void validateCustomerCart(final long customerId, final Long productId) {
         final List<Long> cartIds = findCartIdsByCustomerId(customerId);
-        if (cartIds.contains(cartId)) {
+        if (cartIds.contains(productId)) {
             return;
         }
         throw new NotInCustomerCartItemException();

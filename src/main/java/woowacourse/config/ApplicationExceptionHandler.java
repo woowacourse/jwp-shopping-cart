@@ -27,7 +27,7 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NonExistProductException;
+import woowacourse.shoppingcart.exception.NotExistProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.InValidPassword;
 import woowacourse.shoppingcart.exception.OverQuantityException;
@@ -85,7 +85,6 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
             AlreadyCartItemExistException.class,
             InValidPassword.class,
             OverQuantityException.class
@@ -95,7 +94,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NonExistProductException.class)
+    @ExceptionHandler({NotExistProductException.class, NotInCustomerCartItemException.class})
     public ErrorResponse handleNotFoundException(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());
     }

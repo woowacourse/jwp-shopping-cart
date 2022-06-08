@@ -9,13 +9,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CartItem {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
-
-    public CartItem(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-    }
+    private long id;
+    private long customerId;
+    private long productId;
+    private long count;
 }
