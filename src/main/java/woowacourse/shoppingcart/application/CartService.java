@@ -37,7 +37,7 @@ public class CartService {
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
             final Product product = productDao.findProductById(productId);
-            final int quantity = cartItemDao.findQuantityById(productId);
+            final int quantity = cartItemDao.findQuantityById(cartId);
             carts.add(new CartItem(cartId, product, quantity));
         }
         return carts;

@@ -30,6 +30,9 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
                                   WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) nativeWebRequest.getNativeRequest();
         String token = AuthorizationExtractor.extract(request);
+        if (token == null) {
+            return null;
+        }
         String userName = jwtTokenProvider.getPayload(token);
         return userName;
     }

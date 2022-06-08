@@ -64,10 +64,10 @@ public class CartItemDao {
         }
     }
 
-    public int findQuantityById(Long productId) {
+    public int findQuantityById(Long cartId) {
         try {
             final String sql = "SELECT quantity FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"), productId);
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"), cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
@@ -76,5 +76,15 @@ public class CartItemDao {
     public void updateQuantity(CartItem cartItem) {
         final String sql = "UPDATE cart_item set quantity=? where id = ?";
         jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public int findQuantityByUserAndProduct(Long customerId, Long productId) {
+        try {
+            final String sql = "SELECT quantity FROM cart_item WHERE customer_id = ? and product_id = ?";
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"),
+                    customerId, productId);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
     }
 }
