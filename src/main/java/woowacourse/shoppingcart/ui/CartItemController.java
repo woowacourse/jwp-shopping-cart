@@ -28,12 +28,12 @@ public class CartItemController {
 
     private final CartService cartService;
 
-    public CartItemController(final CartService cartService) {
+    public CartItemController(CartService cartService) {
         this.cartService = cartService;
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> getCartItems(@PathVariable final long customerId) {
+    public ResponseEntity<List<CartItemResponse>> getCartItems(@PathVariable long customerId) {
         List<CartItem> carts = cartService.findCartItemsByCustomerId(customerId);
         List<CartItemResponse> cartResponses = carts.stream()
             .map(CartItemResponse::new)
@@ -42,21 +42,21 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final CartItemRequest request,
+    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody CartItemRequest request,
         @PathVariable final long customerId) {
         cartService.addCartItem(request.getProductId(), customerId, request.getCount());
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping
-    public ResponseEntity<Void> updateCount(@PathVariable final long customerId,
+    public ResponseEntity<Void> updateCount(@PathVariable long customerId,
         @RequestParam long productId, @RequestBody CartItemUpdateRequest request) {
         cartService.updateCount(customerId, productId, request.getCount());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final long customerId,
+    public ResponseEntity<Void> deleteCartItem(@PathVariable long customerId,
         @RequestParam long productId) {
         cartService.deleteCartItem(customerId, productId);
         return ResponseEntity.noContent().build();

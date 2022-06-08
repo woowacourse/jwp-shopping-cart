@@ -17,11 +17,11 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(final JdbcTemplate jdbcTemplate) {
+    public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final Product product) {
+    public Long save(Product product) {
         final String query = "INSERT INTO product (name, price, image_url, quantity) VALUES (?, ?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -37,7 +37,7 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Product findProductById(Long productId) {
         try {
             final String query = "SELECT name, price, image_url, quantity FROM product WHERE id = ?";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
@@ -67,7 +67,7 @@ public class ProductDao {
                 ));
     }
 
-    public void delete(final Long productId) {
+    public void delete(Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);
     }

@@ -15,7 +15,7 @@ public class ProductService {
 
     private final ProductDao productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 
@@ -23,15 +23,15 @@ public class ProductService {
         return productDao.findProducts();
     }
 
-    public Long addProduct(final ProductRequest request) {
+    public Long addProduct(ProductRequest request) {
         return productDao.save(request.toEntity());
     }
 
-    public Product findProductById(final Long productId) {
+    public Product findProductById(Long productId) {
         return productDao.findProductById(productId);
     }
 
-    public void deleteProductById(final Long productId) {
+    public void deleteProductById(Long productId) {
         productDao.delete(productId);
     }
 }

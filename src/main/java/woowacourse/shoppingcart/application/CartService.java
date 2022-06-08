@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
@@ -20,16 +19,14 @@ import woowacourse.shoppingcart.exception.ProductNotFoundException;
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(CartItemDao cartItemDao, ProductDao productDao) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
         this.productDao = productDao;
     }
 
-    public List<CartItem> findCartItemsByCustomerId(final long customerId) {
+    public List<CartItem> findCartItemsByCustomerId(long customerId) {
         List<Long> cartItemIds = cartItemDao.findIdsByCustomerId(customerId);
 
         final List<CartItem> cartItems = new ArrayList<>();
@@ -42,7 +39,7 @@ public class CartService {
         return cartItems;
     }
 
-    public Long addCartItem(final Long productId, final long customerId, final int count) {
+    public Long addCartItem(Long productId, long customerId, int count) {
         checkProductExist(productId);
         int quantity = productDao.findProductById(productId).getQuantity();
         checkAlreadyInCart(productId, customerId);
@@ -69,7 +66,7 @@ public class CartService {
         }
     }
 
-    public void deleteCartItem(final long customerId, final long productId) {
+    public void deleteCartItem(long customerId, long productId) {
         checkProductExist(productId);
         try {
             cartItemDao.deleteCartItem(customerId, productId);

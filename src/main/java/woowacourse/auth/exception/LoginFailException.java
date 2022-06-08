@@ -6,7 +6,7 @@ public class LoginFailException extends RuntimeException {
         this("id 또는 비밀번호가 틀렸습니다");
     }
 
-    public LoginFailException(final String msg) {
+    public LoginFailException(String msg) {
         super(msg);
     }
 }

@@ -13,13 +13,13 @@ public class CartItem {
     public CartItem() {
     }
 
-    public CartItem(final Long id, final int count, final Product product) {
+    public CartItem(Long id, int count, Product product) {
         this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getQuantity(),
             count);
     }
 
-    public CartItem(final Long id, final Long productId, final String name, final int price, final String imageUrl,
-        final int quantity, final int count) {
+    public CartItem(Long id, Long productId, String name, int price, String imageUrl,
+        int quantity, int count) {
         this.id = id;
         this.productId = productId;
         this.name = name;
