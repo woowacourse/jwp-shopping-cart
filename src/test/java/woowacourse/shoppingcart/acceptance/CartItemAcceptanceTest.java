@@ -123,6 +123,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
+    public static void BAD_REQUEST_에러(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @Override
     @BeforeEach
     public void setUp() {
@@ -307,6 +311,17 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(accessToken, cartItemId + 1, newCartItemRequest);
 
         NOT_FOUND_에러(response);
+    }
+
+    @DisplayName("장바구니 상품 수정 시 Body로 전달된 productId와 실제 cartItem의 productId가 일치하지 않을 경우 400에러 발생")
+    @Test
+    void updateCartItem_notSameProductId() {
+        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        CartItemRequest newCartItemRequest = new CartItemRequest(productId2, 500);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(accessToken, cartItemId, newCartItemRequest);
+
+        BAD_REQUEST_에러(response);
     }
 
     @DisplayName("장바구니 상품 제거 시 존재하지 않는 장바구니일 경우 404에러가 발생")

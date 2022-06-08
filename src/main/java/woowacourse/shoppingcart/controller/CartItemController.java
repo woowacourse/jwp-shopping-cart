@@ -52,8 +52,9 @@ public class CartItemController {
 
     @PutMapping("/{cartItemId}")
     public ResponseEntity<Void> updateCartItem(@RequestBody final CartItemRequest cartItemRequest,
-                                               @PathVariable final Long cartItemId) {
-        cartService.updateCartItem(cartItemId, cartItemRequest);
+                                               @PathVariable final Long cartItemId,
+                                               @CustomerId final Long customerId) {
+        cartService.updateCartItem(customerId, cartItemId, cartItemRequest);
         return ResponseEntity.noContent().build();
     }
 

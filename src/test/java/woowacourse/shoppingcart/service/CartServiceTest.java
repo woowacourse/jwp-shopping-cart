@@ -73,7 +73,7 @@ class CartServiceTest {
         Long cartItemId = cartService.addCart(new CartItemRequest(productId, 10), customerId);
 
         // when
-        cartService.updateCartItem(cartItemId, new CartItemRequest(productId, 100));
+        cartService.updateCartItem(customerId, cartItemId, new CartItemRequest(productId, 100));
         Integer actual = cartItemDao.findCartItemById(cartItemId).getQuantity();
 
         // then
@@ -84,7 +84,7 @@ class CartServiceTest {
     @Test
     void updateCartItem_cartItemNotFound() {
         // when & then
-        assertThatThrownBy(() -> cartService.updateCartItem(999L, new CartItemRequest(productId, 100)))
+        assertThatThrownBy(() -> cartService.updateCartItem(customerId, 999L, new CartItemRequest(productId, 100)))
                 .isInstanceOf(CartItemNotFoundException.class);
     }
 

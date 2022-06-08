@@ -40,8 +40,7 @@ public class CartService {
 
     private CartItem convertEntityToCartItem(CartItemEntity cartItemEntity) {
         Product product = productDao.findProductById(cartItemEntity.getProductId());
-        return new CartItem(cartItemEntity.getId(), cartItemEntity.getCustomerId(), product,
-                cartItemEntity.getQuantity());
+        return new CartItem(cartItemEntity.getId(), product, cartItemEntity.getQuantity());
     }
 
     public Long addCart(final CartItemRequest cartItemRequest, final Long customerId) {
@@ -60,11 +59,13 @@ public class CartService {
         cartItemDao.deleteCartItem(cartItemId);
     }
 
-    public void updateCartItem(Long cartItemId, CartItemRequest cartItemRequest) {
-        Long customerId = cartItemDao.findCartItemById(cartItemId).getCustomerId();
+    public void updateCartItem(Long customerId, Long cartItemId, CartItemRequest cartItemRequest) {
+        validateCustomerCart(cartItemId, customerId);
+        validateProductId(cartItemId, cartItemRequest.getProductId());
+
         Product newProduct = productDao.findProductById(cartItemRequest.getProductId());
         Integer newQuantity = cartItemRequest.getQuantity();
-        CartItem newCartItem = new CartItem(cartItemId, customerId, newProduct, newQuantity);
+        CartItem newCartItem = new CartItem(cartItemId, newProduct, newQuantity);
 
         cartItemDao.updateCartItem(cartItemId, newCartItem);
     }
@@ -73,6 +74,13 @@ public class CartService {
         CartItemEntity cartItemEntity = cartItemDao.findCartItemById(cartItemId);
         if (!cartItemEntity.getCustomerId().equals(customerId)) {
             throw new NotInCustomerCartItemException();
+        }
+    }
+
+    private void validateProductId(final Long cartItemId, final Long productId) {
+        CartItemEntity cartItemEntity = cartItemDao.findCartItemById(cartItemId);
+        if (!cartItemEntity.getProductId().equals(productId)) {
+            throw new IllegalArgumentException("productId는 변경될 수 없습니다.");
         }
     }
 
