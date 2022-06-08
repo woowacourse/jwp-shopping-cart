@@ -61,7 +61,7 @@ class OrdersDetailDaoTest {
     @Test
     void findOrdersDetailsByOrderId() {
         //given
-        final int insertCount = 3;
+        int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
             jdbcTemplate
                     .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
@@ -69,7 +69,7 @@ class OrdersDetailDaoTest {
         }
 
         //when
-        final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
+        List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
                 .findOrdersDetailsByOrderId(ordersId);
 
         //then
