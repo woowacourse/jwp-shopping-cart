@@ -72,7 +72,7 @@ public class CartService {
         throw new NotInCustomerCartItemException();
     }
 
-    public void updateQuantity(String userName, Long cartId, CartItemRequest cartItemRequest) {
+    public void updateQuantity(Long cartId, CartItemRequest cartItemRequest) {
         final CartItem cartItem = getCartItemById(cartId);
         cartItem.updateQuantity(cartItemRequest.getQuantity());
         cartItemDao.updateQuantity(cartItem);

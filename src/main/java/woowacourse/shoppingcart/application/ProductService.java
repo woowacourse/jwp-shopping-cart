@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.dto.ProductResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -33,13 +34,25 @@ public class ProductService {
         List<Product> products = productDao.findProducts();
         for (Product product : products) {
             int quantity = getQuantityByUserAndProduct(userName, product);
-            productResponses.add(new ProductResponse(product, quantity));
+            Long cartId = getCartIdByUserAndProduct(userName, product);
+            productResponses.add(new ProductResponse(product, quantity, cartId));
         }
         return productResponses;
     }
 
+    private Long getCartIdByUserAndProduct(String userName, Product product) {
+        if (Objects.isNull(userName)) {
+            return null;
+        }
+
+        return cartItemDao.findIdByUserAndProduct(
+                customerDao.findIdByUserName(new UserName(userName)),
+                product.getId()
+        );
+    }
+
     private int getQuantityByUserAndProduct(String userName, Product product) {
-        if (userName == null) {
+        if (Objects.isNull(userName)) {
             return 0;
         }
 
