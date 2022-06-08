@@ -7,7 +7,6 @@ import woowacourse.shoppingcart.domain.Age;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Nickname;
 import woowacourse.shoppingcart.domain.Password;
-import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
@@ -51,10 +50,8 @@ public class CustomerService {
     @Transactional
     public void updateMe(Long id, UpdateMeRequest request) {
         Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
-        customer = customer.updateUsername(new Username(request.getUsername()))
-                .updateNickname(new Nickname(request.getNickname()))
+        customer = customer.updateNickname(new Nickname(request.getNickname()))
                 .updateAge(new Age(request.getAge()));
-        checkDuplicateCondition(customer);
         customerDao.update(customer);
     }
 
