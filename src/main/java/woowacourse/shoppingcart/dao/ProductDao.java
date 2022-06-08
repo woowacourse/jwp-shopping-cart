@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -47,6 +48,10 @@ public class ProductDao {
     }
 
     public List<Product> findProductsByIds(List<Long> productIds) {
+        if (productIds.size() == 0) {
+            return Collections.emptyList();
+        }
+
         String value = productIds.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(", "));
