@@ -9,7 +9,7 @@ public class Cart {
     private String name;
     private int price;
     private String imageUrl;
-    private int quantity;
+    private Quantity quantity;
 
     public Cart(final Long id, final Product product, final int quantity) {
         this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
@@ -21,7 +21,7 @@ public class Cart {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
     }
 
     public Long getId() {
@@ -45,7 +45,7 @@ public class Cart {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 
     @Override
