@@ -45,4 +45,14 @@ public class ProductsTest {
         // then
         assertThat(productIds).containsExactly(7L);
     }
+
+    @Test
+    @DisplayName("페이지가 반환 가능한 페이지보다 클 시 빈 상품을 반환한다.")
+    void getProductsOfEmptyProducts() {
+        // when
+        Products productsOfPage = products.getProductsOfPage(1000, 3);
+
+        // then
+        assertThat(productsOfPage.getValue()).isEmpty();
+    }
 }

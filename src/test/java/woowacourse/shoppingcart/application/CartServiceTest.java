@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dto.CartIdRequest;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponses;
@@ -30,6 +31,9 @@ class CartServiceTest {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private CartItemDao cartItemDao;
+
     @Test
     @DisplayName("장바구니에 상품을 추가할 수 있다.")
     void addCart() {
@@ -42,6 +46,22 @@ class CartServiceTest {
 
         // then
         assertThat(id).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("이미 장바구니에 추가된 상품은 수량이 증가한다.")
+    void addCartPlusProudctQuantity() {
+        // given
+        customerService.addCustomer(new SignUpRequest("rennon", "rennon@woowa.com", "123456"));
+        productService.addProduct(new ProductRequest("치킨", 20_000, "http://example.com/chicken.jpg"));
+
+        // when
+        cartService.addCart("rennon", new CartRequest(1L, 1, true));
+        Long id = cartService.addCart("rennon", new CartRequest(1L, 1, true));
+
+        // then
+        Long productId = cartItemDao.findProductIdById(id);
+        assertThat(productId).isEqualTo(1L);
     }
 
     @Test

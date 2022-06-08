@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import woowacourse.shoppingcart.exception.InvalidPageException;
@@ -22,7 +23,7 @@ public class Products {
         if (page == countOfPage) {
             return new Products(value.subList(value.size() - sizeOfLastPage, value.size()));
         }
-        throw new InvalidPageException();
+        return new Products(new ArrayList<>());
     }
 
     public List<Product> getValue() {
