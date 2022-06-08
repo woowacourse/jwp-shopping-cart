@@ -16,7 +16,7 @@ public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
+    public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
