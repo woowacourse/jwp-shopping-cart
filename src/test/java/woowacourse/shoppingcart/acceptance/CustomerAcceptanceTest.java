@@ -60,7 +60,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(getResponse.body().jsonPath().getString("name")).isEqualTo("testx");
+        assertThat(getResponse.body().jsonPath().getString("userName")).isEqualTo("testx");
     }
 
     @Test
