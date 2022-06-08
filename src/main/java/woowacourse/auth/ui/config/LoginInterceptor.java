@@ -1,9 +1,12 @@
 package woowacourse.auth.ui.config;
 
+import static org.springframework.web.cors.CorsUtils.*;
+
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -18,8 +21,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-
-        if (isPreflight(request) || isSignUpRequest(request)) {
+        if (isPreFlightRequest(request) || isSignUpRequest(request)) {
             return true;
         }
 
@@ -38,9 +40,5 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     private boolean isAuthorizedRequest(String token) {
         return tokenProvider.validateToken(token) && !Objects.isNull(token);
-    }
-
-    private boolean isPreflight(HttpServletRequest request) {
-        return request.getMethod().equals("OPTIONS");
     }
 }
