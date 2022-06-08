@@ -8,21 +8,21 @@ public class ProductResponse {
     private String name;
     private Integer price;
     private String thumbnail;
-    private boolean isStored;
+    private int quantity;
 
     public ProductResponse() {
     }
 
-    public ProductResponse(Product product, boolean isStored) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), isStored);
+    public ProductResponse(Product product, int quantity) {
+        this(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
     }
 
-    public ProductResponse(Long id, String name, Integer price, String thumbnail, boolean isStored) {
+    public ProductResponse(Long id, String name, Integer price, String thumbnail, int quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.thumbnail = thumbnail;
-        this.isStored = isStored;
+        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -41,7 +41,7 @@ public class ProductResponse {
         return thumbnail;
     }
 
-    public boolean getIsStored() {
-        return isStored;
+    public int getQuantity() {
+        return quantity;
     }
 }

@@ -147,7 +147,7 @@
 
 ### 상품
 
-- [ ] 상품 목록 조회
+- [x] 상품 목록 조회
     - `요청`
 
         ```java
@@ -159,15 +159,22 @@
         ```java
         HTTP/1.1 200 OK
         Content-Type: application/json
-        [
+        {products : [
             {
                 id: '상품 ID',
                 thumbnail: '상품 이미지 url',
                 name: '상품 이름',
                 price: 상품 가격,
-                isStored: 장바구니 존재 여부
+                quantity: 장바구니 수량
+            },{
+                id: '상품 ID',
+                thumbnail: '상품 이미지 url',
+                name: '상품 이름',
+                price: 상품 가격,
+                quantity: 장바구니 수량
             }
-        ]
+            ...
+        ]}
       
         ```
 

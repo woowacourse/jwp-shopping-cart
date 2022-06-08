@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +22,7 @@ import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController
@@ -40,19 +41,10 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> products(HttpServletRequest request) {
+    public ResponseEntity<ProductsResponse> products(HttpServletRequest request) {
         String token = AuthorizationExtractor.extract(request);
-        List<Product> products = productService.findProducts();
-        if (token == null) {
-            return ResponseEntity.ok(products.stream()
-                    .map(product -> new ProductResponse(product, false))
-                    .collect(Collectors.toList()));
-        }
-        List<Cart> carts = cartService.findCartsByCustomerId(Long.valueOf(jwtTokenProvider.getPayload(token)));
-        List<Long> productIdsInCart = carts.stream().map(Cart::getProductId).collect(Collectors.toList());
-        return ResponseEntity.ok(products.stream()
-                .map(product -> new ProductResponse(product, productIdsInCart.contains(product.getId())))
-                .collect(Collectors.toList()));
+        List<ProductResponse> productResponses = getProductResponses(token);
+        return ResponseEntity.ok(new ProductsResponse(productResponses));
     }
 
     @PostMapping
@@ -74,5 +66,27 @@ public class ProductController {
     public ResponseEntity<Void> delete(@PathVariable final Long productId) {
         productService.deleteProductById(productId);
         return ResponseEntity.noContent().build();
+    }
+
+    private List<ProductResponse> getProductResponses(String token) {
+        List<Product> products = productService.findProducts();
+        if (token == null) {
+            return products.stream()
+                    .map(product -> new ProductResponse(product, 0))
+                    .collect(Collectors.toList());
+        }
+        List<Cart> carts = cartService.findCartsByCustomerId(Long.valueOf(jwtTokenProvider.getPayload(token)));
+        Map<Long, Integer> quantityMap = carts.stream()
+                .collect(Collectors.toMap(Cart::getProductId, Cart::getQuantity));
+        return products.stream()
+                .map(product -> new ProductResponse(product, getCartItemQuantity(quantityMap, product)))
+                .collect(Collectors.toList());
+    }
+
+    private int getCartItemQuantity(Map<Long, Integer> quantityMap, Product product) {
+        if (quantityMap.containsKey(product.getId())) {
+            return quantityMap.get(product.getId());
+        }
+        return 0;
     }
 }
