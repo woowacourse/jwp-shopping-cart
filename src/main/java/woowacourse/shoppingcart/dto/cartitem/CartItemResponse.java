@@ -25,10 +25,8 @@ public class CartItemResponse {
     }
 
     public CartItemResponse(CartItem cart) {
-        this.productId = cart.getProductId();
-        this.thumbnailUrl = cart.getImageUrl();
-        this.name = cart.getName();
-        this.price = cart.getPrice();
+        this(cart.getProductId(), cart.getImageUrl(), cart.getName(), cart.getPrice(), cart.getQuantity(),
+            cart.getCount());
     }
 
     public Long getProductId() {
