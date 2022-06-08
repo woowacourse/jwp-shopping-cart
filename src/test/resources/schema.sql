@@ -37,11 +37,13 @@ create table cart_item
 
 alter table cart_item
     add constraint fk_cart_item_to_customer
-        foreign key (customer_id) references customer (id);
+        foreign key (customer_id) references customer (id)
+            on update cascade on delete cascade;
 
 alter table cart_item
     add constraint fk_cart_item_to_product
-        foreign key (product_id) references product (id);
+        foreign key (product_id) references product (id)
+            on update cascade on delete cascade;
 
 create table orders
 (
