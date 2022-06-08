@@ -32,4 +32,8 @@ public class ProductService {
     public void deleteProductById(final Long productId) {
         productDao.delete(productId);
     }
+
+    public List<Product> findAllProduct() {
+        return productDao.findProducts();
+    }
 }

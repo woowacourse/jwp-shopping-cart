@@ -29,18 +29,19 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<FindAllProductsResponse> products(@RequestParam("size") int size,
-                                                            @RequestParam("page") int page) {
+                                                            @RequestParam("page") int page
+    ) {
         var products = productService.findProducts(size, page);
 
         return ResponseEntity.ok(new FindAllProductsResponse(products));
     }
 
-//    @GetMapping
-//    public ResponseEntity<FindAllProductsResponse> products2() {
-//        var products = productService.findProducts(size, page);
-//
-//        return ResponseEntity.ok(new FindAllProductsResponse(products));
-//    }
+    @GetMapping("/all")
+    public ResponseEntity<FindAllProductsResponse> productAll() {
+        var products = productService.findAllProduct();
+
+        return ResponseEntity.ok(new FindAllProductsResponse(products));
+    }
 
     @PostMapping
     public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final Product product) {

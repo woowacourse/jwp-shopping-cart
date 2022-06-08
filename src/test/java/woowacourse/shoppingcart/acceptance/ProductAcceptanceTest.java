@@ -9,6 +9,7 @@ import static woowacourse.shoppingcart.ProductFixture.WATER;
 import io.restassured.RestAssured;
 import java.util.List;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -62,5 +63,18 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         var products = response.body().jsonPath().getList("products", Product.class);
 
         assertThat(products).containsAll(expected);
+    }
+
+    @Test
+    void 상품_전체_조회() {
+        var response = RestAssured.given().log().all()
+                .get("/products/all")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        var products = response.body().jsonPath().getList("products", Product.class);
+
+        assertThat(products.size()).isEqualTo(4);
     }
 }
