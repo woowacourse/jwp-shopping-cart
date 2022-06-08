@@ -43,8 +43,8 @@ public class CustomerDao {
     }
 
     public Long findIdByName(String name) {
+        String query = "SELECT id FROM CUSTOMER WHERE name = ?";
         try {
-            final String query = "SELECT id FROM CUSTOMER WHERE name = ?";
             return jdbcTemplate.queryForObject(query, Long.class, name.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
@@ -52,7 +52,7 @@ public class CustomerDao {
     }
 
     public boolean existByEmail(String email) {
-        final String query = "SELECT EXISTS (SELECT id FROM CUSTOMER WHERE email = ?)";
+        String query = "SELECT EXISTS (SELECT id FROM CUSTOMER WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);
     }
 
@@ -65,24 +65,29 @@ public class CustomerDao {
         }
     }
 
+    public String findNameById(Long customerId) { // TODO : test
+        String query = "SELECT name FROM CUSTOMER WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, String.class, customerId);
+    }
+
     public Customer findById(Long customerId) {
         String query = "SELECT * FROM CUSTOMER WHERE id = ?";
         return jdbcTemplate.queryForObject(query, customerRowMapper, customerId);
     }
 
     public boolean existById(Long customerId) {
-        final String query = "SELECT EXISTS (SELECT id FROM CUSTOMER WHERE id = ?)";
+        String query = "SELECT EXISTS (SELECT id FROM CUSTOMER WHERE id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, customerId);
     }
 
     public void update(Customer customer) {
-        final String query = "UPDATE CUSTOMER SET name = (?), password = (?), phone = (?), address = (?) WHERE id = (?)";
+        String query = "UPDATE CUSTOMER SET name = (?), password = (?), phone = (?), address = (?) WHERE id = (?)";
         jdbcTemplate.update(query, customer.getName(), customer.getPassword(), customer.getPhone(),
                 customer.getAddress(), customer.getId());
     }
 
     public void deleteById(Long customerId) {
-        final String query = "DELETE FROM CUSTOMER WHERE id = ?";
+        String query = "DELETE FROM CUSTOMER WHERE id = ?";
         jdbcTemplate.update(query, customerId);
     }
 }
