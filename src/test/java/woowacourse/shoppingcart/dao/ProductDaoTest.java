@@ -40,7 +40,8 @@ public class ProductDaoTest {
     @Test
     void findProductById() {
         Long productId = productDao.save(CHICKEN);
-        Product expectedProduct = new Product(productId, CHICKEN_NAME, CHICKEN_PRICE, CHICKEN_IMAGE_URL, CHICKEN_SELLING, CHICKEN_DESCRIPTION);
+        Product expectedProduct = new Product(productId, CHICKEN_NAME, CHICKEN_PRICE, CHICKEN_IMAGE_URL,
+                CHICKEN_SELLING, CHICKEN_DESCRIPTION);
 
         Product product = productDao.findProductById(productId).get();
 

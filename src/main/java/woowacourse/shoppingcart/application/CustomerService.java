@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.password.PasswordEncoder;
-import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.dto.customer.request.CustomerSaveRequest;
 import woowacourse.shoppingcart.dto.customer.request.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.customer.request.EmailDuplicateRequest;
-import woowacourse.shoppingcart.dto.customer.response.EmailDuplicateResponse;
-import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.dto.customer.request.UsernameDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.response.EmailDuplicateResponse;
 import woowacourse.shoppingcart.dto.customer.response.UsernameDuplicateResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -55,7 +55,8 @@ public class CustomerService {
     }
 
     public UsernameDuplicateResponse checkUsernameDuplicate(UsernameDuplicateRequest usernameDuplicateRequest) {
-        String username = usernameDuplicateRequest.getUsername();;
+        String username = usernameDuplicateRequest.getUsername();
+        ;
         if (customerDao.findByUsername(username).isPresent()) {
             return new UsernameDuplicateResponse(username, true);
         }

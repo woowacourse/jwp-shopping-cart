@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.*;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,11 +13,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+
 import woowacourse.shoppingcart.dao.dto.OrderDetailDto;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -25,7 +26,6 @@ class OrdersDetailDaoTest {
     private final OrdersDetailDao ordersDetailDao;
     private long ordersId;
     private long productId;
-    private long customerId;
 
     public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -34,7 +34,7 @@ class OrdersDetailDaoTest {
 
     @BeforeEach
     void setUp() {
-        customerId = 1L;
+        long customerId = 1L;
         jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
         ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 

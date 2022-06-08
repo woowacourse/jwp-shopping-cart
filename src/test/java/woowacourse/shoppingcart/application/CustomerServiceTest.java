@@ -1,21 +1,8 @@
 package woowacourse.shoppingcart.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static Fixture.CustomerFixtures.MAT_ADDRESS;
-import static Fixture.CustomerFixtures.MAT_EMAIL;
-import static Fixture.CustomerFixtures.MAT_PHONE_NUMBER;
-import static Fixture.CustomerFixtures.MAT_SAVE_REQUEST;
-import static Fixture.CustomerFixtures.MAT_USERNAME;
-import static Fixture.CustomerFixtures.UPDATE_ADDRESS;
-import static Fixture.CustomerFixtures.UPDATE_PHONE_NUMBER;
-import static Fixture.CustomerFixtures.UPDATE_REQUEST;
-import static Fixture.CustomerFixtures.YAHO_ADDRESS;
-import static Fixture.CustomerFixtures.YAHO_EMAIL;
-import static Fixture.CustomerFixtures.YAHO_PHONE_NUMBER;
-import static Fixture.CustomerFixtures.YAHO_SAVE_REQUEST;
-import static Fixture.CustomerFixtures.YAHO_USERNAME;
+import static Fixture.CustomerFixtures.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,12 +10,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
+
+import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.dto.customer.request.CustomerSaveRequest;
 import woowacourse.shoppingcart.dto.customer.request.EmailDuplicateRequest;
-import woowacourse.shoppingcart.dto.customer.response.EmailDuplicateResponse;
-import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.dto.customer.request.UsernameDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.response.EmailDuplicateResponse;
 import woowacourse.shoppingcart.dto.customer.response.UsernameDuplicateResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 

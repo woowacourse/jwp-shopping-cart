@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.exception.NoSuchProductException;
 
 @Repository
 public class ProductDao {

@@ -79,7 +79,7 @@ public class CustomerDaoTest {
 
         assertThat(foundCustomerId).isEqualTo(savedCustomer.getId());
     }
-    
+
     @DisplayName("email을 통해 조회를 하면, 있는 경우 email을 반환한다.")
     @Test
     void findEmailByEmail_exist() {

@@ -1,17 +1,10 @@
 package woowacourse.shoppingcart.acceptance;
 
-import Fixture.SimpleRestAssured;
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.OrdersResponse;
+import static Fixture.CustomerFixtures.*;
+import static Fixture.ProductFixtures.*;
+import static org.assertj.core.api.Assertions.*;
+import static woowacourse.shoppingcart.acceptance.CartItemAcceptanceTest.*;
+import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,11 +12,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static Fixture.CustomerFixtures.*;
-import static Fixture.ProductFixtures.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.CartItemAcceptanceTest.장바구니_아이템_추가되어_있음;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+import Fixture.SimpleRestAssured;
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrdersResponse;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {

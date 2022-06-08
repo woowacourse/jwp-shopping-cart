@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.dto.product.ProductRequest;
 import woowacourse.shoppingcart.dto.product.ProductFindResponse;
+import woowacourse.shoppingcart.dto.product.ProductRequest;
 import woowacourse.shoppingcart.exception.NoSuchProductException;
 
 @Service
@@ -33,7 +33,8 @@ public class ProductService {
 
     public ProductFindResponse findProductById(Long productId) {
         Product product = productDao.findProductById(productId)
-                .orElseThrow(NoSuchProductException::new);;
+                .orElseThrow(NoSuchProductException::new);
+        ;
         return new ProductFindResponse(product);
     }
 

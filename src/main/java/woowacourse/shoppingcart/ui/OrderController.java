@@ -1,18 +1,24 @@
 package woowacourse.shoppingcart.ui;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.dto.customer.LoginCustomer;
-
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 
 @Validated
 @RestController
@@ -26,14 +32,15 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal LoginCustomer loginCustomer,
-                                   @RequestBody @Valid List<OrderRequest> orderDetails) {
+            @RequestBody @Valid List<OrderRequest> orderDetails) {
         Long orderId = orderService.addOrder(orderDetails, loginCustomer);
         return ResponseEntity.created(
                 URI.create("/api/customers/me/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal LoginCustomer loginCustomer, @PathVariable Long orderId) {
+    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal LoginCustomer loginCustomer,
+            @PathVariable Long orderId) {
         Orders order = orderService.findOrderById(loginCustomer, orderId);
         return ResponseEntity.ok(order);
     }

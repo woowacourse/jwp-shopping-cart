@@ -84,16 +84,4 @@ public class OrderService {
         List<OrderDetail> ordersDetails = ordersRepository.findOrdersDetailsByOrderId(orderId);
         return new Orders(orderId, ordersDetails);
     }
-
-    // private Orders findOrderResponseDtoByOrderId(Long orderId) {
-    //     List<OrderDetail2> ordersDetails = new ArrayList<>();
-    //     for (OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-    //         Product product = productDao.findProductById(productQuantity.getProductId())
-    //                 .orElseThrow(NoSuchProductException::new);;
-    //         int quantity = productQuantity.getQuantity();
-    //         ordersDetails.add(new OrderDetail2(product, quantity));
-    //     }
-    //
-    //     return new Orders(orderId, ordersDetails);
-    // }
 }

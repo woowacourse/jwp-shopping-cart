@@ -11,8 +11,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.dao.dto.IdDto;
-import woowacourse.shoppingcart.dao.dto.OrdersDetailDto;
 import woowacourse.shoppingcart.dao.dto.OrderDetailDto;
+import woowacourse.shoppingcart.dao.dto.OrdersDetailDto;
 
 @Repository
 public class OrdersDetailDao {
@@ -44,6 +44,6 @@ public class OrdersDetailDao {
                 resultSet.getLong("id"),
                 resultSet.getLong("product_id"),
                 resultSet.getInt("quantity")
-                );
+        );
     }
 }
