@@ -26,7 +26,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
-        LogInResponse logInResponse = RestAssuredFixture.postAutoSignIn(token, "/login/auto", HttpStatus.OK.value());
+        LogInResponse logInResponse = RestAssuredFixture.postAutoSignIn(token, "/token/refresh", HttpStatus.OK.value());
 
         // then
         assertThat(logInResponse.getToken()).isNotNull();
@@ -42,7 +42,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
-        LogInResponse logInResponse = RestAssuredFixture.postAutoSignIn(token, "/login/auto", HttpStatus.OK.value());
+        LogInResponse logInResponse = RestAssuredFixture.postAutoSignIn(token, "/token/refresh", HttpStatus.OK.value());
 
         //when & then
         assertThat(logInResponse.getToken()).isNotNull();
@@ -86,11 +86,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
         RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
-
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-        // then
-        // 내 정보 조회 요청이 거부된다
-       // RestAssuredFixture.get("dummy", "/users/me", HttpStatus.UNAUTHORIZED.value());
     }
 }

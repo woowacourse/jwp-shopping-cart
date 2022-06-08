@@ -11,6 +11,9 @@ import woowacourse.shoppingcart.dto.ProductRequest;
 
 @Service
 public class ProductService {
+
+    private static final Long DEFAULT_PAGE = 1L;
+
     private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {
@@ -19,7 +22,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Products findProducts(Long size, Long page) {
-        return productDao.findProducts(page * size, size);
+        return productDao.findProducts((page - DEFAULT_PAGE) * size, size);
     }
 
     @Transactional(readOnly = true)
