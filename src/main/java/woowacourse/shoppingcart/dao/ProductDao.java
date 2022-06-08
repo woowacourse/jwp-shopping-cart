@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 @Repository
 public class ProductDao {
 
-    private final RowMapper<Product> productRowMapper = (resultSet, rowMapper) -> new Product(
+    private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (resultSet, rowMapper) -> new Product(
         resultSet.getLong("id"),
         resultSet.getString("name"),
         resultSet.getInt("price"),
@@ -60,7 +60,7 @@ public class ProductDao {
     public Product findProductById(final Long productId) {
         try {
             final String query = "SELECT id, name, price, thumbnail_url, thumbnail_alt FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, productRowMapper, productId);
+            return jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, productId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
         }
@@ -68,7 +68,7 @@ public class ProductDao {
 
     public List<Product> findProducts() {
         final String query = "SELECT id, name, price, thumbnail_url, thumbnail_alt FROM product";
-        return jdbcTemplate.query(query, productRowMapper);
+        return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
     }
 
     public void delete(final Long productId) {
