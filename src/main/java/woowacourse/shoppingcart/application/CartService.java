@@ -38,8 +38,11 @@ public class CartService {
 
     public Long addCart(String email, Long productId) {
         Customer customer = customerService.getCustomerByEmail(email);
-
         Product product = productService.findProductById(productId);
+
+        if (cartItemDao.existsByCustomerIdAndProductId(customer.getId(), product.getId())) {
+            throw new IllegalArgumentException("이미 추가된 상품입니다.");
+        }
 
         return cartItemDao.addCartItem(customer.getId(), product.getId());
     }
