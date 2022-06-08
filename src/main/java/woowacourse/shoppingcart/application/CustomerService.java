@@ -20,6 +20,7 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
+    @Transactional
     public void save(final CustomerSaveServiceRequest customerSaveServiceRequest) {
         final Customer customer = customerSaveServiceRequest.toEntity();
 
