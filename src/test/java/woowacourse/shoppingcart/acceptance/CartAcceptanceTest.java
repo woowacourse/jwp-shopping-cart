@@ -6,9 +6,7 @@ import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_�
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,12 +14,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartAdditionRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
 
-    private static final String USER = "newemail@email.com";
+    private static final String EMAIL = "newemail@email.com";
 
     private Long productId1;
     private Long productId2;
@@ -54,7 +53,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_추가_요청(accessToken, productId1, 1);
         장바구니_아이템_추가_요청(accessToken, productId2, 1);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(accessToken);
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
@@ -68,7 +67,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         장바구니_아이템_추가_요청(accessToken, productId1, 1);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, 1L);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(EMAIL, 1L);
 
         장바구니_삭제됨(response);
     }
@@ -86,11 +85,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
+    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String accessToken) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", userName)
+                .auth().oauth2(accessToken)
+                .when().get("/api/carts")
                 .then().log().all()
                 .extract();
     }
@@ -114,7 +114,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
         List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
+                .map(Cart::getProduct)
+                .map(Product::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dao.entity.CartItemEntity;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Email;
@@ -28,20 +29,20 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public List<Cart> findCartsByEmail(final String email) {
+        final List<Long> cartIds = findCartIdsByCustomerName(email);
 
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            final CartItemEntity cartItemEntity = cartItemDao.findById(cartId);
+            final Product product = productDao.findProductById(cartItemEntity.getProductId());
+            carts.add(new Cart(product, cartItemEntity.getQuantity()));
         }
         return carts;
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByEmail(new Email(customerName));
+    private List<Long> findCartIdsByCustomerName(final String email) {
+        final Long customerId = customerDao.findIdByEmail(new Email(email));
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 

@@ -48,3 +48,8 @@ values ('캠핑 의자', 35000, 100, 'https://thawing-fortress-83192.herokuapp.c
        ('스위스 칼', 26700, 100, 'https://thawing-fortress-83192.herokuapp.com/static/images/swiss-knife.jpg'),
        ('테이블', 55000, 100, 'https://thawing-fortress-83192.herokuapp.com/static/images/table.jpg')
 ;
+
+insert into cart_item (customer_id, product_id, quantity)
+values (1L, 1L, 1),
+       (1L, 2L, 1)
+;

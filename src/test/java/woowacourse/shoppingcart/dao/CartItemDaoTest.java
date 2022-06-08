@@ -1,19 +1,20 @@
 package woowacourse.shoppingcart.dao;
 
-import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.shoppingcart.dao.entity.CartItemEntity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -22,44 +23,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CartItemDaoTest {
 
     private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
+    @Autowired
+    public CartItemDaoTest(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        cartItemDao = new CartItemDao(jdbcTemplate, namedParameterJdbcTemplate);
     }
 
-    @BeforeEach
-    void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com", 10));
-        productDao.save(new Product("apple", 2_000, "woowa2.com", 10));
-
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 1);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 1);
-    }
-
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
-    @Test
-    void addCartItem() {
-
-        // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
-        final int quantity = 1;
-
-        // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId, quantity);
-
-        // then
-        assertThat(cartId).isEqualTo(3L);
-    }
-
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 장바구니에 담은 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
-
         // given
         final Long customerId = 1L;
 
@@ -73,7 +45,6 @@ public class CartItemDaoTest {
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
-
         // given
         final Long customerId = 1L;
 
@@ -82,6 +53,33 @@ public class CartItemDaoTest {
 
         // then
         assertThat(cartIds).containsExactly(1L, 2L);
+    }
+
+    @DisplayName("cartId로 장바구니를 조회한다.")
+    @Test
+    void findById() {
+        // given
+        final Long cartId = 1L;
+
+        // when
+        final CartItemEntity cartItemEntity = cartItemDao.findById(cartId);
+
+        // then
+        assertThat(cartItemEntity)
+                .usingRecursiveComparison()
+                .isEqualTo(new CartItemEntity(1L, 1L, 1L, 1));
+    }
+
+    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @Test
+    void addCartItem() {
+        // given
+        final Long customerId = 1L;
+        final Long productId = 1L;
+        final int quantity = 1;
+
+        // when & then
+        assertDoesNotThrow(() -> cartItemDao.addCartItem(customerId, productId, quantity));
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")

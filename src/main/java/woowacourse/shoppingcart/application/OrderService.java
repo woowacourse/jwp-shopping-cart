@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dao.entity.CartItemEntity;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
@@ -42,10 +43,10 @@ public class OrderService {
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
+            final CartItemEntity cartItemEntity = cartItemDao.findById(cartId);
             final int quantity = orderDetail.getQuantity();
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
+            ordersDetailDao.addOrdersDetail(ordersId, cartItemEntity.getProductId(), quantity);
             cartItemDao.deleteCartItem(cartId);
         }
 

@@ -1,21 +1,36 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.dao.entity.CartItemEntity;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
-    private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
+    private static final RowMapper<CartItemEntity> CART_ITEM_ENTITY_ROW_MAPPER = (rs, rowNum) -> new CartItemEntity(
+            rs.getLong("id"),
+            rs.getLong("customer_id"),
+            rs.getLong("product_id"),
+            rs.getInt("quantity"));
+
+    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public CartItemDao(JdbcTemplate jdbcTemplate,
+                       NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
@@ -30,10 +45,15 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public Long findProductIdById(final Long cartId) {
+    public CartItemEntity findById(final Long cartId) {
+        final String query = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE id = :id";
+
+        final Map<String, Object> params = new HashMap<>();
+        params.put("id", cartId);
+
         try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
+            return namedParameterJdbcTemplate
+                    .queryForObject(query, params, CART_ITEM_ENTITY_ROW_MAPPER);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }

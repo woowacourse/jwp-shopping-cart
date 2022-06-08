@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,8 @@ import woowacourse.shoppingcart.dto.CartAdditionRequest;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 class CartServiceTest {
 
+    public static final String EMAIL = "email@email.com";
+
     private final CartService cartService;
 
     @Autowired
@@ -20,10 +23,16 @@ class CartServiceTest {
         this.cartService = cartService;
     }
 
+    @DisplayName("장바구니를 조회한다.")
+    @Test
+    void findCartsByEmail() {
+        assertThat(cartService.findCartsByEmail(EMAIL)).hasSize(2);
+    }
+
     @DisplayName("장바구니에 제품을 추가한다.")
     @Test
     void addCart() {
         CartAdditionRequest cartAdditionRequest = new CartAdditionRequest(1L, 1);
-        assertDoesNotThrow(() -> cartService.addCart(cartAdditionRequest, "email@email.com"));
+        assertDoesNotThrow(() -> cartService.addCart(cartAdditionRequest, EMAIL));
     }
 }

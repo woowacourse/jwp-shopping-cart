@@ -22,9 +22,9 @@ public class CartItemController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/api/customers/{customerName}/carts")
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    @GetMapping("/api/carts")
+    public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal final String email) {
+        return ResponseEntity.ok().body(cartService.findCartsByEmail(email));
     }
 
     @PostMapping("/api/carts/products")
