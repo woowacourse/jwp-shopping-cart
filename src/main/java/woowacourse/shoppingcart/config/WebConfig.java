@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.ui.LoginInterceptor;
 
 @Configuration
-
 public class WebConfig implements WebMvcConfigurer {
     public static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH";
 
