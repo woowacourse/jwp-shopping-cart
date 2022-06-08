@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.application;
 
-import static woowacourse.shoppingcart.application.ProductService.convertResponseToProduct;
+import static woowacourse.shoppingcart.application.ProductService.convertResponseToProductEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.entity.OrdersDetailEntity;
+import woowacourse.shoppingcart.entity.ProductEntity;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -89,9 +89,9 @@ public class OrderService {
 
 
     private CartItemResponse getCartResponse(OrdersDetailEntity ordersDetailEntity) {
-        final Product product = productDao.findProductById(ordersDetailEntity.getProduct_id());
+        final ProductEntity product = productDao.findProductById(ordersDetailEntity.getProduct_id());
         final int quantity = ordersDetailEntity.getQuantity();
-        return new CartItemResponse(convertResponseToProduct(product), quantity);
+        return new CartItemResponse(convertResponseToProductEntity(product), quantity);
     }
 
     public OrderResponse findOrder(Long orderId, int customerId) {

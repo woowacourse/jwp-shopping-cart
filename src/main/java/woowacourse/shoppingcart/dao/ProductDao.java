@@ -1,14 +1,15 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.List;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.entity.ProductEntity;
 
 public interface ProductDao {
     Long save(final Product product);
 
-    Product findProductById(final Long productId);
+    ProductEntity findProductById(final Long productId);
 
-    List<Product> findProducts();
+    List<ProductEntity> findProducts();
 
     void delete(final Long productId);
 }

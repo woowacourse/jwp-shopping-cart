@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_1;
 import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_2;
 
@@ -13,7 +14,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.entity.ProductEntity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -44,27 +46,33 @@ public class ProductDaoTest {
         final Long productId = productDao.save(PRODUCT_1);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final ProductEntity product = productDao.findProductById(productId);
 
         // then
-        assertThat(product).isEqualTo(PRODUCT_1);
+        assertThat(product).extracting("id", "name", "price", "imageUrl", "description", "stock")
+                .containsExactly(productId, PRODUCT_1.getName(), PRODUCT_1.getPrice().getValue(),
+                        PRODUCT_1.getImageUrl(), PRODUCT_1.getDescription(), PRODUCT_1.getStock().getValue());
     }
 
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {
         // given
-        productDao.save(PRODUCT_1);
-        productDao.save(PRODUCT_2);
+        final Long productId1 = productDao.save(PRODUCT_1);
+        final Long productId2 = productDao.save(PRODUCT_2);
 
         final int size = 2;
 
         // when
-        final List<Product> products = productDao.findProducts();
+        final List<ProductEntity> products = productDao.findProducts();
 
         // then
 
-        assertThat(products).hasSize(2);
+        assertThat(products).hasSize(2).extracting("id", "name", "price", "imageUrl", "description", "stock")
+                .contains(tuple(productId1, PRODUCT_1.getName(), PRODUCT_1.getPrice().getValue(),
+                        PRODUCT_1.getImageUrl(), PRODUCT_1.getDescription(), PRODUCT_1.getStock().getValue())
+                        .tuple(productId2, PRODUCT_2.getName(), PRODUCT_2.getPrice().getValue(),
+                                PRODUCT_2.getImageUrl(), PRODUCT_2.getDescription(), PRODUCT_2.getStock().getValue()));
     }
 
     @DisplayName("싱품 삭제")

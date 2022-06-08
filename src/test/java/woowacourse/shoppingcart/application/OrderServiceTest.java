@@ -96,8 +96,8 @@ class OrderServiceTest {
                 () -> assertThat(orderResponses.stream()
                         .map(OrderResponse::getTotalPrice)
                         .collect(Collectors.toList())).containsExactly(
-                        PRODUCT_1.getPrice() * 3 + PRODUCT_2.getPrice() * 5,
-                        PRODUCT_1.getPrice() * 4 + PRODUCT_2.getPrice() * 9)
+                        PRODUCT_1.getPrice().getValue() * 3 + PRODUCT_2.getPrice().getValue() * 5,
+                        PRODUCT_1.getPrice().getValue() * 4 + PRODUCT_2.getPrice().getValue() * 9)
         );
     }
 
@@ -119,7 +119,7 @@ class OrderServiceTest {
         assertAll(
                 () -> assertThat(orderResponse.getProducts()).hasSize(2),
                 () -> assertThat(orderResponse.getTotalPrice()).isEqualTo(
-                        PRODUCT_1.getPrice() * 3 + PRODUCT_2.getPrice() * 5)
+                        PRODUCT_1.getPrice().getValue() * 3 + PRODUCT_2.getPrice().getValue() * 5)
         );
     }
 

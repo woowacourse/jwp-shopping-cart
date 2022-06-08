@@ -63,8 +63,8 @@ class CartServiceTest {
         final int customerId = customerDao.save(CUSTOMER_1);
         final Long productId1 = productDao.save(PRODUCT_1);
         final Long productId2 = productDao.save(PRODUCT_2);
-        final Long cartId1 = cartService.addCart(customerId, productId1, 3);
-        final Long cartId2 = cartService.addCart(customerId, productId2, 4);
+        cartService.addCart(customerId, productId1, 3);
+        cartService.addCart(customerId, productId2, 4);
 
         // when
         final List<CartItemResponse> cartResponses = cartService.findCartsByCustomerId(customerId);
@@ -74,12 +74,12 @@ class CartServiceTest {
         assertAll(
                 () -> assertThat(productResponses).extracting("name", "price", "imageUrl", "description", "stock")
                         .containsExactly(
-                                tuple(PRODUCT_1.getName(), PRODUCT_1.getPrice(),
+                                tuple(PRODUCT_1.getName(), PRODUCT_1.getPrice().getValue(),
                                         PRODUCT_1.getImageUrl(), PRODUCT_1.getDescription(),
-                                        PRODUCT_1.getStock()),
-                                tuple(PRODUCT_2.getName(), PRODUCT_2.getPrice(),
+                                        PRODUCT_1.getStock().getValue()),
+                                tuple(PRODUCT_2.getName(), PRODUCT_2.getPrice().getValue(),
                                         PRODUCT_2.getImageUrl(), PRODUCT_2.getDescription(),
-                                        PRODUCT_2.getStock())
+                                        PRODUCT_2.getStock().getValue())
                         ),
                 () -> assertThat(quantities).hasSize(2).containsExactly(3, 4)
         );
@@ -152,9 +152,9 @@ class CartServiceTest {
         assertAll(
                 () -> assertThat(productResponses).extracting("name", "price", "imageUrl", "description", "stock")
                         .containsExactly(
-                                tuple(PRODUCT_1.getName(), PRODUCT_1.getPrice(),
+                                tuple(PRODUCT_1.getName(), PRODUCT_1.getPrice().getValue(),
                                         PRODUCT_1.getImageUrl(), PRODUCT_1.getDescription(),
-                                        PRODUCT_1.getStock())
+                                        PRODUCT_1.getStock().getValue())
                         ),
                 () -> assertThat(quantities).hasSize(1).containsExactly(newQuantity)
         );

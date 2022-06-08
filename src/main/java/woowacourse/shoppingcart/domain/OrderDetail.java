@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.domain.product.Product;
+
 public class OrderDetail {
     private Long productId;
     private int quantity;
@@ -16,7 +18,7 @@ public class OrderDetail {
     }
 
     public OrderDetail(final Product product, final int quantity) {
-        this(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), quantity);
+        this(product.getId(), product.getPrice().getValue(), product.getName(), product.getImageUrl(), quantity);
     }
 
     public OrderDetail(final Long productId, final int price, final String name,

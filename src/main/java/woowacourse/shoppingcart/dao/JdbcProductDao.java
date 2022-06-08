@@ -1,16 +1,13 @@
 package woowacourse.shoppingcart.dao;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.entity.ProductEntity;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
@@ -29,10 +26,10 @@ public class JdbcProductDao implements ProductDao {
             final PreparedStatement preparedStatement =
                     connection.prepareStatement(query, new String[]{"id"});
             preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getPrice());
+            preparedStatement.setInt(2, product.getPrice().getValue());
             preparedStatement.setString(3, product.getImageUrl());
             preparedStatement.setString(4, product.getDescription());
-            preparedStatement.setInt(5, product.getStock());
+            preparedStatement.setInt(5, product.getStock().getValue());
             return preparedStatement;
         }, keyHolder);
 
@@ -40,10 +37,10 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public Product findProductById(final Long productId) {
+    public ProductEntity findProductById(final Long productId) {
         final String query = "SELECT name, price, image_url, description, stock FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                new Product(
+                new ProductEntity(
                         productId,
                         resultSet.getString("name"),
                         resultSet.getInt("price"),
@@ -55,11 +52,11 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> findProducts() {
+    public List<ProductEntity> findProducts() {
         final String query = "SELECT id, name, price, image_url, description, stock FROM product";
         return jdbcTemplate.query(query,
                 (resultSet, rowNumber) ->
-                        new Product(
+                        new ProductEntity(
                                 resultSet.getLong("id"),
                                 resultSet.getString("name"),
                                 resultSet.getInt("price"),

@@ -36,20 +36,20 @@ class ProductServiceTest {
     @Test
     void findProducts() {
         //given
-        productService.addProduct(PRODUCT_REQUEST_1);
-        productService.addProduct(PRODUCT_REQUEST_2);
+        final Long productId1 = productService.addProduct(PRODUCT_REQUEST_1);
+        final Long productId2 = productService.addProduct(PRODUCT_REQUEST_2);
 
         //when
         final List<ProductResponse> productResponses = productService.findProducts();
 
         //then
         assertThat(productResponses)
-                .extracting("name", "price", "imageUrl", "description", "stock")
+                .extracting("id", "name", "price", "imageUrl", "description", "stock")
                 .containsExactly(
-                        tuple(PRODUCT_REQUEST_1.getName(), PRODUCT_REQUEST_1.getPrice(),
+                        tuple(productId1, PRODUCT_REQUEST_1.getName(), PRODUCT_REQUEST_1.getPrice(),
                                 PRODUCT_REQUEST_1.getImageUrl(), PRODUCT_REQUEST_1.getDescription(),
                                 PRODUCT_REQUEST_1.getStock()),
-                        tuple(PRODUCT_REQUEST_2.getName(), PRODUCT_REQUEST_2.getPrice(),
+                        tuple(productId2, PRODUCT_REQUEST_2.getName(), PRODUCT_REQUEST_2.getPrice(),
                                 PRODUCT_REQUEST_2.getImageUrl(), PRODUCT_REQUEST_2.getDescription(),
                                 PRODUCT_REQUEST_2.getStock())
                 );
@@ -61,11 +61,11 @@ class ProductServiceTest {
         final Long id = productService.addProduct(PRODUCT_REQUEST_1);
 
         //when
-        final ProductResponse productResponse= productService.findProductById(id);
+        final ProductResponse productResponse = productService.findProductById(id);
 
         //then
-        assertThat(productResponse).extracting("name", "price", "imageUrl", "description", "stock")
-                .containsExactly(PRODUCT_REQUEST_1.getName(), PRODUCT_REQUEST_1.getPrice(),
+        assertThat(productResponse).extracting("id", "name", "price", "imageUrl", "description", "stock")
+                .containsExactly(id, PRODUCT_REQUEST_1.getName(), PRODUCT_REQUEST_1.getPrice(),
                         PRODUCT_REQUEST_1.getImageUrl(), PRODUCT_REQUEST_1.getDescription(),
                         PRODUCT_REQUEST_1.getStock());
     }

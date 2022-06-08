@@ -154,12 +154,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(productResponses).extracting("name", "price", "imageUrl", "description", "stock")
                         .containsExactly(
-                                tuple(PRODUCT_1.getName(), PRODUCT_1.getPrice(),
+                                tuple(PRODUCT_1.getName(), PRODUCT_1.getPrice().getValue(),
                                         PRODUCT_1.getImageUrl(), PRODUCT_1.getDescription(),
-                                        PRODUCT_1.getStock()),
-                                tuple(PRODUCT_2.getName(), PRODUCT_2.getPrice(),
+                                        PRODUCT_1.getStock().getValue()),
+                                tuple(PRODUCT_2.getName(), PRODUCT_2.getPrice().getValue(),
                                         PRODUCT_2.getImageUrl(), PRODUCT_2.getDescription(),
-                                        PRODUCT_2.getStock())
+                                        PRODUCT_2.getStock().getValue())
                         ),
                 () -> assertThat(quantities).hasSize(2).containsExactly(PRODUCT_QUANTITY_1, PRODUCT_QUANTITY_2)
         );
@@ -317,7 +317,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         Long cartId = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
 
         // when
-        final ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(cartId, token, CART_REQUEST_1);
+        final ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(cartId, token, new CartRequest(productId1, 3));
 
         // then
         장바구니_수정_확인(response);
