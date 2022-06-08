@@ -45,13 +45,28 @@ public class ProductDaoTest {
     @Test
     void findProducts() {
         // given
-        final int size = 3;
+        final int limit = 3;
 
         // when
-        final List<Product> products = productDao.findProducts(size, 1);
+        final List<Product> products = productDao.findProducts(limit, 1);
 
         // then
-        assertThat(products).size().isEqualTo(size);
+        assertThat(products).hasSize(limit)
+                .extracting(Product::getId)
+                .containsExactly(2L, 3L, 4L);
+    }
+
+    @DisplayName("상품 목록 조회 - 전체 상품 개수를 넘어가는 offset")
+    @Test
+    void findProductsFail() {
+        // given
+        final int limit = 3;
+
+        // when
+        final List<Product> products = productDao.findProducts(limit, 100);
+
+        // then
+        assertThat(products).hasSize(0);
     }
 
     @DisplayName("전체 상품 개수 조회")
