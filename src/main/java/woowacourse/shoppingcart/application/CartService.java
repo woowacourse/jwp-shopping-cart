@@ -23,12 +23,12 @@ public class CartService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductService productService) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
+        this.productService = productService;
     }
 
     public List<Cart> findCartsByEmail(final String email) {
@@ -36,7 +36,7 @@ public class CartService {
 
         final List<Cart> carts = new ArrayList<>();
         for (final CartItemEntity entity : cartItemEntities) {
-            final Product product = productDao.findProductById(entity.getProductId());
+            final Product product = productService.findProductById(entity.getProductId());
             carts.add(new Cart(product, entity.getQuantity()));
         }
         return carts;
@@ -45,7 +45,7 @@ public class CartService {
     @Transactional
     public void addCartItem(final String email, final CartAdditionRequest cartAdditionRequest) {
         final Long customerId = customerDao.findIdByEmail(new Email(email));
-        final Product product = productDao.findProductById(cartAdditionRequest.getProductId());
+        final Product product = productService.findProductById(cartAdditionRequest.getProductId());
 
         if (cartItemDao.existCartItem(customerId, product.getId())) {
             addQuantity(cartAdditionRequest, customerId, product);
@@ -69,7 +69,7 @@ public class CartService {
     @Transactional
     public void updateCartItem(final String email, final CartUpdateRequest cartUpdateRequest) {
         final Long customerId = customerDao.findIdByEmail(new Email(email));
-        final Product product = productDao.findProductById(cartUpdateRequest.getProductId());
+        final Product product = productService.findProductById(cartUpdateRequest.getProductId());
 
         validateExistProduct(customerId, product);
         validateStock(product.getStock(), cartUpdateRequest.getQuantity());
