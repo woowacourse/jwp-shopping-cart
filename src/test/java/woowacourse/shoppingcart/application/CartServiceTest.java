@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.CartAdditionRequest;
-import woowacourse.shoppingcart.dto.CartUpdateRequest;
+import woowacourse.shoppingcart.dto.cart.CartAdditionRequest;
+import woowacourse.shoppingcart.dto.cart.CartUpdateRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 

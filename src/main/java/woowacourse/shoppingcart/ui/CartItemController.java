@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.dto.CartAdditionRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.CartUpdateRequest;
+import woowacourse.shoppingcart.dto.cart.CartAdditionRequest;
+import woowacourse.shoppingcart.dto.cart.CartResponse;
+import woowacourse.shoppingcart.dto.cart.CartUpdateRequest;
 
 @RestController
 @RequestMapping("/api/carts")

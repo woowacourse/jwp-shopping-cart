@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.dto.PageRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.product.PageRequest;
+import woowacourse.shoppingcart.dto.product.ProductResponse;
 
 @RestController
 @RequestMapping("/api/products")
