@@ -2,25 +2,14 @@ package woowacourse.shoppingcart.domain;
 
 public class CartItem {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final Long id;
+    private final Product product;
+    private final Integer count;
 
-    public CartItem() {
-    }
-
-    public CartItem(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getThumbnailUrl());
-    }
-
-    public CartItem(final Long id, final Long productId, final String name, final int price, final String imageUrl) {
+    public CartItem(final Long id, final Product product, final Integer count) {
         this.id = id;
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.product = product;
+        this.count = count;
     }
 
     public Long getId() {
@@ -28,18 +17,26 @@ public class CartItem {
     }
 
     public Long getProductId() {
-        return productId;
+        return product.getId();
     }
 
     public String getName() {
-        return name;
+        return product.getName();
     }
 
     public int getPrice() {
-        return price;
+        return product.getPrice();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return product.getThumbnailUrl();
+    }
+
+    public Integer getQuantity() {
+        return product.getQuantity();
+    }
+
+    public Integer getCount() {
+        return count;
     }
 }

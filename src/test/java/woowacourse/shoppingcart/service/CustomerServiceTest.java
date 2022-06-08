@@ -30,7 +30,6 @@ class CustomerServiceTest {
     @MockBean
     private PasswordEncoder passwordEncoder;
 
-
     @Test
     @DisplayName("회원을 가입시킨다.")
     void signUp() {

@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products() {
+    public ResponseEntity<List<ProductResponseDto>> products() {
         return ResponseEntity.ok(productService.findProducts());
     }
 

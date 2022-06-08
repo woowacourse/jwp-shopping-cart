@@ -1,0 +1,83 @@
+package woowacourse.shoppingcart.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.fixture.Fixture.PRICE;
+import static woowacourse.fixture.Fixture.PRODUCT_NAME;
+import static woowacourse.fixture.Fixture.QUANTITY;
+import static woowacourse.fixture.Fixture.TEST_EMAIL;
+import static woowacourse.fixture.Fixture.TEST_PASSWORD;
+import static woowacourse.fixture.Fixture.TEST_USERNAME;
+import static woowacourse.fixture.Fixture.THUMBNAIL_URL;
+
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.AddCartItemRequestDto;
+import woowacourse.shoppingcart.dto.CartItemResponseDto;
+import woowacourse.shoppingcart.exception.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.OverQuantityException;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+class CartServiceTest {
+
+    @Autowired
+    private CartService cartService;
+    @Autowired
+    private CartItemDao cartItemDao;
+    @Autowired
+    private CustomerDao customerDao;
+    @Autowired
+    private ProductDao productDao;
+
+    private Long customerId;
+    private Long productId;
+
+    @BeforeEach
+    void setUp(){
+        customerId = customerDao.save(Customer.createWithoutId(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
+        productId = productDao.save(new Product(PRODUCT_NAME, PRICE, THUMBNAIL_URL, QUANTITY));
+    }
+
+    @Test
+    @DisplayName("장바구니에 품목을 추가한다.")
+    void addCart() {
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
+        cartService.addCart(addCartItemRequestDto, customerId);
+
+        final List<CartItemResponseDto> cartItems = cartService.findCartsByCustomerId(customerId);
+
+        assertThat(cartItems.size()).isEqualTo(1);
+        assertThat(cartItems.get(0).getName()).isEqualTo(PRODUCT_NAME);
+    }
+
+    @Test
+    @DisplayName("장바구니에 품목을 추가할때 이미 등록된 품목일 경우 예외가 발생한다.")
+    void addCart_DuplicateProductException() {
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
+        cartService.addCart(addCartItemRequestDto, customerId);
+
+        assertThatThrownBy(() -> cartService.addCart(addCartItemRequestDto, customerId))
+                .isInstanceOf(DuplicateCartItemException.class)
+                .hasMessage("이미 담겨있는 상품입니다.");
+    }
+
+    @Test
+    @DisplayName("장바구니에 품목을 추가할때 재고가 주문수량보다 적으면 예외가 발생한다.")
+    void addCart_OverQuantityException() {
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 11);
+        assertThatThrownBy(() -> cartService.addCart(addCartItemRequestDto, customerId))
+                .isInstanceOf(OverQuantityException.class)
+                .hasMessage("재고가 부족합니다.");
+    }
+}

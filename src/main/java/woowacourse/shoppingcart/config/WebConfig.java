@@ -15,12 +15,14 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/api/**")
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
+                .allowedOrigins("*")
                 .exposedHeaders(HttpHeaders.LOCATION);
     }
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns("/api/customers/{id}");
+                .addPathPatterns("/api/customers/{id}")
+                .addPathPatterns("/api/customers/{customerId}/carts");
     }
 }
