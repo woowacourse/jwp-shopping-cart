@@ -8,11 +8,11 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerLoginResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerPasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.dto.customer.CustomerWithdrawRequest;
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 @Service
@@ -74,9 +74,9 @@ public class CustomerService {
         customerDao.updatePassword(customer.getId(), customerUpdatePasswordRequest.getNewPassword());
     }
 
-    public void withdraw(final TokenRequest tokenRequest, final CustomerWithdrawRequest customerWithdrawRequest) {
+    public void withdraw(final TokenRequest tokenRequest, final CustomerPasswordRequest customerPasswordRequest) {
         Customer customer = customerDao.findById(tokenRequest.getId());
-        customer.comparePasswordFrom(customerWithdrawRequest.getPassword());
+        customer.comparePasswordFrom(customerPasswordRequest.getPassword());
         customerDao.delete(customer.getId());
     }
 
@@ -86,5 +86,10 @@ public class CustomerService {
 
     public void checkDuplicateNickname(final String nickname) {
         validateNotDuplicateNickname(nickname);
+    }
+
+    public void matchCustomerPassword(final TokenRequest tokenRequest, final CustomerPasswordRequest request) {
+        Customer customer = customerDao.findById(tokenRequest.getId());
+        customer.comparePasswordFrom(request.getPassword());
     }
 }

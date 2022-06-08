@@ -22,7 +22,7 @@ import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.dto.customer.CustomerWithdrawRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerPasswordRequest;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.LoginDataNotFoundException;
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
@@ -121,8 +121,8 @@ class CustomerServiceTest {
                 "1234asdf!");
         Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
-        CustomerWithdrawRequest customerWithdrawRequest = new CustomerWithdrawRequest("1234asdf!");
-        customerService.withdraw(tokenRequest, customerWithdrawRequest);
+        CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("1234asdf!");
+        customerService.withdraw(tokenRequest, customerPasswordRequest);
 
         // when & then
         assertThatThrownBy(() -> customerService.findProfile(tokenRequest))
@@ -172,8 +172,8 @@ class CustomerServiceTest {
                 "1234asdf!");
         Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
-        CustomerWithdrawRequest customerWithdrawRequest = new CustomerWithdrawRequest("1234asdf!");
-        customerService.withdraw(tokenRequest, customerWithdrawRequest);
+        CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("1234asdf!");
+        customerService.withdraw(tokenRequest, customerPasswordRequest);
 
         // when & then
         CustomerUpdateProfileRequest customerUpdateProfileRequest = new CustomerUpdateProfileRequest("test2",
@@ -205,8 +205,8 @@ class CustomerServiceTest {
                 "1234asdf!");
         Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
-        CustomerWithdrawRequest customerWithdrawRequest = new CustomerWithdrawRequest("1234asdf!");
-        customerService.withdraw(tokenRequest, customerWithdrawRequest);
+        CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("1234asdf!");
+        customerService.withdraw(tokenRequest, customerPasswordRequest);
         CustomerUpdatePasswordRequest customerUpdatePasswordRequest = new CustomerUpdatePasswordRequest("1234asdf!",
                 "47374*ffff");
 
@@ -224,10 +224,10 @@ class CustomerServiceTest {
                 "1234asdf!");
         Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
-        CustomerWithdrawRequest customerWithdrawRequest = new CustomerWithdrawRequest("1234asdf!");
+        CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("1234asdf!");
 
         // when
-        customerService.withdraw(tokenRequest, customerWithdrawRequest);
+        customerService.withdraw(tokenRequest, customerPasswordRequest);
 
         // then
         assertThatThrownBy(() -> customerService.findProfile(tokenRequest))
@@ -240,10 +240,10 @@ class CustomerServiceTest {
     void withdrawNonCustomer() {
         // given
         TokenRequest tokenRequest = new TokenRequest("9999999");
-        CustomerWithdrawRequest customerWithdrawRequest = new CustomerWithdrawRequest("1234asdf!");
+        CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("1234asdf!");
 
         // when & then
-        assertThatThrownBy(() -> customerService.withdraw(tokenRequest, customerWithdrawRequest))
+        assertThatThrownBy(() -> customerService.withdraw(tokenRequest, customerPasswordRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
@@ -256,11 +256,11 @@ class CustomerServiceTest {
                 "1234asdf!");
         Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
-        CustomerWithdrawRequest customerWithdrawRequest = new CustomerWithdrawRequest("1234asdf!");
-        customerService.withdraw(tokenRequest, customerWithdrawRequest);
+        CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("1234asdf!");
+        customerService.withdraw(tokenRequest, customerPasswordRequest);
 
         // when & then
-        assertThatThrownBy(() -> customerService.withdraw(tokenRequest, customerWithdrawRequest))
+        assertThatThrownBy(() -> customerService.withdraw(tokenRequest, customerPasswordRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }
@@ -273,10 +273,10 @@ class CustomerServiceTest {
                 "1234asdf!");
         Long customerId = customerService.signUp(customerSignUpRequest);
         TokenRequest tokenRequest = new TokenRequest(String.valueOf(customerId));
-        CustomerWithdrawRequest customerWithdrawRequest = new CustomerWithdrawRequest("1234affff!");
+        CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("1234affff!");
 
         // when & then
-        assertThatThrownBy(() -> customerService.withdraw(tokenRequest, customerWithdrawRequest))
+        assertThatThrownBy(() -> customerService.withdraw(tokenRequest, customerPasswordRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("입력한 비밀번호가 올바르지 않습니다.");
     }
