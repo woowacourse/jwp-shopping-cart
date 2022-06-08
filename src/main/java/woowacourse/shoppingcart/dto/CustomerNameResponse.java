@@ -2,7 +2,10 @@ package woowacourse.shoppingcart.dto;
 
 public class CustomerNameResponse {
 
-    private final String name;
+    private String name;
+
+    public CustomerNameResponse() {
+    }
 
     public CustomerNameResponse(String name) {
         this.name = name;

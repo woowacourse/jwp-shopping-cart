@@ -2,8 +2,11 @@ package woowacourse.shoppingcart.dto;
 
 public class CartRequest {
 
-    private final Long id;
-    private final Integer quantity;
+    private Long id;
+    private Integer quantity;
+
+    public CartRequest() {
+    }
 
     public CartRequest(Long id, Integer quantity) {
         this.id = id;

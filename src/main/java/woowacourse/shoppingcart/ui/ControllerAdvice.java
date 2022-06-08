@@ -25,8 +25,9 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionDto handleUnhandledException() {
-        return new ExceptionDto("Unhandled Exception");
+    public ExceptionDto handleUnhandledException(Exception exception) {
+        exception.printStackTrace();
+        return new ExceptionDto(exception.getMessage());
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)

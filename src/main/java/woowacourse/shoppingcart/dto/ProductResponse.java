@@ -4,11 +4,14 @@ import woowacourse.shoppingcart.domain.Product;
 
 public class ProductResponse {
 
-    private final Long id;
-    private final String thumbnail;
-    private final String name;
-    private final Integer price;
-    private final Integer quantity;
+    private Long id;
+    private String thumbnail;
+    private String name;
+    private Integer price;
+    private Integer quantity;
+
+    public ProductResponse() {
+    }
 
     private ProductResponse(Long id, String thumbnail, String name, Integer price, Integer quantity) {
         this.id = id;

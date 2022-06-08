@@ -1,14 +1,14 @@
-drop table if exists orders_detail;
+drop table if exists ORDERS_DETAIL;
 
-drop table if exists orders;
+drop table if exists ORDERS;
 
-drop table if exists cart_item;
+drop table if exists CART_ITEM;
 
-drop table if exists product;
+drop table if exists PRODUCT;
 
-drop table if exists customer;
+drop table if exists CUSTOMER;
 
-create table customer
+create table CUSTOMER
 (
     id       bigint       not null auto_increment,
     email varchar(255),
@@ -19,10 +19,10 @@ create table customer
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-alter table customer
+alter table CUSTOMER
     add unique key (name);
 
-create table product
+create table PRODUCT
 (
     id        bigint       not null auto_increment,
     name      varchar(255) not null,
@@ -31,7 +31,7 @@ create table product
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-create table cart_item
+create table CART_ITEM
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,

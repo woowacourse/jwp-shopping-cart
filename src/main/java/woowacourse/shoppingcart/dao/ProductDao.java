@@ -40,7 +40,7 @@ public class ProductDao {
 
     public Product findProductById(Long productId) {
         try {
-            final String query = "SELECT * FROM product WHERE id = ?";
+            final String query = "SELECT * FROM PRODUCT WHERE id = ?";
             return jdbcTemplate.queryForObject(query, productRowMapper, productId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
@@ -48,12 +48,12 @@ public class ProductDao {
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
+        final String query = "SELECT id, name, price, image_url FROM PRODUCT";
         return jdbcTemplate.query(query, productRowMapper);
     }
 
     public void delete(Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
+        final String query = "DELETE FROM PRODUCT WHERE id = ?";
         jdbcTemplate.update(query, productId);
     }
 }
