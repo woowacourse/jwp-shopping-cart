@@ -1,4 +1,4 @@
-package woowacourse.study;
+package study;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
