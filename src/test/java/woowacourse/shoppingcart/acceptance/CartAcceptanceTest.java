@@ -34,7 +34,8 @@ import woowacourse.shoppingcart.dto.CartItemResponse;
 @Sql(scripts = {"classpath:schema.sql", "classpath:import.sql"})
 class CartAcceptanceTest extends AcceptanceTest {
 
-    private static final String CART_URI = "/api/carts/products";
+    private static final String CART_URI_EXCEPT_GET = "/api/carts/products";
+    private static final String CART_GET_URI = "/api/carts";
     private static final CartItemAddRequest VALID_CART_ITEM_ADD_REQUEST1 =
             new CartItemAddRequest(1L, 5);
     private static final CartItemAddRequest VALID_CART_ITEM_ADD_REQUEST2 =
@@ -56,7 +57,8 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니에 상품 추가에 성공하면 201을 응답한다.")
     @Test
     void addCartItem_created() {
-        ExtractableResponse<Response> response = postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
+        ExtractableResponse<Response> response = postWithAuthorization(CART_URI_EXCEPT_GET, token,
+                VALID_CART_ITEM_ADD_REQUEST1);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -65,7 +67,7 @@ class CartAcceptanceTest extends AcceptanceTest {
     @Test
     void addCartItem_badRequest_InvalidProductId() {
         ExtractableResponse<Response> response =
-                postWithAuthorization(CART_URI, token, INVALID_PRODUCT_ID_CART_ITEM_ADD_REQUEST);
+                postWithAuthorization(CART_URI_EXCEPT_GET, token, INVALID_PRODUCT_ID_CART_ITEM_ADD_REQUEST);
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -80,7 +82,7 @@ class CartAcceptanceTest extends AcceptanceTest {
     @MethodSource("provideNullProductIdAndQuantity")
     void addCartItem_badRequest_Null(Long productId, Integer quantity) {
         ExtractableResponse<Response> response =
-                postWithAuthorization(CART_URI, token, new CartItemAddRequest(productId, quantity));
+                postWithAuthorization(CART_URI_EXCEPT_GET, token, new CartItemAddRequest(productId, quantity));
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -95,7 +97,7 @@ class CartAcceptanceTest extends AcceptanceTest {
     void addCartItem_badRequest_InvalidQuantity() {
         int invalidQuantity = 101;
         ExtractableResponse<Response> response =
-                postWithAuthorization(CART_URI, token, new CartItemAddRequest(1L, invalidQuantity));
+                postWithAuthorization(CART_URI_EXCEPT_GET, token, new CartItemAddRequest(1L, invalidQuantity));
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -108,10 +110,10 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 목록을 반환한다.")
     @Test
     void findAllCartItems_OK() {
-        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
-        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST2);
+        postWithAuthorization(CART_URI_EXCEPT_GET, token, VALID_CART_ITEM_ADD_REQUEST1);
+        postWithAuthorization(CART_URI_EXCEPT_GET, token, VALID_CART_ITEM_ADD_REQUEST2);
 
-        ExtractableResponse<Response> response = getWithAuthorization(CART_URI, token);
+        ExtractableResponse<Response> response = getWithAuthorization(CART_GET_URI, token);
         List<CartItemResponse> cartItems = response.jsonPath()
                 .getList(".", CartItemResponse.class);
         CartItemResponse first = cartItems.get(0);
@@ -130,9 +132,9 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품의 수량을 변경하고 성공하면 200과 변경된 장바구니 목록을 반환한다.")
     @Test
     void updateQuantity_OK() {
-        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
+        postWithAuthorization(CART_URI_EXCEPT_GET, token, VALID_CART_ITEM_ADD_REQUEST1);
 
-        ExtractableResponse<Response> response = patchWithAuthorization(CART_URI, token,
+        ExtractableResponse<Response> response = patchWithAuthorization(CART_URI_EXCEPT_GET, token,
                 VALID_CART_ITEM_QUANTITY_UPDATE_REQUEST);
 
         CartItemResponse updatedCartItem = response.jsonPath()
@@ -148,10 +150,11 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품의 재고보다 많은 양으로 수량을 변경하려고 하면 400을 응답한다.")
     @Test
     void updateQuantity_badRequest_InvalidQuantity() {
-        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
+        postWithAuthorization(CART_URI_EXCEPT_GET, token, VALID_CART_ITEM_ADD_REQUEST1);
         int invalidQuantity = 101;
         ExtractableResponse<Response> response =
-                patchWithAuthorization(CART_URI, token, new CartItemQuantityUpdateRequest(1L, invalidQuantity));
+                patchWithAuthorization(CART_URI_EXCEPT_GET, token,
+                        new CartItemQuantityUpdateRequest(1L, invalidQuantity));
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -166,7 +169,8 @@ class CartAcceptanceTest extends AcceptanceTest {
     @MethodSource("provideNullProductIdAndQuantity")
     void updateQuantity_badRequest_Null(Long productId, Integer quantity) {
         ExtractableResponse<Response> response =
-                patchWithAuthorization(CART_URI, token, new CartItemQuantityUpdateRequest(productId, quantity));
+                patchWithAuthorization(CART_URI_EXCEPT_GET, token,
+                        new CartItemQuantityUpdateRequest(productId, quantity));
         String message = response.as(ErrorResponse.class)
                 .getMessage();
 
@@ -179,9 +183,9 @@ class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 삭제하고 성공하면 200과 삭제된 장바구니 목록을 응답한다.")
     @Test
     void deleteCartItem_OK() {
-        postWithAuthorization(CART_URI, token, VALID_CART_ITEM_ADD_REQUEST1);
+        postWithAuthorization(CART_URI_EXCEPT_GET, token, VALID_CART_ITEM_ADD_REQUEST1);
 
-        ExtractableResponse<Response> response = deleteWithAuthorization(CART_URI + "?productId=1", token);
+        ExtractableResponse<Response> response = deleteWithAuthorization(CART_URI_EXCEPT_GET + "?productId=1", token);
         List<CartItemResponse> cartItems = response.jsonPath()
                 .getList(".", CartItemResponse.class);
 

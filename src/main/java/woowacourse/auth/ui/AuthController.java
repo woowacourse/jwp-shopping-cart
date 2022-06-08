@@ -41,7 +41,7 @@ public class AuthController {
                 .build();
     }
 
-    @GetMapping("/members/check-email")
+    @GetMapping("/members/email-check")
     public ResponseEntity<CheckResponse> checkDuplicatedEmail(@RequestParam @NotBlank String email) {
         CheckResponse checkResponse = new CheckResponse(!authService.existsEmail(email));
         return ResponseEntity.ok(checkResponse);

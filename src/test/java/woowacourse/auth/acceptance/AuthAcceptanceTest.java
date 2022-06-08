@@ -117,9 +117,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     private static Stream<Arguments> provideInvalidEmailAndExpectedMessage() {
         return Stream.of(
-                Arguments.of("/api/members/check-email?email=", DATA_EMPTY_EXCEPTION_MESSAGE),
-                Arguments.of("/api/members/check-email?email= ", DATA_EMPTY_EXCEPTION_MESSAGE),
-                Arguments.of("/api/members/check-email?email=abc", "이메일 형식이 올바르지 않습니다.")
+                Arguments.of("/api/members/email-check?email=", DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("/api/members/email-check?email= ", DATA_EMPTY_EXCEPTION_MESSAGE),
+                Arguments.of("/api/members/email-check?email=abc", "이메일 형식이 올바르지 않습니다.")
         );
     }
 
