@@ -19,6 +19,7 @@ import woowacourse.shoppingcart.dto.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.CartItemResponseDto;
 import woowacourse.shoppingcart.dto.ProductRequestDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
+import woowacourse.shoppingcart.dto.UpdateCartItemCountItemRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -86,6 +87,23 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    @DisplayName("장바구니에 담긴 물건의 수량을 변경한다.")
+    void updateCartItems() {
+        final AddCartItemRequestDto addCartItemRequestDto1 = new AddCartItemRequestDto(productId1, 1);
+        post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto1);
+
+        final UpdateCartItemCountItemRequest updateCartItemCountItemRequest = new UpdateCartItemCountItemRequest(2);
+        patch("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader, updateCartItemCountItemRequest);
+
+        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
+        final List<CartItemResponseDto> cartItemResponseDtos
+                = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
+
+        assertThat(cartItemResponseDtos.size()).isEqualTo(1);
+        assertThat(cartItemResponseDtos.get(0).getCount()).isEqualTo(2);
+    }
+
+    @Test
     @DisplayName("장바구니에 담긴 물건을 삭제한다.")
     void deleteCartItem() {
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
@@ -100,4 +118,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         assertThat(cartItemResponseDtos.size()).isEqualTo(0);
     }
+
+
 }
