@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.exception.badrequest.InvalidCartItemQuantityException;
 
 public class CartItem {
 
@@ -12,6 +13,13 @@ public class CartItem {
         this.id = id;
         this.product = product;
         this.quantity = quantity;
+        validateQuantity();
+    }
+
+    private void validateQuantity() {
+        if (quantity < 0) {
+            throw new InvalidCartItemQuantityException();
+        }
     }
 
     public boolean hasProductById(Long productId) {
@@ -40,5 +48,9 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public CartItem updateQuantity(int quantity) {
+        return new CartItem(id, product, quantity);
     }
 }

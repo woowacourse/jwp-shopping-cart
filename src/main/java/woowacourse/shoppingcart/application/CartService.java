@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.domain.user.Customer;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.QuantityRequest;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateCartItemException;
 import woowacourse.shoppingcart.exception.badrequest.InvalidProductException;
 import woowacourse.shoppingcart.exception.badrequest.InvalidProductIdException;
@@ -85,5 +86,16 @@ public class CartService {
                 .filter(cartItem -> cartItem.hasProductById(productId))
                 .findAny()
                 .orElseThrow(NotInCustomerCartItemException::new);
+    }
+
+    public CartItemResponse updateQuantity(String email, Long productId, QuantityRequest quantityRequest) {
+        Customer customer = findCustomerByEmail(email);
+        Product product = findProductById(productId, NotFoundProductException::new);
+        List<CartItem> cartItems = cartItemDao.findByCustomerId(customer.getId());
+        CartItem cartItem = findCartItemByProductId(product.getId(), cartItems);
+        CartItem updateCartItem = cartItem.updateQuantity(quantityRequest.getQuantity());
+        cartItemDao.update(cartItem);
+        return new CartItemResponse(updateCartItem.getId(), updateCartItem.getName(), updateCartItem.getPrice(),
+                updateCartItem.getImageUrl(), updateCartItem.getQuantity());
     }
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.acceptance.fixture.CartSimpleAssured.장바구니_상품_등록;
 import static woowacourse.shoppingcart.acceptance.fixture.CartSimpleAssured.장바구니_상품_삭제;
+import static woowacourse.shoppingcart.acceptance.fixture.CartSimpleAssured.장바구니_상품_수량_수정;
 import static woowacourse.shoppingcart.acceptance.fixture.CartSimpleAssured.장바구니_상품_조회;
 import static woowacourse.shoppingcart.acceptance.fixture.ProductSimpleAssured.상품_등록;
 import static woowacourse.shoppingcart.acceptance.fixture.UserSimpleAssured.회원가입_요청;
@@ -139,6 +140,68 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
                 () -> assertThat(cartList).hasSize(0)
+        );
+    }
+
+    @DisplayName("장바구니에 담긴 상품의 수량을 수정할 때 인가되지 않은 회원이면 401을 응답한다.")
+    @Test
+    void putCartItemUnauthorized() {
+        ExtractableResponse<Response> response = 장바구니_상품_수량_수정("invalid token", "1", 1);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("장바구니에 담긴 상품의 수량을 수정할 때 없는 상품이면 404을 응답한다.")
+    @Test
+    void putCartItemNotFound() {
+        ExtractableResponse<Response> response = 장바구니_상품_수량_수정(로그인된_토큰, "1", 2);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @DisplayName("장바구니에 담긴 상품의 수량을 수정할 때 장바구니에 없는 상품이면 400을 응답한다.")
+    @Test
+    void putCartItemNotFoundProductInCartBadRequest() {
+        상품_등록(new ProductRequest("상품", 10000, "image.url"));
+
+        ExtractableResponse<Response> response = 장바구니_상품_수량_수정(로그인된_토큰, "1", 2);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.jsonPath().getString("message"))
+                        .isEqualTo("장바구니에 상품이 존재하지 않습니다."),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(1102)
+        );
+    }
+
+    @DisplayName("장바구니에 담긴 상품의 수량을 수정할 때 수량이 음수이면 400을 응답한다.")
+    @Test
+    void putCartItemInvalidQuantityBadRequest() {
+        상품_등록(new ProductRequest("상품", 10000, "image.url"));
+        장바구니_상품_등록(로그인된_토큰, "1");
+        ExtractableResponse<Response> response = 장바구니_상품_수량_수정(로그인된_토큰, "1", -1);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.jsonPath().getString("message"))
+                        .isEqualTo("잘못된 형식입니다."),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(1100)
+        );
+    }
+
+    @DisplayName("장바구니에 담긴 상품의 수량을 수정할 때 정상 케이스인 경우 200을 응답하고 수정된 상품을 알려준다.")
+    @Test
+    void putCartItemOk() {
+        상품_등록(new ProductRequest("상품", 10000, "image.url"));
+        장바구니_상품_등록(로그인된_토큰, "1");
+        ExtractableResponse<Response> response = 장바구니_상품_수량_수정(로그인된_토큰, "1", 2);
+        CartItemResponse cartItemResponse = response.jsonPath().getObject(".", CartItemResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(cartItemResponse.getName()).isEqualTo("상품"),
+                () -> assertThat(cartItemResponse.getPrice()).isEqualTo(10000),
+                () -> assertThat(cartItemResponse.getImageUrl()).isEqualTo("image.url"),
+                () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(2)
         );
     }
 }
