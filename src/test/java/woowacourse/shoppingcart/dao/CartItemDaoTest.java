@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
@@ -102,5 +103,24 @@ public class CartItemDaoTest {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);
+    }
+
+    @DisplayName("quantity에 따라 수량이 업데이트 된다.")
+    @Test
+    void updateQuantity(){
+        // given
+        final Long customerId = 1L;
+        final Long cartId = 1L;
+
+        // when
+        cartItemDao.updateQuantity(cartId, 30);
+        List<Cart> carts = cartItemDao.findAllByCustomerId(customerId);
+
+        Cart findCart = carts.stream()
+                .filter(cart -> cart.isSameId(cartId))
+                .findFirst()
+                .get();
+
+        assertThat(findCart.getQuantity()).isEqualTo(30);
     }
 }

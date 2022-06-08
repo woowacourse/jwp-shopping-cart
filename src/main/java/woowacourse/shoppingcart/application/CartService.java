@@ -7,11 +7,9 @@ import woowacourse.shoppingcart.application.exception.NotInCustomerCartItemExcep
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.dto.CartResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,12 +19,10 @@ public class CartService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
     public List<CartResponse> findCartsByCustomerName(final String customerName) {
@@ -63,5 +59,10 @@ public class CartService {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    public void updateQuantity(final String userName, final Long cartId, final int quantity) {
+        validateCustomerCart(cartId, userName);
+        cartItemDao.updateQuantity(cartId, quantity);
     }
 }

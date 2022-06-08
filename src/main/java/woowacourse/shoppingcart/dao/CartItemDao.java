@@ -57,7 +57,7 @@ public class CartItemDao {
     }
 
     public Long addCartItem(final Long customerId, final Long productId) {
-        //여기
+
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -78,5 +78,10 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public void updateQuantity(final Long cartId, final int quantity) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        jdbcTemplate.update(sql, quantity, cartId);
     }
 }

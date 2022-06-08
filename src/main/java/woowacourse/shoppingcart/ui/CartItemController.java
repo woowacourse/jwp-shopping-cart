@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductRequest;
 
@@ -29,8 +29,8 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@Valid @RequestBody final ProductRequest.OnlyId productRequest,
-                                            @AuthenticationPrincipal final Customer customer) {
+    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final Customer customer,
+                                            @Valid @RequestBody final ProductRequest.OnlyId productRequest) {
         final Long cartId = cartService.addCart(productRequest.getId(), customer.getUserName());
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -44,6 +44,14 @@ public class CartItemController {
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final Customer customer,
                                                @PathVariable final Long cartId) {
         cartService.deleteCart(customer.getUserName(), cartId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{cartId}")
+    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final Customer customer,
+                                            @PathVariable final Long cartId,
+                                            @RequestBody final CartRequest cartRequest) {
+        cartService.updateQuantity(customer.getUserName(), cartId, cartRequest.getQuantity());
         return ResponseEntity.noContent().build();
     }
 }
