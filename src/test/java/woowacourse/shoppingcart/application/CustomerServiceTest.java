@@ -17,10 +17,9 @@ import woowacourse.shoppingcart.exception.domain.CustomerNotFoundException;
 import woowacourse.shoppingcart.ui.dto.CustomerRequest;
 import woowacourse.shoppingcart.ui.dto.FindCustomerRequest;
 import woowacourse.shoppingcart.ui.dto.UpdateCustomerRequest;
+import woowacourse.support.test.ExtendedApplicationTest;
 
-@SpringBootTest
-@Transactional
-@Sql(scripts = {"classpath:schema-test.sql", "classpath:data-test.sql"})
+@ExtendedApplicationTest
 class CustomerServiceTest {
 
     @Autowired
