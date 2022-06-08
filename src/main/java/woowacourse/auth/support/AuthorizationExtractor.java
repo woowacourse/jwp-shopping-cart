@@ -23,12 +23,16 @@ public class AuthorizationExtractor {
                 String authHeaderValue = value.substring(BEARER_TYPE.length()).trim();
                 request.setAttribute(ACCESS_TOKEN_TYPE, value.substring(0, BEARER_TYPE.length()).trim());
                 int commaIndex = authHeaderValue.indexOf(',');
-                if (commaIndex > 0) {
-                    authHeaderValue = authHeaderValue.substring(0, commaIndex);
-                }
-                return authHeaderValue;
+                return getAuthHeaderValue(authHeaderValue, commaIndex);
             }
         }
         throw new AuthException("토큰 값이 잘못되었습니다.");
+    }
+
+    private static String getAuthHeaderValue(String authHeaderValue, int commaIndex) {
+        if (commaIndex > 0) {
+            authHeaderValue = authHeaderValue.substring(0, commaIndex);
+        }
+        return authHeaderValue;
     }
 }
