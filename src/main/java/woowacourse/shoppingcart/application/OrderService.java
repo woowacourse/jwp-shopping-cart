@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dao.entity.CartItemEntity;
 import woowacourse.shoppingcart.dao.entity.OrdersDetailEntity;
 import woowacourse.shoppingcart.dao.entity.OrdersEntity;
+import woowacourse.shoppingcart.dao.entity.ProductEntity;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -22,7 +24,7 @@ import woowacourse.shoppingcart.ui.dto.OrderDetailRequest;
 import woowacourse.shoppingcart.ui.dto.OrderRequest;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class OrderService {
 
     private final OrdersDao ordersDao;
@@ -56,17 +58,27 @@ public class OrderService {
         cartItemDao.delete(new CartItemEntity(customerId, productId));
     }
 
-    public OrderResponse findById(Long customerId, Long orderId) {
-        validateOrderIdByCustomerName(customerId, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+    private Product findProductById(Long id) {
+        return productDao.findById(id)
+                .orElseThrow(InvalidProductException::new)
+                .toProduct();
     }
 
-    private void validateOrderIdByCustomerName(Long customerId, Long orderId) {
+    @Transactional(readOnly = true)
+    public OrderResponse findById(Long customerId, Long orderId) {
+        validateOrderId(customerId, orderId);
+        return findById(orderId);
+    }
+
+    private void validateOrderId(Long customerId, Long orderId) {
         if (!ordersDao.existsOrderId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+            throw new InvalidOrderException(
+                    String.format("사용자가 해당 주문을 한 적이 없습니다. 입력값: 사용자 - %d, 주문 번호 - %d", customerId, orderId)
+            );
         }
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findByCustomerId(Long customerId) {
         List<Long> orderIds = ordersDao.findByCustomerId(customerId)
                 .stream()
@@ -74,24 +86,38 @@ public class OrderService {
                 .collect(Collectors.toUnmodifiableList());
 
         return orderIds.stream()
-                .map(this::findOrderResponseDtoByOrderId)
+                .map(this::findById)
                 .collect(Collectors.toList());
     }
 
-    private OrderResponse findOrderResponseDtoByOrderId(Long orderId) {
-        List<OrderDetailResponse> products = new ArrayList<>();
+    private OrderResponse findById(Long orderId) {
+        List<OrderDetailResponse> result = new ArrayList<>();
+        List<Product> products = findProductsByOrderId(orderId);
+        Map<Long, Product> productMap = initProductMap(products);
+
         for (OrdersDetailEntity ordersDetail : ordersDetailDao.findByOrderId(orderId)) {
-            Product product = findProductById(ordersDetail.getProductId());
+            Product product = productMap.get(ordersDetail.getProductId());
             int quantity = ordersDetail.getQuantity();
-            products.add(OrderDetailResponse.from(product, quantity));
+            result.add(OrderDetailResponse.from(product, quantity));
         }
 
-        return new OrderResponse(orderId, products);
+        return new OrderResponse(orderId, result);
     }
 
-    private Product findProductById(Long id) {
-        return productDao.findById(id)
-                .orElseThrow(InvalidProductException::new)
-                .toProduct();
+    private List<Product> findProductsByOrderId(Long orderId) {
+        List<Long> productIds = ordersDetailDao.findByOrderId(orderId)
+                .stream()
+                .map(OrdersDetailEntity::getProductId)
+                .collect(Collectors.toUnmodifiableList());
+
+        return productDao.findByIds(productIds)
+                .stream()
+                .map(ProductEntity::toProduct)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private Map<Long, Product> initProductMap(List<Product> products) {
+        return products.stream()
+                .collect(Collectors.toMap(Product::getId, product -> product));
     }
 }

@@ -59,6 +59,25 @@ class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    void 존재하지_않는_주문_id로_주문_검색() {
+        // given
+        String token = 회원_가입_후_토큰_발급("yeonlog", "11aaAA!!");
+
+        // when
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, BEARER + token)
+                .when().get("/customers/orders/{orderId}", 1L)
+                .then().log().all()
+                .extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(findValue(response, "message")).contains("사용자가 해당 주문을 한 적이 없습니다.");
+    }
+
+    @Test
     void 주문_내역_조회() {
         // given
         String token = 회원_가입_후_토큰_발급("yeonlog", "11aaAA!!");
