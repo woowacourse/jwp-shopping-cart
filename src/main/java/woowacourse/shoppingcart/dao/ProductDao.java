@@ -57,7 +57,7 @@ public class ProductDao {
     }
 
     public int countProducts() {
-        final String query = "SELECT count (*) FROM product";
+        final String query = "SELECT COUNT(*) FROM product";
         return jdbcTemplate.queryForObject(query, Integer.class);
     }
 
