@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dao;
 
-import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -30,7 +29,7 @@ public class CustomerDao {
     public Long findIdByUserName(final String userName) {
         try {
             final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            return jdbcTemplate.queryForObject(query, Long.class, userName);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
