@@ -10,12 +10,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.request.ProductRequest;
 import woowacourse.shoppingcart.dto.response.ExceptionResponse;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.dto.response.ProductsResponse;
 
 @DisplayName("상품 관련 기능")
+@Sql("/truncate.sql")
 public class ProductAcceptanceTest extends AcceptanceTest {
 
     public static final String 치킨 = "치킨";

@@ -44,7 +44,7 @@ public class CustomerDao {
     }
 
     public Optional<Customer> findById(Long id) {
-        final String sql = "SELECT id, email, name, password FROM Customer WHERE id = ?";
+        final String sql = "SELECT id, email, name, password FROM customer WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
@@ -58,7 +58,7 @@ public class CustomerDao {
     }
 
     public Optional<Customer> findByEmail(String email) {
-        final String sql = "SELECT id, email, name, password FROM CUSTOMER where email = ?";
+        final String sql = "SELECT id, email, name, password FROM customer where email = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, CUSTOMER_ROW_MAPPER, email));
         } catch (EmptyResultDataAccessException e) {
@@ -67,17 +67,17 @@ public class CustomerDao {
     }
 
     public void updateProfile(Customer customer) {
-        final String sql = "UPDATE Customer SET name = ? WHERE id = ?";
+        final String sql = "UPDATE customer SET name = ? WHERE id = ?";
         jdbcTemplate.update(sql, customer.getName(), customer.getId());
     }
 
     public void updatePassword(Customer customer) {
-        final String sql = "UPDATE Customer SET password = ? WHERE id = ?";
+        final String sql = "UPDATE customer SET password = ? WHERE id = ?";
         jdbcTemplate.update(sql, customer.getPassword(), customer.getId());
     }
 
     public void delete(long id) {
-        final String sql = "DELETE FROM Customer WHERE id = ?";
+        final String sql = "DELETE FROM customer WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

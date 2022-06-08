@@ -19,10 +19,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
 import woowacourse.shoppingcart.dto.response.OrdersResponse;
 
 @DisplayName("주문 관련 기능")
+@Sql("/truncate.sql")
 public class OrderAcceptanceTest extends AcceptanceTest {
 
     private String token;

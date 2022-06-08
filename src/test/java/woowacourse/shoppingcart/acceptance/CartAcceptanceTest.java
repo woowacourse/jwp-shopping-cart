@@ -15,9 +15,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.response.CartResponse;
 
 @DisplayName("장바구니 관련 기능")
+@Sql("/truncate.sql")
 public class CartAcceptanceTest extends AcceptanceTest {
 
     private String token;
