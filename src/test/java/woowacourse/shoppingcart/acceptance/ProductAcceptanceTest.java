@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.acceptance.ShoppingCartAcceptanceTestFixture.PRODUCTS_FIND_URI;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -17,8 +18,6 @@ import woowacourse.util.HttpRequestUtil;
 @DisplayName("상품 관련 기능")
 @Sql({"classpath:schema.sql", "classpath:import.sql"})
 class ProductAcceptanceTest extends AcceptanceTest {
-
-    private static final String PRODUCTS_FIND_URI = "/api/products";
 
     @DisplayName("상품 목록을 조회한다")
     @Test

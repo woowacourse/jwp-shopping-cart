@@ -6,6 +6,12 @@ import static woowacourse.member.acceptance.MemberAcceptanceTestFixture.LOGIN_UR
 import static woowacourse.member.acceptance.MemberAcceptanceTestFixture.MEMBER_CREATE_REQUEST;
 import static woowacourse.member.acceptance.MemberAcceptanceTestFixture.SIGN_UP_URI;
 import static woowacourse.member.acceptance.MemberAcceptanceTestFixture.VALID_LOGIN_REQUEST;
+import static woowacourse.shoppingcart.acceptance.ShoppingCartAcceptanceTestFixture.CART_GET_URI;
+import static woowacourse.shoppingcart.acceptance.ShoppingCartAcceptanceTestFixture.CART_URI_EXCEPT_GET;
+import static woowacourse.shoppingcart.acceptance.ShoppingCartAcceptanceTestFixture.INVALID_PRODUCT_ID_CART_ITEM_ADD_REQUEST;
+import static woowacourse.shoppingcart.acceptance.ShoppingCartAcceptanceTestFixture.VALID_CART_ITEM_ADD_REQUEST1;
+import static woowacourse.shoppingcart.acceptance.ShoppingCartAcceptanceTestFixture.VALID_CART_ITEM_ADD_REQUEST2;
+import static woowacourse.shoppingcart.acceptance.ShoppingCartAcceptanceTestFixture.VALID_CART_ITEM_QUANTITY_UPDATE_REQUEST;
 import static woowacourse.util.HttpRequestUtil.deleteWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.getWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.patchWithAuthorization;
@@ -33,17 +39,6 @@ import woowacourse.shoppingcart.dto.CartItemResponse;
 @DisplayName("장바구니 관련 기능")
 @Sql(scripts = {"classpath:schema.sql", "classpath:import.sql"})
 class CartAcceptanceTest extends AcceptanceTest {
-
-    private static final String CART_URI_EXCEPT_GET = "/api/carts/products";
-    private static final String CART_GET_URI = "/api/carts";
-    private static final CartItemAddRequest VALID_CART_ITEM_ADD_REQUEST1 =
-            new CartItemAddRequest(1L, 5);
-    private static final CartItemAddRequest VALID_CART_ITEM_ADD_REQUEST2 =
-            new CartItemAddRequest(2L, 8);
-    private static final CartItemAddRequest INVALID_PRODUCT_ID_CART_ITEM_ADD_REQUEST =
-            new CartItemAddRequest(20L, 5);
-    private static final CartItemQuantityUpdateRequest VALID_CART_ITEM_QUANTITY_UPDATE_REQUEST =
-            new CartItemQuantityUpdateRequest(1L, 8);
 
     private String token;
 
