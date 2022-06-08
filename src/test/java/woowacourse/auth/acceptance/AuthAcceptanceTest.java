@@ -101,7 +101,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(() -> assertThat(tokenResponse.getAccessToken()).isNotBlank(),
-                () -> assertThat(tokenResponse.getCustomerId()).isPositive());
+                () -> assertThat(tokenResponse.getUserId()).isPositive());
     }
 
     @DisplayName("잘못된 비밀번호를 전달하면 토큰 생성에 실패한다.")
