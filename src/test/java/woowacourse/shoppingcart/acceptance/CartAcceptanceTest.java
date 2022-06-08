@@ -50,7 +50,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_추가(token, 100L);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(findValue(response, "message")).contains("존재하지 않는 상품입니다.");
     }
 

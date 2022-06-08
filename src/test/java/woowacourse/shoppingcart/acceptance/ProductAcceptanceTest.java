@@ -88,7 +88,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = id로_상품_조회(1L);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(findValue(response, "message")).contains("존재하지 않는 상품입니다.");
     }
 
