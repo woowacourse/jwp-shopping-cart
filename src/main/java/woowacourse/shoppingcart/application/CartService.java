@@ -9,6 +9,13 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
+import woowacourse.shoppingcart.dto.DeleteCartItemRequests;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequests;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -26,16 +33,24 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
+    public List<CartResponse> findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
-        final List<Cart> carts = new ArrayList<>();
+        final List<CartResponse> responses = new ArrayList<>();
         for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            Cart cart = cartItemDao.findById(cartId);
+            Product product = productDao.findProductById(cart.getProductId());
+            responses.add(new CartResponse(
+                    cartId,
+                    product.getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getImageUrl(),
+                    cart.getQuantity(),
+                    cart.isChecked()
+            ));
         }
-        return carts;
+        return responses;
     }
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
@@ -43,13 +58,46 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
+    public Long addCart(final AddCartItemRequest updateCartItemRequest, final String customerName) {
         final Long customerId = customerDao.findByUsername(customerName).getId();
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            Cart cart = cartItemDao.findByCustomerIdAndProductId(customerId, updateCartItemRequest.getProductId());
+            cartItemDao.increaseQuantityById(cart.getId(), updateCartItemRequest.getQuantity());
+            return cart.getId();
+        } catch (InvalidCartItemException e) {
+            return cartItemDao.addCartItem(
+                    customerId,
+                    updateCartItemRequest.getProductId(),
+                    updateCartItemRequest.getQuantity(),
+                    updateCartItemRequest.getChecked());
         } catch (Exception e) {
             throw new InvalidProductException();
         }
+    }
+
+    public List<CartResponse> updateCartItems(UpdateCartItemRequests updateCartItemRequests, String customerName) {
+        List<CartResponse> responses = new ArrayList<>();
+
+        for (UpdateCartItemRequest cartItemRequest : updateCartItemRequests.getCartItems()) {
+            validateCustomerCart(cartItemRequest.getId(), customerName);
+
+            Cart cart = cartItemDao.findById(cartItemRequest.getId());
+            cart.update(cartItemRequest.getQuantity(), cartItemRequest.getChecked());
+            cartItemDao.update(cart.getId(), cart);
+
+            Product product = productDao.findProductById(cart.getProductId());
+            responses.add(new CartResponse(
+                    cart.getId(),
+                    product.getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getImageUrl(),
+                    cart.getQuantity(),
+                    cart.isChecked()
+            ));
+        }
+
+        return responses;
     }
 
     public void deleteCart(final String customerName, final Long cartId) {
@@ -63,5 +111,19 @@ public class CartService {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    public void deleteAllCart(String customerName) {
+        Long customerId = customerDao.findByUsername(customerName).getId();
+        cartItemDao.deleteAllByCustomerId(customerId);
+    }
+
+    public void deleteAllCartByProducts(String customerName, DeleteCartItemRequests deleteCartItemRequests) {
+        List<DeleteCartItemRequest> cartItems = deleteCartItemRequests.getCartItems();
+        for (DeleteCartItemRequest cartItem : cartItems) {
+            long id = cartItem.getId();
+            validateCustomerCart(id, customerName);
+            deleteCart(customerName, id);
+        }
     }
 }

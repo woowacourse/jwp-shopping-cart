@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
+import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.회원가입하고_로그인하여_토큰_가져오기;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
@@ -30,12 +31,13 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
+        String token = 회원가입하고_로그인하여_토큰_가져오기("alien", "alien@email.com", "12345678");
 
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1, token);
+        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2, token);
     }
 
     @DisplayName("주문하기")
