@@ -16,6 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import woowacourse.auth.dto.customer.CustomerPasswordUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerProfileUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
@@ -81,30 +83,45 @@ class CustomerServiceTest {
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
-    @DisplayName("회원 정보를 수정한다.")
+    @DisplayName("회원 프로필 정보를 수정한다.")
     @Test
-    void updateCustomer() {
+    void updateCustomerProfile() {
         // given
-        CustomerUpdateRequest request = new CustomerUpdateRequest("thor", password, "b1234!");
+        CustomerProfileUpdateRequest request = new CustomerProfileUpdateRequest("thor");
         given(customerDao.findByEmail(any(String.class)))
                 .willReturn(Optional.of(customer));
 
         // when
-        Customer update = customerService.update(email, request);
+        Customer update = customerService.updateProfile(email, request);
 
         // then
         assertThat(update.getNickname()).isEqualTo("thor");
+    }
+
+    @DisplayName("회원 비밀번호 정보를 수정한다.")
+    @Test
+    void updateCustomerPassword_success() {
+        // given
+        CustomerPasswordUpdateRequest request = new CustomerPasswordUpdateRequest("a1234!", "b1234!");
+        given(customerDao.findByEmail(any(String.class)))
+                .willReturn(Optional.of(customer));
+
+        // when
+        Customer update = customerService.updatePassword(email, request);
+
+        // then
+        assertThat(update.getPassword()).isEqualTo("b1234!");
     }
 
     @DisplayName("기존 비밀번호가 다르면 수정하지 못한다.")
     @Test
     void updateCustomerPasswordFail() {
         // given
-        CustomerUpdateRequest request = new CustomerUpdateRequest("thor", "differ!1", "b1234!");
+        CustomerPasswordUpdateRequest request = new CustomerPasswordUpdateRequest("differ!1", "b1234!");
         given(customerDao.findByEmail(any(String.class)))
                 .willReturn(Optional.of(customer));
         // when
-        assertThatThrownBy(() -> customerService.update("other@gmail.com", request))
+        assertThatThrownBy(() -> customerService.updatePassword("other@gmail.com", request))
                 .isInstanceOf(IncorrectPasswordException.class);
     }
 }

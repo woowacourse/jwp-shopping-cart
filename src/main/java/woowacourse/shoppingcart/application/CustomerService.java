@@ -4,15 +4,14 @@ import static woowacourse.shoppingcart.exception.ExceptionMessage.*;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.customer.CustomerUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerProfileUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerPasswordUpdateRequest;
 import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.auth.dto.customer.SignupRequest;
-import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
-import woowacourse.shoppingcart.exception.ExceptionMessage;
 import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 
 @Service
@@ -45,12 +44,24 @@ public class CustomerService {
     }
 
     @Transactional
-    public Customer update(String email, CustomerUpdateRequest request) {
+    public Customer updateProfile(String email, CustomerProfileUpdateRequest request) {
+        Customer customer = findByEmail(email);
+        Customer updatedCustomer = new Customer(customer.getId(),
+                customer.getEmail(),
+                request.getNickname(),
+                customer.getPassword()
+        );
+        customerDao.update(updatedCustomer);
+        return updatedCustomer;
+    }
+
+    @Transactional
+    public Customer updatePassword(String email, CustomerPasswordUpdateRequest request) {
         Customer customer = findByEmail(email);
         validatePassword(customer, request.getPassword());
         Customer updatedCustomer = new Customer(customer.getId(),
                 customer.getEmail(),
-                request.getNickname(),
+                customer.getNickname(),
                 request.getNewPassword()
         );
         customerDao.update(updatedCustomer);

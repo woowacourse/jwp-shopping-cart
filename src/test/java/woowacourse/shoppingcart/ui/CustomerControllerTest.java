@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
+import woowacourse.auth.dto.customer.CustomerPasswordUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerProfileUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.auth.dto.customer.SignupRequest;
@@ -138,11 +140,9 @@ class CustomerControllerTest extends AcceptanceTest {
         String token = loginResponse.jsonPath().getString("accessToken");
 
         // when
-        CustomerUpdateRequest request = new CustomerUpdateRequest(
-                "thor", "a1234!", "b1234!"
-        );
+        CustomerProfileUpdateRequest request = new CustomerProfileUpdateRequest("thor");
 
-        ExtractableResponse<Response> response = patchWithToken("/customers", token, request);
+        ExtractableResponse<Response> response = patchWithToken("/customers/profile", token, request);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
@@ -171,11 +171,9 @@ class CustomerControllerTest extends AcceptanceTest {
         String token = loginResponse.jsonPath().getString("accessToken");
 
         // when
-        CustomerUpdateRequest request = new CustomerUpdateRequest(
-                "thor", "different!1", "b1234!"
-        );
+        CustomerPasswordUpdateRequest request = new CustomerPasswordUpdateRequest("different!1", "b1234!");
 
-        ExtractableResponse<Response> response = patchWithToken("/customers", token, request);
+        ExtractableResponse<Response> response = patchWithToken("/customers/password", token, request);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 

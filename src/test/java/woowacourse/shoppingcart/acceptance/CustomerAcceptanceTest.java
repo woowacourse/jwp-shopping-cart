@@ -19,6 +19,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.customer.CustomerProfileUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.utils.AcceptanceTest;
@@ -78,14 +79,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> loginResponse = login("/auth/login", tokenRequest);
         String token = loginResponse.jsonPath().getString("accessToken");
 
-        CustomerUpdateRequest request = new CustomerUpdateRequest("thor", password, "b1234!");
+        CustomerProfileUpdateRequest request = new CustomerProfileUpdateRequest("thor");
 
         // when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(token)
                 .body(request)
-                .when().patch("/customers")
+                .when().patch("/customers/profile")
                 .then().log().all().extract();
 
         // then
