@@ -52,8 +52,8 @@ public class CartService {
 
     public Long addCart(final Long customerId, final CartRequest cartRequest) {
         checkExistById(customerId);
+        validateQuantity(cartRequest.getQuantity());
         try {
-            validateQuantity(cartRequest.getQuantity());
             return cartItemDao.addCartItem(customerId, cartRequest.getId(), cartRequest.getQuantity());
         } catch (Exception e) {
             throw new InvalidProductException();
@@ -75,6 +75,7 @@ public class CartService {
 
     public void updateCartQuantity(Long customerId, CartRequest cartRequest) {
         checkExistById(customerId);
+        validateQuantity(cartRequest.getQuantity());
         cartItemDao.updateQuantity(customerId, cartRequest.getId(), cartRequest.getQuantity());
     }
 }

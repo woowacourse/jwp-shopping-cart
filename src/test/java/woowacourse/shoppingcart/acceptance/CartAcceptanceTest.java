@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.ProductIdsRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
@@ -42,6 +43,63 @@ public class CartAcceptanceTest extends AcceptanceTest {
                                 5));
     }
 
+    @DisplayName("존재하지 않는 회원이 장바구니에 아이템을 담을 경우, 예외를 발생시킨다.")
+    @Test
+    void addCartItemWhoNonCustomerException() {
+        //when
+        ExtractableResponse<Response> response = addCartItemApi("", 1L, 5);
+
+        //then
+        assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("장바구니에 양수가 아닌 수의 아이템을 담을 경우, 예외를 발생시킨다.")
+    @Test
+    void addCartItemNotPositiveQuantityException() {
+        //given
+        String accessToken = getAccessToken();
+
+        //when
+        ExtractableResponse<Response> response = addCartItemApi(accessToken, 1L, 0);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("올바르지 않은 상품 수량 형식입니다.");
+    }
+
+    @DisplayName("장바구니에 담긴 아이템의 수량을 수정한다.")
+    @Test
+    void updateCartItemQuantity() {
+        //given
+        String accessToken = getAccessToken();
+        addCartItemApi(accessToken, 1L, 5);
+
+        //when
+        updateCartItemQuantityApi(accessToken, 1L, 10);
+
+        //then
+        ExtractableResponse<Response> response = findCartItemsApi(accessToken);
+        List<ProductResponse> productResponses = response.jsonPath().getList(".", ProductResponse.class);
+
+        assertThat(productResponses.size()).isEqualTo(1);
+        productResponses.forEach(productResponse -> assertThat(productResponse.getSavedQuantity()).isEqualTo(10));
+    }
+
+    @DisplayName("장바구니 상품의 개수를 수정할 때, 음수인 경우 예외를 발생시킨다.")
+    @Test
+    void updateCartNotPositiveQuantity() {
+        //given
+        String accessToken = getAccessToken();
+        addCartItemApi(accessToken, 1L, 5);
+
+        //when
+        ExtractableResponse<Response> response = updateCartItemQuantityApi(accessToken, 1L, 0);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("올바르지 않은 상품 수량 형식입니다.");
+    }
+
     @DisplayName("장바구니 아이템 3개 추가 후, 장바구니에서 1개를 삭제하고 장바구니 목록 조회")
     @Test
     void deleteCartItem() {
@@ -63,22 +121,21 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     }
 
-    @DisplayName("장바구니에 담긴 아이템의 수량을 수정한다.")
+    @DisplayName("장바구니에 존재하지 않는 상품을 장바구니에서 삭제할 경우, 예외를 발생시킨다.")
     @Test
-    void updateCartItemQuantity() {
+    void deleteCartWhenNotSaveCartException() {
         //given
         String accessToken = getAccessToken();
         addCartItemApi(accessToken, 1L, 5);
+        addCartItemApi(accessToken, 2L, 5);
+        addCartItemApi(accessToken, 3L, 5);
 
         //when
-        updateCartItemQuantityApi(accessToken, 1L, 10);
+        ExtractableResponse<Response> deleteResponse = deleteCartItemApi(accessToken, List.of(4L));
 
         //then
-        ExtractableResponse<Response> response = findCartItemsApi(accessToken);
-        List<ProductResponse> productResponses = response.jsonPath().getList(".", ProductResponse.class);
-
-        assertThat(productResponses.size()).isEqualTo(1);
-        productResponses.forEach(productResponse -> assertThat(productResponse.getSavedQuantity()).isEqualTo(10));
+        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(deleteResponse.as(ExceptionResponse.class).getMessage()).isEqualTo("유효하지 않은 장바구니입니다.");
     }
 
     public static ExtractableResponse<Response> addCartItemApi(String accessToken, Long productId, int quantity) {
