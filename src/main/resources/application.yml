@@ -1,22 +1,29 @@
 spring:
   profiles.active: test
   sql.init.mode: always
-  datasource:
-    url: jdbc:h2:~/test;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
   h2.console.enabled: true
   mvc.pathmatch.matching-strategy: ANT_PATH_MATCHER
 
 ---
 
-spring.config.activate.on-profile: prod
+spring:
+  config.activate.on-profile: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${db-url}
+    username: ${db-username}
+    password: ${db-password}
 security.jwt.token:
   secret-key: ${secret-key}
   expire-length: ${jwt-validity}
 
 ---
 
-spring.config.activate.on-profile: test
+spring:
+  config.activate.on-profile: test
+  datasource:
+    url: jdbc:h2:~/test;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
 security.jwt.token:
   secret-key: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   expire-length: 3600000
