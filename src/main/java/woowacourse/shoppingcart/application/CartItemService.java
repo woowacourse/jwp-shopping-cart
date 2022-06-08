@@ -40,7 +40,7 @@ public class CartItemService {
                                                         final List<CartItemCreateRequest> cartItemCreateRequests) {
         Customer customer = customerDao.findById(tokenRequest.getId());
         return cartItemCreateRequests.stream()
-                .map(cartItemCreateRequest -> createCartItemResponse(customer, createProduct(cartItemCreateRequest)))
+                .map(cartItemCreateRequest -> createCartItemResponse(customer, findProduct(cartItemCreateRequest)))
                 .collect(Collectors.toList());
     }
 
@@ -48,7 +48,7 @@ public class CartItemService {
         return new CartItemCreateResponse(createCartItem(customer.getId(), product.getId()), CREATE_CART_ITEM_QUANTITY);
     }
 
-    private Product createProduct(final CartItemCreateRequest cartItemCreateRequest) {
+    private Product findProduct(final CartItemCreateRequest cartItemCreateRequest) {
         return productDao.findById(cartItemCreateRequest.getProductId());
     }
 

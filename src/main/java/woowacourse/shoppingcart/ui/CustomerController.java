@@ -32,12 +32,6 @@ public class CustomerController {
         return ResponseEntity.ok().body(customerResponse);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> withdraw(@AuthenticationPrincipal TokenRequest tokenRequest) {
-        customerService.withdraw(tokenRequest);
-        return ResponseEntity.noContent().build();
-    }
-
     @PatchMapping
     public ResponseEntity<Void> update(@AuthenticationPrincipal TokenRequest tokenRequest,
                                        @Valid @RequestBody CustomerUpdateProfileRequest customerUpdateProfileRequest) {
@@ -50,5 +44,11 @@ public class CustomerController {
                                                @Valid @RequestBody CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         customerService.updatePassword(tokenRequest, customerUpdatePasswordRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> withdraw(@AuthenticationPrincipal TokenRequest tokenRequest) {
+        customerService.withdraw(tokenRequest);
+        return ResponseEntity.noContent().build();
     }
 }

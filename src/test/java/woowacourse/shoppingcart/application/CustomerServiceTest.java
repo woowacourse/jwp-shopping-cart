@@ -149,7 +149,7 @@ class CustomerServiceTest {
     void update() {
         // given
         TokenRequest tokenRequest = new TokenRequest("-1");
-        CustomerUpdateProfileRequest customerUpdateProfileRequest = new CustomerUpdateProfileRequest("nickname");
+        CustomerUpdateProfileRequest customerUpdateProfileRequest = new CustomerUpdateProfileRequest("nickname", "1243#adsfs");
 
         // when & then
         assertThatThrownBy(() -> customerService.updateProfile(tokenRequest, customerUpdateProfileRequest))
@@ -167,7 +167,7 @@ class CustomerServiceTest {
         customerService.withdraw(tokenRequest);
 
         // when & then
-        CustomerUpdateProfileRequest customerUpdateProfileRequest = new CustomerUpdateProfileRequest("test2");
+        CustomerUpdateProfileRequest customerUpdateProfileRequest = new CustomerUpdateProfileRequest("test2", "1234asdf!");
         assertThatThrownBy(() -> customerService.updateProfile(tokenRequest, customerUpdateProfileRequest))
                 .isInstanceOf(CustomerDataNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");

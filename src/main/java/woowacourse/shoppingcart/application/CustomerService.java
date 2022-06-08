@@ -5,13 +5,13 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 @Service
@@ -61,6 +61,7 @@ public class CustomerService {
                               final CustomerUpdateProfileRequest customerUpdateProfileRequest) {
         validateNotDuplicateNickname(customerUpdateProfileRequest.getNickname());
         Customer customer = customerDao.findById(tokenRequest.getId());
+        customer.comparePasswordFrom(customerUpdateProfileRequest.getPassword());
         customerDao.update(customer.getId(), customerUpdateProfileRequest.getNickname());
     }
 

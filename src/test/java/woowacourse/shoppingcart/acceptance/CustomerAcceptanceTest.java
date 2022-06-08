@@ -230,6 +230,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("nickname", "리버");
+        requestBody.put("password", "1234asdf!");
 
         // when & then
         RestAssured
@@ -252,6 +253,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("nickname", "리버");
+        requestBody.put("password", "1234asdf!");
 
         // when & than
         RestAssured
@@ -274,6 +276,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("nickname", "nickname");
+        requestBody.put("password", "1234asdf!");
 
         // when & than
         RestAssured
