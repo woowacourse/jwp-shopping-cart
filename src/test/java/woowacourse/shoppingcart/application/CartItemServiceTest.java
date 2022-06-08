@@ -60,7 +60,7 @@ public class CartItemServiceTest {
 
         // then
         List<CartItemDto> carts = 장바구니_목록을_조회한다(customerId);
-        assertThat(carts).hasSize(1);
+        assertThat(carts).hasSize(2);
     }
 
     @DisplayName("CartItem을 추가 시에 존재하지 않는 product id로 요청을 보내면 예외가 발생한다.")
@@ -160,6 +160,35 @@ public class CartItemServiceTest {
 
         // when then
         assertThatThrownBy(() -> cartItemService.updateCount(customerId, 10L, 30))
+                .isInstanceOf(NoSuchProductException.class);
+    }
+
+    @DisplayName("장바구니 특정 상품을 삭제한다.")
+    @Test
+    void deleteCartItem() {
+        // given
+        Long customerId = 손님_추가한다("손1@naver.com", "손님1", "1234");
+        Long productId = 상품_추가한다("아이템1", 10000, "주소1", 30);
+        장바구니에_추가한다(customerId, productId, 10);
+
+        // when
+        cartItemService.deleteCartItem(customerId, productId);
+        List<CartItemDto> carts = cartItemService.findCartsByCustomerId(customerId);
+
+        // then
+        assertThat(carts).isEmpty();
+    }
+
+    @DisplayName("장바구니 삭제 시 장바구니 내에 상품이 존재하지 않으면 예외를 발생한다.")
+    @Test
+    void deleteCartItem_throwNoSuchProduct() {
+        // given
+        Long customerId = 손님_추가한다("손1@naver.com", "손님1", "1234");
+        Long productId = 상품_추가한다("아이템1", 10000, "주소1", 30);
+        장바구니에_추가한다(customerId, productId, 10);
+
+        // when then
+        assertThatThrownBy(() -> cartItemService.deleteCartItem(customerId, productId + 1))
                 .isInstanceOf(NoSuchProductException.class);
     }
 

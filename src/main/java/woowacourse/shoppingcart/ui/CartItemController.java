@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.CartItemService;
@@ -42,10 +43,10 @@ public class CartItemController {
         return ResponseEntity.created(responseLocation).build();
     }
 
-    @DeleteMapping("/{cartId}")
+    @DeleteMapping
     public ResponseEntity<Void> deleteCartItem(@PathVariable final Long customerId,
-                                               @PathVariable final Long cartId) {
-        cartService.deleteCart(customerId, cartId);
+                                               @RequestParam final Long productId) {
+        cartService.deleteCartItem(customerId, productId);
         return ResponseEntity.noContent().build();
     }
 }

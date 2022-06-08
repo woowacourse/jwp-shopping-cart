@@ -13,7 +13,6 @@ import woowacourse.shoppingcart.dto.cart.CartItemCreateRequest;
 import woowacourse.shoppingcart.dto.cart.CartItemDto;
 import woowacourse.shoppingcart.exception.ExistSameProductIdException;
 import woowacourse.shoppingcart.exception.NoSuchProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.OutOfStockException;
 
 @Service
@@ -68,21 +67,21 @@ public class CartItemService {
         cartItemDao.updateCount(customerId, productId, newCount);
     }
 
-    public void deleteCart(final Long customerId, final Long cartId) {
-        validateCustomerCart(cartId, customerId);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCartItem(final Long customerId, final Long productId) {
+        validateProductInCustomerCart(customerId, productId);
+        cartItemDao.deleteCartItemByCustomerIdAndProductId(customerId, productId);
     }
 
-    private void validateCustomerCart(final Long cartId, final Long customerId) {
-        List<CartItem> cartItemsByCustomerId = cartItemDao.findCartItemsByCustomerId(customerId);
-        List<Long> cartItemIds = cartItemsByCustomerId.stream()
-                .map(CartItem::getId)
+    private void validateProductInCustomerCart(final Long customerId, final Long productId) {
+        List<CartItem> carts = cartItemDao.findCartItemsByCustomerId(customerId);
+        List<Long> productIdsInCarts = carts.stream()
+                .map(CartItem::getProductId)
                 .collect(Collectors.toList());
 
-        if (cartItemIds.contains(cartId)) {
+        if (productIdsInCarts.contains(productId)) {
             return;
         }
 
-        throw new NotInCustomerCartItemException();
+        throw new NoSuchProductException("장바구니에 해당 상품이 존재하지 않습니다.");
     }
 }
