@@ -32,8 +32,8 @@ public class CartFixture {
         return get("/api/customers/" + customerId + "/carts", token);
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token, long customerId, long cartId) {
-        return delete("/api/customers/" + customerId + "/carts/" + cartId, token);
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(String token, long customerId, long productId) {
+        return delete("/api/customers/" + customerId + "/carts?productId=" + productId, token);
     }
 
     public static Long 장바구니_아이템_추가_요청후_ID_반환(String token, long customerId, long productId, long count) {

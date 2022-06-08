@@ -59,10 +59,10 @@ public class CartController {
         cartService.changeCartItemCount(customerId, productId, request.getCount());
     }
 
-    @DeleteMapping("/{cartId}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCartItem(@PathVariable final long customerId,
-                               @PathVariable final long cartId) {
-        cartService.deleteCart(customerId, cartId);
+                               @RequestParam final long productId) {
+        cartService.deleteCart(customerId, productId);
     }
 }
