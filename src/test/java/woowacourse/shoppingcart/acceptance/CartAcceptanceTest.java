@@ -116,10 +116,10 @@ class CartAcceptanceTest extends AcceptanceTest {
         //given 회원가입 후 로그인하여 장바구니에 상품을 담고
         requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
         final String accessToken = 로그인_토큰_발급();
-        final Long cartItemId = 장바구니_상품_추가되어_있음(accessToken, productId1);
+        장바구니_상품_추가되어_있음(accessToken, productId1);
 
         //when 장바구니 상품의 수량을 변경하면
-        final ExtractableResponse<Response> response = 장바구니_수정_요청(accessToken, cartItemId, 10);
+        final ExtractableResponse<Response> response = 장바구니_수정_요청(accessToken, productId1, 10);
 
         //then 성공적으로 수량이 변경된다.
         장바구니_수정됨(response);
@@ -163,10 +163,10 @@ class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_수정_요청(final String accessToken, final Long cartItemId,
+    public static ExtractableResponse<Response> 장바구니_수정_요청(final String accessToken, final Long productId,
                                                            final int quantity) {
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("cartItemId", cartItemId);
+        requestBody.put("productId", productId);
         requestBody.put("quantity", quantity);
 
         return RestAssured

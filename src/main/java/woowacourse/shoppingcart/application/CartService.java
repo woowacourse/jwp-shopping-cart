@@ -30,14 +30,14 @@ public class CartService {
         return cartItemDao.findCartItemsByCustomerId(customerId);
     }
 
-    public void updateCartItemQuantity(final Long customerId, final Long cartItemId, final int quantity) {
-        validateCustomerCart(customerId, cartItemId);
-        cartItemDao.updateQuantity(cartItemId, quantity);
+    public void updateCartItemQuantity(final Long customerId, final Long productId, final int quantity) {
+        validateCustomerCart(customerId, productId);
+        cartItemDao.updateQuantity(productId, quantity);
     }
 
-    private void validateCustomerCart(final Long customerId, final Long cartItemId) {
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-        if (!cartIds.contains(cartItemId)) {
+    private void validateCustomerCart(final Long customerId, final Long productId) {
+        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        if (!productIds.contains(productId)) {
             throw new NotFoundCustomerCartItemException();
         }
     }

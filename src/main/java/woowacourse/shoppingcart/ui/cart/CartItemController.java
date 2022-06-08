@@ -56,7 +56,7 @@ public class CartItemController {
     @PutMapping
     public ResponseEntity<Void> updateCartItemQuantity(@AuthenticationPrincipal final Long customerId,
                                                        @RequestBody final CartItemUpdateRequest cartItemUpdateRequest) {
-        cartService.updateCartItemQuantity(customerId, cartItemUpdateRequest.getCartItemId(),
+        cartService.updateCartItemQuantity(customerId, cartItemUpdateRequest.getProductId(),
                 cartItemUpdateRequest.getQuantity());
         return ResponseEntity.noContent().build();
 
@@ -64,7 +64,7 @@ public class CartItemController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final Long customerId,
-                                               @RequestBody CartDeleteRequest cartDeleteRequest) {
+                                               @RequestBody final CartDeleteRequest cartDeleteRequest) {
         cartService.deleteCart(customerId, cartDeleteRequest.getCartIds());
         return ResponseEntity.noContent().build();
     }

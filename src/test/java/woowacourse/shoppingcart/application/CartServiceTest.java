@@ -77,7 +77,7 @@ public class CartServiceTest {
     void updateCartItemQuantity() {
         //given
         final long cartItemId = 1L;
-        when(cartItemDao.findIdsByCustomerId(any(Long.class)))
+        when(cartItemDao.findProductIdsByCustomerId(any(Long.class)))
                 .thenReturn(List.of(1L, 2L));
 
         //when
@@ -90,7 +90,7 @@ public class CartServiceTest {
     void updateCartItemQuantity_invalidCartItem_throwsException() {
         //given
         final long cartItemId = 51L;
-        when(cartItemDao.findIdsByCustomerId(any(Long.class)))
+        when(cartItemDao.findProductIdsByCustomerId(any(Long.class)))
                 .thenReturn(List.of(1L, 2L));
 
         //when, then
