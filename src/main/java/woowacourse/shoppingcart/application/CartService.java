@@ -39,7 +39,7 @@ public class CartService {
                 .getId();
         List<CartItem> cartItems = cartItemDao.findByCustomerId(customerId);
         return cartItems.stream()
-                .map(cartItem -> new CartItemResponse(cartItem.getId(), cartItem.getName(), cartItem.getPrice(),
+                .map(cartItem -> new CartItemResponse(cartItem.getProductId(), cartItem.getName(), cartItem.getPrice(),
                         cartItem.getImageUrl(), cartItem.getQuantity()))
                 .collect(Collectors.toList());
     }
