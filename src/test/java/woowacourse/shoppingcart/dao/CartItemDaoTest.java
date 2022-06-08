@@ -240,4 +240,30 @@ public class CartItemDaoTest {
         assertThatThrownBy(() -> cartItemDao.deleteCartItem(1L, cartId))
                 .isInstanceOf(InvalidCartItemException.class);
     }
+
+    @DisplayName("모든 장바구니 항목을 제거한다.")
+    @Test
+    void deleteAllCartItemByEmail() {
+
+        // when
+        cartItemDao.deleteAllCartItemByCustomerId(1L);
+
+        // then
+        final Long customerId = 1L;
+        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+
+        assertThat(productIds).isEmpty();
+    }
+
+    @DisplayName("존재하지 않는 Email 을 통해 모든 장바구니 항목을 제거할 경우 예외가 발생한다.")
+    @Test
+    void deleteAllCartItemByEmailFail() {
+
+        // given
+        final Long customerId = 3L;
+
+        // when
+        assertThatThrownBy(() -> cartItemDao.deleteAllCartItemByCustomerId(customerId))
+                .isInstanceOf(InvalidCartItemException.class);
+    }
 }
