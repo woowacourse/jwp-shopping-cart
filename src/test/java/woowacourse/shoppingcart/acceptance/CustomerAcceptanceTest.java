@@ -68,7 +68,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final TokenResponse tokenResponse = 로그인을_한다("giron", RAW_BASIC_PASSWORD).as(TokenResponse.class);
         // when
         CustomerRequest request =
-                new CustomerRequest("giron", "87654321");
+                new CustomerRequest("giron", "8@76!432Aa1");
 
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
@@ -159,7 +159,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호의 길이는 8이상 16이하여야 합니다.")
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호는 8~16자의 영문 대문자 1개 이상, 소문자 1개 이상, 숫자 1개 이상, 특수문자 1개 이상이어야 합니다.")
         );
     }
 
@@ -170,7 +170,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void signUpWithWrongUserName(String userName) {
 
         // when
-        final ExtractableResponse<Response> response = 회원가입을_한다(userName, "12345678");
+        final ExtractableResponse<Response> response = 회원가입을_한다(userName, "@Aa23445678");
 
         final ErrorResponse errorResponse = response.as(ErrorResponse.class);
         // then

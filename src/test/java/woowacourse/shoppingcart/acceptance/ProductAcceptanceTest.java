@@ -31,9 +31,9 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        회원가입을_한다("giron", "password");
+        회원가입을_한다("giron", "p!23Assword");
 
-        TokenResponse tokenResponse = 로그인을_한다("giron", "password").as(TokenResponse.class);
+        TokenResponse tokenResponse = 로그인을_한다("giron", "p!23Assword").as(TokenResponse.class);
         final String accessToken = tokenResponse.getAccessToken();
 
         final Long cartId = 장바구니_아이템_추가되어_있음(productId1, accessToken);

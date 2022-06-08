@@ -110,11 +110,11 @@ class CustomerControllerTest {
     @DisplayName("내 정보 업데이트 문서화")
     @Test
     void updateCustomer() throws Exception {
-        Customer customer = new Customer(1L, "giron", "paA@14sswordd");
+        Customer customer = new Customer(1L, "giron", "paA@14ssdd");
 
         CustomerResponse response = new CustomerResponse(customer);
         CustomerRequest request =
-                new CustomerRequest("giron", "updatePa!sD@");
+                new CustomerRequest("giron", "upda12ePa!sD@");
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
         given(jwtTokenProvider.validateToken(any())).willReturn(true);

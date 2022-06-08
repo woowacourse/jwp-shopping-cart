@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class CustomerRequest {
@@ -9,8 +10,9 @@ public class CustomerRequest {
         @Size(min = 5, max = 20, message = "유저 이름의 길이는 5이상 20이하여야 합니다.")
         private String userName;
 
-        @NotBlank(message = "비밀번호의 길이는 8이상 16이하여야 합니다.")
-        @Size(min = 8, max = 16, message = "비밀번호의 길이는 8이상 16이하여야 합니다.")
+
+        @Pattern(regexp="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*_\\-])(?=\\S+$).{8,16}",
+                message = "비밀번호는 8~16자의 영문 대문자 1개 이상, 소문자 1개 이상, 숫자 1개 이상, 특수문자 1개 이상이어야 합니다.")
         private String password;
 
         private CustomerRequest() {
