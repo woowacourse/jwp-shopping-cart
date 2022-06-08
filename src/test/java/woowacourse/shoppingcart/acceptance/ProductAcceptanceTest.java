@@ -46,7 +46,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         조회_응답됨(response);
         상품_목록_포함됨(productId1, productId2, response);
-        장바구니에_추가되어_있는_상품만_추가여부가_true(response);
+        장바구니_아이템별_수량_확인됨(response);
     }
 
     public static void 회원_추가되어_있음() {
@@ -70,7 +70,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         조회_응답됨(response);
         상품_목록_포함됨(productId1, productId2, response);
-        장바구니_추가여부가_모두_false(response);
+        장바구니_아이템_수량이_모두_0(response);
     }
 
     @DisplayName("상품을 조회한다")
@@ -96,23 +96,23 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
         Product productRequest = new Product(name, price, imageUrl);
-        return requestHttpPost("", productRequest, "/api/products").extract();
+        return requestHttpPost("", productRequest, "/products").extract();
     }
 
     public static ExtractableResponse<Response> 상품_목록_조회_요청_회원(String token) {
-        return requestHttpGet(token, "/api/products").extract();
+        return requestHttpGet(token, "/products").extract();
     }
 
     public static ExtractableResponse<Response> 상품_목록_조회_요청_비회원() {
-        return requestHttpGet("", "/api/products").extract();
+        return requestHttpGet("", "/products").extract();
     }
 
     public static ExtractableResponse<Response> 상품_조회_요청(Long productId) {
-        return requestHttpGet("", "/api/products/" + productId).extract();
+        return requestHttpGet("", "/products/" + productId).extract();
     }
 
     public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
-        return requestHttpDelete("", "/api/products/" + productId).extract();
+        return requestHttpDelete("", "/products/" + productId).extract();
     }
 
     public static void 상품_추가됨(ExtractableResponse<Response> response) {
@@ -137,22 +137,22 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(resultProductIds).contains(productId1, productId2);
     }
 
-    public static void 장바구니에_추가되어_있는_상품만_추가여부가_true(ExtractableResponse<Response> response) {
+    public static void 장바구니_아이템별_수량_확인됨(ExtractableResponse<Response> response) {
         ProductsResponse products = response.jsonPath().getObject(".", ProductsResponse.class);
-        List<Boolean> result =  products.getProducts().stream()
-                .map(ProductResponse::getIsStored)
+        List<Integer> result =  products.getProducts().stream()
+                .map(ProductResponse::getQuantity)
                 .collect(Collectors.toList());
 
-        assertThat(result).containsExactly(true, false);
+        assertThat(result).containsExactly(10, 0);
     }
 
-    public static void 장바구니_추가여부가_모두_false(ExtractableResponse<Response> response) {
+    public static void 장바구니_아이템_수량이_모두_0(ExtractableResponse<Response> response) {
         ProductsResponse products = response.jsonPath().getObject(".", ProductsResponse.class);
-        List<Boolean> result =  products.getProducts().stream()
-                .map(ProductResponse::getIsStored)
+        List<Integer> result =  products.getProducts().stream()
+                .map(ProductResponse::getQuantity)
                 .collect(Collectors.toList());
 
-        assertThat(result).containsExactly(false, false);
+        assertThat(result).containsExactly(0, 0);
     }
 
     public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
