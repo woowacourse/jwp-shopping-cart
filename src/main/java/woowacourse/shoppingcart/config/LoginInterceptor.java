@@ -19,16 +19,19 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-
         if (request.getMethod().equals(HttpMethod.OPTIONS.name())) {
             return true;
         }
 
+        validateToken(request);
+        return true;
+    }
+
+    private void validateToken(HttpServletRequest request) {
         String token = AuthorizationExtractor.extract(request);
         boolean isValidate = jwtTokenProvider.validateToken(token);
         if (!isValidate) {
             throw new UnauthorizedTokenException();
         }
-        return true;
     }
 }

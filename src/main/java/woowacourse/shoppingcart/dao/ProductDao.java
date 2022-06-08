@@ -27,7 +27,7 @@ public class ProductDao {
 
     public Product findProductById(final Long productId) {
         try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
+            final String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
             return jdbcTemplate.queryForObject(query, rowMapper, productId);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundProductException();
