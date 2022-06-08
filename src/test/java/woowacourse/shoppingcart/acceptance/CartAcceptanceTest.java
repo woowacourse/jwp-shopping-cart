@@ -37,6 +37,43 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .getAccessToken();
     }
 
+    private ValidatableResponse postCart(CartAdditionRequest request, String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .header(AuthorizationExtractor.AUTHORIZATION,
+                        AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/users/me/carts")
+                .then().log().all();
+    }
+
+    private ValidatableResponse getCart(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
+                .when().get("/users/me/carts")
+                .then().log().all();
+    }
+
+    private ValidatableResponse deleteCart(Long productId, String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
+                .when().delete("/users/me/carts/" + productId)
+                .then().log().all();
+    }
+
+    private ValidatableResponse putCart(Long productId, String accessToken, CartUpdationRequest cartUpdationRequest) {
+        return RestAssured
+                .given().log().all()
+                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(cartUpdationRequest)
+                .when().put("/users/me/carts/" + productId)
+                .then().log().all();
+    }
+
     @DisplayName("장바구니 상품 추가 기능")
     @Nested
     class Describe_장바구니_상품_추가 {
@@ -241,7 +278,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
                         .body("id", equalTo(1))
                         .body("name", equalTo("붙이는 치약 홀더 / 걸이"))
                         .body("price", equalTo(1600))
-                        .body("imageUrl", equalTo("https://image.ohou.se/i/bucketplace-v2-development/uploads/productions/163178721379405896.jpg?gif=1&w=512&h=512&c=c"))
+                        .body("imageUrl",
+                                equalTo("https://image.ohou.se/i/bucketplace-v2-development/uploads/productions/163178721379405896.jpg?gif=1&w=512&h=512&c=c"))
                         .body("quantity", equalTo(3));
             }
         }
@@ -299,42 +337,5 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 response.statusCode(HttpStatus.NOT_FOUND.value());
             }
         }
-    }
-
-    private ValidatableResponse postCart(CartAdditionRequest request, String accessToken) {
-        return RestAssured
-                .given().log().all()
-                .header(AuthorizationExtractor.AUTHORIZATION,
-                        AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/users/me/carts")
-                .then().log().all();
-    }
-
-    private ValidatableResponse getCart(String accessToken) {
-        return RestAssured
-                .given().log().all()
-                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
-                .when().get("/users/me/carts")
-                .then().log().all();
-    }
-
-    private ValidatableResponse deleteCart(Long productId, String accessToken) {
-        return RestAssured
-                .given().log().all()
-                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
-                .when().delete("/users/me/carts/" + productId)
-                .then().log().all();
-    }
-
-    private ValidatableResponse putCart(Long productId, String accessToken, CartUpdationRequest cartUpdationRequest) {
-        return RestAssured
-                .given().log().all()
-                .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(cartUpdationRequest)
-                .when().put("/users/me/carts/" + productId)
-                .then().log().all();
     }
 }

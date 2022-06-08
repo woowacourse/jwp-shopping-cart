@@ -31,7 +31,8 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal Customer customer, @RequestBody CartAdditionRequest request) {
+    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal Customer customer,
+                                            @RequestBody CartAdditionRequest request) {
         cartService.addCart(request.getProductId(), customer);
         return ResponseEntity.noContent().build();
     }
@@ -57,7 +58,8 @@ public class CartItemController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal Customer customer, @PathVariable Long productId) {
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal Customer customer,
+                                               @PathVariable Long productId) {
         cartService.deleteProductInCart(customer, productId);
         return ResponseEntity.noContent().build();
     }

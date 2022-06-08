@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class Cart {
 
-    private Long id;
-    private Product product;
-    private Quantity quantity;
+    private final Long id;
+    private final Product product;
+    private final Quantity quantity;
 
     public Cart(final Long id, final Product product, final int quantity) {
         this.id = id;

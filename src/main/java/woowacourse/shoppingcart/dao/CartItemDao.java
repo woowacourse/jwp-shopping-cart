@@ -13,14 +13,13 @@ import woowacourse.shoppingcart.domain.Product;
 @Repository
 public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Cart> rowMapper = (rs, rowNum) -> new Cart(rs.getLong("id"),
+            toProduct(rs.getLong("product_id"), rs.getString("name"), rs.getInt("price"), rs.getString("image_url")),
+            rs.getInt("quantity"));
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-    private final RowMapper<Cart> rowMapper = (rs, rowNum) -> new Cart(rs.getLong("id"),
-            toProduct(rs.getLong("product_id"), rs.getString("name"), rs.getInt("price"), rs.getString("image_url")),
-            rs.getInt("quantity"));
 
     private Product toProduct(Long productId, String name, int price, String imageUrl) {
         return new Product(productId, name, price, imageUrl);
