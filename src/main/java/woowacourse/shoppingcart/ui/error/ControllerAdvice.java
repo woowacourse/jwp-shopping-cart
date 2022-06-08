@@ -57,7 +57,6 @@ public class ControllerAdvice {
     @ExceptionHandler({
             InvalidCustomerException.class,
             InvalidCartItemException.class,
-            InvalidOrderException.class,
             NoSuchEmailException.class,
             PasswordNotMatchException.class,
     })
@@ -67,6 +66,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             InvalidProductException.class,
+            InvalidOrderException.class,
             NotFoundCustomerCartItemException.class
     })
     public ResponseEntity<ErrorResponse> handleNotFountException(final RuntimeException e) {

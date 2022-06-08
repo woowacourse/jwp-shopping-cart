@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.OrderDetailServiceResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
@@ -53,17 +54,16 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+    public OrderDetailServiceResponse findOrderById(final Long customerId, final Long orderId) {
+        validateOrderIdByCustomerId(customerId, orderId);
+        final Orders orders = findOrderResponseDtoByOrderId(orderId);
+        final int totalPrice = orders.calculateTotalPrice();
+        return OrderDetailServiceResponse.from(orders, totalPrice);
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(customerName)
-                .orElseThrow(InvalidCustomerException::new);
-
+    private void validateOrderIdByCustomerId(final Long customerId, final Long orderId) {
         if (!orderDao.isValidOrderId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+            throw new InvalidOrderException();
         }
     }
 
@@ -79,10 +79,10 @@ public class OrderService {
 
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId())
+        for (final OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
+            final Product product = productDao.findProductById(orderDetail.getProductId())
                     .orElseThrow(InvalidProductException::new);
-            final int quantity = productQuantity.getQuantity();
+            final int quantity = orderDetail.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }
 

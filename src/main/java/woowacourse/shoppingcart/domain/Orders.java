@@ -12,6 +12,12 @@ public class Orders {
         this.orderDetails = orderDetails;
     }
 
+    public int calculateTotalPrice() {
+        return orderDetails.stream()
+                .mapToInt(OrderDetail::getPrice)
+                .sum();
+    }
+
     public Long getId() {
         return id;
     }
