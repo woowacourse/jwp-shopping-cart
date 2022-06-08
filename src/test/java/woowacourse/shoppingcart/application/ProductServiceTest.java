@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.NotFoundProductException;
+import woowacourse.shoppingcart.exception.nobodyexception.NotFoundProductException;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {

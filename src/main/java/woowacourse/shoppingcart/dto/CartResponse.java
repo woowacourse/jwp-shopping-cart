@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.cart.Cart;
 
 public class CartResponse {
     private final Long id;

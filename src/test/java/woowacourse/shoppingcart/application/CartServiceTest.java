@@ -13,13 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartUpdationRequest;
-import woowacourse.shoppingcart.exception.DuplicatedProductInCartException;
-import woowacourse.shoppingcart.exception.NotExistProductInCartException;
-import woowacourse.shoppingcart.exception.NotFoundProductException;
+import woowacourse.shoppingcart.exception.bodyexception.DuplicatedProductInCartException;
+import woowacourse.shoppingcart.exception.bodyexception.NotExistProductInCartException;
+import woowacourse.shoppingcart.exception.nobodyexception.NotFoundProductException;
 
 @ExtendWith(MockitoExtension.class)
 public class CartServiceTest {

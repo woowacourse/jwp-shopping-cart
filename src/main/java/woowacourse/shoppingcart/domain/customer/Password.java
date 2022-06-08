@@ -1,9 +1,9 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import woowacourse.shoppingcart.exception.IllegalPasswordException;
+import woowacourse.shoppingcart.exception.bodyexception.IllegalPasswordException;
 
 public class Password {
 

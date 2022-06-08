@@ -1,6 +1,6 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.cart;
 
-import woowacourse.shoppingcart.exception.IllegalQuantityException;
+import woowacourse.shoppingcart.exception.bodyexception.IllegalQuantityException;
 
 public class Quantity {
 

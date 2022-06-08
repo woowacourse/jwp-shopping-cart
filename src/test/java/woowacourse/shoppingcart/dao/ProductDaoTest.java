@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.NotFoundProductException;
+import woowacourse.shoppingcart.exception.nobodyexception.NotFoundProductException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

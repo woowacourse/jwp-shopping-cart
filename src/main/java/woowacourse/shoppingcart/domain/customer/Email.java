@@ -1,23 +1,23 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.IllegalNicknameException;
+import woowacourse.shoppingcart.exception.bodyexception.IllegalEmailException;
 
-public class Nickname {
+public class Email {
 
-    private static final String REGEX = "[a-zA-Z0-9가-힣]{2,8}";
+    private static final String REGEX = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 
     private final String value;
 
-    public Nickname(String value) {
+    public Email(String value) {
         validate(value);
         this.value = value;
     }
 
     private void validate(String value) {
         if (!Pattern.matches(REGEX, value)) {
-            throw new IllegalNicknameException();
+            throw new IllegalEmailException();
         }
     }
 
@@ -33,8 +33,8 @@ public class Nickname {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Nickname nickname = (Nickname) o;
-        return Objects.equals(value, nickname.value);
+        Email email = (Email) o;
+        return Objects.equals(value, email.value);
     }
 
     @Override

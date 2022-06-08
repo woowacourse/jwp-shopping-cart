@@ -7,7 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.shoppingcart.exception.IllegalPasswordException;
+import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.exception.bodyexception.IllegalPasswordException;
 
 public class PasswordTest {
 

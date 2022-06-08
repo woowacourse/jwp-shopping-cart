@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.Product;
 
 @Repository

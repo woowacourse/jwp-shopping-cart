@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.exception.bodyexception;
 
 public class DuplicatedProductInCartException extends IllegalRequestException {
 

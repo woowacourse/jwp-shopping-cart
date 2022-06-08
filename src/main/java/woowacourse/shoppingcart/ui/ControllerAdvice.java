@@ -10,8 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.BodyToReturnException;
-import woowacourse.shoppingcart.exception.NotBodyToReturnException;
+import woowacourse.shoppingcart.exception.bodyexception.BodyToReturnException;
+import woowacourse.shoppingcart.exception.nobodyexception.NotBodyToReturnException;
 
 @RestControllerAdvice
 public class ControllerAdvice {

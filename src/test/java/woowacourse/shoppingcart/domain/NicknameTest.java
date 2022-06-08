@@ -5,7 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.shoppingcart.exception.IllegalNicknameException;
+import woowacourse.shoppingcart.domain.customer.Nickname;
+import woowacourse.shoppingcart.exception.bodyexception.IllegalNicknameException;
 
 public class NicknameTest {
 

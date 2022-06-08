@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.config.WebConfig;
-import woowacourse.shoppingcart.exception.InvalidLoginException;
+import woowacourse.shoppingcart.exception.bodyexception.InvalidLoginException;
 
 @WebMvcTest(controllers = {AuthController.class})
 @MockBean(value = {WebConfig.class})

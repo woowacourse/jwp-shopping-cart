@@ -6,7 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.exception.UnauthorizedTokenException;
+import woowacourse.shoppingcart.exception.nobodyexception.UnauthorizedTokenException;
 
 public class LoginInterceptor implements HandlerInterceptor {
 

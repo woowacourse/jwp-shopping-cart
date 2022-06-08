@@ -1,6 +1,7 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.cart;
 
 import java.util.Objects;
+import woowacourse.shoppingcart.domain.Product;
 
 public class Cart {
 

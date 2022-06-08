@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.NotFoundProductException;
+import woowacourse.shoppingcart.exception.nobodyexception.NotFoundProductException;
 
 @Repository
 public class ProductDao {

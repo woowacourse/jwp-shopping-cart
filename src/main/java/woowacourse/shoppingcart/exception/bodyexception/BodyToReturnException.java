@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.exception.bodyexception;
 
 import org.springframework.http.HttpStatus;
 import woowacourse.shoppingcart.dto.ErrorResponse;

@@ -2,10 +2,10 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
-import woowacourse.shoppingcart.exception.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.bodyexception.DuplicateEmailException;
 
 @Service
 public class CustomerService {

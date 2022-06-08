@@ -4,12 +4,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartUpdationRequest;
-import woowacourse.shoppingcart.exception.DuplicatedProductInCartException;
-import woowacourse.shoppingcart.exception.NotExistProductInCartException;
+import woowacourse.shoppingcart.exception.bodyexception.DuplicatedProductInCartException;
+import woowacourse.shoppingcart.exception.bodyexception.NotExistProductInCartException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)

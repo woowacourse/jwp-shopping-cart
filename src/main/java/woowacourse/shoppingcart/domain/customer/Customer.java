@@ -1,7 +1,7 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
-import woowacourse.shoppingcart.exception.InvalidLoginException;
+import woowacourse.shoppingcart.exception.bodyexception.InvalidLoginException;
 
 public class Customer {
 

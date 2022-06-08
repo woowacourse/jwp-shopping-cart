@@ -20,7 +20,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.config.LoginCustomerResolver;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
-import woowacourse.shoppingcart.exception.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.bodyexception.DuplicateEmailException;
 
 @WebMvcTest(controllers = {CustomerController.class})
 @MockBean(value = LoginCustomerResolver.class)
