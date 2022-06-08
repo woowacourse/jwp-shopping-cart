@@ -73,13 +73,13 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/auth/customers/check", params = "userId")
+    @GetMapping(value = "/customers/check", params = "userId")
     public ResponseEntity<Void> checkDuplicateUsername(final @RequestParam(name = "userId") String username) {
         customerService.checkDuplicateUsername(username);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/auth/customers/check", params = "nickname")
+    @GetMapping(value = "/customers/check", params = "nickname")
     public ResponseEntity<Void> checkDuplicateNickname(final @RequestParam String nickname) {
         customerService.checkDuplicateNickname(nickname);
         return ResponseEntity.ok().build();
