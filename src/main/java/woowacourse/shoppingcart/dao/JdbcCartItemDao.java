@@ -1,12 +1,13 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.entity.CartItemEntity;
@@ -23,9 +24,13 @@ public class JdbcCartItemDao implements CartItemDao {
     );
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcCartItemDao(final JdbcTemplate jdbcTemplate) {
+    public JdbcCartItemDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
     }
 
     public CartItemEntity findById(Long cartItemId) {
@@ -43,17 +48,12 @@ public class JdbcCartItemDao implements CartItemDao {
     }
 
     public Long save(final Long customerId, final CartItem cartItem) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        Map<String, Object> params = new HashMap<>();
+        params.put("customer_id", customerId);
+        params.put("product_id", cartItem.getProduct().getId());
+        params.put("quantity", cartItem.getQuantity());
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, cartItem.getProduct().getId());
-            preparedStatement.setLong(3, cartItem.getQuantity());
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public void update(Long cartItemId, CartItem newCartItem) {
