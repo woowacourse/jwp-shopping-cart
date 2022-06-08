@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.Login;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.order.Orders;
+import woowacourse.shoppingcart.dto.order.FindOrderResponse;
 import woowacourse.shoppingcart.dto.order.MakeOrderResponse;
 import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
 
@@ -33,16 +34,10 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@PathVariable String customerName,
+    public ResponseEntity<FindOrderResponse> findOrder(@Login String email,
                                             @PathVariable Long orderId) {
-        Orders order = orderService.findOrderById(customerName, orderId);
-        return ResponseEntity.ok(order);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@PathVariable String customerName) {
-        List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
-        return ResponseEntity.ok(orders);
+        FindOrderResponse findOrderResponse = orderService.findOrderById(email, orderId);
+        return ResponseEntity.ok(findOrderResponse);
     }
 
     private URI createUri(Long id) {

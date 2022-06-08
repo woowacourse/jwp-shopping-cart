@@ -92,5 +92,4 @@ class ProductServiceTest {
                 .extracting("name")
                 .containsExactly(치킨.getName(), 맥주.getName());
     }
-
 }

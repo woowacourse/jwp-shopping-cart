@@ -1,7 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -28,7 +30,16 @@ public class OrdersDetailDao {
     }
 
     public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
-        return null;
+        String sql = "SELECT id, orders_id, product_id, quantity FROM orders_detail WHERE orders_id = :orderId";
+        return jdbcTemplate.query(sql, Map.of("orderId", orderId), getOrderDetailRowMapper());
+    }
+
+    private RowMapper<OrderDetail> getOrderDetailRowMapper() {
+        return (rs, rowNum) -> new OrderDetail(
+                rs.getLong("id"),
+                rs.getLong("orders_id"),
+                rs.getLong("product_id"),
+                rs.getInt("quantity")
+        );
     }
 }

@@ -31,14 +31,4 @@ public class OrderDao {
         return jdbcInsert.executeAndReturnKey(Map.of("customer_id", customerId))
                 .longValue();
     }
-
-    public List<Long> findOrderIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM orders WHERE customer_id = ? ";
-        return null;
-    }
-
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
-        return true;
-    }
 }

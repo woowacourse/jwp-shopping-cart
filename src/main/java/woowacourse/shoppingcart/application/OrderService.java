@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.application;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartDao;
@@ -13,12 +12,11 @@ import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
-import woowacourse.shoppingcart.domain.order.Orders;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.order.FindOrderResponse;
 import woowacourse.shoppingcart.dto.order.MakeOrderResponse;
 import woowacourse.shoppingcart.dto.order.OrderDetailDto;
 import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
 @Transactional(readOnly = true)
@@ -46,12 +44,12 @@ public class OrderService {
         List<OrderDetailDto> orderDetails = new ArrayList<>();
 
         int totalPrice = 0;
+        Long ordersId = orderDao.addOrders(customerId);
         for (Long productId : productIds) {
             Cart cart = cartDao.findByCustomerIdAndProductId(customerId, productId)
                     .orElseThrow(() -> new IllegalArgumentException("장바구니에 해당 물건이 존재하지 않습니다"));
-            Long ordersId = orderDao.addOrders(customerId);
-            ordersDetailDao.addOrdersDetail(new OrderDetail(ordersId, productId, cart.getQuantity()));
 
+            ordersDetailDao.addOrdersDetail(new OrderDetail(ordersId, productId, cart.getQuantity()));
             Product findProduct = productDao.findProductById(cart.getProductId())
                     .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다"));
             totalPrice += cart.getQuantity() * findProduct.getPrice();
@@ -59,39 +57,25 @@ public class OrderService {
                     findProduct.getPrice(), findProduct.getImage()));
         }
 
-        return new MakeOrderResponse(customerId, orderDetails, totalPrice, LocalDateTime.now());
+        return new MakeOrderResponse(ordersId, orderDetails, totalPrice, LocalDateTime.now());
     }
 
-    public Orders findOrderById(String customerName, Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
-    }
+    @Transactional
+    public FindOrderResponse findOrderById(String email, Long orderId) {
+        List<OrderDetail> orderDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId);
+        List<OrderDetailDto> orderDetailDtos = new ArrayList<>();
 
-    private void validateOrderIdByCustomerName(String customerName, Long orderId) {
-        Long customerId = customerDao.findIdByUserName(customerName);
+        int totalPrice = 0;
+        for (OrderDetail orderDetail : orderDetails) {
+            Long productId = orderDetail.getProductId();
+            Product product = productDao.findProductById(productId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다"));
 
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
-        }
-    }
-
-    public List<Orders> findOrdersByCustomerName(String customerName) {
-        Long customerId = customerDao.findIdByUserName(customerName);
-        List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
-
-        return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
-                .collect(Collectors.toList());
-    }
-
-    private Orders findOrderResponseDtoByOrderId(Long orderId) {
-        List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            Product product = productDao.findProductById(productQuantity.getProductId()).get();
-            int quantity = productQuantity.getQuantity();
-//            ordersDetails.add(new OrderDetail(product, quantity));
+            totalPrice += orderDetail.getQuantity() * product.getPrice();
+            orderDetailDtos.add(new OrderDetailDto(product.getId(), product.getName(), orderDetail.getQuantity(),
+                    product.getPrice(), product.getImage()));
         }
 
-        return new Orders(orderId, ordersDetails);
+        return new FindOrderResponse(orderId, orderDetailDtos, totalPrice, LocalDateTime.now());
     }
 }

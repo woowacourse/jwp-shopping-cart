@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.tuple;
 import static woowacourse.utils.Fixture.customer_id없음;
 import static woowacourse.utils.Fixture.치킨_id없음;
 
@@ -53,36 +54,22 @@ class OrdersDetailDaoTest {
         assertThat(orderId).isNotNull();
     }
 
-//    @DisplayName("OrderDatail을 추가하는 기능")
-//    @Test
-//    void addOrdersDetail() {
-//        //given
-//        int quantity = 5;
-//
-//        //when
-//        Long orderDetailId = ordersDetailDao
-//                .addOrdersDetail(ordersId, productId, quantity);
-//
-//        //then
-//        assertThat(orderDetailId).isEqualTo(1L);
-//    }
-//
-//    @DisplayName("OrderId로 OrderDetails 조회하는 기능")
-//    @Test
-//    void findOrdersDetailsByOrderId() {
-//        //given
-//        final int insertCount = 3;
-//        for (int i = 0; i < insertCount; i++) {
-//            jdbcTemplate
-//                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-//                            ordersId, productId, 3);
-//        }
-//
-//        //when
-//        final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-//                .findOrdersDetailsByOrderId(ordersId);
-//
-//        //then
-//        assertThat(ordersDetailsByOrderId).hasSize(insertCount);
-//    }
+    @DisplayName("OrderId로 OrderDetails 조회하는 기능")
+    @Test
+    void findOrdersDetailsByOrderId() {
+        //given
+        Customer save = customerDao.save(customer_id없음);
+        Long orderId = orderDao.addOrders(save.getId());
+        Product save1 = productDao.save(치킨_id없음);
+        ordersDetailDao.addOrdersDetail(new OrderDetail(orderId, save1.getId(), 1000));
+
+        //when
+        List<OrderDetail> orderDetails = ordersDetailDao
+                .findOrdersDetailsByOrderId(orderId);
+
+        //then
+        assertThat(orderDetails).hasSize(1)
+            .extracting("ordersId", "productId", "quantity")
+            .containsExactly(tuple(orderId, save1.getId(), 1000));
+    }
 }
