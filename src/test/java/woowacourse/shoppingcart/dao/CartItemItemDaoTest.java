@@ -12,31 +12,34 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Quantity;
+import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.ProductRequest;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemDaoTest {
+public class CartItemItemDaoTest {
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public CartItemItemDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
+        cartItemDao = new CartItemDao(jdbcTemplate, productDao);
     }
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
+        productDao.save(new ProductRequest("banana", 1_000, "http://woowa1.com", "description"));
+        productDao.save(new ProductRequest("apple", 2_000, "http://woowa2.com", "description"));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 10);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 5);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
@@ -46,9 +49,10 @@ public class CartItemDaoTest {
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
+        final int quantity = 10;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(customerId, productId, quantity);
 
         // then
         assertThat(cartId).isEqualTo(3L);
@@ -97,5 +101,25 @@ public class CartItemDaoTest {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);
+    }
+
+    @DisplayName("장바구니 수량을 업데이트 한다.")
+    @Test
+    void updateCartItem() {
+        final Long customerId = 1L;
+        final Long productId = 1L;
+        final int quantity = 10;
+        final Long cartItemId = cartItemDao.addCartItem(customerId, productId, quantity);
+
+        final int updatingQuantity = 20;
+        final Product product = productDao.findProductById(productId);
+        cartItemDao.updateCartItem(new CartItem(cartItemId, product, new Quantity(updatingQuantity)));
+
+        final CartItem updatedCartItem = cartItemDao.findCartItemsByCustomerId(customerId).stream()
+                .filter(cartItem -> cartItem.getId().equals(cartItemId))
+                .findFirst()
+                .get();
+
+        assertThat(updatedCartItem.getQuantity()).isEqualTo(updatingQuantity);
     }
 }
