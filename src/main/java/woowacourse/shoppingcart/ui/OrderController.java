@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +13,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.application.dto.OrderResponse;
 import woowacourse.shoppingcart.ui.dto.OrderRequest;
+import woowacourse.shoppingcart.ui.dto.OrdersResponse;
 
 @RestController
 @RequestMapping("/customers/orders")
@@ -44,7 +44,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderResponse> findAll(@AuthenticationPrincipal Long customerId) {
-        return orderService.findByCustomerId(customerId);
+    public OrdersResponse findAll(@AuthenticationPrincipal Long customerId) {
+        return new OrdersResponse(orderService.findByCustomerId(customerId));
     }
 }

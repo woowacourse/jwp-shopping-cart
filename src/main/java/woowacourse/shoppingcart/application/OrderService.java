@@ -101,7 +101,11 @@ public class OrderService {
             result.add(OrderDetailResponse.from(product, quantity));
         }
 
-        return new OrderResponse(orderId, result);
+        int totalCost = result.stream()
+                .mapToInt(OrderDetailResponse::getCost)
+                .sum();
+
+        return new OrderResponse(orderId, totalCost, result);
     }
 
     private List<Product> findProductsByOrderId(Long orderId) {

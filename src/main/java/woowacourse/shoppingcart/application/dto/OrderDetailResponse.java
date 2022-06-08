@@ -6,14 +6,14 @@ public class OrderDetailResponse {
 
     private final Long id;
     private final String name;
-    private final int price;
+    private final int cost;
     private final String imageUrl;
     private final int quantity;
 
-    public OrderDetailResponse(Long id, String name, int price, String imageUrl, int quantity) {
+    public OrderDetailResponse(Long id, String name, int cost, String imageUrl, int quantity) {
         this.id = id;
         this.name = name;
-        this.price = price;
+        this.cost = cost;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
     }
@@ -22,7 +22,7 @@ public class OrderDetailResponse {
         return new OrderDetailResponse(
                 product.getId(),
                 product.getName().getValue(),
-                product.getPrice().getValue(),
+                product.multiplePrice(quantity),
                 product.getImageUrl().getValue(),
                 quantity
         );
@@ -36,8 +36,8 @@ public class OrderDetailResponse {
         return name;
     }
 
-    public int getPrice() {
-        return price;
+    public int getCost() {
+        return cost;
     }
 
     public String getImageUrl() {
