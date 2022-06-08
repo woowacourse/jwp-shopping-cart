@@ -1,16 +1,19 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.cartitem;
+
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.InvalidCartItemPropertyException;
 
 public class CartItem {
 
     private Long id;
     private Long productId;
-    private String name;
-    private int price;
+    private Name name;
+    private Price price;
     private String imageUrl;
-    private int quantity;
-    private int count;
+    private Amount quantity;
+    private Amount count;
 
-    public CartItem() {
+    private CartItem() {
     }
 
     public CartItem(Long id, int count, Product product) {
@@ -22,11 +25,15 @@ public class CartItem {
         int quantity, int count) {
         this.id = id;
         this.productId = productId;
-        this.name = name;
-        this.price = price;
         this.imageUrl = imageUrl;
-        this.quantity = quantity;
-        this.count = count;
+        try {
+            this.name = new Name(name);
+            this.price = new Price(price);
+            this.quantity = new Amount(quantity);
+            this.count = new Amount(count);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidCartItemPropertyException(e.getMessage());
+        }
     }
 
     public Long getId() {
@@ -38,11 +45,11 @@ public class CartItem {
     }
 
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     public int getPrice() {
-        return price;
+        return price.getValue();
     }
 
     public String getImageUrl() {
@@ -50,10 +57,10 @@ public class CartItem {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 
     public int getCount() {
-        return count;
+        return count.getValue();
     }
 }
