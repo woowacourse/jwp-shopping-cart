@@ -49,7 +49,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             ConstraintViolationException.class
     })
     public ErrorResponse handleInvalidAccess(final RuntimeException ex) {
-        log.info("handleInvalidAccess ! ");
         return new ErrorResponse(ex.getMessage());
     }
 

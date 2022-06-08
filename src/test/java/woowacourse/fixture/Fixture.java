@@ -5,6 +5,7 @@ import static io.restassured.RestAssured.given;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import java.util.List;
 import org.springframework.http.MediaType;
 
 public abstract class Fixture {
@@ -52,6 +53,10 @@ public abstract class Fixture {
 
     public static ExtractableResponse<Response> delete(String path, String token, Object... pathParams) {
         return postProcess(preProcess(token).delete(path, pathParams));
+    }
+
+    public static <T> List<T> covertTypeList(ExtractableResponse<Response> response, Class<T> clazz) {
+        return response.jsonPath().getList("", clazz);
     }
 
     protected static RequestSpecification preProcess(Object body) {

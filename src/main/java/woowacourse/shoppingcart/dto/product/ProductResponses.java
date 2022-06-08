@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.Getter;
 import woowacourse.shoppingcart.domain.Product;
 
-@JsonTypeName("qwe")
 @Getter
 public class ProductResponses {
 
