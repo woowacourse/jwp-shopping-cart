@@ -44,6 +44,17 @@ class CartServiceTest {
                 .hasMessage("존재하지 않는 상품입니다.");
     }
 
+    @DisplayName("이미 장바구니에 추가된 상품을 추가하려면 추가하려는 수량만큼 수량을 증가시킨다.")
+    @Test
+    void addCart_increaseQuantity() {
+        cartService.addCart(1L, 1L, 5);
+        cartService.addCart(1L, 1L, 8);
+        CartItemResponse cartItemResponse = cartService.findAll(1L)
+                .get(0);
+
+        assertThat(cartItemResponse.getQuantity()).isEqualTo(13);
+    }
+
     @DisplayName("장바구니에 담긴 상품의 수량을 변경한다.")
     @Test
     void updateQuantity() {

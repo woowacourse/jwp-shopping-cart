@@ -49,7 +49,7 @@ public class CartItemDao {
     }
 
     public void increaseQuantity(long memberId, long productId, int increasingQuantity) {
-        String sql = "UPDATE CART_ITEM SET quantity = quantity + :increasingQuantity"
+        String sql = "UPDATE CART_ITEM SET quantity = quantity + :increasingQuantity "
                 + "WHERE member_id = :member_id AND product_id = :product_id";
         SqlParameterSource params = new MapSqlParameterSource("increasingQuantity", increasingQuantity)
                 .addValue("member_id", memberId)
