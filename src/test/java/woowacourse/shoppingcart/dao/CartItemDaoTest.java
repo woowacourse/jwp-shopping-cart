@@ -125,6 +125,25 @@ public class CartItemDaoTest {
         assertThat(cartIds).containsExactly(1L, 2L);
     }
 
+    @DisplayName("Customer Id를 넣으면, 해당 장바구니의 수량이 변경된다.")
+    @Test
+    void updateCartItemQuantity() {
+        // given
+        final Long customerId = 1L;
+        final Long cartItemId = 1L;
+
+        // when
+        cartItemDao.updateQuantity(1, cartItemId);
+        final List<Cart> carts = cartItemDao.findAllJoinProductByCustomerId(customerId);
+        final Cart cart = carts.stream()
+                .filter(each -> Objects.equals(each.getId(), cartItemId))
+                .collect(Collectors.toList())
+                .get(0);
+        
+        // then
+        assertThat(cart.getQuantity()).isEqualTo(1);
+    }
+
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void deleteCartItem() {

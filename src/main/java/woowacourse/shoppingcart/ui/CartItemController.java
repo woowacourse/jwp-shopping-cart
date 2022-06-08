@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.dto.CartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.Request;
@@ -45,6 +47,14 @@ public class CartItemController {
                 .buildAndExpand(cartId)
                 .toUri();
         return ResponseEntity.created(responseLocation).build();
+    }
+
+    @PatchMapping("/{cartId}")
+    public ResponseEntity<Void> updateCartItemQuantity(@AuthenticationPrincipal final LoginCustomer loginCustomer,
+                                                       @PathVariable final Long cartId,
+                                                       @RequestBody final CartItemQuantityRequest cartItemQuantityRequest) {
+        cartService.updateQuantity(cartId, cartItemQuantityRequest.getQuantity(), loginCustomer.getId());
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{cartId}")

@@ -21,12 +21,13 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.dto.CartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
 @DisplayName("장바구니 관련 기능")
 @SuppressWarnings("NonAsciiCharacters")
 public class CartAcceptanceTest extends AcceptanceShoppingCartTest {
-    
+
     private Long productId1;
     private Long productId2;
     private String accessToken;
@@ -67,6 +68,16 @@ public class CartAcceptanceTest extends AcceptanceShoppingCartTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
+    @DisplayName("장바구니 수량 업데이트")
+    @Test
+    void updateCartItemQuantity() {
+        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+
+        ExtractableResponse<Response> response = 장바구니_수량_업데이트_요청(accessToken, cartId);
+
+        장바구니_아이템_수량_업데이트됨(response);
+    }
+
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
@@ -101,6 +112,18 @@ public class CartAcceptanceTest extends AcceptanceShoppingCartTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 장바구니_수량_업데이트_요청(String token, Long cartId) {
+        CartItemQuantityRequest cartItemQuantityRequest = new CartItemQuantityRequest(2);
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
+                .body(cartItemQuantityRequest)
+                .when().patch("/api/customers/me/carts/{cartId}", cartId)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> 장바구니_삭제_요청(String token, Long cartId) {
         return RestAssured
                 .given().log().all()
@@ -130,6 +153,10 @@ public class CartAcceptanceTest extends AcceptanceShoppingCartTest {
                 .map(Cart::getProductId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
+    }
+
+    private static void 장바구니_아이템_수량_업데이트됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     private static void 장바구니_삭제됨(ExtractableResponse<Response> response) {

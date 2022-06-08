@@ -50,6 +50,11 @@ public class CartService {
         cartItemDao.deleteCartItem(cartId);
     }
 
+    public void updateQuantity(final Long cartId, final int quantity, final Long customerId) {
+        validateCustomerCart(cartId, customerId);
+        cartItemDao.updateQuantity(quantity, cartId);
+    }
+    
     private void validateCustomerCart(final Long cartId, final Long customerId) {
         final Customer customer = customerDao.findById(customerId)
                 .orElseThrow(InvalidCustomerException::new);

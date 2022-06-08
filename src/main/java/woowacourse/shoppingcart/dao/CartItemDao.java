@@ -77,6 +77,14 @@ public class CartItemDao {
         return keyHolder.getKey().longValue();
     }
 
+    public void updateQuantity(final int quantity, final Long id) {
+        final String query = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        final int update = jdbcTemplate.update(query, quantity, id);
+        if (update == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
+
     public void deleteCartItem(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 

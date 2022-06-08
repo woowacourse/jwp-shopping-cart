@@ -2,7 +2,9 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
 
@@ -62,6 +64,30 @@ class CartItemServiceTest {
                 () -> assertThat(cartResponse.getImageUrl()).isEqualTo("woowa1.com"),
                 () -> verify(customerDao).findById(customerId),
                 () -> verify(cartItemDao).findAllJoinProductByCustomerId(customerId)
+        );
+    }
+
+    @DisplayName("로그인 된 사용자의 장바구니의 수량을 변경한다.")
+    @Test
+    void updateCartItemQuantity() {
+        // given
+        final UserName userName = new UserName("giron");
+        final Long cartId = 1L;
+        final Long customerId = 1L;
+        final Customer customer = new Customer(customerId, userName, encryptedBasicPassword);
+
+        given(customerDao.findById(customerId))
+                .willReturn(Optional.of(customer));
+        given(cartItemDao.findIdsByCustomerId(customerId))
+                .willReturn(List.of(cartId));
+        doNothing().when(cartItemDao).updateQuantity(1, cartId);
+
+        // when  // then
+        assertAll(
+                () -> assertDoesNotThrow(() -> cartService.updateQuantity(cartId, 1, customerId)),
+                () -> verify(customerDao).findById(customerId),
+                () -> verify(cartItemDao).findIdsByCustomerId(customerId),
+                () -> verify(cartItemDao).updateQuantity(1, cartId)
         );
     }
 }
