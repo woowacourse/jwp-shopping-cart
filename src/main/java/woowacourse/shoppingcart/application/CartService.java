@@ -35,7 +35,7 @@ public class CartService {
     public Long addCart(String username, CartRequest cartRequest) {
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
         Product product = productDao.findProductById(cartRequest.getProductId());
-        if (cartItemDao.existByProductId(cartRequest.getProductId())) {
+        if (cartItemDao.existByProductId(customerId, cartRequest.getProductId())) {
             cartItemDao.updateCartItem(List.of(new Cart(product, cartRequest.getQuantity() + 1, cartRequest.getChecked())));
             return 0L;
         }

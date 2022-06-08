@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +15,6 @@ import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductResponses;
-import woowacourse.shoppingcart.dto.ProductsPerPageRequest;
-import woowacourse.shoppingcart.dto.Request;
 
 @RestController
 @RequestMapping("/products")
@@ -33,8 +30,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addProduct(
-            @Validated(Request.allProperties.class) @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> addProduct(@RequestBody ProductRequest productRequest) {
         final Long productId = productService.addProduct(productRequest);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()

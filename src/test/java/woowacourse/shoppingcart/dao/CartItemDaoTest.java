@@ -128,4 +128,30 @@ public class CartItemDaoTest {
         // then
         assertThat(cartItemDao.findByCustomerId(customerId)).size().isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("회원의 장바구니에 상품이 존재한다..")
+    void existByProductIdWithTrue() {
+        // given
+        Long customerId = 1L;
+
+        // when
+        boolean result = cartItemDao.existByProductId(customerId, 1L);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("회원의 장바구니에 상품이 존재하지 않는다..")
+    void existByProductIdWithFalse() {
+        // given
+        Long customerId = 1L;
+
+        // when
+        boolean result = cartItemDao.existByProductId(customerId,  10L);
+
+        // then
+        assertThat(result).isFalse();
+    }
 }

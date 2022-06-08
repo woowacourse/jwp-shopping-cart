@@ -124,10 +124,10 @@ public class CartItemDao {
         }
     }
 
-    public boolean existByProductId(Long productId) {
+    public boolean existByProductId(Long customerId, Long productId) {
         try {
-            String sql = "SELECT EXISTS (SELECT * FROM cart_item WHERE product_id = ?)";
-            return jdbcTemplate.queryForObject(sql, Boolean.class, productId);
+            String sql = "SELECT EXISTS (SELECT * FROM cart_item WHERE customer_id = ? and product_id = ?)";
+            return jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
