@@ -2,7 +2,18 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.*;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.DATA_EMPTY_EXCEPTION_MESSAGE;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.EMAIL_DUPLICATION_CHECK_URI;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.LOGIN_URI;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.MEMBERS_URI;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.MEMBER_CREATE_REQUEST;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.PASSWORD_CHECK_URI;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.PASSWORD_UPDATE_URI;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.SIGN_UP_URI;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.VALID_LOGIN_REQUEST;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.VALID_NICKNAME_UPDATE_REQUEST;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.VALID_PASSWORD_CHECK_REQUEST;
+import static woowacourse.auth.acceptance.AuthAcceptanceTestFixture.VALID_PASSWORD_UPDATE_REQUEST;
 import static woowacourse.util.HttpRequestUtil.deleteWithAuthorization;
 import static woowacourse.util.HttpRequestUtil.get;
 import static woowacourse.util.HttpRequestUtil.getWithAuthorization;
@@ -20,6 +31,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.request.LoginRequest;
 import woowacourse.auth.dto.request.MemberCreateRequest;
 import woowacourse.auth.dto.request.MemberUpdateRequest;
@@ -31,6 +43,7 @@ import woowacourse.auth.dto.response.MemberResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
+@Sql("classpath:schema.sql")
 class AuthAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("이메일, 비밀번호, 닉네임으로 회원 가입에 성공하면 201를 응답한다.")
