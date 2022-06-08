@@ -2,6 +2,7 @@ package woowacourse.auth.ui;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedException;
@@ -22,7 +23,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = jwtTokenExtractor.extract(request);
-
+        if(HttpMethod.OPTIONS.matches(request.getMethod())) {
+            return true;
+        }
         if (!jwtTokenProvider.validateToken(token)) {
             throw new UnauthorizedException();
         }
