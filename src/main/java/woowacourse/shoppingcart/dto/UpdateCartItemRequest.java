@@ -30,9 +30,9 @@ public class UpdateCartItemRequest {
                 .collect(Collectors.toList());
     }
 
-    public List<Boolean> getChecked() {
+    public List<Boolean> generateChecked() {
         return products.stream()
-                .map(UpdateCartItemElement::isChecked)
+                .map(UpdateCartItemElement::getChecked)
                 .collect(Collectors.toList());
     }
 }

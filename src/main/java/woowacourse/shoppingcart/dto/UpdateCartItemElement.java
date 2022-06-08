@@ -23,7 +23,7 @@ public class UpdateCartItemElement {
         return quantity;
     }
 
-    public boolean isChecked() {
+    public boolean getChecked() {
         return checked;
     }
 }

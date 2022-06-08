@@ -124,7 +124,7 @@ public class CartService {
         validateExistCartIds(cartIds, id);
         List<Integer> quantities = updateCartItemRequest.getQuantities();
         validatePositiveQuantities(quantities);
-        List<Boolean> checked = updateCartItemRequest.getChecked();
+        List<Boolean> checked = updateCartItemRequest.generateChecked();
         for (int i = 0; i < quantities.size(); i++) {
             cartItemDao.updateQuantityAndCheck(id, cartIds.get(i), quantities.get(i), checked.get(i));
         }
