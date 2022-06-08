@@ -4,7 +4,7 @@ import woowacourse.shoppingcart.product.domain.Product;
 
 public class ProductResponse {
 
-    private long productId;
+    private long id;
     private String name;
     private int price;
     private String image;
@@ -12,8 +12,8 @@ public class ProductResponse {
     public ProductResponse() {
     }
 
-    public ProductResponse(final long productId, final String name, final int price, final String image) {
-        this.productId = productId;
+    public ProductResponse(final long id, final String name, final int price, final String image) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.image = image;
@@ -23,8 +23,8 @@ public class ProductResponse {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public long getProductId() {
-        return productId;
+    public long getId() {
+        return id;
     }
 
     public String getName() {
