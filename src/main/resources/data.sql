@@ -25,3 +25,48 @@ values ('puterism@email.com', '65c21921ca10a8502757efc9aa552874d181c6206feb2845a
        ('yujo11@email.com', '65c21921ca10a8502757efc9aa552874d181c6206feb2845a921eb57f5e518d4', 'yujo11'),
        ('sunhpark4@email.com2', '65c21921ca10a8502757efc9aa552874d181c6206feb2845a921eb57f5e518d4', 'sunhpark42')
 ;
+
+INSERT INTO product (name, price, stock_quantity)
+VALUES ('Apple Watch Series 5', '120', '5'),
+       ('Apple Watch Nike', '400', '0'),
+       ('Apple watch Aluminum', '79', '5'),
+       ('Apple Smart Watch', '35', '0'),
+       ('Microsoft Surface Book', '550', '5'),
+       ('Mackbook Pro Letina', '250', '5'),
+       ('Apple iMac', '300', '5'),
+       ('XBox Wireless Controller', '180', '0'),
+       ('XBox One X 1TB', '100', '5'),
+       ('Playstation 4', '100', '5'),
+       ('Controller for PlayStation 4', '200', '5'),
+       ('Wireless Playstation', '150', '5'),
+       ('Sony Series Headphones', '100', '5'),
+       ('Bluetooth Headphones', '100', '5'),
+       ('Jabra Wireless Stereo Headset', '80', '5'),
+       ('Beats On-Ear Headphone', '100', '5'),
+       ('Beats On-Ear Headphone', '100', '5'),
+       ('Digital Alarm Clock', '30', '5'),
+       ('Mkay Bluetooth Headphones', '150', '5'),
+       ('Wireless Bluetooth Headphones', '60', '5')
+;
+
+INSERT INTO image (product_id, image_url, image_alt)
+VALUES ('1', 'https://develoger.kr/wp-content/uploads/apple-watch-1.jpg', 'Apple Watch Series 5'),
+       ('2', 'https://develoger.kr/wp-content/uploads/apple-watch-nike.jpg', 'Apple Watch Nike'),
+       ('3', 'https://develoger.kr/wp-content/uploads/apple-watch-aluminum.jpg', 'Apple watch Aluminum'),
+       ('4', 'https://develoger.kr/wp-content/uploads/apple-smart-watch.jpg', 'Apple Smart Watch'),
+       ('5', 'https://develoger.kr/wp-content/uploads/microsoft-surface-book.jpg', 'Microsoft Surface Book'),
+       ('6', 'https://develoger.kr/wp-content/uploads/mackbook-pro-retina.jpeg', 'Mackbook Pro Letina'),
+       ('7', 'https://develoger.kr/wp-content/uploads/apple-imac.jpg', 'Apple iMac'),
+       ('8', 'https://develoger.kr/wp-content/uploads/xbox-wireless-controller.jpg', 'XBox Wireless Controller'),
+       ('9', 'https://develoger.kr/wp-content/uploads/XBox-One-X-1TB.jpg', 'XBox One X 1TB'),
+       ('10', 'https://develoger.kr/wp-content/uploads/playstation-4.jpeg', 'Playstation 4'),
+       ('11', 'https://develoger.kr/wp-content/uploads/Controller-for-Playstation-4.jpg', 'Controller for PlayStation 4'),
+       ('12', 'https://develoger.kr/wp-content/uploads/wireless-playstation.jpg', 'Wireless Playstation'),
+       ('13', 'https://develoger.kr/wp-content/uploads/Sony-Series-Headphones.jpg', 'Sony Series Headphones'),
+       ('14', 'https://develoger.kr/wp-content/uploads/Bluetooth-Headphones.jpg', 'Bluetooth Headphones'),
+       ('15', 'https://develoger.kr/wp-content/uploads/Jabra-Wireless-Stereo-Headset.jpg', 'Jabra Wireless Stereo Headset'),
+       ('16', 'https://develoger.kr/wp-content/uploads/Beats-On-Ear-Headphone.jpg', 'Beats On-Ear Headphone'),
+       ('17', 'https://develoger.kr/wp-content/uploads/Digital-Alarm-Clock.jpg', 'Digital Alarm Clock'),
+       ('18', 'https://develoger.kr/wp-content/uploads/Mkay-Bluetooth-Headphones.jpg', 'Mkay Bluetooth Headphones'),
+       ('19', 'https://develoger.kr/wp-content/uploads/Wireless-Bluetooth-Headphones.jpg', 'Wireless Bluetooth Headphones')
+;
