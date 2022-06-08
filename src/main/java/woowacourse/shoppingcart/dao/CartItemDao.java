@@ -25,7 +25,7 @@ public class CartItemDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
+    public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")
@@ -69,7 +69,7 @@ public class CartItemDao {
     }
 
     public void deleteByMemberIdAndProductId(Long memberId, Long productId) {
-        final String sql = "DELETE FROM cart_item WHERE member_id = :member_id AND product_id = :product_id";
+        String sql = "DELETE FROM cart_item WHERE member_id = :member_id AND product_id = :product_id";
         MapSqlParameterSource parameters = new MapSqlParameterSource("member_id", memberId)
                 .addValue("product_id", productId);
         namedParameterJdbcTemplate.update(sql, parameters);

@@ -19,7 +19,7 @@ public class CartService {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final ProductDao productDao) {
+    public CartService(CartItemDao cartItemDao, ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.productDao = productDao;
     }

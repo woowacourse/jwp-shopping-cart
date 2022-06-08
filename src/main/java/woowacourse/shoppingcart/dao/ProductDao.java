@@ -26,20 +26,20 @@ public class ProductDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public ProductDao(final JdbcTemplate jdbcTemplate) {
+    public ProductDao(JdbcTemplate jdbcTemplate) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(final Product product) {
+    public Long save(Product product) {
         BeanPropertySqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
         return simpleJdbcInsert.executeAndReturnKey(parameters)
                 .longValue();
     }
 
-    public Optional<Product> findProductById(final Long productId) {
+    public Optional<Product> findProductById(Long productId) {
         final String sql = "SELECT id, name, price, stock, image_url FROM product WHERE id = :id";
         MapSqlParameterSource parameters = new MapSqlParameterSource("id", productId);
         return namedParameterJdbcTemplate.query(sql, parameters, PRODUCT_MAPPER)
@@ -74,7 +74,7 @@ public class ProductDao {
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 
-    public void delete(final Long productId) {
+    public void delete(Long productId) {
         final String sql = "DELETE FROM product WHERE id = :id";
         MapSqlParameterSource parameters = new MapSqlParameterSource("id", productId);
         namedParameterJdbcTemplate.update(sql, parameters);

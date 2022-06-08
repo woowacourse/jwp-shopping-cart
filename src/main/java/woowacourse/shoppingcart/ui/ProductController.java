@@ -35,9 +35,10 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final ProductRequest productRequest) {
-        final Long productId = productService.save(productRequest);
-        final URI uri = ServletUriComponentsBuilder
+    public ResponseEntity<Void> add(
+            @Validated(Request.allProperties.class) @RequestBody ProductRequest productRequest) {
+        Long productId = productService.save(productRequest);
+        URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/" + productId)
                 .build().toUri();

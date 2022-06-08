@@ -15,12 +15,12 @@ public class ProductService {
 
     private final ProductDao productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 
     @Transactional
-    public Long save(final ProductRequest productRequest) {
+    public Long save(ProductRequest productRequest) {
         Product product = productRequest.toProduct();
         return productDao.save(product);
     }
