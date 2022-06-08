@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.exception.bodyexception;
 
-import woowacourse.shoppingcart.exception.bodyexception.IllegalRequestException;
-
 public class NotExistProductInCartException extends IllegalRequestException {
 
     public NotExistProductInCartException() {
