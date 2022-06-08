@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.FindCartItemResponse;
 import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
-import woowacourse.shoppingcart.dto.UpdateCartItemsRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequests;
 
 public class CartAcceptanceTest extends AcceptanceTest {
 
@@ -168,8 +168,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
         createCart(accessToken, 2L);
 
         var response = updateCartItem(1L, 2L, accessToken, HttpStatus.OK);
-        var findCartItemResponses = getFindCartItemResponses(response);
 
+        checkUpdateResult(response);
+    }
+
+    private void checkUpdateResult(ExtractableResponse<Response> response) {
+        var findCartItemResponses = getFindCartItemResponses(response);
         var cartItemResponse1 = findCartItemResponses.get(0);
         var cartItemResponse2 = findCartItemResponses.get(1);
 
@@ -196,7 +200,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 new UpdateCartItemRequest(cartId2, 5, true)
         );
 
-        var updateCartItemsRequest = new UpdateCartItemsRequest(updateCartItemRequests);
+        var updateCartItemsRequest = new UpdateCartItemRequests(updateCartItemRequests);
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
@@ -206,5 +210,20 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(httpStatus.value())
                 .extract();
+    }
+
+    @Test
+    void 장바구니_상품_추가한뒤_존재하지_않는_장바구니_아이디로_상품_수정_요청하는_경우() {
+        String accessToken = getAccessToken();
+
+        createCart(accessToken, 1L);
+
+        createCart(accessToken, 2L);
+
+        var invalidCartId = 100L;
+        var response = updateCartItem(1L, invalidCartId, accessToken, HttpStatus.BAD_REQUEST);
+
+        var message = response.body().jsonPath().getString("message");
+        assertThat(message).contains("[ERROR]", "장바구니", "아이템", "없");
     }
 }

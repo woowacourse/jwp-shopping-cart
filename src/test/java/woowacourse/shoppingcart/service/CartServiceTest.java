@@ -10,11 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemIdsRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
-import woowacourse.shoppingcart.dto.UpdateCartItemsRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequests;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @SpringBootTest
@@ -74,7 +73,7 @@ public class CartServiceTest {
     @Test
     void 장바구니_상품_정보_수정() {
         var updateCartItemRequest = new UpdateCartItemRequest(1L, 3, false);
-        var updateCartItemsRequest = new UpdateCartItemsRequest(List.of(updateCartItemRequest));
+        var updateCartItemsRequest = new UpdateCartItemRequests(List.of(updateCartItemRequest));
 
         cartService.update(1L, updateCartItemsRequest);
 

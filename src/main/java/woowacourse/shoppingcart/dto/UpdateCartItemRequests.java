@@ -2,13 +2,13 @@ package woowacourse.shoppingcart.dto;
 
 import java.util.List;
 
-public class UpdateCartItemsRequest {
+public class UpdateCartItemRequests {
     private List<UpdateCartItemRequest> products;
 
-    public UpdateCartItemsRequest() {
+    public UpdateCartItemRequests() {
     }
 
-    public UpdateCartItemsRequest(List<UpdateCartItemRequest> updateCartItemRequest) {
+    public UpdateCartItemRequests(List<UpdateCartItemRequest> updateCartItemRequest) {
         this.products = updateCartItemRequest;
     }
 

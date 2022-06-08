@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.service.CartService;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.AuthorizedCustomer;
 import woowacourse.shoppingcart.dto.DeleteCartItemIdsRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.FindAllCartItemResponse;
 import woowacourse.shoppingcart.dto.Request;
-import woowacourse.shoppingcart.dto.UpdateCartItemsRequest;
+import woowacourse.shoppingcart.dto.UpdateCartItemRequests;
 
 @RestController
 @RequestMapping("/cart")
@@ -67,11 +67,11 @@ public class CartItemController {
     @PatchMapping
     public ResponseEntity<FindAllCartItemResponse> updateCartItem(
             @AuthenticationPrincipal final AuthorizedCustomer authorizedCustomer,
-            @RequestBody final UpdateCartItemsRequest updateCartItemsRequest
+            @RequestBody final UpdateCartItemRequests updateCartItemRequests
     ) {
         var customerId = authorizedCustomer.getId();
 
-        cartService.update(customerId, updateCartItemsRequest);
+        cartService.update(customerId, updateCartItemRequests);
         var findAllCartItemResponse = cartService.getAllCartItem(customerId);
 
         return ResponseEntity.ok().body(findAllCartItemResponse);
