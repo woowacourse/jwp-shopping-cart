@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception.handler;
+package woowacourse.exception;
 
 import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;

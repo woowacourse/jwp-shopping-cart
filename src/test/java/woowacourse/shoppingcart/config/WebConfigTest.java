@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static woowacourse.shoppingcart.config.WebConfig.ALLOWED_METHOD_NAMES;
+import static woowacourse.config.WebConfig.ALLOWED_METHOD_NAMES;
 
 @SpringBootTest
 @AutoConfigureMockMvc
