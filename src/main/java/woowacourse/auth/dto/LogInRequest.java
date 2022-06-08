@@ -12,7 +12,6 @@ public class LogInRequest {
     @Size(max = 64)
     private String email;
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9]*$")
     @Size(min = 6)
     private String password;
 
