@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.request.CartItemIdRequest;
 import woowacourse.shoppingcart.application.dto.request.CartItemRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.request.ProductIdRequest;
@@ -15,7 +16,6 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.datanotfound.CartItemDataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundException;
@@ -72,9 +72,10 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCarts(final List<CartItemIdRequest> cartItemIdRequests) {
+        for (CartItemIdRequest cartItemIdRequest : cartItemIdRequests) {
+            cartItemDao.delete(cartItemIdRequest.getId());
+        }
     }
 
     private CartItem addCartItem(final Customer customer, final Long productId) {
@@ -99,18 +100,5 @@ public class CartService {
     private CartItem findCartItemById(final Long cartItemId) {
         return cartItemDao.findCartItemById(cartItemId)
                 .orElseThrow(() -> new CartItemDataNotFoundException("존재하지 않는 장바구니 정보입니다."));
-    }
-
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
-    }
-
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
     }
 }

@@ -79,16 +79,12 @@ public class CartItemDao {
     }
 
     public void updateQuantity(final Long id, final Long customerId, final int quantity) {
-        String query = "UPDATE cart_item SET quantity = ? WHERE id = ? and customer_id = ?";
-        jdbcTemplate.update(query, quantity, id, customerId);
+        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ? and customer_id = ?";
+        jdbcTemplate.update(sql, quantity, id, customerId);
     }
 
-    public void deleteCartItem(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
-
-        final int rowCount = jdbcTemplate.update(sql, id);
-        if (rowCount == 0) {
-            throw new InvalidCartItemException();
-        }
+    public void delete(final Long id) {
+        String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.request.CartItemIdRequest;
 import woowacourse.shoppingcart.application.dto.request.CartItemRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.request.ProductIdRequest;
@@ -19,6 +20,7 @@ import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundExcept
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -123,5 +125,23 @@ class CartServiceTest {
                 () -> assertThat(cartItemResponse.getId()).isEqualTo(cartItemResponses.get(0).getId()),
                 () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(1)
         );
+    }
+
+    @DisplayName("장바구니에 담긴 상품을 제거한다.")
+    @Test
+    void delete() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+
+        Long productId = productService.addProduct(new Product("초콜렛", 1_000, "www.test.com"));
+        ProductIdRequest productIdRequest = new ProductIdRequest(productId);
+
+        List<CartItemResponse> cartItemResponses = cartService.addCartItems(customerIdentificationRequest, List.of(productIdRequest));
+
+        // when & then
+        assertThatCode(() -> cartService.deleteCarts(List.of(new CartItemIdRequest(cartItemResponses.get(0).getId()))))
+                .doesNotThrowAnyException();
     }
 }
