@@ -21,7 +21,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody final TokenRequest tokenRequest) {
-        final TokenResponse accessToken = authService.login(tokenRequest);
-        return ResponseEntity.ok().body(accessToken);
+        try {
+            final TokenResponse accessToken = authService.login(tokenRequest);
+            return ResponseEntity.ok().body(accessToken);
+        }catch (Exception e ){
+            System.out.println("Login에서 발생하는 에러 :" + e.getMessage());
+            throw new IllegalArgumentException("토큰 발급 에러");
+        }
     }
 }
