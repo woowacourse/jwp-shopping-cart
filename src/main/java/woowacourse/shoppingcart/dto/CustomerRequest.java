@@ -5,17 +5,17 @@ import javax.validation.constraints.NotNull;
 public class CustomerRequest {
 
     @NotNull
-    private final String name;
+    private final String userName;
     @NotNull
     private final String password;
 
-    public CustomerRequest(String name, String password) {
-        this.name = name;
+    public CustomerRequest(String userName, String password) {
+        this.userName = userName;
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
     public String getPassword() {
