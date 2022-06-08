@@ -17,7 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.dto.product.ProductRequest;
-import woowacourse.shoppingcart.dto.product.ProductResponse;
+import woowacourse.shoppingcart.dto.product.ProductFindResponse;
 
 @RestController
 @RequestMapping("/api/products")
@@ -30,7 +30,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> findAll() {
+    public ResponseEntity<List<ProductFindResponse>> findAll() {
         return ResponseEntity.ok(productService.findProducts());
     }
 
@@ -45,7 +45,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponse> find(@PathVariable Long productId) {
+    public ResponseEntity<ProductFindResponse> find(@PathVariable Long productId) {
         return ResponseEntity.ok(productService.findProductById(productId));
     }
 

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.product.ProductRequest;
-import woowacourse.shoppingcart.dto.product.ProductResponse;
+import woowacourse.shoppingcart.dto.product.ProductFindResponse;
 import woowacourse.shoppingcart.exception.NoSuchProductException;
 
 @Service
@@ -21,9 +21,9 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<ProductResponse> findProducts() {
+    public List<ProductFindResponse> findProducts() {
         return productDao.findSellingProducts().stream()
-                .map(ProductResponse::new)
+                .map(ProductFindResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -31,10 +31,10 @@ public class ProductService {
         return productDao.save(productRequest.toProduct());
     }
 
-    public ProductResponse findProductById(Long productId) {
+    public ProductFindResponse findProductById(Long productId) {
         Product product = productDao.findProductById(productId)
                 .orElseThrow(NoSuchProductException::new);;
-        return new ProductResponse(product);
+        return new ProductFindResponse(product);
     }
 
     public void deleteProductById(Long productId) {

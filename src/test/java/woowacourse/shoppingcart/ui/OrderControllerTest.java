@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import static Fixture.CustomerFixtures.*;
+import static Fixture.ProductFixtures.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -90,7 +91,7 @@ public class OrderControllerTest {
         LoginCustomer loginCustomer = new LoginCustomer("pobi123");
         Long orderId = 1L;
         Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "http://banana.png", 2)));
+                Collections.singletonList(new OrderDetail(CHICKEN, 2)));
 
         String token = "Bearer " + provider.createToken(YAHO_USERNAME);
 
@@ -110,10 +111,8 @@ public class OrderControllerTest {
         // given
         LoginCustomer loginCustomer = new LoginCustomer("pobi123");
         List<Orders> expected = Arrays.asList(
-                new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", "http://banana.png", 2))),
-                new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", "http://apple.png", 4)))
+                new Orders(1L, Collections.singletonList(new OrderDetail(CHICKEN, 2))),
+                new Orders(2L, Collections.singletonList(new OrderDetail(BEER, 4)))
         );
 
         String token = "Bearer " + provider.createToken(YAHO_USERNAME);

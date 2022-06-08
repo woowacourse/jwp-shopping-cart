@@ -149,8 +149,8 @@
 - [x] jdbcTemplate 대신 NamedParameterJdbcTemplate과 SimpleJdbcInsert 사용하도록 수정
 - [x] controller 중복 Path RequestMapping 으로 제거 
 - [x] 파라미터 final 제거 
-- [ ] dto로 사용되고 있는 domain 패키지를 dto 패키지로 수정 
-- [ ] domain 새로 만들기 
+- [x] dto로 사용되고 있는 domain 패키지를 dto 패키지로 수정 
+- [x] domain 새로 만들기 
 - api 명세 수정
     - [x] 팀 회의로 결정된 api 명세에 맞도록 path 수정
     - [x] 팀 회의로 결정된 api 명세에 맞도록 request, response 수정

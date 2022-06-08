@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,16 +10,14 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
-import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dao.OrdersRepository;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.NoSuchProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -30,15 +27,15 @@ public class OrderService {
     private final OrdersDetailDao ordersDetailDao;
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
+    private final OrdersRepository ordersRepository;
 
     public OrderService(OrderDao orderDao, OrdersDetailDao ordersDetailDao,
-            CartItemDao cartItemDao, CustomerDao customerDao, ProductDao productDao) {
+            CartItemDao cartItemDao, CustomerDao customerDao, OrdersRepository ordersRepository) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
+        this.ordersRepository = ordersRepository;
     }
 
     public Long addOrder(List<OrderRequest> orderDetailRequests, LoginCustomer loginCustomer) {
@@ -84,14 +81,19 @@ public class OrderService {
     }
 
     private Orders findOrderResponseDtoByOrderId(Long orderId) {
-        List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            Product product = productDao.findProductById(productQuantity.getProductId())
-                    .orElseThrow(NoSuchProductException::new);;
-            int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
-        }
-
+        List<OrderDetail> ordersDetails = ordersRepository.findOrdersDetailsByOrderId(orderId);
         return new Orders(orderId, ordersDetails);
     }
+
+    // private Orders findOrderResponseDtoByOrderId(Long orderId) {
+    //     List<OrderDetail2> ordersDetails = new ArrayList<>();
+    //     for (OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
+    //         Product product = productDao.findProductById(productQuantity.getProductId())
+    //                 .orElseThrow(NoSuchProductException::new);;
+    //         int quantity = productQuantity.getQuantity();
+    //         ordersDetails.add(new OrderDetail2(product, quantity));
+    //     }
+    //
+    //     return new Orders(orderId, ordersDetails);
+    // }
 }

@@ -14,9 +14,8 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.product.ProductRequest;
-import woowacourse.shoppingcart.dto.product.ProductResponse;
+import woowacourse.shoppingcart.dto.product.ProductFindResponse;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
@@ -114,15 +113,15 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", ProductResponse.class).stream()
-                .map(ProductResponse::getId)
+        List<Long> resultProductIds = response.jsonPath().getList(".", ProductFindResponse.class).stream()
+                .map(ProductFindResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
     }
 
     public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
-        ProductResponse resultProductResponse = response.as(ProductResponse.class);
-        assertThat(resultProductResponse.getId()).isEqualTo(productId);
+        ProductFindResponse resultProductFindResponse = response.as(ProductFindResponse.class);
+        assertThat(resultProductFindResponse.getId()).isEqualTo(productId);
     }
 
     public static void 상품_삭제됨(ExtractableResponse<Response> response) {

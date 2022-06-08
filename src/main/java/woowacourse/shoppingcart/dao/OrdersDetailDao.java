@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.dao.dto.IdDto;
 import woowacourse.shoppingcart.dao.dto.OrdersDetailDto;
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.dao.dto.OrderDetailDto;
 
 @Repository
 public class OrdersDetailDao {
@@ -33,16 +33,17 @@ public class OrdersDetailDao {
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<OrderDetail> findOrdersDetailsByOrderId(Long orderId) {
-        String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = :id";
+    public List<OrderDetailDto> findOrdersDetailsByOrderId(Long orderId) {
+        String sql = "SELECT id, product_id, quantity FROM orders_detail WHERE orders_id = :id";
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(new IdDto(orderId));
         return jdbcTemplate.query(sql, parameterSource, mapToOrderDetail());
     }
 
-    private RowMapper<OrderDetail> mapToOrderDetail() {
-        return (resultSet, rowNum) -> new OrderDetail(
+    private RowMapper<OrderDetailDto> mapToOrderDetail() {
+        return (resultSet, rowNum) -> new OrderDetailDto(
+                resultSet.getLong("id"),
                 resultSet.getLong("product_id"),
                 resultSet.getInt("quantity")
-        );
+                );
     }
 }
