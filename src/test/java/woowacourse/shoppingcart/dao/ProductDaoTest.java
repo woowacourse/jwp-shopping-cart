@@ -27,22 +27,6 @@ public class ProductDaoTest {
         this.productDao = new ProductDao(jdbcTemplate);
     }
 
-    @DisplayName("Product를 저장하면, id를 반환한다.")
-    @Test
-    void save() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final int stock = 10;
-
-        // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl, stock));
-
-        // then
-        assertThat(productId).isNotNull();
-    }
-
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
     @Test
     void findProductById() {
@@ -59,7 +43,7 @@ public class ProductDaoTest {
 
     @DisplayName("상품 목록 조회")
     @Test
-    void getProducts() {
+    void findProducts() {
         // given
         final int size = 3;
 
@@ -68,25 +52,6 @@ public class ProductDaoTest {
 
         // then
         assertThat(products).size().isEqualTo(size);
-    }
-
-    @DisplayName("상품 삭제")
-    @Test
-    void deleteProduct() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final int stock = 10;
-
-        final Long productId = productDao.save(new Product(name, price, imageUrl, stock));
-
-        // when
-        productDao.delete(productId);
-
-        // then
-        assertThatThrownBy(() -> productDao.findProductById(productId))
-                .isInstanceOf(InvalidProductException.class);
     }
 
     @DisplayName("전체 상품 개수 조회")

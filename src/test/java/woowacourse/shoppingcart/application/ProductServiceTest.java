@@ -24,11 +24,11 @@ class ProductServiceTest {
     @DisplayName("상품 목록을 조회한다.")
     @Test
     void products() {
-        final PageRequest pageRequest = new PageRequest(1, 2);
+        final PageRequest pageRequest = new PageRequest(3, 2);
 
         assertThat(productService.findProducts(pageRequest))
                 .hasSize(2)
                 .extracting(Product::getId)
-                .contains(1L, 2L);
+                .contains(5L, 6L);
     }
 }

@@ -28,22 +28,6 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url, stock) VALUES (?, ?, ?, ?)";
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
-            preparedStatement.setInt(4, product.getStock());
-            return preparedStatement;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
-
     public Product findProductById(final Long productId) {
         try {
             final String query = "SELECT id, name, price, image_url, stock FROM product WHERE id = ?";
@@ -57,11 +41,6 @@ public class ProductDao {
         final String query = "SELECT id, name, price, image_url, stock FROM product ORDER BY id"
                 + " LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER, limit, (offset - 1) * limit);
-    }
-
-    public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
     }
 
     public int findTotalCount() {
