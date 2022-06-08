@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthorizationFailureException;
 import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.exception.PasswordNotMatchException;
+import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -27,7 +28,8 @@ import woowacourse.shoppingcart.ui.error.dto.response.ErrorResponse;
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+    public ResponseEntity<ErrorResponse> handleUnhandledException(final RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity.badRequest().body(new ErrorResponse("Unhandled Exception"));
     }
 
@@ -59,6 +61,7 @@ public class ControllerAdvice {
             InvalidCartItemException.class,
             NoSuchEmailException.class,
             PasswordNotMatchException.class,
+            DuplicatedEmailException.class
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
