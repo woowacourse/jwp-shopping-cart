@@ -5,36 +5,34 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.shoppingcart.application.CartItemService;
-import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.dao.CartQueryDao;
 import woowacourse.shoppingcart.dto.cartitem.CartItemCreateRequest;
+import woowacourse.shoppingcart.dto.cartitem.CartResponse;
 
 @RestController
 @RequestMapping("/api/customers/{customerId}/carts")
 @RequiredArgsConstructor
-public class CartItemController {
+public class CartController {
 
-    private final CartItemService cartItemService;
+    private final CartService cartService;
+    private final CartQueryDao cartQueryDao;
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(
             @PathVariable final long customerId,
             @RequestBody final CartItemCreateRequest requestBody
     ) {
-        final Long cartId = cartItemService.addCartItem(requestBody.getProductId(), customerId, requestBody.getCount());
+        final Long cartId = cartService.addCartItem(requestBody.getProductId(), customerId, requestBody.getCount());
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")
@@ -45,15 +43,14 @@ public class CartItemController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CartItem> getCartItems(@PathVariable final long customerId) {
-        cartItemService.findCartsByCustomerId(customerId);
-        return null;
+    public List<CartResponse> getCartItems(@PathVariable final long customerId) {
+        return cartQueryDao.findAllCartByCustomerId(customerId);
     }
 
     @DeleteMapping("/{cartId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCartItem(@PathVariable final long customerId,
-                                               @PathVariable final long cartId) {
-        cartItemService.deleteCart(customerId, cartId);
+                               @PathVariable final long cartId) {
+        cartService.deleteCart(customerId, cartId);
     }
 }

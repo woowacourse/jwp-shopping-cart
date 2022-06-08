@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.specification.CustomerSpecification;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
@@ -17,7 +16,7 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 @Service
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
-public class CartItemService {
+public class CartService {
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;

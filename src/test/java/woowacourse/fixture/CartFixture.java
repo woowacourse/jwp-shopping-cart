@@ -1,6 +1,7 @@
 package woowacourse.fixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.fixture.Fixture.covertTypeList;
 import static woowacourse.fixture.Fixture.delete;
 import static woowacourse.fixture.Fixture.get;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.dto.cartitem.CartResponse;
 
 public class CartFixture {
 
@@ -44,15 +45,15 @@ public class CartFixture {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static void 장바구니_아이템_목록_응답_검증(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
     public static void 장바구니_아이템_목록_포함_검증(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", CartItem.class).stream()
-                .map(CartItem::getProductId)
+        List<CartResponse> cartResponses = covertTypeList(response, CartResponse.class);
+        List<Long> resultProductIds = cartResponses.stream()
+                .map(CartResponse::getProductId)
                 .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productIds);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(resultProductIds).containsExactlyInAnyOrder(productIds);
+        assertThat(cartResponses.size()).isEqualTo(2);
     }
 
     public static void 장바구니_삭제_검증(ExtractableResponse<Response> response) {

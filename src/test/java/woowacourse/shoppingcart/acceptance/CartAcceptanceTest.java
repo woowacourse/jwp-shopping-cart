@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.fixture.CartFixture.장바구니_삭제_검증;
 import static woowacourse.fixture.CartFixture.장바구니_삭제_요청;
-import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_응답_검증;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_조회_요청;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_포함_검증;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_요청후_ID_반환;
@@ -13,16 +13,20 @@ import static woowacourse.fixture.ProductFixture.상품_등록되어_있음;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.fixture.CustomFixture;
 import woowacourse.global.AcceptanceTest;
+import woowacourse.shoppingcart.dto.cartitem.CartResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 
 @DisplayName("장바구니 관련 기능")
-public class CartItemAcceptanceTest extends AcceptanceTest {
+public class CartAcceptanceTest extends AcceptanceTest {
 
     private String token;
     private long customerId;
@@ -55,9 +59,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token, customerId);
 
-        장바구니_아이템_목록_응답_검증(response);
         장바구니_아이템_목록_포함_검증(response, productId1, productId2);
     }
+
+
 
     @DisplayName("장바구니 삭제")
     @Test
