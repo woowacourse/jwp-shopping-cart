@@ -8,10 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import woowacourse.auth.support.PasswordEncoder;
-import woowacourse.shoppingcart.dto.response.CustomerDto;
 import woowacourse.shoppingcart.dto.request.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.request.SignUpDto;
 import woowacourse.shoppingcart.dto.request.UpdateCustomerDto;
+import woowacourse.shoppingcart.dto.response.CustomerDto;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -73,7 +73,7 @@ class CustomerServiceTest {
 
         assertThatThrownBy(() -> customerService.updateCustomer(createdCustomerId, changeForm))
                 .isInstanceOf(DuplicateNameException.class)
-                .hasMessageContaining("수정하려는 이름이 이미 존재합니다.");
+                .hasMessage("이미 존재하는 닉네임입니다.");
     }
 
     @Test

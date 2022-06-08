@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -35,8 +36,6 @@ class CartItemControllerTest extends ControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private CartItemController cartItemController;
     @MockBean
     private CartService cartService;
     @MockBean
@@ -53,9 +52,11 @@ class CartItemControllerTest extends ControllerTest {
     @Test
     @DisplayName("장바구니에 담긴 물건들을 가져온다.")
     void getCartItems() throws Exception {
+        final CartItemResponseDto cartItemResponseDto1 = new CartItemResponseDto(1L, THUMBNAIL_URL, PRODUCT_NAME, PRICE, 10, 1);
+        final CartItemResponseDto cartItemResponseDto2 = new CartItemResponseDto(2L, THUMBNAIL_URL, PRODUCT_NAME, PRICE, 10, 1);
         final List<CartItemResponseDto> cartItems = List.of(
-                new CartItemResponseDto(1L, THUMBNAIL_URL, PRODUCT_NAME, PRICE, 10, 1),
-                new CartItemResponseDto(2L, THUMBNAIL_URL, PRODUCT_NAME, PRICE, 10, 1)
+                cartItemResponseDto1,
+                cartItemResponseDto2
         );
         when(cartService.findCartsByCustomerId(any())).thenReturn(cartItems);
 
@@ -71,6 +72,9 @@ class CartItemControllerTest extends ControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(cartItemResponseDtos.size()).isEqualTo(2);
+        assertThat(cartItemResponseDtos).extracting("productId","name")
+        .contains(tuple(1L, PRODUCT_NAME),
+                tuple(2L, PRODUCT_NAME));
     }
 
     @Test
@@ -95,7 +99,7 @@ class CartItemControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("장바구니에 담긴 물건을 삭제한다.")
-    void deleteCartItem() throws Exception{
+    void deleteCartItem() throws Exception {
         doNothing().when(authService).checkAuthorization(any(), any());
         doNothing().when(cartService).deleteCart(any(), any());
         when(cartService.addCart(any(), any())).thenReturn(1L);
@@ -123,7 +127,7 @@ class CartItemControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("장바구니에 담긴 물건의 수량을 수정한다.")
-    void updateCartItem() throws Exception{
+    void updateCartItem() throws Exception {
         doNothing().when(authService).checkAuthorization(any(), any());
         when(cartService.addCart(any(), any())).thenReturn(1L);
 

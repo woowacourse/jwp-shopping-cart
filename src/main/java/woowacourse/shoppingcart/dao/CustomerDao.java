@@ -13,9 +13,7 @@ import woowacourse.shoppingcart.domain.customer.Username;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
-import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -38,7 +36,7 @@ public class CustomerDao {
     public Long save(final Customer customer) {
         final String query = "INSERT INTO customer(email, password, username) values(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
-        try{
+        try {
             jdbcTemplate.update(connection -> {
                 final PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
                 preparedStatement.setString(1, customer.getEmail());
@@ -46,10 +44,9 @@ public class CustomerDao {
                 preparedStatement.setString(3, customer.getUsername());
                 return preparedStatement;
             }, keyHolder);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateNameException("이미 가입된 닉네임입니다.");
         }
-
         return keyHolder.getKey().longValue();
     }
 
@@ -82,15 +79,17 @@ public class CustomerDao {
 
     public void update(final Customer customer) {
         final String query = "UPDATE customer SET username = ? WHERE id = ?";
-
-        final int changedRowCount = jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, customer.getUsername());
-            preparedStatement.setLong(2, customer.getId());
-            return preparedStatement;
-        });
-
-        checkAffectedRowCount(changedRowCount);
+        try {
+            final int changedRowCount = jdbcTemplate.update(connection -> {
+                final PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, customer.getUsername());
+                preparedStatement.setLong(2, customer.getId());
+                return preparedStatement;
+            });
+            checkAffectedRowCount(changedRowCount);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateNameException("이미 존재하는 닉네임입니다.");
+        }
     }
 
     public void deleteById(final Long id) {

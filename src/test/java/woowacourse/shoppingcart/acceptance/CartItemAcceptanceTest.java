@@ -70,6 +70,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
         assertThat(cartItemResponseDtos.size()).isEqualTo(2);
+        assertThat(cartItemResponseDtos.get(0).getProductId()).isEqualTo(productId1);
+        assertThat(cartItemResponseDtos.get(1).getProductId()).isEqualTo(productId2);
     }
 
     @Test
@@ -84,7 +86,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
         assertThat(cartItemResponseDtos.size()).isEqualTo(1);
-
+        assertThat(cartItemResponseDtos.get(0).getProductId()).isEqualTo(productId1);
     }
 
     @Test

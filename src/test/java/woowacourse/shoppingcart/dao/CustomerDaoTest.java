@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.exception.DuplicateNameException;
 
 import java.util.Optional;
 
@@ -122,7 +122,8 @@ class CustomerDaoTest {
         );
 
         assertThatThrownBy(() -> customerDao.update(changeForm))
-                .isInstanceOf(DataIntegrityViolationException.class);
+                .isInstanceOf(DuplicateNameException.class)
+                .hasMessage("이미 존재하는 닉네임입니다.");
     }
 
     @Test

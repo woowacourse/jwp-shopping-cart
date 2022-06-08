@@ -58,7 +58,10 @@ class AuthControllerTest extends ControllerTest {
                 .andReturn()
                 .getResponse();
 
+        TokenResponseDto tokenResponseDto = objectMapper.readValue(response.getContentAsString(), TokenResponseDto.class);
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(tokenResponseDto.getAccessToken()).isNotNull();
+        assertThat(tokenResponseDto.getExpirationTime()).isNotNull();
     }
 
     @ParameterizedTest

@@ -18,6 +18,7 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
 import woowacourse.shoppingcart.dto.response.CustomerDto;
 import woowacourse.shoppingcart.dto.request.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.request.SignUpDto;
@@ -78,7 +79,7 @@ class CustomerControllerTest extends ControllerTest {
         when(customerService.findCustomerByEmail(any(String.class)))
                 .thenReturn(new CustomerDto(CUSTOMER_ID, TEST_EMAIL, TEST_USERNAME));
         when(customerService.updateCustomer(any(Long.class), any(UpdateCustomerDto.class))).thenReturn(new CustomerDto(
-                CUSTOMER_ID, TEST_EMAIL, "테스트2"));
+                CUSTOMER_ID, TEST_EMAIL, "test2"));
 
         final UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto("테스트2");
 
@@ -91,7 +92,10 @@ class CustomerControllerTest extends ControllerTest {
                 .andReturn()
                 .getResponse();
 
+        CustomerDto customer = objectMapper.readValue(response.getContentAsString(), CustomerDto.class);
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(customer.getUsername()).isEqualTo("test2");
+
     }
 
     @Test
