@@ -9,10 +9,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.member.domain.Member;
 import woowacourse.member.domain.password.ExistPassword;
-import woowacourse.member.exception.MemberNotFoundException;
 
 import javax.sql.DataSource;
-import java.util.Locale;
 import java.util.Optional;
 
 @Repository
