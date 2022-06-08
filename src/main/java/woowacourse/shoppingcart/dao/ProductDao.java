@@ -67,4 +67,9 @@ public class ProductDao {
         final String query = "DELETE FROM product WHERE id = ?";
         return jdbcTemplate.update(query, productId) == FUNCTION_SUCCESS;
     }
+
+    public Integer countProducts() {
+        final String query = "SELECT count(*) from product";
+        return jdbcTemplate.queryForObject(query, Integer.class);
+    }
 }

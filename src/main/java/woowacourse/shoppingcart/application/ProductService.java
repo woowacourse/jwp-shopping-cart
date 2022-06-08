@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Page;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.dto.request.ProductRequest;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.dto.response.ProductsResponse;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -33,7 +33,8 @@ public class ProductService {
                 )
                 .collect(Collectors.toList());
 
-        return new ProductsResponse(products.size(), products);
+        final Integer totalCount = productDao.countProducts();
+        return new ProductsResponse(totalCount, products);
     }
 
     public Long addProduct(final ProductRequest productRequest) {

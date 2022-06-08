@@ -80,7 +80,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(제품_전체_조회.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(제품_전체_조회_응답.getTotalCount()).isEqualTo(size);
+        assertThat(제품_전체_조회_응답.getTotalCount()).isEqualTo(12);
     }
 
     @DisplayName("상품을 조회한다")
