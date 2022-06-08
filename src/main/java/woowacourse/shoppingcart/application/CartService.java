@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartItemCreateRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -55,14 +56,25 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
+    public CartItemResponse updateQuantity(LoginCustomer loginCustomer, Long cartItemId,
+                                           CartItemUpdateRequest cartItemUpdateRequest) {
+        customerDao.findByLoginId(loginCustomer.getLoginId());
+        final Long productId = cartItemDao.findProductIdById(cartItemId);
+        final Product product = productDao.findProductById(productId);
+
+        int quantity = cartItemUpdateRequest.getQuantity();
+        cartItemDao.updateById(quantity, cartItemId);
+        return CartItemResponse.of(cartItemId, new CartItem(cartItemId, product, quantity));
+    }
+
     public void deleteAll(LoginCustomer loginCustomer) {
         final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
         cartItemDao.deleteAllByCustomerId(customer.getId());
     }
 
-    public void deleteCart(final LoginCustomer loginCustomer, final Long cartId) {
-        validateCustomerCart(cartId, loginCustomer);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCart(final LoginCustomer loginCustomer, final Long id) {
+        validateCustomerCart(id, loginCustomer);
+        cartItemDao.deleteCartItem(id);
     }
 
     private void validateCustomerCart(final Long cartId, final LoginCustomer loginCustomer) {

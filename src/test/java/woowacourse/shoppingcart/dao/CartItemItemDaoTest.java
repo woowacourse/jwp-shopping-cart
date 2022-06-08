@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,6 +81,17 @@ class CartItemItemDaoTest {
 
         // then
         assertThat(cartIds).containsExactly(1L, 2L);
+    }
+
+    @DisplayName("id에 해당하는 장바구니 아이템의 수량을 수정한다.")
+    @Test
+    void updateById() {
+        // given
+        final Long cartId = 1L;
+        final int quantity = 10;
+
+        // when & then
+        assertDoesNotThrow(() -> cartItemDao.updateById(quantity, cartId));
     }
 
     @DisplayName("Customer Id에 해당하는 장바구니 아이템을 모두 삭제한다.")

@@ -22,6 +22,8 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.CartItemCreateRequest;
+import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
 
 @DisplayName("장바구니 관련 기능")
 class CartItemAcceptanceTest extends AcceptanceTest {
@@ -57,6 +59,38 @@ class CartItemAcceptanceTest extends AcceptanceTest {
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
+    }
+
+    @DisplayName("장바구니 상품 수량 수정")
+    @Test
+    void updateQuantity() {
+        String accessToken = 인증토큰_생성();
+        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        CartItemUpdateRequest request = new CartItemUpdateRequest(10);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_수정_요청(accessToken, request, cartItemId);
+
+        장바구니_아이템_수량_응답됨(response);
+    }
+
+    private void 장바구니_아이템_수량_응답됨(ExtractableResponse<Response> response) {
+        CartItemResponse cartItemResponse = response.as(CartItemResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(10)
+        );
+    }
+
+    private ExtractableResponse<Response> 장바구니_아이템_수량_수정_요청(String accessToken, CartItemUpdateRequest request,
+                                                            Long cartItemId) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/customers/carts/" + cartItemId)
+                .then().log().all()
+                .extract();
     }
 
     @DisplayName("장바구니 모두 삭제")

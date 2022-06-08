@@ -22,6 +22,10 @@ public class CartItem {
         this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), DEFAULT_QUANTITY);
     }
 
+    public CartItem(final Long id, final Product product, int quantity) {
+        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
+    }
+
     public CartItem(final Long id, final Long productId, final String name, final int price, final String imageUrl,
                     final int quantity) {
         this.id = id;
