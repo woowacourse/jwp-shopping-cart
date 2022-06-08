@@ -70,7 +70,7 @@ public class CustomerDao {
     }
 
     public void update(final Customer newCustomer) {
-        String query = "update customer set nickname = :nickname where id = :id and exists" + REAL_CUSTOMER_QUERY;
+        String query = "update customer set nickname = :nickname where id = :id and withdrawal = false";
         Map<String, Object> params = new HashMap<>();
         params.put("id", newCustomer.getId());
         params.put("nickname", newCustomer.getNickname());
@@ -82,7 +82,7 @@ public class CustomerDao {
 
     public void updatePassword(final Long id, final String oldPassword, final String newPassword) {
         String query = "update customer set password = :newPassword"
-                + " where id = :id and password = :oldPassword and exists" + REAL_CUSTOMER_QUERY;
+                + " where id = :id and password = :oldPassword and withdrawal = false";
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
         params.put("newPassword", newPassword);
