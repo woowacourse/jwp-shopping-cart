@@ -56,11 +56,11 @@ public class ProductDao {
         }
     }
 
-    public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
+    public List<Product> findProducts(final int startIndex, final int limit) {
+        final String query = "SELECT id, name, price, image_url FROM product LIMIT ?, ?";
         return jdbcTemplate.query(query,
                 (resultSet, rowNumber) ->
-                        rowMapperToProduct(resultSet.getLong("id"), resultSet));
+                        rowMapperToProduct(resultSet.getLong("id"), resultSet), startIndex, limit);
     }
 
     public int delete(final Long productId) {

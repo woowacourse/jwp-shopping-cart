@@ -29,8 +29,9 @@ public class ProductService {
         return ProductDetailServiceResponse.from(product);
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public List<Product> findProducts(final int page, final int limit) {
+        final int startIndex = limit * (page - 1);
+        return productDao.findProducts(startIndex, limit);
     }
 
     public void deleteProductById(final Long productId) {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.application.dto.ProductDetailServiceResponse;
@@ -42,8 +43,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> showProducts() {
-        return ResponseEntity.ok(productService.findProducts());
+    public ResponseEntity<List<Product>> showProducts(@RequestParam final int page,
+                                                      @RequestParam(required = false, defaultValue = "10") final int limit) {
+        return ResponseEntity.ok(productService.findProducts(page, limit));
     }
 
     @DeleteMapping("/{productId}")
