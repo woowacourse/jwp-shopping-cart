@@ -40,11 +40,11 @@ public class Product {
         return name;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public Integer getStock() {
+    public int getStock() {
         return stock;
     }
 
