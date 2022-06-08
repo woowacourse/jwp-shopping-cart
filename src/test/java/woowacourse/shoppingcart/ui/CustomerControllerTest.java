@@ -18,6 +18,7 @@ import woowacourse.shoppingcart.dto.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailUniqueCheckResponse;
+import woowacourse.shoppingcart.dto.PasswordCheckResponse;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -87,9 +88,9 @@ class CustomerControllerTest {
     void checkPassword() {
         final PasswordRequest passwordRequest = new PasswordRequest("password123!");
 
-        final ResponseEntity<Void> response = customerController.checkPassword("email@email.com", passwordRequest);
+        final ResponseEntity<PasswordCheckResponse> response = customerController.checkPassword("email@email.com", passwordRequest);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @DisplayName("비밀번호를 확인에 실패한다.")
