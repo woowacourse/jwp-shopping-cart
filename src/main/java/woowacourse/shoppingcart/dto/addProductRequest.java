@@ -1,10 +1,13 @@
 package woowacourse.shoppingcart.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class addProductRequest {
 
     private String name;
     private int price;
     private int stockQuantity;
+    @JsonProperty("thumbnailImage")
     private ImageDto thumbnailImage;
 
     public addProductRequest() {
