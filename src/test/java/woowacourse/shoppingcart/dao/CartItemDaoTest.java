@@ -66,6 +66,22 @@ public class CartItemDaoTest {
                 );
     }
 
+    @DisplayName("customerId와 productId로 장바구니를 조회한다")
+    @Test
+    void findByCustomerIdAndProductId() {
+        // given
+        final Long customerId = 1L;
+        final Long productId = 1L;
+
+        // when
+        final CartItemEntity cartItemEntity = cartItemDao.findByCustomerIdAndProductId(customerId, productId);
+
+        // then
+        assertThat(cartItemEntity)
+                .usingRecursiveComparison()
+                .isEqualTo(new CartItemEntity(1L, 1L, 1L, 1));
+    }
+
     @DisplayName("cartId로 장바구니를 조회한다.")
     @Test
     void findById() {
