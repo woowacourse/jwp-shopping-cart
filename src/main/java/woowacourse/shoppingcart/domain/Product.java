@@ -16,10 +16,6 @@ public class Product {
         this.stock = stock;
     }
 
-    public Product(final String name, final int price, final String imageUrl, final int stock) {
-        this(null, name, price, imageUrl, stock);
-    }
-
     public String getName() {
         return name;
     }

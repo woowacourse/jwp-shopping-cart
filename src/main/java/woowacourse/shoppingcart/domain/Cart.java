@@ -5,9 +5,6 @@ public class Cart {
     private Product product;
     private int quantity;
 
-    public Cart() {
-    }
-
     public Cart(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
