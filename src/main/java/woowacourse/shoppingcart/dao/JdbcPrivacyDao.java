@@ -29,7 +29,7 @@ public class JdbcPrivacyDao implements PrivacyDao {
 
     @Override
     public void save(PrivacyEntity privacyEntity) {
-        String sql = "INSERT INTO PRIVACY (customer_id, name, gender, birth_day, contact) VALUES(:customerId, :name, :gender, :birthday ,:contact)";
+        String sql = "INSERT INTO privacy (customer_id, name, gender, birth_day, contact) VALUES(:customerId, :name, :gender, :birthday ,:contact)";
 
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(privacyEntity);
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
@@ -37,13 +37,13 @@ public class JdbcPrivacyDao implements PrivacyDao {
 
     @Override
     public PrivacyEntity findById(int id) {
-        String sql = "SELECT customer_id, name, gender, birth_day, contact FROM PRIVACY WHERE customer_id = ?";
+        String sql = "SELECT customer_id, name, gender, birth_day, contact FROM privacy WHERE customer_id = ?";
         return jdbcTemplate.queryForObject(sql, PRIVACY_ENTITY_ROW_MAPPER, id);
     }
 
     @Override
     public void update(PrivacyEntity privacyEntity) {
-        String sql = "UPDATE PRIVACY SET name = :name, gender = :gender, birth_day = :birthday, contact = :contact WHERE customer_id = :customerId";
+        String sql = "UPDATE privacy SET name = :name, gender = :gender, birth_day = :birthday, contact = :contact WHERE customer_id = :customerId";
 
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(privacyEntity);
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
@@ -51,7 +51,7 @@ public class JdbcPrivacyDao implements PrivacyDao {
 
     @Override
     public void delete(int customerId) {
-        String sql = "DELETE FROM PRIVACY WHERE customer_id = ?";
+        String sql = "DELETE FROM privacy WHERE customer_id = ?";
         jdbcTemplate.update(sql, customerId);
     }
 }

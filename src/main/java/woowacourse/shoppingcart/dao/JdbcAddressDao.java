@@ -28,7 +28,7 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public void save(AddressEntity addressEntity) {
-        String sql = "INSERT INTO FULL_ADDRESS (customer_id, address, detail_address, zone_code) VALUES(:customerId, :address, :detailAddress, :zoneCode)";
+        String sql = "INSERT INTO full_address (customer_id, address, detail_address, zone_code) VALUES(:customerId, :address, :detailAddress, :zoneCode)";
 
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(addressEntity);
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
@@ -36,13 +36,13 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public AddressEntity findById(int id) {
-        String sql = "SELECT customer_id, address, detail_address, zone_code FROM FULL_ADDRESS WHERE customer_id = ?";
+        String sql = "SELECT customer_id, address, detail_address, zone_code FROM full_address WHERE customer_id = ?";
         return jdbcTemplate.queryForObject(sql, ADDRESS_ENTITY_ROW_MAPPER, id);
     }
 
     @Override
     public void update(AddressEntity addressEntity) {
-        String sql = "UPDATE FULL_ADDRESS SET address = :address, detail_address = :detailAddress, zone_code = :zoneCode WHERE customer_id = :customerId";
+        String sql = "UPDATE full_address SET address = :address, detail_address = :detailAddress, zone_code = :zoneCode WHERE customer_id = :customerId";
 
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(addressEntity);
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
@@ -50,7 +50,7 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public void delete(int customerId) {
-        String sql = "DELETE FROM FULL_ADDRESS WHERE customer_id = ?";
+        String sql = "DELETE FROM full_address WHERE customer_id = ?";
         jdbcTemplate.update(sql, customerId);
     }
 }
