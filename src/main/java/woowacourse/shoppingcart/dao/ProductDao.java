@@ -4,11 +4,11 @@ import java.util.List;
 import woowacourse.shoppingcart.domain.Product;
 
 public interface ProductDao {
-    Long save(final Product product);
+    Long save(Product product);
 
-    Product findById(final Long productId);
+    Product findById(long productId);
 
     List<Product> findAll();
 
-    void delete(final Long productId);
+    void delete(long productId);
 }

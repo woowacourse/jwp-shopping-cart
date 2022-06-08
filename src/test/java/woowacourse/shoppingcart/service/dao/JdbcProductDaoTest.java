@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.service.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -20,11 +21,10 @@ import woowacourse.shoppingcart.domain.Product;
 @Sql("classpath:schema.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class JdbcProductDaoTest {
-
     private final ProductDao productDao;
 
-    public JdbcProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new JdbcProductDao(jdbcTemplate);
+    public JdbcProductDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+        this.productDao = new JdbcProductDao(jdbcTemplate, dataSource);
     }
 
     @DisplayName("Product를 저장하면, id를 반환한다.")

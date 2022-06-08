@@ -44,7 +44,7 @@ class CartServiceTest {
     @Autowired
     public CartServiceTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         cartItemDao = new JdbcCartItemDao(jdbcTemplate, dataSource);
-        productDao = new JdbcProductDao(jdbcTemplate);
+        productDao = new JdbcProductDao(jdbcTemplate, dataSource);
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
 
         cartService = new CartService(cartItemDao, productDao);

@@ -44,7 +44,7 @@ public class JdbcCartItemDaoTest {
 
     public JdbcCartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         cartItemDao = new JdbcCartItemDao(jdbcTemplate, dataSource);
-        productDao = new JdbcProductDao(jdbcTemplate);
+        productDao = new JdbcProductDao(jdbcTemplate, dataSource);
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
     }
 

@@ -1,76 +1,70 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.notfound.ProductNotFoundException;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
-    private final JdbcTemplate jdbcTemplate;
+    private static final String TABLE_NAME = "product";
+    private static final String KEY_COLUMN = "id";
 
-    public JdbcProductDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
-    // TODO: SimpleInsert 사용하도록 개선
-    public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, description, price, stock, image_url) VALUES (?, ?, ?, ?, ?)";
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setString(2, product.getDescription());
-            preparedStatement.setInt(3, product.getPrice());
-            preparedStatement.setInt(4, product.getStock());
-            preparedStatement.setString(5, product.getImageUrl());
-            return preparedStatement;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
-
-    // TODO: mapper를 상수로 분리
-    public Product findById(final Long productId) {
-        try {
-            final String query = "SELECT name, description, price, stock, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"),
-                            resultSet.getString("description"),
-                            resultSet.getInt("price"),
-                            resultSet.getInt("stock"),
-                            resultSet.getString("image_url")
-                    ), productId
+    private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (resultSet, rowNumber) ->
+            new Product(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("description"),
+                    resultSet.getInt("price"),
+                    resultSet.getInt("stock"),
+                    resultSet.getString("image_url")
             );
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public JdbcProductDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns(KEY_COLUMN);
+    }
+
+    public Long save(Product product) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", product.getName());
+        params.put("description", product.getDescription());
+        params.put("price", product.getPrice());
+        params.put("stock", product.getStock());
+        params.put("image_url", product.getImageUrl());
+
+        return jdbcInsert.executeAndReturnKey(params).longValue();
+    }
+
+    public Product findById(long productId) {
+        String query = "SELECT id, name, description, price, stock, image_url FROM product WHERE id = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, productId);
         } catch (EmptyResultDataAccessException e) {
             throw new ProductNotFoundException();
         }
     }
 
-    // TODO: mapper를 상수로 분리
     public List<Product> findAll() {
         final String query = "SELECT id, name, description, price, stock, image_url FROM product";
-        return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("description"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getInt("stock"),
-                                resultSet.getString("image_url")
-                        ));
+        return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
     }
 
-    public void delete(final Long productId) {
+    public void delete(long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);
     }
