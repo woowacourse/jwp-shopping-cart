@@ -1,8 +1,8 @@
 set foreign_key_checks = 0;
 
-truncate table orders_detail;
-
-truncate table orders;
+-- truncate table orders_detail;
+--
+-- truncate table orders;
 
 truncate table cart_item;
 

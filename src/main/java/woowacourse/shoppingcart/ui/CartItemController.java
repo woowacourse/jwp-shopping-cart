@@ -6,10 +6,10 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CartItemAddRequest;
-import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
-import woowacourse.shoppingcart.dto.CartItemsResponse;
+import woowacourse.shoppingcart.dto.cart.CartItemAddRequest;
+import woowacourse.shoppingcart.dto.cart.CartItemResponse;
+import woowacourse.shoppingcart.dto.cart.CartItemUpdateRequest;
+import woowacourse.shoppingcart.dto.cart.CartItemsResponse;
 
 import java.util.List;
 

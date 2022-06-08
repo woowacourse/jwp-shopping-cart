@@ -1,25 +1,25 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.product;
 
 import woowacourse.shoppingcart.domain.Product;
 
-public class ProductRequest {
+public class ProductResponse {
     private Long id;
     private String name;
     private int price;
     private String imageUrl;
 
-    public ProductRequest() {
+    public ProductResponse() {
     }
 
-    public ProductRequest(Long id, String name, int price, String imageUrl) {
+    public ProductResponse(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product toEntity() {
-        return new Product(id, name, price, imageUrl);
+    public static ProductResponse from(Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public Long getId() {

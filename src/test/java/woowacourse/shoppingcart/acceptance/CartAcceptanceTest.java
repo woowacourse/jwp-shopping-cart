@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.cart.CartItemResponse;
 
 import java.util.HashMap;
 import java.util.List;
