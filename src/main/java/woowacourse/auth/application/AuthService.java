@@ -23,6 +23,12 @@ public class AuthService {
         this.customerDao = customerDao;
     }
 
+    @Transactional
+    public SignInResponse createToken(String username) {
+        Customer customer = customerDao.findByUsername(username);
+        return SignInResponse.fromCustomer(customer, jwtTokenProvider);
+    }
+
     @Transactional(readOnly = true)
     public SignInResponse signIn(SignInRequest signInRequest) {
         SignIn signIn = signInRequest.toSignIn();

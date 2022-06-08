@@ -19,7 +19,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         WebMvcConfigurer.super.addInterceptors(registry);
         registry.addInterceptor(new LoginInterceptor(jwtTokenProvider))
-                .addPathPatterns("/users/**", "/cart/**")
+                .addPathPatterns("/users/**", "/cart/**", "/token/refresh")
                 .excludePathPatterns("/users");
     }
 }
