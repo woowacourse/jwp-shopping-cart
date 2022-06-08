@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 @DisplayName("상품 관련 기능")
 class ProductAcceptanceTest extends AcceptanceTest {
 
+    private static final String REQUEST_URL = "/products";
+
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
@@ -22,7 +24,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/products")
+                .get(REQUEST_URL)
                 .then().log().all();
 
         // then
@@ -46,7 +48,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/products/{productId}", productId)
+                .get(REQUEST_URL + "/{productId}", productId)
                 .then().log().all();
 
         // then

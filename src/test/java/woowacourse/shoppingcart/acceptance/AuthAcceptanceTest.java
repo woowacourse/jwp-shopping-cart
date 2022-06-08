@@ -48,8 +48,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("errorCode", equalTo("1000"))
-                .body("message", equalTo(message));
+                .body(ERROR_CODE, equalTo("1000"))
+                .body(MESSAGE, equalTo(message));
     }
 
     @Test
@@ -66,7 +66,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("errorCode", equalTo("1002"))
-                .body("message", equalTo("로그인에 실패했습니다."));
+                .body(ERROR_CODE, equalTo("1002"))
+                .body(MESSAGE, equalTo("로그인에 실패했습니다."));
     }
 }

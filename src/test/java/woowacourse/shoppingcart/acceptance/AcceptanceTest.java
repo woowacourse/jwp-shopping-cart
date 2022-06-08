@@ -19,6 +19,13 @@ import woowacourse.shoppingcart.support.AuthorizationExtractor;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 public abstract class AcceptanceTest {
 
+    protected static final String ERROR_CODE = "errorCode";
+    protected static final String MESSAGE = "message";
+    protected static final String BEARER = "Bearer ";
+    protected static final String CUSTOMER_REQUEST_URL = "/users/me";
+    private static final String LOGIN_URL = "/login";
+    private static final String SIGN_UP_URL = "/users";
+
     protected String token;
 
     @LocalServerPort
@@ -44,7 +51,7 @@ public abstract class AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("/users")
+                .when().post(SIGN_UP_URL)
                 .then().log().all();
     }
 
@@ -53,7 +60,7 @@ public abstract class AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("/login")
+                .when().post(LOGIN_URL)
                 .then().log().all();
     }
 
@@ -61,7 +68,7 @@ public abstract class AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
-                .when().get("/users/me")
+                .when().get(CUSTOMER_REQUEST_URL)
                 .then().log().all();
     }
 }

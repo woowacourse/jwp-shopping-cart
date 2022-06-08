@@ -65,7 +65,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         final ValidatableResponse response = RestAssured
                 .given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
@@ -89,7 +89,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         final ValidatableResponse response = RestAssured
                 .given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .delete(REQUEST_URL + "/{productId}", productId)
@@ -107,7 +107,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
@@ -119,7 +119,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get(REQUEST_URL)
