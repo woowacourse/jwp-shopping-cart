@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static Fixture.CustomerFixtures.*;
+import static Fixture.ProductFixtures.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
@@ -35,9 +36,9 @@ public class CartItemDaoTest {
     @Test
     void addCartItem() {
         Customer yaho = customerDao.save(YAHO);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true, "상세 설명"));
+        Long chickenId = productDao.save(CHICKEN);
 
-        Long cartId = cartItemDao.addCartItem(yaho.getId(), bananaId, 10);
+        Long cartId = cartItemDao.addCartItem(yaho.getId(), chickenId, 10);
 
         assertThat(cartId).isNotNull();
     }
@@ -46,24 +47,24 @@ public class CartItemDaoTest {
     @Test
     void findProductIdsByCustomerId() {
         Customer mat = customerDao.save(MAT);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true, "상세 설명"));
-        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true, "상세 설명"));
-        cartItemDao.addCartItem(mat.getId(), bananaId, 10);
-        cartItemDao.addCartItem(mat.getId(), appleId, 10);
+        Long chickenId = productDao.save(CHICKEN);
+        Long beerId = productDao.save(BEER);
+        cartItemDao.addCartItem(mat.getId(), chickenId, 10);
+        cartItemDao.addCartItem(mat.getId(), beerId, 10);
 
         List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(mat.getId());
 
-        assertThat(productsIds).containsExactly(bananaId, appleId);
+        assertThat(productsIds).containsExactly(chickenId, beerId);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
         Customer yaho = customerDao.save(YAHO);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true, "상세 설명"));
-        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true, "상세 설명"));
-        Long bananaCartId = cartItemDao.addCartItem(yaho.getId(), bananaId, 10);
-        Long appleCartId = cartItemDao.addCartItem(yaho.getId(), appleId, 10);
+        Long chickenId = productDao.save(CHICKEN);
+        Long beerId = productDao.save(BEER);
+        Long bananaCartId = cartItemDao.addCartItem(yaho.getId(), chickenId, 10);
+        Long appleCartId = cartItemDao.addCartItem(yaho.getId(), beerId, 10);
 
         List<Long> cartIds = cartItemDao.findIdsByCustomerId(yaho.getId());
 
@@ -74,24 +75,24 @@ public class CartItemDaoTest {
     @Test
     void deleteCartItem() {
         Customer mat = customerDao.save(MAT);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true, "상세 설명"));
-        Long appleId = productDao.save(new Product("apple", 2_000, "http://woowa2.com", true, "상세 설명"));
-        cartItemDao.addCartItem(mat.getId(), bananaId, 10);
-        Long appleCartId = cartItemDao.addCartItem(mat.getId(), appleId, 10);
+        Long chickenId = productDao.save(CHICKEN);
+        Long beerId = productDao.save(BEER);
+        cartItemDao.addCartItem(mat.getId(), chickenId, 10);
+        Long appleCartId = cartItemDao.addCartItem(mat.getId(), beerId, 10);
 
         cartItemDao.deleteCartItem(appleCartId);
 
         List<Long> productIds = cartItemDao.findProductIdsByCustomerId(mat.getId());
 
-        assertThat(productIds).containsExactly(bananaId);
+        assertThat(productIds).containsExactly(chickenId);
     }
 
     @DisplayName("cartId 에 해당하는 상품의 개수를 quantity로 수정한다.")
     @Test
     void updateQuantity() {
         Customer mat = customerDao.save(MAT);
-        Long bananaId = productDao.save(new Product("banana", 1_000, "http://woowa1.com", true, "상세 설명"));
-        Long bananaCartId = cartItemDao.addCartItem(mat.getId(), bananaId, 10);
+        Long chickenId = productDao.save(CHICKEN);
+        Long bananaCartId = cartItemDao.addCartItem(mat.getId(), chickenId, 10);
 
         cartItemDao.updateQuantity(bananaCartId, 5);
 

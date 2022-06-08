@@ -27,6 +27,10 @@ public class ProductRequest {
         this(null, null, null, null);
     }
 
+    public ProductRequest(Product product) {
+        this(product.getName(), product.getPrice(), product.getImageUrl(), product.getDescription());
+    }
+
     public ProductRequest(String name, Integer price, String imageUrl, String description) {
         this.name = name;
         this.price = price;

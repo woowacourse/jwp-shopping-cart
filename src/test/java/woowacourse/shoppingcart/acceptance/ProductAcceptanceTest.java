@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static Fixture.ProductFixtures.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.product.ProductRequest;
 import woowacourse.shoppingcart.dto.product.ProductResponse;
 
@@ -21,9 +23,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
-        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000,
-                "http://example.com/chicken.jpg", true,
-                "상세 설명");
+        ExtractableResponse<Response> response = 상품_등록_요청(CHICKEN_REQUEST);
 
         상품_추가됨(response);
     }
@@ -31,10 +31,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000,
-                "http://example.com/chicken.jpg", true, "상세 설명");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000,
-                "http://example.com/beer.jpg", true, "상세 설명");
+        Long productId1 = 상품_등록되어_있음(CHICKEN_REQUEST);
+        Long productId2 = 상품_등록되어_있음(BEER_REQUEST);
 
         ExtractableResponse<Response> response = 상품_목록_조회_요청();
 
@@ -45,8 +43,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000,
-                "http://example.com/chicken.jpg", true, "상세 설명");
+        Long productId = 상품_등록되어_있음(CHICKEN_REQUEST);
 
         ExtractableResponse<Response> response = 상품_조회_요청(productId);
 
@@ -57,17 +54,14 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 삭제한다")
     @Test
     void deleteProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000,
-                "http://example.com/chicken.jpg", true, "상세 설명");
+        Long productId = 상품_등록되어_있음(CHICKEN_REQUEST);
 
         ExtractableResponse<Response> response = 상품_삭제_요청(productId);
 
         상품_삭제됨(response);
     }
 
-    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl, boolean selling,
-            String description) {
-        ProductRequest productRequest = new ProductRequest(name, price, imageUrl, description);
+    public static ExtractableResponse<Response> 상품_등록_요청(ProductRequest productRequest) {
 
         return RestAssured
                 .given().log().all()
@@ -110,8 +104,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 상품_등록되어_있음(String name, int price, String imageUrl, boolean selling, String description) {
-        ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl, selling, description);
+    public static Long 상품_등록되어_있음(ProductRequest productRequest) {
+        ExtractableResponse<Response> response = 상품_등록_요청(productRequest);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 

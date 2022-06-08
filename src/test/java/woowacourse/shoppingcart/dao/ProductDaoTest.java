@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import static Fixture.ProductFixtures.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
@@ -30,11 +31,7 @@ public class ProductDaoTest {
     @DisplayName("Product를 저장하면, id를 반환한다.")
     @Test
     void save() {
-        String name = "초콜렛";
-        int price = 1_000;
-        String imageUrl = "http://www.test.com";
-
-        Long productId = productDao.save(new Product(name, price, imageUrl, true, "상세 설명"));
+        Long productId = productDao.save(CHICKEN);
 
         assertThat(productId).isEqualTo(1L);
     }
@@ -42,11 +39,8 @@ public class ProductDaoTest {
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
     @Test
     void findProductById() {
-        String name = "초콜렛";
-        int price = 1_000;
-        String imageUrl = "http://www.test.com";
-        Long productId = productDao.save(new Product(name, price, imageUrl, true, "상세 설명"));
-        Product expectedProduct = new Product(productId, name, price, imageUrl, true, "상세 설명");
+        Long productId = productDao.save(CHICKEN);
+        Product expectedProduct = new Product(productId, CHICKEN_NAME, CHICKEN_PRICE, CHICKEN_IMAGE_URL, CHICKEN_SELLING, CHICKEN_DESCRIPTION);
 
         Product product = productDao.findProductById(productId).get();
 
@@ -56,10 +50,7 @@ public class ProductDaoTest {
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {
-        String name = "초콜렛";
-        int price = 1_000;
-        String imageUrl = "http://www.test.com";
-        productDao.save(new Product(name, price, imageUrl, true, "상세 설명"));
+        productDao.save(CHICKEN);
 
         List<Product> products = productDao.findSellingProducts();
 
@@ -69,11 +60,7 @@ public class ProductDaoTest {
     @DisplayName("싱품 삭제")
     @Test
     void deleteProduct() {
-        String name = "초콜렛";
-        int price = 1_000;
-        String imageUrl = "http://www.test.com";
-
-        Long productId = productDao.save(new Product(name, price, imageUrl, true, "상세 설명"));
+        Long productId = productDao.save(CHICKEN);
         int beforeSize = productDao.findSellingProducts().size();
 
         productDao.delete(productId);

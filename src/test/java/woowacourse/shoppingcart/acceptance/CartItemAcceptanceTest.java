@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static Fixture.CustomerFixtures.*;
+import static Fixture.ProductFixtures.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
@@ -33,8 +34,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         super.setUp();
         SimpleRestAssured.saveCustomer(YAHO_SAVE_REQUEST);
 
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg", true, "상세 설명");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg", true, "상세 설명");
+        productId1 = 상품_등록되어_있음(CHICKEN_REQUEST);
+        productId2 = 상품_등록되어_있음(BEER_REQUEST);
     }
 
     @DisplayName("장바구니 아이템 추가")
