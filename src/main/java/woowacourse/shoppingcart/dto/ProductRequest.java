@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
@@ -11,7 +9,6 @@ public class ProductRequest {
     private String name;
     @Positive(message = "상품 가격은 0이하의 수가 될 수 없습니다.")
     private int price;
-    @JsonProperty("image_url")
     @NotBlank(message = "이미지 Url은 빈 값일 수 없습니다.")
     private String imageUrl;
 
