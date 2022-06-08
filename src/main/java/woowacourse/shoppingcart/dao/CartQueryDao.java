@@ -33,8 +33,6 @@ public class CartQueryDao {
 
     public List<CartResponse> findAllCartByCustomerId(long customerId) {
         return jdbcTemplate
-                .query(
-                        FIND_ALL_CART_BY_CUSTOMER_ID_SQL,
-                        ROW_MAPPER, customerId);
+                .query(FIND_ALL_CART_BY_CUSTOMER_ID_SQL, ROW_MAPPER, customerId);
     }
 }

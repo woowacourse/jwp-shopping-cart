@@ -5,17 +5,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.fixture.CartFixture.장바구니_삭제_검증;
 import static woowacourse.fixture.CartFixture.장바구니_삭제_요청;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_조회_요청;
-import static woowacourse.fixture.CartFixture.장바구니_아이템_목록_포함_검증;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_검증;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_요청;
 import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_요청후_ID_반환;
 import static woowacourse.fixture.CustomerFixture.로그인_요청_및_토큰발급;
 import static woowacourse.fixture.CustomerFixture.회원가입_요청_및_ID_추출;
+import static woowacourse.fixture.Fixture.covertTypeList;
 import static woowacourse.fixture.ProductFixture.상품_등록되어_있음;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,6 +27,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.global.AcceptanceTest;
 import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.dto.cartitem.CartResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 
 @DisplayName("장바구니 관련 기능")
@@ -72,7 +75,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token, customerId);
 
-        장바구니_아이템_목록_포함_검증(response, productId1, productId2);
+        CartResponse expected1 = new CartResponse(1L, "http://example.com/chicken.jpg", "치킨", 10_000, 20_000, 2);
+        CartResponse expected2 = new CartResponse(2L, "http://example.com/beer.jpg", "맥주", 20_000, 30_000, 4);
+        List<CartResponse> cartResponses = covertTypeList(response, CartResponse.class);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(cartResponses.size()).isEqualTo(2L);
+        assertThat(cartResponses).containsExactlyInAnyOrder(expected1, expected2);
     }
 
     @DisplayName("장바구니 수량 수정")
