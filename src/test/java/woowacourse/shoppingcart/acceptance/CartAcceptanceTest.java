@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginTokenResponse;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
@@ -39,19 +41,29 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(CUSTOMER_ID, productId1, 5);
+        //given
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
 
+        //when
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId1, 5);
+
+        //then
         장바구니_아이템_추가됨(response);
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가_요청(CUSTOMER_ID, productId1, 5);
-        장바구니_아이템_추가_요청(CUSTOMER_ID, productId2, 5);
+        //given
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(CUSTOMER_ID);
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId1, 5);
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId2, 5);
 
+        //when
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token, CUSTOMER_ID);
+
+        //then
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
@@ -59,26 +71,50 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 상품 삭제")
     @Test
     void deleteCartItem() {
-        장바구니_아이템_추가_요청(CUSTOMER_ID, productId1, 5);
+        //given
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId1, 5);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_삭제_요청(CUSTOMER_ID, productId1);
+        //when
+        ExtractableResponse<Response> response = 장바구니_아이템_삭제_요청(token, CUSTOMER_ID, productId1);
 
+        //then
         장바구니_아이템_삭제됨(response);
     }
 
     @Test
     @DisplayName("장바구니 상품 구매 수 업데이트")
     void updateCount() {
-        ExtractableResponse<Response> response = 장바구니_아이템_구매_수_업데이트(CUSTOMER_ID, productId1, 7);
+        //given
+        String token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
 
+        //then
+        ExtractableResponse<Response> response = 장바구니_아이템_구매_수_업데이트(token, CUSTOMER_ID, productId1, 7);
+
+        //then
         장바구니_아이템_구매_수_업데이트됨(response);
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(long customerId, Long productId, int count) {
+    private String 로그인_요청_및_토큰발급(LoginRequest request) {
+        ExtractableResponse<Response> loginResponse = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(request)
+            .when().post("/api/auth/login")
+            .then().log().all()
+            .extract();
+
+        LoginTokenResponse loginTokenResponse = loginResponse.body().as(LoginTokenResponse.class);
+        return loginTokenResponse.getAccessToken();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, long customerId, Long productId,
+        int count) {
         CartItemRequest request = new CartItemRequest(productId, count);
 
         return RestAssured
             .given().log().all()
+            .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(request)
             .when().post("/api/customers/{customerId}/carts", customerId)
@@ -86,20 +122,34 @@ public class CartAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(long customerId) {
+    public static ExtractableResponse<Response> 장바구니_아이템_삭제_요청(String token, long customerId, long productId) {
         return RestAssured
             .given().log().all()
+            .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/api/customers/{customerId}/carts", customerId)
+            .when().delete("/api/customers/{customerId}/carts?productId={productId}", customerId, productId)
             .then().log().all()
             .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_삭제_요청(long customerId, long productId) {
+    private ExtractableResponse<Response> 장바구니_아이템_구매_수_업데이트(String token, long customerId, Long productId, int count) {
+        CartItemUpdateRequest request = new CartItemUpdateRequest(count);
         return RestAssured
             .given().log().all()
+            .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().delete("/api/customers/{customerId}/carts?productId={productId}", customerId, productId)
+            .body(request)
+            .when().patch("/api/customers/{customerId}/carts?productId={productId}", customerId, productId)
+            .then().log().all()
+            .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token, long customerId) {
+        return RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + token)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/customers/{customerId}/carts", customerId)
             .then().log().all()
             .extract();
     }
@@ -121,17 +171,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    private ExtractableResponse<Response> 장바구니_아이템_구매_수_업데이트(long customerId, Long productId, int count) {
-        CartItemUpdateRequest request = new CartItemUpdateRequest(count);
-        return RestAssured
-            .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(request)
-            .when().patch("/api/customers/{customerId}/carts?productId={productId}", customerId, productId)
-            .then().log().all()
-            .extract();
     }
 
     private void 장바구니_아이템_구매_수_업데이트됨(ExtractableResponse<Response> response) {
