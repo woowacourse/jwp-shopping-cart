@@ -48,7 +48,7 @@ public class ProductDaoTest {
     void findProductById() {
         // given
         Product 캠핑_의자 = new Product(1L, "캠핑 의자", 35000,
-                "https://thawing-fortress-83192.herokuapp.com/static/images/camping-chair.jpg", 100);
+                "https://thawing-fortress-83192.herokuapp.com/static/images/camping-chair.jpg", 10);
 
         // when
         final Product product = productDao.findProductById(1L);
@@ -87,5 +87,11 @@ public class ProductDaoTest {
         // then
         assertThatThrownBy(() -> productDao.findProductById(productId))
                 .isInstanceOf(InvalidProductException.class);
+    }
+
+    @DisplayName("전체 상품 개수 조회")
+    @Test
+    void findTotalCount() {
+        assertThat(productDao.findTotalCount()).isEqualTo(19);
     }
 }

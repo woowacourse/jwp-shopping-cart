@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.PageRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
@@ -63,5 +62,10 @@ public class ProductDao {
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);
+    }
+
+    public int findTotalCount() {
+        final String query = "SELECT COUNT(*) FROM product";
+        return Objects.requireNonNull(jdbcTemplate.queryForObject(query, int.class));
     }
 }
