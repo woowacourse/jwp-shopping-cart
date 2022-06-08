@@ -8,10 +8,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.common.exception.LoginException;
+import woowacourse.common.exception.NotFoundException;
 import woowacourse.common.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
@@ -33,7 +33,7 @@ public class CustomerDao {
             final String query = "SELECT id FROM customer WHERE email = ?";
             return jdbcTemplate.queryForObject(query, Long.class, email);
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new NotFoundException("존재하지 않는 사용자입니다.", ErrorResponse.NOT_EXIST_CUSTOMER);
         }
     }
 
