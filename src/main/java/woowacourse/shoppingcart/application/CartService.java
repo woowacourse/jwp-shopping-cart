@@ -78,7 +78,7 @@ public class CartService {
     @Transactional
     public void deleteCart(Long memberId, Long cartId) {
         validateExistMember(memberId);
-        validateExistMemberCart(cartId, memberId);
+        validateExistMemberCart(memberId, cartId);
         cartItemDao.deleteById(cartId);
     }
 
