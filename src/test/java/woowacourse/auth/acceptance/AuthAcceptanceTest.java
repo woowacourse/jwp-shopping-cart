@@ -19,7 +19,7 @@ import static woowacourse.fixture.Fixture.*;
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-    @DisplayName("Bearer Auth 로그인 성공")
+    @DisplayName("Bearer Auth 로그인을 한다.")
     @Test
     void myInfoWithBearerAuth() {
         // given
@@ -40,7 +40,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
+    @DisplayName("Bearer Auth 로그인을 할때 패스워드가 일치하지 않으면 예외가 발생한다.")
     @Test
     void myInfoWithBadBearerAuth() {
         // given
@@ -53,7 +53,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(wrongPasswordResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
+    @DisplayName("Bearer Auth 로그인시 유효하지 않은 토큰이 들어오면 예외가 발생한다.")
     @Test
     void myInfoWithWrongBearerAuth() {
         final ExtractableResponse<Response> createResponse
@@ -61,12 +61,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         loginCustomer(TEST_EMAIL, TEST_PASSWORD);
 
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         final ExtractableResponse<Response> response
                 = get(createResponse.header(HttpHeaders.LOCATION), new Header(HttpHeaders.AUTHORIZATION, "invalidToken"));
 
         // then
-        // 내 정보 조회 요청이 거부된다
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }

@@ -28,7 +28,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         final String token = AuthorizationExtractor.extract(request);
         request.setAttribute("token", token);
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 
     public static class RequestEndPoint {
