@@ -4,6 +4,7 @@ import static org.springframework.http.HttpMethod.OPTIONS;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.shoppingcart.exception.AuthorizationException;
@@ -18,7 +19,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (OPTIONS.equals(request.getMethod())) {
+        if (CorsUtils.isPreFlightRequest(request)) {
             return true;
         }
         String accessToken = AuthorizationExtractor.extract(request);
