@@ -71,6 +71,7 @@ public class CartService {
         return new CartItemResponse(new ProductResponse(product), cartItem.getQuantity());
     }
 
+    @Transactional
     public void updateCartItemQuantity(Long memberId, CartItemRequest updateRequest) {
         Long productId = updateRequest.getProductId();
         Integer quantity = updateRequest.getQuantity();
@@ -85,6 +86,7 @@ public class CartService {
         }
     }
 
+    @Transactional
     public void deleteCartItem(Long memberId, Long productId) {
         validateProductExist(memberId, productId);
         cartItemDao.deleteByMemberIdAndProductId(memberId, productId);
