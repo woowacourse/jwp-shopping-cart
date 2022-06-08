@@ -81,4 +81,21 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(사용자_정보_삭제됨.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
+
+    @DisplayName("회원탈퇴 시 연관된 장바구니 내역도 삭제된다.")
+    @Test
+    void deleteMeAdditionalCart() {
+        // given
+        postCustomers("basic@email.com", "password123@Q", "rookie");
+        ExtractableResponse<Response> 로그인_응답됨 = postLogin("basic@email.com", "password123@Q");
+        TokenResponse tokenResponse = 로그인_응답됨.as(TokenResponse.class);
+        postProduct("치킨", 20_000, "http://chicken.test.com");
+        postCart(tokenResponse, 1L);
+
+        // when
+        ExtractableResponse<Response> 사용자_정보_삭제됨 = deleteCustomers(tokenResponse);
+
+        // then
+        assertThat(사용자_정보_삭제됨.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
 }

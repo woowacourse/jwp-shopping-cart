@@ -42,7 +42,7 @@ public class ProductDao {
     }
 
     public Optional<Product> findById(Long id) {
-        String query = "SELECT id, name, price, image_Url FROM product WHERE id = :id";
+        String query = "SELECT id, name, price, image_Url FROM product WHERE id=:id";
         SqlParameterSource nameParameters = new MapSqlParameterSource("id", id);
 
         try {
@@ -59,7 +59,7 @@ public class ProductDao {
     }
 
     public boolean existByName(String name) {
-        String query = "SELECT EXISTS (SELECT * FROM product WHERE name = :name)";
+        String query = "SELECT EXISTS (SELECT * FROM product WHERE name=:name)";
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("name", name);
         int count = template.queryForObject(query, nameParameters, Integer.class);
         return count != 0;

@@ -42,7 +42,7 @@ public class CartItemDao {
     }
 
     public Optional<Cart> findById(long id) {
-        String query = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE id = :id";
+        String query = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE id=:id";
         SqlParameterSource nameParameters = new MapSqlParameterSource("id", id);
 
         try {
@@ -55,7 +55,7 @@ public class CartItemDao {
     }
 
     public List<Cart> findAllByCustomerId(Long customerId) {
-        String query = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE customer_id = :customer_Id";
+        String query = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE customer_id=:customer_Id";
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("customer_Id", customerId);
         return template.query(query, nameParameters, CART_ROW_MAPPER);
     }
