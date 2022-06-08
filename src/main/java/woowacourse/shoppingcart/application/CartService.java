@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.CartItemsRequest;
@@ -31,27 +31,30 @@ public class CartService {
     }
 
     public CartItemsResponse findCartsByUsername(final String username) {
+        final Cart cart = findCartByUsername(username);
+        return CartItemsResponse.from(cart);
+    }
+
+    private Cart findCartByUsername(String username) {
         final Long customerId = customerDao.getIdByUsername(username);
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
-        final List<CartItem> cartItems = new ArrayList<>();
+        final Cart cart = new Cart();
         for (final Long productId : productIds) {
             final Product product = productDao.findProductById(productId);
             final int quantity = cartItemDao.findQuantity(productId, customerId);
-            cartItems.add(new CartItem(product, quantity));
+            cart.addItem(new CartItem(product, quantity));
         }
-        return CartItemsResponse.from(cartItems);
+        return cart;
     }
 
     public Long addCart(final Long productId, final String username) {
         Long customerId = customerDao.getIdByUsername(username);
+        Cart cart = findCartByUsername(username);
         Product product = productDao.findProductById(productId);
         CartItem cartItem = new CartItem(product, 1);
-        try {
-            return cartItemDao.addCartItem(cartItem, customerId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
+        cart.addItem(cartItem);
+        return cartItemDao.addCartItem(cartItem, customerId);
     }
 
     public void updateQuantity(Long productId, QuantityRequest quantityRequest, String username) {
