@@ -6,7 +6,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.request.ProductIdRequest;
 import woowacourse.shoppingcart.application.dto.response.CartItemResponse;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.application.dto.response.CartResponse;
 import woowacourse.shoppingcart.application.CartService;
 
 import java.util.List;
@@ -20,8 +20,8 @@ public class CartItemController {
     }
 
     @GetMapping("/api/customers/{customerName}/carts")
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<List<CartResponse>> getCartItems(@AuthenticationPrincipal CustomerIdentificationRequest customerIdentificationRequest) {
+        return ResponseEntity.ok().body(cartService.findCarts(customerIdentificationRequest));
     }
 
     @PostMapping("/auth/customer/cartItems")

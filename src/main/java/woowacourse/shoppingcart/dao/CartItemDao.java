@@ -21,6 +21,8 @@ public class CartItemDao {
     private final static RowMapper<CartItem> CART_ITEM_ROW_MAPPER = (resultSet, rowNum) ->  {
         return new CartItem(
                 resultSet.getLong("id"),
+                resultSet.getLong("customer_id"),
+                resultSet.getLong("product_id"),
                 resultSet.getInt("quantity")
         );
     };
@@ -69,7 +71,7 @@ public class CartItemDao {
 
     public Optional<CartItem> findCartItemById(final Long cartId) {
         try {
-            String sql = "SELECT id, quantity FROM cart_item WHERE id = ?";
+            String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE id = ?";
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, CART_ITEM_ROW_MAPPER, cartId));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

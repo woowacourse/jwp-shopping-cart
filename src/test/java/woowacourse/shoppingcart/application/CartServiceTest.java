@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRe
 import woowacourse.shoppingcart.application.dto.request.ProductIdRequest;
 import woowacourse.shoppingcart.application.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.application.dto.response.CartItemResponse;
+import woowacourse.shoppingcart.application.dto.response.CartResponse;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundException;
 
@@ -33,6 +34,32 @@ class CartServiceTest {
 
     @Autowired
     private CustomerService customerService;
+
+    @DisplayName("장바구니에 담긴 상품 목록을 조회한다.")
+    @Test
+    void findCarts() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+
+        Long productId = productService.addProduct(new Product("초콜렛", 1_000, "www.test.com"));
+        ProductIdRequest productIdRequest = new ProductIdRequest(productId);
+        cartService.addCartItems(customerIdentificationRequest, List.of(productIdRequest));
+
+        // when
+        List<CartResponse> cartResponses = cartService.findCarts(customerIdentificationRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(cartResponses).hasSize(1),
+                () -> assertThat(cartResponses.get(0).getProductId()).isEqualTo(productId),
+                () -> assertThat(cartResponses.get(0).getName()).isEqualTo("초콜렛"),
+                () -> assertThat(cartResponses.get(0).getPrice()).isEqualTo(1_000),
+                () -> assertThat(cartResponses.get(0).getImageUrl()).isEqualTo("www.test.com"),
+                () -> assertThat(cartResponses.get(0).getQuantity()).isEqualTo(1)
+        );
+    }
 
     @DisplayName("장바구니에 상품을 추가한다.")
     @Test

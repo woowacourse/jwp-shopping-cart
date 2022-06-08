@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.request.ProductIdRequest;
 import woowacourse.shoppingcart.application.dto.response.CartItemResponse;
+import woowacourse.shoppingcart.application.dto.response.CartResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -13,14 +14,12 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.datanotfound.CartItemDataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -39,40 +38,21 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    // TODO: delete
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findById(productId).get();
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
-    }
-
-    public List<Cart> findCartsByCustomerId(final Long customerId) {
-        List<Long> cartIds = findCartIdsByCustomerId(customerId);
+    public List<CartResponse> findCarts(final CustomerIdentificationRequest customerIdentificationRequest) {
+        List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerIdentificationRequest.getId());
 
         List<Cart> carts = new ArrayList<>();
         for (Long cartId : cartIds) {
-            Long productId = cartItemDao.findProductIdById(cartId);
-            Product product = findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            CartItem cartItem = findCartItemById(cartId);
+            Product product = findProductById(cartItem.getProductId());
+            carts.add(Cart.from(cartItem, product));
         }
-        return Collections.unmodifiableList(carts);
+        return CartResponse.from(carts);
     }
 
-    // TODO: delete
     private List<Long> findCartIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
-    private List<Long> findCartIdsByCustomerId(final Long customerId) {
-        Customer customer = findCustomerById(customerId);
-        return cartItemDao.findIdsByCustomerId(customer.getId());
     }
 
     @Transactional
