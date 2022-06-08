@@ -58,4 +58,23 @@ public class CartItemDaoTest {
         final CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
         assertThat(cartItem.getName()).isEqualTo(PRODUCT_NAME);
     }
+
+    @Test
+    @DisplayName("장바구니에 담긴 물건을 삭제한다.")
+    void deleteCartItem() {
+        cartItemDao.addCartItem(customerId, productId, 1);
+        cartItemDao.deleteCartItem(customerId, productId);
+
+        assertThat(cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("장바구니에 담긴 물건을 삭제할때 존재하지 않는 상품이면 예외가 발생한다.")
+    void deleteCartItem_NotFoundException() {
+        cartItemDao.addCartItem(customerId, productId, 1);
+
+        assertThatThrownBy(() -> cartItemDao.deleteCartItem(customerId, 2L))
+                .isInstanceOf(NotFoundProductException.class)
+                .hasMessage("존재하지 않는 상품 ID입니다.");
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 @Repository
 public class CartItemDao {
@@ -49,12 +50,12 @@ public class CartItemDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void deleteCartItem(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
+    public void deleteCartItem(final Long customerId, final Long productId) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = ? AND product_id = ?";
 
-        final int rowCount = jdbcTemplate.update(sql, id);
+        final int rowCount = jdbcTemplate.update(sql, customerId, productId);
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new NotFoundProductException();
         }
     }
 

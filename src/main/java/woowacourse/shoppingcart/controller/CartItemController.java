@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.application.AuthService;
@@ -48,6 +49,16 @@ public class CartItemController {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
         final Long cartId = cartService.addCart(addCartItemRequestDto, customerId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCartItem(@PathVariable final Long customerId,
+                                               @RequestParam final Long productId,
+                                               @AuthenticationPrincipal LoginCustomer loginCustomer) {
+        authService.checkAuthorization(customerId, loginCustomer.getEmail());
+
+        cartService.deleteCart(customerId, productId);
         return ResponseEntity.noContent().build();
     }
 }

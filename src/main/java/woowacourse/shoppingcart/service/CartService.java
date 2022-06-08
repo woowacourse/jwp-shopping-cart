@@ -80,12 +80,7 @@ public class CartService {
                 ).collect(Collectors.toList());
     }
 
-
-    private void validateCustomerCart(final Long cartId, final Long customerId) {
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
+    public void deleteCart(final Long customerId, final Long productId) {
+        cartItemDao.deleteCartItem(customerId, productId);
     }
 }
