@@ -18,6 +18,10 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
 
+        if (request.getMethod().equals("OPTIONS")) {
+            return true;
+        }
+
         if (isSignUpWithNoToken(request)) {
             return true;
         }
