@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.AuthorizedCustomer;
-import woowacourse.shoppingcart.dto.DeleteCartItemIdsRequest;
-import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
+import woowacourse.shoppingcart.dto.DeleteCartItemRequests;
 import woowacourse.shoppingcart.dto.FindAllCartItemResponse;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequests;
@@ -49,10 +48,9 @@ public class CartItemController {
     @DeleteMapping
     public ResponseEntity<Void> deleteCartItem(
             @AuthenticationPrincipal final AuthorizedCustomer authorizedCustomer,
-            @RequestBody final DeleteCartItemRequest deleteCartItemRequest
+            @RequestBody final DeleteCartItemRequests deleteCartItemRequests
     ) {
-        var deleteCartItemIdsRequest = new DeleteCartItemIdsRequest(deleteCartItemRequest);
-        cartService.deleteCart(authorizedCustomer.getId(), deleteCartItemIdsRequest);
+        cartService.deleteCart(authorizedCustomer.getId(), deleteCartItemRequests);
         return ResponseEntity.noContent().build();
     }
 

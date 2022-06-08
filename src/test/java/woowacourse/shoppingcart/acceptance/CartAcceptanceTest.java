@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
+import woowacourse.shoppingcart.dto.DeleteCartItemRequests;
 import woowacourse.shoppingcart.dto.FindCartItemResponse;
 import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
@@ -50,10 +51,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     private ExtractableResponse<Response> deleteCart(String accessToken, Long cartItemId, HttpStatus httpStatus) {
+        var deleteCartItemRequest = new DeleteCartItemRequest(cartItemId);
+
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
-                .body(new DeleteCartItemRequest(cartItemId))
+                .body(new DeleteCartItemRequests(List.of(deleteCartItemRequest)))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .delete("/cart")
                 .then().log().all()
@@ -115,7 +118,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         checkFindResults(findAllCartItemResponse);
 
-        deleteAllCart(accessToken, 1L, HttpStatus.NO_CONTENT);
+        deleteAllCart(accessToken, HttpStatus.NO_CONTENT);
 
         findAllCartItemResponse = findCart(accessToken);
 
@@ -142,7 +145,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private void deleteAllCart(String accessToken, Long customerId, HttpStatus httpStatus) {
+    private void deleteAllCart(String accessToken, HttpStatus httpStatus) {
         RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)

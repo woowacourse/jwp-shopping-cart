@@ -9,7 +9,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItems;
 import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
-import woowacourse.shoppingcart.dto.DeleteCartItemIdsRequest;
+import woowacourse.shoppingcart.dto.DeleteCartItemRequests;
 import woowacourse.shoppingcart.dto.FindAllCartItemResponse;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequests;
@@ -31,8 +31,8 @@ public class CartService {
         cartItemDao.addCartItem(customerId, addCartItemRequest);
     }
 
-    public void deleteCart(final Long customerId, final DeleteCartItemIdsRequest deleteCartItemIdsRequest) {
-        var cartItemIds = deleteCartItemIdsRequest.getCartItemIds().stream()
+    public void deleteCart(final Long customerId, final DeleteCartItemRequests deleteCartItemIdsRequests) {
+        var cartItemIds = deleteCartItemIdsRequests.getCartItemIds().stream()
                 .map(it -> it.getId())
                 .collect(Collectors.toList());
 

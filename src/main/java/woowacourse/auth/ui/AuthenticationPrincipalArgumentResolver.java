@@ -13,8 +13,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
     private final CustomerDao customerDao;
-    private AuthService authService;
-
+    private final AuthService authService;
 
     public AuthenticationPrincipalArgumentResolver(AuthService authService, CustomerDao customerDao) {
         this.authService = authService;
