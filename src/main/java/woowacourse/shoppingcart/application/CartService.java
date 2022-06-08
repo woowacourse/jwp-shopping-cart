@@ -37,7 +37,9 @@ public class CartService {
 
     private CartItemResponse convertEntityCartItemResponse(CartItemEntity cartItemEntity) {
         return new CartItemResponse(
-                productService.findProductById(cartItemEntity.getProductId()), cartItemEntity.getQuantity()
+                cartItemEntity.getId(),
+                productService.findProductById(cartItemEntity.getProductId()),
+                cartItemEntity.getQuantity()
         );
     }
 

@@ -3,18 +3,18 @@ package woowacourse.shoppingcart.dto;
 import java.util.List;
 
 public class OrderResponse {
-    private List<CartItemResponse> products;
+    private List<OrderDetailResponse> products;
     private int totalPrice;
 
     public OrderResponse() {
     }
 
-    public OrderResponse(List<CartItemResponse> products, int totalPrice) {
+    public OrderResponse(List<OrderDetailResponse> products, int totalPrice) {
         this.products = products;
         this.totalPrice = totalPrice;
     }
 
-    public List<CartItemResponse> getProducts() {
+    public List<OrderDetailResponse> getProducts() {
         return products;
     }
 

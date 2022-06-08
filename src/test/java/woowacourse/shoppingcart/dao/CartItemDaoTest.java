@@ -20,7 +20,6 @@ import woowacourse.shoppingcart.entity.CartItemEntity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
     private final CartItemDao cartItemDao;

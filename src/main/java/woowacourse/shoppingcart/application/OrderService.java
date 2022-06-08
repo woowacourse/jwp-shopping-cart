@@ -10,8 +10,8 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cartItem.CartItem;
-import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.entity.OrdersDetailEntity;
 import woowacourse.shoppingcart.entity.ProductEntity;
@@ -68,39 +68,38 @@ public class OrderService {
         return orderIds.stream()
                 .map(ordersDetailDao::findOrdersDetailsByOrderId)
                 .map(ordersDetailEntity -> {
-                    final List<CartItemResponse> cartItemResponses = getCartItemResponse(ordersDetailEntity);
+                    final List<OrderDetailResponse> orderDetailResponses = getCartItemResponse(ordersDetailEntity);
 
-                    final int totalPrice = getTotalPrice(cartItemResponses);
+                    final int totalPrice = getTotalPrice(orderDetailResponses);
 
-                    return new OrderResponse(cartItemResponses, totalPrice);
+                    return new OrderResponse(orderDetailResponses, totalPrice);
                 })
                 .collect(Collectors.toList());
     }
 
-    private List<CartItemResponse> getCartItemResponse(List<OrdersDetailEntity> ordersDetailEntity) {
+    private List<OrderDetailResponse> getCartItemResponse(List<OrdersDetailEntity> ordersDetailEntity) {
         return ordersDetailEntity.stream()
                 .map(this::getCartResponse)
                 .collect(Collectors.toList());
     }
 
-    private int getTotalPrice(List<CartItemResponse> cartItemResponses) {
-        return cartItemResponses.stream()
+    private int getTotalPrice(List<OrderDetailResponse> orderDetailResponses) {
+        return orderDetailResponses.stream()
                 .mapToInt(cartItemResponse -> cartItemResponse.getProduct().getPrice()
                         * cartItemResponse.getQuantity())
                 .sum();
     }
 
-
-    private CartItemResponse getCartResponse(OrdersDetailEntity ordersDetailEntity) {
+    private OrderDetailResponse getCartResponse(OrdersDetailEntity ordersDetailEntity) {
         final ProductEntity product = productDao.findProductById(ordersDetailEntity.getProduct_id());
         final int quantity = ordersDetailEntity.getQuantity();
-        return new CartItemResponse(convertResponseToProductEntity(product), quantity);
+        return new OrderDetailResponse(convertResponseToProductEntity(product), quantity);
     }
 
     public OrderResponse findOrder(Long orderId, int customerId) {
         validateOrderId(orderId, customerId);
         final List<OrdersDetailEntity> ordersDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId);
-        final List<CartItemResponse> cartItemResponses = getCartItemResponse(ordersDetails);
+        final List<OrderDetailResponse> cartItemResponses = getCartItemResponse(ordersDetails);
         final int totalPrice = getTotalPrice(cartItemResponses);
 
         return new OrderResponse(cartItemResponses, totalPrice);

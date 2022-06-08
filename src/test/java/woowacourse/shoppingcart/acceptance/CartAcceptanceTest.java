@@ -141,8 +141,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    private void 장바구니_아이템_목록_확인(ExtractableResponse<Response> response) {
+    private void 장바구니_아이템_목록_확인(ExtractableResponse<Response> response, Long... cartItemId) {
         final List<CartItemResponse> cartItemResponses = response.jsonPath().getList(".", CartItemResponse.class);
+
+        final List<Long> cartItemIds = cartItemResponses.stream()
+                .map(CartItemResponse::getCartItemId)
+                .collect(Collectors.toList());
 
         final List<ProductResponse> productResponses = cartItemResponses
                 .stream()
@@ -152,6 +156,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .collect(Collectors.toList());
 
         assertAll(
+                () -> assertThat(cartItemIds).containsExactly(cartItemId[0], cartItemId[1]),
                 () -> assertThat(productResponses).extracting("name", "price", "imageUrl", "description", "stock")
                         .containsExactly(
                                 tuple(PRODUCT_1.getName(), PRODUCT_1.getPrice().getValue(),
@@ -162,6 +167,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                                         PRODUCT_2.getStock().getValue())
                         ),
                 () -> assertThat(quantities).hasSize(2).containsExactly(PRODUCT_QUANTITY_1, PRODUCT_QUANTITY_2)
+
         );
     }
 
@@ -239,13 +245,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
-        장바구니_아이템_추가되어_있음(productId2, PRODUCT_QUANTITY_2, token);
+        final Long cartItemId1 = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
+        final Long cartItemId2 = 장바구니_아이템_추가되어_있음(productId2, PRODUCT_QUANTITY_2, token);
 
         ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token);
 
         장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_확인(response);
+        장바구니_아이템_목록_확인(response, cartItemId1, cartItemId2);
     }
 
     @DisplayName("유효하지 않은 토큰으로 장바구니 아이템 목록 조회시 401 Unauthorized")
