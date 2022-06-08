@@ -27,7 +27,7 @@ public class OrderController {
                                    @RequestBody @Valid final List<OrderRequest> orderDetails) {
         final Long orderId = orderService.addOrder(orderDetails, customerId);
         return ResponseEntity.created(
-                URI.create("/api/" + customerId + "/orders/" + orderId)).build();
+                URI.create("/api/customer/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
