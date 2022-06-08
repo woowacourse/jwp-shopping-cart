@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.cartitem.Quantity;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.CartItemRequest;
+import woowacourse.shoppingcart.exception.AlreadyExistException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -52,10 +53,19 @@ public class CartService {
     public Long addCart(final Long productId, final String customerName) {
         final UserName userName = new UserName(customerName);
         final Long customerId = customerDao.findIdByUserName(userName);
+
+        validateAlreadyExist(productId, customerId);
+
         try {
             return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
             throw new InvalidProductException();
+        }
+    }
+
+    private void validateAlreadyExist(Long productId, Long customerId) {
+        if (cartItemDao.findIdByUserAndProduct(customerId, productId) != null) {
+            throw new AlreadyExistException();
         }
     }
 
