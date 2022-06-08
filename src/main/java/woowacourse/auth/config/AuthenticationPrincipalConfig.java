@@ -26,7 +26,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/api/members/**")
                 .excludePathPatterns("/api/members")
-                .excludePathPatterns("/api/members/check-email");
+                .excludePathPatterns("/api/members/email-check");
     }
 
     @Override
