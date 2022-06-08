@@ -74,7 +74,7 @@ class CustomerControllerTest {
                                 fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
                         ),
                         responseHeaders(
-                                headerWithName("Location").description("/api/customers/{유저 id} 형태")
+                                headerWithName("Location").description("Location의 url마지막에 customer의 식별자가 있습니다")
                         )
                 ));
 

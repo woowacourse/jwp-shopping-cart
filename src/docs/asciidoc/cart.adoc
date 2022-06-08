@@ -1,0 +1,77 @@
+= Cart 관련 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:snippets: ../../../build/generated-snippets
+
+= Customer
+---
+== 장바구니 API
+
+=== 장바구니 조회
+
+`GET /api/customers/me/carts`
+
+요청 HTTP
+
+include::{snippets}/carts-get/http-request.adoc[]
+
+요청 헤더
+
+include::{snippets}/carts-get/request-headers.adoc[]
+
+성공 응답 HTTP
+
+include::{snippets}/carts-get/http-response.adoc[]
+include::{snippets}/carts-get/response-fields.adoc[]
+
+=== 장바구니에 상품 추가
+
+`POST /api/customers/me/carts/`
+
+요청 HTTP
+
+include::{snippets}/carts-add/http-request.adoc[]
+
+요청 헤더
+
+include::{snippets}/carts-add/request-headers.adoc[]
+
+응답 HTTP
+
+include::{snippets}/carts-add/http-response.adoc[]
+
+=== 장바구니에 상품 삭제
+
+`DELETE /api/customers/me/carts/{cartId}`
+
+요청 HTTP
+
+include::{snippets}/carts-delete/http-request.adoc[]
+
+요청 헤더
+
+include::{snippets}/carts-delete/request-headers.adoc[]
+
+응답 HTTP
+
+include::{snippets}/carts-delete/http-response.adoc[]
+
+=== 상품 수량 변경
+
+`PATCH /api/customers/me/carts/{cartId}`
+
+요청 HTTP
+
+include::{snippets}/carts-quantity-update/http-request.adoc[]
+요청 헤더
+
+include::{snippets}/carts-quantity-update/request-headers.adoc[]
+
+성공 응답 HTTP
+
+include::{snippets}/carts-quantity-update/http-response.adoc[]
+

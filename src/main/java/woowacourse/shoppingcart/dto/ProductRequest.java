@@ -3,17 +3,22 @@ package woowacourse.shoppingcart.dto;
 import woowacourse.shoppingcart.domain.Product;
 
 public class ProductRequest {
-    public static class OnlyId{
+    public static class OnlyId {
         private Long id;
 
-        private OnlyId(){}
+        public OnlyId(Long id) {
+            this.id = id;
+        }
+
+        private OnlyId() {
+        }
 
         public Long getId() {
             return id;
         }
     }
 
-    public static class AllProperties{
+    public static class AllProperties {
         private Long id;
         private String name;
         private Integer price;
@@ -38,7 +43,7 @@ public class ProductRequest {
             return imageUrl;
         }
 
-        public Product toEntity(){
+        public Product toEntity() {
             return new Product(id, name, price, imageUrl);
         }
     }
