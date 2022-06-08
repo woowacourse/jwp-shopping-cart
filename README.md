@@ -11,7 +11,7 @@
 ### 프론트 요청사항
 
 - [ ] 회원가입, 사용자 조회, 사용자 수정에 body 값 fullAddress Indent 지우기
-- [ ] zoneCode -> zonecode 로 변경
+- [ ] zonecode -> zonecode 로 변경
 
 ### 리팩터링 할 부분
 

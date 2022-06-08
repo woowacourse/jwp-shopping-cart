@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.application.dto.AddressDto;
-
 public class CustomerResponse {
 
     private Long id;
@@ -11,14 +9,16 @@ public class CustomerResponse {
     private String gender;
     private String birthday;
     private String contact;
-    private AddressDto fullAddress;
+    private String address;
+    private String detailAddress;
+    private String zonecode;
     private boolean terms;
 
     public CustomerResponse() {
     }
 
     public CustomerResponse(Long id, String email, String profileImageUrl, String name, String gender,
-                            String birthday, String contact, String address, String detailAddress, String zoneCode) {
+                            String birthday, String contact, String address, String detailAddress, String zonecode) {
         this.id = id;
         this.email = email;
         this.profileImageUrl = profileImageUrl;
@@ -26,17 +26,11 @@ public class CustomerResponse {
         this.gender = gender;
         this.birthday = birthday;
         this.contact = contact;
-        this.fullAddress = new AddressDto(address, detailAddress, zoneCode);
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.zonecode = zonecode;
         this.terms = true;
     }
-
-    public static CustomerResponse fromCustomerRequest(final CustomerRequest request) {
-        return new CustomerResponse(request.getId(), request.getEmail(), request.getProfileImageUrl(),
-                request.getName(),
-                request.getGender(), request.getBirthday(), request.getContact(), request.getFullAddress().getAddress(),
-                request.getFullAddress().getDetailAddress(), request.getFullAddress().getZoneCode());
-    }
-
 
     public Long getId() {
         return id;
@@ -66,8 +60,16 @@ public class CustomerResponse {
         return contact;
     }
 
-    public AddressDto getFullAddress() {
-        return fullAddress;
+    public String getAddress() {
+        return address;
+    }
+
+    public String getDetailAddress() {
+        return detailAddress;
+    }
+
+    public String getZonecode() {
+        return zonecode;
     }
 
     public boolean isTerms() {

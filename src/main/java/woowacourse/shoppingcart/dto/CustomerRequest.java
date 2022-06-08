@@ -9,14 +9,16 @@ public class CustomerRequest {
     private String gender;
     private String birthday;
     private String contact;
-    private AddressRequest fullAddress;
+    private String address;
+    private String detailAddress;
+    private String zonecode;
     private boolean terms;
 
     public CustomerRequest() {
     }
 
     public CustomerRequest(Long id, String email, String profileImageUrl, String name, String gender,
-                           String birthday, String contact, String address, String detailAddress, String zoneCode) {
+                           String birthday, String contact, String address, String detailAddress, String zonecode) {
         this.id = id;
         this.email = email;
         this.profileImageUrl = profileImageUrl;
@@ -24,36 +26,10 @@ public class CustomerRequest {
         this.gender = gender;
         this.birthday = birthday;
         this.contact = contact;
-        this.fullAddress = new AddressRequest(address, detailAddress, zoneCode);
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.zonecode = zonecode;
         this.terms = true;
-    }
-
-    public static class AddressRequest {
-
-        private String address;
-        private String detailAddress;
-        private String zoneCode;
-
-        public AddressRequest() {
-        }
-
-        public AddressRequest(String address, String detailAddress, String zoneCode) {
-            this.address = address;
-            this.detailAddress = detailAddress;
-            this.zoneCode = zoneCode;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public String getDetailAddress() {
-            return detailAddress;
-        }
-
-        public String getZoneCode() {
-            return zoneCode;
-        }
     }
 
     public Long getId() {
@@ -84,8 +60,16 @@ public class CustomerRequest {
         return contact;
     }
 
-    public AddressRequest getFullAddress() {
-        return fullAddress;
+    public String getAddress() {
+        return address;
+    }
+
+    public String getDetailAddress() {
+        return detailAddress;
+    }
+
+    public String getZonecode() {
+        return zonecode;
     }
 
     public boolean isTerms() {
