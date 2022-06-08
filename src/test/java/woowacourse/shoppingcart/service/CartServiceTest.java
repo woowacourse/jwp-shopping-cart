@@ -16,6 +16,8 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.request.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
+import woowacourse.shoppingcart.exception.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.OverQuantityException;
 
 import java.util.List;
 
@@ -57,6 +59,27 @@ class CartServiceTest {
         assertThat(cartItems.size()).isEqualTo(1);
         assertThat(cartItems.get(0).getName()).isEqualTo(PRODUCT_NAME);
     }
+
+    @Test
+    @DisplayName("장바구니에 품목을 추가할때 이미 등록된 품목일 경우 예외가 발생한다.")
+    void addCart_DuplicateProductException() {
+        AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
+        cartService.addCart(addCartItemRequestDto, customerId);
+
+        assertThatThrownBy(() -> cartService.addCart(addCartItemRequestDto, customerId))
+                        .isInstanceOf(DuplicateCartItemException.class)
+                        .hasMessage("이미 담겨있는 상품입니다.");
+    }
+
+    @Test
+    @DisplayName("장바구니에 품목을 추가할때 재고가 주문수량보다 적으면 예외가 발생한다.")
+    void addCart_OverQuantityException() {
+        AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 11);
+        assertThatThrownBy(() -> cartService.addCart(addCartItemRequestDto, customerId))
+                        .isInstanceOf(OverQuantityException.class)
+                        .hasMessage("재고가 부족합니다.");
+    }
+
 
     @Test
     @DisplayName("장바구니 내의 품목의 수량을 수정한다.")
