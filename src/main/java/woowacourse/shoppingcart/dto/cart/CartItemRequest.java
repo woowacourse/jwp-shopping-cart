@@ -2,16 +2,16 @@ package woowacourse.shoppingcart.dto.cart;
 
 public class CartItemRequest {
 
-    private final int id;
+    private final int productId;
     private final int quantity;
 
     public CartItemRequest(int id, int quantity) {
-        this.id = id;
+        this.productId = id;
         this.quantity = quantity;
     }
 
-    public int getId() {
-        return id;
+    public int getProductId() {
+        return productId;
     }
 
     public int getQuantity() {

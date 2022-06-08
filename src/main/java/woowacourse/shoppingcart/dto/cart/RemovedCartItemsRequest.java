@@ -4,16 +4,16 @@ import java.util.List;
 
 public class RemovedCartItemsRequest {
 
-    private List<Integer> ids;
+    private List<Integer> productIds;
 
     public RemovedCartItemsRequest() {
     }
 
     public RemovedCartItemsRequest(List<Integer> productsIds) {
-        this.ids = productsIds;
+        this.productIds = productsIds;
     }
 
-    public List<Integer> getIds() {
-        return ids;
+    public List<Integer> getProductIds() {
+        return productIds;
     }
 }

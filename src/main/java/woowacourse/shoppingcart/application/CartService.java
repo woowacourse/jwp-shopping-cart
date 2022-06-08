@@ -30,7 +30,7 @@ public class CartService {
 
     public CartItemResponse addCartItem(String token, CartItemRequest cartItemRequest) {
         final CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
-        ProductId productId = new ProductId(cartItemRequest.getId());
+        ProductId productId = new ProductId(cartItemRequest.getProductId());
         checkExistenceInAllProducts(productId);
         checkExistenceInCart(customerId, productId);
         cartItemDao.save(customerId, productId, new Quantity(cartItemRequest.getQuantity()));
@@ -53,7 +53,7 @@ public class CartService {
 
     public void removeCartItems(String token, RemovedCartItemsRequest removedCartItemsRequest) {
         final CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
-        List<ProductId> productIds = removedCartItemsRequest.getIds().stream()
+        List<ProductId> productIds = removedCartItemsRequest.getProductIds().stream()
                 .map(ProductId::new)
                 .collect(Collectors.toList());
         if (!productIds.stream()
@@ -65,7 +65,7 @@ public class CartService {
 
     public void editCartItem(String token, CartItemRequest cartItemRequest) {
         final CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
-        final ProductId productId = new ProductId(cartItemRequest.getId());
+        final ProductId productId = new ProductId(cartItemRequest.getProductId());
         checkExistenceInAllProducts(productId);
         checkNoneExistenceInCart(customerId, productId);
         cartItemDao.edit(customerId, productId, new Quantity(cartItemRequest.getQuantity()));
