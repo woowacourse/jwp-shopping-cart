@@ -12,23 +12,27 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class OrdersDetailDaoTest {
+class OrderDetailDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
-    private final OrdersDetailDao ordersDetailDao;
+    private final OrderDetailDao orderDetailDao;
+    private final ProductDao productDao;
+
     private long ordersId;
     private long productId;
     private long customerId;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
+    public OrderDetailDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
+        this.productDao = new ProductDao(jdbcTemplate);
+        this.orderDetailDao = new OrderDetailDao(jdbcTemplate, productDao);
     }
 
     @BeforeEach
@@ -38,7 +42,7 @@ class OrdersDetailDaoTest {
         ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 
         jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
-                , "name", 1000, "imageUrl");
+                , "name", 1000, "http://imageUrl");
         productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
     }
 
@@ -47,10 +51,10 @@ class OrdersDetailDaoTest {
     void addOrdersDetail() {
         //given
         int quantity = 5;
+        OrderDetail orderDetail = new OrderDetail(productDao.findProductById(productId), new Quantity(quantity));
 
         //when
-        Long orderDetailId = ordersDetailDao
-                .addOrdersDetail(ordersId, productId, quantity);
+        Long orderDetailId = orderDetailDao.addOrdersDetail(ordersId, orderDetail);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);
@@ -68,7 +72,7 @@ class OrdersDetailDaoTest {
         }
 
         //when
-        final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
+        final List<OrderDetail> ordersDetailsByOrderId = orderDetailDao
                 .findOrdersDetailsByOrderId(ordersId);
 
         //then
