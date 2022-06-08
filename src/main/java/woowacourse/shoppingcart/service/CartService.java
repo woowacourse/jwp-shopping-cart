@@ -86,7 +86,7 @@ public class CartService {
     public void addItem(String username, AddCartItemRequest addCartItemRequest) {
         validateExistName(username);
         Long id = customerDao.findIdByUserName(username);
-        Long productId = addCartItemRequest.getId();
+        Long productId = addCartItemRequest.getProductId();
         validatePositiveProductId(productId);
         validateExistProductId(productId);
         int quantity = addCartItemRequest.getQuantity();
@@ -119,10 +119,10 @@ public class CartService {
     public CartResponse updateItem(String username, UpdateCartItemRequest updateCartItemRequest) {
         validateExistName(username);
         Long id = customerDao.findIdByUserName(username);
-        List<Long> cartIds = updateCartItemRequest.getCartIds();
+        List<Long> cartIds = updateCartItemRequest.generateCartIds();
         validatePositiveCartIds(cartIds);
         validateExistCartIds(cartIds, id);
-        List<Integer> quantities = updateCartItemRequest.getQuantities();
+        List<Integer> quantities = updateCartItemRequest.generateQuantities();
         validatePositiveQuantities(quantities);
         List<Boolean> checked = updateCartItemRequest.generateChecked();
         for (int i = 0; i < quantities.size(); i++) {
