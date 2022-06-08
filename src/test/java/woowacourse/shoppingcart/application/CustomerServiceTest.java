@@ -128,7 +128,7 @@ public class CustomerServiceTest {
         customerDao.save(new Customer("beomWhale@naver.com", nickname, "Password123!"));
 
         String email = "awesome@gmail.com";
-        Customer customer = new Customer(email, "awesome", "Password123!");
+        Customer customer = new Customer(email, "awesomeo", "Password123!");
         customerDao.save(customer);
 
         assertThatThrownBy(() -> customerService.changeNickname(email, new ChangeCustomerRequest(nickname)))
