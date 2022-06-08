@@ -31,12 +31,7 @@ public class CartItemController {
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final int customerId,
                                             @RequestBody final CartRequest cartRequest) {
         final Long cartId = cartService.addCart(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
-                .toUri();
-        return ResponseEntity.created(responseLocation).build();
+        return ResponseEntity.created(URI.create("/api/customers/cart/" + cartId)).build();
     }
 
     @GetMapping
