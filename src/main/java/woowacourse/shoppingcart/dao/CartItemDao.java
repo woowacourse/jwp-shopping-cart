@@ -28,22 +28,24 @@ public class CartItemDao {
     }
 
     public List<Long> findProductIdsByCustomerId(Long customerId) {
-        String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
+        String sql = "SELECT product_id FROM cart_item WHERE customer_id = :customerId";
+        SqlParameterSource parameterSource = new MapSqlParameterSource("customerId", customerId);
+        return namedParameterJdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> rs.getLong("product_id"));
     }
 
     public List<Long> findIdsByCustomerId(Long customerId) {
-        String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+        String sql = "SELECT id FROM cart_item WHERE customer_id = :customerId";
+        SqlParameterSource parameterSource = new MapSqlParameterSource("customerId", customerId);
+        return namedParameterJdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> rs.getLong("id"));
     }
 
-    public Long findProductIdById(Long cartItemId) {
+    public Optional<Long> findProductIdById(Long cartItemId) {
         try {
-            String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartItemId);
+            String sql = "SELECT product_id FROM cart_item WHERE id = :id";
+            SqlParameterSource parameterSource = new MapSqlParameterSource("id", cartItemId);
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, parameterSource, (rs, rowNum) -> rs.getLong("product_id")));
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
+            return Optional.empty();
         }
     }
 

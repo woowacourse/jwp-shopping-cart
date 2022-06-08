@@ -152,9 +152,9 @@
 - [ ] dto로 사용되고 있는 domain 패키지를 dto 패키지로 수정 
 - [ ] domain 새로 만들기 
 - api 명세 수정
-    - [ ] 팀 회의로 결정된 api 명세에 맞도록 path 수정
-    - [ ] 팀 회의로 결정된 api 명세에 맞도록 request, response 수정
-    - [ ] 팀 회의로 결정된 api 명세에 맞도록 예외처리 수정
+    - [x] 팀 회의로 결정된 api 명세에 맞도록 path 수정
+    - [x] 팀 회의로 결정된 api 명세에 맞도록 request, response 수정
+    - [x] 팀 회의로 결정된 api 명세에 맞도록 예외처리 수정
 - [ ] dao에서 조회하는 값이 없느면 error를 반환하던 코드를 Optional을 반환하도록 수정
 - [ ] PathVariable customerName 를 token 을 이용하도록 수정
 

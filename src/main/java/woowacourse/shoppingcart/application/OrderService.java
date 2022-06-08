@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -44,7 +45,8 @@ public class OrderService {
 
         for (OrderRequest orderDetail : orderDetailRequests) {
             Long cartId = orderDetail.getCartId();
-            Long productId = cartItemDao.findProductIdById(cartId);
+            Long productId = cartItemDao.findProductIdById(cartId)
+                    .orElseThrow(InvalidCartItemException::new);
             int quantity = orderDetail.getQuantity();
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);

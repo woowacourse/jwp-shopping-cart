@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemSaveRequest;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NoSuchCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -38,7 +39,8 @@ public class CartItemService {
 
         List<CartItem> cartItems = new ArrayList<>();
         for (Long cartId : cartIds) {
-            Long productId = cartItemDao.findProductIdById(cartId);
+            Long productId = cartItemDao.findProductIdById(cartId)
+                    .orElseThrow(InvalidCartItemException::new);
             Product product = productDao.findProductById(productId);
             Integer quantity = cartItemDao.findQuantityById(cartId)
                     .orElseThrow(NoSuchCartItemException::new);
