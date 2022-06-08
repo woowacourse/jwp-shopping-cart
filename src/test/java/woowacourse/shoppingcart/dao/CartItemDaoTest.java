@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.domain.Customer.Customer;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -50,7 +51,7 @@ class CartItemDaoTest {
 
         cartItemDao.updateCartItem(customerId, productId, expected);
 
-        final CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId);
+        final CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
         assertThat(cartItem.getCount()).isEqualTo(expected);
     }
 
@@ -60,5 +61,14 @@ class CartItemDaoTest {
         cartItemDao.addCartItem(customerId, productId, 1);
         cartItemDao.deleteCartItem(customerId, productId);
 
+    }
+
+    @Test
+    @DisplayName("장바구니에 물건을 담는다.")
+    void addCartItem() {
+        cartItemDao.addCartItem(customerId, productId, 1);
+
+        CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
+        assertThat(cartItem.getName()).isEqualTo(PRODUCT_NAME);
     }
 }

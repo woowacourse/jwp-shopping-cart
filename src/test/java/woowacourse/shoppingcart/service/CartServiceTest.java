@@ -12,7 +12,11 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Customer.Customer;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.request.UpdateCartItemCountItemRequest;
+import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,11 +45,15 @@ class CartServiceTest {
     }
 
     @Test
-    void findCartsByCustomerId() {
-    }
-
-    @Test
+    @DisplayName("장바구니에 품목을 추가한다.")
     void addCart() {
+        AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
+        cartService.addCart(addCartItemRequestDto, customerId);
+
+        List<CartItemResponseDto> cartItems = cartService.findCartsByCustomerId(customerId);
+
+        assertThat(cartItems.size()).isEqualTo(1);
+        assertThat(cartItems.get(0).getName()).isEqualTo(PRODUCT_NAME);
     }
 
     @Test
@@ -55,7 +63,7 @@ class CartServiceTest {
 
         cartService.updateCart(customerId, productId, new UpdateCartItemCountItemRequest(2));
 
-        CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId);
+        final CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
         assertThat(cartItem.getCount()).isEqualTo(2);
     }
 
