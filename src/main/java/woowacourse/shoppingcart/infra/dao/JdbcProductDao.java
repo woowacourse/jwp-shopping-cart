@@ -44,7 +44,7 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public Optional<ProductEntity> findById(final long id) {
-        final String sql = "SELECT id, name, price, image_url FROM Product WHERE id = ?";
+        final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
 
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, PRODUCT_ENTITY_ROW_MAPPER, id));
@@ -55,14 +55,14 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public void deleteById(final long id) {
-        final String sql = "DELETE FROM Product WHERE id = ?";
+        final String sql = "DELETE FROM product WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public long countAll() {
-        final String sql = "SELECT COUNT(id) FROM Product";
+        final String sql = "SELECT COUNT(id) FROM product";
 
         return jdbcTemplate.queryForObject(sql, Long.class);
     }

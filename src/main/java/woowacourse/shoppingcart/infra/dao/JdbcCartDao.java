@@ -24,8 +24,8 @@ public class JdbcCartDao implements CartDao {
                     + "p.price AS product_price, "
                     + "p.image_url AS product_image_url, "
                     + "c.quantity AS cart_quantity "
-                    + "FROM Cart_Item c "
-                    + "JOIN Product p ON c.product_id = p.id "
+                    + "FROM cart_item c "
+                    + "JOIN product p ON c.product_id = p.id "
                     + "WHERE c.customer_id = ?";
 
     private static final RowMapper<CartEntity> CART_ENTITY_ROW_MAPPER =
@@ -78,9 +78,9 @@ public class JdbcCartDao implements CartDao {
         if (cartIds.isEmpty()) {
             return;
         }
-        
+
         final String inSql = String.join(",", Collections.nCopies(cartIds.size(), "?"));
-        final String sql = "DELETE FROM Cart_Item WHERE id IN (%s)";
+        final String sql = "DELETE FROM cart_item WHERE id IN (%s)";
 
         jdbcTemplate.update(String.format(sql, inSql), cartIds.toArray());
     }

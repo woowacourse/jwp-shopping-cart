@@ -3,13 +3,16 @@ package woowacourse.shoppingcart.ui.dto.response;
 public class CartResponse {
     private final long id;
     private final int quantity;
+    private final long productId;
     private final String name;
     private final long price;
     private final String imageUrl;
 
-    public CartResponse(final long id, final int quantity, final String name, final long price, final String imageUrl) {
+    public CartResponse(final long id, final int quantity, final long productId, final String name, final long price,
+                        final String imageUrl) {
         this.id = id;
         this.quantity = quantity;
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -21,6 +24,10 @@ public class CartResponse {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public long getProductId() {
+        return productId;
     }
 
     public String getName() {

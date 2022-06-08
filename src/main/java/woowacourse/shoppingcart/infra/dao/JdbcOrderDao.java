@@ -23,9 +23,9 @@ public class JdbcOrderDao implements OrderDao {
                     + "c.id AS cart_id, c.customer_id, "
                     + "p.id AS product_id, p.name AS product_name, p.price AS product_price, p.image_url AS product_image_url, "
                     + "c.quantity "
-                    + "FROM Cart_Item c JOIN Product p ON c.product_id = p.id "
-                    + "JOIN Orders o ON c.customer_id = o.customer_id "
-                    + "JOIN Orders_Detail od ON o.id = od.orders_id AND od.product_id = p.id";
+                    + "FROM cart_item c JOIN product p ON c.product_id = p.id "
+                    + "JOIN orders o ON c.customer_id = o.customer_id "
+                    + "JOIN orders_detail od ON o.id = od.orders_id AND od.product_id = p.id";
 
     private static final RowMapper<OrderEntity> ORDER_ENTITY_ROW_MAPPER =
             (rs, rowNum) -> new OrderEntity(

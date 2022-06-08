@@ -71,7 +71,8 @@ public class CartController {
     private CartResponse toCartResponse(Cart cart) {
         final Product product = cart.getProduct();
 
-        return new CartResponse(cart.getId(), cart.getQuantity(), product.getName(), product.getPrice(),
+        return new CartResponse(cart.getId(), cart.getQuantity(), product.getId(), product.getName(),
+                product.getPrice(),
                 product.getImageUrl());
     }
 }

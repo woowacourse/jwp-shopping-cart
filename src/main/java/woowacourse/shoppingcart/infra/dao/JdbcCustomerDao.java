@@ -37,7 +37,7 @@ public class JdbcCustomerDao implements CustomerDao {
     @Override
     public Optional<CustomerEntity> findById(long id) {
         try {
-            final String sql = "SELECT id, email, name, password FROM Customer WHERE id = ?";
+            final String sql = "SELECT id, email, name, password FROM customer WHERE id = ?";
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -47,7 +47,7 @@ public class JdbcCustomerDao implements CustomerDao {
     @Override
     public Optional<CustomerEntity> findByEmail(String email) {
         try {
-            final String sql = "SELECT id, email, name, password FROM Customer WHERE email = ?";
+            final String sql = "SELECT id, email, name, password FROM customer WHERE email = ?";
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, email));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -57,7 +57,7 @@ public class JdbcCustomerDao implements CustomerDao {
     @Override
     public Optional<CustomerEntity> findByName(String name) {
         try {
-            final String sql = "SELECT id, email, name, password FROM Customer WHERE name = ?";
+            final String sql = "SELECT id, email, name, password FROM customer WHERE name = ?";
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, name));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -66,7 +66,7 @@ public class JdbcCustomerDao implements CustomerDao {
 
     @Override
     public void update(CustomerEntity customerEntity) {
-        final String sql = "UPDATE Customer SET email = ?, name = ?, password = ? WHERE id = ?";
+        final String sql = "UPDATE customer SET email = ?, name = ?, password = ? WHERE id = ?";
 
         jdbcTemplate.update(sql, customerEntity.getEmail(), customerEntity.getName(), customerEntity.getPassword(),
                 customerEntity.getId());
@@ -74,7 +74,7 @@ public class JdbcCustomerDao implements CustomerDao {
 
     @Override
     public void deleteById(long id) {
-        final String sql = "DELETE FROM Customer WHERE id = ?";
+        final String sql = "DELETE FROM customer WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
     }
