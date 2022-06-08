@@ -42,7 +42,7 @@ public class OrderService {
                 .collect(Collectors.toList());
         final List<Cart> cart = cartDao.findCartsByIds(cartIds);
         ordersDetailDao.addBatchOrderDetails(toOrderDetails(orderId, cart));
-
+        cartDao.deleteBatch(cartIds);
         return orderId;
     }
 

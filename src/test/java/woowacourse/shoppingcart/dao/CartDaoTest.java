@@ -96,4 +96,17 @@ public class CartDaoTest {
         cartDao.updateQuantity(foundCart);
         assertThat(foundCart.getQuantity()).isEqualTo(10);
     }
+
+    @DisplayName("여러 장바구니 물품을 삭제한다.")
+    @Test
+    void deleteBatch() {
+        final Long memberId = memberDao.save(MemberFixture.createMember(EMAIL, PASSWORD, NAME));
+        final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
+        final Long cartId = cartDao.save(new Cart(memberId, productDao.findProductById(productId), 1));
+        final Long cartId2 = cartDao.save(new Cart(memberId, productDao.findProductById(productId), 2));
+        final Long cartId3 = cartDao.save(new Cart(memberId, productDao.findProductById(productId), 3));
+
+        cartDao.deleteBatch(List.of(cartId, cartId2, cartId3));
+        assertThat(cartDao.findCartsByMemberId(memberId)).hasSize(0);
+    }
 }

@@ -75,6 +75,14 @@ public class CartDao {
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 
+    public void deleteBatch(final List<Long> cartIds) {
+        String sql = "DELETE FROM cart WHERE id IN (:ids)";
+        final SqlParameterSource[] parameters = cartIds.stream()
+                .map(cartId -> new MapSqlParameterSource("ids", cartId))
+                .toArray(SqlParameterSource[]::new);
+        namedParameterJdbcTemplate.batchUpdate(sql, parameters);
+    }
+
     private RowMapper<Cart> joinRowMapper() {
         return (rs, rowNum) -> {
             final Long id = rs.getLong("id");
