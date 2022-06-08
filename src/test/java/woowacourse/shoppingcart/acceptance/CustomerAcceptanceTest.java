@@ -214,8 +214,7 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers/duplication")
+                .when().get("/api/customers/exists?userName=" + request.getUserName())
                 .then().log().all()
                 .extract();
     }

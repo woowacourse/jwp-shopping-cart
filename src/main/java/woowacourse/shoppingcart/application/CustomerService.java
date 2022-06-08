@@ -10,7 +10,6 @@ import woowacourse.shoppingcart.domain.customer.PlainPassword;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUserNameRequest;
 import woowacourse.shoppingcart.dto.DuplicateResponse;
 import woowacourse.shoppingcart.exception.DuplicatedNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -66,8 +65,8 @@ public class CustomerService {
                 .orElseThrow(InvalidCustomerException::new);
     }
 
-    public DuplicateResponse isDuplicateUserName(final CustomerUserNameRequest customerUserNameRequest) {
-        final boolean isDuplicated = customerDao.existsByUserName(customerUserNameRequest.getUserName());
+    public DuplicateResponse isDuplicateUserName(final String userName) {
+        final boolean isDuplicated = customerDao.existsByUserName(userName);
         return new DuplicateResponse(isDuplicated);
     }
 }
