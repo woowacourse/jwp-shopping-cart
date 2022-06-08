@@ -1,0 +1,11 @@
+spring:
+  datacourse:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${URL}
+    username: ${USERNAME}
+    password: ${PASSWORD}
+security:
+  jwt:
+    token:
+      secret-key: ${SECRET_KEY}
+      expire-length: ${EXPIRE_LENGTH}
