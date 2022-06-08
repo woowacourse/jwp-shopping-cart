@@ -3,11 +3,13 @@ package woowacourse.shoppingcart.dao;
 import java.util.HashMap;
 import java.util.Map;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @Repository
 public class JdbcCustomerDao implements CustomerDao {
@@ -46,13 +48,23 @@ public class JdbcCustomerDao implements CustomerDao {
     @Override
     public CustomerEntity findById(int id) {
         String sql = "SELECT id, email, password, profile_image_url, terms FROM customer WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, id);
+
+        try {
+            return jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CustomerNotFoundException();
+        }
     }
 
     @Override
     public CustomerEntity findByEmail(String email) {
         String sql = "SELECT id, email, password, profile_image_url, terms FROM customer WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, email);
+
+        try {
+            return jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, email);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CustomerNotFoundException();
+        }
     }
 
     @Override
@@ -69,7 +81,13 @@ public class JdbcCustomerDao implements CustomerDao {
     }
 
     @Override
-    public boolean hasEmail(String email) {
+    public boolean existsById(long id) {
+        String sql = "SELECT EXISTS(SELECT * FROM customer WHERE id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
         String sql = "SELECT EXISTS(SELECT * FROM customer WHERE email = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, email));
     }

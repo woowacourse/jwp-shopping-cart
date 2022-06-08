@@ -11,10 +11,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @JdbcTest
 class JdbcCustomerDaoTest {
@@ -97,7 +97,7 @@ class JdbcCustomerDaoTest {
 
         // then
         assertThatThrownBy(() -> customerDao.findById(customerId))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+                .isInstanceOf(CustomerNotFoundException.class);
     }
 
     @DisplayName("email을 전달받아 존재여부를 반환한다.")
@@ -108,7 +108,7 @@ class JdbcCustomerDaoTest {
         customerDao.save(CUSTOMER_ENTITY_1);
 
         // when
-        boolean actual = customerDao.hasEmail(email);
+        boolean actual = customerDao.existsByEmail(email);
 
         // then
         assertThat(actual).isEqualTo(expected);

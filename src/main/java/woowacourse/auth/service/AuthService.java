@@ -38,7 +38,7 @@ public class AuthService {
     }
 
     private void validateEmailExisting(String email) {
-        if (!customerDao.hasEmail(email)) {
+        if (!customerDao.existsByEmail(email)) {
             throw new LoginFailedException();
         }
     }

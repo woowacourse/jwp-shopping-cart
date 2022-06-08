@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.service;
 
 import java.time.format.DateTimeFormatter;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.AddressDao;
@@ -49,20 +48,16 @@ public class CustomerService {
     }
 
     private void validateDuplicateEmail(CustomerRequest customerRequest) {
-        if (customerDao.hasEmail(customerRequest.getEmail())) {
+        if (customerDao.existsByEmail(customerRequest.getEmail())) {
             throw new DuplicateEmailException();
         }
     }
 
     public CustomerResponse getCustomerById(int id) {
-        try {
-            CustomerEntity customerEntity = customerDao.findById(id);
-            PrivacyEntity privacyEntity = privacyDao.findById(id);
-            AddressEntity addressEntity = addressDao.findById(id);
-            return convertEntityToResponse(customerEntity, privacyEntity, addressEntity);
-        } catch (EmptyResultDataAccessException e) {
-            throw new CustomerNotFoundException();
-        }
+        CustomerEntity customerEntity = customerDao.findById(id);
+        PrivacyEntity privacyEntity = privacyDao.findById(id);
+        AddressEntity addressEntity = addressDao.findById(id);
+        return convertEntityToResponse(customerEntity, privacyEntity, addressEntity);
     }
 
     public void updateCustomerById(int customerId, CustomerRequest customerRequest) {
@@ -87,13 +82,11 @@ public class CustomerService {
     }
 
     public EmailDuplicationResponse isDuplicatedEmail(String email) {
-        return new EmailDuplicationResponse(customerDao.hasEmail(email));
+        return new EmailDuplicationResponse(customerDao.existsByEmail(email));
     }
 
     private void validateExists(int customerId) {
-        try {
-            customerDao.findById(customerId);
-        } catch (EmptyResultDataAccessException e) {
+        if (!customerDao.existsById(customerId)) {
             throw new CustomerNotFoundException();
         }
     }

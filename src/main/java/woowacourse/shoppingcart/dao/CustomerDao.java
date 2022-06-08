@@ -13,5 +13,7 @@ public interface CustomerDao {
 
     void delete(int id);
 
-    boolean hasEmail(String email);
+    boolean existsById(long id);
+
+    boolean existsByEmail(String email);
 }
