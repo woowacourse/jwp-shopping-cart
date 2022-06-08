@@ -3,6 +3,7 @@ package woowacourse.product.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static woowacourse.product.dto.ProductResponse.InnerProductResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +51,7 @@ public class ProductServiceTest {
         final ProductResponses findProducts = productService.findProducts();
 
         final List<Long> findIds = findProducts.getProducts().stream()
-            .map(ProductResponses.ProductDetailResponse::getId)
+            .map(InnerProductResponse::getId)
             .collect(Collectors.toList());
 
         assertThat(findIds).contains(id1, id2);
@@ -62,7 +63,8 @@ public class ProductServiceTest {
         final ProductRequest productRequest = new ProductRequest(name, price, stock, imageURL);
         final Long id = productService.addProduct(productRequest);
 
-        final ProductResponse findProduct = productService.findProductById(id);
+        final ProductResponse productResponse = productService.findProductById(id);
+        final InnerProductResponse findProduct = productResponse.getProduct();
 
         assertAll(
             () -> assertThat(findProduct.getId()).isEqualTo(id),

@@ -72,6 +72,6 @@ public class OrderServiceTest {
         final Long orderId = orderService.addOrder(username, orderRequests);
         final OrderResponse orderResponse = orderService.findOrderById(username, orderId);
 
-        assertThat(orderResponse.getId()).isEqualTo(orderId);
+        assertThat(orderResponse.getOrder().getId()).isEqualTo(orderId);
     }
 }

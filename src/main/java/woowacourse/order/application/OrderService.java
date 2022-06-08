@@ -12,6 +12,7 @@ import woowacourse.cartitem.exception.InvalidCartItemException;
 import woowacourse.customer.dao.CustomerDao;
 import woowacourse.order.dao.OrderDao;
 import woowacourse.order.dao.OrdersDetailDao;
+import woowacourse.order.domain.Orders;
 import woowacourse.order.dto.OrderAddRequest;
 import woowacourse.order.dto.OrderResponse;
 import woowacourse.order.dto.OrderResponses;
@@ -69,11 +70,12 @@ public class OrderService {
         final List<Long> orderIds = orderDao.findIdsByCustomerId(customerId);
 
         return OrderResponses.from(orderIds.stream()
-            .map(this::findOrderResponseByOrderId)
+            .map(id -> new Orders(id, ordersDetailDao.findAllByOrderId(id)))
             .collect(Collectors.toList()));
     }
 
     private OrderResponse findOrderResponseByOrderId(final Long orderId) {
-        return OrderResponse.from(orderId, ordersDetailDao.findAllByOrderId(orderId));
+        final Orders orders = new Orders(orderId, ordersDetailDao.findAllByOrderId(orderId));
+        return OrderResponse.from(orders);
     }
 }

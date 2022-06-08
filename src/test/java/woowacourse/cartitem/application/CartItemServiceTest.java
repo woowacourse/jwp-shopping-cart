@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.cartitem.dto.CartItemAddRequest;
-import woowacourse.cartitem.dto.CartItemResponses;
+import woowacourse.cartitem.dto.CartItemResponse.InnerCartItemResponse;
 import woowacourse.cartitem.exception.InvalidCartItemException;
 import woowacourse.customer.application.CustomerService;
 import woowacourse.customer.dto.SignupRequest;
@@ -65,7 +65,7 @@ public class CartItemServiceTest {
 
         final List<Long> productIds = cartItemService.findCartItemsByCustomerName(username).getCartItems()
             .stream()
-            .map(CartItemResponses.CartItemDetailResponse::getProductId)
+            .map(InnerCartItemResponse::getProductId)
             .collect(Collectors.toList());
 
         assertThat(productIds).contains(productId1, productId2);

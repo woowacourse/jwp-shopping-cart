@@ -2,8 +2,8 @@ package woowacourse.product.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -122,15 +122,18 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     public static void 상품_목록_포함됨(final Long productId1, final Long productId2,
         final ExtractableResponse<Response> response) {
-        final List<Long> resultProductIds = response.as(ProductResponses.class).getProducts().stream()
-            .map(ProductResponses.ProductDetailResponse::getId)
-            .collect(Collectors.toList());
+        final List<Long> resultProductIds = new ArrayList<>();
+        for (ProductResponse.InnerProductResponse innerProductResponse : response.as(ProductResponses.class)
+            .getProducts()) {
+            Long id = innerProductResponse.getId();
+            resultProductIds.add(id);
+        }
         assertThat(resultProductIds).contains(productId1, productId2);
     }
 
     public static void 상품_조회됨(final ExtractableResponse<Response> response, final Long productId) {
         final ProductResponse resultProduct = response.as(ProductResponse.class);
-        assertThat(resultProduct.getId()).isEqualTo(productId);
+        assertThat(resultProduct.getProduct().getId()).isEqualTo(productId);
     }
 
     public static void 상품_삭제됨(final ExtractableResponse<Response> response) {

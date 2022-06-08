@@ -3,50 +3,28 @@ package woowacourse.order.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import woowacourse.order.domain.Orders;
+import woowacourse.order.dto.OrderResponse.InnerOrderResponse;
+
 public class OrderResponses {
 
-    private List<OrderInnerResponse> orders;
+    private List<InnerOrderResponse> orders;
 
     private OrderResponses() {
     }
 
-    public OrderResponses(final List<OrderInnerResponse> orders) {
+    public OrderResponses(final List<InnerOrderResponse> orders) {
         this.orders = orders;
     }
 
-    public static OrderResponses from(final List<OrderResponse> orderResponses) {
-        return new OrderResponses(OrderInnerResponse.from(orderResponses));
+    public static OrderResponses from(final List<Orders> orders) {
+        final List<InnerOrderResponse> orderResponses = orders.stream()
+            .map(InnerOrderResponse::from)
+            .collect(Collectors.toList());
+        return new OrderResponses(orderResponses);
     }
 
-    public List<OrderInnerResponse> getOrders() {
+    public List<InnerOrderResponse> getOrders() {
         return orders;
-    }
-
-    public static class OrderInnerResponse {
-
-        private Long id;
-        private List<OrderDetailResponse> orderDetails;
-
-        private OrderInnerResponse() {
-        }
-
-        public OrderInnerResponse(final OrderResponse orderResponse) {
-            this.id = orderResponse.getId();
-            this.orderDetails = orderResponse.getOrderDetails();
-        }
-
-        public static List<OrderInnerResponse> from(final List<OrderResponse> orderResponses) {
-            return orderResponses.stream()
-                .map(OrderInnerResponse::new)
-                .collect(Collectors.toList());
-        }
-
-        public Long getId() {
-            return id;
-        }
-
-        public List<OrderDetailResponse> getOrderDetails() {
-            return orderDetails;
-        }
     }
 }

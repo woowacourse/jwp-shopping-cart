@@ -24,6 +24,7 @@ import woowacourse.cartitem.dto.CartItemAddRequest;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.order.dto.OrderAddRequest;
 import woowacourse.order.dto.OrderResponse;
+import woowacourse.order.dto.OrderResponse.InnerOrderResponse;
 import woowacourse.order.dto.OrderResponses;
 import woowacourse.product.dto.ProductRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
@@ -132,13 +133,13 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
     public static void 주문_내역_포함됨(final ExtractableResponse<Response> response, final Long... orderIds) {
         final List<Long> resultOrderIds = response.as(OrderResponses.class).getOrders().stream()
-                .map(OrderResponses.OrderInnerResponse::getId)
+                .map(InnerOrderResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
     }
 
     private void 주문_조회됨(final ExtractableResponse<Response> response, final Long orderId) {
         final OrderResponse resultOrder = response.as(OrderResponse.class);
-        assertThat(resultOrder.getId()).isEqualTo(orderId);
+        assertThat(resultOrder.getOrder().getId()).isEqualTo(orderId);
     }
 }

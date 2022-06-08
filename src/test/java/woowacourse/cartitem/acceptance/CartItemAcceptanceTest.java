@@ -20,6 +20,7 @@ import io.restassured.response.Response;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.cartitem.dto.CartItemAddRequest;
 import woowacourse.cartitem.dto.CartItemResponse;
+import woowacourse.cartitem.dto.CartItemResponse.InnerCartItemResponse;
 import woowacourse.cartitem.dto.CartItemResponses;
 import woowacourse.customer.dto.SignupRequest;
 import woowacourse.product.dto.ProductRequest;
@@ -133,7 +134,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_추가됨(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body().as(CartItemResponse.class).getId()).isNotNull();
+        assertThat(response.body().as(CartItemResponse.class).getCartItem().getId()).isNotNull();
     }
 
     public static Long 장바구니_아이템_추가되어_있음(
@@ -141,7 +142,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         final CartItemAddRequest cartItemAddRequest
     ) {
         final ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, cartItemAddRequest);
-        return response.as(CartItemResponse.class).getId();
+        return response.as(CartItemResponse.class).getCartItem().getId();
     }
 
     public static void 장바구니_아이템_목록_응답됨(final ExtractableResponse<Response> response) {
@@ -150,7 +151,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_목록_포함됨(final ExtractableResponse<Response> response, final Long... productIds) {
         final List<Long> resultProductIds = response.as(CartItemResponses.class).getCartItems().stream()
-            .map(CartItemResponses.CartItemDetailResponse::getProductId)
+            .map(InnerCartItemResponse::getProductId)
             .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }
