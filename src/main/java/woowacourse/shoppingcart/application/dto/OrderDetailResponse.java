@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.application.dto;
 
-import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
 
 public class OrderDetailResponse {
 
@@ -18,13 +18,13 @@ public class OrderDetailResponse {
         this.quantity = quantity;
     }
 
-    public static OrderDetailResponse from(Product product, int quantity) {
+    public static OrderDetailResponse from(OrderDetail orderDetail) {
         return new OrderDetailResponse(
-                product.getId(),
-                product.getName().getValue(),
-                product.multiplePrice(quantity),
-                product.getImageUrl().getValue(),
-                quantity
+                orderDetail.getId(),
+                orderDetail.getProduct().getName().getValue(),
+                orderDetail.calculateCost(),
+                orderDetail.getProduct().getImageUrl().getValue(),
+                orderDetail.getQuantity()
         );
     }
 

@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.dao.entity;
 
+import java.util.Map;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.domain.product.Product;
 
 public class OrdersDetailEntity {
 
@@ -18,11 +20,15 @@ public class OrdersDetailEntity {
 
     public static OrdersDetailEntity from(Long ordersId, OrderDetail orderDetail) {
         return new OrdersDetailEntity(
-                null,
+                orderDetail.getId(),
                 ordersId,
                 orderDetail.getProduct().getId(),
                 orderDetail.getQuantity()
         );
+    }
+
+    public OrderDetail toOrderDetail(Map<Long, Product> productMap) {
+        return new OrderDetail(id, productMap.get(productId), quantity);
     }
 
     public Long getId() {

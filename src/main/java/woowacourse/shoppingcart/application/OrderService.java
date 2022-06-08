@@ -1,12 +1,10 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.application.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.application.dto.OrderResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrdersDao;
@@ -17,6 +15,7 @@ import woowacourse.shoppingcart.dao.entity.OrdersDetailEntity;
 import woowacourse.shoppingcart.dao.entity.OrdersEntity;
 import woowacourse.shoppingcart.dao.entity.ProductEntity;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.domain.order.Orders;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -91,21 +90,13 @@ public class OrderService {
     }
 
     private OrderResponse findById(Long orderId) {
-        List<OrderDetailResponse> result = new ArrayList<>();
         List<Product> products = findProductsByOrderId(orderId);
         Map<Long, Product> productMap = initProductMap(products);
 
-        for (OrdersDetailEntity ordersDetail : ordersDetailDao.findByOrderId(orderId)) {
-            Product product = productMap.get(ordersDetail.getProductId());
-            int quantity = ordersDetail.getQuantity();
-            result.add(OrderDetailResponse.from(product, quantity));
-        }
+        List<OrderDetail> orderDetails = findOrderDetails(productMap, orderId);
+        Orders orders = new Orders(orderId, orderDetails);
 
-        int totalCost = result.stream()
-                .mapToInt(OrderDetailResponse::getCost)
-                .sum();
-
-        return new OrderResponse(orderId, totalCost, result);
+        return OrderResponse.from(orders);
     }
 
     private List<Product> findProductsByOrderId(Long orderId) {
@@ -123,5 +114,12 @@ public class OrderService {
     private Map<Long, Product> initProductMap(List<Product> products) {
         return products.stream()
                 .collect(Collectors.toMap(Product::getId, product -> product));
+    }
+
+    private List<OrderDetail> findOrderDetails(Map<Long, Product> productMap, Long orderId) {
+        return ordersDetailDao.findByOrderId(orderId)
+                .stream()
+                .map(orderDetail -> orderDetail.toOrderDetail(productMap))
+                .collect(Collectors.toUnmodifiableList());
     }
 }
