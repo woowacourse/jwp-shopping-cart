@@ -1,3 +1,5 @@
+INSERT INTO customer (name, password, email, address, phone_number) VALUES ('halee', '$2a$10$iVjNvsW9uy2joOzETTZIPeHB3x1QgoJrsuy2PwtxfG8qLPA.MvkSa', 'example@email.com', 'some-address', '010-1234-1234');
+
 INSERT INTO product (id, name, price, image_url, is_deleted, description)
 VALUES (1, '짱구 토끼 인형', 9900,
         'https://search.pstatic.net/common/?src=http%3A%2F%2Fshopping.phinf.naver.net%2Fmain_2928088%2F29280886621.20211018102157.jpg&type=sc960_832',
