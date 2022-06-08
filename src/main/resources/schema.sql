@@ -30,12 +30,9 @@ create table privacy
     gender      varchar(9)   not null,
     contact     varchar(11)  not null,
     birth_day   timestamp,
+    foreign key (customer_id) references customer (id),
     primary key (customer_id)
 );
-
-alter table privacy
-    add constraint fk_privacy_to_customer
-        foreign key (customer_id) references customer (id);
 
 create table full_address
 (
@@ -43,12 +40,9 @@ create table full_address
     address        varchar(255) not null,
     detail_address varchar(255),
     zone_code      char(5)      not null,
+    foreign key (customer_id) references customer (id),
     primary key (customer_id)
 );
-
-alter table full_address
-    add constraint fk_full_address_to_customer
-        foreign key (customer_id) references customer (id);
 
 create table product
 (
@@ -67,16 +61,10 @@ create table cart_item
     customer_id bigint  not null,
     product_id  bigint  not null,
     quantity    integer not null,
+    foreign key (customer_id) references customer (id),
+    foreign key (product_id) references product (id),
     primary key (id)
 );
-
-alter table cart_item
-    add constraint fk_cart_item_to_customer
-        foreign key (customer_id) references customer (id);
-
-alter table cart_item
-    add constraint fk_cart_item_to_product
-        foreign key (product_id) references product (id);
 
 create table orders
 (
