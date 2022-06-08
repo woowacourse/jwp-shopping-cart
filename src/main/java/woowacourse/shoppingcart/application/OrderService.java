@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.application;
 
-import static woowacourse.shoppingcart.application.ProductService.convertResponseToProductEntity;
+import static woowacourse.shoppingcart.application.ProductService.convertProductEntityToResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,24 +85,23 @@ public class OrderService {
 
     private int getTotalPrice(List<OrderDetailResponse> orderDetailResponses) {
         return orderDetailResponses.stream()
-                .mapToInt(cartItemResponse -> cartItemResponse.getProduct().getPrice()
-                        * cartItemResponse.getQuantity())
+                .mapToInt(cartItemResponse -> cartItemResponse.getProduct().getPrice() * cartItemResponse.getQuantity())
                 .sum();
     }
 
     private OrderDetailResponse getCartResponse(OrdersDetailEntity ordersDetailEntity) {
-        final ProductEntity product = productDao.findProductById(ordersDetailEntity.getProduct_id());
+        final ProductEntity productEntity = productDao.findProductById(ordersDetailEntity.getProductId());
         final int quantity = ordersDetailEntity.getQuantity();
-        return new OrderDetailResponse(convertResponseToProductEntity(product), quantity);
+        return new OrderDetailResponse(convertProductEntityToResponse(productEntity), quantity);
     }
 
     public OrderResponse findOrder(Long orderId, int customerId) {
         validateOrderId(orderId, customerId);
         final List<OrdersDetailEntity> ordersDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId);
-        final List<OrderDetailResponse> cartItemResponses = getCartItemResponse(ordersDetails);
-        final int totalPrice = getTotalPrice(cartItemResponses);
+        final List<OrderDetailResponse> orderDetailResponses = getCartItemResponse(ordersDetails);
+        final int totalPrice = getTotalPrice(orderDetailResponses);
 
-        return new OrderResponse(cartItemResponses, totalPrice);
+        return new OrderResponse(orderDetailResponses, totalPrice);
     }
 
     private void validateOrderId(Long orderId, int customerId) {

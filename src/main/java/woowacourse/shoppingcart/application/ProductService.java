@@ -36,11 +36,11 @@ public class ProductService {
         final List<ProductEntity> products = productDao.findProducts();
 
         return products.stream()
-                .map(ProductService::convertResponseToProductEntity)
+                .map(ProductService::convertProductEntityToResponse)
                 .collect(Collectors.toList());
     }
 
-    public static ProductResponse convertResponseToProductEntity(ProductEntity productEntity) {
+    public static ProductResponse convertProductEntityToResponse(ProductEntity productEntity) {
         return new ProductResponse(productEntity.getId(), productEntity.getName(),
                 productEntity.getPrice(), productEntity.getImageUrl(),
                 productEntity.getDescription(), productEntity.getStock());
@@ -50,7 +50,7 @@ public class ProductService {
     public ProductResponse findProductById(final Long productId) {
         try {
             final ProductEntity productEntity = productDao.findProductById(productId);
-            return convertResponseToProductEntity(productEntity);
+            return convertProductEntityToResponse(productEntity);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundProductException();
         }

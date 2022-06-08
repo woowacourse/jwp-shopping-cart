@@ -84,7 +84,7 @@ class OrdersDetailDaoTest {
 
         //then
         assertThat(ordersDetailsByOrderId)
-                .extracting("id", "orders_id", "product_id", "quantity")
+                .extracting("id", "ordersId", "productId", "quantity")
                 .containsExactly(
                         tuple(orderDetailId1, ordersId, productId1, 3),
                         tuple(orderDetailId2, ordersId, productId2, 4)
