@@ -71,6 +71,12 @@ public class CustomerDao {
         return namedJdbcTemplate.queryForObject(query, params, String.class);
     }
 
+    public Email findEmail(final Email email) {
+        final String query = "SELECT email FROM customer WHERE email=:email";
+        final SqlParameterSource params = new MapSqlParameterSource(Map.of("email", email.getValue()));
+        return namedJdbcTemplate.queryForObject(query, params, Email.class);
+    }
+
     public Long findIdByUserEmail(final Email email) {
         try {
             final String query = "SELECT id FROM customer WHERE email = :email";

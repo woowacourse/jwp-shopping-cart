@@ -10,6 +10,7 @@ import woowacourse.auth.dto.EmailAuthentication;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
+import woowacourse.shoppingcart.application.dto.EmailDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
 import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -30,6 +31,10 @@ public class CustomerService {
     public CustomerService(final CustomerRepository customerRepository, final JwtTokenProvider provider) {
         this.customerRepository = customerRepository;
         this.provider = provider;
+    }
+
+    public boolean checkEmailDuplication(final EmailDto emailDto) {
+        return customerRepository.checkEmailDuplication(new Email(emailDto.getEmail()));
     }
 
     public Long createCustomer(final CustomerDto newCustomer) {
