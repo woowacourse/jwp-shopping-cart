@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import woowacourse.shoppingcart.application.OrderService;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import woowacourse.shoppingcart.dto.OrdersResponse;
 
 @Validated
 @RestController
@@ -31,15 +33,18 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal final Long customerId,
+    public ResponseEntity<OrdersResponse> findOrder(@AuthenticationPrincipal final Long customerId,
                                             @PathVariable final Long orderId) {
         final Orders order = orderService.findOrderById(customerId, orderId);
-        return ResponseEntity.ok(order);
+        return ResponseEntity.ok(OrdersResponse.from(order));
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@AuthenticationPrincipal final Long customerId) {
+    public ResponseEntity<List<OrdersResponse>> findOrders(@AuthenticationPrincipal final Long customerId) {
         final List<Orders> orders = orderService.findOrdersByCustomerId(customerId);
-        return ResponseEntity.ok(orders);
+        final List<OrdersResponse> ordersResponses = orders.stream()
+                .map(OrdersResponse::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ordersResponses);
     }
 }

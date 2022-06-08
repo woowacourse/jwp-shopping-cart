@@ -84,9 +84,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-                .map(Orders::getId)
-                .collect(Collectors.toList());
+        List<Long> resultOrderIds = response.jsonPath().getList("id", Long.class);
         assertThat(resultOrderIds).contains(orderIds);
     }
 
@@ -125,6 +123,17 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         주문_조회_응답됨(response);
         주문_내역_포함됨(response, orderId1, orderId2);
+        주문_총_금액_포함됨(response, 20_000, 100_000);
+    }
+
+    private void 주문_총_금액_포함됨(final ExtractableResponse<Response> response, final Integer... totalPrice) {
+        final List<Integer> actual = response.jsonPath().getList("totalPrice", Integer.class);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(Arrays.asList(totalPrice));
+    }
+
+    private void 주문_총_금액_일치함(final ExtractableResponse<Response> response, final int totalPrice) {
+        final int actual = response.jsonPath().getInt("totalPrice");
+        assertThat(actual).isEqualTo(totalPrice);
     }
 
     @DisplayName("주문 단일 조회")
@@ -139,10 +148,11 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         주문_조회_응답됨(response);
         주문_조회됨(response, orderId);
+        주문_총_금액_일치함(response, 100_000);
     }
 
     private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-        Orders resultOrder = response.as(Orders.class);
-        assertThat(resultOrder.getId()).isEqualTo(orderId);
+        Long actual = response.jsonPath().getLong("id");
+        assertThat(actual).isEqualTo(orderId);
     }
 }
