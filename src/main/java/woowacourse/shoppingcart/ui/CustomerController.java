@@ -14,6 +14,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerWithdrawRequest;
 
 @RestController
 @RequestMapping("/auth/customers/profile")
@@ -47,8 +48,9 @@ public class CustomerController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> withdraw(@AuthenticationPrincipal TokenRequest tokenRequest) {
-        customerService.withdraw(tokenRequest);
+    public ResponseEntity<Void> withdraw(@AuthenticationPrincipal TokenRequest tokenRequest,
+                                         @Valid @RequestBody CustomerWithdrawRequest customerWithdrawRequest) {
+        customerService.withdraw(tokenRequest, customerWithdrawRequest);
         return ResponseEntity.noContent().build();
     }
 }

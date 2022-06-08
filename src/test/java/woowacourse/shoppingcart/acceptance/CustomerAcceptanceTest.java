@@ -1,10 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.AuthFixture.findById;
-import static woowacourse.fixture.AuthFixture.updatePassword;
 import static woowacourse.fixture.AuthFixture.withdraw;
 import static woowacourse.fixture.CustomerFixture.login;
 
@@ -209,7 +206,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
-        withdraw(token);
+        withdraw(token, "1234asdf!");
 
         // when & then
         RestAssured
@@ -249,7 +246,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
-        withdraw(token);
+        withdraw(token, "1234asdf!");
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("nickname", "리버");
@@ -366,9 +363,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
         // when & then
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("password", "1234asdf!");
+
         RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
                 .when().delete("/auth/customers/profile")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
@@ -380,15 +382,42 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
-        withdraw(token);
+        withdraw(token, "1234asdf!");
 
         // when & then
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("password", "1234asdf!");
+
         RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
                 .when().delete("/auth/customers/profile")
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value())
+                .body("message", is("존재하지 않는 회원입니다."));
+    }
+
+    @DisplayName("탈퇴를 요청할 경우 입력한 비밀번호가 실제 비밀번호와 일치하지 않으면 안된다.")
+    @Test
+    void deleteMeWithdrawalNotMatchPassword() {
+        // given
+        ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
+        String token = firstResponse.body().jsonPath().getString("accessToken");
+
+        // when & then
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("password", "1234asdf!");
+
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().delete("/auth/customers/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is("존재하지 않는 회원입니다."));
     }
 }
