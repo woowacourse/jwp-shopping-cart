@@ -46,5 +46,6 @@ CREATE TABLE orders_detail
     order_id   BIGINT  NOT NULL,
     product_id BIGINT  NOT NULL,
     quantity   INTEGER NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE KEY unique_product_per_order (order_id, product_id)
 ) engine=InnoDB default charset=utf8mb4;
