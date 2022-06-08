@@ -14,8 +14,8 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dao.entity.CartItemEntity;
 import woowacourse.shoppingcart.dao.entity.OrdersDetailEntity;
 import woowacourse.shoppingcart.dao.entity.OrdersEntity;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.ui.dto.OrderDetailRequest;
@@ -38,39 +38,37 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long save(OrderRequest orderRequest, final Long customerId) {
+    public Long save(OrderRequest orderRequest, Long customerId) {
         final Long ordersId = ordersDao.save(customerId);
 
-        for (final OrderDetailRequest orderDetail : orderRequest.getOrder()) {
-            final Long cartId = orderDetail.getId();
-            final Long productId = getCartItemEntity(cartId).getProductId();
-            final int quantity = orderDetail.getQuantity();
-
-            ordersDetailDao.save(new OrdersDetailEntity(null, ordersId, productId, quantity));
-            cartItemDao.delete(new CartItemEntity(customerId, productId));
-        }
+        orderRequest.getOrder()
+                .forEach(orderDetailRequest -> order(ordersId, customerId, orderDetailRequest));
 
         return ordersId;
     }
 
-    private CartItemEntity getCartItemEntity(Long cartId) {
-        return cartItemDao.findById(cartId)
-                .orElseThrow(InvalidCartItemException::new);
+    private void order(Long ordersId, Long customerId, OrderDetailRequest orderDetailRequest) {
+        Long productId = orderDetailRequest.getId();
+        int quantity = orderDetailRequest.getQuantity();
+        OrderDetail orderDetail = new OrderDetail(findProductById(productId), quantity);
+
+        ordersDetailDao.save(OrdersDetailEntity.from(ordersId, orderDetail));
+        cartItemDao.delete(new CartItemEntity(customerId, productId));
     }
 
-    public OrderResponse findById(final Long customerId, final Long orderId) {
+    public OrderResponse findById(Long customerId, Long orderId) {
         validateOrderIdByCustomerName(customerId, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByCustomerName(final Long customerId, final Long orderId) {
+    private void validateOrderIdByCustomerName(Long customerId, Long orderId) {
         if (!ordersDao.existsOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    public List<OrderResponse> findByCustomerId(final Long customerId) {
-        final List<Long> orderIds = ordersDao.findByCustomerId(customerId)
+    public List<OrderResponse> findByCustomerId(Long customerId) {
+        List<Long> orderIds = ordersDao.findByCustomerId(customerId)
                 .stream()
                 .map(OrdersEntity::getId)
                 .collect(Collectors.toUnmodifiableList());
@@ -80,11 +78,11 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private OrderResponse findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetailResponse> products = new ArrayList<>();
-        for (final OrdersDetailEntity ordersDetail : ordersDetailDao.findByOrderId(orderId)) {
-            final Product product = findProductById(ordersDetail.getProductId());
-            final int quantity = ordersDetail.getQuantity();
+    private OrderResponse findOrderResponseDtoByOrderId(Long orderId) {
+        List<OrderDetailResponse> products = new ArrayList<>();
+        for (OrdersDetailEntity ordersDetail : ordersDetailDao.findByOrderId(orderId)) {
+            Product product = findProductById(ordersDetail.getProductId());
+            int quantity = ordersDetail.getQuantity();
             products.add(OrderDetailResponse.from(product, quantity));
         }
 

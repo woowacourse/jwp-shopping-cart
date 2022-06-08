@@ -1,4 +1,6 @@
- package woowacourse.shoppingcart.dao.entity;
+package woowacourse.shoppingcart.dao.entity;
+
+import woowacourse.shoppingcart.domain.order.OrderDetail;
 
 public class OrdersDetailEntity {
 
@@ -12,6 +14,15 @@ public class OrdersDetailEntity {
         this.ordersId = ordersId;
         this.productId = productId;
         this.quantity = quantity;
+    }
+
+    public static OrdersDetailEntity from(Long ordersId, OrderDetail orderDetail) {
+        return new OrdersDetailEntity(
+                null,
+                ordersId,
+                orderDetail.getProduct().getId(),
+                orderDetail.getQuantity()
+        );
     }
 
     public Long getId() {
