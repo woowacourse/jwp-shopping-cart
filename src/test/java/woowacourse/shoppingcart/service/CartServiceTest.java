@@ -20,7 +20,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.JdbcCartItemDao;
 import woowacourse.shoppingcart.dao.JdbcCustomerDao;
+import woowacourse.shoppingcart.dao.JdbcProductDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.CartItemRequest;
@@ -41,8 +43,8 @@ class CartServiceTest {
 
     @Autowired
     public CartServiceTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
+        cartItemDao = new JdbcCartItemDao(jdbcTemplate);
+        productDao = new JdbcProductDao(jdbcTemplate);
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
 
         cartService = new CartService(cartItemDao, productDao);
@@ -74,7 +76,7 @@ class CartServiceTest {
 
         // when
         cartService.updateCartItem(customerId, cartItemId, new CartItemRequest(productId, 100));
-        Integer actual = cartItemDao.findCartItemById(cartItemId).getQuantity();
+        Integer actual = cartItemDao.findById(cartItemId).getQuantity();
 
         // then
         assertThat(actual).isEqualTo(100);

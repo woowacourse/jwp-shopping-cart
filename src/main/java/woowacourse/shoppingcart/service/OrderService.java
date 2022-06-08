@@ -28,12 +28,12 @@ public class OrderService {
 
     public Long addOrder(final List<OrderRequest> orderRequests, final Long customerId) {
         List<OrderProduct> orderProducts = orderRequests.stream()
-                .map(orderRequest -> new OrderProduct(productDao.findProductById(orderRequest.getProductId()),
+                .map(orderRequest -> new OrderProduct(productDao.findById(orderRequest.getProductId()),
                         orderRequest.getQuantity())).collect(
                         Collectors.toList());
 
         Order order = new Order(orderProducts, customerId);
-        return orderDao.addOrder(order);
+        return orderDao.save(order);
     }
 
     public OrderResponse findOrderById(final Long customerId, final Long orderId) {

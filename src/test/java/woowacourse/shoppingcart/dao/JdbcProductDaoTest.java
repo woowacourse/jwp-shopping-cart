@@ -17,12 +17,12 @@ import woowacourse.shoppingcart.domain.Product;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql("classpath:schema.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class ProductDaoTest {
+public class JdbcProductDaoTest {
 
     private final ProductDao productDao;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
+    public JdbcProductDaoTest(JdbcTemplate jdbcTemplate) {
+        this.productDao = new JdbcProductDao(jdbcTemplate);
     }
 
     @DisplayName("Product를 저장하면, id를 반환한다.")
@@ -55,7 +55,7 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, description, price, stock, imageUrl);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findById(productId);
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -69,7 +69,7 @@ public class ProductDaoTest {
         final int size = 0;
 
         // when
-        final List<Product> products = productDao.findProducts();
+        final List<Product> products = productDao.findAll();
 
         // then
         assertThat(products).size().isEqualTo(size);
@@ -86,13 +86,13 @@ public class ProductDaoTest {
         final String imageUrl = "www.test.com";
 
         final Long productId = productDao.save(new Product(name, description, price, stock, imageUrl));
-        final int beforeSize = productDao.findProducts().size();
+        final int beforeSize = productDao.findAll().size();
 
         // when
         productDao.delete(productId);
 
         // then
-        final int afterSize = productDao.findProducts().size();
+        final int afterSize = productDao.findAll().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
     }
 }

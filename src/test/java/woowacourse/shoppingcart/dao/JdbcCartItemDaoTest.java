@@ -28,7 +28,7 @@ import woowacourse.shoppingcart.entity.CustomerEntity;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemDaoTest {
+public class JdbcCartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final CustomerDao customerDao;
@@ -36,9 +36,9 @@ public class CartItemDaoTest {
     private Long customerId;
     private Long productId;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
+    public JdbcCartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+        cartItemDao = new JdbcCartItemDao(jdbcTemplate);
+        productDao = new JdbcProductDao(jdbcTemplate);
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
     }
 
@@ -56,11 +56,11 @@ public class CartItemDaoTest {
     @Test
     void addCartItem() {
         // given
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.findById(productId);
         CartItem cartItem = new CartItem(customerId, product, 10);
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, cartItem);
+        final Long cartId = cartItemDao.save(customerId, cartItem);
 
         // then
         assertThat(cartId).isNotNull();
@@ -70,14 +70,14 @@ public class CartItemDaoTest {
     @Test
     void updateCartItem() {
         // given
-        Product product = productDao.findProductById(productId);
-        Long cartItemId = cartItemDao.addCartItem(customerId, new CartItem(customerId, product, 10));
+        Product product = productDao.findById(productId);
+        Long cartItemId = cartItemDao.save(customerId, new CartItem(customerId, product, 10));
 
         CartItem newCartItem = new CartItem(cartItemId, product, 100);
 
         // when
-        cartItemDao.updateCartItem(cartItemId, newCartItem);
-        Integer actual = cartItemDao.findCartItemById(customerId).getQuantity();
+        cartItemDao.update(cartItemId, newCartItem);
+        Integer actual = cartItemDao.findById(customerId).getQuantity();
 
         // then
         assertThat(actual).isEqualTo(100);
@@ -87,8 +87,8 @@ public class CartItemDaoTest {
     @Test
     void isProductExisting_existing() {
         // given
-        Product product = productDao.findProductById(productId);
-        cartItemDao.addCartItem(customerId, new CartItem(customerId, product, 10));
+        Product product = productDao.findById(productId);
+        cartItemDao.save(customerId, new CartItem(customerId, product, 10));
 
         // when
         boolean expected = cartItemDao.isProductExisting(customerId, productId);
