@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
@@ -32,9 +32,9 @@ public class CartService {
         return new CartItemsResponse(createCartItemResponses(carts));
     }
 
-    private List<CartItemResponse> createCartItemResponses(List<Cart> carts) {
+    private List<ProductResponse> createCartItemResponses(List<Cart> carts) {
         return carts.stream()
-                .map(CartItemResponse::from)
+                .map(cart -> ProductResponse.from(cart.getProduct(), cart.getQuantity()))
                 .collect(Collectors.toList());
     }
 

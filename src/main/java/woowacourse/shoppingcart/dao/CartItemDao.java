@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -55,6 +56,15 @@ public class CartItemDao {
     public Boolean existByCustomerIdAndProductId(Long customerId, Long productId) {
         String sql = "SELECT EXISTS (SELECT id FROM CART_ITEM WHERE customer_id = ? AND product_id = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId);
+    }
+
+    public Integer findQuantityByCustomerIdAndProductId(Long customerId, Long productId) {
+        String sql = "SELECT quantity FROM CART_ITEM WHERE customer_id = ? AND product_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, customerId, productId);
+        } catch (EmptyResultDataAccessException exception) {
+            return 0;
+        }
     }
 
     public void updateQuantityByCustomerIdAndProductId(Long customerId, Long productId, Integer quantity) {

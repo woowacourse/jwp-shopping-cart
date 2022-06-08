@@ -1,33 +1,22 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
+import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.로그인_후_토큰_획득;
+import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.회원_추가되어_있음;
+
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.domain.Cart;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.로그인_후_토큰_획득;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.회원_추가되어_있음;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -127,7 +116,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
         CartItemsResponse cartItems = response.jsonPath().getObject(".", CartItemsResponse.class);
         List<Long> resultProductIds = cartItems.getCarts().stream()
-                .map(cartItem -> cartItem.getProduct().getId())
+                .map(product -> product.getId())
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }

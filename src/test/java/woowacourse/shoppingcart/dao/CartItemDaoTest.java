@@ -79,6 +79,16 @@ public class CartItemDaoTest {
         assertThat(result).isTrue();
     }
 
+    @DisplayName("Customer Id와 Product Id를 이용하여 장바구니 아이템의 수량을 조회한다.")
+    @Test
+    void findQuantityByCustomerIdAndProductId() {
+        // when
+        Integer quantity = cartItemDao.findQuantityByCustomerIdAndProductId(1L, product2.getId());
+
+        // then
+        assertThat(quantity).isEqualTo(20);
+    }
+
     @DisplayName("Customer Id와 Product Id를 이용하여 장바구니 아이템의 수량을 업데이트한다.")
     @Test
     void updateQuantityByCustomerIdAndProductId() {

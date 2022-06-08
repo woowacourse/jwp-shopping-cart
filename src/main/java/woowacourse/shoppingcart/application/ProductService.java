@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
-import java.util.function.BiFunction;
+import java.util.function.ToIntBiFunction;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,18 +28,18 @@ public class ProductService {
 
         if (user.isNonMember()) {
             return new ProductsResponse(
-                    createProductResponses(products, user.getId(), (customerId, productId) -> false));
+                    createProductResponses(products, user.getId(), (customerId, productId) -> 0));
         }
 
         return new ProductsResponse(
-                createProductResponses(products, user.getId(), cartItemDao::existByCustomerIdAndProductId));
+                createProductResponses(products, user.getId(), cartItemDao::findQuantityByCustomerIdAndProductId));
     }
 
     private List<ProductResponse> createProductResponses(List<Product> products,
                                                          Long customerId,
-                                                         BiFunction<Long, Long, Boolean> checkIsStored) {
+                                                         ToIntBiFunction<Long, Long> quantityProvider) {
         return products.stream()
-                .map(product -> ProductResponse.from(product, checkIsStored.apply(customerId, product.getId())))
+                .map(product -> ProductResponse.from(product, quantityProvider.applyAsInt(customerId, product.getId())))
                 .collect(Collectors.toList());
     }
 
