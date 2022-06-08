@@ -57,7 +57,7 @@ public class CartItemDaoTest {
 
     @DisplayName("Id를 통해 장바구니를 조회할 수 있다.")
     @Test
-    void deleteCartItem() {
+    void findCartItem() {
         // given
         cartItemDao.save(1L, 1L, 3);
 
