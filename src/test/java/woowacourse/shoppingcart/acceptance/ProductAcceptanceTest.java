@@ -69,6 +69,21 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .body("imageUrl", is("http://example.com/chicken.jpg"));
     }
 
+    @DisplayName("상품 전체 조회")
+    @Test
+    void getProduct2() {
+        //given
+        ProductRequest productRequest = new ProductRequest("치킨", 10000, "http://example.com/chicken.jpg");
+        ProductRequest productRequest2 = new ProductRequest("피자", 20000, "http://example.com/pizza.jpg");
+
+        RestAssuredFixture.post(productRequest, "/products", HttpStatus.CREATED.value());
+        RestAssuredFixture.post(productRequest2, "/products", HttpStatus.CREATED.value());
+
+        //when & then
+        RestAssuredFixture.getProducts("/products", 200);
+        //RestAssuredFixture.getProduct("/products", HttpStatus.OK.value(), 1L);
+    }
+
     @DisplayName("상품 삭제")
     @Test
     void deleteProduct() {
