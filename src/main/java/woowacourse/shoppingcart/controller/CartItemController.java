@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.service.CartService;
 
 @RestController
-@RequestMapping("/api/customers/{customerName}/carts")
+@RequestMapping("/api/customers/{customerName}/cartItems")
 public class CartItemController {
     private final CartService cartService;
 
@@ -27,7 +27,7 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
+    public ResponseEntity<List<CartItem>> getCartItems(@PathVariable final String customerName) {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
     }
 
