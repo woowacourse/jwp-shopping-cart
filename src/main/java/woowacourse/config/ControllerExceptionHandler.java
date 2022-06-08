@@ -53,21 +53,35 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({DuplicateEmailException.class, DuplicateUsernameException.class})
-    public FieldErrorResponse handleDuplicatedRequest(DuplicateDomainException exception) {
-        return new FieldErrorResponse(exception.getField(), exception.getMessage());
+    @ExceptionHandler(DuplicateEmailException.class)
+    public FieldErrorResponse handleDuplicateEmailException(DuplicateDomainException exception) {
+        String message = String.format("이미 가입된 이메일입니다.", exception.getField());
+        return new FieldErrorResponse(exception.getField(), message);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateUsernameException.class)
+    public FieldErrorResponse handleDuplicateUsernameException(DuplicateDomainException exception) {
+        String message = String.format("이미 가입된 닉네임입니다.", exception.getField());
+        return new FieldErrorResponse(exception.getField(), message);
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
+    @ExceptionHandler(LoginFailException.class)
     public ErrorResponse handleLoginFailException(Exception ex) {
-        return new ErrorResponse(ex.getMessage() + "somethingg");
+        return new ErrorResponse("id 또는 비밀번호가 틀렸습니다.");
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InvalidTokenException.class)
+    public ErrorResponse handleInvalidTokenException(Exception ex) {
+        return new ErrorResponse("유효하지 않은 토큰입니다.");
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(ForbiddenAccessException.class)
     public ErrorResponse handleForbiddenAccessException(Exception ex) {
-        return new ErrorResponse(ex.getMessage());
+        return new ErrorResponse("권한이 없는 요청입니다.");
     }
 
     @ExceptionHandler(Exception.class)
