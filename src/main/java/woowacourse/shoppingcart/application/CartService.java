@@ -7,40 +7,37 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.application.dto.CartResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.cart.Quantity;
-import woowacourse.shoppingcart.exception.domain.InvalidProductException;
+import woowacourse.shoppingcart.exception.domain.ProductNotFoundException;
 import woowacourse.shoppingcart.exception.domain.NotInCustomerCartItemException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, readOnly = true)
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(CartItemDao cartItemDao) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
     }
 
-    @Transactional(readOnly = true)
     public CartResponse findCartsByCustomerId(final Long customerId) {
         final Cart cart = new Cart(cartItemDao.findCartItemsByCustomerId(customerId));
         return CartResponse.from(cart);
     }
 
+    @Transactional
     public Long addCart(final Long productId, Integer quantity, final Long customerId) {
         try {
             return cartItemDao.addCartItem(customerId, productId, quantity);
         } catch (Exception e) {
-            throw new InvalidProductException();
+            throw new ProductNotFoundException();
         }
     }
 
+    @Transactional
     public void deleteCart(final Long customerId, final Long cartId) {
         validateCustomerHasCartItem(cartId, customerId);
         cartItemDao.deleteById(cartId);
@@ -54,6 +51,7 @@ public class CartService {
         }
     }
 
+    @Transactional
     public void updateCartItemQuantity(Long customerId, Long cartId, Integer quantityValue) {
         cartItemDao.updateQuantity(customerId, cartId, new Quantity(quantityValue));
     }

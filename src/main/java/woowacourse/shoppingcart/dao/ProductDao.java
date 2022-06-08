@@ -11,7 +11,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.exception.domain.InvalidProductException;
 
 @Repository
 public class ProductDao {
@@ -69,8 +68,8 @@ public class ProductDao {
                 ));
     }
 
-    public void delete(final Long productId) {
+    public boolean delete(final Long productId) {
         final String query = "UPDATE product SET is_deleted = 1 WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+        return jdbcTemplate.update(query, productId) != 0;
     }
 }

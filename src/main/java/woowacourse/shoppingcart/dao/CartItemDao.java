@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.exception.domain.CartItemNotFoundException;
-import woowacourse.shoppingcart.exception.domain.InvalidProductException;
+import woowacourse.shoppingcart.exception.domain.ProductNotFoundException;
 
 @Repository
 public class CartItemDao {
@@ -84,7 +84,7 @@ public class CartItemDao {
             rs.getLong("id"),
             new Quantity(rs.getInt("quantity")),
             productDao.findProductById(rs.getLong("product_id"))
-                .orElseThrow(InvalidProductException::new)
+                .orElseThrow(ProductNotFoundException::new)
         ), customerId);
     }
 

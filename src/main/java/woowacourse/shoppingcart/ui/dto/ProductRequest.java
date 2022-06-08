@@ -19,13 +19,15 @@ public class ProductRequest {
     private String description;
 
     private ProductRequest() {
-        this(null, null, null);
+        this(null, null, null, null);
+
     }
 
-    public ProductRequest(final String name, final Integer price, final String imageUrl) {
+    public ProductRequest(String name, Integer price, String imageUrl, String description) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     public String getName() {

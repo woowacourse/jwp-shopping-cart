@@ -8,30 +8,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.application.dto.OrderResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrderDetailDao;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.order.Order;
 import woowacourse.shoppingcart.exception.domain.InvalidOrderException;
 import woowacourse.shoppingcart.ui.dto.OrderDetailRequest;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, readOnly = true)
 public class OrderService {
 
     private final OrderDao orderDao;
     private final OrderDetailDao orderDetailDao;
     private final CartItemDao cartItemDao;
 
-    public OrderService(final OrderDao orderDao, final OrderDetailDao orderDetailDao,
-        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public OrderService(OrderDao orderDao, OrderDetailDao orderDetailDao,
+        CartItemDao cartItemDao) {
         this.orderDao = orderDao;
         this.orderDetailDao = orderDetailDao;
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional
     public Long addOrder(final List<OrderDetailRequest> orderDetailRequests, final Long customerId) {
         final Long orderId = orderDao.addOrders(customerId);
 
@@ -47,7 +45,6 @@ public class OrderService {
         cartItemDao.deleteById(cartId);
     }
 
-    @Transactional(readOnly = true)
     public OrderResponse findOrderById(final Long customerId, final Long orderId) {
         validateOrderIdByCustomerName(customerId, orderId);
         return OrderResponse.from(findOrderById(orderId));
@@ -59,7 +56,6 @@ public class OrderService {
         }
     }
 
-    @Transactional(readOnly = true)
     public List<OrderResponse> findOrdersByCustomerId(final Long customerId) {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 

@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.ui.dto.FindCustomerRequest;
 import woowacourse.shoppingcart.ui.dto.UpdateCustomerRequest;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, readOnly = true)
 public class CustomerService {
 
     private final PasswordEncryptor encryptor;
@@ -29,6 +29,7 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
+    @Transactional
     public Long createCustomer(CustomerRequest request) {
         Customer customer = Customer.fromInput(
             request.getUsername(),
@@ -42,13 +43,13 @@ public class CustomerService {
             .orElseThrow(DuplicateCustomerException::new);
     }
 
-    @Transactional(readOnly = true)
     public CustomerResponse findCustomer(FindCustomerRequest findCustomerRequest) {
         Customer customer = customerDao.findById(findCustomerRequest.getId())
             .orElseThrow(CustomerNotFoundException::new);
         return CustomerResponse.from(customer);
     }
 
+    @Transactional
     public void updateCustomer(FindCustomerRequest findCustomerRequest, UpdateCustomerRequest updateCustomerRequest) {
         Customer customer = customerDao.findById(findCustomerRequest.getId())
             .orElseThrow(CustomerNotFoundException::new);
@@ -57,6 +58,7 @@ public class CustomerService {
         customerDao.update(updatedCustomer);
     }
 
+    @Transactional
     public void deleteCustomer(FindCustomerRequest findCustomerRequest) {
         customerDao.deleteById(findCustomerRequest.getId());
     }

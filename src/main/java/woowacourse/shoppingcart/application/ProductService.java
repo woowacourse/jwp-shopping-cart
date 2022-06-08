@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.exception.domain.InvalidProductException;
+import woowacourse.shoppingcart.exception.domain.ProductNotFoundException;
 import woowacourse.shoppingcart.ui.dto.ProductRequest;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, readOnly = true)
 public class ProductService {
 
     private final ProductDao productDao;
@@ -22,6 +22,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public Long addProduct(final ProductRequest request) {
         return productDao.save(
             new Product(request.getName(),
@@ -31,15 +32,13 @@ public class ProductService {
         );
     }
 
-    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         return ProductResponse.from(
             productDao.findProductById(productId)
-                .orElseThrow(InvalidProductException::new)
+                .orElseThrow(ProductNotFoundException::new)
         );
     }
 
-    @Transactional(readOnly = true)
     public List<ProductResponse> findProducts() {
         return productDao.findProducts()
             .stream()
@@ -47,7 +46,10 @@ public class ProductService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+        if (!productDao.delete(productId)) {
+            throw new ProductNotFoundException();
+        }
     }
 }
