@@ -195,4 +195,16 @@ public class AcceptanceTest {
                 .statusCode(httpStatus.value())
                 .extract();
     }
+
+    protected ExtractableResponse findAllProducts(HttpStatus httpStatus) {
+        return RestAssured
+                .given()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/products/all")
+                .then().log().all()
+                .statusCode(httpStatus.value())
+                .extract();
+    }
 }

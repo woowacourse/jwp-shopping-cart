@@ -67,4 +67,10 @@ public class ProductServiceTest {
                 .isInstanceOf(InvalidProductException.class)
                 .hasMessage("[ERROR] 페이지당 갯수는 자연수여야 합니다.");
     }
+
+    @Test
+    void 전체_상품을_가져오는_경우() {
+        ProductsResponse productsResponse = productService.findProducts();
+        assertThat(productsResponse.getProducts().size()).isEqualTo(13);
+    }
 }

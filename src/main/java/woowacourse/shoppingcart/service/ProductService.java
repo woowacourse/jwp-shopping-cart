@@ -44,4 +44,9 @@ public class ProductService {
         Product product = productDao.findProductById(productId);
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
+
+    public ProductsResponse findProducts() {
+        Products products = new Products(productDao.findProducts());
+        return new ProductsResponse(products.getProducts());
+    }
 }

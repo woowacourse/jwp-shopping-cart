@@ -69,4 +69,12 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(extract.body().jsonPath().getString("message"))
                 .isEqualTo("[ERROR] 최대 페이지보다 큰 페이지를 로드할 수 없습니다.");
     }
+
+    @Test
+    void 상품_전체를_조회() {
+
+        var extract = findAllProducts(HttpStatus.OK).as(ProductsResponse.class);
+
+        assertThat(extract.getProducts().size()).isEqualTo(13);
+    }
 }

@@ -29,11 +29,6 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void saveProduct(String name, int price, String url) {
-        String sql = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, name, price, url);
-    }
-
     public Product findProductById(Long productId) {
         try {
             final String sql = "SELECT * FROM product WHERE id = ?";

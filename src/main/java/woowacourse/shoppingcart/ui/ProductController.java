@@ -20,6 +20,11 @@ public class ProductController {
         return productService.findProducts(page, size);
     }
 
+    @GetMapping("/all")
+    public ProductsResponse searchProducts() {
+        return productService.findProducts();
+    }
+
     @GetMapping("/{productId}")
     public ProductResponse searchOneProducts(@PathVariable Long productId) {
         return productService.findProductById(productId);
