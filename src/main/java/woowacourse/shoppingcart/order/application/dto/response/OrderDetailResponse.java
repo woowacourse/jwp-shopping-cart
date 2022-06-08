@@ -8,17 +8,17 @@ public class OrderDetailResponse {
     private Long productId;
     private String name;
     private long price;
-    private String imgUrl;
+    private String image;
     private long quantity;
 
     public OrderDetailResponse() {
     }
 
-    public OrderDetailResponse(Long productId, String name, long price, String imgUrl, long quantity) {
+    public OrderDetailResponse(Long productId, String name, long price, String image, long quantity) {
         this.productId = productId;
         this.name = name;
         this.price = price;
-        this.imgUrl = imgUrl;
+        this.image = image;
         this.quantity = quantity;
     }
 
@@ -39,8 +39,8 @@ public class OrderDetailResponse {
         return price;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getImage() {
+        return image;
     }
 
     public long getQuantity() {
