@@ -20,7 +20,7 @@ import woowacourse.shoppingcart.dto.CartItemQuantityUpdateRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @RestController
-@RequestMapping("/api/carts/products")
+@RequestMapping("/api/carts")
 @Validated
 public class CartItemController {
 
@@ -30,7 +30,7 @@ public class CartItemController {
         this.cartService = cartService;
     }
 
-    @PostMapping
+    @PostMapping("/products")
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal long memberId,
                                             @Valid @RequestBody CartItemAddRequest cartItemAddRequest) {
         cartService.addCart(memberId, cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity());
@@ -42,7 +42,7 @@ public class CartItemController {
         return ResponseEntity.ok(cartService.findAll(memberId));
     }
 
-    @PatchMapping
+    @PatchMapping("/products")
     public ResponseEntity<List<CartItemResponse>> updateQuantity(@AuthenticationPrincipal long memberId,
                                                                  @Valid @RequestBody CartItemQuantityUpdateRequest
                                                                          cartItemQuantityUpdateRequest) {
@@ -51,7 +51,7 @@ public class CartItemController {
         return ResponseEntity.ok(cartItemResponses);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/products")
     public ResponseEntity<List<CartItemResponse>> deleteCartItem(@AuthenticationPrincipal long memberId,
                                                                  @RequestParam long productId) {
         return ResponseEntity.ok(cartService.deleteCartItem(memberId, productId));
