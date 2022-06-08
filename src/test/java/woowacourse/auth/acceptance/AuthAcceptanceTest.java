@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.fixture.AuthFixture.로그인_요청;
 import static woowacourse.fixture.AuthFixture.로그인_요청_및_토큰발급;
 import static woowacourse.fixture.AuthFixture.회원조회_요청;
-import static woowacourse.fixture.CustomFixture.회원가입_요청_및_ID_추출;
+import static woowacourse.fixture.CustomerFixture.회원가입_요청_및_ID_추출;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

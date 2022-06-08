@@ -1,7 +1,8 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static woowacourse.fixture.CartFixture.장바구니_아이템_추가_요청후_ID_반환;
-import static woowacourse.fixture.CustomFixture.로그인_요청_및_토큰발급;
+import static woowacourse.fixture.CustomerFixture.로그인_요청_및_토큰발급;
+import static woowacourse.fixture.CustomerFixture.회원가입_요청_및_ID_추출;
 import static woowacourse.fixture.OrderFixture.주문_내역_조회_요청;
 import static woowacourse.fixture.OrderFixture.주문_내역_포함_검증;
 import static woowacourse.fixture.OrderFixture.주문_단일_조회_요청;
@@ -23,7 +24,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.fixture.CustomFixture;
 import woowacourse.global.AcceptanceTest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
@@ -90,9 +90,9 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     private void 토큰_및_회원_ID_초기화() {
-        CustomerCreateRequest customerRequest = new CustomerCreateRequest("roma@naver.com", "roma", "12345678");
-        this.customerId = CustomFixture.회원가입_요청_및_ID_추출(customerRequest);
-        TokenRequest tokenRequest = new TokenRequest("roma@naver.com", "12345678");
+        CustomerCreateRequest customerRequest = new CustomerCreateRequest("philz@gmail.com", "swcho", "1q2w3e4r!");
+        this.customerId = 회원가입_요청_및_ID_추출(customerRequest);
+        TokenRequest tokenRequest = new TokenRequest("philz@gmail.com", "1q2w3e4r!");
         this.token = 로그인_요청_및_토큰발급(tokenRequest);
     }
 }

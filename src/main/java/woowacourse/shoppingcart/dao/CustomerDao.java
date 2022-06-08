@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InValidPassword;
 
 @Repository
 public class CustomerDao {
@@ -104,11 +105,17 @@ public class CustomerDao {
         );
     }
 
-    public void deleteById(Long id) {
-        String sql = "delete from customer where id = :id";
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
+    public void deleteById(Long id, String password) {
+        String sql = "delete from customer where id = :id and password = :password";
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("id", id)
+                .addValue("password", password);
 
-        jdbcTemplate.update(sql, namedParameters);
+        int updatedRow = jdbcTemplate.update(sql, namedParameters);
+
+        if (updatedRow == 0) {
+            throw new InValidPassword();
+        }
     }
 
     private RowMapper<Customer> rowMapper() {

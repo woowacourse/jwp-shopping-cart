@@ -122,7 +122,7 @@ public class CustomerDaoTest extends DaoTest {
 
         // when
         Long savedId = customerDao.save(customer);
-        customerDao.deleteById(savedId);
+        customerDao.deleteById(savedId, "12345678");
         Optional<Customer> result = customerDao.findById(savedId);
 
         // then

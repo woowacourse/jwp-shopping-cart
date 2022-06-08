@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static woowacourse.fixture.CustomFixture.로그인_요청_및_토큰발급;
-import static woowacourse.fixture.CustomFixture.회원가입_요청;
+import static woowacourse.fixture.CustomerFixture.로그인_요청_및_토큰발급;
+import static woowacourse.fixture.CustomerFixture.회원가입_요청;
 import static woowacourse.fixture.ProductFixture.상품_등록_요청;
 import static woowacourse.fixture.ProductFixture.상품_등록되어_있음2;
 import static woowacourse.fixture.ProductFixture.상품_목록_검증;
@@ -78,8 +78,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     private String getToken() {
         회원가입_요청(
-                new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+                new CustomerCreateRequest("philz@gmail.com", "swcho", "1q2w3e4r!"));
+        String token = 로그인_요청_및_토큰발급(new TokenRequest("philz@gmail.com", "1q2w3e4r!"));
         return token;
     }
 }

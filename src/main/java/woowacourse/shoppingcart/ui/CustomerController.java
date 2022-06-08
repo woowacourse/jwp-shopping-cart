@@ -18,6 +18,7 @@ import woowacourse.config.auth.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.ForbiddenAccessException;
@@ -55,9 +56,11 @@ public class CustomerController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id, @AuthenticationPrincipal Customer customer) {
+    public void delete(@PathVariable long id,
+                                        @RequestBody CustomerDeleteRequest request,
+                                        @AuthenticationPrincipal Customer customer) {
         validateAuthorizedUser(customer, id);
-        customerService.delete(id);
+        customerService.delete(id, request.getPassword());
     }
 
     private void validateAuthorizedUser(Customer customer, long id) {

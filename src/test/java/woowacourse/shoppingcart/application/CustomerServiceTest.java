@@ -146,7 +146,7 @@ public class CustomerServiceTest {
         Long savedId = customerService.save(createRequest);
 
         // when
-        customerService.delete(savedId);
+        customerService.delete(savedId, "12345678");
 
         // then
         assertThatThrownBy(() -> customerService.findById(savedId))

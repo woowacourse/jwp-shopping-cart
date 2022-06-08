@@ -66,8 +66,8 @@ public class CustomerService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id, String password) {
         customerSpec.validateCustomerExists(id);
-        customerDao.deleteById(id);
+        customerDao.deleteById(id, password);
     }
 }
