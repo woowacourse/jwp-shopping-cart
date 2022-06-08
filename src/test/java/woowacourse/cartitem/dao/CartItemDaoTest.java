@@ -102,7 +102,7 @@ public class CartItemDaoTest {
         final Long cartItemId = cartItemDao.addCartItem(customerId, productId1, 5);
 
         // when
-        cartItemDao.deleteCartItem(cartItemId);
+        cartItemDao.deleteCartItem(cartItemId, customerId);
 
         // then
         assertThat(cartItemDao.findCartItemById(cartItemId)).isEmpty();

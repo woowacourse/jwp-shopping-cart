@@ -52,7 +52,7 @@ public class CartItemServiceTest {
     void addCartItem() {
         final CartItemAddRequest cartItemAddRequest = new CartItemAddRequest(productId1, 1);
 
-        final Long cartItemId = cartItemService.addCartItem(username, cartItemAddRequest).getId();
+        final Long cartItemId = cartItemService.addCartItem(username, cartItemAddRequest);
 
         assertThat(cartItemId).isNotNull();
     }
@@ -74,14 +74,14 @@ public class CartItemServiceTest {
     @DisplayName("카트 아이템 수량을 수정한다.")
     @Test
     void updateCartItem() {
-        final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1)).getId();
+        final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1));
         assertDoesNotThrow(() -> cartItemService.updateQuantity(username, cartItemId, 5));
     }
 
     @DisplayName("카트 아이템을 삭제한다.")
     @Test
     void deleteCartItem() {
-        final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1)).getId();
+        final Long cartItemId = cartItemService.addCartItem(username, new CartItemAddRequest(productId1, 1));
         cartItemService.deleteCart(username, cartItemId);
 
         assertThatThrownBy(() -> cartItemService.findCartById(cartItemId))

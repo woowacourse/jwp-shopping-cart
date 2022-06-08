@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.cartitem.dao.CartItemDao;
 import woowacourse.cartitem.domain.CartItem;
+import woowacourse.cartitem.exception.InvalidCartItemException;
 import woowacourse.customer.dao.CustomerDao;
 import woowacourse.order.dao.OrderDao;
 import woowacourse.order.dao.OrdersDetailDao;
@@ -41,10 +42,10 @@ public class OrderService {
 
         for (final OrderAddRequest orderAddRequest : orderAddRequests) {
             final CartItem cartItem = cartItemDao.findCartItemById(orderAddRequest.getCartItemId())
-                .orElseThrow(() -> new woowacourse.cartitem.exception.InvalidCartItemException("장바구니를 찾을 수 없습니다."));
+                .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
 
             ordersDetailDao.addOrdersDetail(ordersId, cartItem.getProductId(), cartItem.getQuantity().getValue());
-            cartItemDao.deleteCartItem(cartItem.getId());
+            cartItemDao.deleteCartItem(cartItem.getId(), customerId);
         }
 
         return ordersId;

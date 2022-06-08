@@ -35,16 +35,12 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
-    public CartItemResponse addCartItem(final String username, final CartItemAddRequest cartItemAddRequest) {
+    public Long addCartItem(final String username, final CartItemAddRequest cartItemAddRequest) {
         final Long customerId = customerService.findIdByUsername(username);
         validateProductStock(cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity());
         final Quantity quantity = new Quantity(cartItemAddRequest.getQuantity());
 
-        final Long cartItemId = cartItemDao.addCartItem(customerId, cartItemAddRequest.getProductId(), quantity.getValue());
-        final CartItem cartItem = cartItemDao.findCartItemById(cartItemId)
-            .orElseThrow(() -> new woowacourse.cartitem.exception.InvalidCartItemException("장바구니를 찾을 수 없습니다."));
-
-        return CartItemResponse.from(cartItem);
+        return cartItemDao.addCartItem(customerId, cartItemAddRequest.getProductId(), quantity.getValue());
     }
 
     private void validateProductStock(final Long productId, final Integer quantity) {
@@ -62,7 +58,7 @@ public class CartItemService {
 
     public CartItemResponse findCartById(final Long cartItemId) {
         final CartItem cartItem = cartItemDao.findCartItemById(cartItemId)
-            .orElseThrow(() -> new woowacourse.cartitem.exception.InvalidCartItemException("장바구니를 찾을 수 없습니다."));
+            .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
 
         return CartItemResponse.from(cartItem);
     }
@@ -70,15 +66,10 @@ public class CartItemService {
     public void updateQuantity(final String customerName, final Long cartItemId, final int quantity) {
         validateCustomerCart(cartItemId, customerName);
         final CartItem cartItem = cartItemDao.findCartItemById(cartItemId)
-            .orElseThrow(() -> new woowacourse.cartitem.exception.InvalidCartItemException("장바구니를 찾을 수 없습니다."));
+            .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
         cartItem.updateQuantity(quantity);
 
         cartItemDao.update(cartItemId, cartItem);
-    }
-
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
@@ -88,5 +79,10 @@ public class CartItemService {
             return;
         }
         throw new InvalidCartItemException();
+    }
+
+    public void deleteCart(final String customerName, final Long cartId) {
+        final Long customerId = customerService.findIdByUsername(customerName);
+        cartItemDao.deleteCartItem(cartId, customerId);
     }
 }

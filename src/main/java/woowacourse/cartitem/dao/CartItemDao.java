@@ -89,9 +89,10 @@ public class CartItemDao {
         jdbcTemplate.update(sql, params);
     }
 
-    public void deleteCartItem(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = :id";
-        final SqlParameterSource params = new MapSqlParameterSource("id", id);
+    public void deleteCartItem(final Long id, final Long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE id = :id AND customer_id = :customer_id";
+        final SqlParameterSource params = new MapSqlParameterSource("id", id)
+            .addValue("customer_id", customerId);
 
         jdbcTemplate.update(sql, params);
     }

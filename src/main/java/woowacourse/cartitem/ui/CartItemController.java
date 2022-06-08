@@ -1,7 +1,5 @@
 package woowacourse.cartitem.ui;
 
-import java.net.URI;
-
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -41,7 +39,8 @@ public class CartItemController {
         @AuthenticationPrincipal final String username,
         @Valid @RequestBody final CartItemAddRequest cartItemAddRequest
     ) {
-        return ResponseEntity.ok(cartItemService.addCartItem(username, cartItemAddRequest));
+        final Long id = cartItemService.addCartItem(username, cartItemAddRequest);
+        return ResponseEntity.ok(cartItemService.findCartById(id));
     }
 
     @PatchMapping("/{cartItemId}")
