@@ -90,18 +90,19 @@ public class OrderService {
     }
 
     private OrderResponse findById(Long orderId) {
-        List<Product> products = findProductsByOrderId(orderId);
+        List<OrdersDetailEntity> ordersDetailEntities = ordersDetailDao.findByOrderId(orderId);
+
+        List<Product> products = findProducts(ordersDetailEntities);
         Map<Long, Product> productMap = initProductMap(products);
 
-        List<OrderDetail> orderDetails = findOrderDetails(productMap, orderId);
+        List<OrderDetail> orderDetails = generateOrderDetails(productMap, ordersDetailEntities);
         Orders orders = new Orders(orderId, orderDetails);
 
         return OrderResponse.from(orders);
     }
 
-    private List<Product> findProductsByOrderId(Long orderId) {
-        List<Long> productIds = ordersDetailDao.findByOrderId(orderId)
-                .stream()
+    private List<Product> findProducts(List<OrdersDetailEntity> ordersDetailEntities) {
+        List<Long> productIds = ordersDetailEntities.stream()
                 .map(OrdersDetailEntity::getProductId)
                 .collect(Collectors.toUnmodifiableList());
 
@@ -116,9 +117,9 @@ public class OrderService {
                 .collect(Collectors.toMap(Product::getId, product -> product));
     }
 
-    private List<OrderDetail> findOrderDetails(Map<Long, Product> productMap, Long orderId) {
-        return ordersDetailDao.findByOrderId(orderId)
-                .stream()
+    private List<OrderDetail> generateOrderDetails(Map<Long, Product> productMap,
+                                                   List<OrdersDetailEntity> ordersDetailEntities) {
+        return ordersDetailEntities.stream()
                 .map(orderDetail -> orderDetail.toOrderDetail(productMap))
                 .collect(Collectors.toUnmodifiableList());
     }
