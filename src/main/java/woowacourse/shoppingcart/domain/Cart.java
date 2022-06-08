@@ -7,6 +7,7 @@ public class Cart {
     private String name;
     private int price;
     private String imageUrl;
+    private int totalPrice;
     private int quantity;
 
     public Cart() {
@@ -23,6 +24,7 @@ public class Cart {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.totalPrice = price * quantity;
         this.quantity = quantity;
     }
 
@@ -44,6 +46,10 @@ public class Cart {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
     }
 
     public int getQuantity() {
