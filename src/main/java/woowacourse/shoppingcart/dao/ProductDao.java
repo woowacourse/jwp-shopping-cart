@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -17,8 +18,8 @@ public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ProductDao(final DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     public Product save(final Product product) {
