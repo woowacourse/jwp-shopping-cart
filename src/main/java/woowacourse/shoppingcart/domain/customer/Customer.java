@@ -24,7 +24,7 @@ public class Customer {
         }
     }
 
-    public Customer() {
+    private Customer() {
     }
 
     public Long getId() {

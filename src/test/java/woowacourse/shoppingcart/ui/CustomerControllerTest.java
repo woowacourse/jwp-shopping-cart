@@ -32,9 +32,11 @@ public class CustomerControllerTest extends AcceptanceTest {
 
         ErrorResponseWithField errorResponseWithField = response.as(ErrorResponseWithField.class);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(errorResponseWithField).usingRecursiveComparison()
-            .isEqualTo(new ErrorResponseWithField("email", "이미 가입된 이메일입니다."));
+        assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+            () -> assertThat(errorResponseWithField).usingRecursiveComparison()
+                .isEqualTo(new ErrorResponseWithField("email", "이미 가입된 이메일입니다."))
+        );
     }
 
     @DisplayName("회원가입시 중복된 username으로 가입하려는 경우 400 응답을 반환한다.")
@@ -45,9 +47,11 @@ public class CustomerControllerTest extends AcceptanceTest {
 
         ErrorResponseWithField errorResponseWithField = response.as(ErrorResponseWithField.class);
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(errorResponseWithField).usingRecursiveComparison()
-            .isEqualTo(new ErrorResponseWithField("username", "이미 가입된 닉네임입니다."));
+        assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+            () -> assertThat(errorResponseWithField).usingRecursiveComparison()
+                .isEqualTo(new ErrorResponseWithField("username", "이미 가입된 닉네임입니다."))
+        );
     }
 
     @DisplayName("회원 가입시 잘못된 형식의 email을 입력한 경우 400 응답을 반환한다.")
