@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.CartAdditionRequest;
+import woowacourse.shoppingcart.dto.CartUpdateRequest;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @SpringBootTest
@@ -31,11 +33,35 @@ class CartServiceTest {
         assertThat(cartService.findCartsByEmail(EMAIL)).hasSize(2);
     }
 
-    @DisplayName("장바구니에 제품을 추가한다.")
+    @DisplayName("장바구니에 상품을 추가한다.")
     @Test
     void addCartItem() {
-        CartAdditionRequest cartAdditionRequest = new CartAdditionRequest(1L, 1);
-        assertDoesNotThrow(() -> cartService.addCartItem(cartAdditionRequest, EMAIL));
+        final CartAdditionRequest cartAdditionRequest = new CartAdditionRequest(1L, 1);
+        assertDoesNotThrow(() -> cartService.addCartItem(EMAIL, cartAdditionRequest));
+    }
+
+    @DisplayName("장바구니에 상품 수량을 변경한다.")
+    @Test
+    void updateCartItem() {
+        final CartUpdateRequest cartUpdateRequest = new CartUpdateRequest(1L, 2);
+        assertDoesNotThrow(() -> cartService.updateCartItem(EMAIL, cartUpdateRequest));
+    }
+
+    @DisplayName("장바구니에 변경할 상품이 존재하지 않는 경우 예외가 발생한다.")
+    @Test
+    void updateNotExistCartItem() {
+        final CartUpdateRequest cartUpdateRequest = new CartUpdateRequest(10L, 2);
+        assertThatThrownBy(() -> cartService.updateCartItem(EMAIL, cartUpdateRequest))
+                .isInstanceOf(InvalidCartItemException.class)
+                .hasMessage("장바구니에 해당 상품이 존재하지 않습니다.");
+    }
+
+    @DisplayName("장바구니에 담을 상품의 재고가 부족할 경우 예외가 발생한다.")
+    @Test
+    void updateShortageOfStockCartItem() {
+        final CartUpdateRequest cartUpdateRequest = new CartUpdateRequest(1L, 100);
+        assertThatThrownBy(() -> cartService.updateCartItem(EMAIL, cartUpdateRequest))
+                .isInstanceOf(InvalidCartItemException.class);
     }
 
     @DisplayName("장바구니를 삭제한다.")

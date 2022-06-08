@@ -12,6 +12,8 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.dto.CartAdditionRequest;
+import woowacourse.shoppingcart.dto.CartUpdateRequest;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -47,6 +49,29 @@ public class CartService {
             cartItemDao.addCartItem(customerId, cartAdditionRequest.getProductId(), cartAdditionRequest.getQuantity());
         } catch (Exception e) {
             throw new InvalidProductException();
+        }
+    }
+
+    @Transactional
+    public void updateCartItem(final String email, final CartUpdateRequest cartUpdateRequest) {
+        final Long customerId = customerDao.findIdByEmail(new Email(email));
+        final Product product = productDao.findProductById(cartUpdateRequest.getProductId());
+
+        validateExistProduct(customerId, product);
+        validateStock(product.getStock(), cartUpdateRequest.getQuantity());
+
+        cartItemDao.updateCartItem(customerId, cartUpdateRequest.getProductId(), cartUpdateRequest.getQuantity());
+    }
+
+    private void validateExistProduct(Long customerId, Product product) {
+        if (!cartItemDao.existCartItem(customerId, product.getId())) {
+            throw new InvalidCartItemException("장바구니에 해당 상품이 존재하지 않습니다.");
+        }
+    }
+
+    private void validateStock(int stock, int quantity) {
+        if (stock < quantity) {
+            throw new InvalidCartItemException("재고가 부족합니다. 현재 재고: " + stock);
         }
     }
 

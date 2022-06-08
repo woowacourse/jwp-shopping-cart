@@ -32,7 +32,7 @@ public class CartItemController {
     @PostMapping("/products")
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final String email,
                                             @RequestBody final CartAdditionRequest cartAdditionRequest) {
-        cartService.addCartItem(cartAdditionRequest, email);
+        cartService.addCartItem(email, cartAdditionRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
