@@ -67,24 +67,4 @@ public class ProductServiceTest {
         assertThatThrownBy(() -> productService.findProductById(1L))
                 .isInstanceOf(NotFoundProductException.class);
     }
-
-    @Test
-    @DisplayName("productId들로 Product들을 반환한다.")
-    void getProductsByIds_exist_returnProducts() {
-        // given
-        Product product1 = new Product(1L, "product1", 1000, "url1");
-        Product product2 = new Product(2L, "product2", 2000, "url2");
-        Product product3 = new Product(3L, "product3", 3000, "url3");
-
-        List<Long> productIds = List.of(3L, 2L, 1L);
-
-        given(productDao.findProductsByIds(productIds))
-                .willReturn(List.of(product3, product2, product1));
-
-        // when
-        List<Product> actual = productService.getProductsByIds(productIds);
-
-        // then
-        assertThat(actual).containsExactly(product3, product2, product1);
-    }
 }

@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +21,5 @@ public class ProductService {
 
     public Product findProductById(final Long productId) {
         return productDao.findProductById(productId);
-    }
-
-    public List<Product> getProductsByIds(List<Long> productIds) {
-        if (productIds.size() == 0) {
-            return Collections.emptyList();
-        }
-        return productDao.findProductsByIds(productIds);
     }
 }

@@ -61,19 +61,4 @@ public class ProductDaoTest {
         // then
         assertThat(products.size()).isEqualTo(20);
     }
-
-    @DisplayName("product id들로 product를 조회한다.")
-    @Test
-    void findProductsByIds() {
-        // given
-        Product product1 = new Product(1L, "product1", 1000, "url1");
-        Product product2 = new Product(2L, "product2", 2000, "url2");
-        Product product3 = new Product(3L, "product3", 3000, "url3");
-
-        // when
-        List<Product> products = productDao.findProductsByIds(List.of(3L, 1L, 2L));
-
-        // then
-        assertThat(products).containsExactly(product3, product1, product2);
-    }
 }
