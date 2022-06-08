@@ -52,7 +52,7 @@ class CustomerControllerTest {
         ResultActions 회원가입_응답 = postCustomers("email@email.com", "password123!Q", "rookie");
 
         // then
-        assertThat(회원가입_응답.andExpect(status().isCreated()));
+        assertThat(회원가입_응답.andExpect(status().isOk()));
     }
 
     @Test
