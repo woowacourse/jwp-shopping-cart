@@ -1,14 +1,14 @@
-drop table if exists order_product;
+drop table if exists order_detail;
 
-drop table if exists single_order;
+drop table if exists orders;
 
 drop table if exists cart_item;
-
-drop table if exists product;
 
 drop table if exists full_address;
 
 drop table if exists privacy;
+
+drop table if exists product;
 
 drop table if exists customer;
 
@@ -78,7 +78,7 @@ alter table cart_item
     add constraint fk_cart_item_to_product
         foreign key (product_id) references product (id);
 
-create table single_order
+create table orders
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,
@@ -86,13 +86,13 @@ create table single_order
     primary key (id)
 );
 
-create table order_product
+create table order_detail
 (
     id         bigint  not null auto_increment,
     order_id   bigint  not null,
     product_id bigint  not null,
     quantity   integer not null,
-    foreign key (order_id) references single_order (id),
+    foreign key (order_id) references orders (id),
     foreign key (product_id) references product (id),
     primary key (id)
 )

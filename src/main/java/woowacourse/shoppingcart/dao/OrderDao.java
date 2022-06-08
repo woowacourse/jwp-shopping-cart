@@ -1,14 +1,14 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.List;
-import woowacourse.shoppingcart.domain.Order;
+import woowacourse.shoppingcart.domain.Orders;
 
 public interface OrderDao {
-    Long save(Order order);
+    Long save(Orders orders);
 
-    Order findById(Long id);
+    Orders findById(Long id);
 
-    List<Order> findAllByCustomerId(Long customerId);
+    List<Orders> findAllByCustomerId(Long customerId);
 
     boolean isValidOrderId(Long customerId, Long orderId);
 }

@@ -3,23 +3,39 @@ package woowacourse.shoppingcart.domain;
 import java.util.List;
 
 public class Orders {
-
-    private Long id;
-    private List<Order> orders;
+    private List<OrderDetail> orderDetails;
+    private Long customerId;
+    private int totalPrice;
 
     public Orders() {
     }
 
-    public Orders(final Long id, final List<Order> orders) {
-        this.id = id;
-        this.orders = orders;
+    public Orders(List<OrderDetail> orderDetails, Long customerId) {
+        this.orderDetails = orderDetails;
+        this.customerId = customerId;
+        this.totalPrice = orderDetails.stream()
+                .mapToInt(orderDetail -> orderDetail.getProduct().getPrice())
+                .sum();
     }
 
-    public Long getId() {
-        return id;
+    public List<OrderDetail> getOrderProducts() {
+        return orderDetails;
     }
 
-    public List<Order> getOrderDetails() {
-        return orders;
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderProducts=" + orderDetails +
+                ", customerId=" + customerId +
+                ", totalPrice=" + totalPrice +
+                '}';
     }
 }

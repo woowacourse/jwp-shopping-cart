@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Order;
-import woowacourse.shoppingcart.domain.OrderProduct;
+import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
 import woowacourse.shoppingcart.dto.response.OrderProductResponse;
 import woowacourse.shoppingcart.dto.response.OrderResponse;
@@ -27,20 +27,20 @@ public class OrderService {
     }
 
     public Long addOrder(final List<OrderRequest> orderRequests, final Long customerId) {
-        List<OrderProduct> orderProducts = orderRequests.stream()
-                .map(orderRequest -> new OrderProduct(productDao.findById(orderRequest.getProductId()),
+        List<OrderDetail> orderDetails = orderRequests.stream()
+                .map(orderRequest -> new OrderDetail(productDao.findById(orderRequest.getProductId()),
                         orderRequest.getQuantity())).collect(
                         Collectors.toList());
 
-        Order order = new Order(orderProducts, customerId);
-        return orderDao.save(order);
+        Orders orders = new Orders(orderDetails, customerId);
+        return orderDao.save(orders);
     }
 
     public OrderResponse findOrderById(final Long customerId, final Long orderId) {
         validateOrderIdByCustomerId(customerId, orderId);
-        Order order = orderDao.findById(orderId);
+        Orders orders = orderDao.findById(orderId);
 
-        return convertOrderToResponse(order);
+        return convertOrderToResponse(orders);
     }
 
     private void validateOrderIdByCustomerId(final Long customerId, final Long orderId) {
@@ -50,20 +50,20 @@ public class OrderService {
     }
 
     public List<OrderResponse> findOrdersByCustomerId(final Long customerId) {
-        List<Order> orders = orderDao.findAllByCustomerId(customerId);
+        List<Orders> orders = orderDao.findAllByCustomerId(customerId);
 
         return orders.stream().map(this::convertOrderToResponse).collect(Collectors.toList());
     }
 
-    private OrderResponse convertOrderToResponse(Order order) {
-        List<OrderProductResponse> orderProductResponses = getOrderProductResponseByOrder(order);
+    private OrderResponse convertOrderToResponse(Orders orders) {
+        List<OrderProductResponse> orderProductResponses = getOrderProductResponseByOrder(orders);
         return new OrderResponse(orderProductResponses);
     }
 
-    private List<OrderProductResponse> getOrderProductResponseByOrder(Order order) {
-        return order.getOrderProducts().stream()
-                .map(orderProduct -> new OrderProductResponse(new ProductResponse(orderProduct.getProduct()),
-                        orderProduct.getQuantity())).collect(
+    private List<OrderProductResponse> getOrderProductResponseByOrder(Orders orders) {
+        return orders.getOrderProducts().stream()
+                .map(orderDetail -> new OrderProductResponse(new ProductResponse(orderDetail.getProduct()),
+                        orderDetail.getQuantity())).collect(
                         Collectors.toList());
     }
 }
