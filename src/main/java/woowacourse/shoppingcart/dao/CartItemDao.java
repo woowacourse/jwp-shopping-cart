@@ -108,6 +108,18 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    public void updateCartItem(final Long customerId, final Long productId, final int quantity) {
+        final String query = "UPDATE cart_item set quantity = :quantity"
+                + " WHERE customer_id = :customer_id AND product_id = :product_id";
+
+        final Map<String, Object> params = new HashMap<>();
+        params.put("quantity", quantity);
+        params.put("customer_id", customerId);
+        params.put("product_id", productId);
+
+        namedParameterJdbcTemplate.update(query, params);
+    }
+
     public void deleteCartItem(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
