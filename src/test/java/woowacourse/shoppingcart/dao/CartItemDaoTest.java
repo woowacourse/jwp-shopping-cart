@@ -128,4 +128,19 @@ public class CartItemDaoTest {
         // when & then
         assertDoesNotThrow(() -> cartItemDao.deleteCartItem(customerId, productId));
     }
+
+    @Test
+    @DisplayName("추가할 상품이 동일 회원의 장바구니에 동일한 상품인지 확인할 수 있다.")
+    void existCartItems() {
+        // given
+        Long customerId = 1L;
+        Long productId = 1L;
+        cartItemDao.saveCartItem(customerId, productId);
+
+        // when
+        boolean flag = cartItemDao.existCartItems(1L, 1L);
+
+        // then
+        assertThat(flag).isTrue();
+    }
 }

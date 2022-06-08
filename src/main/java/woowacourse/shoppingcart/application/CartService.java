@@ -32,7 +32,15 @@ public class CartService {
     public Long saveCartItem(final Long productId, final Long customerId) {
         productDao.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+
+        validateDuplicatedCartItems(customerId, productId);
         return cartItemDao.saveCartItem(customerId, productId);
+    }
+
+    private void validateDuplicatedCartItems(Long customerId, Long productId) {
+        if (cartItemDao.existCartItems(customerId, productId)) {
+            throw new IllegalArgumentException("이미 등록되어 있는 상품입니다.");
+        }
     }
 
     public List<CartItemResponse> findAllByCustomerId(Long customerId) {

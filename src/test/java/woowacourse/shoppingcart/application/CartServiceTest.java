@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.List;
@@ -36,6 +37,19 @@ class CartServiceTest {
 
         // when & then
         assertDoesNotThrow(() -> cartService.saveCartItem(1L, 1L));
+    }
+
+    @Test
+    @DisplayName("상품을 카드에 저장할 경우 기존에 동일 상품이 있으면 예외가 발생한다.")
+    void saveCartDuplicatedItem() {
+        // given
+        customerService.save(new CustomerSaveRequest("email@email.com", "password1234A!", "rookie"));
+        productService.save(new ProductSaveRequest("상품1", 1000, "https://www.test.com"));
+        cartService.saveCartItem(1L, 1L);
+
+        // when & then
+        assertThatThrownBy(() -> cartService.saveCartItem(1L, 1L))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

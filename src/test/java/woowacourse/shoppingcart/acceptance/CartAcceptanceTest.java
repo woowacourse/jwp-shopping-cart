@@ -84,6 +84,19 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_삭제됨(response);
     }
 
+    @Test
+    @DisplayName("장바구니에 이미 등록된 상품을 다시 등록하는 경우 예외가 발생한다.")
+    void addCartDuplicatedItem() {
+        // given
+        장바구니_아이템_추가되어_있음(accessToken, productId1);
+
+        // when
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1);
+
+        // then
+        장바구니에_중복된_아이템을_추가하면_예외가_발생함(response);
+    }
+
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
         return RestAssured
                 .given().log().all()
@@ -150,5 +163,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void 장바구니에_중복된_아이템을_추가하면_예외가_발생함(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }

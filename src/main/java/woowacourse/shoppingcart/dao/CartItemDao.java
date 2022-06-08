@@ -92,4 +92,13 @@ public class CartItemDao {
 
         template.update(query, nameParameters);
     }
+
+    public boolean existCartItems(Long customerId, Long productId) {
+        String query = "SELECT EXISTS (SELECT * FROM cart_item WHERE customer_id = :customer_id AND product_id = :product_id)";
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource("customer_id", customerId)
+                .addValue("product_id", productId);
+
+        int count = template.queryForObject(query, nameParameters, Integer.class);
+        return count != 0;
+    }
 }
