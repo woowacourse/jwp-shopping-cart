@@ -86,7 +86,7 @@ public class CartService {
     public void addItem(String username, AddCartItemRequest addCartItemRequest) {
         validateExistName(username);
         Long id = customerDao.findIdByUserName(username);
-        Long productId = addCartItemRequest.getProductId();
+        Long productId = addCartItemRequest.getId();
         validatePositiveProductId(productId);
         validateExistProductId(productId);
         int quantity = addCartItemRequest.getQuantity();
