@@ -1,17 +1,19 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
-import java.sql.PreparedStatement;
-import java.util.List;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
@@ -44,7 +46,7 @@ public class CartItemDao {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[] {"id"});
             preparedStatement.setLong(1, customerId);
             preparedStatement.setLong(2, productId);
             return preparedStatement;
