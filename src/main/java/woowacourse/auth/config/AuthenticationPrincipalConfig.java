@@ -10,6 +10,7 @@ import woowacourse.auth.controller.AuthenticationPrincipalArgumentResolver;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
+
     private final AuthService authService;
 
     public AuthenticationPrincipalConfig(final AuthService authService) {
