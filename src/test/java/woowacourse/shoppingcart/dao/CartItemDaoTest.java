@@ -15,8 +15,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.auth.dao.MemberDao;
-import woowacourse.auth.domain.Member;
+import woowacourse.member.dao.MemberDao;
+import woowacourse.member.domain.Member;
 import woowacourse.shoppingcart.domain.CartItem;
 
 @JdbcTest

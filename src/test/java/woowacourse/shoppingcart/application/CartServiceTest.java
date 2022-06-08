@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.auth.dao.MemberDao;
-import woowacourse.auth.domain.Member;
+import woowacourse.member.dao.MemberDao;
+import woowacourse.member.domain.Member;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @SpringBootTest

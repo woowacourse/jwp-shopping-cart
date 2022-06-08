@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.auth.dto.response.ErrorResponse;
+import woowacourse.member.dto.response.ErrorResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
