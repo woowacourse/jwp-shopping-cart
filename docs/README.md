@@ -118,7 +118,7 @@
     - 회원 탈퇴
     - [x] username 중복 확인
     - [x] email 중복 확인
-    - [ ] username, email 중복 확인에 대한 인수테스트 추가
+    - [x] username, email 중복 확인에 대한 인수테스트 추가
 - 상품(product) 관련 기능
     - 상품 조회
     - 상품 전체 조회

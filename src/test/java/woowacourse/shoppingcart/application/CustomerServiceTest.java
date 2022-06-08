@@ -129,7 +129,7 @@ class CustomerServiceTest {
         customerService.save(YAHO_SAVE_REQUEST);
         UsernameDuplicateResponse response = customerService.checkUsernameDuplicate(
                 new UsernameDuplicateRequest(YAHO_USERNAME));
-        assertThat(response.isDuplicate()).isTrue();
+        assertThat(response.isDuplicated()).isTrue();
     }
 
     @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=false를 반환한다.")
@@ -138,7 +138,7 @@ class CustomerServiceTest {
         customerService.save(YAHO_SAVE_REQUEST);
         UsernameDuplicateResponse response = customerService.checkUsernameDuplicate(
                 new UsernameDuplicateRequest(MAT_USERNAME));
-        assertThat(response.isDuplicate()).isFalse();
+        assertThat(response.isDuplicated()).isFalse();
     }
 
     @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=ture를 반환한다.")
@@ -147,7 +147,7 @@ class CustomerServiceTest {
         customerService.save(YAHO_SAVE_REQUEST);
         EmailDuplicateResponse response = customerService.checkEmailDuplicate(
                 new EmailDuplicateRequest(YAHO_EMAIL));
-        assertThat(response.isDuplicate()).isTrue();
+        assertThat(response.isDuplicated()).isTrue();
     }
 
     @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=false를 반환한다.")
@@ -156,6 +156,6 @@ class CustomerServiceTest {
         customerService.save(YAHO_SAVE_REQUEST);
         EmailDuplicateResponse response = customerService.checkEmailDuplicate(
                 new EmailDuplicateRequest(MAT_EMAIL));
-        assertThat(response.isDuplicate()).isFalse();
+        assertThat(response.isDuplicated()).isFalse();
     }
 }

@@ -60,14 +60,14 @@ public class CustomerController {
 
     @PostMapping("/api/customers/duplication/username")
     public ResponseEntity<UsernameDuplicateResponse> checkDuplicateUsername(
-            @Valid @ModelAttribute UsernameDuplicateRequest request) {
+            @Valid @RequestBody UsernameDuplicateRequest request) {
         UsernameDuplicateResponse usernameDuplicateResponse = customerService.checkUsernameDuplicate(request);
         return ResponseEntity.ok(usernameDuplicateResponse);
     }
 
     @PostMapping("/api/customers/duplication/email")
     public ResponseEntity<EmailDuplicateResponse> checkDuplicateEmail(
-            @Valid @ModelAttribute EmailDuplicateRequest request) {
+            @Valid @RequestBody EmailDuplicateRequest request) {
         EmailDuplicateResponse emailDuplicateResponse = customerService.checkEmailDuplicate(request);
         return ResponseEntity.ok(emailDuplicateResponse);
     }
