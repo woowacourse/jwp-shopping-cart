@@ -5,6 +5,7 @@ import woowacourse.shoppingcart.domain.Cart;
 public class CartResponse {
 
     private Long id;
+    private Long productId;
     private String name;
     private int price;
     private String imageUrl;
@@ -14,8 +15,10 @@ public class CartResponse {
     public CartResponse() {
     }
 
-    public CartResponse(Long id, String name, int price, String imageUrl, int quantity, boolean checked) {
+    public CartResponse(Long id, Long productId, String name, int price, String imageUrl, int quantity,
+                        boolean checked) {
         this.id = id;
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -26,6 +29,7 @@ public class CartResponse {
     public static CartResponse from(Cart cart) {
         return new CartResponse(
                 cart.getId(),
+                cart.getProduct().getId(),
                 cart.getProduct().getName(),
                 cart.getProduct().getPrice(),
                 cart.getProduct().getImageUrl(),
@@ -36,6 +40,10 @@ public class CartResponse {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public String getName() {

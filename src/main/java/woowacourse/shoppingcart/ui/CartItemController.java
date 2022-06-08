@@ -32,11 +32,7 @@ public class CartItemController {
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal String usernameByToken,
                                             @Validated(Request.id.class) @RequestBody CartRequest cartRequest) {
         cartService.addCart(usernameByToken, cartRequest);
-        URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .build()
-                .toUri();
-        return ResponseEntity.created(responseLocation).build();
+        return ResponseEntity.created(URI.create("/cart")).build();
     }
 
     @GetMapping

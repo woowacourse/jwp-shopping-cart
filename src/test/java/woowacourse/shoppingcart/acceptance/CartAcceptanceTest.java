@@ -11,7 +11,6 @@ import io.restassured.response.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -67,7 +66,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, "치킨", "맥주");
     }
 
-    @Disabled
     @Test
     @DisplayName("장바구니 아이템 정보 수정")
     void updateCartItems() {
@@ -177,7 +175,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, String... productNames) {
         List<String> resultProductIds = response
                 .as(CartResponses.class)
-                .getProducts()
+                .getCartItems()
                 .stream()
                 .map(CartResponse::getName)
                 .collect(Collectors.toList());

@@ -19,15 +19,9 @@ public class UpdateCartRequests {
         return products;
     }
 
-    public List<Cart> getCarts() {
+    public List<Cart> carts() {
         return products.stream()
                 .map(UpdateCartRequest::toCart)
-                .collect(Collectors.toList());
-    }
-
-    public List<Long> getCartIds() {
-        return products.stream()
-                .map(updateCartRequest -> updateCartRequest.getId())
                 .collect(Collectors.toList());
     }
 }

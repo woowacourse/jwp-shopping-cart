@@ -56,7 +56,7 @@ class CartServiceTest {
         CartResponses cartResponses = cartService.findCartsByUsername("rennon");
 
         // then
-        assertThat(cartResponses.getProducts()).size().isEqualTo(1);
+        assertThat(cartResponses.getCartItems()).size().isEqualTo(1);
     }
 
     @Test
@@ -72,7 +72,7 @@ class CartServiceTest {
         cartService.updateCartItems("rennon", updateCartRequests);
 
         // then
-        assertThat(cartService.findCartsByUsername("rennon").getProducts().get(0).getQuantity()).isEqualTo(10);
+        assertThat(cartService.findCartsByUsername("rennon").getCartItems().get(0).getQuantity()).isEqualTo(10);
     }
 
     @Test
@@ -91,7 +91,7 @@ class CartServiceTest {
         cartService.deleteCart(new DeleteProductRequest(List.of(new CartIdRequest(1L), new CartIdRequest(3L))));
 
         // then
-        assertThat(cartService.findCartsByUsername("rennon").getProducts()).size().isEqualTo(1);
+        assertThat(cartService.findCartsByUsername("rennon").getCartItems()).size().isEqualTo(1);
     }
 
     @Test
@@ -106,6 +106,6 @@ class CartServiceTest {
         cartService.deleteAllCart("rennon");
 
         // then
-        assertThat(cartService.findCartsByUsername("rennon").getProducts()).size().isEqualTo(0);
+        assertThat(cartService.findCartsByUsername("rennon").getCartItems()).size().isEqualTo(0);
     }
 }

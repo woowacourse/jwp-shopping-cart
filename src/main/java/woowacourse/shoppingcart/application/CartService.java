@@ -51,7 +51,7 @@ public class CartService {
 
     @Transactional(rollbackFor = Exception.class)
     public CartResponses updateCartItems(String username, UpdateCartRequests updateCartRequests) {
-        List<Cart> carts = updateCartRequests.getCarts();
+        List<Cart> carts = updateCartRequests.carts();
         cartItemDao.updateCartItem(carts);
         List<Cart> foundCarts = findCartIdsByUsername(username);
         List<CartResponse> cartResponses = foundCarts.stream()
@@ -67,7 +67,7 @@ public class CartService {
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteCart(DeleteProductRequest deleteProductRequest) {
-        List<Long> cartIds = deleteProductRequest.getCartIds();
+        List<Long> cartIds = deleteProductRequest.cartIds();
         cartItemDao.deleteCartItem(cartIds);
     }
 

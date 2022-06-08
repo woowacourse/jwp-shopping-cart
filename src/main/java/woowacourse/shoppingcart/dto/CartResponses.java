@@ -6,13 +6,13 @@ import woowacourse.shoppingcart.domain.Cart;
 
 public class CartResponses {
 
-    private List<CartResponse> products;
+    private List<CartResponse> cartItems;
 
     public CartResponses() {
     }
 
-    public CartResponses(List<CartResponse> products) {
-        this.products = products;
+    public CartResponses(List<CartResponse> cartItems) {
+        this.cartItems = cartItems;
     }
 
     public static CartResponses from(List<Cart> carts) {
@@ -22,7 +22,7 @@ public class CartResponses {
         return new CartResponses(cartResponses);
     }
 
-    public List<CartResponse> getProducts() {
-        return products;
+    public List<CartResponse> getCartItems() {
+        return cartItems;
     }
 }

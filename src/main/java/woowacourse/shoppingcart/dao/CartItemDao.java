@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CartItemDao {
@@ -122,6 +123,15 @@ public class CartItemDao {
         int rowCount = jdbcTemplate.update(sql, customerId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
+        }
+    }
+
+    public boolean existByProductId(Long productId) {
+        try {
+            String sql = "SELECT EXISTS (SELECT * FROM cart_item WHERE product_id = ?)";
+            return jdbcTemplate.queryForObject(sql, Boolean.class, productId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
         }
     }
 }
