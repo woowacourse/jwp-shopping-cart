@@ -29,8 +29,11 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Products> products(@ModelAttribute PageRequest pageRequest) {
-        return ResponseEntity.ok(productService.findProducts(pageRequest));
+    public ResponseEntity<Products> getProducts(@RequestParam(required = false) Long size, @RequestParam(required = false) Long page) {
+        if (size == null && page == null) {
+            return ResponseEntity.ok(productService.findAllProducts());
+        }
+        return ResponseEntity.ok(productService.findProducts(size, page));
     }
 
     @GetMapping("/{productId}")

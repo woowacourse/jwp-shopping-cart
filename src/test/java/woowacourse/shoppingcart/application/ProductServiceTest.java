@@ -125,7 +125,7 @@ class ProductServiceTest {
         }
 
         //when & then
-        assertThat(productService.findProducts(new PageRequest(12L, page))
+        assertThat(productService.findProducts(12L, page)
                 .getProducts()
                 .size())
                 .isEqualTo(expectSize);

@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.Products;
@@ -17,8 +18,13 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Products findProducts(PageRequest pageRequest) {
-        return productDao.findProducts(pageRequest.getPage() * pageRequest.getSize(), pageRequest.getSize());
+    public Products findProducts(Long size, Long page) {
+        return productDao.findProducts(page * size, size);
+    }
+
+    @Transactional(readOnly = true)
+    public Products findAllProducts() {
+        return productDao.findAllProducts();
     }
 
     @Transactional

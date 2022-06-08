@@ -38,6 +38,20 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .body("products.size()", is(expectSize));
     }
 
+    @DisplayName("상품 전체 목록 조회 페이징 검증")
+    @ParameterizedTest
+    @CsvSource(value = {"13", "24", "20"})
+    void getProductsByPaging2(int allSize) {
+        //given
+        for (int index = 0; index < allSize; index++) {
+            RestAssuredFixture.post(new ProductRequest("치킨" + index, 10000, "http://example.com/chicken.jpg"), "/products", HttpStatus.CREATED.value());
+        }
+
+        //when & then
+        RestAssuredFixture.getProducts("/products", HttpStatus.OK.value())
+                .body("products.size()", is(allSize));
+    }
+
     @DisplayName("상품 단건 조회")
     @Test
     void getProduct() {
