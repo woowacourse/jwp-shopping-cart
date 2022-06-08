@@ -42,7 +42,7 @@ public class CartItemDao {
 
     public Long findProductIdById(final Long cartId) {
         try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = catdId";
+            final String sql = "SELECT product_id FROM cart_item WHERE id = :cartId";
             final SqlParameterSource parameter = new MapSqlParameterSource(Map.of("cartId", cartId));
             return namedJdbcTemplate.queryForObject(sql, parameter,
                     (resultSet, rowNum) -> resultSet.getLong("product_id"));
@@ -51,13 +51,20 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
+    public Integer findQuantityById(final Long productId) {
+        final String sql = "SELECT quantity FROM cart_item WHERE product_id=:productId";
+        final SqlParameterSource parameter = new MapSqlParameterSource(Map.of("productId", productId));
+        return namedJdbcTemplate.queryForObject(sql, parameter, Integer.class);
+    }
+
+    public Long addCartItem(final Long customerId, final Long productId, final int quantity) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         final Map<String, Object> params = new HashMap<>(Map.of(
                 "customer_id", customerId,
-                "product_id", productId));
+                "product_id", productId,
+                "quantity", quantity));
         return simpleInsert.executeAndReturnKey(params).longValue();
     }
 

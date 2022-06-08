@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.auth.dto.EmailDto;
+import woowacourse.auth.dto.EmailAuthentication;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
@@ -46,13 +46,13 @@ public class CustomerController {
 
     @GetMapping("/customers/{customerId}")
     public ResponseEntity<CustomerResponse> findCustomerInformation(
-            @AuthenticationPrincipal final EmailDto email, @PathVariable Long customerId) {
+            @AuthenticationPrincipal final EmailAuthentication email, @PathVariable Long customerId) {
         CustomerResponse response = customerService.findCustomerByEmail(email);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/customers/{customerId}")
-    public ResponseEntity<Void> updateCustomerInformation(@AuthenticationPrincipal final EmailDto emailDto,
+    public ResponseEntity<Void> updateCustomerInformation(@AuthenticationPrincipal final EmailAuthentication emailDto,
                                                           @PathVariable Long customerId,
                                                           @RequestBody final ModifiedCustomerRequest request) {
         customerService.updateCustomer(ModifiedCustomerDto.fromModifiedCustomerRequest(request));
@@ -60,7 +60,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/customers/{customerId}")
-    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal final EmailDto emailDto,
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal final EmailAuthentication emailDto,
                                                @PathVariable Long customerId) {
         customerService.deleteCustomer(emailDto);
         return ResponseEntity.noContent().build();

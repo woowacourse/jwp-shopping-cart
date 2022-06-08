@@ -39,8 +39,8 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
+        productDao.save(new Product("banana", 1_000, "woowa1.com", "banana description", 1));
+        productDao.save(new Product("apple", 2_000, "woowa2.com", "apple description", 1));
 
         namedJdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(:customerId, :productId)",
                 Map.of("customerId", 1L, "productId", 1L));
@@ -57,7 +57,7 @@ public class CartItemDaoTest {
         final Long productId = 1L;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(customerId, productId, 1);
 
         // then
         assertThat(cartId).isEqualTo(3L);

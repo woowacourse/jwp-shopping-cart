@@ -8,6 +8,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
@@ -24,28 +26,30 @@ public class CartRepository {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public List<Cart> findCartsByCustomerName(final Email email) {
+        final List<Long> cartIds = findCartIdsByCustomerEmail(email);
 
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
             final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            final int quantity = cartItemDao.findQuantityById(productId);
+            carts.add(new Cart(cartId, product, quantity));
         }
 
         return carts;
     }
 
-    public List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public List<Long> findCartIdsByCustomerEmail(final Email email) {
+        final Long customerId = customerDao.findIdByUserEmail(email);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public Long addCart(final Long productId, final int quantity, final Email email) {
+        final Customer customer = customerDao.findByUserEmail(email);
+        final Long customerId = customer.getId();
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.addCartItem(customerId, productId, quantity);
         } catch (Exception e) {
             throw new InvalidProductException();
         }

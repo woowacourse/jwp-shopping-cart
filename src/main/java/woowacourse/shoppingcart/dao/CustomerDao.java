@@ -71,10 +71,10 @@ public class CustomerDao {
         return namedJdbcTemplate.queryForObject(query, params, String.class);
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByUserEmail(final Email email) {
         try {
-            final String query = "SELECT id FROM customer WHERE name = :name";
-            final SqlParameterSource params = new MapSqlParameterSource(Map.of("name", userName));
+            final String query = "SELECT id FROM customer WHERE email = :email";
+            final SqlParameterSource params = new MapSqlParameterSource(Map.of("email", email.getValue()));
             return namedJdbcTemplate.queryForObject(query, params, Long.class);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();

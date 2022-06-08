@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Repository
@@ -32,8 +33,8 @@ public class OrderRepository {
         this.productDao = productDao;
     }
 
-    public Long addOrder(List<OrderDto> orderDetails, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public Long addOrder(List<OrderDto> orderDetails, final Email email) {
+        final Long customerId = customerDao.findIdByUserEmail(email);
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderDto orderDetail : orderDetails) {
@@ -57,16 +58,16 @@ public class OrderRepository {
         return ordersDetails;
     }
 
-    public void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public void validateOrderIdByCustomerEmail(final Email email, final Long orderId) {
+        final Long customerId = customerDao.findIdByUserEmail(email);
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    public List<Long> findOrderIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public List<Long> findOrderIdsByCustomerEmail(final Email email) {
+        final Long customerId = customerDao.findIdByUserEmail(email);
         return orderDao.findOrderIdsByCustomerId(customerId);
     }
 

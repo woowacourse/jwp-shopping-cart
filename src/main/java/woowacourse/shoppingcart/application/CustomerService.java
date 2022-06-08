@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.EmailDto;
+import woowacourse.auth.dto.EmailAuthentication;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
@@ -48,7 +48,7 @@ public class CustomerService {
         final Password foundPassword = customerRepository.findPasswordByEmail(email);
         verifyPassword(password, foundPassword);
         Customer tokenPayloadDto = customerRepository.findByUserEmail(email);
-        String payload = createPayload(new EmailDto(email.getValue()));
+        String payload = createPayload(new EmailAuthentication(email.getValue()));
         return new TokenResponse(tokenPayloadDto.getId(), provider.createToken(payload));
     }
 
@@ -58,7 +58,7 @@ public class CustomerService {
         }
     }
 
-    private String createPayload(final EmailDto email) {
+    private String createPayload(final EmailAuthentication email) {
         try {
             ObjectMapper mapper = new JsonMapper();
             return mapper.writeValueAsString(email);
@@ -72,12 +72,12 @@ public class CustomerService {
         customerRepository.updateCustomer(modifiedCustomer);
     }
 
-    public CustomerResponse findCustomerByEmail(EmailDto email) {
+    public CustomerResponse findCustomerByEmail(EmailAuthentication email) {
         final Customer customer = customerRepository.findByUserEmail(new Email(email.getEmail()));
         return CustomerResponse.fromCustomer(customer);
     }
 
-    public void deleteCustomer(final EmailDto emailDto) {
+    public void deleteCustomer(final EmailAuthentication emailDto) {
         customerRepository.deleteCustomer(new Email(emailDto.getEmail()));
     }
 }
