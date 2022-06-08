@@ -16,7 +16,7 @@ public class Birthday {
     }
 
     private void validateBirthday(final String birthday) {
-        if (!COMPILED_PATTERN.matcher(birthday).matches()) {
+        if (!birthday.isEmpty() && !COMPILED_PATTERN.matcher(birthday).matches()) {
             throw new IllegalArgumentException(INVALID_BIRTHDAY_FORMAT);
         }
     }
