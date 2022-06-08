@@ -146,7 +146,7 @@
 ### 레거시 리팩터링
 
 - [ ] test fixture 만들어 중복코드 제거하기
-- [ ] jdbcTemplate 대신 NamedParameterJdbcTemplate과 SimpleJdbcInsert 사용하도록 수정
+- [x] jdbcTemplate 대신 NamedParameterJdbcTemplate과 SimpleJdbcInsert 사용하도록 수정
 - [ ] controller 중복 Path RequestMapping 으로 제거 
 - [ ] 파라미터 final 제거 
 - [ ] dto로 사용되고 있는 domain 패키지를 dto 패키지로 수정 

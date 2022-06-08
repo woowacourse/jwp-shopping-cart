@@ -13,17 +13,16 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NoSuchProductException;
 
 @Repository
 public class ProductDao {
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
@@ -49,7 +48,7 @@ public class ProductDao {
         try {
             String sql = "SELECT id, name, price, image_url, selling, description FROM product WHERE id = :id";
             SqlParameterSource parameterSource = new MapSqlParameterSource("id", productId);
-            return namedParameterJdbcTemplate.queryForObject(sql, parameterSource, mapToProduct());
+            return jdbcTemplate.queryForObject(sql, parameterSource, mapToProduct());
         } catch (EmptyResultDataAccessException e) {
             throw new NoSuchProductException();
         }
@@ -57,12 +56,12 @@ public class ProductDao {
 
     public List<Product> findSellingProducts() {
         String sql = "SELECT id, name, price, image_url, selling, description FROM product WHERE selling = true";
-        return namedParameterJdbcTemplate.query(sql, mapToProduct());
+        return jdbcTemplate.query(sql, mapToProduct());
     }
 
     public void delete(Long productId) {
         String sql = "UPDATE product SET selling = false WHERE id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource("id", productId);
-        namedParameterJdbcTemplate.update(sql, parameterSource);
+        jdbcTemplate.update(sql, parameterSource);
     }
 }
