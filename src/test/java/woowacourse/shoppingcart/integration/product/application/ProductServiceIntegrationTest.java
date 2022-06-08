@@ -8,20 +8,12 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
-import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.integration.IntegrationTest;
 import woowacourse.shoppingcart.product.application.ProductService;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
 
-@SpringBootTest
-@Transactional
-@ActiveProfiles("test")
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-class ProductServiceIntegrationTest {
+class ProductServiceIntegrationTest extends IntegrationTest {
 
     @Autowired
     private ProductService productService;

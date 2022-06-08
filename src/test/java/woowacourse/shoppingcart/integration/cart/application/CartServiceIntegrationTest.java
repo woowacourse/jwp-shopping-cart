@@ -9,11 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
-import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.cart.application.CartService;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.cart.domain.Cart;
@@ -22,14 +17,11 @@ import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemExcep
 import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
+import woowacourse.shoppingcart.integration.IntegrationTest;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
 
-@SpringBootTest
-@Transactional
-@ActiveProfiles("test")
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-class CartServiceIntegrationTest {
+class CartServiceIntegrationTest extends IntegrationTest {
 
     @Autowired
     private CartService cartService;
@@ -80,7 +72,7 @@ class CartServiceIntegrationTest {
         final Long actual = cartService.addCart(productId, customer);
 
         // then
-        assertThat(actual).isEqualTo(1L);
+        assertThat(actual).isNotNull();
     }
 
     @Test

@@ -9,8 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.customer.application.CustomerService;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
@@ -18,10 +16,9 @@ import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
 import woowacourse.shoppingcart.customer.exception.badrequest.DuplicateEmailException;
 import woowacourse.shoppingcart.customer.exception.notfound.NotFoundCustomerException;
+import woowacourse.shoppingcart.integration.IntegrationTest;
 
-@SpringBootTest
-@Transactional
-class CustomerServiceIntegrationTest {
+class CustomerServiceIntegrationTest extends IntegrationTest {
 
     @Autowired
     private CustomerService customerService;

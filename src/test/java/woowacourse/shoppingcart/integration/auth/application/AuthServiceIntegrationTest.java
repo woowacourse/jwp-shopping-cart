@@ -7,17 +7,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.auth.application.AuthService;
 import woowacourse.shoppingcart.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.auth.exception.badrequest.InvalidLoginException;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
+import woowacourse.shoppingcart.integration.IntegrationTest;
 
-@SpringBootTest
-@Transactional
-class AuthServiceIntegrationTest {
+class AuthServiceIntegrationTest extends IntegrationTest {
 
     private static final String PASSWORD = "qwerasdf123";
 
