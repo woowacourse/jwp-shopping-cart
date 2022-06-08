@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -59,7 +60,8 @@ public class ProductService {
     private void addCartItem(final List<Long> productIds, final Product product,
                              final ProductResponse productResponse, final Long customerId) {
         if (productIds.contains(product.getId())) {
-            Cart cart = cartItemDao.findIdAndQuantityByProductId(product.getId(), customerId).orElseThrow();
+            Cart cart = cartItemDao.findIdAndQuantityByProductId(product.getId(), customerId)
+                    .orElseThrow(InvalidCartItemException::new);
             productResponse.addCartQuantity(cart);
         }
     }

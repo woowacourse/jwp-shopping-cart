@@ -36,7 +36,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         TokenResponse tokenResponse = 로그인을_한다("giron", "password").as(TokenResponse.class);
         final String accessToken = tokenResponse.getAccessToken();
 
-        final Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        final Long cartId = 장바구니_아이템_추가되어_있음(productId1, accessToken);
 
         ExtractableResponse<Response> response = 로그인된_상품_목록_조회_요청(accessToken);
 
@@ -89,12 +89,12 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String token, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, productId);
+    public static Long 장바구니_아이템_추가되어_있음(Long productId, String accessToken) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(productId, accessToken);
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, Long productId) {
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(Long productId,String token) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", productId);
 
