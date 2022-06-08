@@ -60,4 +60,9 @@ public class CartItem {
     public int hashCode() {
         return Objects.hash(product, quantity);
     }
+
+    @Override
+    public String toString() {
+        return "CartItem{" + "product=" + product + ", quantity=" + quantity + '}';
+    }
 }

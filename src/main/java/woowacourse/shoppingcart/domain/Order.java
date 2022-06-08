@@ -27,6 +27,12 @@ public class Order {
         return cartItems;
     }
 
+    public List<Long> getProductIds() {
+        return cartItems.stream()
+                .map(CartItem::getProductId)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
