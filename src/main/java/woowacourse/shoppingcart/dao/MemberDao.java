@@ -38,19 +38,19 @@ public class MemberDao {
     }
 
     public boolean existsEmail(String email) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM MEMBER WHERE email = :email)";
+        String sql = "SELECT EXISTS (SELECT 1 FROM member WHERE email = :email)";
         SqlParameterSource params = new MapSqlParameterSource("email", email);
         return namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class);
     }
 
     public boolean exists(Long id) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM MEMBER WHERE id = :id)";
+        String sql = "SELECT EXISTS (SELECT 1 FROM member WHERE id = :id)";
         SqlParameterSource params = new MapSqlParameterSource("id", id);
         return namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class);
     }
 
     public Optional<Member> findByEmail(String email) {
-        String sql = "SELECT id, email, password, nickname FROM MEMBER WHERE email = :email";
+        String sql = "SELECT id, email, password, nickname FROM member WHERE email = :email";
         SqlParameterSource params = new MapSqlParameterSource("email", email);
         return namedParameterJdbcTemplate.query(sql, params, MEMBER_MAPPER)
                 .stream()
@@ -58,7 +58,7 @@ public class MemberDao {
     }
 
     public Optional<Member> findById(Long id) {
-        String sql = "SELECT id, email, password, nickname FROM MEMBER WHERE id = :id";
+        String sql = "SELECT id, email, password, nickname FROM member WHERE id = :id";
         SqlParameterSource params = new MapSqlParameterSource("id", id);
         return namedParameterJdbcTemplate.query(sql, params, MEMBER_MAPPER)
                 .stream()
@@ -66,41 +66,41 @@ public class MemberDao {
     }
 
     public void updateNicknameByEmail(String email, String nickname) {
-        String sql = "UPDATE MEMBER SET nickname = :nickname WHERE email = :email";
+        String sql = "UPDATE member SET nickname = :nickname WHERE email = :email";
         SqlParameterSource params = new MapSqlParameterSource("email", email)
                 .addValue("nickname", nickname);
         namedParameterJdbcTemplate.update(sql, params);
     }
 
     public void updateNicknameById(Long id, String nickname) {
-        String sql = "UPDATE MEMBER SET nickname = :nickname WHERE id = :id";
+        String sql = "UPDATE member SET nickname = :nickname WHERE id = :id";
         SqlParameterSource params = new MapSqlParameterSource("id", id)
                 .addValue("nickname", nickname);
         namedParameterJdbcTemplate.update(sql, params);
     }
 
     public void updatePasswordByEmail(String email, String password) {
-        String sql = "UPDATE MEMBER SET password = :password WHERE email = :email";
+        String sql = "UPDATE member SET password = :password WHERE email = :email";
         SqlParameterSource params = new MapSqlParameterSource("email", email)
                 .addValue("password", password);
         namedParameterJdbcTemplate.update(sql, params);
     }
 
     public void updatePasswordById(Long id, String password) {
-        String sql = "UPDATE MEMBER SET password = :password WHERE id = :id";
+        String sql = "UPDATE member SET password = :password WHERE id = :id";
         SqlParameterSource params = new MapSqlParameterSource("id", id)
                 .addValue("password", password);
         namedParameterJdbcTemplate.update(sql, params);
     }
 
     public void deleteByEmail(String email) {
-        String sql = "DELETE FROM MEMBER WHERE email = :email";
+        String sql = "DELETE FROM member WHERE email = :email";
         SqlParameterSource params = new MapSqlParameterSource("email", email);
         namedParameterJdbcTemplate.update(sql, params);
     }
 
     public void deleteById(Long id) {
-        String sql = "DELETE FROM MEMBER WHERE id = :id";
+        String sql = "DELETE FROM member WHERE id = :id";
         SqlParameterSource params = new MapSqlParameterSource("id", id);
         namedParameterJdbcTemplate.update(sql, params);
     }
