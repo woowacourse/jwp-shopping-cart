@@ -1,8 +1,7 @@
 package woowacourse.auth.ui;
 
 import java.net.URI;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +21,7 @@ import woowacourse.auth.dto.request.UpdatePasswordRequest;
 import woowacourse.auth.dto.response.GetMeResponse;
 import woowacourse.auth.dto.response.UniqueUsernameResponse;
 
+@Validated
 @RestController
 @RequestMapping("/customers")
 public class CustomerController {
@@ -67,7 +67,7 @@ public class CustomerController {
 
     @GetMapping("/username/uniqueness")
     public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(
-            @Valid @NotNull(message = "아이디 입력 필요") @RequestParam String username) {
+            @NotBlank(message = "아이디 입력 필요") @RequestParam String username) {
         UniqueUsernameResponse response = customerService.checkUniqueUsername(username);
         return ResponseEntity.ok(response);
     }

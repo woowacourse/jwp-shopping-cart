@@ -231,8 +231,8 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
-        void 필요한_정보가_누락된_경우_400() {
-            ExtractableResponse<Response> response = 아이디_중복_조회_요청(null);
+        void 조회하려는_사용자명이_누락된_경우_400() {
+            ExtractableResponse<Response> response = 아이디_중복_조회_요청("");
 
             assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         }
@@ -240,18 +240,10 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         private ExtractableResponse<Response> 아이디_중복_조회_요청(String username) {
             return RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .params(toRequestParams(username))
+                    .params("username", username)
                     .when().get("/customers/username/uniqueness")
                     .then().log().all()
                     .extract();
-        }
-
-        private Map<String, Object> toRequestParams(String username) {
-            Map<String, Object> requestParameters = new HashMap<>();
-            if (username != null) {
-                requestParameters.put("username", username);
-            }
-            return requestParameters;
         }
     }
 

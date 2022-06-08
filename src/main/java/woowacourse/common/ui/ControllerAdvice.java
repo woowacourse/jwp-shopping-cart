@@ -1,6 +1,8 @@
 package woowacourse.common.ui;
 
 import java.util.stream.Collectors;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ import woowacourse.common.exception.RedirectException;
 @RestControllerAdvice
 public class ControllerAdvice {
 
+    private static final String INVALID_REQUEST_FORMAT_EXCEPTION_FORMAT = "입력이 잘못되었습니다: [%s]";
+    private static final String INVALID_REQUEST_FORMAT_EXCEPTION_DELIMITER = ", ";
+
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleUnhandledException(RuntimeException e) {
         e.printStackTrace();
@@ -25,12 +30,22 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleInvalidRequest(final MethodArgumentNotValidException bindingResult) {
+    public ResponseEntity<ErrorResponse> handleInvalidRequest(ConstraintViolationException e) {
+        String causes = e.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining(INVALID_REQUEST_FORMAT_EXCEPTION_DELIMITER));
+        String errorMessage = String.format(INVALID_REQUEST_FORMAT_EXCEPTION_FORMAT, causes);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleInvalidRequest(MethodArgumentNotValidException bindingResult) {
         String causes = bindingResult.getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.joining(", "));
-        String errorMessage = String.format("입력이 잘못되었습니다: [%s]", causes);
+                .collect(Collectors.joining(INVALID_REQUEST_FORMAT_EXCEPTION_DELIMITER));
+        String errorMessage = String.format(INVALID_REQUEST_FORMAT_EXCEPTION_FORMAT, causes);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
     }
 
