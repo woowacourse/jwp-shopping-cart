@@ -51,23 +51,18 @@ public class CartControllerAdvice {
     }
 
     @ExceptionHandler(DuplicatedEmailException.class)
-    public ResponseEntity<ExceptionDto> handleDuplicatedEmail(InvalidPasswordFormatException e) {
+    public ResponseEntity<ExceptionDto> handleDuplicatedEmail(DuplicatedEmailException e) {
         return ResponseEntity.badRequest().body(new ExceptionDto(CODE_2001.getCode(), CODE_2001.getMessage()));
     }
 
     @ExceptionHandler(IncorrectPasswordException.class)
     public ResponseEntity<ExceptionDto> handleIncorrectPassword(IncorrectPasswordException e) {
-        return ResponseEntity.badRequest().body(new ExceptionDto(CODE_2201.getCode(), CODE_2201.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionDto(CODE_2201.getCode(), CODE_2201.getMessage()));
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ExceptionDto> handleProductNotFound(ProductNotFoundException e) {
         return ResponseEntity.badRequest().body(new ExceptionDto(CODE_3001.getCode(), CODE_3001.getMessage()));
-    }
-
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handleNotFound(ProductNotFoundException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

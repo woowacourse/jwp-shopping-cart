@@ -21,6 +21,8 @@ import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.exception.DuplicatedEmailException;
+import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -53,7 +55,7 @@ class CustomerServiceTest {
 
         // then
         assertThatThrownBy(() -> customerService.signUp(signupRequest))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(DuplicatedEmailException.class);
     }
 
     @DisplayName("이메일로 회원을 조회한다.")
@@ -103,6 +105,6 @@ class CustomerServiceTest {
                 .willReturn(Optional.of(customer));
         // when
         assertThatThrownBy(() -> customerService.update("other@gmail.com", request))
-                .isInstanceOf(InvalidAuthException.class);
+                .isInstanceOf(IncorrectPasswordException.class);
     }
 }

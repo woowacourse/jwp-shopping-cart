@@ -63,9 +63,9 @@ public class ProductDaoTest {
         List<Product> products = productDao.findProducts();
 
         // then
-        assertThat(products).hasSize(2)
+        assertThat(products).hasSize(14)
                 .extracting("name")
-                .containsExactly(초콜렛.getName(), 맥주.getName());
+                .contains(초콜렛.getName(), 맥주.getName());
     }
 
     @DisplayName("상품 삭제")
