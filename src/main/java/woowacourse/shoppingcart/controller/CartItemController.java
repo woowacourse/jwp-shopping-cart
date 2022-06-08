@@ -35,11 +35,11 @@ public class CartItemController {
     @PostMapping
     public ResponseEntity<Void> addCartItem(@RequestBody final CartItemRequest cartItemRequest,
                                             @CustomerId final Long customerId) {
-        final Long cartId = cartService.addCart(cartItemRequest, customerId);
+        final Long cartItemId = cartService.addCart(cartItemRequest, customerId);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
+                .path("/{cartItemId}")
+                .buildAndExpand(cartItemId)
                 .toUri();
         return ResponseEntity.created(responseLocation).build();
     }

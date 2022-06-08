@@ -220,9 +220,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @ValueSource(strings = {"", "abcd"})
     @ParameterizedTest
     void deleteCartItem_failWithInvalidToken(String invalidToken) {
-        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(invalidToken, cartId);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(invalidToken, cartItemId);
 
         AuthAcceptanceTest.토큰이_유효하지_않음(response);
     }
@@ -230,9 +230,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제 실패 - 만료된 토큰")
     @Test
     void deleteCartItem_failWithExpiredToken() {
-        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        Long cartItemId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(EXPIRED_TOKEN, cartId);
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(EXPIRED_TOKEN, cartItemId);
 
         AuthAcceptanceTest.토큰이_만료됨(response);
     }

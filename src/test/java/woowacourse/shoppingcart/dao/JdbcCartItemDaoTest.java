@@ -60,10 +60,10 @@ public class JdbcCartItemDaoTest {
         CartItem cartItem = new CartItem(customerId, product, 10);
 
         // when
-        final Long cartId = cartItemDao.save(customerId, cartItem);
+        final Long cartItemId = cartItemDao.save(customerId, cartItem);
 
         // then
-        assertThat(cartId).isNotNull();
+        assertThat(cartItemId).isNotNull();
     }
 
     @DisplayName("저장된 카트 아이템을 수정한다.")
