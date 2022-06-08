@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,9 @@ public class CartService {
 
     public List<Cart> getCarts(Customer customer) {
         List<Long> cartIds = cartItemDao.findIdsByCustomerId(customer.getId());
+        if (cartIds.size() == 0) {
+            return Collections.emptyList();
+        }
 
         List<CartDto> cartDtos = cartItemDao.getCartinfosByIds(cartIds);
 

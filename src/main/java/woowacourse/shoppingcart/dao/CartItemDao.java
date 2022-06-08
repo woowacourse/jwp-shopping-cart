@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,6 +48,9 @@ public class CartItemDao {
     }
 
     public List<CartDto> getCartinfosByIds(List<Long> cartIds) {
+        if (cartIds.size() == 0) {
+            return new ArrayList<>();
+        }
         String value = cartIds.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(", "));

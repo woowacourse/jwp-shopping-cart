@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -119,5 +120,18 @@ public class CartItemDaoTest {
         // then
         List<Long> cartIds = cartItemDao.findIdsByCustomerId(productId);
         assertThat(cartIds.size()).isEqualTo(1);
+    }
+
+    @DisplayName("장바구니에 상품이 없을 때 조회해온다.")
+    @Test
+    void getCartinfosByIds() {
+        // given
+        List<Long> cartIds = new ArrayList<>();
+
+        // when
+        List<CartDto> cartDtos = cartItemDao.getCartinfosByIds(cartIds);
+
+        // then
+        assertThat(cartDtos.size()).isEqualTo(0);
     }
 }

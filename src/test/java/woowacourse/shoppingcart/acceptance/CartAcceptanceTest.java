@@ -123,6 +123,19 @@ public class CartAcceptanceTest extends AcceptanceTest {
             }
         }
 
+        @Nested
+        @DisplayName("장바구니가 비어있다면")
+        class Context_empty_carts extends AcceptanceTest {
+
+            @Test
+            @DisplayName("장바구니 상품 목록 정보들과 상태코드 200을 반환받는다.")
+            void it_return_200() {
+                ValidatableResponse response = getCart(accessToken);
+
+                response.statusCode(HttpStatus.OK.value());
+            }
+        }
+
         @DisplayName("유효하지 않은 인가로 장바구니를 조회하려고 하면")
         @Nested
         class Context_invalid_token extends AcceptanceTest {
