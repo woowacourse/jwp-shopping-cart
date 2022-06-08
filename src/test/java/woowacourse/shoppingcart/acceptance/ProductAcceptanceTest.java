@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.addCartItemApi;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -22,20 +23,34 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("상품 목록을 조회한다")
     @Test
-    void getProducts() {
+    void getProduct() {
+        //when
+        ExtractableResponse<Response> response = findProductsApi("");
+        List<ProductResponse> productResponses = response.jsonPath().getList(".", ProductResponse.class);
+
+        //then
+        assertThat(productResponses.size()).isEqualTo(12);
+        productResponses.forEach(product -> assertThat(product.getSavedQuantity()).isEqualTo(0));
+    }
+
+    @DisplayName("상품을 장바구니에 담은 후, 상품 목록을 조회한다.")
+    @Test
+    void findProductsWhenAddCartItem() {
         //given
         String accessToken = getAccessToken();
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .when().get("/products")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
+        addCartItemApi(accessToken, 1L, 5);
 
+        //when
+        ExtractableResponse<Response> response = findProductsApi(accessToken);
         List<ProductResponse> productResponses = response.jsonPath().getList(".", ProductResponse.class);
+
+        //then
         assertThat(productResponses.size()).isEqualTo(12);
-        //TODO : 전체 상품 확인하는 검증부 추가
+        boolean match = productResponses.stream()
+                .anyMatch(productResponse -> productResponse.getId().equals(1L)
+                        && productResponse.getSavedQuantity().equals(5));
+        assertThat(match).isTrue();
+
     }
 
     public static String getAccessToken() {
@@ -56,5 +71,15 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .post("/auth/login")
                 .then().log().all()
                 .extract().as(TokenResponse.class).getAccessToken();
+    }
+
+    public static ExtractableResponse<Response> findProductsApi(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .when().get("/products")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
     }
 }
