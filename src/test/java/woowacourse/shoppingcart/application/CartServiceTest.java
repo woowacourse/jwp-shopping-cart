@@ -15,7 +15,7 @@ import woowacourse.member.domain.Member;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:import.sql"})
+@Sql(scripts = {"classpath:schema.sql", "classpath:product_data.sql"})
 class CartServiceTest {
 
     @Autowired

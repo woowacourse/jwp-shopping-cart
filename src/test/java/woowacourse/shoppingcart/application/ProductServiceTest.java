@@ -13,7 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:import.sql"})
+@Sql(scripts = {"classpath:schema.sql", "classpath:product_data.sql"})
 class ProductServiceTest {
 
     @Autowired

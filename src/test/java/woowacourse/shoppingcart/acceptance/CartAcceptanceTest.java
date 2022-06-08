@@ -37,7 +37,7 @@ import woowacourse.shoppingcart.dto.CartItemQuantityUpdateRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @DisplayName("장바구니 관련 기능")
-@Sql(scripts = {"classpath:schema.sql", "classpath:import.sql"})
+@Sql(scripts = {"/schema.sql", "/product_data.sql"})
 class CartAcceptanceTest extends AcceptanceTest {
 
     private String token;
