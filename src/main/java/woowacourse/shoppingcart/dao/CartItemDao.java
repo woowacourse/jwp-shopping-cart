@@ -90,7 +90,7 @@ public class CartItemDao {
     }
 
     public void update(Long id, Long quantity, boolean checked) {
-        final String sql = "UPDATE cart_item SET (quantity, checked) = (?, ?) where id = ?";
+        final String sql = "UPDATE cart_item SET (quantity, checked) VALUES(?, ?) WHERE id = ?";
         jdbcTemplate.update(sql, quantity, checked, id);
     }
 }
