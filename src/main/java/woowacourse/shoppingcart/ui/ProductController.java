@@ -21,17 +21,13 @@ public class ProductController {
     @GetMapping("/products/{productId}")
     public ResponseEntity<ProductResponse> get(final @PathVariable Long productId) {
         ProductResponse response = productService.findById(productId);
-        return ResponseEntity.ok()
-                .header("Access-Control-Allow-Origin", "*")
-                .body(response);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getProductsOfPage(final @RequestParam int page,
                                                                    final @RequestParam int limit) {
         List<ProductResponse> productResponses = productService.findProductsOfPage(page, limit);
-        return ResponseEntity.ok()
-                .header("Access-Control-Allow-Origin", "*")
-                .body(productResponses);
+        return ResponseEntity.ok().body(productResponses);
     }
 }

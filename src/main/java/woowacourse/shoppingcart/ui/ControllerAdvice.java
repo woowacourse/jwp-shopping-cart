@@ -19,41 +19,31 @@ public class ControllerAdvice {
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity duplicateKeyException() {
         ExceptionRequest exceptionRequest = new ExceptionRequest("중복된 값이 존재합니다.");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .header("Access-Control-Allow-Origin", "*")
-                .body(exceptionRequest);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionRequest);
     }
 
     @ExceptionHandler
     public ResponseEntity invalidPasswordException(final InvalidPasswordException exception) {
         ExceptionRequest exceptionRequest = new ExceptionRequest(exception.getMessage());
-        return ResponseEntity.status(InvalidPasswordException.STATUS_CODE)
-                .header("Access-Control-Allow-Origin", "*")
-                .body(exceptionRequest);
+        return ResponseEntity.status(InvalidPasswordException.STATUS_CODE).body(exceptionRequest);
     }
 
     @ExceptionHandler
     public ResponseEntity invalidCustomerException(final InvalidCustomerException exception) {
         ExceptionRequest exceptionRequest = new ExceptionRequest(exception.getMessage());
-        return ResponseEntity.status(InvalidCustomerException.STATUS_CODE)
-                .header("Access-Control-Allow-Origin", "*")
-                .body(exceptionRequest);
+        return ResponseEntity.status(InvalidCustomerException.STATUS_CODE).body(exceptionRequest);
     }
 
     @ExceptionHandler
     public ResponseEntity resourceNotFoundException(final ResourceNotFoundException exception) {
         ExceptionRequest exceptionRequest = new ExceptionRequest(exception.getMessage());
-        return ResponseEntity.status(ResourceNotFoundException.STATUS_CODE)
-                .header("Access-Control-Allow-Origin", "*")
-                .body(exceptionRequest);
+        return ResponseEntity.status(ResourceNotFoundException.STATUS_CODE).body(exceptionRequest);
     }
 
     @ExceptionHandler
     public ResponseEntity invalidLoginException(final InvalidLoginException exception) {
         ExceptionRequest exceptionRequest = new ExceptionRequest(exception.getMessage());
-        return ResponseEntity.status(InvalidLoginException.STATUS_CODE)
-                .header("Access-Control-Allow-Origin", "*")
-                .body(exceptionRequest);
+        return ResponseEntity.status(InvalidLoginException.STATUS_CODE).body(exceptionRequest);
     }
 
     @ExceptionHandler
@@ -65,16 +55,12 @@ public class ControllerAdvice {
     @ExceptionHandler
     public ResponseEntity invalidInputException(final InvalidInputException exception) {
         ExceptionRequest exceptionRequest = new ExceptionRequest(exception.getMessage());
-        return ResponseEntity.status(InvalidInputException.STATUS_CODE)
-                .header("Access-Control-Allow-Origin", "*")
-                .body(exceptionRequest);
+        return ResponseEntity.status(InvalidInputException.STATUS_CODE).body(exceptionRequest);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity unhandledException() {
         ExceptionRequest exceptionRequest = new ExceptionRequest("예상치못한 에러가 발생했습니다.");
-        return ResponseEntity.badRequest()
-                .header("Access-Control-Allow-Origin", "*")
-                .body(exceptionRequest);
+        return ResponseEntity.badRequest().body(exceptionRequest);
     }
 }
