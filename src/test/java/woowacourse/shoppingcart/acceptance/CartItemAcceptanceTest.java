@@ -77,7 +77,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         CartItemResponse cartItemResponse = response.jsonPath().getObject(".", CartItemResponse.class);
 
         // when
-        ExtractableResponse<Response> deleteResponse = 장바구니_삭제_요청_토큰(accessToken, cartItemResponse.getId());
+        ExtractableResponse<Response> deleteResponse = 장바구니_아이템_삭제_요청_토큰(accessToken, cartItemResponse.getId());
 
         // then
         장바구니_삭제됨(deleteResponse);
@@ -142,7 +142,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public ExtractableResponse<Response> 장바구니_삭제_요청_토큰(String token, Long cartId) {
+    public ExtractableResponse<Response> 장바구니_아이템_삭제_요청_토큰(String token, Long cartId) {
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)

@@ -68,12 +68,12 @@ public class CartService {
         updateProduct(product);
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        CartItem cartItem = cartItemDao.findById(cartId);
-        Product product = productDao.findProductById(cartItemDao.findProductIdById(cartItem.getProductId()));
+    public void deleteCart(final String customerName, final Long cartItemId) {
+        validateCustomerCart(cartItemId, customerName);
+        CartItem cartItem = cartItemDao.findById(cartItemId);
+        Product product = productDao.findProductById(cartItemDao.findProductIdById(cartItemId));
         addProductStock(product, cartItem.getStock());
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteCartItem(cartItemId);
     }
 
     private void addProductStock(Product product, int stock) {
