@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.application.CartItemService;
 import woowacourse.shoppingcart.dto.cart.CartItemCreateRequest;
 import woowacourse.shoppingcart.dto.cart.CartItemDto;
 
@@ -19,9 +19,9 @@ import woowacourse.shoppingcart.dto.cart.CartItemDto;
 @RequestMapping("/api/customers/{customerId}/carts")
 public class CartItemController {
 
-    private final CartService cartService;
+    private final CartItemService cartService;
 
-    public CartItemController(final CartService cartService) {
+    public CartItemController(final CartItemService cartService) {
         this.cartService = cartService;
     }
 

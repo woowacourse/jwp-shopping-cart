@@ -16,12 +16,12 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class CartService {
+public class CartItemService {
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final ProductDao productDao) {
+    public CartItemService(final CartItemDao cartItemDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.productDao = productDao;
     }
