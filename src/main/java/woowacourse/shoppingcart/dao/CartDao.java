@@ -36,7 +36,8 @@ public class CartDao {
     public Cart update(Cart cart) {
         String sql = "UPDATE cart SET quantity = :quantity WHERE customer_id = :customerId AND product_id = :productId";
         SqlParameterSource parameters = new MapSqlParameterSource(
-                Map.of("customerId", cart.getCustomerId(), "productId", cart.getProductId(), "quantity", cart.getQuantity()));
+                Map.of("customerId", cart.getCustomerId(), "productId", cart.getProductId(), "quantity",
+                        cart.getQuantity()));
         if (jdbcTemplate.update(sql, parameters) == 0) {
             throw new NoSuchElementException("수정하려는 제품이 장바구니에 없습니다.");
         }
@@ -48,7 +49,8 @@ public class CartDao {
                 + "where customer_id = :customerId AND product_id = :productId";
         try {
             return Optional.ofNullable(
-                    jdbcTemplate.queryForObject(sql, Map.of("customerId", customerId, "productId", productId), getCartRowMapper())
+                    jdbcTemplate.queryForObject(sql, Map.of("customerId", customerId, "productId", productId),
+                            getCartRowMapper())
             );
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -57,12 +59,12 @@ public class CartDao {
 
     public List<Cart> findByCustomerId(Long customerId) {
         String sql = "select id, product_id, customer_id, quantity from cart where customer_id = :customerId";
-        return jdbcTemplate.query(sql,  Map.of("customerId", customerId), getCartRowMapper());
+        return jdbcTemplate.query(sql, Map.of("customerId", customerId), getCartRowMapper());
     }
 
     public int deleteByCustomerIdAndCartIds(Long customerId, List<Long> productIds) {
         String sql = "DELETE FROM cart WHERE customer_id = :customerId AND product_id IN (:productIds)";
-        return jdbcTemplate.update(sql,  Map.of("customerId", customerId, "productIds", productIds));
+        return jdbcTemplate.update(sql, Map.of("customerId", customerId, "productIds", productIds));
     }
 
     private RowMapper<Cart> getCartRowMapper() {

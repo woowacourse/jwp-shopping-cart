@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static woowacourse.utils.Fixture.customer_id없음;
 import static woowacourse.utils.Fixture.맥주_id없음;
 import static woowacourse.utils.Fixture.치킨_id없음;

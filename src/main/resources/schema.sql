@@ -1,12 +1,12 @@
 set FOREIGN_KEY_CHECKS = 0;
-drop table if exists orders_detail;
-drop table if exists orders;
-drop table if exists cart;
-drop table if exists product;
-drop table if exists customer;
+truncate table customer;
+truncate table product;
+truncate table cart;
+truncate table orders;
+truncate table orders_detail;
 set FOREIGN_KEY_CHECKS = 1;
 
-create table customer
+create table IF NOT EXISTS customer
 (
     id bigint auto_increment not null,
     email varchar(255) not null unique,
@@ -15,7 +15,7 @@ create table customer
     primary key(id)
 );
 
-create table product
+create table  IF NOT EXISTS product
 (
     id        bigint       not null auto_increment,
     name      varchar(255) not null,
@@ -24,7 +24,7 @@ create table product
     primary key (id)
 );
 
-create table cart
+create table  IF NOT EXISTS cart
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,
@@ -36,7 +36,7 @@ create table cart
 --    foreign key (product_id) references product(id)
 );
 
-create table orders
+create table  IF NOT EXISTS orders
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,
@@ -45,7 +45,7 @@ create table orders
     foreign key (customer_id) references customer(id)
 );
 
-create table orders_detail
+create table  IF NOT EXISTS orders_detail
 (
     id         bigint  not null auto_increment,
     orders_id  bigint  not null,

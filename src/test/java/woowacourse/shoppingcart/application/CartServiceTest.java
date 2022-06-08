@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.application;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
 import static woowacourse.utils.Fixture.email;
 import static woowacourse.utils.Fixture.치킨;
 

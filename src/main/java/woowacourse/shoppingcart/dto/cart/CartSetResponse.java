@@ -16,7 +16,8 @@ public class CartSetResponse {
         this.id = cart.getId();
         this.productId = product.getId();
         this.image = product.getImage();
-        this.name = product.getName();;
+        this.name = product.getName();
+        ;
         this.price = product.getPrice();
         this.quantity = cart.getQuantity();
         this.isCreated = isCreated;

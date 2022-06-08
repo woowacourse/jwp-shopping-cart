@@ -1,7 +1,7 @@
 set FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE customer;
-TRUNCATE TABLE product;
-TRUNCATE TABLE cart;
-TRUNCATE TABLE orders;
-TRUNCATE TABLE orders_detail;
+truncate table customer;
+truncate table product;
+truncate table cart;
+truncate table orders;
+truncate table orders_detail;
 set FOREIGN_KEY_CHECKS = 1;

@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.Login;
 import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.domain.order.Orders;
 import woowacourse.shoppingcart.dto.order.FindOrderResponse;
 import woowacourse.shoppingcart.dto.order.MakeOrderResponse;
 import woowacourse.shoppingcart.dto.order.OrderSaveRequest;
@@ -28,14 +26,15 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<MakeOrderResponse> addOrder(@Login String email, @RequestBody OrderSaveRequest orderSaveRequest) {
+    public ResponseEntity<MakeOrderResponse> addOrder(@Login String email,
+                                                      @RequestBody OrderSaveRequest orderSaveRequest) {
         MakeOrderResponse makeOrderResponse = orderService.addOrder(orderSaveRequest, email);
         return ResponseEntity.created(createUri(makeOrderResponse.getId())).body(makeOrderResponse);
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<FindOrderResponse> findOrder(@Login String email,
-                                            @PathVariable Long orderId) {
+                                                       @PathVariable Long orderId) {
         FindOrderResponse findOrderResponse = orderService.findOrderById(email, orderId);
         return ResponseEntity.ok(findOrderResponse);
     }

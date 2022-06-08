@@ -11,12 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.domain.product.Product;
@@ -69,7 +64,7 @@ class OrdersDetailDaoTest {
 
         //then
         assertThat(orderDetails).hasSize(1)
-            .extracting("ordersId", "productId", "quantity")
-            .containsExactly(tuple(orderId, save1.getId(), 1000));
+                .extracting("ordersId", "productId", "quantity")
+                .containsExactly(tuple(orderId, save1.getId(), 1000));
     }
 }

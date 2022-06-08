@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.CartDao;
+import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.cart.CartDeleteRequest;
 import woowacourse.shoppingcart.dto.cart.CartProduct;
-import woowacourse.shoppingcart.dto.cart.CartSetResponse;
 import woowacourse.shoppingcart.dto.cart.CartSetRequest;
+import woowacourse.shoppingcart.dto.cart.CartSetResponse;
 
 @Service
 @Transactional(readOnly = true)
@@ -54,7 +54,8 @@ public class CartService {
 
         for (Cart cart : carts) {
             Product product = productDao.findProductById(cart.getProductId()).get();
-            cartProducts.add(new CartProduct(product.getId(), product.getImage(), product.getName(), product.getPrice(), cart.getQuantity()));
+            cartProducts.add(new CartProduct(product.getId(), product.getImage(), product.getName(), product.getPrice(),
+                    cart.getQuantity()));
         }
         return cartProducts;
     }

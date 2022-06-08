@@ -79,7 +79,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> 상품_등록_요청(Product product, String token) {
-        ProductSaveRequest productRequest = new ProductSaveRequest(product.getName(), product.getPrice(), product.getImage());
+        ProductSaveRequest productRequest = new ProductSaveRequest(product.getName(), product.getPrice(),
+                product.getImage());
 
         return RestAssured
                 .given().log().all()

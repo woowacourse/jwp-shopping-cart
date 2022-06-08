@@ -1,11 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.utils.Fixture.customer;
 import static woowacourse.utils.Fixture.customer_id없음;
-import static woowacourse.utils.Fixture.email;
-import static woowacourse.utils.Fixture.email;
-import static woowacourse.utils.Fixture.email;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
