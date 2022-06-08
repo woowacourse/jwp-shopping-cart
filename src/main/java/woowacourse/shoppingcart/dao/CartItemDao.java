@@ -2,13 +2,15 @@ package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.exception.bodyexception.NotExistProductInCartException;
 
 @Repository
 public class CartItemDao {
@@ -51,9 +53,13 @@ public class CartItemDao {
     }
 
     public Cart findCartByProductCustomer(Long customerId, Long productId) {
-        final String query = "SELECT c.id, c.customer_id, c.quantity, c.product_id, p.name, p.price, p.image_url "
-                + "FROM cart_item c JOIN product p ON c.product_id = p.id WHERE c.customer_id = ? and c.product_id = ?";
-        return jdbcTemplate.queryForObject(query, rowMapper, customerId, productId);
+        try {
+            final String query = "SELECT c.id, c.customer_id, c.quantity, c.product_id, p.name, p.price, p.image_url "
+                    + "FROM cart_item c JOIN product p ON c.product_id = p.id WHERE c.customer_id = ? and c.product_id = ?";
+            return jdbcTemplate.queryForObject(query, rowMapper, customerId, productId);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new NotExistProductInCartException();
+        }
     }
 
     public void updateCartItem(Long customerId, int quantity, Long productId) {
