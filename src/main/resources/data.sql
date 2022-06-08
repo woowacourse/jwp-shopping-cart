@@ -1,5 +1,5 @@
 insert into customer (username, password, nickname, withdrawal)
-values ('first@naver.com', 'abcd1234!', 'firstCustomer', false);
+values ('jojogreen@naver.com', 'abcd1234!', 'jojogreen', false);
 
 insert into product (name, price, image_url)
 values (
