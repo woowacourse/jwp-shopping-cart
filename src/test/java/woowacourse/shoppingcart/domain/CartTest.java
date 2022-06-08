@@ -19,7 +19,7 @@ class CartTest {
         final Cart updatedRice = rice.applyQuantity(updateValue);
 
         // then
-        assertThat(updatedRice.getQuantity()).isEqualTo(initValue + updateValue);
+        assertThat(updatedRice.getQuantity()).isEqualTo(updateValue);
     }
 
 }
