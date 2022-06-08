@@ -18,6 +18,7 @@ import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.LoginFailException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.dto.FieldErrorResponse;
+import woowacourse.shoppingcart.exception.AlreadyCartItemExistException;
 import woowacourse.shoppingcart.exception.DuplicateDomainException;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
@@ -82,6 +83,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
             InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
+            AlreadyCartItemExistException.class
     })
     public ErrorResponse handleInvalidAccess(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());
@@ -92,6 +94,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     public ErrorResponse handleForbiddenAccessException(Exception ex) {
         return new ErrorResponse("권한이 없는 요청입니다.");
     }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleAllOtherErrors(final Exception e) {

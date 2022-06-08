@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.global.AcceptanceTest;
+import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 
 @DisplayName("장바구니 관련 기능")
@@ -49,6 +50,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, customerId, productId1, 2);
 
         장바구니_아이템_추가_검증(response);
+    }
+
+    @DisplayName("장바구니 상품을 중복하여 담을 경우 예외를 반환한다")
+    @Test
+    void addCartItemException() {
+        장바구니_아이템_추가_요청(token, customerId, productId1, 2);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, customerId, productId1, 2);
+
+        ErrorResponse errorResponse = response.as(ErrorResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponse.getMessage()).isEqualTo("이미 담겨있는 상품입니다.");
     }
 
     @DisplayName("장바구니 아이템 목록 조회")

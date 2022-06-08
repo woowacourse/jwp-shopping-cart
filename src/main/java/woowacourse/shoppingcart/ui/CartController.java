@@ -35,7 +35,7 @@ public class CartController {
             @PathVariable final long customerId,
             @RequestBody final CartItemCreateRequest requestBody
     ) {
-        final Long cartId = cartService.addCartItem(requestBody.getProductId(), customerId, requestBody.getCount());
+        final Long cartId = cartService.addCartItem(customerId, requestBody.getProductId(), requestBody.getCount());
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")

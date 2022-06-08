@@ -15,7 +15,6 @@ public class CustomerResponse {
     private String email;
     private String username;
 
-
     public CustomerResponse(Customer customer) {
         this(customer.getId(), customer.getEmail(), customer.getUsername());
     }

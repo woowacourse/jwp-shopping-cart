@@ -23,7 +23,7 @@ public class CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long addCartItem(final Long customerId, final Long productId, final Long count) {
+    public Long addCartItem(long customerId, long productId, long count) {
         return insertActor.executeAndReturnKey(new MapSqlParameterSource()
                 .addValue("customer_id", customerId)
                 .addValue("product_id", productId)
@@ -54,6 +54,14 @@ public class CartItemDao {
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public boolean existCartItem(long customerId, long productId) {
+        final String sql =
+                "SELECT EXISTS (SELECT id FROM cart_item WHERE customer_id  = :customerId and product_id = :productId LIMIT 1 ) AS `exists`";
+        final Map<String, Long> params = Map.of("customerId", customerId, "productId", productId);
+
+        return jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> rs.getBoolean("exists"));
     }
 
     public void deleteCartItemById(final Long cartId) {
