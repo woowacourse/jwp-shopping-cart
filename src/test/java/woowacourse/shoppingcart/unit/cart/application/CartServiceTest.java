@@ -8,9 +8,7 @@ import static org.mockito.BDDMockito.given;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import woowacourse.shoppingcart.cart.application.CartService;
-import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemException;
@@ -24,9 +22,6 @@ class CartServiceTest extends ServiceMockTest {
 
     @InjectMocks
     private CartService cartService;
-
-    @Mock
-    private CartItemDao cartItemDao;
 
     @Test
     @DisplayName("존재하지 않는 상품을 장바구니에 추가하면 예외를 던진다.")

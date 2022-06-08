@@ -5,19 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.customer.exception.notfound.NotFoundCustomerException;
 import woowacourse.shoppingcart.unit.DaoTest;
 
 class CustomerDaoTest extends DaoTest {
-
-    private final CustomerDao customerDao;
-
-    public CustomerDaoTest(final JdbcTemplate jdbcTemplate) {
-        customerDao = new CustomerDao(jdbcTemplate);
-    }
 
     @Test
     @DisplayName("이메일이 존재하지 않으면 false를 반환한다.")

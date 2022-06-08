@@ -6,23 +6,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import woowacourse.shoppingcart.auth.application.AuthService;
 import woowacourse.shoppingcart.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.auth.exception.badrequest.InvalidLoginException;
-import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.integration.IntegrationTest;
 
 class AuthServiceIntegrationTest extends IntegrationTest {
 
     private static final String PASSWORD = "qwerasdf123";
-
-    @Autowired
-    private AuthService authService;
-
-    @Autowired
-    private CustomerDao customerDao;
 
     private Customer customer;
 

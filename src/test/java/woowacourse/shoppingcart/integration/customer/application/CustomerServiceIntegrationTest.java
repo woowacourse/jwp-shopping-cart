@@ -8,9 +8,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import woowacourse.shoppingcart.customer.application.CustomerService;
-import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
@@ -19,12 +16,6 @@ import woowacourse.shoppingcart.customer.exception.notfound.NotFoundCustomerExce
 import woowacourse.shoppingcart.integration.IntegrationTest;
 
 class CustomerServiceIntegrationTest extends IntegrationTest {
-
-    @Autowired
-    private CustomerService customerService;
-
-    @Autowired
-    private CustomerDao customerDao;
 
     private Customer customer;
     private Long id;

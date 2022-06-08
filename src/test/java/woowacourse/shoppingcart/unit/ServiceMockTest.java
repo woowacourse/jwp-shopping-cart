@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.customer.application.CustomerService;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.product.application.ProductService;
@@ -22,6 +23,9 @@ public abstract class ServiceMockTest {
 
     @Mock
     protected CustomerDao customerDao;
+
+    @Mock
+    protected CartItemDao cartItemDao;
 
     @Mock
     protected CustomerService customerService;

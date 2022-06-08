@@ -7,16 +7,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import woowacourse.shoppingcart.integration.IntegrationTest;
-import woowacourse.shoppingcart.product.application.ProductService;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
 
 class ProductServiceIntegrationTest extends IntegrationTest {
-
-    @Autowired
-    private ProductService productService;
 
     @Test
     @DisplayName("모든 상품 목록을 조회한다.")

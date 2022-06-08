@@ -23,15 +23,6 @@ import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductExcept
 
 class CartServiceIntegrationTest extends IntegrationTest {
 
-    @Autowired
-    private CartService cartService;
-
-    @Autowired
-    private CartItemDao cartItemDao;
-
-    @Autowired
-    private CustomerDao customerDao;
-
     private Customer customer;
 
     @BeforeEach
