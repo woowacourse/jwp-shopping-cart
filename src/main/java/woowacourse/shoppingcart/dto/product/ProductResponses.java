@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dto.product;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;

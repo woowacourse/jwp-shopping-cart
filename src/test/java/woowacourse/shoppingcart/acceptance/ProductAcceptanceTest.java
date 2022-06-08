@@ -4,12 +4,12 @@ import static woowacourse.fixture.CustomFixture.로그인_요청_및_토큰발�
 import static woowacourse.fixture.CustomFixture.회원가입_요청;
 import static woowacourse.fixture.ProductFixture.상품_등록_요청;
 import static woowacourse.fixture.ProductFixture.상품_등록되어_있음2;
-import static woowacourse.fixture.ProductFixture.상품_목록_조회_요청;
 import static woowacourse.fixture.ProductFixture.상품_목록_검증;
-import static woowacourse.fixture.ProductFixture.상품_삭제_요청;
+import static woowacourse.fixture.ProductFixture.상품_목록_조회_요청;
 import static woowacourse.fixture.ProductFixture.상품_삭제_검증;
-import static woowacourse.fixture.ProductFixture.상품_조회_요청;
+import static woowacourse.fixture.ProductFixture.상품_삭제_요청;
 import static woowacourse.fixture.ProductFixture.상품_조회_검증;
+import static woowacourse.fixture.ProductFixture.상품_조회_요청;
 import static woowacourse.fixture.ProductFixture.상품_추가_검증;
 
 import io.restassured.response.ExtractableResponse;

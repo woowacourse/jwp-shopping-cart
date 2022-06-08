@@ -1,17 +1,13 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -63,6 +59,21 @@ public class CartItemDao {
     public void deleteCartItemById(final Long cartId) {
         final String query = "DELETE FROM cart_item WHERE id = :cartId";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("cartId", cartId);
+
+        int rowCount = jdbcTemplate.update(query, namedParameters);
+
+        if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public void updateCartItemDao(long customerId, int productId, int cartItemCount) {
+        final String query =
+                "UPDATE cart_item SET count = :cartItemCount WHERE customer_id = :customerId and product_id = :productId";
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("customerId", customerId)
+                .addValue("productId", productId)
+                .addValue("cartItemCount", cartItemCount);
 
         int rowCount = jdbcTemplate.update(query, namedParameters);
 

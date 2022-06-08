@@ -49,6 +49,10 @@ public class CartService {
         cartItemDao.deleteCartItemById(cartId);
     }
 
+    public void changeCartItemCount(long customerId, int productId, int cartItemCount) {
+        cartItemDao.updateCartItemDao(customerId, productId, cartItemCount);
+    }
+
     private void validateCustomerCart(final Long cartId, final long customerId) {
         final List<Long> cartIds = findCartIdsByCustomerId(customerId);
         if (cartIds.contains(cartId)) {

@@ -12,7 +12,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.application.AuthService;
-import woowacourse.config.LoginInterceptor;
 import woowacourse.config.auth.AuthenticationPrincipalArgumentResolver;
 import woowacourse.utils.JwtTokenProvider;
 

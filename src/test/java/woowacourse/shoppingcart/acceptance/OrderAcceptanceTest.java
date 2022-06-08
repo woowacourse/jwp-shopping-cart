@@ -5,8 +5,8 @@ import static woowacourse.fixture.CustomFixture.로그인_요청_및_토큰발�
 import static woowacourse.fixture.OrderFixture.주문_내역_조회_요청;
 import static woowacourse.fixture.OrderFixture.주문_내역_포함_검증;
 import static woowacourse.fixture.OrderFixture.주문_단일_조회_요청;
-import static woowacourse.fixture.OrderFixture.주문_조회_응답_검증;
 import static woowacourse.fixture.OrderFixture.주문_조회_검증;
+import static woowacourse.fixture.OrderFixture.주문_조회_응답_검증;
 import static woowacourse.fixture.OrderFixture.주문하기_성공함;
 import static woowacourse.fixture.OrderFixture.주문하기_요청;
 import static woowacourse.fixture.OrderFixture.주문하기_요청_성공_검증;
