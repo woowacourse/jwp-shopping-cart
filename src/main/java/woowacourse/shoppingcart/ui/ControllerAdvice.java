@@ -25,7 +25,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleUnhandledException(Exception e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse("Unhandled Exception"));
+        return ResponseEntity.badRequest().body(new ErrorResponse(e + " Unhandled Exception"));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
