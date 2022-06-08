@@ -85,6 +85,6 @@ public class CartItemDao {
     public void updateCount(long customerId, long productId, int count) {
         final String sql = "UPDATE cart_item SET count = ? WHERE customer_id = ? AND product_id = ?";
 
-        final int rowCount = jdbcTemplate.update(sql, count, customerId, productId);
+        jdbcTemplate.update(sql, count, customerId, productId);
     }
 }

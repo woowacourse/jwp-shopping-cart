@@ -1,6 +1,5 @@
-package woowacourse.shoppingcart.domain.cartitem;
+package woowacourse.shoppingcart.domain.cart;
 
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemPropertyException;
 
 public class CartItem {

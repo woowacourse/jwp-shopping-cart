@@ -1,22 +1,28 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.cart;
+
+import woowacourse.shoppingcart.exception.InvalidProductPropertyException;
 
 public class Product {
 
     private Long id;
-    private String name;
-    private Integer price;
+    private Name name;
+    private Price price;
     private String imageUrl;
-    private Integer quantity;
+    private Amount quantity;
 
     public Product() {
     }
 
     public Product(Long id, String name, int price, String imageUrl, int quantity) {
         this.id = id;
-        this.name = name;
-        this.price = price;
         this.imageUrl = imageUrl;
-        this.quantity = quantity;
+        try {
+            this.name = new Name(name);
+            this.price = new Price(price);
+            this.quantity = new Amount(quantity);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidProductPropertyException(e.getMessage());
+        }
     }
 
     public Product(String name, int price, String imageUrl, int quantity) {
@@ -24,11 +30,11 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     public int getPrice() {
-        return price;
+        return price.getValue();
     }
 
     public String getImageUrl() {
@@ -40,6 +46,6 @@ public class Product {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 }

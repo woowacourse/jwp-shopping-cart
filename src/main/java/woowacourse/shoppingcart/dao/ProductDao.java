@@ -9,8 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.domain.cart.Product;
+import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 @Repository
 public class ProductDao {
@@ -50,7 +50,7 @@ public class ProductDao {
                 ), productId
             );
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            throw new ProductNotFoundException();
         }
     }
 
@@ -67,8 +67,8 @@ public class ProductDao {
                 ));
     }
 
-    public void delete(Long productId) {
+    public int delete(Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+        return jdbcTemplate.update(query, productId);
     }
 }

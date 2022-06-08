@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.cart.Product;
 import woowacourse.shoppingcart.dto.product.ProductRequest;
+import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -32,6 +33,8 @@ public class ProductService {
     }
 
     public void deleteProductById(Long productId) {
-        productDao.delete(productId);
+        if (productDao.delete(productId) == 0) {
+            throw new ProductNotFoundException();
+        }
     }
 }
