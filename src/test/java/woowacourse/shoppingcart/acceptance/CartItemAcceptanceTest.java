@@ -10,12 +10,9 @@ import org.springframework.http.HttpStatus;
 import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredFixture;
 import woowacourse.auth.dto.LogInRequest;
-import woowacourse.shoppingcart.domain.Id;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.IdRequest;
 import woowacourse.shoppingcart.dto.*;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @DisplayName("장바구니 관련 기능")
@@ -108,7 +105,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 token, "/cart", HttpStatus.CREATED.value());
 
         //when & then
-        DeleteProductRequest request = new DeleteProductRequest(List.of(new Id(1L), new Id(3L)));
+        DeleteProductRequest request = new DeleteProductRequest(List.of(new IdRequest(1L), new IdRequest(3L)));
 
 
         RestAssuredFixture.delete(request, token, "/cart", HttpStatus.NO_CONTENT.value());

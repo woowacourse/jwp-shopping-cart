@@ -11,10 +11,24 @@ public class CartItem {
     }
 
     public CartItem(Long id, Product product, Long quantity, boolean checked) {
+        validateNull(product, quantity);
+        validatePositive(quantity);
         this.id = id;
         this.product = product;
         this.quantity = quantity;
         this.checked = checked;
+    }
+
+    private void validateNull(Product product, Long quantity) {
+        if (product == null || quantity == null) {
+            throw new IllegalArgumentException("상품과 수량에는 null이 들어올 수 없습니다.");
+        }
+    }
+
+    private void validatePositive(Long quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("수량에는 음수가 들어올 수 없습니다.");
+        }
     }
 
     public Long getId() {

@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dto.IdRequest;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
-import woowacourse.shoppingcart.domain.Id;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.*;
 
@@ -102,7 +102,7 @@ class CartItemServiceTest {
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
 
         //when
-        cartService.deleteCart(new DeleteProductRequest(List.of(new Id(1L), new Id(2L))));
+        cartService.deleteCart(new DeleteProductRequest(List.of(new IdRequest(1L), new IdRequest(2L))));
 
         //then
         assertThat(cartService.getCart("greenlawn").getCartItems().size()).isEqualTo(0);

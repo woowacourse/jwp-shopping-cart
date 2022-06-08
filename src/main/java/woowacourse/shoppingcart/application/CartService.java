@@ -9,7 +9,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.Id;
+import woowacourse.shoppingcart.dto.IdRequest;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.*;
@@ -84,8 +84,8 @@ public class CartService {
 
     @Transactional
     public void deleteCart(DeleteProductRequest deleteProductRequest) {
-        for (Id id : deleteProductRequest.getCartItems()) {
-            cartItemDao.deleteCartItemById(id.getId());
+        for (IdRequest idRequest : deleteProductRequest.getCartItems()) {
+            cartItemDao.deleteCartItemById(idRequest.getId());
         }
     }
 
