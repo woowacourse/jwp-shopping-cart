@@ -10,7 +10,6 @@ import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductsRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -50,7 +49,8 @@ public class CartService {
 
     public void updateCartItemQuantity(Long customerId, CartRequest cartRequest) {
         checkExistCartItem(customerId, cartRequest.getProductId());
-        cartItemDao.updateQuantityByCustomerIdAndProductId(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
+        cartItemDao.updateQuantityByCustomerIdAndProductId(customerId, cartRequest.getProductId(),
+                cartRequest.getQuantity());
     }
 
     private void checkExistCartItem(Long customerId, Long productId) {
