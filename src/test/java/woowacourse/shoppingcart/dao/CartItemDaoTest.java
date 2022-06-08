@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dao.entity.CartEntity;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
@@ -131,7 +132,9 @@ public class CartItemDaoTest {
         final Long productId = 1L;
 
         // when
-        final int quantity = cartItemDao.findQuantityByCustomerIdAndProductId(customerId, productId).get();
+        final int quantity = cartItemDao.findQuantityByCustomerIdAndProductId(customerId, productId)
+                .get()
+                .getQuantity();
 
         // then
         assertThat(quantity).isEqualTo(1);
@@ -146,7 +149,7 @@ public class CartItemDaoTest {
         final Long productId = 3L;
 
         // when
-        Optional<Integer> quantity = cartItemDao.findQuantityByCustomerIdAndProductId(customerId, productId);
+        Optional<CartEntity> quantity = cartItemDao.findQuantityByCustomerIdAndProductId(customerId, productId);
 
         // then
         assertThat(quantity).isEmpty();

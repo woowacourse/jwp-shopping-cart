@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.dao.entity.CartEntity;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -49,11 +50,15 @@ public class CartItemDao {
         }
     }
 
-    public Optional<Integer> findQuantityByCustomerIdAndProductId(Long customerId, Long productId) {
+    public Optional<CartEntity> findQuantityByCustomerIdAndProductId(Long customerId, Long productId) {
         try {
-            final String sql = "SELECT quantity FROM cart_item WHERE customer_id = ? AND product_id = ?";
+            final String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE customer_id = ? AND product_id = ?";
             return Optional.of(
-                    jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"), customerId, productId));
+                    jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new CartEntity(
+                            rs.getLong("id"),
+                            rs.getLong("customer_id"),
+                            rs.getLong("product_id"),
+                            rs.getInt("quantity")), customerId, productId));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

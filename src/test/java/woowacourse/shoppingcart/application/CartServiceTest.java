@@ -48,24 +48,6 @@ class CartServiceTest {
         );
     }
 
-    @DisplayName("장바구니 상품 중 재고가 부족한 경우 최대 수량으로 수정하여 보낸다.")
-    @Test
-    void findModifiedCartsByEmail() {
-        cartService.addCart(new CartRequest(1L, 100), 이메일);
-
-        jdbcTemplate.update("UPDATE product SET stock = ? WHERE id = ?", 90, 1L);
-
-        List<Cart> carts = cartService.findCartsByEmail(이메일);
-
-        assertAll(
-                () -> assertThat(carts.size()).isEqualTo(1),
-                () -> assertThat(carts.get(0).getProductId()).isEqualTo(1L),
-                () -> assertThat(carts.get(0).getName()).isEqualTo("캠핑 의자"),
-                () -> assertThat(carts.get(0).getPrice()).isEqualTo(35000),
-                () -> assertThat(carts.get(0).getQuantity()).isEqualTo(90)
-        );
-    }
-
     @DisplayName("이메일에 해당하는 장바구니에 상품을 추가한다.")
     @Test
     void addCart() {
@@ -74,10 +56,29 @@ class CartServiceTest {
         assertThat(cartId).isEqualTo(1L);
     }
 
-    @DisplayName("이메일에 해당하는 장바구니에 상품을 추가할 때 상품 재고가 부족할 경우 예외가 발생한다.")
+    @DisplayName("이미 장바구니에 존재하는 상품에 상품을 더 추가한다.")
     @Test
-    void addCartNotEnough() {
-        assertThatThrownBy(() -> cartService.addCart(new CartRequest(1L, 101), 이메일))
+    void addAnotherCart() {
+        Long cartId = cartService.addCart(장바구니_상품_추가_요청, 이메일);
+        cartService.addCart(new CartRequest(1L, 10), 이메일);
+
+        List<Cart> carts = cartService.findCartsByEmail(이메일);
+
+        int quantity = carts.stream()
+                .filter(cart -> cart.getId().equals(cartId))
+                .findAny()
+                .get()
+                .getQuantity();
+
+        assertThat(quantity).isEqualTo(11);
+    }
+
+    @DisplayName("이미 장바구니에 존재하는 상품에 상품을 더 추가할 때 재고가 부족할 경우 예외가 발생한다.")
+    @Test
+    void addAnotherCartNotEnough() {
+        cartService.addCart(장바구니_상품_추가_요청, 이메일);
+
+        assertThatThrownBy(() -> cartService.addCart(new CartRequest(1L, 100), 이메일))
                 .isInstanceOf(InvalidCartItemException.class)
                 .hasMessage("상품의 수량이 부족합니다. 현재 재고 = 100");
     }
