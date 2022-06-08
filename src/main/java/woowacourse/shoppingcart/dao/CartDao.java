@@ -14,6 +14,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.exception.ExceptionMessage;
+import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 @Repository
 public class CartDao {
@@ -39,7 +41,7 @@ public class CartDao {
                 Map.of("customerId", cart.getCustomerId(), "productId", cart.getProductId(), "quantity",
                         cart.getQuantity()));
         if (jdbcTemplate.update(sql, parameters) == 0) {
-            throw new NoSuchElementException("수정하려는 제품이 장바구니에 없습니다.");
+            throw new ProductNotFoundException(ExceptionMessage.CODE_3001.getMessage());
         }
         return cart;
     }

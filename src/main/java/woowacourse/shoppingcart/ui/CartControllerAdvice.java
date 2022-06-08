@@ -1,6 +1,11 @@
 package woowacourse.shoppingcart.ui;
 
-import static woowacourse.shoppingcart.exception.ExceptionMessage.*;
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_1001;
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_2001;
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_2102;
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_2103;
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_2201;
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_3001;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
@@ -16,7 +21,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.shoppingcart.dto.exception.ExceptionDto;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
-import woowacourse.shoppingcart.exception.ExceptionMessage;
 import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -52,8 +56,13 @@ public class CartControllerAdvice {
     }
 
     @ExceptionHandler(IncorrectPasswordException.class)
-    public ResponseEntity<ExceptionDto> handleDuplicatedEmail(IncorrectPasswordException e) {
+    public ResponseEntity<ExceptionDto> handleIncorrectPassword(IncorrectPasswordException e) {
         return ResponseEntity.badRequest().body(new ExceptionDto(CODE_2201.getCode(), CODE_2201.getMessage()));
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ExceptionDto> handleProductNotFound(ProductNotFoundException e) {
+        return ResponseEntity.badRequest().body(new ExceptionDto(CODE_3001.getCode(), CODE_3001.getMessage()));
     }
 
     @ExceptionHandler(ProductNotFoundException.class)

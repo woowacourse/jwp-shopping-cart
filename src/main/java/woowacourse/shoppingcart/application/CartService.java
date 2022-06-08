@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.application;
 
+import static woowacourse.shoppingcart.exception.ExceptionMessage.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +16,8 @@ import woowacourse.shoppingcart.dto.cart.CartDeleteRequest;
 import woowacourse.shoppingcart.dto.cart.CartProduct;
 import woowacourse.shoppingcart.dto.cart.CartSetRequest;
 import woowacourse.shoppingcart.dto.cart.CartSetResponse;
+import woowacourse.shoppingcart.exception.ExceptionMessage;
+import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,7 +39,7 @@ public class CartService {
         Optional<Cart> findCart = cartDao
                 .findByCustomerIdAndProductId(customerId, productId);
         Product findProduct = productDao.findProductById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다"));
+                .orElseThrow(() -> new ProductNotFoundException(CODE_3001.getMessage()));
 
         if (findCart.isPresent()) {
             Cart update = cartDao.update(new Cart(findCart.get().getId(), productId, customerId,
@@ -67,6 +71,6 @@ public class CartService {
 
     public Cart findCartsByCustomerIdAndProductId(Long customerId, Long productId) {
         return cartDao.findByCustomerIdAndProductId(customerId, productId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 제품이 존재하지 않습니다."));
+                .orElseThrow(() -> new ProductNotFoundException(CODE_3001.getMessage()));
     }
 }
