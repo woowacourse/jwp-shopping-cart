@@ -6,9 +6,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer.Customer;
-import woowacourse.shoppingcart.domain.Customer.Email;
-import woowacourse.shoppingcart.domain.Customer.Username;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Username;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import java.sql.PreparedStatement;

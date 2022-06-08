@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.Customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.request.UpdateCartItemCountItemRequest;
@@ -52,10 +51,10 @@ class CartServiceTest {
     @Test
     @DisplayName("장바구니에 품목을 추가한다.")
     void addCart() {
-        AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
         cartService.addCart(addCartItemRequestDto, customerId);
 
-        List<CartItemResponseDto> cartItems = cartService.findCartsByCustomerId(customerId);
+        final List<CartItemResponseDto> cartItems = cartService.findCartsByCustomerId(customerId);
 
         assertThat(cartItems.size()).isEqualTo(1);
         assertThat(cartItems.get(0).getName()).isEqualTo(PRODUCT_NAME);
@@ -64,7 +63,7 @@ class CartServiceTest {
     @Test
     @DisplayName("장바구니에 품목을 추가할때 이미 등록된 품목일 경우 예외가 발생한다.")
     void addCart_DuplicateProductException() {
-        AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
         cartService.addCart(addCartItemRequestDto, customerId);
 
         assertThatThrownBy(() -> cartService.addCart(addCartItemRequestDto, customerId))
@@ -75,7 +74,7 @@ class CartServiceTest {
     @Test
     @DisplayName("장바구니에 품목을 추가할때 재고가 주문수량보다 적으면 예외가 발생한다.")
     void addCart_OverQuantityException() {
-        AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 11);
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 11);
         assertThatThrownBy(() -> cartService.addCart(addCartItemRequestDto, customerId))
                         .isInstanceOf(OverQuantityException.class)
                         .hasMessage("재고가 부족합니다.");

@@ -41,15 +41,15 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품을 추가한다.")
     void addProduct() {
-        Long addedId = productService.addProduct(product1);
-        ProductResponseDto productDto = productService.findProductById(addedId);
+        final Long addedId = productService.addProduct(product1);
+        final ProductResponseDto productDto = productService.findProductById(addedId);
         assertThat(productDto.getName()).isEqualTo(product1.getName());
     }
 
     @Test
     @DisplayName("상품을 삭제한다.")
     void deleteProductById() {
-        Long addedId = productService.addProduct(product1);
+        final Long addedId = productService.addProduct(product1);
 
         productService.deleteProductById(addedId);
 
@@ -61,7 +61,7 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품들을 추가한다.")
     void addProducts() {
-        List<ProductRequestDto> productRequestDtos = List.of(
+        final List<ProductRequestDto> productRequestDtos = List.of(
                 new ProductRequestDto("product1", 10000, null, 10),
                 new ProductRequestDto("product2", 11000, null, 10)
         );

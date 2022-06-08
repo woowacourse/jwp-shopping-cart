@@ -44,8 +44,9 @@ class AuthControllerTest extends ControllerTest {
     @Test
     @DisplayName("이메일과 패스워드를 받아 로그인한 후 accessToken과 유효시간을 반환한다.")
     void login() throws Exception {
-        CustomerDto customerDto = new CustomerDto(CUSTOMER_ID, TEST_EMAIL, TEST_USERNAME);
-        when(authService.login(any())).thenReturn(new TokenResponseDto("testAccessToken", 10800000L, customerDto));
+        final CustomerDto customerDto = new CustomerDto(CUSTOMER_ID, TEST_EMAIL, TEST_USERNAME);
+        when(authService.login(any()))
+                .thenReturn(new TokenResponseDto("testAccessToken", 10800000L, customerDto));
 
         final SignInDto signInDto = new SignInDto(TEST_EMAIL, TEST_PASSWORD);
 

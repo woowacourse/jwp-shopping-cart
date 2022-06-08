@@ -6,12 +6,11 @@ import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.response.CustomerDto;
 import woowacourse.shoppingcart.exception.AuthorizationFailException;
 import woowacourse.shoppingcart.exception.ForbiddenException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.service.CustomerService;
 
 @Service
 public class AuthService {

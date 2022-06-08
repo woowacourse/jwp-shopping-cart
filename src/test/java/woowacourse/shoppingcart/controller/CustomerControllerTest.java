@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -47,10 +48,6 @@ class CustomerControllerTest extends ControllerTest {
     private JwtTokenProvider jwtTokenProvider;
     private String accessToken;
 
-    static Stream<UpdateCustomerDto> invalidParams() {
-        return Stream.of(new UpdateCustomerDto(null), new UpdateCustomerDto(" "));
-    }
-
     @BeforeEach
     void setUp() {
         accessToken = jwtTokenProvider.createToken(TEST_EMAIL);
@@ -83,7 +80,7 @@ class CustomerControllerTest extends ControllerTest {
         when(customerService.updateCustomer(any(Long.class), any(UpdateCustomerDto.class))).thenReturn(new CustomerDto(
                 CUSTOMER_ID, TEST_EMAIL, "테스트2"));
 
-        UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto("테스트2");
+        final UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto("테스트2");
 
         final MockHttpServletResponse response = mockMvc.perform(put("/api/customers/" + CUSTOMER_ID)
                 .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
@@ -97,16 +94,15 @@ class CustomerControllerTest extends ControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
-    @ParameterizedTest
-    @MethodSource("invalidParams")
-    @DisplayName("파라미터가 공백이거나 null인 경우 예외를 발생시킨다.")
-    void updateCustomer_invalidParams(UpdateCustomerDto updateCustomerDto) throws Exception {
+    @Test
+    @DisplayName("파라미터가 null인 경우 예외를 발생시킨다.")
+    void updateCustomer_invalidParams() throws Exception {
 
         final MockHttpServletResponse response = mockMvc.perform(put("/api/customers/" + CUSTOMER_ID)
                 .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(objectMapper.writeValueAsString(updateCustomerDto)))
+                .content(objectMapper.writeValueAsString(null)))
                 .andDo(print())
                 .andReturn()
                 .getResponse();

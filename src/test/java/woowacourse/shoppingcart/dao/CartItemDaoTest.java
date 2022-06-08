@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dao;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,12 +8,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.Customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
-
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -91,7 +87,7 @@ class CartItemDaoTest {
     void addCartItem() {
         cartItemDao.addCartItem(customerId, productId, 1);
 
-        CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
+        final CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
         assertThat(cartItem.getName()).isEqualTo(PRODUCT_NAME);
     }
 }

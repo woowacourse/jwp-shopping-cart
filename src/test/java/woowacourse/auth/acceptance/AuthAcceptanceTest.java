@@ -23,13 +23,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        ExtractableResponse<Response> createResponse = createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
+        final ExtractableResponse<Response> createResponse = createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
         final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
         final String accessToken = tokenResponseDto.getAccessToken();
 
         // when
-        ExtractableResponse<Response> response = get(createResponse.header(HttpHeaders.LOCATION), new Header(HttpHeaders.AUTHORIZATION, BEARER + accessToken));
+        final ExtractableResponse<Response> response = get(createResponse.header(HttpHeaders.LOCATION), new Header(HttpHeaders.AUTHORIZATION, BEARER + accessToken));
 
         // then
         final CustomerDto actual = response.body().as(CustomerDto.class);
@@ -56,12 +56,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
     void myInfoWithWrongBearerAuth() {
-        ExtractableResponse<Response> createResponse = createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
+        final ExtractableResponse<Response> createResponse
+                = createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
         loginCustomer(TEST_EMAIL, TEST_PASSWORD);
 
         // when
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-        ExtractableResponse<Response> response = get(createResponse.header(HttpHeaders.LOCATION), new Header(HttpHeaders.AUTHORIZATION, "invalidToken"));
+        final ExtractableResponse<Response> response
+                = get(createResponse.header(HttpHeaders.LOCATION), new Header(HttpHeaders.AUTHORIZATION, "invalidToken"));
 
         // then
         // 내 정보 조회 요청이 거부된다

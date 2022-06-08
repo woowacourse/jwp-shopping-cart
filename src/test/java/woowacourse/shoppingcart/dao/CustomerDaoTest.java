@@ -11,7 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 import java.util.Optional;
 
@@ -80,7 +80,6 @@ class CustomerDaoTest {
         final Customer customer = customerDao.findByEmail(email).get();
 
         assertThat(customer.getEmail()).isEqualTo(email);
-
     }
 
     @Test
