@@ -33,7 +33,7 @@ public class CustomerDao {
 
 
     public Long save(final Customer customer) {
-        final String query = "INSERT INTO CUSTOMER(email, password, username) values(?, ?, ?)";
+        final String query = "INSERT INTO customer(email, password, username) values(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -48,7 +48,7 @@ public class CustomerDao {
     }
 
     public Optional<Customer> findById(final Long createdMemberId) {
-        final String query = "SELECT id, email, password, username FROM CUSTOMER WHERE id = ?";
+        final String query = "SELECT id, email, password, username FROM customer WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, memberRowMapper, createdMemberId));
         } catch (EmptyResultDataAccessException e) {
@@ -57,7 +57,7 @@ public class CustomerDao {
     }
 
     public Optional<Customer> findByEmail(final String email) {
-        final String query = "SELECT id, email, password, username FROM CUSTOMER WHERE email = ?";
+        final String query = "SELECT id, email, password, username FROM customer WHERE email = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, memberRowMapper, email));
         } catch (final EmptyResultDataAccessException e) {
@@ -66,7 +66,7 @@ public class CustomerDao {
     }
 
     public Long findByUsername(final String username) {
-        final String query = "SELECT id FROM CUSTOMER WHERE username = ?";
+        final String query = "SELECT id FROM customer WHERE username = ?";
         try {
             return jdbcTemplate.queryForObject(query, Long.class, username.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
@@ -75,7 +75,7 @@ public class CustomerDao {
     }
 
     public void update(final Customer customer) {
-        final String query = "UPDATE CUSTOMER SET username = ? WHERE id = ?";
+        final String query = "UPDATE customer SET username = ? WHERE id = ?";
 
         final int changedRowCount = jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -88,7 +88,7 @@ public class CustomerDao {
     }
 
     public void deleteById(final Long id) {
-        final String query = "DELETE FROM CUSTOMER WHERE id = ?";
+        final String query = "DELETE FROM customer WHERE id = ?";
 
         final int deletedRowCount = jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement = connection.prepareStatement(query);
