@@ -58,7 +58,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(
-                () -> assertThat(로그인실패응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(로그인실패응답.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThatCode(() -> 로그인실패응답.as(ExceptionResponse.class))
                         .doesNotThrowAnyException()
         );
