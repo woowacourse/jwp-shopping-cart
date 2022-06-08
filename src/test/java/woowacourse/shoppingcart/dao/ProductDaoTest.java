@@ -13,8 +13,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Price;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.ImageUrl;
+import woowacourse.shoppingcart.domain.product.Name;
+import woowacourse.shoppingcart.domain.product.Price;
+import woowacourse.shoppingcart.domain.product.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -37,7 +39,7 @@ public class ProductDaoTest {
         final String imageUrl = "www.test.com";
 
         // when
-        final Product savedProduct = productDao.save(new Product(name, new Price(price), imageUrl));
+        final Product savedProduct = productDao.save(new Product(new Name(name), new Price(price), new ImageUrl(imageUrl)));
 
         // then
         assertAll(
@@ -55,7 +57,7 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
-        final Product savedProduct = productDao.save(new Product(name, new Price(price), imageUrl));
+        final Product savedProduct = productDao.save(new Product(new Name(name), new Price(price), new ImageUrl(imageUrl)));
 
         // when
         final Optional<Product> product = productDao.findProductById(savedProduct.getId());
@@ -74,7 +76,7 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
-        productDao.save(new Product(name, new Price(price), imageUrl));
+        productDao.save(new Product(new Name(name), new Price(price), new ImageUrl(imageUrl)));
 
         // when
         final List<Product> products = productDao.findProducts();
@@ -91,7 +93,7 @@ public class ProductDaoTest {
         final int price = 1_000;
         final String imageUrl = "www.test.com";
 
-        final Product product = productDao.save(new Product(name, new Price(price), imageUrl));
+        final Product product = productDao.save(new Product(new Name(name), new Price(price), new ImageUrl(imageUrl)));
         final int beforeSize = productDao.findProducts().size();
 
         // when

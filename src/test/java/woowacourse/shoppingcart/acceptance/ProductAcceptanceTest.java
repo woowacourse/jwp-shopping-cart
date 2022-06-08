@@ -13,8 +13,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Price;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.ImageUrl;
+import woowacourse.shoppingcart.domain.product.Name;
+import woowacourse.shoppingcart.domain.product.Price;
+import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 @DisplayName("상품 관련 기능")
@@ -89,7 +91,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, new Price(price), imageUrl);
+        Product productRequest = new Product(new Name(name), new Price(price), new ImageUrl(imageUrl));
 
         return RestAssured
                 .given().log().all()

@@ -8,17 +8,21 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.domain.order.Quantity;
+import woowacourse.shoppingcart.domain.product.ImageUrl;
+import woowacourse.shoppingcart.domain.product.Name;
+import woowacourse.shoppingcart.domain.product.Price;
 
 @Repository
 public class OrdersDetailDao {
 
     private final RowMapper<OrderDetail> orderDetailRowMapper = (rs, rowNum) -> new OrderDetail(
             rs.getLong("product_id"),
-            rs.getInt("price"),
-            rs.getString("name"),
-            rs.getString("image_url"),
-            rs.getInt("quantity")
+            new Quantity(rs.getInt("quantity")),
+            new Price(rs.getInt("price")),
+            new Name(rs.getString("name")),
+            new ImageUrl(rs.getString("image_url"))
     );
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;

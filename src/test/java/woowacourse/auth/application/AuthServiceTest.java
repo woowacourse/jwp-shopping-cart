@@ -14,11 +14,11 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.FakePasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Account;
-import woowacourse.shoppingcart.domain.Address;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Nickname;
-import woowacourse.shoppingcart.domain.PhoneNumber;
+import woowacourse.shoppingcart.domain.customer.Account;
+import woowacourse.shoppingcart.domain.customer.Address;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Nickname;
+import woowacourse.shoppingcart.domain.customer.PhoneNumber;
 import woowacourse.shoppingcart.exception.LoginFailException;
 
 class AuthServiceTest {

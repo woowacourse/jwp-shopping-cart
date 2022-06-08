@@ -4,11 +4,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Account;
-import woowacourse.shoppingcart.domain.Address;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Nickname;
-import woowacourse.shoppingcart.domain.PhoneNumber;
+import woowacourse.shoppingcart.domain.customer.Account;
+import woowacourse.shoppingcart.domain.customer.Address;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Nickname;
+import woowacourse.shoppingcart.domain.customer.PhoneNumber;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.PhoneNumberFormat;
@@ -40,16 +40,6 @@ public class CustomerService {
         return CustomerResponse.of(savedCustomer);
     }
 
-    private Customer toCustomer(SignupRequest signupRequest) {
-        PhoneNumberFormat phoneNumberFormat = signupRequest.getPhoneNumber();
-        return new Customer(
-                new Account(signupRequest.getAccount()),
-                new Nickname(signupRequest.getNickname()),
-                passwordEncoder.encode(signupRequest.getPassword()),
-                new Address(signupRequest.getAddress()),
-                new PhoneNumber(phoneNumberFormat.appendNumbers()));
-    }
-
     @Transactional(readOnly = true)
     public CustomerResponse getById(long customerId) {
         Customer customer = customerDao.findById(customerId)
@@ -72,5 +62,15 @@ public class CustomerService {
             throw new WrongPasswordException();
         }
         return customerDao.deleteById(id);
+    }
+
+    private Customer toCustomer(SignupRequest signupRequest) {
+        PhoneNumberFormat phoneNumberFormat = signupRequest.getPhoneNumber();
+        return new Customer(
+                new Account(signupRequest.getAccount()),
+                new Nickname(signupRequest.getNickname()),
+                passwordEncoder.encode(signupRequest.getPassword()),
+                new Address(signupRequest.getAddress()),
+                new PhoneNumber(phoneNumberFormat.appendNumbers()));
     }
 }

@@ -17,7 +17,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
 @JdbcTest

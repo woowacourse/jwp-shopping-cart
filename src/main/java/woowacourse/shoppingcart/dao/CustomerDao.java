@@ -10,11 +10,11 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Account;
-import woowacourse.shoppingcart.domain.Address;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Nickname;
-import woowacourse.shoppingcart.domain.PhoneNumber;
+import woowacourse.shoppingcart.domain.customer.Account;
+import woowacourse.shoppingcart.domain.customer.Address;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Nickname;
+import woowacourse.shoppingcart.domain.customer.PhoneNumber;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
 @Repository

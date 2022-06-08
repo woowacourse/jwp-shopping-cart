@@ -12,7 +12,11 @@ import org.mockito.Mock;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.domain.order.Quantity;
+import woowacourse.shoppingcart.domain.product.ImageUrl;
+import woowacourse.shoppingcart.domain.product.Name;
+import woowacourse.shoppingcart.domain.product.Price;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
@@ -62,7 +66,7 @@ class OrderServiceTest {
         Long productId1 = 1L;
         Long customerId = 11L;
         Long ordersId = 101L;
-        OrderDetail bananaOrderDetail = new OrderDetail(productId1, 1000, "banana", "banana.com", 2);
+        OrderDetail bananaOrderDetail = new OrderDetail(productId1, new Quantity(2), new Price(1000), new Name("banana"), new ImageUrl("banana.com"));
         given(orderDao.isValidOrderId(customerId, ordersId)).willReturn(true);
 
         given(ordersDetailDao.findOrdersDetailsByOrderId(ordersId)).willReturn(List.of(bananaOrderDetail));
@@ -91,7 +95,7 @@ class OrderServiceTest {
         Long productId1 = 1L;
         Long customerId = 11L;
         Long ordersId = 101L;
-        OrderDetail bananaOrderDetail = new OrderDetail(productId1, 1000, "banana", "banana.com", 2);
+        OrderDetail bananaOrderDetail = new OrderDetail(productId1, new Quantity(2), new Price(1000), new Name("banana"), new ImageUrl("banana.com"));
         given(orderDao.findOrderIdsByCustomerId(customerId)).willReturn(List.of(ordersId));
         given(ordersDetailDao.findOrdersDetailsByOrderId(ordersId)).willReturn(List.of(bananaOrderDetail));
         //when

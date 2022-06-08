@@ -7,7 +7,6 @@ import static org.mockito.BDDMockito.given;
 import static woowacourse.shoppingcart.application.ProductFixture.바나나;
 import static woowacourse.shoppingcart.application.ProductFixture.사과;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +15,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 class CartServiceTest {

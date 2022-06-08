@@ -10,8 +10,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Price;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.ImageUrl;
+import woowacourse.shoppingcart.domain.product.Name;
+import woowacourse.shoppingcart.domain.product.Price;
+import woowacourse.shoppingcart.domain.product.Product;
 
 @Repository
 public class ProductDao {
@@ -20,9 +22,9 @@ public class ProductDao {
     private final RowMapper<Product> productRowMapper = (resultSet, rowNumber) ->
             new Product(
                     resultSet.getLong("id"),
-                    resultSet.getString("name"),
+                    new Name(resultSet.getString("name")),
                     new Price(resultSet.getInt("price")),
-                    resultSet.getString("image_url")
+                    new ImageUrl(resultSet.getString("image_url"))
             );
 
     public ProductDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -42,9 +44,9 @@ public class ProductDao {
         final Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
         return new Product(
                 number.longValue(),
-                product.getName(),
+                new Name(product.getName()),
                 new Price(product.getPrice()),
-                product.getImageUrl());
+                new ImageUrl(product.getImageUrl()));
     }
 
     public Optional<Product> findProductById(final Long productId) {
