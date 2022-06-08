@@ -3,12 +3,12 @@ package woowacourse.shoppingcart.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Page;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
@@ -56,6 +56,11 @@ public class ProductDao {
     public List<Product> findProducts() {
         final String query = "SELECT id, name, price, image_url FROM product";
         return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
+    }
+
+    public List<Product> findProductsByPage(final Page page) {
+        final String query = "SELECT id, name, price, image_url FROM product ORDER BY id Limit ? , ?";
+        return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER, page.getBegin(), page.getSize());
     }
 
     public boolean delete(final Long productId) {

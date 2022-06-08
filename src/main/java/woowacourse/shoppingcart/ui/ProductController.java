@@ -27,12 +27,11 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // TODO: page 쿼리 추가
     @GetMapping
     public ResponseEntity<ProductsResponse> products(
-            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
-        return ResponseEntity.ok(productService.findProducts());
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+        return ResponseEntity.ok(productService.findProducts(page, size));
     }
 
     @PostMapping

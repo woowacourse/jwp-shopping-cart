@@ -52,6 +52,35 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(제품_전체_조회_응답.getTotalCount()).isEqualTo(2);
     }
 
+    @DisplayName("페이지 쿼리 스트링이 있을 떄, 페이지에 맞게 전체 목록을 조회한다")
+    @Test
+    void getProductWithPage() {
+        //given
+        상품_등록_요청(치킨, PRICE1, IMAGE_URI1);
+        상품_등록_요청(파자, PRICE2, IMAGE_URI2);
+        상품_등록_요청("파스타", 2000, "url");
+        상품_등록_요청("소세지",2000, "url");
+        상품_등록_요청("김밥",2000, "url");
+        상품_등록_요청("라면",2000, "url");
+        상품_등록_요청("떡볶이",2000, "url");
+        상품_등록_요청("오징어",2000, "url");
+        상품_등록_요청("초밥",2000, "url");
+        상품_등록_요청("캐밥",2000, "url");
+        상품_등록_요청("스테이크",2000, "url");
+        상품_등록_요청("옥수수",2000, "url");
+
+        int page = 1;
+        int size = 10;
+
+        //when
+        final ExtractableResponse<Response> 제품_전체_조회 = 상품_목록_조회_페이지_요청(page, size);
+        final ProductsResponse 제품_전체_조회_응답 = 제품_전체_조회.as(ProductsResponse.class);
+
+        //then
+        assertThat(제품_전체_조회.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(제품_전체_조회_응답.getTotalCount()).isEqualTo(size);
+    }
+
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
@@ -128,6 +157,17 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     public static ExtractableResponse<Response> 상품_목록_조회_요청() {
         return RestAssured
                 .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/products")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 상품_목록_조회_페이지_요청(int page, int size) {
+        return RestAssured
+                .given().log().all()
+                .queryParam("page", page)
+                .queryParam("size", size)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/api/products")
                 .then().log().all()

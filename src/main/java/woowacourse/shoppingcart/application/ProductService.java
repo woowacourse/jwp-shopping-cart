@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Page;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.dto.request.ProductRequest;
@@ -20,11 +21,16 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public ProductsResponse findProducts() {
-        final List<ProductResponse> products = productDao.findProducts()
+    public ProductsResponse findProducts(final Integer begin, final Integer size) {
+        final Page page = Page.of(begin, size);
+        final List<ProductResponse> products = productDao.findProductsByPage(page)
                 .stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-                        product.getImageUrl()))
+                .map(product -> new ProductResponse(
+                        product.getId(),
+                        product.getName(),
+                        product.getPrice(),
+                        product.getImageUrl())
+                )
                 .collect(Collectors.toList());
 
         return new ProductsResponse(products.size(), products);
