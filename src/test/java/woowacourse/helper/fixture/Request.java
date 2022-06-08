@@ -49,6 +49,18 @@ public class Request {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> putWithTokenAndPathValue(Object params, Object value, String url,
+                                                                         String token) {
+        return RestAssured.given().log().all()
+                .auth().oauth2(token)
+                .body(params)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put(url, value)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> get(String url) {
         return RestAssured.given().log().all()
                 .when()

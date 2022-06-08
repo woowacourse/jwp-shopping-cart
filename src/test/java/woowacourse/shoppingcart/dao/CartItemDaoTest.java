@@ -68,6 +68,16 @@ public class CartItemDaoTest {
         assertThat(cartIds).containsExactly(1L);
     }
 
+    @DisplayName("장바구니 아이템의 수량을 업데이트한다.")
+    @Test
+    void updateCartItemQuantity() {
+        Long cartId = cartItemDao.addCartItem(1L, 1L);
+
+        cartItemDao.updateCartItemQuantity(cartId, 3);
+
+        assertThat(cartItemDao.findProductQuantityIdById(cartId)).isEqualTo(3);
+    }
+
     @DisplayName("멤버의 장바구니 아이템을 삭제한다.")
     @Test
     void deleteCartItem() {

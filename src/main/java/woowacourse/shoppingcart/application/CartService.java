@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -78,6 +79,10 @@ public class CartService {
         } catch (Exception e) {
             throw new InvalidProductException();
         }
+    }
+
+    public void updateCartItemQuantity(final Long cartId, final UpdateQuantityRequest updateQuantityRequest) {
+        cartItemDao.updateCartItemQuantity(cartId, updateQuantityRequest.getQuantity());
     }
 
     public void deleteCart(final String customerName, final Long cartId) {

@@ -53,6 +53,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
+    @DisplayName("장바구니 아이템 수량 업데이트")
+    @Test
+    void updateCartItemQuantity() {
+        Long cartId = 장바구니_아이템_추가되어_있음(productId1);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_수량_업데이트_요청(cartId, 5);
+
+        장바구니_아이템_수량_업데이트됨(response);
+    }
+
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
@@ -72,6 +82,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청() {
         return Request.getWithToken("/api/members/me/carts", MARU.getToken());
+    }
+
+    public static ExtractableResponse<Response> 장바구니_아이템_수량_업데이트_요청(Long cartId, int quantity) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("quantity", quantity);
+
+        return Request.putWithTokenAndPathValue(requestBody, cartId, "/api/members/me/carts/{cartId}", MARU.getToken());
     }
 
     public static ExtractableResponse<Response> 장바구니_삭제_요청(Long cartId) {
@@ -97,6 +114,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .map(Cart::getProductId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
+    }
+
+    private void 장바구니_아이템_수량_업데이트됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
