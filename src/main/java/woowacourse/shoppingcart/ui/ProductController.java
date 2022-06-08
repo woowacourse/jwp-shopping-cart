@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,8 +9,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.PageRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
 
 @RestController
 @RequestMapping("/api/products")
@@ -22,9 +23,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products(@ModelAttribute @Valid PageRequest pageRequest) {
+    public ResponseEntity<List<ProductResponse>> products(@ModelAttribute @Valid PageRequest pageRequest) {
+        List<ProductResponse> responses = productService.findProducts(pageRequest).stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toList());
         return ResponseEntity.ok()
                 .header("x-total-count", String.valueOf(productService.findTotalCount()))
-                .body(productService.findProducts(pageRequest));
+                .body(responses);
     }
 }
