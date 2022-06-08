@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: ${DB-URL}
+    url: ${DB_URL}
     username: ${ID}
     password: ${PASSWORD}
-    driver-class-name: ${DRIVER-CLASS-NAME}
+    driver-class-name: ${DRIVER_CLASS_NAME}
 
 security:
   jwt:
     token:
-      secret-key: ${SECRET-KEY}
-      expire-length: ${EXPIRE-LENGTH}
+      secret-key: ${SECRET_KEY}
+      expire-length: ${EXPIRE_LENGTH}
