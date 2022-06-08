@@ -68,4 +68,22 @@ public class CartItemDaoTest {
             .extracting("id", "customerId", "productId", "quantity")
             .containsExactly(1L, 1L, 1L, 10);
     }
+
+    @DisplayName("장바구니 제품의 희망 수량을 변동한다.")
+    @Test
+    void updateQuantity() {
+        // given
+        final long customerId = 1L;
+        Product product = productStock1.getProduct();
+        CartItem cartItem = new CartItem(product, new Quantity(10));
+        long id = cartItemDao.addCartItem(customerId, cartItem);
+
+        // when
+        cartItemDao.update(new CartItem(id, cartItem.getProduct(), new Quantity(12)));
+
+        // then
+        CartItemEntity cartItemEntity = cartItemDao.findCartItemById(id);
+        assertThat(cartItemEntity.getQuantity()).isEqualTo(12);
+
+    }
 }
