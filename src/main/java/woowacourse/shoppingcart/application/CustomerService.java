@@ -79,4 +79,12 @@ public class CustomerService {
         customer.comparePasswordFrom(customerWithdrawRequest.getPassword());
         customerDao.delete(customer.getId());
     }
+
+    public void checkDuplicateUserId(final String userId) {
+        validateNotDuplicateUserId(userId);
+    }
+
+    public void checkDuplicateNickname(final String nickname) {
+        validateNotDuplicateNickname(nickname);
+    }
 }

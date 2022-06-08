@@ -408,7 +408,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when & then
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("password", "1234asdf!");
+        requestBody.put("password", "1234asdwqwqf!");
 
         RestAssured
                 .given().log().all()
@@ -418,6 +418,52 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().delete("/auth/customers/profile")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("존재하지 않는 회원입니다."));
+                .body("message", is("입력한 비밀번호가 올바르지 않습니다."));
+    }
+
+    @DisplayName("회원가입시 기존에 존재하는 아이디를 입력하면 안된다.")
+    @Test
+    void checkDuplicateUserId_exception() {
+        // when & then
+        RestAssured
+                .given().log().all()
+                .when().get("/customers/check?userId=puterism@woowacourse.com")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("이미 존재하는 아이디입니다."));
+    }
+
+    @DisplayName("회원가입시 기존에 존재하는 닉네임을 입력하면 안된다.")
+    @Test
+    void checkDuplicateNickname_exception() {
+        // when & then
+        RestAssured
+                .given().log().all()
+                .when().get("/customers/check?nickname=nickname")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("이미 존재하는 닉네임입니다."));
+    }
+
+    @DisplayName("회원가입시 기존에 존재하지 않는 닉네임을 입력하면 상태코드 200을 반환한다.")
+    @Test
+    void checkDuplicateNickname() {
+        // when & then
+        RestAssured
+                .given().log().all()
+                .when().get("/customers/check?nickname=새로운이름")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("회원가입시 기존에 존재하지 않는 아이디를 입력하면 상태코드 200을 반환한다.")
+    @Test
+    void checkDuplicateUserId() {
+        // when & then
+        RestAssured
+                .given().log().all()
+                .when().get("/customers/check?userId=coobim@woowacourse.com")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 }
