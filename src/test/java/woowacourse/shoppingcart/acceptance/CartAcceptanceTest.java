@@ -15,7 +15,6 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -151,41 +150,66 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+        회원가입_요청("email@email.com", "12345678a", "tonic");
+        String token = 토큰_요청("email@email.com", "12345678a");
+        장바구니_추가_요청(token, productId1);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
-
-        장바구니_삭제됨(response);
-    }
-
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
-        return RestAssured
-            .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(requestBody)
-            .when().post("/api/customers/{customerName}/carts", userName)
+        ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .when().log().all()
+            .delete("/users/me/carts/{productId}", productId1)
             .then().log().all()
             .extract();
-    }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
-        return RestAssured
-            .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
-            .then().log().all()
-            .extract();
-    }
-
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
-    }
-
-    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
+        ExtractableResponse<Response> response2 = RestAssured
+            .given(spec).log().all()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .when().log().all()
+            .get("/users/me/carts")
+            .then().log().all()
+            .extract();
+
+        CartsResponse cartsResponse = response2.jsonPath().getObject(".", CartsResponse.class);
+
+        assertThat(cartsResponse.getCartList()).hasSize(0);
+    }
+
+    @DisplayName("장바구니 수정")
+    @Test
+    void updateCartItem() {
+        회원가입_요청("email@email.com", "12345678a", "tonic");
+        String token = 토큰_요청("email@email.com", "12345678a");
+        장바구니_추가_요청(token, productId1);
+
+        ExtractableResponse<Response> response = RestAssured
+            .given(spec).log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .body(Map.of("quantity", "4"))
+            .when().log().all()
+            .put("/users/me/carts/{productId}", productId1)
+            .then().log().all()
+            .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
+        ExtractableResponse<Response> response2 = RestAssured
+            .given(spec).log().all()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .when().log().all()
+            .get("/users/me/carts")
+            .then().log().all()
+            .extract();
+
+        CartsResponse cartsResponse = response2.jsonPath().getObject(".", CartsResponse.class);
+
+        assertThat(cartsResponse.getCartList())
+            .extracting(CartResponse::getId, CartResponse::getName, CartResponse::getPrice,
+                CartResponse::getImageUrl, CartResponse::getQuantity)
+            .containsExactlyInAnyOrder(
+                tuple(productId1, "치약", 1600, "image 치약", 4));
     }
 }

@@ -41,16 +41,6 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public Long findProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate
-                .queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-    }
-
     public Long addCartItem(final Long customerId, final Long productId) {
         final String sql = "INSERT INTO cart_item(account_id, product_id) VALUES(?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -100,5 +90,15 @@ public class CartItemDao {
             + "from cart_item as c join product as p on c.product_id = p.id "
             + "where c.account_id = ?";
         return jdbcTemplate.query(sql, ROM_MAPPER, accountId);
+    }
+
+    public void deleteCartItem(long accountId, long productId) {
+        jdbcTemplate.update("delete from cart_item where account_id = ? and product_id = ?",
+            accountId, productId);
+    }
+
+    public void updateCartItem(Long accountId, Long productId, int quantity) {
+        String sql = "update cart_item set quantity = ? where account_id = ? and product_id = ?";
+        jdbcTemplate.update(sql, quantity, accountId, productId);
     }
 }

@@ -34,6 +34,7 @@ dependencies {
     implementation 'mysql:mysql-connector-java'
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.2'
 
     asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
