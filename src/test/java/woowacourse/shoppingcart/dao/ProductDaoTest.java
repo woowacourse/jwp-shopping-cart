@@ -56,12 +56,14 @@ public class ProductDaoTest {
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {
-
-        int size = 0;
+        String name = "초콜렛";
+        int price = 1_000;
+        String imageUrl = "http://www.test.com";
+        productDao.save(new Product(name, price, imageUrl, true, "상세 설명"));
 
         List<Product> products = productDao.findSellingProducts();
 
-        assertThat(products).size().isEqualTo(size);
+        assertThat(products).size().isEqualTo(1);
     }
 
     @DisplayName("싱품 삭제")
