@@ -44,11 +44,11 @@ class CartAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("products.id", contains(2, 1))
-                .body("products.name", contains("포도", "사과"))
-                .body("products.image_url", hasSize(2))
-                .body("products.price", contains(700, 1600))
-                .body("products.quantity", contains(1, 1));
+                .body("cartList.id", contains(2, 1))
+                .body("cartList.name", contains("포도", "사과"))
+                .body("cartList.imageUrl", hasSize(2))
+                .body("cartList.price", contains(700, 1600))
+                .body("cartList.quantity", contains(1, 1));
     }
 
     @Test
@@ -100,7 +100,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
         cartItemsResponse.statusCode(HttpStatus.OK.value())
-                .body("products", hasSize(0));
+                .body("cartList", hasSize(0));
     }
 
     private ValidatableResponse postCartItem(CartItemAdditionRequest request) {

@@ -159,7 +159,7 @@ class CartItemControllerTest extends ControllerTest {
     }
 
     @Test
-    @DisplayName("장바구니에의 상품 목록을 조회한다.")
+    @DisplayName("장바구니에 담긴 상품 목록을 조회한다.")
     void getCartItems() throws Exception {
         // given
         String accessToken = "fake-token";
@@ -192,7 +192,7 @@ class CartItemControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isOk())
-                .andExpect(jsonPath("products").isArray());
+                .andExpect(jsonPath("cartList").isArray());
 
         // docs
         perform.andDo(document("get-cart-items",
@@ -202,12 +202,12 @@ class CartItemControllerTest extends ControllerTest {
                         headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
                 ),
                 responseFields(
-                        fieldWithPath("products[]").description("상품 목록"),
-                        fieldWithPath("products[].id").description("상품 ID"),
-                        fieldWithPath("products[].name").description("상품 이름"),
-                        fieldWithPath("products[].price").description("가격"),
-                        fieldWithPath("products[].imageUrl").description("상품 이미지 url"),
-                        fieldWithPath("products[].quantity").description("상품 수량")
+                        fieldWithPath("cartList[]").description("상품 목록"),
+                        fieldWithPath("cartList[].id").description("상품 ID"),
+                        fieldWithPath("cartList[].name").description("상품 이름"),
+                        fieldWithPath("cartList[].price").description("가격"),
+                        fieldWithPath("cartList[].imageUrl").description("상품 이미지 url"),
+                        fieldWithPath("cartList[].quantity").description("상품 수량")
                 )
         ));
     }

@@ -6,10 +6,10 @@ import woowacourse.shoppingcart.cart.domain.Cart;
 
 public class CartItemsResponse {
 
-    private final List<CartItemResponse> products;
+    private final List<CartItemResponse> cartList;
 
-    private CartItemsResponse(List<CartItemResponse> products) {
-        this.products = products;
+    private CartItemsResponse(List<CartItemResponse> cartList) {
+        this.cartList = cartList;
     }
 
     public static CartItemsResponse from(List<Cart> carts) {
@@ -20,7 +20,7 @@ public class CartItemsResponse {
         return new CartItemsResponse(responses);
     }
 
-    public List<CartItemResponse> getProducts() {
-        return products;
+    public List<CartItemResponse> getCartList() {
+        return cartList;
     }
 }
