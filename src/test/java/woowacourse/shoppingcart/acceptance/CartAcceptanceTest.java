@@ -5,11 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -19,28 +15,9 @@ import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 
 @DisplayName("장바구니 관련 기능")
-public class CartAcceptanceTest extends AcceptanceTest {
+class CartAcceptanceTest extends AcceptanceTest {
 
     private static final String REQUEST_URL = "/users/me/carts";
-
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(final String token, final Long productId) {
-        final Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(requestBody)
-                .when().post("/customers/me/carts")
-                .then().log().all()
-                .extract();
-    }
-
-    public static Long 장바구니_아이템_추가되어_있음(final String token, final Long productId) {
-        final ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
-    }
 
     @DisplayName("장바구니 아이템 추가")
     @Test
