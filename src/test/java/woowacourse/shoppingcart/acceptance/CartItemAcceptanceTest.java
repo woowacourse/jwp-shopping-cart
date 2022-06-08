@@ -31,8 +31,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     void setCustomer() {
         final SignUpDto signUpDto = new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME);
-        ExtractableResponse<Response> customerResponse = createCustomer(signUpDto);
-        String[] locations = customerResponse.header("Location").split("/");
+        final ExtractableResponse<Response> customerResponse = createCustomer(signUpDto);
+        final String[] locations = customerResponse.header("Location").split("/");
         customerId = Long.valueOf(locations[locations.length - 1]);
         final ExtractableResponse<Response> loginResponse = loginCustomer(TEST_EMAIL, TEST_PASSWORD);
         final TokenResponseDto tokenResponseDto = loginResponse.body().as(TokenResponseDto.class);
@@ -42,14 +42,14 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     @BeforeEach
     void setProducts() {
-        ProductRequestDto productRequestDto1 = new ProductRequestDto("product1", 10000, null, 10);
-        ProductRequestDto productRequestDto2 = new ProductRequestDto("product2", 11000, null, 10);
+        final ProductRequestDto productRequestDto1 = new ProductRequestDto("product1", 10000, null, 10);
+        final ProductRequestDto productRequestDto2 = new ProductRequestDto("product2", 11000, null, 10);
 
-        ExtractableResponse<Response> productResponse1 = post("/api/products", EMPTY_HEADER, productRequestDto1);
-        String[] locations1 = productResponse1.header("Location").split("/");
+        final ExtractableResponse<Response> productResponse1 = post("/api/products", EMPTY_HEADER, productRequestDto1);
+        final String[] locations1 = productResponse1.header("Location").split("/");
         productId1 = Long.valueOf(locations1[locations1.length - 1]);
-        ExtractableResponse<Response> productResponse2 = post("/api/products", EMPTY_HEADER, productRequestDto2);
-        String[] locations2 = productResponse2.header("Location").split("/");
+        final ExtractableResponse<Response> productResponse2 = post("/api/products", EMPTY_HEADER, productRequestDto2);
+        final String[] locations2 = productResponse2.header("Location").split("/");
         productId2 = Long.valueOf(locations2[locations2.length - 1]);
     }
 
@@ -57,13 +57,13 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니에 담긴 물건들을 불러온다.")
     void getCartItems() {
 
-        AddCartItemRequestDto addCartItemRequestDto1 = new AddCartItemRequestDto(productId1, 1);
-        AddCartItemRequestDto addCartItemRequestDto2 = new AddCartItemRequestDto(productId2, 1);
+        final AddCartItemRequestDto addCartItemRequestDto1 = new AddCartItemRequestDto(productId1, 1);
+        final AddCartItemRequestDto addCartItemRequestDto2 = new AddCartItemRequestDto(productId2, 1);
 
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto1);
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto2);
 
-        ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
+        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
 
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
@@ -74,11 +74,11 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("장바구니에 물건을 담는다.")
     void addCartItem() {
-        AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
 
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
 
-        ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
+        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
@@ -89,13 +89,13 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("장바구니에 담긴 물건의 수량을 변경한다.")
     void updateCartItems() {
-        AddCartItemRequestDto addCartItemRequestDto1 = new AddCartItemRequestDto(productId1, 1);
+        final AddCartItemRequestDto addCartItemRequestDto1 = new AddCartItemRequestDto(productId1, 1);
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto1);
 
-        UpdateCartItemCountItemRequest updateCartItemCountItemRequest = new UpdateCartItemCountItemRequest(2);
+        final UpdateCartItemCountItemRequest updateCartItemCountItemRequest = new UpdateCartItemCountItemRequest(2);
         put("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader, updateCartItemCountItemRequest);
 
-        ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
+        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
@@ -106,13 +106,13 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("장바구니에 담긴 물건을 삭제한다.")
     void deleteCartItem() {
-        AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
 
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
 
         delete("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader);
 
-        ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
+        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
