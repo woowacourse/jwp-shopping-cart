@@ -1,7 +1,9 @@
 package woowacourse.shoppingcart.domain.customer;
 
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BcryptPasswordEncryptor implements PasswordEncryptor {
 
     @Override
