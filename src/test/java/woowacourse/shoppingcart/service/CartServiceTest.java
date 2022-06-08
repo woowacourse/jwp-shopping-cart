@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.dto.UpdateCartItemRequests;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql", "classpath:testData.sql"})
 public class CartServiceTest {
 
     @Autowired

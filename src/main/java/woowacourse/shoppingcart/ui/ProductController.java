@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.shoppingcart.service.ProductService;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.FindAllProductsResponse;
 import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.service.ProductService;
 
 @RestController
 @RequestMapping("/products")
@@ -28,11 +28,19 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<FindAllProductsResponse> products(@RequestParam("size") int size, @RequestParam("page") int page) {
+    public ResponseEntity<FindAllProductsResponse> products(@RequestParam("size") int size,
+                                                            @RequestParam("page") int page) {
         var products = productService.findProducts(size, page);
 
         return ResponseEntity.ok(new FindAllProductsResponse(products));
     }
+
+//    @GetMapping
+//    public ResponseEntity<FindAllProductsResponse> products2() {
+//        var products = productService.findProducts(size, page);
+//
+//        return ResponseEntity.ok(new FindAllProductsResponse(products));
+//    }
 
     @PostMapping
     public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final Product product) {

@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql", "classpath:testData.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
 

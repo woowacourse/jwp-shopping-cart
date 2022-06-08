@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignInRequest;
@@ -16,6 +17,7 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Sql(scripts = {"classpath:schema.sql", "classpath:testData.sql"})
 @ActiveProfiles("test")
 public class AcceptanceTest {
     @LocalServerPort
@@ -27,7 +29,7 @@ public class AcceptanceTest {
     }
 
     protected ExtractableResponse createSignInResult(SignInRequest signInRequest, HttpStatus httpStatus) {
-        return  RestAssured
+        return RestAssured
                 .given().log().all()
                 .body(signInRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -59,7 +61,9 @@ public class AcceptanceTest {
                 .statusCode(httpStatus.value()).extract();
     }
 
-    protected ExtractableResponse createChangePasswordResult(String accessToken, ChangePasswordRequest changePasswordRequest, HttpStatus httpStatus) {
+    protected ExtractableResponse createChangePasswordResult(String accessToken,
+                                                             ChangePasswordRequest changePasswordRequest,
+                                                             HttpStatus httpStatus) {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
@@ -73,7 +77,9 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    protected ExtractableResponse createDeleteCustomerResult(String accessToken, DeleteCustomerRequest deleteCustomerRequest, HttpStatus httpStatus) {
+    protected ExtractableResponse createDeleteCustomerResult(String accessToken,
+                                                             DeleteCustomerRequest deleteCustomerRequest,
+                                                             HttpStatus httpStatus) {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
