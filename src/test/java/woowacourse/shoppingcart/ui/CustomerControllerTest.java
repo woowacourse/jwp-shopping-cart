@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.config.AuthenticationPrincipalConfig;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.global.exception.ErrorResponse;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.ui.dto.CustomerChangePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerChangeRequest;
@@ -68,17 +70,17 @@ class CustomerControllerTest {
         // then
         assertAll(
                 () -> 이메일_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이메일은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이메일은 공백일 수 없습니다.")),
                 () -> 이메일_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이메일은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이메일은 공백일 수 없습니다.")),
                 () -> 비밀번호_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 비밀번호는 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 비밀번호는 공백일 수 없습니다.")),
                 () -> 비밀번호_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 비밀번호는 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 비밀번호는 공백일 수 없습니다.")),
                 () -> 닉네임_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 닉네임은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 닉네임은 공백일 수 없습니다.")),
                 () -> 닉네임_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 닉네임은 공백일 수 없습니다."))
+                        .andExpect(jsonPath("$.message").value("[ERROR] 닉네임은 공백일 수 없습니다."))
         );
     }
 
@@ -95,17 +97,17 @@ class CustomerControllerTest {
         // then
         assertAll(
                 () -> 닉네임_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 닉네임은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 닉네임은 공백일 수 없습니다.")),
                 () -> 닉네임_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 닉네임은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 닉네임은 공백일 수 없습니다.")),
                 () -> 이전_패스워드_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이전 비밀번호는 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이전 비밀번호는 공백일 수 없습니다.")),
                 () -> 이전_패스워드_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이전 비밀번호는 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이전 비밀번호는 공백일 수 없습니다.")),
                 () -> 새로운_패스워드_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 새로운 비밀번호는 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 새로운 비밀번호는 공백일 수 없습니다.")),
                 () -> 새로운_패스워드_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 새로운 비밀번호는 공백일 수 없습니다."))
+                        .andExpect(jsonPath("$.message").value("[ERROR] 새로운 비밀번호는 공백일 수 없습니다."))
         );
     }
 
