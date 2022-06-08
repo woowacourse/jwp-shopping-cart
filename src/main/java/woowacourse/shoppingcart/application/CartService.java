@@ -47,7 +47,7 @@ public class CartService {
     public CartItemResponse addCart(final Long productId, final int stock, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         Product product = productDao.findProductById(productId);
-        removeStock(product, stock);
+        removeProductStock(product, stock);
         try {
             Long cartItemId = cartItemDao.addCartItem(customerId, productId, stock);
             return new CartItemResponse(
@@ -63,18 +63,30 @@ public class CartService {
         }
     }
 
-    private void removeStock(Product product, int stock) {
+    private void removeProductStock(Product product, int stock) {
         product.removeStock(stock);
+        updateProduct(product);
+    }
+
+    public void deleteCart(final String customerName, final Long cartId) {
+        validateCustomerCart(cartId, customerName);
+        CartItem cartItem = cartItemDao.findById(cartId);
+        Product product = productDao.findProductById(cartItemDao.findProductIdById(cartItem.getProductId()));
+        addProductStock(product, cartItem.getStock());
+        cartItemDao.deleteCartItem(cartId);
+    }
+
+    private void addProductStock(Product product, int stock) {
+        product.addStock(stock);
+        updateProduct(product);
+    }
+
+    private void updateProduct(Product product) {
         try {
             productDao.update(product);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
-    }
-
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
@@ -87,7 +99,12 @@ public class CartService {
 
     public void updateQuantity(final Long cartId, final int quantity) {
         CartItem cartItem = cartItemDao.findById(cartId);
+        Product product = productDao.findProductById(cartItem.getProductId());
+
+        product.addStock(cartItem.getStock() - quantity);
         cartItem.updateStock(quantity);
+
+        productDao.update(product);
         cartItemDao.update(cartItem);
     }
 }

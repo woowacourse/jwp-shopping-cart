@@ -21,6 +21,16 @@ class ProductTest {
     void removeOverStock() {
         Product product = new Product("치킨", 10_000, 10, "http://example.chicken.jpg");
 
-        assertThatThrownBy(() -> product.removeStock(12));
+        assertThatThrownBy(() -> product.removeStock(12))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("상품의 재고를 증가한다.")
+    @Test
+    void addStock() {
+        Product product = new Product("치킨", 10_000, 10, "http://example.chicken.jpg");
+        product.addStock(5);
+
+        assertThat(product.getStock()).isEqualTo(15);
     }
 }
