@@ -74,4 +74,12 @@ public class CartItemDao {
             throw new InvalidCartItemException();
         }
     }
+
+    public void updateQuantity(Long customerId, Long productId, Integer quantity) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? AND product_id = ?";
+        final int rowCount = jdbcTemplate.update(sql, quantity, customerId, productId);
+        if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
 }

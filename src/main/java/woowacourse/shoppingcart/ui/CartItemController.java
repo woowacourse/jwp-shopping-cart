@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +34,7 @@ public class CartItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addCartItem(@RequestBody CartRequest cartRequest, @AuthenticationPrincipal Long customerId) {
+    public void addCartItem(@AuthenticationPrincipal Long customerId, @RequestBody CartRequest cartRequest) {
         cartService.addCart(customerId, cartRequest);
     }
 
@@ -41,5 +42,11 @@ public class CartItemController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCartItem(@AuthenticationPrincipal Long customerId, @RequestBody ProductIdsRequest productIds) {
         cartService.deleteCart(customerId, productIds);
+    }
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void updateCartItemQuantity(@AuthenticationPrincipal Long customerId, @RequestBody CartRequest cartRequest) {
+        cartService.updateCartQuantity(customerId, cartRequest);
     }
 }

@@ -63,4 +63,7 @@ public class CartService {
         }
     }
 
+    public void updateCartQuantity(Long customerId, CartRequest cartRequest) {
+        cartItemDao.updateQuantity(customerId, cartRequest.getId(), cartRequest.getQuantity());
+    }
 }
