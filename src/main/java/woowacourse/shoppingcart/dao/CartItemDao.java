@@ -22,7 +22,7 @@ public class CartItemDao {
     public CartItemDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("CART_ITEM")
+                .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id");
     }
 

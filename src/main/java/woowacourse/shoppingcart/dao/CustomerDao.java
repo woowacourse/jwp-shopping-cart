@@ -31,7 +31,7 @@ public class CustomerDao {
     public CustomerDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("CUSTOMER")
+                .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
     }
 
