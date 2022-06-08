@@ -12,7 +12,7 @@ import woowacourse.shoppingcart.entity.CustomerEntity;
 
 @Repository
 public class JdbcCustomerDao implements CustomerDao {
-    private static final String TABLE_NAME = "CUSTOMER";
+    private static final String TABLE_NAME = "customer";
     private static final String ID_COLUMN = "id";
 
     private static final RowMapper<CustomerEntity> CUSTOMER_ENTITY_ROW_MAPPER = (rs, rowNum) -> new CustomerEntity(
