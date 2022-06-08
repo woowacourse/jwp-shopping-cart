@@ -8,7 +8,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.ProductRequestDto;
 import woowacourse.shoppingcart.dto.response.ProductResponseDto;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 import java.util.List;
 
@@ -54,7 +54,8 @@ class ProductServiceTest {
         productService.deleteProductById(addedId);
 
         assertThatThrownBy(() -> productService.findProductById(addedId))
-                .isInstanceOf(InvalidProductException.class);
+                .isInstanceOf(NotFoundProductException.class)
+                .hasMessage("존재하지 않는 상품 ID입니다.");
     }
 
     @Test
