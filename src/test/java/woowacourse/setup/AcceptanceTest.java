@@ -32,7 +32,7 @@ public class AcceptanceTest {
     @BeforeAll
     void setUpSchema() throws Exception {
         try (Connection connection = dataSource.getConnection()) {
-            ScriptUtils.executeSqlScript(connection, new ClassPathResource("schema.sql"));
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("test_schema.sql"));
         }
     }
 

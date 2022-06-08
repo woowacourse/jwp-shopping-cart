@@ -13,6 +13,6 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @TestInstance(Lifecycle.PER_CLASS)
-@Sql(scripts = "classpath:schema.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "classpath:test_schema.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 public class DatabaseTest {
 }
