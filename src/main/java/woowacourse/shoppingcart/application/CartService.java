@@ -3,12 +3,11 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.domain.customer.CustomerId;
 import woowacourse.shoppingcart.domain.product.ProductId;
-import woowacourse.shoppingcart.dto.CartItemRequest;
-import woowacourse.shoppingcart.dto.CartItemResponse;
-import woowacourse.shoppingcart.dto.RemovedCartItemsRequest;
+import woowacourse.shoppingcart.dto.cart.*;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
@@ -30,13 +29,26 @@ public class CartService {
     }
 
     public CartItemResponse addCartItem(String token, CartItemRequest cartItemRequest) {
-        customerService.validateToken(token);
         final CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
         ProductId productId = new ProductId(cartItemRequest.getId());
         checkExistenceInAllProducts(productId);
         checkExistenceInCart(customerId, productId);
         cartItemDao.save(customerId, productId, new Quantity(cartItemRequest.getQuantity()));
         return new CartItemResponse(customerId.getValue(), cartItemRequest.getQuantity());
+    }
+
+    public CartsResponse findCartItems(String token) {
+        final CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
+        Carts carts = new Carts(cartItemDao.getAllCartsBy(customerId));
+        return new CartsResponse(
+                carts.getCarts().stream()
+                .map(cart -> new CartResponse(
+                        cart.getProduct().getId().getValue(),
+                        cart.getProduct().getName().getValue(),
+                        cart.getProduct().getPrice().getValue(),
+                        cart.getProduct().getThumbnail().getValue(),
+                        cart.getQuantity().getValue()))
+                .collect(Collectors.toList()));
     }
 
     public void removeCartItems(String token, RemovedCartItemsRequest removedCartItemsRequest) {

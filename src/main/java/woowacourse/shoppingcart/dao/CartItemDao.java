@@ -1,12 +1,17 @@
 package woowacourse.shoppingcart.dao;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.domain.cart.CartId;
 import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.domain.customer.CustomerId;
-import woowacourse.shoppingcart.domain.product.ProductId;
+import woowacourse.shoppingcart.domain.product.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,10 +45,9 @@ public class CartItemDao {
         jdbcTemplate.update(sql, query);
     }
 
-    public List<ProductId> getProductIdsBy(CustomerId customerId) {
-        final String sql = "select product_id from cart_item where customer_id = :customerId";
-        return jdbcTemplate.query(sql, new MapSqlParameterSource("customerId", customerId.getValue()),
-                (rs, rowNum) -> new ProductId(rs.getInt("product_id")));
+    public List<Cart> getAllCartsBy(CustomerId customerId) {
+        final String sql = "select c.id id, p.id productId, p.name name, p.price price, p.thumbnail thumbnail, c.quantity quantity from cart_item c inner join product p on p.id = c.product_id where c.customer_id = :customerId";
+        return jdbcTemplate.query(sql, new MapSqlParameterSource("customerId", customerId.getValue()), new CartMapper());
     }
 
     public boolean exists(CustomerId customerId, ProductId productId) {
@@ -59,5 +63,19 @@ public class CartItemDao {
         query.addValue("productId", productId.getValue());
         query.addValue("quantity", quantity.getValue());
         jdbcTemplate.update(sql, query);
+    }
+
+    private static class CartMapper implements RowMapper<Cart> {
+        @Override
+        public Cart mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Cart(new CartId(rs.getInt("id")),
+                    new Product(
+                    new ProductId(rs.getInt("productId")),
+                    new Name(rs.getString("name")),
+                    new Price(rs.getInt("price")),
+                    new Thumbnail(rs.getString("thumbnail"))),
+                    new Quantity(rs.getInt("quantity"))
+            );
+        }
     }
 }

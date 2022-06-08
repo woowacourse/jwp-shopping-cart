@@ -4,11 +4,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Carts;
+import woowacourse.shoppingcart.domain.Products;
+import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.domain.customer.CustomerId;
-import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.domain.product.ProductId;
-import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ProductsResponse;
+import woowacourse.shoppingcart.dto.product.ProductResponse;
+import woowacourse.shoppingcart.dto.product.ProductsResponse;
 import woowacourse.shoppingcart.exception.InvalidTokenException;
 
 import java.util.List;
@@ -30,23 +32,36 @@ public class ProductService {
 
     public ProductsResponse findProducts(String token) {
         try {
-            customerService.validateToken(token);
             CustomerId customerId = new CustomerId(customerService.getCustomerId(token));
-            return new ProductsResponse(getProductsResponse(productDao.getProducts(), cartItemDao.getProductIdsBy(customerId)));
+            return new ProductsResponse(getProductsResponseWhoMember(new Products(productDao.getProducts()), new Carts(cartItemDao.getAllCartsBy(customerId))));
         } catch (InvalidTokenException e) {
-            return new ProductsResponse(getProductsResponse(productDao.getProducts(), List.of()));
+            return new ProductsResponse(getProductsResponseWhoGuest(new Products(productDao.getProducts())));
         }
     }
 
-    private List<ProductResponse> getProductsResponse(List<Product> products, List<ProductId> allProductIdsInCarts) {
-        return products.stream()
+    private List<ProductResponse> getProductsResponseWhoGuest(Products products) {
+        return products.getProducts().stream()
                 .map(product ->
                         new ProductResponse(
                                 product.getId().getValue(),
                                 product.getName().getValue(),
                                 product.getPrice().getValue(),
                                 product.getThumbnail().getValue(),
-                                product.in(allProductIdsInCarts)))
+                                Quantity.GUEST_QUANTITY
+                                ))
+                .collect(Collectors.toList());
+    }
+
+    private List<ProductResponse> getProductsResponseWhoMember(Products products, Carts carts) {
+        return products.getProducts().stream()
+                .map(product ->
+                        new ProductResponse(
+                                product.getId().getValue(),
+                                product.getName().getValue(),
+                                product.getPrice().getValue(),
+                                product.getThumbnail().getValue(),
+                                carts.findQuantity(product).getValue()
+                                ))
                 .collect(Collectors.toList());
     }
 

@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.product;
 
 public class ProductResponse {
 
@@ -6,14 +6,14 @@ public class ProductResponse {
     private final String name;
     private final int price;
     private final String thumbnail;
-    private final boolean isStored;
+    private final int quantity;
 
-    public ProductResponse(int id, String name, int price, String thumbnail, boolean isStored) {
+    public ProductResponse(int id, String name, int price, String thumbnail, int quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.thumbnail = thumbnail;
-        this.isStored = isStored;
+        this.quantity = quantity;
     }
 
     public int getId() {
@@ -32,7 +32,7 @@ public class ProductResponse {
         return thumbnail;
     }
 
-    public boolean getIsStored() {
-        return isStored;
+    public int getQuantity() {
+        return quantity;
     }
 }

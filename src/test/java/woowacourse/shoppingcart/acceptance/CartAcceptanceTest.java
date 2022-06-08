@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.dto.CartItemRequest;
-import woowacourse.shoppingcart.dto.RemovedCartItemsRequest;
+import woowacourse.shoppingcart.dto.cart.CartItemRequest;
+import woowacourse.shoppingcart.dto.cart.RemovedCartItemsRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 
 import java.util.List;
@@ -88,11 +88,30 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(token)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().put("/customers/carts")
+                .when().patch("/customers/carts")
                 .then().log().all().extract();
 
         // then
         // 정상적으로 수정된다.
+        assertThat(extract.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("장바구니 상품 조회")
+    @Test
+    void findAll() {
+        // given
+        // 로그인하여 토큰 발급과 장바구니에 물품이 추가되어 있고
+        회원가입(new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS));
+        String token = 로그인(new TokenRequest(EMAIL, PASSWORD));
+        장바구니_상품_추가(token, new CartItemRequest(1, 3));
+        장바구니_상품_추가(token, new CartItemRequest(2, 3));
+
+        // when
+        // 장바구니에 있는 물품을 조회하면
+        ExtractableResponse<Response> extract = 장바구니_상품_목록_조회_요청(token);
+
+        // then
+        // 정상적으로 조회된다.
         assertThat(extract.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
@@ -109,4 +128,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .then().log().all().extract();
     }
 
+    private ExtractableResponse<Response> 장바구니_상품_목록_조회_요청(String token) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(token)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/carts")
+                .then().log().all().extract();
+    }
 }

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.product.ProductResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 
 import java.util.List;
@@ -59,9 +59,9 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         List<ProductResponse> products = response.body().jsonPath().getList("products", ProductResponse.class);
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(products.get(0).getIsStored()).isFalse(),
-                () -> assertThat(products.get(1).getIsStored()).isFalse(),
-                () -> assertThat(products.get(2).getIsStored()).isFalse());
+                () -> assertThat(products.get(0).getQuantity()).isEqualTo(0),
+                () -> assertThat(products.get(1).getQuantity()).isEqualTo(0),
+                () -> assertThat(products.get(2).getQuantity()).isEqualTo(0));
     }
 
     private ExtractableResponse<Response> 비회원_상품_목록_조회_요청() {

@@ -4,7 +4,8 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 public class Quantity {
 
-    private static final int MINIMUM_QUANTITY = 1;
+    public static final int GUEST_QUANTITY = 0;
+    private static final int MINIMUM_QUANTITY = 0;
     private final int quantity;
 
     public Quantity(int quantity) {

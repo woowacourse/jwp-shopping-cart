@@ -14,6 +14,10 @@ public class Cart {
         this.quantity = quantity;
     }
 
+    public boolean isSame(Product product) {
+        return product.isSame(this.product);
+    }
+
     public CartId getId() {
         return cartId;
     }

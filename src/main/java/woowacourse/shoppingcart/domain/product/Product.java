@@ -32,8 +32,7 @@ public class Product {
         return thumbnail;
     }
 
-    public boolean in(List<ProductId> ids) {
-        return ids.stream()
-                .anyMatch(id -> id.equals(productId));
+    public boolean isSame(Product product) {
+        return product.productId.equals(this.productId);
     }
 }

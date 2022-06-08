@@ -3,10 +3,11 @@ package woowacourse.shoppingcart.ui;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.shoppingcart.dto.CartItemRequest;
-import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.cart.CartItemRequest;
+import woowacourse.shoppingcart.dto.cart.CartItemResponse;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.dto.RemovedCartItemsRequest;
+import woowacourse.shoppingcart.dto.cart.CartsResponse;
+import woowacourse.shoppingcart.dto.cart.RemovedCartItemsRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -19,6 +20,15 @@ public class CartItemController {
     public CartItemController(final CartService cartService) {
         this.cartService = cartService;
     }
+
+    @GetMapping
+    public ResponseEntity<CartsResponse> findCartItems(HttpServletRequest request) {
+        String token = AuthorizationExtractor.extract(request);
+        CartsResponse cartsResponse = cartService.findCartItems(token);
+        return ResponseEntity.ok().body(cartsResponse);
+    }
+
+
 
     @PostMapping
     public ResponseEntity<CartItemResponse> addCartItem(HttpServletRequest request, @RequestBody CartItemRequest cartItemRequest) {
@@ -34,7 +44,7 @@ public class CartItemController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<Void> editCartItem(HttpServletRequest request, @RequestBody CartItemRequest cartItemRequest) {
         String token = AuthorizationExtractor.extract(request);
         cartService.editCartItem(token, cartItemRequest);
