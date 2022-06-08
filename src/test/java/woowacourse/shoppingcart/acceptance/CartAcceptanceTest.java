@@ -15,7 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@Sql(scripts = {"classpath:schema.sql", "classpath:cartData.sql"})
+@Sql(scripts = {"classpath:testSchema.sql", "classpath:testCartData.sql"})
 public class CartAcceptanceTest extends AcceptanceTest {
     private static final String EMAIL = "crew01@naver.com";
     private static final String VALID_PASSWORD = "a12345";

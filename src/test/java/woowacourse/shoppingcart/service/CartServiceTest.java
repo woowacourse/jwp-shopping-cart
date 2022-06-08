@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:cartData.sql"})
+@Sql(scripts = {"classpath:testSchema.sql", "classpath:testCartData.sql"})
 public class CartServiceTest {
 
     @Autowired
