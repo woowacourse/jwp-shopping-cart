@@ -5,9 +5,9 @@ import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.customer.SignUpRequest;
-import woowacourse.shoppingcart.exception.DuplicateCustomerException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
+import woowacourse.shoppingcart.exception.customer.DuplicateCustomerBadRequestException;
+import woowacourse.shoppingcart.exception.customer.InvalidCustomerBadRequestException;
 
 @Service
 public class CustomerService {
@@ -18,9 +18,9 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public Long registerCustomer(SignUpRequest request) {
+    public Long registerCustomer(CustomerSignUpRequest request) {
         if (customerDao.existByEmail(request.getEmail())) {
-            throw new DuplicateCustomerException();
+            throw new DuplicateCustomerBadRequestException();
         }
         String encryptPassword = PasswordEncoder.encrypt(request.getPassword());
         Customer customer = customerDao.save(
@@ -30,17 +30,17 @@ public class CustomerService {
 
     public Customer findById(Long id) {
         return customerDao.findById(id)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(InvalidCustomerBadRequestException::new);
     }
 
     public Customer findByEmail(String email) {
         return customerDao.findByEmail(email)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(InvalidCustomerBadRequestException::new);
     }
 
     public void deleteByEmail(String email) {
         if (!customerDao.existByEmail(email)) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerBadRequestException();
         }
         customerDao.deleteByEmail(email);
     }

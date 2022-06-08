@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.product.ProductRequest;
-import woowacourse.shoppingcart.exception.NotFoundProductException;
+import woowacourse.shoppingcart.exception.product.ShoppingCartNotFoundProductException;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class ProductService {
 
     public Product findProductById(final Long productId) {
         return productDao.findProductById(productId)
-                .orElseThrow(NotFoundProductException::new);
+                .orElseThrow(ShoppingCartNotFoundProductException::new);
     }
 
     public void deleteProductById(final Long productId) {

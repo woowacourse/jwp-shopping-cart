@@ -7,7 +7,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.customer.SignUpRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 
 import javax.validation.Valid;
 
@@ -22,8 +22,8 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCustomer(@RequestBody @Valid SignUpRequest signUpRequest) {
-        customerService.registerCustomer(signUpRequest);
+    public ResponseEntity<Void> addCustomer(@RequestBody @Valid CustomerSignUpRequest customerSignUpRequest) {
+        customerService.registerCustomer(customerSignUpRequest);
         return ResponseEntity.noContent().build();
     }
 

@@ -8,7 +8,10 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.cart.CartItemUpdateRequest;
-import woowacourse.shoppingcart.exception.*;
+import woowacourse.shoppingcart.exception.cartItem.DuplicateCartItemBadRequestException;
+import woowacourse.shoppingcart.exception.product.InvalidProductBadRequestException;
+import woowacourse.shoppingcart.exception.product.InvalidQuantityBadRequestException;
+import woowacourse.shoppingcart.exception.product.ShoppingCartNotFoundProductException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +35,7 @@ public class CartService {
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
             final Product product = productDao.findProductById(productId)
-                    .orElseThrow(InvalidProductException::new);
+                    .orElseThrow(InvalidProductBadRequestException::new);
             cartItems.add(new CartItem(cartId, product));
         }
         return cartItems;
@@ -44,24 +47,24 @@ public class CartService {
 
     public Long addCart(final Long productId, final Customer customer) {
         productDao.findProductById(productId)
-                .orElseThrow(NotFoundProductException::new);
+                .orElseThrow(ShoppingCartNotFoundProductException::new);
         validateDuplicateCartItem(productId);
         try {
             return cartItemDao.addCartItem(customer.getId(), productId, 1);
         } catch (Exception e) {
-            throw new InvalidProductException();
+            throw new InvalidProductBadRequestException();
         }
     }
 
     private void validateDuplicateCartItem(Long productId) {
         if (cartItemDao.existByProductId(productId)) {
-            throw new DuplicateCartItemException();
+            throw new DuplicateCartItemBadRequestException();
         }
     }
 
     public void deleteCart(final Customer customer, final Long productId) {
         productDao.findProductById(productId)
-                .orElseThrow(NotFoundProductException::new);
+                .orElseThrow(ShoppingCartNotFoundProductException::new);
 
         cartItemDao.deleteByProductIdAndCustomerId(customer.getId(), productId);
     }
@@ -69,7 +72,7 @@ public class CartService {
     public CartItem updateQuantity(CartItemUpdateRequest request, final Customer customer, final Long productId) {
         validateQuantity(request.getQuantity());
         Product product = productDao.findProductById(productId)
-                .orElseThrow(NotFoundProductException::new);
+                .orElseThrow(ShoppingCartNotFoundProductException::new);
 
         cartItemDao.updateQuantity(customer.getId(), productId, request.getQuantity());
 
@@ -79,7 +82,7 @@ public class CartService {
 
     private void validateQuantity(int quantity) {
         if (quantity < 1) {
-            throw new InvalidQuantityException();
+            throw new InvalidQuantityBadRequestException();
         }
     }
 }

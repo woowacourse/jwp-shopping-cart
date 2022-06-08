@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
 public class Customer {
 
     private final Long id;

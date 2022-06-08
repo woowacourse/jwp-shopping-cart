@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.auth.support.PasswordEncoder;
-import woowacourse.shoppingcart.dto.customer.SignUpRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
-import woowacourse.shoppingcart.exception.DuplicateCustomerException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.customer.DuplicateCustomerBadRequestException;
+import woowacourse.shoppingcart.exception.customer.InvalidCustomerBadRequestException;
 
 @SpringBootTest
 @Transactional
@@ -35,7 +35,7 @@ class CustomerServiceTest {
 
     @BeforeEach
     void setUp() {
-        SignUpRequest request = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
+        CustomerSignUpRequest request = new CustomerSignUpRequest(EMAIL, PASSWORD, NICKNAME);
         customerService.registerCustomer(request);
     }
 
@@ -54,9 +54,9 @@ class CustomerServiceTest {
     @DisplayName("중복된 email로 회원 등록")
     @Test
     void duplicatedEmailCustomer() {
-        SignUpRequest request = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
+        CustomerSignUpRequest request = new CustomerSignUpRequest(EMAIL, PASSWORD, NICKNAME);
         assertThatThrownBy(() -> customerService.registerCustomer(request))
-                .isInstanceOf(DuplicateCustomerException.class);
+                .isInstanceOf(DuplicateCustomerBadRequestException.class);
     }
 
     @DisplayName("email로 회원 조회")
@@ -74,14 +74,14 @@ class CustomerServiceTest {
     @Test
     void notFoundCustomerByEmailThrowException() {
         assertThatThrownBy(() -> customerService.findByEmail(NOT_FOUND_EMAIL))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(InvalidCustomerBadRequestException.class);
     }
 
     @DisplayName("존재하지 않는 이메일로 탈퇴 시 예외 발생")
     @Test
     void deleteByNotExistEmail() {
         assertThatThrownBy(() -> customerService.deleteByEmail(NOT_FOUND_EMAIL))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(InvalidCustomerBadRequestException.class);
     }
 
     @DisplayName("이메일로 회원 탈퇴")
@@ -97,7 +97,7 @@ class CustomerServiceTest {
     void updateByNotExistEmail() {
         assertThatThrownBy(() -> customerService.updateCustomer(NOT_FOUND_EMAIL,
                 new CustomerUpdateRequest(NICKNAME, PASSWORD)))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(InvalidCustomerBadRequestException.class);
     }
 
     @DisplayName("정상적인 회원 정보 수정")
