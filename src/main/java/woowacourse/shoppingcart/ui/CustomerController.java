@@ -13,6 +13,7 @@ import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.CustomerNameResponse;
 
 @RestController
 @RequestMapping("/customers")
@@ -47,6 +48,12 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal Long id) {
         customerService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<CustomerNameResponse> findCustomerName(@AuthenticationPrincipal Long id) {
+        CustomerNameResponse customerNameResponse = new CustomerNameResponse(customerService.findCustomerById(id).getName());
+        return ResponseEntity.ok().body(customerNameResponse);
     }
 
     @PostMapping("/email")

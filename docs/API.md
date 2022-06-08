@@ -142,6 +142,26 @@
         HTTP/1.1 204 No Content
         Content-Type: application/json
         ```
+- [x] 회원 이름 조회
+    - `요청`
+        ```java
+        GET /customers/name HTTP/1.1
+        Content-Type: application/json
+        Authorization : accessToken
+        ```
+
+    - `응답`
+
+        ```java
+        HTTP/1.1 200 Ok
+        Content-Type: application/json
+        
+        {
+          "name" : "이름"
+        }
+        ```
+    - `예외`
+        - Token 값이 잘못되었을 경우
 
 ## 장바구니 API
 

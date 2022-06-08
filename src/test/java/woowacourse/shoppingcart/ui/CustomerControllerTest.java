@@ -165,4 +165,26 @@ public class CustomerControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("message").exists());
     }
+
+    @DisplayName("회원 이름 조회 성공 시 상태코드 200과 회원 이름을 반환한다.")
+    @Test
+    void findCustomerName() throws Exception {
+        // given
+        when(authenticationPrincipalArgumentResolver.supportsParameter((MethodParameter) notNull()))
+                .thenReturn(true);
+        when(authenticationPrincipalArgumentResolver.resolveArgument(
+                (MethodParameter) notNull()
+                , (ModelAndViewContainer) notNull()
+                , (NativeWebRequest) notNull()
+                , (WebDataBinderFactory) notNull()))
+                .thenReturn(1L);
+        when(customerService.findCustomerById(any(Long.class)))
+                .thenReturn(new CustomerResponse(1L, "test@test.com", "bunny", "010-0000-0000", "서울시 종로구"));
+        // when
+        ResultActions perform = mockMvc.perform(get("/customers/name"));
+        // then
+        perform.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value("bunny"));
+    }
 }
