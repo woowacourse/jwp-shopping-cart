@@ -32,7 +32,7 @@ public class CartService {
     }
 
     public void addCartItem(final long memberId, final AddCartItemRequest request) {
-        long productId = request.getProduct_id();
+        long productId = request.getProductId();
 
         validateMember(memberId);
         validateProduct(productId);
