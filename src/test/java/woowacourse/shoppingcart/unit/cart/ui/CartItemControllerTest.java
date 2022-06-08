@@ -30,6 +30,7 @@ import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemException;
+import woowacourse.shoppingcart.cart.exception.badrequest.InvalidQuantityException;
 import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.product.domain.Product;
@@ -329,6 +330,9 @@ class CartItemControllerTest extends ControllerTest {
         final QuantityChangingRequest request = new QuantityChangingRequest(-1);
         final String json = objectMapper.writeValueAsString(request);
 
+        given(cartService.changeQuantity(customer, product.getId(), request))
+                .willThrow(new InvalidQuantityException());
+
         // when
         final ResultActions perform = mockMvc.perform(
                 put(REQUEST_URL + "/{productId}", product.getId())
@@ -340,7 +344,7 @@ class CartItemControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("errorCode").value("1000"))
+                .andExpect(jsonPath("errorCode").value("1100"))
                 .andExpect(jsonPath("message").value("수량이 유효하지 않습니다."));
 
         // docs

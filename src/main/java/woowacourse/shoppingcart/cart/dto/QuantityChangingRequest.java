@@ -1,21 +1,21 @@
 package woowacourse.shoppingcart.cart.dto;
 
 import java.util.Objects;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.NotNull;
 
 public class QuantityChangingRequest {
 
-    @Positive(message = "수량이 유효하지 않습니다.")
-    private int quantity;
+    @NotNull
+    private Integer quantity;
 
     private QuantityChangingRequest() {
     }
 
-    public QuantityChangingRequest(int quantity) {
+    public QuantityChangingRequest(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -28,7 +28,7 @@ public class QuantityChangingRequest {
             return false;
         }
         final QuantityChangingRequest that = (QuantityChangingRequest) o;
-        return quantity == that.quantity;
+        return Objects.equals(quantity, that.quantity);
     }
 
     @Override
