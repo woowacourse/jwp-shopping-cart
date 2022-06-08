@@ -12,13 +12,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.global.DaoTest;
 import woowacourse.shoppingcart.domain.OrderDetail;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class OrdersDetailDaoTest {
+class OrdersDetailDaoTest extends DaoTest {
 
     private final JdbcTemplate jdbcTemplate;
     private final OrdersDetailDao ordersDetailDao;
@@ -37,8 +34,8 @@ class OrdersDetailDaoTest {
         jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
         ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 
-        jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
-                , "name", 1000, "imageUrl");
+        jdbcTemplate.update("INSERT INTO product (name, price, image_url, quantity) VALUES (?, ?, ?, ?)"
+                , "name", 1_000, "imageUrl", 5_000);
         productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
     }
 

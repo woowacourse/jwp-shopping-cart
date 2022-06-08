@@ -4,23 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import javax.sql.DataSource;
-import org.aspectj.apache.bcel.generic.RET;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
+import woowacourse.global.DaoTest;
 import woowacourse.shoppingcart.domain.Product;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:schema.sql")
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class ProductDaoTest {
+public class ProductDaoTest extends DaoTest {
+
+    private static final int 초기_데이터_수 = 30;
 
     private static final String name = "초콜렛";
     private static final int price = 1_000;
@@ -37,7 +29,6 @@ public class ProductDaoTest {
 
     private Product createTestProduct() {
 
-
         return new Product(name, price, imageUrl, quantity);
     }
 
@@ -48,7 +39,7 @@ public class ProductDaoTest {
         final Long productId = productDao.save(TEST_PRODUCT);
 
         // then
-        assertThat(productId).isEqualTo(1L);
+        assertThat(productId).isEqualTo(초기_데이터_수 + 1L);
     }
 
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
@@ -70,7 +61,7 @@ public class ProductDaoTest {
     void getProducts() {
 
         // given
-        final int size = 0;
+        final int size = 초기_데이터_수 + 0;
 
         // when
         final List<Product> products = productDao.findProducts();

@@ -14,15 +14,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.global.DaoTest;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.cartitem.CartResponse;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class CartQueryDaoTest {
+class CartQueryDaoTest extends DaoTest  {
 
     private final CartQueryDao cartQueryDao;
 
@@ -49,11 +46,12 @@ class CartQueryDaoTest {
         cartItemDao.addCartItem(저장된_회원_ID, 저장된_상품_ID, 40L);
     }
 
-    @DisplayName("asd")
+    @DisplayName("장바구니 목록 추출을 검증한다")
     @Test
-    void qwe() {
+    void findAll() {
         List<CartResponse> allCartByCustomerId = cartQueryDao.findAllCartByCustomerId(저장된_회원_ID);
         CartResponse cartResponse = allCartByCustomerId.get(0);
+
         CartResponse expected =
                 new CartResponse(저장된_상품_ID, "foo.com/app.png", "사과", 3_000, 8_000L, 40L);
 
