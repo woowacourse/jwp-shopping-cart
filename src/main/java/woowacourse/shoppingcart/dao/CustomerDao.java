@@ -56,6 +56,11 @@ public class CustomerDao {
         }
     }
 
+    public boolean hasEmail(String email) {
+        String sql = "SELECT EXISTS(SELECT * FROM CUSTOMER WHERE email = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, email));
+    }
+
     public int updateCustomer(final Long customerId, final Customer customer) {
         final String query = "UPDATE customer SET password=:password, name=:name, gender=:gender, contact=:contact, address=:address, detailAddress=:detailAddress, zoneCode=:zoneCode WHERE id=:customerId";
         final Map<String, Object> parameterSource = Map.ofEntries(

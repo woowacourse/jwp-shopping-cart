@@ -2,11 +2,14 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import woowacourse.auth.exception.BadRequestException;
 import woowacourse.auth.exception.NotFoundException;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
+import woowacourse.shoppingcart.application.dto.EmailDuplicationResponse;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -52,5 +55,9 @@ public class CustomerService {
         if (affectedRows != 1) {
             throw new BadRequestException("삭제가 되지 않았습니다.");
         }
+    }
+
+    public EmailDuplicationResponse isDuplicatedEmail(String email) {
+        return new EmailDuplicationResponse(customerDao.hasEmail(email));
     }
 }
