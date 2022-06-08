@@ -23,7 +23,7 @@ public class Nickname {
 
     private boolean isLengthOutOfSize(final String value) {
         final int length = value.length();
-        return length < MIN_LENGTH || length > MAX_LENGTH;
+        return (length < MIN_LENGTH) || (length > MAX_LENGTH);
     }
 
     public String get() {
