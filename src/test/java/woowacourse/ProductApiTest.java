@@ -18,7 +18,7 @@ class ProductApiTest extends TestSupport {
     @Test
     void add_test() throws Exception {
         mockMvc.perform(
-                post("/api/products")
+                post("/products")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(readJson("/json/products/products-create.json"))
             )
@@ -38,7 +38,7 @@ class ProductApiTest extends TestSupport {
     @Test
     void products_test() throws Exception {
         mockMvc.perform(
-                get("/api/products")
+                get("/products")
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
@@ -57,7 +57,7 @@ class ProductApiTest extends TestSupport {
     @Test
     void product_test() throws Exception {
         mockMvc.perform(
-                get("/api/products/{productId}", 1L)
+                get("/products/{productId}", 1L)
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
@@ -79,7 +79,7 @@ class ProductApiTest extends TestSupport {
     @Test
     void delete_test() throws Exception {
         mockMvc.perform(
-                delete("/api/products/{productId}", 2L)
+                delete("/products/{productId}", 2L)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
             )
             .andExpect(status().isNoContent())
