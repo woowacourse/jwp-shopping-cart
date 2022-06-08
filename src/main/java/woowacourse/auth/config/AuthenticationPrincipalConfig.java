@@ -27,10 +27,10 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor(tokenManager))
-                .addPathPatterns("/api/members/me")
-                .addPathPatterns("/api/members/password")
-                .addPathPatterns("/api/members/password-check")
-                .addPathPatterns("/api/carts");
+                .addPathPatterns("/api/members/me/**")
+                .addPathPatterns("/api/members/password/**")
+                .addPathPatterns("/api/members/password-check/**")
+                .addPathPatterns("/api/carts/**");
     }
 
     @Bean
