@@ -20,12 +20,10 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 public class CartItemService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
     private final ProductDao productDao;
     private final CustomerSpecification customerSpec;
 
     public List<CartItem> findCartsByCustomerId(final long customerId) {
-        customerSpec.validateCustomerExists(customerId);
         final List<Long> cartIds = findCartIdsByCustomerId(customerId);
 
         final List<CartItem> carts = new ArrayList<>();

@@ -24,12 +24,9 @@ public class CartItemDaoTest {
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
 
     public CartItemDaoTest(DataSource dataSource,
-                           NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                           JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+                           NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         cartItemDao = new CartItemDao(dataSource, namedParameterJdbcTemplate);
         productDao = new ProductDao(dataSource, namedParameterJdbcTemplate);
     }
@@ -39,8 +36,8 @@ public class CartItemDaoTest {
         productDao.save(new Product("banana", 1_000, "woowa1.com", 2_000));
         productDao.save(new Product("apple", 2_000, "woowa2.com", 3_000));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, 1L, 5L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, 2L, 10L);
+        cartItemDao.addCartItem(1L, 1L, 5L);
+        cartItemDao.addCartItem(1L, 2L, 10L);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
