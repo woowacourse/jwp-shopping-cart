@@ -7,6 +7,8 @@ import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -33,7 +35,7 @@ public class CartItemController {
     public ResponseEntity<Void> updateCartItemQuantity(
             @AuthenticationPrincipal String email,
             @PathVariable Long productId,
-            @RequestBody UpdateQuantityRequest request) {
+            @Valid @RequestBody UpdateQuantityRequest request) {
         cartService.updateQuantity(email, productId, request.getQuantity());
         return ResponseEntity.noContent().build();
     }
