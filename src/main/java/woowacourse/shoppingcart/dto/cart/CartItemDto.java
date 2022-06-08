@@ -11,6 +11,9 @@ public class CartItemDto {
     private int quantity;
     private int count;
 
+    private CartItemDto() {
+    }
+
     public CartItemDto(Product product, int count) {
         this(product.getId(), product.getName(), product.getPrice(),
                 product.getImageUrl(), product.getQuantity(), count);
