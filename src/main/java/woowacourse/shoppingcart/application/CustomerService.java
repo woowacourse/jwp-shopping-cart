@@ -28,12 +28,6 @@ public class CustomerService {
         return customerDao.save(request.toEntity());
     }
 
-    private void encryptPassword(CustomerCreateRequest request) {
-        String originPassword = request.getPassword();
-        String encryptPassword = CryptoUtils.encrypt(originPassword);
-        request.setPassword(encryptPassword);
-    }
-
     @Transactional
     public Customer findById(long id) {
         return customerDao.findById(id)
@@ -68,6 +62,17 @@ public class CustomerService {
     @Transactional
     public void delete(Long id, String password) {
         customerSpec.validateCustomerExists(id);
-        customerDao.deleteById(id, password);
+        String encryptPassword = encryptPassword(password);
+        customerDao.deleteById(id, encryptPassword);
+    }
+
+    private String encryptPassword(String password) {
+        return CryptoUtils.encrypt(password);
+    }
+
+    private void encryptPassword(CustomerCreateRequest request) {
+        String originPassword = request.getPassword();
+        String encryptPassword = CryptoUtils.encrypt(originPassword);
+        request.setPassword(encryptPassword);
     }
 }
