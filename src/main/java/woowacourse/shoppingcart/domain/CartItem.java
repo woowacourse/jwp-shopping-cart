@@ -27,6 +27,10 @@ public class CartItem {
         }
     }
 
+    public boolean hasQuantityOverZero() {
+        return quantity > 0;
+    }
+
     public Product getProduct() {
         return product;
     }
