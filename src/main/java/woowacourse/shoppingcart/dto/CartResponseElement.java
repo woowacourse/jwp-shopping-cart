@@ -9,7 +9,7 @@ public class CartResponseElement {
     private int price;
     private String imageUrl;
     private int quantity;
-    private boolean check;
+    private boolean checked;
 
     public CartResponseElement() {
     }
@@ -20,7 +20,7 @@ public class CartResponseElement {
         this.price = product.getPrice();
         this.imageUrl = product.getImageUrl();
         this.quantity = quantity;
-        this.check = checked;
+        this.checked = checked;
     }
 
     public Long getId() {
@@ -44,7 +44,7 @@ public class CartResponseElement {
     }
 
     public boolean getCheck() {
-        return check;
+        return checked;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class CartResponseElement {
                 ", price=" + price +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", quantity=" + quantity +
-                ", check=" + check +
+                ", check=" + checked +
                 '}' + "\n";
     }
 }

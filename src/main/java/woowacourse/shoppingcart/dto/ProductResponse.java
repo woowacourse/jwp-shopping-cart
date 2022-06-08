@@ -10,11 +10,11 @@ public class ProductResponse {
     public ProductResponse() {
     }
 
-    public ProductResponse(Long id, String name, int price, String image_url) {
+    public ProductResponse(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.imageUrl = image_url;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
