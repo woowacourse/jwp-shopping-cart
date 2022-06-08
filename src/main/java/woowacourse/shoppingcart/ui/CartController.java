@@ -41,7 +41,8 @@ public class CartController {
     public ResponseEntity<List<CartResponse>> findByCartId(@LoginMemberPrincipal LoginMember loginMember) {
         final Carts carts = cartService.findCartsByCustomerId(loginMember.getId());
 
-        return ResponseEntity.ok(toCartResponses(carts));
+        final List<CartResponse> body = toCartResponses(carts);
+        return ResponseEntity.ok(body);
     }
 
     @PutMapping
