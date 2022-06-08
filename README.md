@@ -73,22 +73,22 @@
     - 상품 조회 시에는 `GET` `/api/products` 로 요청한다.
     - List를 이용해 모든 상품이 조회된다.
     - 인가를 받지 않아도 된다. (인터셉터에서 제외)
-- [ ] 내 장바구니 상품 조회 구현
+- [x] 내 장바구니 상품 조회 구현
     - 장바구니 상품 조회 시 `GET` `api/customers/{customerId}/carts` 로 요청한다.
     - 토큰을 넣어주어야 한다.
     - `예외` customerId와 토큰에서 받은 값이 다르면 `403 Forbidden`
-- [ ] 내 장바구니에 상품 추가 구현
+- [x] 내 장바구니에 상품 추가 구현
     - 장바구니 상품 추가 시 `POST` `/api/customers/{customerId}/carts` 로 요청한다.
     - body에 productId, count를 입력받는다.
     - `예외` 존재하지 않는 productId로 요청을 보낼 경우
     - `예외` 이미 담겨있는 productId로 요청을 보낼 경우
     - `예외` count가 물품의 재고를 넘기는 경우
     - `예외` customerId와 입력받은 토큰의 유저와 다를 경우
-- [ ] 내 장바구니에 상품 제거 구현
+- [x] 내 장바구니에 상품 제거 구현
     - 장바구니 상품 제거 시 `DELETE` `/api/customers/{customerId}/carts?productId={id}` 로 요청한다.
     - `예외` 존재하지 않는 productId로 요청을 보낼 경우
     - `예외` customerId와 입력받은 토큰의 유저와 다를 경우
-- [ ] 내 장바구니에 상품 개수 변경 구현
+- [x] 내 장바구니에 상품 개수 변경 구현
     - 장바구니 상품 제거 시 `PATCH` `/api/customers/{customerId}/carts?productId={id}` 로 요청한다.
     - body에 count를 입력받는다.
     - `예외` count가 물품의 재고를 넘기는 경우
