@@ -64,7 +64,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     private List<FindCartItemResponse> getFindCartItemResponses(ExtractableResponse<Response> findAllCartItemResponse) {
         return findAllCartItemResponse.body().jsonPath()
-                .getList("products", FindCartItemResponse.class);
+                .getList("cartItems", FindCartItemResponse.class);
     }
 
     private void createCart(String accessToken, Long productId) {
