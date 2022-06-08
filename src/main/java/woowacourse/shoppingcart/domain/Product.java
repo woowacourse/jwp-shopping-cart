@@ -4,19 +4,23 @@ public class Product {
     private final Long id;
     private final String name;
     private final int price;
-    private final int stockQuantity;
+    private final StockQuantity stockQuantity;
     private final ThumbnailImage thumbnailImage;
 
     public Product(Long id, String name, int price, int stockQuantity, ThumbnailImage thumbnailImage) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.stockQuantity = stockQuantity;
+        this.stockQuantity = new StockQuantity(stockQuantity);
         this.thumbnailImage = thumbnailImage;
     }
 
     public Product(String name, int price, int stockQuantity, ThumbnailImage thumbnailImage) {
         this(null, name, price, stockQuantity, thumbnailImage);
+    }
+
+    public void order(int value){
+        stockQuantity.reduce(value);
     }
 
     public Long getId() {
@@ -32,7 +36,7 @@ public class Product {
     }
 
     public int getStockQuantity() {
-        return stockQuantity;
+        return stockQuantity.getValue();
     }
 
     public ThumbnailImage getThumbnailImage() {

@@ -46,7 +46,7 @@ create table thumbnail_image
 alter table thumbnail_image
     add constraint fk_thumbnail_image_to_product
         foreign key (product_id) references product (id)
-        ON DELETE CASCADE ;
+            ON DELETE CASCADE;
 
 create table cart_item
 (

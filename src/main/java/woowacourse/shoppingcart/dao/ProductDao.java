@@ -74,4 +74,9 @@ public class ProductDao {
         final String sql = "SELECT exists(SELECT id FROM product WHERE id = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
+
+    public void updateQuantity(Long id, int quantity) {
+        final String sql = "UPDATE product SET stock_quantity = ? WHERE id = ?";
+        jdbcTemplate.update(sql, quantity, id);
+    }
 }
