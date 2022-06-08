@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.service.LoginService;
+import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.support.Encryptor;
@@ -31,7 +31,7 @@ public class LoginControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private LoginService authService;
+    private AuthService authService;
 
     @MockBean
     private JwtTokenProvider jwtTokenProvider;

@@ -5,15 +5,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.exception.AuthorizationException;
+import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 
 public class AuthInterceptor implements HandlerInterceptor {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthService authService;
 
-    public AuthInterceptor(final JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthInterceptor(final AuthService authService) {
+        this.authService = authService;
     }
 
     @Override
@@ -31,8 +32,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     public void validateToken(final HttpServletRequest request) {
         final String token = AuthorizationExtractor.extract(request);
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new AuthorizationException("유효하지 않은 토큰입니다😤");
-        }
+        authService.validateToken(token);
     }
 }

@@ -8,26 +8,27 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.controller.AuthInterceptor;
 import woowacourse.auth.controller.OptionalUserNameResolver;
 import woowacourse.auth.controller.UserNameResolver;
+import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthService authService;
 
-    public AuthenticationPrincipalConfig(final JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthenticationPrincipalConfig(final AuthService authService) {
+        this.authService = authService;
     }
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthInterceptor(jwtTokenProvider))
+        registry.addInterceptor(new AuthInterceptor(authService))
                 .addPathPatterns("/api/customers/me/**");
     }
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new UserNameResolver(jwtTokenProvider));
-        resolvers.add(new OptionalUserNameResolver(jwtTokenProvider));
+        resolvers.add(new UserNameResolver(authService));
+        resolvers.add(new OptionalUserNameResolver(authService));
     }
 }

@@ -14,14 +14,14 @@ import woowacourse.shoppingcart.support.Encryptor;
 
 @Service
 @Transactional(readOnly = true)
-public class LoginService {
+public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final Encryptor encryptor;
     private final CustomerDao customerDao;
 
-    public LoginService(final JwtTokenProvider jwtTokenProvider, final Encryptor encryptor,
-                        final CustomerDao customerDao) {
+    public AuthService(final JwtTokenProvider jwtTokenProvider, final Encryptor encryptor,
+                       final CustomerDao customerDao) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.encryptor = encryptor;
         this.customerDao = customerDao;
@@ -34,5 +34,15 @@ public class LoginService {
             return new TokenResponse(token);
         }
         throw new AuthorizationException("로그인에 실패했습니다😤");
+    }
+
+    public void validateToken(final String token) {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new AuthorizationException("유효하지 않은 토큰입니다😤");
+        }
+    }
+
+    public UserName getUserNameFormToken(final String token) {
+        return new UserName(jwtTokenProvider.getPayload(token));
     }
 }
