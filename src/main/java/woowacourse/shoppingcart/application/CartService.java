@@ -75,4 +75,8 @@ public class CartService {
     public void updateQuantity(Long cartId, int quantity) {
         cartItemDao.updateProductQuantity(cartId, quantity);
     }
+
+    public void updateQuantity(Long cartId, int quantity) {
+        cartItemDao.updateProductQuantity(cartId, quantity);
+    }
 }
