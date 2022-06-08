@@ -42,7 +42,7 @@ public class CustomerRepository {
 
     public void delete(final Long id) {
         customerDao.delete(id);
-        cartItemDao.deleteByCustomerId(id);
+        cartItemDao.deleteAllByCustomerId(id);
     }
 
     public void validateDuplicateUsername(final String username) {

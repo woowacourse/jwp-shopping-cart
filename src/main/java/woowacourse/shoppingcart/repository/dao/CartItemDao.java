@@ -93,7 +93,7 @@ public class CartItemDao {
         }
     }
 
-    public void deleteByCustomerId(final Long customerId) {
+    public void deleteAllByCustomerId(final Long customerId) {
         String query = "delete from cart_item where customer_id = :customerId";
         Map<String, Object> params = new HashMap<>();
         params.put("customerId", customerId);
