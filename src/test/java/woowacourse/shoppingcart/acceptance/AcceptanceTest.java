@@ -190,7 +190,7 @@ public class AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/login/auto")
+                .post("/token/refresh")
                 .then().log().all()
                 .statusCode(httpStatus.value())
                 .extract();
@@ -202,7 +202,7 @@ public class AcceptanceTest {
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/products/all")
+                .get("/products")
                 .then().log().all()
                 .statusCode(httpStatus.value())
                 .extract();

@@ -16,7 +16,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ProductsResponse searchPagedProducts(@RequestParam int size, @RequestParam int page) {
+    public ProductsResponse searchPagedProducts(@RequestParam(required = false, defaultValue = "1000") int size,
+                                                @RequestParam(required = false, defaultValue = "1") int page) {
         return productService.findProducts(page, size);
     }
 

@@ -47,11 +47,16 @@ public class ProductServiceTest {
         assertThat(productsResponse.getProducts().size()).isEqualTo(1);
     }
 
+    @Test 
+    void 페이지와_페이지당_사이즈_모두_없이_가져오는_경우() {
+        ProductsResponse productsResponse = productService.findProducts(1, 1000);
+        assertThat(productsResponse.getProducts().size()).isEqualTo(13);
+    }
+
     @Test
     void 전체_상품의_페이지보다_더_많은_페이지를_요구하는_경우() {
-        assertThatThrownBy(() -> productService.findProducts(3, 12))
-                .isInstanceOf(InvalidProductException.class)
-                .hasMessage("[ERROR] 최대 페이지보다 큰 페이지를 로드할 수 없습니다.");
+        ProductsResponse productsResponse = productService.findProducts(3, 12);
+        assertThat(productsResponse.getProducts().size()).isEqualTo(0);
     }
 
     @Test

@@ -63,10 +63,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @Test
     void 전체페이지보다_더_큰_페이지를_조회하는_경우() {
 
-        var extract = createPagedProductResult(3, 12, HttpStatus.BAD_REQUEST);
+        var extract = createPagedProductResult(3, 12, HttpStatus.OK).as(ProductsResponse.class);
+        assertThat(extract.getProducts().size()).isEqualTo(0);
 
-        assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 최대 페이지보다 큰 페이지를 로드할 수 없습니다.");
+
     }
 
     @Test

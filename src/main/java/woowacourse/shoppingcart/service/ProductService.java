@@ -31,7 +31,7 @@ public class ProductService {
         }
         Long totalPage = (long) Math.ceil(totalItem / (double) perPage);
         if (page > totalPage) {
-            throw new InvalidProductException("[ERROR] 최대 페이지보다 큰 페이지를 로드할 수 없습니다.");
+            return new ProductsResponse(new Products(List.of()).getProducts());
         }
         Products products = new Products(productDao.findProductsByPage(page, perPage));
         return new ProductsResponse(products.getProducts());

@@ -49,7 +49,7 @@ public class CartResponseElement {
         return quantity;
     }
 
-    public boolean getCheck() {
+    public boolean getChecked() {
         return checked;
     }
 

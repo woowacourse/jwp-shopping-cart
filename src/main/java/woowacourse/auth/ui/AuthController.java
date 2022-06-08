@@ -13,7 +13,6 @@ import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.SignInResponse;
 
 @RestController
-@RequestMapping("/login")
 public class AuthController {
 
     private final AuthService authService;
@@ -22,12 +21,12 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest) {
         return ResponseEntity.ok().body(authService.signIn(signInRequest));
     }
 
-    @PostMapping("/auto")
+    @PostMapping("/token/refresh")
     public ResponseEntity<SignInResponse> signInAuto(@AuthenticationPrincipal String username) {
         return ResponseEntity.ok().body(authService.autoSignIn(username));
     }

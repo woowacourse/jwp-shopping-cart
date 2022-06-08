@@ -165,7 +165,7 @@ public class CartService {
     public void deleteItem(String username, DeleteCartItemRequest deleteCartItemRequest) {
         validateExistName(username);
         Long id = customerDao.findIdByUserName(username);
-        List<Long> cartIds = deleteCartItemRequest.getIds();
+        List<Long> cartIds = deleteCartItemRequest.generateIds();
         validatePositiveCartIds(cartIds);
         validateExistCartIds(cartIds, id);
         for (Long cartId : cartIds) {

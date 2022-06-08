@@ -18,7 +18,7 @@ public class DeleteCartItemRequest {
         return cartItems;
     }
 
-    public List<Long> getIds() {
+    public List<Long> generateIds() {
         return cartItems.stream()
                 .map(DeleteCartItemElement::getId)
                 .collect(Collectors.toList());

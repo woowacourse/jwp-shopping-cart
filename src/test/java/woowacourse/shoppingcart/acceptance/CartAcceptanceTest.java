@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.*;
 
 import java.util.List;
@@ -30,27 +28,27 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse extract = findCustomerCart(accessToken, HttpStatus.OK);
 
-        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("products", CartResponseElement.class);
+        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("cartItems", CartResponseElement.class);
         assertAll(() -> assertThat(cartResponseElements.get(0).getId()).isEqualTo(1L),
                 () -> assertThat(cartResponseElements.get(0).getName()).isEqualTo("맛있는 치킨"),
                 () -> assertThat(cartResponseElements.get(0).getPrice()).isEqualTo(100),
                 () -> assertThat(cartResponseElements.get(0).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(0).getQuantity()).isEqualTo(1),
-                () -> assertThat(cartResponseElements.get(0).getCheck()).isTrue(),
+                () -> assertThat(cartResponseElements.get(0).getChecked()).isTrue(),
 
                 () -> assertThat(cartResponseElements.get(1).getId()).isEqualTo(2L),
                 () -> assertThat(cartResponseElements.get(1).getName()).isEqualTo("맛있는 짜장면"),
                 () -> assertThat(cartResponseElements.get(1).getPrice()).isEqualTo(300),
                 () -> assertThat(cartResponseElements.get(1).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(1).getQuantity()).isEqualTo(2),
-                () -> assertThat(cartResponseElements.get(1).getCheck()).isFalse(),
+                () -> assertThat(cartResponseElements.get(1).getChecked()).isFalse(),
 
                 () -> assertThat(cartResponseElements.get(2).getId()).isEqualTo(3L),
                 () -> assertThat(cartResponseElements.get(2).getName()).isEqualTo("맛있는 짬뽕"),
                 () -> assertThat(cartResponseElements.get(2).getPrice()).isEqualTo(500),
                 () -> assertThat(cartResponseElements.get(2).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(2).getQuantity()).isEqualTo(1),
-                () -> assertThat(cartResponseElements.get(2).getCheck()).isTrue()
+                () -> assertThat(cartResponseElements.get(2).getChecked()).isTrue()
         );
     }
 
@@ -71,27 +69,27 @@ public class CartAcceptanceTest extends AcceptanceTest {
         createCartItem(accessToken, addCartItemRequest, HttpStatus.CREATED);
         ExtractableResponse extract = findCustomerCart(accessToken, HttpStatus.OK);
 
-        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("products", CartResponseElement.class);
+        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("cartItems", CartResponseElement.class);
         assertAll(() -> assertThat(cartResponseElements.get(0).getId()).isEqualTo(1L),
                 () -> assertThat(cartResponseElements.get(0).getName()).isEqualTo("맛있는 치킨"),
                 () -> assertThat(cartResponseElements.get(0).getPrice()).isEqualTo(100),
                 () -> assertThat(cartResponseElements.get(0).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(0).getQuantity()).isEqualTo(4),
-                () -> assertThat(cartResponseElements.get(0).getCheck()).isTrue(),
+                () -> assertThat(cartResponseElements.get(0).getChecked()).isTrue(),
 
                 () -> assertThat(cartResponseElements.get(1).getId()).isEqualTo(2L),
                 () -> assertThat(cartResponseElements.get(1).getName()).isEqualTo("맛있는 짜장면"),
                 () -> assertThat(cartResponseElements.get(1).getPrice()).isEqualTo(300),
                 () -> assertThat(cartResponseElements.get(1).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(1).getQuantity()).isEqualTo(2),
-                () -> assertThat(cartResponseElements.get(1).getCheck()).isFalse(),
+                () -> assertThat(cartResponseElements.get(1).getChecked()).isFalse(),
 
                 () -> assertThat(cartResponseElements.get(2).getId()).isEqualTo(3L),
                 () -> assertThat(cartResponseElements.get(2).getName()).isEqualTo("맛있는 짬뽕"),
                 () -> assertThat(cartResponseElements.get(2).getPrice()).isEqualTo(500),
                 () -> assertThat(cartResponseElements.get(2).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(2).getQuantity()).isEqualTo(1),
-                () -> assertThat(cartResponseElements.get(2).getCheck()).isTrue()
+                () -> assertThat(cartResponseElements.get(2).getChecked()).isTrue()
         );
     }
 
@@ -101,34 +99,34 @@ public class CartAcceptanceTest extends AcceptanceTest {
         AddCartItemRequest addCartItemRequest = new AddCartItemRequest(2L, 3, true);
         createCartItem(accessToken, addCartItemRequest, HttpStatus.CREATED);
         ExtractableResponse extract = findCustomerCart(accessToken, HttpStatus.OK);
-        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("products", CartResponseElement.class);
+        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("cartItems", CartResponseElement.class);
         assertAll(() -> assertThat(cartResponseElements.get(0).getId()).isEqualTo(1L),
                 () -> assertThat(cartResponseElements.get(0).getName()).isEqualTo("맛있는 치킨"),
                 () -> assertThat(cartResponseElements.get(0).getPrice()).isEqualTo(100),
                 () -> assertThat(cartResponseElements.get(0).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(0).getQuantity()).isEqualTo(1),
-                () -> assertThat(cartResponseElements.get(0).getCheck()).isTrue(),
+                () -> assertThat(cartResponseElements.get(0).getChecked()).isTrue(),
 
                 () -> assertThat(cartResponseElements.get(1).getId()).isEqualTo(2L),
                 () -> assertThat(cartResponseElements.get(1).getName()).isEqualTo("맛있는 짜장면"),
                 () -> assertThat(cartResponseElements.get(1).getPrice()).isEqualTo(300),
                 () -> assertThat(cartResponseElements.get(1).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(1).getQuantity()).isEqualTo(2),
-                () -> assertThat(cartResponseElements.get(1).getCheck()).isFalse(),
+                () -> assertThat(cartResponseElements.get(1).getChecked()).isFalse(),
 
                 () -> assertThat(cartResponseElements.get(2).getId()).isEqualTo(3L),
                 () -> assertThat(cartResponseElements.get(2).getName()).isEqualTo("맛있는 짬뽕"),
                 () -> assertThat(cartResponseElements.get(2).getPrice()).isEqualTo(500),
                 () -> assertThat(cartResponseElements.get(2).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(2).getQuantity()).isEqualTo(1),
-                () -> assertThat(cartResponseElements.get(2).getCheck()).isTrue(),
+                () -> assertThat(cartResponseElements.get(2).getChecked()).isTrue(),
 
                 () -> assertThat(cartResponseElements.get(3).getId()).isEqualTo(4L),
                 () -> assertThat(cartResponseElements.get(3).getName()).isEqualTo("맛있는 족발"),
                 () -> assertThat(cartResponseElements.get(3).getPrice()).isEqualTo(200),
                 () -> assertThat(cartResponseElements.get(3).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(3).getQuantity()).isEqualTo(3),
-                () -> assertThat(cartResponseElements.get(3).getCheck()).isTrue()
+                () -> assertThat(cartResponseElements.get(3).getChecked()).isTrue()
         );
     }
 
@@ -173,13 +171,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
         String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
         UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(List.of(new UpdateCartItemElement(3L, 10, false)));
         ExtractableResponse extract = updateCartItem(accessToken, updateCartItemRequest, HttpStatus.OK);
-        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("products", CartResponseElement.class);
+        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("cartItems", CartResponseElement.class);
         assertAll(() -> assertThat(cartResponseElements.get(0).getId()).isEqualTo(3L),
                 () -> assertThat(cartResponseElements.get(0).getName()).isEqualTo("맛있는 짬뽕"),
                 () -> assertThat(cartResponseElements.get(0).getPrice()).isEqualTo(500),
                 () -> assertThat(cartResponseElements.get(0).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(0).getQuantity()).isEqualTo(10),
-                () -> assertThat(cartResponseElements.get(0).getCheck()).isFalse()
+                () -> assertThat(cartResponseElements.get(0).getChecked()).isFalse()
         );
     }
 
@@ -225,13 +223,13 @@ public class CartAcceptanceTest extends AcceptanceTest {
         DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(List.of(new DeleteCartItemElement(1L), new DeleteCartItemElement(3L)));
         deleteCartItem(accessToken, deleteCartItemRequest, HttpStatus.NO_CONTENT);
         ExtractableResponse extract = findCustomerCart(accessToken, HttpStatus.OK);
-        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("products", CartResponseElement.class);
+        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("cartItems", CartResponseElement.class);
         assertAll(() -> assertThat(cartResponseElements.get(0).getId()).isEqualTo(2L),
                 () -> assertThat(cartResponseElements.get(0).getName()).isEqualTo("맛있는 짜장면"),
                 () -> assertThat(cartResponseElements.get(0).getPrice()).isEqualTo(300),
                 () -> assertThat(cartResponseElements.get(0).getImageUrl()).isEqualTo("https://www.naver.com"),
                 () -> assertThat(cartResponseElements.get(0).getQuantity()).isEqualTo(2),
-                () -> assertThat(cartResponseElements.get(0).getCheck()).isFalse()
+                () -> assertThat(cartResponseElements.get(0).getChecked()).isFalse()
         );
     }
 
@@ -267,7 +265,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
         deleteCart(accessToken, HttpStatus.NO_CONTENT);
         ExtractableResponse extract = findCustomerCart(accessToken, HttpStatus.OK);
-        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("products", CartResponseElement.class);
+        List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("cartItems", CartResponseElement.class);
         assertThat(cartResponseElements.size()).isEqualTo(0);
     }
 }
