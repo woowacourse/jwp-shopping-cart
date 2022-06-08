@@ -2,33 +2,33 @@ package woowacourse.shoppingcart.domain;
 
 public class CartItem {
 
-    private final Long id;
-    private final Long productId;
-    private int quantity;
+    private final Id id;
+    private final Id productId;
+    private Quantity quantity;
 
     public CartItem(final Long id, final Long productId, final int quantity) {
-        this.id = id;
-        this.productId = productId;
-        this.quantity = quantity;
+        this.id = new Id(id);
+        this.productId = new Id(productId);
+        this.quantity = new Quantity(quantity);
     }
 
     public boolean hasSameProductId(final Long productId) {
-        return this.productId.equals(productId);
+        return this.productId.equals(new Id(productId));
     }
 
     public void plusQuantity() {
-        this.quantity++;
+        this.quantity = this.quantity.plus();
     }
 
     public Long getId() {
-        return id;
+        return id.getValue();
     }
 
     public Long getProductId() {
-        return productId;
+        return productId.getValue();
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 }

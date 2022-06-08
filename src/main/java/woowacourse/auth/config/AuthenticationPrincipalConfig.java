@@ -9,7 +9,6 @@ import woowacourse.auth.controller.AuthInterceptor;
 import woowacourse.auth.controller.OptionalUserNameResolver;
 import woowacourse.auth.controller.UserNameResolver;
 import woowacourse.auth.service.AuthService;
-import woowacourse.auth.support.JwtTokenProvider;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {

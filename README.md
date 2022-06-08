@@ -36,8 +36,9 @@
   - 마찬가지로 토큰의 존재 여부에 따라 다르게 동작하게 해야한다. 
 - [X] auth/controller 레이어에서 AuthService를 사용하도록 변경
 - [X] Interceptor에서 Resolver로 UserName을 넘겨주도록 변경
-- [ ] 장바구니, 주문 DAO에서 SimpleInsert, NamedParameterJdbc 사용하도록 변경
 - [X] 프론트엔드,백엔드와 협의 후 통일해야하는 부분 변경
+- [X] id, quantity를 VO로 만들기
+- [ ] 벨리데이션에 대한 컨트롤러 예외 테스트 추가
 
 <br>
 
@@ -45,14 +46,14 @@
 
 ### 회원 기능 API 명세
 
-| Method | Url                  | Description |
-|--------|----------------------|-------------|
-| POST   | /api/customers       | 회원 가입       |
-| GET    | /api/customers/me    | 내 정보 조회     |
-| PUT    | /api/customers/me    | 내 정보 수정     |
-| DELETE | /api/customers/me    | 회원 탈퇴       |
-| POST   | /api/login           | 로그인         |
-| GET    | /api/customers/exist | 회원 이름 중복 검사 |
+| Method | Url                   | Description |
+|--------|-----------------------|-------------|
+| POST   | /api/customers        | 회원 가입       |
+| GET    | /api/customers/me     | 내 정보 조회     |
+| PUT    | /api/customers/me     | 내 정보 수정     |
+| DELETE | /api/customers/me     | 회원 탈퇴       |
+| POST   | /api/login            | 로그인         |
+| GET    | /api/customers/exists | 회원 이름 중복 검사 |
 
 ### 상품 기능 API 명세
 
