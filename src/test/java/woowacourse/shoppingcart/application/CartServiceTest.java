@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.CartProducts;
 import woowacourse.shoppingcart.domain.Id;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.*;
@@ -37,8 +38,10 @@ class CartServiceTest {
         Product product = productService.addProduct(productRequest);
 
         //when & then
-        assertThat(cartService.addCart(new CartProductRequest(product.getId(), 1L, true), "greenlawn"))
+        cartService.addCart(new CartProductRequest(product.getId(), 1L, true), "greenlawn");
+        assertThat(cartService.addCart(new CartProductRequest(product.getId(), 3L, true), "greenlawn"))
                 .isNotNull();
+        CartProducts products = cartService.getCart("greenlawn");
     }
 
     @Test

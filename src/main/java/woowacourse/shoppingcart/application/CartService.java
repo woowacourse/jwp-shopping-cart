@@ -27,8 +27,17 @@ public class CartService {
     }
 
     public Long addCart(final CartProductRequest cartProductRequest, final String customerName) {
-        final Long customerId = customerDao.findByUsername(customerName).getId();
         try {
+            final Long customerId = customerDao.findByUsername(customerName).getId();
+            final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+
+            for (Long id : cartIds) {
+                if (cartItemDao.findCartIdById(id).getProductId().equals(cartProductRequest.getProductId())) {
+                    CartProductResponse response = cartItemDao.findCartIdById(id);
+                    cartItemDao.update(id, response.getQuantity() + cartProductRequest.getQuantity(), response.isChecked());
+                    return id;
+                }
+            }
             return cartItemDao.addCartItem(customerId, cartProductRequest.getProductId(), cartProductRequest.getQuantity(), cartProductRequest.isChecked());
         } catch (Exception e) {
             throw new InvalidProductException();
