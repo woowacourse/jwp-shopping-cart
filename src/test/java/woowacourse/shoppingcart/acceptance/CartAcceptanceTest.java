@@ -84,4 +84,20 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         assertThat(cartItemResponseDtos.size()).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("장바구니에 담긴 물건을 삭제한다.")
+    void deleteCartItem() {
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
+
+        post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
+
+        delete("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader);
+
+        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
+        final List<CartItemResponseDto> cartItemResponseDtos
+                = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
+
+        assertThat(cartItemResponseDtos.size()).isEqualTo(0);
+    }
 }
