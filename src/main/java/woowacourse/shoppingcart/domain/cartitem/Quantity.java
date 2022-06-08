@@ -2,6 +2,9 @@ package woowacourse.shoppingcart.domain.cartitem;
 
 public class Quantity {
 
+    private static final int MIN_QUANTITY = 1;
+    private static final int MAX_QUANTITY = 99;
+
     private int quantity;
 
     public Quantity(final int quantity) {
@@ -15,7 +18,7 @@ public class Quantity {
     }
 
     private void validateQuantity(int quantity) {
-        if (quantity < 1 || quantity > 99) {
+        if (quantity < MIN_QUANTITY || quantity > MAX_QUANTITY) {
             throw new IllegalArgumentException("개수의 범위를 벗어났습니다.");
         }
     }
