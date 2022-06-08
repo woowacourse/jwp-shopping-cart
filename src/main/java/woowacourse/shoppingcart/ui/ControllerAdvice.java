@@ -35,6 +35,7 @@ public class ControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUnhandledException(RuntimeException exception) {
+        exception.printStackTrace();
         return new ErrorResponse("Unhandled Exception");
     }
 
