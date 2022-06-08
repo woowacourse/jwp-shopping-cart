@@ -42,4 +42,11 @@ class JwtTokenProviderTest {
                 () -> assertThat(TOKEN_PROVIDER.validateToken(token)).isTrue()
         );
     }
+
+    @Test
+    @DisplayName("토큰 유효성을 검사한다.")
+    void validateToken_invalidToken_returnFalse() {
+        // when, then
+        assertThat(TOKEN_PROVIDER.validateToken("token")).isFalse();
+    }
 }
