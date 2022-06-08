@@ -48,7 +48,7 @@ public class ProductDaoTest {
         Long productId = productDao.save(new Product(name, price, imageUrl, true, "상세 설명"));
         Product expectedProduct = new Product(productId, name, price, imageUrl, true, "상세 설명");
 
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.findProductById(productId).get();
 
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
     }

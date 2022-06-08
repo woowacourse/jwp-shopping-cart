@@ -20,6 +20,7 @@ import woowacourse.shoppingcart.dto.customer.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.NoSuchProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -85,7 +86,8 @@ public class OrderService {
     private Orders findOrderResponseDtoByOrderId(Long orderId) {
         List<OrderDetail> ordersDetails = new ArrayList<>();
         for (OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            Product product = productDao.findProductById(productQuantity.getProductId());
+            Product product = productDao.findProductById(productQuantity.getProductId())
+                    .orElseThrow(NoSuchProductException::new);;
             int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }

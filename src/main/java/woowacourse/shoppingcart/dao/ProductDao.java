@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,13 +45,14 @@ public class ProductDao {
                         resultSet.getString("description"));
     }
 
-    public Product findProductById(Long productId) {
+    public Optional<Product> findProductById(Long productId) {
         try {
             String sql = "SELECT id, name, price, image_url, selling, description FROM product WHERE id = :id";
             SqlParameterSource parameterSource = new MapSqlParameterSource("id", productId);
-            return jdbcTemplate.queryForObject(sql, parameterSource, mapToProduct());
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource, mapToProduct()));
         } catch (EmptyResultDataAccessException e) {
-            throw new NoSuchProductException();
+            return Optional.empty();
+            // throw new NoSuchProductException();
         }
     }
 

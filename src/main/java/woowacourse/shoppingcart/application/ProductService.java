@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.product.ProductRequest;
 import woowacourse.shoppingcart.dto.product.ProductResponse;
+import woowacourse.shoppingcart.exception.NoSuchProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -31,7 +32,8 @@ public class ProductService {
     }
 
     public ProductResponse findProductById(Long productId) {
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.findProductById(productId)
+                .orElseThrow(NoSuchProductException::new);;
         return new ProductResponse(product);
     }
 
