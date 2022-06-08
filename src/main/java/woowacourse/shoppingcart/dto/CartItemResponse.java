@@ -37,4 +37,8 @@ public class CartItemResponse {
     public int getPrice() {
         return price;
     }
+
+    public Long getProductId() {
+        return productId;
+    }
 }
