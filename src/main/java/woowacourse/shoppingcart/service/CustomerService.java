@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.dto.response.EmailDuplicationResponse;
 import woowacourse.shoppingcart.entity.AddressEntity;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.entity.PrivacyEntity;
+import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @Transactional
@@ -32,6 +33,8 @@ public class CustomerService {
     }
 
     public int create(CustomerRequest customerRequest) {
+        validateDuplicateEmail(customerRequest);
+
         Customer customer = convertRequestToCustomer(customerRequest);
         CustomerEntity customerEntity = convertCustomerToEntity(customer);
         int customerId = customerDao.save(customerEntity);
@@ -43,6 +46,12 @@ public class CustomerService {
         addressDao.save(addressEntity);
 
         return customerId;
+    }
+
+    private void validateDuplicateEmail(CustomerRequest customerRequest) {
+        if (customerDao.hasEmail(customerRequest.getEmail())) {
+            throw new DuplicateEmailException();
+        }
     }
 
     public CustomerResponse getCustomerById(int id) {

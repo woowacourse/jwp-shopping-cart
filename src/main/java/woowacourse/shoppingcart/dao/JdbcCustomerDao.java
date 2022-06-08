@@ -72,6 +72,5 @@ public class JdbcCustomerDao implements CustomerDao {
     public boolean hasEmail(String email) {
         String sql = "SELECT EXISTS(SELECT * FROM customer WHERE email = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, email));
-
     }
 }

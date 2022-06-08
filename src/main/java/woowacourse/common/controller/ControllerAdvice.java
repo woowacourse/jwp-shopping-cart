@@ -15,6 +15,7 @@ import woowacourse.auth.exception.authentication.AuthenticationException;
 import woowacourse.auth.exception.authorization.AuthorizationException;
 import woowacourse.common.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.DisagreeToTermsException;
+import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -44,6 +45,12 @@ public class ControllerAdvice {
 
     @ExceptionHandler({FormatException.class, DisagreeToTermsException.class})
     public ResponseEntity<ErrorResponse> handleFormatException(RuntimeException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateEmail(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
@@ -87,6 +94,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException(RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity.badRequest().body(new ErrorResponse("Unhandled Exception"));
     }
 }
