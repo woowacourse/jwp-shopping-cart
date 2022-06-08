@@ -39,9 +39,9 @@ class CartServiceTest {
 
         //when & then
         cartService.addCart(new CartProductRequest(product.getId(), 1L, true), "greenlawn");
-        assertThat(cartService.addCart(new CartProductRequest(product.getId(), 3L, true), "greenlawn"))
-                .isNotNull();
+        cartService.addCart(new CartProductRequest(product.getId(), 3L, true), "greenlawn");
         CartProducts products = cartService.getCart("greenlawn");
+        assertThat(products.getCartItems().get(0).getQuantity()).isEqualTo(4);
     }
 
     @Test
@@ -125,7 +125,7 @@ class CartServiceTest {
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
 
         //when
-        cartService.modify(new ModifyProductRequests(List.of(new ModifyProductRequest(1L, 3L, true))));
+        cartService.modifyCartItems(new ModifyProductRequests(List.of(new ModifyProductRequest(1L, 3L, true))));
 
         //then
         assertThat(cartService.getCart("greenlawn").getCartItems().get(0).getQuantity()).isEqualTo(3L);

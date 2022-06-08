@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dto.CartProductResponse;
+import woowacourse.shoppingcart.entity.CartEntity;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import javax.sql.DataSource;
 
@@ -46,24 +48,30 @@ public class CartItemDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<Long> findProductIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
+    public boolean existByCustomerIdAndProductId(Long customerId, Long productId) {
+        try {
+            String query = "SELECT EXISTS (SELECT * FROM cart_item WHERE customer_id= ? AND product_id = ?)";
+            return jdbcTemplate.queryForObject(query, Boolean.class, customerId, productId);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
     }
 
     public List<Long> findIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public Long findProductIdById(final Long cartId) {
+    public CartEntity findIdByCustomerIdAndProductId(Long customerId, Long productId) {
         try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
+            String query = "SELECT * FROM cart_item WHERE customer_id= ? AND product_id = ?";
+            return jdbcTemplate.queryForObject(query, (rs, rowNum) -> new CartEntity(
+                            rs.getLong("id"), rs.getLong("customer_id"),
+                            rs.getLong("product_id"), rs.getLong("quantity"),
+                            rs.getBoolean("checked")),
+                    customerId, productId);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
         }
     }
 
@@ -72,14 +80,18 @@ public class CartItemDao {
             final String query = "SELECT cart_item.id, product.id, product.name, product.price, product.image_url, cart_item.quantity, cart_item.checked " +
                     "FROM cart_item INNER JOIN product ON product.id = cart_item.product_id " +
                     "WHERE cart_item.id = ?";
-
             return jdbcTemplate.queryForObject(query, cartRowMapper, cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
     }
 
-    public void deleteCartItem(final Long id) {
+    public void updateById(Long id, Long quantity, boolean checked) {
+        final String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE id = ?";
+        jdbcTemplate.update(sql, quantity, checked, id);
+    }
+
+    public void deleteCartItemById(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
@@ -87,10 +99,5 @@ public class CartItemDao {
     public void deleteAll() {
         final String sql = "DELETE FROM cart_item";
         jdbcTemplate.update(sql);
-    }
-
-    public void update(Long id, Long quantity, boolean checked) {
-        final String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE id = ?";
-        jdbcTemplate.update(sql, quantity, checked, id);
     }
 }

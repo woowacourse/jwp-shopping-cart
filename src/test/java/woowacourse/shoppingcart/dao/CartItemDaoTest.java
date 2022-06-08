@@ -3,14 +3,11 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
@@ -90,7 +87,7 @@ public class CartItemDaoTest {
         Product product2 = productDao.save(new Product("apple", 1000, "woowa2.com"));
         final Long cartItemId2 = cartItemDao.addCartItem(1L, product2.getId(), 1L, true);
 
-        cartItemDao.update(cartItemId2, 3L, false);
+        cartItemDao.updateById(cartItemId2, 3L, false);
 
         assertThat(cartItemDao.findCartIdById(cartItemId2).getQuantity()).isEqualTo(3L);
     }

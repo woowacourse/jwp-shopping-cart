@@ -43,6 +43,6 @@ public class CartItemController {
 
     @PatchMapping
     public ResponseEntity<CartProducts> modifyCartItem(@AuthenticationPrincipal String userNameByToken, @RequestBody ModifyProductRequests modifyProductRequests) {
-        return ResponseEntity.ok().body(cartService.modify(modifyProductRequests));
+        return ResponseEntity.ok().body(cartService.modifyCartItems(modifyProductRequests));
     }
 }
