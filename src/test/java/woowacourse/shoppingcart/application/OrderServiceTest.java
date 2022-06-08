@@ -66,7 +66,8 @@ class OrderServiceTest {
         Long productId1 = 1L;
         Long customerId = 11L;
         Long ordersId = 101L;
-        OrderDetail bananaOrderDetail = new OrderDetail(productId1, new Quantity(2), new Price(1000), new Name("banana"), new ImageUrl("banana.com"));
+        OrderDetail bananaOrderDetail = new OrderDetail(productId1, new Quantity(2), new Price(1000),
+                new Name("banana"), new ImageUrl("banana.com"));
         given(orderDao.isValidOrderId(customerId, ordersId)).willReturn(true);
 
         given(ordersDetailDao.findOrdersDetailsByOrderId(ordersId)).willReturn(List.of(bananaOrderDetail));
@@ -95,7 +96,8 @@ class OrderServiceTest {
         Long productId1 = 1L;
         Long customerId = 11L;
         Long ordersId = 101L;
-        OrderDetail bananaOrderDetail = new OrderDetail(productId1, new Quantity(2), new Price(1000), new Name("banana"), new ImageUrl("banana.com"));
+        OrderDetail bananaOrderDetail = new OrderDetail(productId1, new Quantity(2), new Price(1000),
+                new Name("banana"), new ImageUrl("banana.com"));
         given(orderDao.findOrderIdsByCustomerId(customerId)).willReturn(List.of(ordersId));
         given(ordersDetailDao.findOrdersDetailsByOrderId(ordersId)).willReturn(List.of(bananaOrderDetail));
         //when

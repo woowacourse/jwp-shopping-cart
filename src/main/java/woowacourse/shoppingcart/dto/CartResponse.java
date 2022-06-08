@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
 import java.util.List;
-import woowacourse.shoppingcart.dto.ProductResponse;
 
 public class CartResponse {
 

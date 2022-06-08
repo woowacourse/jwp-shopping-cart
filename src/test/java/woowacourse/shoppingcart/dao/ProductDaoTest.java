@@ -39,7 +39,8 @@ public class ProductDaoTest {
         final String imageUrl = "www.test.com";
 
         // when
-        final Product savedProduct = productDao.save(new Product(new Name(name), new Price(price), new ImageUrl(imageUrl)));
+        final Product savedProduct = productDao.save(
+                new Product(new Name(name), new Price(price), new ImageUrl(imageUrl)));
 
         // then
         assertAll(
@@ -57,7 +58,8 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
-        final Product savedProduct = productDao.save(new Product(new Name(name), new Price(price), new ImageUrl(imageUrl)));
+        final Product savedProduct = productDao.save(
+                new Product(new Name(name), new Price(price), new ImageUrl(imageUrl)));
 
         // when
         final Optional<Product> product = productDao.findProductById(savedProduct.getId());
