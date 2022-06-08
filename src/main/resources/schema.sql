@@ -37,7 +37,7 @@ create table  IF NOT EXISTS orders
     foreign key (customer_id) references customer(id)
 );
 
-create table  IF NOT EXISTS orders_detail
+create table IF NOT EXISTS orders_detail
 (
     id         bigint  not null auto_increment,
     orders_id  bigint  not null,
