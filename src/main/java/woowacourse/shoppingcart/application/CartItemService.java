@@ -18,13 +18,13 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class CartService {
+public class CartItemService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartItemService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
@@ -34,7 +34,11 @@ public class CartService {
         final Product product = productDao.findProductById(cartItemCreateRequest.getProductId());
         final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
         final CartItem cartItem = cartItemCreateRequest.toCartItem(product);
+        List<Long> cartProductIds = cartItemDao.findProductIdsByCustomerId(customer.getId());
 
+        if (cartProductIds.contains(product.getId())) {
+            throw new IllegalArgumentException("이미 장바구니에 상품이 존재합니다.");
+        }
         Long cartItemId = cartItemDao.add(customer.getId(), cartItem);
         return CartItemResponse.of(cartItemId, cartItem);
     }

@@ -42,7 +42,7 @@ class CartItemItemDaoTest {
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
-    void addCartItem() {
+    void add() {
 
         // given
         final Long customerId = 1L;

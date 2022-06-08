@@ -1,6 +1,7 @@
 package woowacourse;
 
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Product;
 
 public class Fixture {
     public static final String 페퍼_아이디 = "pepper@woowacourse.com";
@@ -11,4 +12,6 @@ public class Fixture {
     public static final String 다른_아이디 = "change@woowacoures.com";
     public static final String 다른_이름 = "changeName";
     public static final String 다른_비밀번호 = "Fake1234!";
+
+    public static final Product 치킨 = new Product("치킨", 10_000, "http://example.com/chicken.jpg");
 }
