@@ -74,6 +74,7 @@ class CartItemServiceTest {
         CartItemQuantityResponse response = cartItemService.updateCartItem(tokenRequest, cartItemQuantityRequest);
 
         // then
+        assertThat(response.getId()).isEqualTo(1L);
         assertThat(response.getQuantity()).isEqualTo(100);
     }
 
