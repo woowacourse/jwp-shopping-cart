@@ -57,6 +57,7 @@ public class OrderService {
         return orderRepository.add(customerId, new Orders(orderDetails));
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> findOrdersByCustomer(String email) {
         long customerId = findCustomerIdByEmail(email);
         return orderRepository.findOrders(customerId).stream()
