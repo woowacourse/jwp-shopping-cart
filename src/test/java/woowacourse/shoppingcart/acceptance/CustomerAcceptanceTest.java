@@ -89,7 +89,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body().jsonPath().getBoolean("result")).isTrue();
+        assertThat(response.body().jsonPath().getBoolean("isDuplicate")).isTrue();
     }
 
     @Test
@@ -103,7 +103,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body().jsonPath().getBoolean("result")).isFalse();
+        assertThat(response.body().jsonPath().getBoolean("isDuplicate")).isFalse();
     }
 
     @Test

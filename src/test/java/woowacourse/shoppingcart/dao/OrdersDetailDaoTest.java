@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.OrderDetail;
@@ -21,26 +23,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrdersDetailDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final OrdersDetailDao ordersDetailDao;
     private long ordersId;
     private long productId;
     private long customerId;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
+    public OrdersDetailDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.ordersDetailDao = new OrdersDetailDao(namedParameterJdbcTemplate);
     }
 
     @BeforeEach
     void setUp() {
         customerId = 1L;
-        jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
-        ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource("customerid", customerId);
+        namedParameterJdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (:customerid)", parameterSource);
 
-        jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
-                , "name", 1000, "imageUrl");
-        productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        MapSqlParameterSource parameterSource2 = new MapSqlParameterSource();
+        ordersId = namedParameterJdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", parameterSource2, Long.class);
+
+        MapSqlParameterSource parameterSource3 = new MapSqlParameterSource("name", "name");
+        parameterSource3.addValue("price", 1000);
+        parameterSource3.addValue("imageurl", "imageurl");
+        namedParameterJdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (:name, :price, :imageurl)", parameterSource3);
+        productId = namedParameterJdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", parameterSource2, Long.class);
     }
 
     @DisplayName("OrderDatail을 추가하는 기능")
@@ -63,9 +70,12 @@ class OrdersDetailDaoTest {
         //given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
-            jdbcTemplate
-                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-                            ordersId, productId, 3);
+            MapSqlParameterSource parameterSource = new MapSqlParameterSource("orderid", ordersId);
+            parameterSource.addValue("productid", productId);
+            parameterSource.addValue("quantity", 3);
+            namedParameterJdbcTemplate.
+                    update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (:orderid, :productid, :quantity)",
+                            parameterSource);
         }
 
         //when
