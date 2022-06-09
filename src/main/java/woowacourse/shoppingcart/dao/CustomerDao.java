@@ -36,7 +36,7 @@ public class CustomerDao {
             final String query = "SELECT id FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException("존재하지 않는 유저입니다.");
         }
     }
 
@@ -45,7 +45,7 @@ public class CustomerDao {
             final String query = "SELECT id, username, password, phone_number, address FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, customerRowMapper, username);
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException("존재하지 않는 유저입니다.");
         }
     }
 
@@ -74,7 +74,7 @@ public class CustomerDao {
         int rowCount = jdbcTemplate
                 .update(query, customer.getPhoneNumber(), customer.getAddress(), customer.getUsername());
         if (rowCount == 0) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException("유저 업데이트에 실패했습니다.");
         }
         return rowCount;
     }
@@ -83,7 +83,7 @@ public class CustomerDao {
         final String query = "UPDATE customer SET password = ? WHERE username = ?";
         int rowCount = jdbcTemplate.update(query, password.getPassword(), username);
         if (rowCount == 0) {
-            throw new InvalidCustomerException();
+            throw new InvalidCustomerException("패스워드 변경에 실패했습니다.");
         }
         return rowCount;
     }

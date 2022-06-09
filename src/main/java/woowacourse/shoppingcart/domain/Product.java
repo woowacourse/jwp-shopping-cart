@@ -1,23 +1,57 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.exception.InvalidProductException;
+
 public class Product {
-    private Long id;
-    private String name;
-    private Integer price;
-    private String imageUrl;
+    private final Long id;
+    private final String name;
+    private final int price;
+    private final int stock;
+    private final String imageUrl;
 
-    public Product() {
-    }
-
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
+    public Product(final Long id, final String name, final int price, final int stock, final String imageUrl) {
+        validMinusPrice(price);
+        validMinusStock(stock);
         this.id = id;
         this.name = name;
         this.price = price;
+        this.stock = stock;
         this.imageUrl = imageUrl;
     }
 
-    public Product(final String name, final int price, final String imageUrl) {
-        this(null, name, price, imageUrl);
+    private void validMinusPrice(final int price) {
+        if (price < 0) {
+            throw new InvalidProductException("제품의 가격은 0보다 작을 수 없습니다.");
+        }
+    }
+
+    private void validMinusStock(final int stock) {
+        if (stock < 0) {
+            throw new InvalidProductException("제품의 수량은 0보다 작을 수 없습니다.");
+        }
+    }
+
+    public Product(final String name, final int price, final int stock, final String imageUrl) {
+        this(null, name, price, stock, imageUrl);
+    }
+
+    public Product(final Product product, final int stock) {
+        this(product.getId(), product.getName(), product.getPrice(), stock, product.getImageUrl());
+    }
+
+    public Product purchaseProduct(final int purchaseQuantity) {
+        checkAvaliablePurchaseProduct(purchaseQuantity);
+        return new Product(this, stock - purchaseQuantity);
+    }
+
+    public void checkAvaliablePurchaseProduct(final int purchaseQuantity) {
+        if (stock < purchaseQuantity) {
+            throw new InvalidProductException("제품의 수량보다 더 주문할 수 없습니다.");
+        }
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -28,11 +62,11 @@ public class Product {
         return price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public int getStock() {
+        return stock;
     }
 
-    public Long getId() {
-        return id;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -80,7 +80,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private String 회원_가입_후_로그인() {
+    public static String 회원_가입_후_로그인() {
         CustomerSignUpRequest request = new CustomerSignUpRequest(USERNAME, PASSWORD, PHONE_NUMBER, ADDRESS);
         회원_가입_요청(request);
         TokenRequest tokenRequest = new TokenRequest(USERNAME, PASSWORD);

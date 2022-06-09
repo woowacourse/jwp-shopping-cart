@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -9,10 +12,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -32,10 +31,11 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
+        final int stock = 20;
         final String imageUrl = "www.test.com";
 
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -47,9 +47,10 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
+        final int stock = 20;
         final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
+        final Product expectedProduct = new Product(productId, name, price, stock, imageUrl);
 
         // when
         final Product product = productDao.findProductById(productId);
@@ -72,15 +73,34 @@ public class ProductDaoTest {
         assertThat(products).size().isEqualTo(size);
     }
 
+    @DisplayName("상품 수량 업데이트")
+    @Test
+    void updateProductStock() {
+        // given
+        final String name = "초콜렛";
+        final int price = 1_000;
+        final int stock = 20;
+        final String imageUrl = "www.test.com";
+
+        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
+
+        // when
+        productDao.updateProductStock(new Product(productId, name, price, 5, imageUrl));
+
+        // then
+        assertThat(productDao.findProductById(productId).getStock()).isEqualTo(5);
+    }
+
     @DisplayName("싱품 삭제")
     @Test
     void deleteProduct() {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
+        final int stock = 20;
         final String imageUrl = "www.test.com";
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
         final int beforeSize = productDao.findProducts().size();
 
         // when

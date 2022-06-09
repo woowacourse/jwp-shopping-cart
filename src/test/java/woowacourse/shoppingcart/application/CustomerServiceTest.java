@@ -12,18 +12,18 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.PasswordEncoder;
 import woowacourse.shoppingcart.domain.customer.PlainPassword;
-import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
 @Transactional
 class CustomerServiceTest {
 
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password123";
-    private static final String PHONE_NUMBER = "01012345678";
-    private static final String ADDRESS = "성담빌딩";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password123";
+    public static final String PHONE_NUMBER = "01012345678";
+    public static final String ADDRESS = "성담빌딩";
 
     @Autowired
     private CustomerService customerService;
