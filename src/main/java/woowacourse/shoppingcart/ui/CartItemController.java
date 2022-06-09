@@ -35,7 +35,7 @@ public class CartItemController {
 
     @PostMapping
     public ResponseEntity<Cart> addCartItem(@AuthenticationPrincipal final LoginCustomer loginCustomer,
-                                            @RequestBody final CartAddRequest cartAddRequest) {
+                                            @RequestBody @Valid final CartAddRequest cartAddRequest) {
         final Cart cart = cartService.addCart(loginCustomer, cartAddRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(cart);
     }

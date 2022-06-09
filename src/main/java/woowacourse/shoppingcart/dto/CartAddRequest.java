@@ -1,16 +1,19 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class CartAddRequest {
-    private Long productId;
+    @NotNull
+    private long productId;
 
     public CartAddRequest() {
     }
 
-    public CartAddRequest(Long productId) {
+    public CartAddRequest(long productId) {
         this.productId = productId;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 }
