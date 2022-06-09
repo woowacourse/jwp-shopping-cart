@@ -6,6 +6,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+
 import woowacourse.shoppingcart.support.Encryptor;
 
 
@@ -27,6 +28,7 @@ public class AuthService {
 
     private void validateNameAndPassword(final String name, final String password) {
         if (customerDao.existsCustomer(Customer.of(name, password))) {
+
             return;
         }
         throw new AuthorizationException("로그인에 실패했습니다.");

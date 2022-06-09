@@ -36,7 +36,6 @@ public class CustomerService {
     }
 
     public void editCustomer(final String userName, final CustomerRequest editRequest) {
-
         customerDao.updateCustomer(Customer.of(userName, editRequest.getPassword()));
     }
 
