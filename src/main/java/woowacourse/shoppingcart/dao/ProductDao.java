@@ -12,6 +12,8 @@ import woowacourse.shoppingcart.domain.Product;
 @Repository
 public class ProductDao {
 
+    private static final int OFFSET = 1;
+
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
@@ -48,9 +50,9 @@ public class ProductDao {
                 );
     }
 
-    public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(query, getRowMapper());
+    public Integer findProductsCount() {
+        final String query = "SELECT COUNT(id) FROM product";
+        return jdbcTemplate.queryForObject(query, Integer.class);
     }
 
     public int delete(final Long productId) {
@@ -60,6 +62,6 @@ public class ProductDao {
 
     public List<Product> findProductsByPage(final int limit, final int page) {
         final String sql = "SELECT id, name, price, image_url FROM product limit ? OFFSET ?";
-        return jdbcTemplate.query(sql, getRowMapper(), limit, (page - 1) * limit);
+        return jdbcTemplate.query(sql, getRowMapper(), limit, (page - OFFSET) * limit);
     }
 }

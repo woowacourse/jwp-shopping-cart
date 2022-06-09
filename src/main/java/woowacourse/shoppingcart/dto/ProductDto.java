@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.application.dto;
+package woowacourse.shoppingcart.dto;
 
 import woowacourse.shoppingcart.domain.Product;
 

@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerDetailResponse {
 
@@ -15,8 +15,8 @@ public class CustomerDetailResponse {
         this.email = email;
     }
 
-    public static CustomerDetailResponse from(final CustomerDetailServiceResponse serviceResponse) {
-        return new CustomerDetailResponse(serviceResponse.getName(), serviceResponse.getEmail());
+    public static CustomerDetailResponse from(final Customer customer) {
+        return new CustomerDetailResponse(customer.getName(), customer.getEmail().getValue());
     }
 
     public String getName() {

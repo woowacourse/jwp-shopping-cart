@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
-import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
 import woowacourse.shoppingcart.application.dto.CustomerProfileUpdateServiceRequest;
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
@@ -56,9 +55,8 @@ public class CustomerService {
         }
     }
 
-    public CustomerDetailServiceResponse findById(final Long id) {
-        final Customer customer = findCustomerById(id);
-        return CustomerDetailServiceResponse.from(customer);
+    public Customer findById(final Long id) {
+        return findCustomerById(id);
     }
 
     private Customer findCustomerById(final Long id) {

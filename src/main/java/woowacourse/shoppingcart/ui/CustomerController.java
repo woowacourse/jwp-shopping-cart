@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.CustomerDetailResponse;
 import woowacourse.shoppingcart.dto.CustomerPasswordUpdateRequest;
@@ -37,8 +37,8 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<CustomerDetailResponse> showMyDetail(@AuthenticationPrincipal final Long id) {
-        final CustomerDetailServiceResponse serviceResponse = customerService.findById(id);
-        final CustomerDetailResponse customerDetailResponse = CustomerDetailResponse.from(serviceResponse);
+        final Customer customer = customerService.findById(id);
+        CustomerDetailResponse customerDetailResponse = CustomerDetailResponse.from(customer);
         return ResponseEntity.ok(customerDetailResponse);
     }
 

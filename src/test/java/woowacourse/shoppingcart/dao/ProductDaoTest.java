@@ -62,13 +62,13 @@ public class ProductDaoTest {
     void getProducts() {
 
         // given
-        final int size = 0;
+        final int expected = 0;
 
         // when
-        final List<Product> products = productDao.findProducts();
+        final int actual = productDao.findProductsCount();
 
         // then
-        assertThat(products).size().isEqualTo(size);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("싱품 삭제")
@@ -80,13 +80,13 @@ public class ProductDaoTest {
         final String imageUrl = "www.test.com";
 
         final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final int beforeSize = productDao.findProducts().size();
+        final int beforeSize = productDao.findProductsCount();
 
         // when
         productDao.delete(productId);
 
         // then
-        final int afterSize = productDao.findProducts().size();
+        final int afterSize = productDao.findProductsCount();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
     }
 

@@ -14,9 +14,9 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
-import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.CartDto;
 import woowacourse.shoppingcart.exception.notfound.NotFoundException;
 
 @SpringBootTest
@@ -66,7 +66,7 @@ class CartItemControllerTest {
         cartItemController.addCartItem(1L, new AddCartItemRequest(1L));
 
         // when
-        final ResponseEntity<List<Cart>> cartItems = cartItemController.getCartItems(1L);
+        final ResponseEntity<List<CartDto>> cartItems = cartItemController.getCartItems(1L);
 
         // then
         assertThat(cartItems.getBody()).hasSize(1);

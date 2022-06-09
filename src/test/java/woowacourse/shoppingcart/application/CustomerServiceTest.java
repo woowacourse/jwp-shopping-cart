@@ -18,7 +18,6 @@ import woowacourse.auth.application.dto.LoginServiceRequest;
 import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
-import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
 import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
 import woowacourse.shoppingcart.application.dto.CustomerProfileUpdateServiceRequest;
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
@@ -92,11 +91,12 @@ class CustomerServiceTest {
                 .thenReturn(Optional.of(customer));
 
         // when
-        CustomerDetailServiceResponse actual = customerService.findById(id);
+        Customer actual = customerService.findById(id);
 
         // then
         assertThat(actual).usingRecursiveComparison()
-                .isEqualTo(new CustomerDetailServiceResponse(NAME, EMAIL));
+                .comparingOnlyFields("name", "email")
+                .isEqualTo(new Customer(NAME, EMAIL, null));
     }
 
     private Customer getCustomerFromSaveServiceRequest(final long id,
