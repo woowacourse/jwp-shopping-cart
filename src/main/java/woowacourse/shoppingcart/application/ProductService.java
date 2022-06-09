@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Page;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ProductCountLimit;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
@@ -34,8 +35,8 @@ public class ProductService {
     }
 
     public void validateStock(long productId, int purchasingQuantity) {
-        int stock = productDao.findStockById(productId);
-        if (stock < purchasingQuantity) {
+        Product product = productDao.findById(productId);
+        if (product.hasLowerStock(purchasingQuantity)) {
             throw new IllegalArgumentException("상품 재고가 부족합니다.");
         }
     }

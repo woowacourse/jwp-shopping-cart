@@ -38,6 +38,10 @@ public class Product {
         return imageUrl;
     }
 
+    public boolean hasLowerStock(int purchasingQuantity) {
+        return stock < purchasingQuantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

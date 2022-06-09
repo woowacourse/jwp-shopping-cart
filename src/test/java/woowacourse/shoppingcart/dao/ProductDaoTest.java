@@ -42,20 +42,23 @@ class ProductDaoTest extends ShoppingCartTest {
         );
     }
 
+    @DisplayName("id에 해당하는 상품을 반환한다.")
+    @Test
+    void findById() {
+        Product product = productDao.findById(1L);
+
+        assertAll(
+                () -> assertThat(product.getId()).isEqualTo(1L),
+                () -> assertThat(product.getName()).isEqualTo("캠핑 의자")
+        );
+    }
+
     @DisplayName("상품의 총 개수를 반환한다.")
     @Test
     void getTotalCount() {
         int count = productDao.getTotalCount();
 
         assertThat(count).isEqualTo(19);
-    }
-
-    @DisplayName("상품의 재고를 반환한다.")
-    @Test
-    void findStockById() {
-        int stock = productDao.findStockById(1L);
-
-        assertThat(stock).isEqualTo(100);
     }
 
     @DisplayName("상품 id가 존재하는지 반환한다.")

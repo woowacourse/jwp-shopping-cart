@@ -34,10 +34,10 @@ public class ProductDao {
         return jdbcTemplate.query(sql, params, PRODUCT_MAPPER);
     }
 
-    public int findStockById(long id) {
-        String sql = "SELECT stock FROM PRODUCT WHERE id = :id";
+    public Product findById(long id) {
+        String sql = "SELECT id, name, price, stock, image_url FROM PRODUCT WHERE id = :id";
         SqlParameterSource params = new MapSqlParameterSource("id", id);
-        return jdbcTemplate.queryForObject(sql, params, Integer.class);
+        return jdbcTemplate.queryForObject(sql, params, PRODUCT_MAPPER);
     }
 
     public boolean checkIdExistence(long id) {
