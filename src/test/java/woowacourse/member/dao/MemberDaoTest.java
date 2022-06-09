@@ -44,6 +44,22 @@ class MemberDaoTest {
         assertThat(result.get().getName()).isEqualTo("아리");
     }
 
+    @DisplayName("이메일이 사용중일시 true를 반환한다.")
+    @Test
+    void existMemberByEmail() {
+        String email = "rex@wooteco.com";
+        boolean result = memberDao.existMemberByEmail(email);
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("이메일이 사용중이지 않으면 false를 반환한다.")
+    @Test
+    void notExistMemberByEmail() {
+        String email = "rex1@wooteco.com";
+        boolean result = memberDao.existMemberByEmail(email);
+        assertThat(result).isFalse();
+    }
+
     @DisplayName("존재하지 않는 이메일인 경우 빈 Optional을 반환한다.")
     @Test
     void findMemberByNotExistEmail() {
