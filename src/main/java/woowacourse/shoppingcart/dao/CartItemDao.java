@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.DuplicateCartItemByProduct;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -25,6 +24,8 @@ public class CartItemDao {
             resultSet.getInt("price"),
             resultSet.getString("image_url"),
             resultSet.getInt("quantity"));
+    private static final int DEFAULT_QUANTITY = 1;
+
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertActor;
@@ -36,16 +37,6 @@ public class CartItemDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public List<Long> findProductIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = :customer_id";
-        try {
-            MapSqlParameterSource parameters = new MapSqlParameterSource("customer_id", customerId);
-            return namedParameterJdbcTemplate.queryForList(sql, parameters, Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-    }
-
     public List<Long> findIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = :customer_id";
         MapSqlParameterSource parameters = new MapSqlParameterSource("customer_id", customerId);
@@ -54,27 +45,18 @@ public class CartItemDao {
 
     public Long findProductIdById(final Long cartId) {
         final String sql = "SELECT product_id FROM cart_item WHERE id = :id";
-        try {
-            MapSqlParameterSource parameters = new MapSqlParameterSource("id", cartId);
-            return namedParameterJdbcTemplate.queryForObject(sql, parameters, Long.class);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
+        MapSqlParameterSource parameters = new MapSqlParameterSource("id", cartId);
+        return namedParameterJdbcTemplate.queryForObject(sql, parameters, Long.class);
     }
 
     public Cart addCartItem(final Long customerId, final Product product) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(:cusotomer_id, :product_id, :quantity)";
-
         MapSqlParameterSource parameters = new MapSqlParameterSource("customer_id", customerId);
         parameters.addValue("product_id", product.getId());
-        parameters.addValue("quantity", 1);
-        try {
-            Long id = insertActor.executeAndReturnKey(parameters).longValue();
-            return new Cart(id, product.getId(), product.getName(), product.getPrice(),
-                product.getImageUrl(), 1);
-        } catch (DataIntegrityViolationException e) {
-            throw new DuplicateCartItemByProduct();
-        }
+        parameters.addValue("quantity", DEFAULT_QUANTITY);
+        Long id = insertActor.executeAndReturnKey(parameters).longValue();
+
+        return new Cart(id, product.getId(), product.getName(), product.getPrice(),
+            product.getImageUrl(), DEFAULT_QUANTITY);
     }
 
     public void deleteCartItem(final Long id) {

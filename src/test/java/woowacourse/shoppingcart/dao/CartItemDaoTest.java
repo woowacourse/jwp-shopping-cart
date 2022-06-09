@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -15,8 +16,10 @@ import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
 import woowacourse.shoppingcart.dto.request.ProductRequest;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("NonAsciiChracters")
 @JdbcTest
@@ -24,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql", "classpath:test.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class CartItemDaoTest {
+
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
@@ -40,54 +44,44 @@ class CartItemDaoTest {
         productDao.save(new ProductRequest("banana", 1_000, "woowa1.com"));
         productDao.save(new ProductRequest("apple", 2_000, "woowa2.com"));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 5);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id,quantity) VALUES(?, ?, ?)", 1L, 2L, 6);
+        jdbcTemplate.update(
+            "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 5);
+        jdbcTemplate.update(
+            "INSERT INTO cart_item(customer_id, product_id,quantity) VALUES(?, ?, ?)", 1L, 2L, 6);
     }
 
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("카트에 아이템을 담으면, 담긴 카트를 반환한다.")
     @Test
     void addCartItem() {
         // given
         final Long customerId = 1L;
-        final Product product = new Product(4L,"banana", 1_000, "woowa1.com");
+        final Product product = new Product(4L, "banana", 1_000, "woowa1.com");
 
-        // when
         Cart cart = cartItemDao.addCartItem(customerId, product);
-        // then
+
         assertThat(cart)
             .extracting("id", "productId", "name", "price", "imageUrl", "quantity")
             .containsExactly(5L, 4L, "banana", 1_000, "woowa1.com", 1);
     }
 
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
     @Test
-    void findProductIdsByCustomerId() {
-
-        // given
+    void findIdsByCustomerId_메서드는_고객id로_장바구니_id들을_반환한다() {
         final Long customerId = 1L;
 
-        // when
-        final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        List<Long> productIds = cartItemDao.findIdsByCustomerId(customerId);
 
-        // then
-        assertThat(productsIds).containsExactly(1L, 2L);
+        assertThat(productIds).containsExactly(3L, 4L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
-    void findIdsByCustomerId() {
+    void findProductIdById_메서드는_장바구니id로_상품_id를_반환한다() {
+        final Long cartId = 1L;
 
-        // given
-        final Long customerId = 1L;
+        Long productId = cartItemDao.findProductIdById(cartId);
 
-        // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-
-        // then
-        assertThat(cartIds).containsExactly(3L, 4L);
+        assertThat(productId).isEqualTo(1L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void deleteCartItem() {
 
@@ -98,10 +92,10 @@ class CartItemDaoTest {
         cartItemDao.deleteCartItem(cartId);
 
         // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        final Long customerId = 25L;
+        final List<Long> productIds = cartItemDao.findIdsByCustomerId(customerId);
 
-        assertThat(productIds).containsExactly(1L, 2L);
+        assertThat(productIds).containsExactly(2L);
     }
 
     @Test
