@@ -4,9 +4,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
-    @NotNull
+
+    @NotNull(message = "장바구니id는 필수 항목입니다.")
     private final Long cartId;
-    @Min(0)
+
+    @NotNull(message = "수량은 필수 항목입니다.")
+    @Min(value = 1,message = "수량은 1개 미만일 수 없습니다.")
     private final Integer quantity;
 
     public OrderRequest(final Long cartId, final Integer quantity) {

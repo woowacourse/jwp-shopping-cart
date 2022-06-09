@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public class CartAddRequest {
 
-    @NotNull
+    @NotNull(message = "제품id는 필수 항목입니다.")
     private Long productId;
 
     public CartAddRequest() {

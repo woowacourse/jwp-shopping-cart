@@ -4,10 +4,10 @@ import javax.validation.constraints.NotNull;
 
 public class CartUpdateRequest {
 
-    @NotNull
+    @NotNull(message = "제품id는 필수 항목입니다.")
     private Long productId;
 
-    @NotNull
+    @NotNull(message = "수량은 필수 항목입니다.")
     private Integer quantity;
 
     public CartUpdateRequest() {
