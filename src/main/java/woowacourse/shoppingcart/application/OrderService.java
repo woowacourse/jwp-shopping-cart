@@ -44,19 +44,25 @@ public class OrderService {
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderSaveRequest orderSaveRequest : orderSaveRequests) {
-            final Long cartItemId = orderSaveRequest.getCartItemId();
-            final CartItem cartItem = cartItemDao.findById(cartItemId);
-            final Long productId = cartItem.getProductId();
-            final int quantity = cartItem.getQuantity();
-            final Product purchaseProduct = productDao.findProductById(productId)
-                    .purchaseProduct(quantity);
-            productDao.updateProductStock(purchaseProduct);
-
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartItemId);
+            final CartItem cartItem = cartItemDao.findById(orderSaveRequest.getCartItemId());
+            purchaseProductAndUpdate(cartItem);
+            addOrdersDetails(ordersId, cartItem);
+            cartItemDao.deleteCartItem(cartItem.getId());
         }
 
         return ordersId;
+    }
+
+    private void purchaseProductAndUpdate(final CartItem cartItem) {
+        final Product purchaseProduct = productDao.findProductById(cartItem.getProductId())
+                .purchaseProduct(cartItem.getQuantity());
+        productDao.updateProductStock(purchaseProduct);
+    }
+
+    private void addOrdersDetails(final Long ordersId, final CartItem cartItem) {
+        final Long productId = cartItem.getProductId();
+        final int quantity = cartItem.getQuantity();
+        ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
     }
 
     public OrderResponse findOrderById(final String customerName, final Long orderId) {
