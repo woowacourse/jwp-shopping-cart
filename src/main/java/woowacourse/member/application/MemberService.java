@@ -26,10 +26,7 @@ public class MemberService {
 
     @Transactional
     public void signUp(SignUpRequest request) {
-        if (memberDao.existMemberByEmail(request.getEmail())) {
-            throw new InvalidMemberEmailException("중복되는 이메일이 존재합니다.");
-        }
-
+        checkDuplicateEmail(request.getEmail());
         Password password = new NewPassword(request.getPassword());
         Member member = new Member(request.getEmail(), request.getName(), password);
         memberDao.save(member);

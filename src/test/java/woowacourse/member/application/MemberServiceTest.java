@@ -11,10 +11,7 @@ import woowacourse.member.dto.FindMemberInfoResponse;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.dto.UpdateNameRequest;
 import woowacourse.member.dto.UpdatePasswordRequest;
-import woowacourse.member.exception.InvalidMemberEmailException;
-import woowacourse.member.exception.InvalidMemberNameException;
-import woowacourse.member.exception.InvalidPasswordException;
-import woowacourse.member.exception.MemberNotFoundException;
+import woowacourse.member.exception.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -47,7 +44,7 @@ class MemberServiceTest {
     void signUpWithDuplicateEmail() {
         assertThatThrownBy(
                 () -> memberService.signUp(new SignUpRequest("ari@wooteco.com", "가짜아리", "Wooteco!"))
-        ).isInstanceOf(InvalidMemberEmailException.class)
+        ).isInstanceOf(DuplicateEmailException.class)
                 .hasMessageContaining("중복되는 이메일이 존재합니다.");
     }
 
