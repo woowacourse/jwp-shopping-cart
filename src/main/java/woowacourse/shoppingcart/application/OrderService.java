@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
 import woowacourse.shoppingcart.dto.order.OrdersResponse;
@@ -40,13 +41,24 @@ public class OrderService {
         final Long orderId = orderDao.save(customerId);
 
         for (final OrderRequest request : orderDetailRequests) {
-            CartItem cartItem = cartItemDao.findById(request.getCartItemId());
-            OrderDetail orderDetail = OrderDetail.from(cartItem);
-            ordersDetailDao.save(orderId, orderDetail);
-            cartItemDao.deleteById(cartItem.getId());
+            saveOrderThenRemoveCartItem(orderId, request);
         }
 
         return orderId;
+    }
+
+    private void saveOrderThenRemoveCartItem(Long orderId, OrderRequest request) {
+        CartItem cartItem = cartItemDao.findById(request.getCartItemId());
+        OrderDetail orderDetail = OrderDetail.from(cartItem);
+        reduceProductStock(orderDetail);
+        ordersDetailDao.save(orderId, orderDetail);
+        cartItemDao.deleteById(cartItem.getId());
+    }
+
+    private void reduceProductStock(OrderDetail orderDetail) {
+        Product product = productDao.findProductById(orderDetail.getProductId());
+        product.reduceStock(orderDetail.getQuantity());
+        productDao.updateStock(product);
     }
 
     public OrderResponse findOrderById(final String customerName, final Long orderId) {
