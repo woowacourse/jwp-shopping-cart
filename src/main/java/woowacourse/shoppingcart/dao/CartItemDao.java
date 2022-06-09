@@ -39,8 +39,7 @@ public class CartItemDao {
         jdbcTemplate.update(sql, params);
     }
 
-
-    public boolean isExistsMemberIdAndProductId(long memberId, long productId) {
+    public boolean isAlreadyInCart(long memberId, long productId) {
         String sql = "SELECT EXISTS "
                 + "(SELECT 1 FROM CART_ITEM WHERE member_id = :member_id AND product_id = :product_id)";
         SqlParameterSource params = new MapSqlParameterSource("member_id", memberId)
@@ -65,7 +64,7 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, params, CART_ITEM_MAPPER);
     }
 
-    public void updateQuantity(long memberId, long productId, int updatingQuantity) {
+    public void updateCartItemQuantity(long memberId, long productId, int updatingQuantity) {
         String sql = "UPDATE CART_ITEM SET quantity = :updatingQuantity "
                 + "WHERE member_id = :member_id AND product_id = :product_id";
         SqlParameterSource params = new MapSqlParameterSource("updatingQuantity", updatingQuantity)
@@ -78,7 +77,7 @@ public class CartItemDao {
         }
     }
 
-    public void delete(long memberId, long productId) {
+    public void deleteCartItem(long memberId, long productId) {
         String sql = "DELETE FROM CART_ITEM WHERE member_id = :member_id AND product_id = :product_id";
         SqlParameterSource params = new MapSqlParameterSource("member_id", memberId)
                 .addValue("product_id", productId);

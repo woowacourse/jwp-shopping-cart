@@ -40,7 +40,7 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(sql, params, Integer.class);
     }
 
-    public boolean existsId(long id) {
+    public boolean checkIdExistence(long id) {
         String sql = "SELECT EXISTS (SELECT id FROM PRODUCT WHERE id = :id)";
         SqlParameterSource params = new MapSqlParameterSource("id", id);
         return jdbcTemplate.queryForObject(sql, params, Boolean.class);

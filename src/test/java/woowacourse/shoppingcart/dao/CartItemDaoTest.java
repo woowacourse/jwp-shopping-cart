@@ -48,10 +48,10 @@ class CartItemDaoTest extends ShoppingCartTest {
     @DisplayName("이미 회원의 장바구니에 담긴 상품인지 반환한다.")
     @ParameterizedTest
     @CsvSource({"1, 1, true", "2, 1, false", "1, 2, false", "2, 2, false"})
-    void isExistsMemberIdAndProductId(long memberId, long productId, boolean expected) {
+    void isAlreadyInCart(long memberId, long productId, boolean expected) {
         cartItemDao.addCartItem(1L, 1L, 5);
 
-        boolean actual = cartItemDao.isExistsMemberIdAndProductId(memberId, productId);
+        boolean actual = cartItemDao.isAlreadyInCart(memberId, productId);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -76,10 +76,10 @@ class CartItemDaoTest extends ShoppingCartTest {
 
     @DisplayName("장바구니에 담긴 상품의 수량을 변경한다.")
     @Test
-    void updateQuantity() {
+    void updateCartItemQuantity() {
         cartItemDao.addCartItem(1L, 1L, 5);
 
-        cartItemDao.updateQuantity(1L, 1L, 6);
+        cartItemDao.updateCartItemQuantity(1L, 1L, 6);
         CartItem item = cartItemDao.findAll(1L)
                 .get(0);
 
@@ -88,10 +88,10 @@ class CartItemDaoTest extends ShoppingCartTest {
 
     @DisplayName("장바구니에 담긴 상품을 삭제한다.")
     @Test
-    void delete() {
+    void deleteCartItem() {
         cartItemDao.addCartItem(1L, 1L, 5);
 
-        cartItemDao.delete(1L, 1L);
+        cartItemDao.deleteCartItem(1L, 1L);
         List<CartItem> cartItems = cartItemDao.findAll(1L);
 
         assertThat(cartItems).isEmpty();

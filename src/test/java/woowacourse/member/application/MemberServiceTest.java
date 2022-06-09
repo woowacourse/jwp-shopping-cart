@@ -167,9 +167,9 @@ class MemberServiceTest {
     @DisplayName("이메일이 일치하는 회원 정보를 삭제한다.")
     @Test
     void deleteMember() {
-        memberService.delete(MEMBER_ID);
+        memberService.deleteMember(MEMBER_ID);
 
-        boolean actual = memberService.existsEmail(EMAIL);
+        boolean actual = memberService.checkEmailExistence(EMAIL);
 
         assertThat(actual).isFalse();
     }
@@ -178,7 +178,7 @@ class MemberServiceTest {
     @ParameterizedTest
     @CsvSource({"abc@woowahan.com, true", "abc@naver.com, false"})
     void existsEmail(String email, boolean expected) {
-        boolean actual = memberService.existsEmail(email);
+        boolean actual = memberService.checkEmailExistence(email);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -188,7 +188,7 @@ class MemberServiceTest {
     void existsEmail_InvalidFormat() {
         String invalidEmail = "abc";
 
-        assertThatThrownBy(() -> memberService.existsEmail(invalidEmail))
+        assertThatThrownBy(() -> memberService.checkEmailExistence(invalidEmail))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이메일 형식이 올바르지 않습니다.");
     }
@@ -196,7 +196,7 @@ class MemberServiceTest {
     @DisplayName("존재하지 않는 회원을 삭제하려 하면 예외를 반환한다.")
     @Test
     void deleteMember_NotFoundMember() {
-        assertThatThrownBy(() -> memberService.delete(NON_EXISTING_MEMBER_ID))
+        assertThatThrownBy(() -> memberService.deleteMember(NON_EXISTING_MEMBER_ID))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("유효하지 않은 토큰입니다.");
     }

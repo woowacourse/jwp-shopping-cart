@@ -29,19 +29,22 @@ public class MemberService {
     @Transactional
     public void save(MemberCreateRequest memberCreateRequest) {
         validateUniqueEmail(memberCreateRequest);
-        Member member = new Member(memberCreateRequest.getEmail(), memberCreateRequest.getPassword(),
-                memberCreateRequest.getNickname());
+        Member member = new Member(
+                memberCreateRequest.getEmail(),
+                memberCreateRequest.getPassword(),
+                memberCreateRequest.getNickname()
+        );
         memberDao.save(member);
     }
 
     private void validateUniqueEmail(MemberCreateRequest memberCreateRequest) {
-        if (existsEmail(memberCreateRequest.getEmail())) {
+        if (checkEmailExistence(memberCreateRequest.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일 주소입니다.");
         }
     }
 
     @Transactional(readOnly = true)
-    public boolean existsEmail(String email) {
+    public boolean checkEmailExistence(String email) {
         String validatedEmail = new Email(email).getValue();
         return memberDao.existsEmail(validatedEmail);
     }
@@ -60,7 +63,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public boolean checkPassword(long memberId, String password) {
-        return memberDao.checkIdAndPassword(memberId, password);
+        return memberDao.checkPassword(memberId, password);
     }
 
     @Transactional(readOnly = true)
@@ -75,24 +78,24 @@ public class MemberService {
         validateId(memberId);
         String nickname = new Nickname(memberUpdateRequest.getNickname())
                 .getValue();
-        memberDao.updateNicknameByEmail(memberId, nickname);
+        memberDao.updateNicknameById(memberId, nickname);
     }
 
     @Transactional
     public void updatePassword(long memberId, String newPassword) {
         validateId(memberId);
         String password = new Password(newPassword).getValue();
-        memberDao.updatePasswordByEmail(memberId, password);
+        memberDao.updatePasswordById(memberId, password);
     }
 
     @Transactional
-    public void delete(long memberId) {
+    public void deleteMember(long memberId) {
         validateId(memberId);
         memberDao.deleteById(memberId);
     }
 
     private void validateId(long memberId) {
-        if (!memberDao.existsId(memberId)) {
+        if (!memberDao.checkIdExistence(memberId)) {
             throw new AuthorizationException("유효하지 않은 토큰입니다.");
         }
     }

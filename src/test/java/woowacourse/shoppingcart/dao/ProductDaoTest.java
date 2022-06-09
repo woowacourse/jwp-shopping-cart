@@ -61,8 +61,8 @@ class ProductDaoTest extends ShoppingCartTest {
     @DisplayName("상품 id가 존재하는지 반환한다.")
     @ParameterizedTest
     @CsvSource({"3, true", "20, false"})
-    void existsId(long id, boolean expected) {
-        boolean actual = productDao.existsId(id);
+    void checkIdExistence(long id, boolean expected) {
+        boolean actual = productDao.checkIdExistence(id);
 
         assertThat(actual).isEqualTo(expected);
     }

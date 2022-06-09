@@ -38,7 +38,7 @@ public class ProductService {
     }
 
     public void validateProductId(long productId) {
-        if (!productDao.existsId(productId)) {
+        if (!productDao.checkIdExistence(productId)) {
             throw new IllegalArgumentException("존재하지 않는 상품입니다.");
         }
     }

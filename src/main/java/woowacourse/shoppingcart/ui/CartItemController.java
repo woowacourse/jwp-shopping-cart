@@ -33,20 +33,20 @@ public class CartItemController {
     @PostMapping("/products")
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal long memberId,
                                             @Valid @RequestBody CartItemAddRequest cartItemAddRequest) {
-        cartService.addCart(memberId, cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity());
+        cartService.addCartItem(memberId, cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> findAllCartItems(@AuthenticationPrincipal long memberId) {
-        return ResponseEntity.ok(cartService.findAll(memberId));
+        return ResponseEntity.ok(cartService.findAllCartItems(memberId));
     }
 
     @PatchMapping("/products")
     public ResponseEntity<List<CartItemResponse>> updateQuantity(@AuthenticationPrincipal long memberId,
                                                                  @Valid @RequestBody CartItemQuantityUpdateRequest
                                                                          cartItemQuantityUpdateRequest) {
-        List<CartItemResponse> cartItemResponses = cartService.updateQuantity(
+        List<CartItemResponse> cartItemResponses = cartService.updateCartItemQuantity(
                 memberId, cartItemQuantityUpdateRequest.getProductId(), cartItemQuantityUpdateRequest.getQuantity());
         return ResponseEntity.ok(cartItemResponses);
     }

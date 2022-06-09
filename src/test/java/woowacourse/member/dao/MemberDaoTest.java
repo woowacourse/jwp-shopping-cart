@@ -1,6 +1,7 @@
 package woowacourse.member.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,8 @@ class MemberDaoTest {
     void save() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
 
-        memberDao.save(member);
+        assertThatCode(() -> memberDao.save(member))
+                .doesNotThrowAnyException();
     }
 
     @DisplayName("이메일이 존재하는지 반환한다.")
@@ -54,11 +56,11 @@ class MemberDaoTest {
     @DisplayName("id가 존재하는지 반환한다.")
     @ParameterizedTest
     @CsvSource({"1, true", "2, false"})
-    void existsId(long id, boolean expected) {
+    void checkIdExistence(long id, boolean expected) {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 
-        boolean actual = memberDao.existsId(id);
+        boolean actual = memberDao.checkIdExistence(id);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -90,42 +92,42 @@ class MemberDaoTest {
     @DisplayName("회원 id와 비밀번호를 받아, 해당 비밀번호가 일치하는지 반환한다.")
     @ParameterizedTest
     @CsvSource({"1q2w3e4r!, true", "1q2w3e4r@, false"})
-    void checkIdAndPassword(String password, boolean expected) {
+    void checkPassword(String password, boolean expected) {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 
-        boolean actual = memberDao.checkIdAndPassword(1L, password);
+        boolean actual = memberDao.checkPassword(1L, password);
 
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("회원의 닉네임을 변경한다.")
+    @DisplayName("회원 id에 해당하는 회원의 닉네임을 변경한다.")
     @Test
-    void updateNicknameByEmail() {
+    void updateNicknameById() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 
-        memberDao.updateNicknameByEmail(1L, "바꾼닉네임");
+        memberDao.updateNicknameById(1L, "바꾼닉네임");
         Member foundMember = memberDao.findById(1L);
 
         assertThat(foundMember.getNickname()).isEqualTo("바꾼닉네임");
     }
 
-    @DisplayName("회원의 비밀번호를 변경한다.")
+    @DisplayName("회원 id에 해당하는 회원의 비밀번호를 변경한다.")
     @Test
-    void updatePasswordByEmail() {
+    void updatePasswordById() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 
-        memberDao.updatePasswordByEmail(1L, "1q2w3e4r@");
+        memberDao.updatePasswordById(1L, "1q2w3e4r@");
         Member foundMember = memberDao.findById(1L);
 
         assertThat(foundMember.getPassword()).isEqualTo("1q2w3e4r@");
     }
 
-    @DisplayName("회원을 삭제한다.")
+    @DisplayName("회원 id에 해당하는 회원을 삭제한다.")
     @Test
-    void deleteByEmail() {
+    void deleteById() {
         Member member = new Member("abc@woowahan.com", "1q2w3e4r!", "닉네임");
         memberDao.save(member);
 

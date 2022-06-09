@@ -43,7 +43,7 @@ public class MemberDao {
         return namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class);
     }
 
-    public boolean existsId(long id) {
+    public boolean checkIdExistence(long id) {
         String sql = "SELECT EXISTS (SELECT 1 FROM MEMBER WHERE id = :id)";
         SqlParameterSource params = new MapSqlParameterSource("id", id);
         return namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class);
@@ -66,21 +66,21 @@ public class MemberDao {
         }
     }
 
-    public boolean checkIdAndPassword(long id, String password) {
+    public boolean checkPassword(long id, String password) {
         String sql = "SELECT EXISTS (SELECT 1 FROM MEMBER WHERE id = :id AND password = :password)";
         SqlParameterSource params = new MapSqlParameterSource("id", id)
                 .addValue("password", password);
         return namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class);
     }
 
-    public void updateNicknameByEmail(long id, String nickname) {
+    public void updateNicknameById(long id, String nickname) {
         String sql = "UPDATE MEMBER SET nickname = :nickname WHERE id = :id";
         SqlParameterSource params = new MapSqlParameterSource("id", id)
                 .addValue("nickname", nickname);
         namedParameterJdbcTemplate.update(sql, params);
     }
 
-    public void updatePasswordByEmail(long id, String password) {
+    public void updatePasswordById(long id, String password) {
         String sql = "UPDATE MEMBER SET password = :password WHERE id = :id";
         SqlParameterSource params = new MapSqlParameterSource("id", id)
                 .addValue("password", password);

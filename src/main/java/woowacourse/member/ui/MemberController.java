@@ -44,7 +44,7 @@ public class MemberController {
 
     @GetMapping("/members/email-check")
     public ResponseEntity<CheckResponse> checkDuplicatedEmail(@RequestParam @NotBlank String email) {
-        CheckResponse checkResponse = new CheckResponse(!memberService.existsEmail(email));
+        CheckResponse checkResponse = new CheckResponse(!memberService.checkEmailExistence(email));
         return ResponseEntity.ok(checkResponse);
     }
 
@@ -83,7 +83,7 @@ public class MemberController {
 
     @DeleteMapping("/members/me")
     public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal long memberId) {
-        memberService.delete(memberId);
+        memberService.deleteMember(memberId);
         return ResponseEntity.noContent()
                 .build();
     }

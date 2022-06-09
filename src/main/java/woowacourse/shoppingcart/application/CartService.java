@@ -21,14 +21,14 @@ public class CartService {
     }
 
     @Transactional
-    public void addCart(long memberId, long productId, int quantity) {
+    public void addCartItem(long memberId, long productId, int quantity) {
         productService.validateProductId(productId);
         productService.validateStock(productId, quantity);
-        addCartItem(memberId, productId, quantity);
+        addCart(memberId, productId, quantity);
     }
 
-    private void addCartItem(long memberId, long productId, int quantity) {
-        if (cartItemDao.isExistsMemberIdAndProductId(memberId, productId)) {
+    private void addCart(long memberId, long productId, int quantity) {
+        if (cartItemDao.isAlreadyInCart(memberId, productId)) {
             cartItemDao.increaseQuantity(memberId, productId, quantity);
             return;
         }
@@ -36,7 +36,7 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartItemResponse> findAll(long memberId) {
+    public List<CartItemResponse> findAllCartItems(long memberId) {
         return cartItemDao.findAll(memberId)
                 .stream()
                 .map(CartItemResponse::new)
@@ -44,17 +44,17 @@ public class CartService {
     }
 
     @Transactional
-    public List<CartItemResponse> updateQuantity(long memberId, long productId, int quantity) {
+    public List<CartItemResponse> updateCartItemQuantity(long memberId, long productId, int quantity) {
         productService.validateProductId(productId);
         productService.validateStock(productId, quantity);
-        cartItemDao.updateQuantity(memberId, productId, quantity);
-        return findAll(memberId);
+        cartItemDao.updateCartItemQuantity(memberId, productId, quantity);
+        return findAllCartItems(memberId);
     }
 
     @Transactional
     public List<CartItemResponse> deleteCartItem(long memberId, long productId) {
         productService.validateProductId(productId);
-        cartItemDao.delete(memberId, productId);
-        return findAll(memberId);
+        cartItemDao.deleteCartItem(memberId, productId);
+        return findAllCartItems(memberId);
     }
 }
