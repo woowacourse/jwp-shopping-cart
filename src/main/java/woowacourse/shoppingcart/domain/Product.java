@@ -4,15 +4,19 @@ public class Product {
 
     private final Long id;
     private final String name;
-    private final Integer price;
+    private final int price;
     private final String imageUrl;
-    private final Integer quantity;
+    private final Amount quantity;
 
-    public Product(final String name, final int price, final String imageUrl, final int quantity) {
+    public Product(String name, int price, String imageUrl, int quantity) {
         this(null, name, price, imageUrl, quantity);
     }
 
-    public Product(Long id, String name, Integer price, String imageUrl, Integer quantity) {
+    public Product(Long id, String name, int price, String imageUrl, Integer quantity) {
+        this(id, name, price, imageUrl, new Amount(quantity));
+    }
+
+    public Product(Long id, String name, int price, String imageUrl, Amount quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -37,6 +41,6 @@ public class Product {
     }
 
     public Integer getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 }
