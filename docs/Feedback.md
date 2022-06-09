@@ -28,10 +28,10 @@
 - [x] `Domain`
     - [x] `Email`, `Password`를 객체로 분리하여 검증 관리
         - 현재 코드에서 Validator로 분리하여 처리하는 것에 대해 객체지향의 역할과 책임의 관점에서 고민
-- [ ] `Exception`
-    - [ ] `Exception.class` -> `RuntimeException.class`
+- [x] `Exception`
+    - [x] `Exception.class` -> `RuntimeException.class`
         - 500 에러 반환 처리
-    - [ ] 응답 메세지 한글로 통일화
+    - [x] 응답 메세지 한글로 통일화
         - 파악 용이
 - [ ] URL
     - `GET /customers`로 개인정보를 조회하는 것이 맞는지
