@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class IdRequest {
 
+    @NotNull
     private Long id;
 
     private IdRequest() {

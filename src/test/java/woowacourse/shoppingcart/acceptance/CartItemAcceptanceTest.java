@@ -49,6 +49,51 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 token, "/cart", HttpStatus.CREATED.value());
     }
 
+    @DisplayName("장바구니 아이템 추가 - 수량이 음수인 경우 예외")
+    @Test
+    void addCartItemQuantityException() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
+
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
+
+        //when & then
+        RestAssuredFixture.postCart(new CartProductRequest(1L, -1L, true),
+                token, "/cart", HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("장바구니 아이템 추가 - 수량이 음수인 경우 예외")
+    @Test
+    void addCartItemQuantityNullException() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
+
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
+
+        //when & then
+        RestAssuredFixture.postCart(new CartProductRequest(1L, null, true),
+                token, "/cart", HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("장바구니 아이템 추가 - id가 null 경우 예외")
+    @Test
+    void addCartItemIdNullException() {
+        //given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
+
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
+
+        //when & then
+        RestAssuredFixture.postCart(new CartProductRequest(null, 1L, true),
+                token, "/cart", HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {

@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.PageRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 

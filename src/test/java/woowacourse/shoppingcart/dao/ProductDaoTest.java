@@ -13,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.PageRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import javax.sql.DataSource;
@@ -64,8 +63,7 @@ public class ProductDaoTest {
         }
 
         // when & then
-        PageRequest pageRequest = new PageRequest(12L, page);
-        assertThat(productDao.findProducts(pageRequest.getPage() * pageRequest.getSize(), pageRequest.getSize())
+        assertThat(productDao.findProducts((page - 1) * 12L, 12L)
                 .size())
                 .isEqualTo(expectSize);
     }

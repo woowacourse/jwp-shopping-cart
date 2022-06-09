@@ -9,6 +9,8 @@ import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/cart")
 public class CartItemController {
@@ -19,7 +21,7 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal String userNameByToken, @RequestBody CartProductRequest cartProductRequest) {
+    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal String userNameByToken, @Valid @RequestBody CartProductRequest cartProductRequest) {
         cartService.addCart(cartProductRequest, userNameByToken);
         return ResponseEntity.created(URI.create("/cart")).build();
     }
