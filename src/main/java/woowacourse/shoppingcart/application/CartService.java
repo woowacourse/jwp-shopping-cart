@@ -55,11 +55,8 @@ public class CartService {
         Product product = productDao.findProductById(productId)
             .orElseThrow(NotFoundProductException::new);
 
-        if (!cartItemDao.existByAccountIdAndProductId(account.getId(), product.getId())) {
-            throw new InvalidCartItemException();
-        }
-
-        return cartItemDao.findByAccountIdAndProductId(account.getId(), product.getId());
+        return cartItemDao.findByAccountIdAndProductId(account.getId(), product.getId())
+            .orElseThrow(InvalidCartItemException::new);
     }
 
     @Transactional

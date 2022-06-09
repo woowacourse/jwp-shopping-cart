@@ -9,9 +9,6 @@ public class Product {
     private Integer price;
     private String imageUrl;
 
-    public Product() {
-    }
-
     public Product(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;
