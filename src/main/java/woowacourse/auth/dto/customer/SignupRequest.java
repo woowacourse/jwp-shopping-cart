@@ -1,6 +1,5 @@
 package woowacourse.auth.dto.customer;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import woowacourse.shoppingcart.domain.customer.Customer;

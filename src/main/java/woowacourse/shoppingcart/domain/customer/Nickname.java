@@ -1,9 +1,8 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import static woowacourse.shoppingcart.exception.ExceptionMessage.*;
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_2102;
 
 import java.util.Objects;
-import woowacourse.shoppingcart.exception.ExceptionMessage;
 import woowacourse.shoppingcart.exception.InvalidNicknameFormatException;
 
 public final class Nickname {

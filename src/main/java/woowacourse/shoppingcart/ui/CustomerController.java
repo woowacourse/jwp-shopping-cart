@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.auth.dto.customer.CustomerProfileUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerPasswordUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerProfileUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateResponse;
 import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.auth.dto.customer.SignupRequest;
@@ -46,14 +46,14 @@ public class CustomerController {
 
     @PatchMapping("/profile")
     public ResponseEntity<CustomerUpdateResponse> updateProfile(@Login String email,
-                                                         @RequestBody @Valid CustomerProfileUpdateRequest request) {
+                                                                @RequestBody @Valid CustomerProfileUpdateRequest request) {
         Customer updatedCustomer = customerService.updateProfile(email, request);
         return ResponseEntity.ok(new CustomerUpdateResponse(updatedCustomer.getNickname()));
     }
 
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(@Login String email,
-                                                         @RequestBody @Valid CustomerPasswordUpdateRequest request) {
+                                               @RequestBody @Valid CustomerPasswordUpdateRequest request) {
         customerService.updatePassword(email, request);
         return ResponseEntity.noContent().build();
     }

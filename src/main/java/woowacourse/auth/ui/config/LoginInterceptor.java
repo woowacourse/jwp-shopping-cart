@@ -1,12 +1,11 @@
 package woowacourse.auth.ui.config;
 
-import static org.springframework.web.cors.CorsUtils.*;
+import static org.springframework.web.cors.CorsUtils.isPreFlightRequest;
 
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;

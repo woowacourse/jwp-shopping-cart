@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.application;
 
-import static woowacourse.shoppingcart.exception.ExceptionMessage.*;
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_3001;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,6 @@ import woowacourse.shoppingcart.dto.cart.CartDeleteRequest;
 import woowacourse.shoppingcart.dto.cart.CartProduct;
 import woowacourse.shoppingcart.dto.cart.CartSetRequest;
 import woowacourse.shoppingcart.dto.cart.CartSetResponse;
-import woowacourse.shoppingcart.exception.ExceptionMessage;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 @Service

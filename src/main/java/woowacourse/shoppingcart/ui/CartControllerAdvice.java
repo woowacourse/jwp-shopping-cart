@@ -57,7 +57,8 @@ public class CartControllerAdvice {
 
     @ExceptionHandler(IncorrectPasswordException.class)
     public ResponseEntity<ExceptionDto> handleIncorrectPassword(IncorrectPasswordException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionDto(CODE_2201.getCode(), CODE_2201.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionDto(CODE_2201.getCode(), CODE_2201.getMessage()));
     }
 
     @ExceptionHandler(ProductNotFoundException.class)

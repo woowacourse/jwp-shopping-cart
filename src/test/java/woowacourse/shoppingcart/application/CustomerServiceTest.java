@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static woowacourse.utils.Fixture.customer;
 import static woowacourse.utils.Fixture.email;
-import static woowacourse.utils.Fixture.password;
 import static woowacourse.utils.Fixture.signupRequest;
 
 import java.util.Optional;
@@ -18,8 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.dto.customer.CustomerPasswordUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerProfileUpdateRequest;
-import woowacourse.auth.dto.customer.CustomerUpdateRequest;
-import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;

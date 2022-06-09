@@ -1,11 +1,12 @@
 package woowacourse.shoppingcart.application;
 
-import static woowacourse.shoppingcart.exception.ExceptionMessage.*;
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_2001;
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_2202;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.customer.CustomerProfileUpdateRequest;
 import woowacourse.auth.dto.customer.CustomerPasswordUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerProfileUpdateRequest;
 import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.auth.dto.customer.SignupRequest;
 import woowacourse.auth.exception.InvalidCustomerException;

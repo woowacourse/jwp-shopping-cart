@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.customer.CustomerProfileUpdateRequest;
-import woowacourse.auth.dto.customer.CustomerUpdateRequest;
 import woowacourse.auth.dto.customer.SignoutRequest;
 import woowacourse.utils.AcceptanceTest;
 

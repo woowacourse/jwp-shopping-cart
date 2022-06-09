@@ -1,10 +1,9 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import static woowacourse.shoppingcart.exception.ExceptionMessage.*;
+import static woowacourse.shoppingcart.exception.ExceptionMessage.CODE_2103;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.ExceptionMessage;
 import woowacourse.shoppingcart.exception.InvalidPasswordFormatException;
 
 public final class Password {
