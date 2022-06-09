@@ -18,12 +18,12 @@ import woowacourse.shoppingcart.domain.Product;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql("classpath:schema.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class ProductDaoTest {
+public class ProductDaoImplTest {
 
     private final ProductDao productDao;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
+    public ProductDaoImplTest(JdbcTemplate jdbcTemplate) {
+        this.productDao = new ProductDaoImpl(jdbcTemplate);
     }
 
     @DisplayName("Product를 저장하면, id를 반환한다.")

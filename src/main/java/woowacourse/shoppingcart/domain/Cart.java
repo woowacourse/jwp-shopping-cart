@@ -11,7 +11,8 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(final Long id, final Long customerId, final Long productId, final long quantity, final boolean checked) {
+    public Cart(final Long id, final Long customerId, final Long productId, final long quantity,
+                final boolean checked) {
         this.id = id;
         this.customerId = customerId;
         this.productId = productId;

@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.Cart;
-
 public class CartResponse {
 
     private Long id;
@@ -15,7 +13,8 @@ public class CartResponse {
     private CartResponse() {
     }
 
-    public CartResponse(Long id, Long productId, String name, int price, String imageUrl, long quantity, boolean checked) {
+    public CartResponse(Long id, Long productId, String name, int price, String imageUrl, long quantity,
+                        boolean checked) {
         this.id = id;
         this.productId = productId;
         this.name = name;
