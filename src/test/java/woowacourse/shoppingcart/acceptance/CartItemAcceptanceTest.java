@@ -37,6 +37,20 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         token = 토큰_요청("email@email.com", "12345678a");
     }
 
+    @DisplayName("A계정으로 장바구니 아이템 추가 후 B계정으로 동일한 아이템 추가 시 성공")
+    @Test
+    void addSameCartItemWithDifferentAccount() {
+        회원가입_요청("email2@email.com", "12345678a", "nick");
+        String otherToken = 토큰_요청("email2@email.com", "12345678a");
+
+        장바구니_아이템_추가_요청2(productId1, token);
+        장바구니_아이템_추가_요청2(productId2, token);
+
+        ExtractableResponse response = 장바구니_아이템_추가_요청2(productId2, otherToken);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
     @DisplayName("장바구니 아이템 추가 시 잘못된 토큰이면 401 반환")
     @Test
     void addCartItemWithUnauthorizedToken() {

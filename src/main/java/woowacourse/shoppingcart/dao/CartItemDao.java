@@ -63,9 +63,9 @@ public class CartItemDao {
         }
     }
 
-    public boolean existByProductId(Long productId) {
-        final String query = "SELECT EXISTS(SELECT id FROM cart_item WHERE product_id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, productId);
+    public boolean existByProductIdAndCustomerId(Long productId, Long customerId) {
+        final String query = "SELECT EXISTS(SELECT id FROM cart_item WHERE product_id = ? and customer_id = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, productId, customerId);
     }
 
     public void deleteByProductIdAndCustomerId(final Long customerId, final Long productId) {

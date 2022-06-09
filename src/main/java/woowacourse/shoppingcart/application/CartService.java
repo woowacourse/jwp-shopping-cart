@@ -48,7 +48,7 @@ public class CartService {
     public Long addCart(final Long productId, final Customer customer) {
         productDao.findProductById(productId)
                 .orElseThrow(ShoppingCartNotFoundProductException::new);
-        validateDuplicateCartItem(productId);
+        validateDuplicateCartItem(productId, customer.getId());
         try {
             return cartItemDao.addCartItem(customer.getId(), productId, 1);
         } catch (Exception e) {
@@ -56,8 +56,8 @@ public class CartService {
         }
     }
 
-    private void validateDuplicateCartItem(Long productId) {
-        if (cartItemDao.existByProductId(productId)) {
+    private void validateDuplicateCartItem(Long productId, Long customerId) {
+        if (cartItemDao.existByProductIdAndCustomerId(productId, customerId)) {
             throw new DuplicateCartItemBadRequestException();
         }
     }
