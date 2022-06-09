@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.entity.OrderDetailEntity;
 import woowacourse.shoppingcart.exception.NotExistOrderException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -54,6 +54,7 @@ public class OrderService {
         return ordersId;
     }
 
+    @Transactional(readOnly = true)
     public List<OrdersDto> findOrdersByCustomer(final Customer customer) {
         List<OrdersDto> result = new LinkedList<>();
         List<Long> orderIds = orderDao.findByCustomerId(customer.getId());
@@ -65,6 +66,7 @@ public class OrderService {
         return result;
     }
 
+    @Transactional(readOnly = true)
     public OrdersDto findOrderByCustomerAndOrderId(Customer customer, Long orderId) {
         validateExistOrder(customer, orderId);
         List<OrderDetail> orderDetails = getOrderDetails(orderId);
