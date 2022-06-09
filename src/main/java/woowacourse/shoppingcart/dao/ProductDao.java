@@ -51,7 +51,6 @@ public class ProductDao {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource, mapToProduct()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
-            // throw new NoSuchProductException();
         }
     }
 
