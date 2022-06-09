@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 
@@ -27,7 +26,7 @@ class CartServiceTest {
     CartItemDao cartItemDao;
 
     @Mock
-    ProductDao productDao;
+    ProductService productService;
 
     @Test
     @DisplayName("장바구니에 상품 추가하는 기능")
@@ -53,9 +52,9 @@ class CartServiceTest {
                 .thenReturn(1L);
         when(cartItemDao.findProductIdById(2L))
                 .thenReturn(2L);
-        when(productDao.findProductById(1L))
+        when(productService.findProductById(1L))
                 .thenReturn(new Product(1L, "밥", 1000, "www.naver.com"));
-        when(productDao.findProductById(2L))
+        when(productService.findProductById(2L))
                 .thenReturn(new Product(2L, "빵", 1000, "www.naver.com"));
 
         // when

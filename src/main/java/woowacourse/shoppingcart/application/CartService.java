@@ -5,11 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.notfound.InvalidProductException;
 import woowacourse.shoppingcart.exception.notfound.NotInCustomerCartItemException;
 
@@ -20,11 +18,11 @@ public class CartService {
     private static final int INITIAL_QUANTITY = 1;
 
     private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public CartService(final CartItemDao cartItemDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final ProductService productService) {
         this.cartItemDao = cartItemDao;
-        this.productDao = productDao;
+        this.productService = productService;
     }
 
     public Long addCart(final Long customerId, final Long productId) {
@@ -41,7 +39,7 @@ public class CartService {
         final List<Cart> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
+            final Product product = productService.findProductById(productId);
             carts.add(new Cart(cartId, product));
         }
         return carts;
