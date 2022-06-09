@@ -23,6 +23,7 @@ import woowacourse.shoppingcart.domain.Product;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
+
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
@@ -64,6 +65,32 @@ public class CartItemDaoTest {
         assertThat(cart.getId()).isEqualTo(4L);
     }
 
+    @Test
+    @DisplayName("회원의 장바구니에 상품이 존재한다.")
+    void existByProductIdWithTrue() {
+        // given
+        Long customerId = 1L;
+
+        // when
+        boolean result = cartItemDao.existByProductId(customerId, 1L);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("회원의 장바구니에 상품이 존재하지 않는다.")
+    void existByProductIdWithFalse() {
+        // given
+        Long customerId = 1L;
+
+        // when
+        boolean result = cartItemDao.existByProductId(customerId, 10L);
+
+        // then
+        assertThat(result).isFalse();
+    }
+
     @DisplayName("Customer Id를 넣으면, 해당 장바구니를 가져온다.")
     @Test
     void findIdsByCustomerId() {
@@ -89,7 +116,8 @@ public class CartItemDaoTest {
 
         // when
         cartItemDao.updateCartItemByProductId(cart);
-        Integer quantity = jdbcTemplate.queryForObject("SELECT quantity FROM cart_item WHERE product_id = ?", Integer.class, 1L);
+        Integer quantity = jdbcTemplate.queryForObject("SELECT quantity FROM cart_item WHERE product_id = ?",
+                Integer.class, 1L);
 
         // then
         assertThat(quantity).isEqualTo(2);
@@ -102,7 +130,7 @@ public class CartItemDaoTest {
         Long customerId = 1L;
 
         // when
-        cartItemDao.updateCartItem(List.of(new Cart(1L, 1, false), new Cart(3L, 3, true)));
+        cartItemDao.updateCartItems(List.of(new Cart(1L, 1, false), new Cart(3L, 3, true)));
         List<Cart> carts = cartItemDao.findByCustomerId(customerId);
         Cart firstCartItem = carts.get(0);
         Cart thirdCartItem = carts.get(2);
@@ -121,7 +149,7 @@ public class CartItemDaoTest {
         Long customerId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(List.of(1L, 2L));
+        cartItemDao.deleteCartItems(List.of(1L, 2L));
         List<Cart> carts = cartItemDao.findByCustomerId(customerId);
         List<Long> cartIds = carts.stream()
                 .map(cart -> cart.getId())
@@ -142,31 +170,5 @@ public class CartItemDaoTest {
 
         // then
         assertThat(cartItemDao.findByCustomerId(customerId)).size().isEqualTo(0);
-    }
-
-    @Test
-    @DisplayName("회원의 장바구니에 상품이 존재한다.")
-    void existByProductIdWithTrue() {
-        // given
-        Long customerId = 1L;
-
-        // when
-        boolean result = cartItemDao.existByProductId(customerId, 1L);
-
-        // then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    @DisplayName("회원의 장바구니에 상품이 존재하지 않는다.")
-    void existByProductIdWithFalse() {
-        // given
-        Long customerId = 1L;
-
-        // when
-        boolean result = cartItemDao.existByProductId(customerId, 10L);
-
-        // then
-        assertThat(result).isFalse();
     }
 }

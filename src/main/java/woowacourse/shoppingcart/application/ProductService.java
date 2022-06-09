@@ -8,7 +8,6 @@ import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductResponses;
-import woowacourse.shoppingcart.dto.ProductsPerPageRequest;
 
 @Service
 @Transactional(rollbackFor = Exception.class, readOnly = true)

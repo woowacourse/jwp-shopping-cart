@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductResponses;
-import woowacourse.shoppingcart.dto.ProductsPerPageRequest;
 
 @SpringBootTest
 public class ProductServiceTest {

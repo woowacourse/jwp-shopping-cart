@@ -19,13 +19,13 @@ public class UpdateCartRequests {
         return cartItems;
     }
 
-    public List<Cart> carts() {
+    public List<Cart> toCart() {
         return cartItems.stream()
                 .map(UpdateCartRequest::toCart)
                 .collect(Collectors.toList());
     }
 
-    public List<Long> cartIds() {
+    public List<Long> toCartIds() {
         return cartItems.stream()
                 .map(UpdateCartRequest::getId)
                 .collect(Collectors.toList());

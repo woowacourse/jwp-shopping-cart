@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductResponses;
-import woowacourse.shoppingcart.dto.ProductsPerPageRequest;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {

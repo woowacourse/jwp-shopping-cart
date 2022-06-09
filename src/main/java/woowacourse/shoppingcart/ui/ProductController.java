@@ -20,8 +20,8 @@ import woowacourse.shoppingcart.dto.ProductResponses;
 @RequestMapping("/products")
 public class ProductController {
 
-    private static final int DEFAULT_SIZE = 1000;
-    private static final int DEFAULT_PAGE = 1;
+    private static final String DEFAULT_SIZE = "1000";
+    private static final String DEFAULT_PAGE = "1";
 
     private final ProductService productService;
 
@@ -41,8 +41,8 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ProductResponses> getProducts(
-            @RequestParam(required = false, defaultValue = "1000") int size,
-            @RequestParam(required = false, defaultValue = "1") int page) {
+            @RequestParam(required = false, defaultValue = DEFAULT_SIZE) int size,
+            @RequestParam(required = false, defaultValue = DEFAULT_PAGE) int page) {
         return ResponseEntity.ok(productService.findProducts(size, page));
     }
 

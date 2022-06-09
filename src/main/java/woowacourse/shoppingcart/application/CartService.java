@@ -15,7 +15,6 @@ import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartResponses;
 import woowacourse.shoppingcart.dto.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.UpdateCartRequests;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class, readOnly = true)
@@ -35,17 +34,15 @@ public class CartService {
     public Long addCart(String username, CartRequest cartRequest) {
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
         Product product = productDao.findProductById(cartRequest.getProductId());
+
         if (cartItemDao.existByProductId(customerId, cartRequest.getProductId())) {
-            cartItemDao.updateCartItemByProductId(new Cart(product, cartRequest.getQuantity() + 1, cartRequest.getChecked()));
+            cartItemDao.updateCartItemByProductId(
+                    new Cart(product, cartRequest.getQuantity() + 1, cartRequest.getChecked()));
             return 0L;
         }
 
-        try {
-            Cart cart = new Cart(product, cartRequest.getQuantity(), cartRequest.getChecked());
-            return cartItemDao.addCartItem(customerId, cart).getId();
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
+        Cart cart = new Cart(product, cartRequest.getQuantity(), cartRequest.getChecked());
+        return cartItemDao.addCartItem(customerId, cart).getId();
     }
 
     public CartResponses findCartsByUsername(String username) {
@@ -56,24 +53,25 @@ public class CartService {
 
     @Transactional(rollbackFor = Exception.class)
     public CartResponses updateCartItems(String username, UpdateCartRequests updateCartRequests) {
-        List<Cart> carts = updateCartRequests.carts();
-        for (Cart cart : carts) {
-            cartItemDao.updateCartItem(cart);
-        }
+        List<Cart> carts = updateCartRequests.toCart();
+        cartItemDao.updateCartItems(carts);
 
-        List<Long> cartIds = updateCartRequests.cartIds();
-        List<Cart> foundCarts = findCartIdsByUsername(username);
-        List<Cart> updateCarts = foundCarts.stream()
-                .filter(it -> cartIds.contains(it.getId()))
-                .collect(Collectors.toList());
-
-        List<CartResponse> cartResponses = updateCarts.stream()
+        List<Cart> updatedCarts = getUpdatedCarts(username, updateCartRequests);
+        List<CartResponse> cartResponses = updatedCarts.stream()
                 .map(CartResponse::from)
                 .collect(Collectors.toList());
         return new CartResponses(cartResponses);
     }
 
-    private List<Cart> findCartIdsByUsername(String username) {
+    private List<Cart> getUpdatedCarts(String username, UpdateCartRequests updateCartRequests) {
+        List<Long> cartIds = updateCartRequests.toCartIds();
+        List<Cart> foundCarts = getCartIdsByUsername(username);
+        return foundCarts.stream()
+                .filter(it -> cartIds.contains(it.getId()))
+                .collect(Collectors.toList());
+    }
+
+    private List<Cart> getCartIdsByUsername(String username) {
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
         return cartItemDao.findByCustomerId(customerId);
     }
@@ -81,7 +79,7 @@ public class CartService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteCart(DeleteProductRequest deleteProductRequest) {
         List<Long> cartIds = deleteProductRequest.cartIds();
-        cartItemDao.deleteCartItem(cartIds);
+        cartItemDao.deleteCartItems(cartIds);
     }
 
     @Transactional(rollbackFor = Exception.class)

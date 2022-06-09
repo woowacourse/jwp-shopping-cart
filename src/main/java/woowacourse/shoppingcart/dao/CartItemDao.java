@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -53,26 +52,23 @@ public class CartItemDao {
         return new Cart(id, cart.getProduct(), cart.getQuantity(), cart.isChecked());
     }
 
+    public boolean existByProductId(Long customerId, Long productId) {
+        try {
+            String sql = "SELECT EXISTS (SELECT * FROM cart_item WHERE customer_id = ? and product_id = ?)";
+            return jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
     public List<Cart> findByCustomerId(Long customerId) {
         try {
             String sql =
-                    "SELECT c.id AS id, c.product_id AS product_id, p.name AS name, "
-                            + "p.price AS price, p.image_url AS image_url, c.quantity AS quantity, c.checked AS checked "
-                            + "FROM cart_item AS c "
-                            + "JOIN product AS p "
-                            + "ON c.product_id = p.id "
+                    "SELECT c.id AS id, c.product_id AS product_id, p.name AS name, p.price AS price, "
+                            + "p.image_url AS image_url, c.quantity AS quantity, c.checked AS checked "
+                            + "FROM cart_item AS c  JOIN product AS p ON c.product_id = p.id "
                             + "WHERE customer_id = ?";
             return jdbcTemplate.query(sql, cartRowMapper, customerId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-
-    }
-
-    public Long findProductIdById(Long cartId) {
-        try {
-            String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
@@ -83,7 +79,7 @@ public class CartItemDao {
         jdbcTemplate.update(sql, cart.getQuantity(), cart.isChecked(), cart.getProduct().getId());
     }
 
-    public void updateCartItem(List<Cart> carts) {
+    public void updateCartItems(List<Cart> carts) {
         String sql = "UPDATE cart_item SET quantity =?, checked = ? WHERE id = ?";
 
         jdbcTemplate.batchUpdate(sql,
@@ -103,13 +99,7 @@ public class CartItemDao {
                 });
     }
 
-    public void updateCartItem(Cart cart) {
-        String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE id = ?";
-
-        jdbcTemplate.update(sql, cart.getQuantity(), cart.isChecked(), cart.getId());
-    }
-
-    public void deleteCartItem(List<Long> cartIds) {
+    public void deleteCartItems(List<Long> cartIds) {
         String sql = "DELETE FROM cart_item WHERE id = ?";
 
         jdbcTemplate.batchUpdate(sql,
@@ -132,15 +122,6 @@ public class CartItemDao {
         int rowCount = jdbcTemplate.update(sql, customerId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
-        }
-    }
-
-    public boolean existByProductId(Long customerId, Long productId) {
-        try {
-            String sql = "SELECT EXISTS (SELECT * FROM cart_item WHERE customer_id = ? and product_id = ?)";
-            return jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
         }
     }
 }
