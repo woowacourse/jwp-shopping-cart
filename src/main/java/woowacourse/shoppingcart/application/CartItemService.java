@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -64,9 +65,9 @@ public class CartItemService {
     public Long addCart(CartItemSaveRequest cartItemSaveRequest, LoginCustomer loginCustomer) {
         Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername())
                 .orElseThrow(InvalidCustomerException::new);
-        Optional<Long> OptionalCartItemId = cartItemDao.findIdByProductId(cartItemSaveRequest.getProductId());
+        OptionalLong OptionalCartItemId = cartItemDao.findIdByProductId(cartItemSaveRequest.getProductId());
         if (OptionalCartItemId.isPresent()) {
-            Long cartItemId = OptionalCartItemId.get();
+            Long cartItemId = OptionalCartItemId.getAsLong();
             cartItemDao.addQuantity(cartItemId, cartItemSaveRequest.getQuantity());
             return cartItemId;
         }

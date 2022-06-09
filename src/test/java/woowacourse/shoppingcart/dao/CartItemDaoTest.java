@@ -95,7 +95,7 @@ public class CartItemDaoTest {
 
         cartItemDao.updateQuantity(bananaCartId, 5);
 
-        Integer quantity = cartItemDao.findQuantityById(bananaCartId).get();
+        Integer quantity = cartItemDao.findQuantityById(bananaCartId).getAsInt();
         assertThat(quantity).isEqualTo(5);
     }
 }

@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,24 +44,25 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> rs.getLong("id"));
     }
 
-    public Optional<Long> findProductIdById(Long cartItemId) {
+    public OptionalLong findProductIdById(Long cartItemId) {
         try {
             String sql = "SELECT product_id FROM cart_item WHERE id = :id";
             SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(new IdDto(cartItemId));
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource,
-                    (rs, rowNum) -> rs.getLong("product_id")));
+            return OptionalLong.of(Objects.requireNonNull(jdbcTemplate.queryForObject(sql, parameterSource,
+                    (rs, rowNum) -> rs.getLong("product_id"))));
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            return OptionalLong.empty();
         }
     }
 
-    public Optional<Integer> findQuantityById(Long cartItemId) {
+    public OptionalInt findQuantityById(Long cartItemId) {
         try {
             String sql = "SELECT quantity FROM cart_item WHERE id = :id";
             SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(new IdDto(cartItemId));
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource, Integer.class));
+            return OptionalInt.of(
+                    Objects.requireNonNull(jdbcTemplate.queryForObject(sql, parameterSource, Integer.class)));
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            return OptionalInt.empty();
         }
     }
 
@@ -91,13 +95,14 @@ public class CartItemDao {
         jdbcTemplate.update(sql, parameterSource);
     }
 
-    public Optional<Long> findIdByProductId(Long productId) {
+    public OptionalLong findIdByProductId(Long productId) {
         try {
             String sql = "SELECT id FROM cart_item WHERE product_id = :id";
             SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(new IdDto(productId));
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource, Long.class));
+            return OptionalLong.of(
+                    Objects.requireNonNull(jdbcTemplate.queryForObject(sql, parameterSource, Long.class)));
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            return OptionalLong.empty();
         }
     }
 }
