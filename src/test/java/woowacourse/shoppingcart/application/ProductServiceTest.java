@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import woowacourse.shoppingcart.ShoppingCartTest;
@@ -43,5 +45,14 @@ class ProductServiceTest extends ShoppingCartTest {
                 .collect(Collectors.toUnmodifiableList());
 
         assertThat(productIds).containsExactly(1L, 2L, 3L, 4L, 5L, 6L);
+    }
+
+    @DisplayName("상품 목록을 페이징 조회할 때, page의 값 혹은 한 페이지에 보여줄 상품의 개수가 1보다 작다면 예외를 발생시킨다.")
+    @ParameterizedTest
+    @CsvSource({"1, 0, 한 페이지에 보여줄 상품의 개수는 양수여야합니다.", "0, 1, page 값은 양수여야 합니다."})
+    void findProducts_InvalidPaginationValue(int page, int productCountLimit, String expectedExceptionMessage) {
+        assertThatThrownBy(() -> productService.findProducts(page, productCountLimit))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(expectedExceptionMessage);
     }
 }
