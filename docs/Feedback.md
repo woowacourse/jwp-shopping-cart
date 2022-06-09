@@ -35,7 +35,7 @@
         - 파악 용이
 - [ ] URL
     - `GET /customers`로 개인정보를 조회하는 것이 맞는지
-- [ ] `Argumnet Resolver`
+- [x] `Argumnet Resolver`
     - UI 패키지로 분리한 이유, config 패키지로 분리에 대해 고민
 - [x] `AuthorizationExtractor`
     - 메서드 분리

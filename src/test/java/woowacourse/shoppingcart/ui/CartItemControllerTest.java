@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
+import woowacourse.auth.config.AuthenticationPrincipalArgumentResolver;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
