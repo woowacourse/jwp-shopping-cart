@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.domain.product.ProductId;
 
 import java.util.List;
 
@@ -27,12 +28,28 @@ public class ProductDaoTest {
         this.productDao = new ProductDao(jdbcTemplate);
     }
 
-    @DisplayName("상품 목록 조회")
+    @DisplayName("상품 목록 조회가 정상적으로 되는지 확인한다.")
     @Test
     void getProducts() {
         final List<Product> products = productDao.getProducts();
         final int result = products.size();
 
         assertThat(result).isEqualTo(3);
+    }
+
+    @DisplayName("상품이 존재하는 것을 확인한다.")
+    @Test
+    void exists_true() {
+        final Boolean result = productDao.exists(new ProductId(1));
+
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("상품이 존재하지 않는 것을 확인한다.")
+    @Test
+    void exists_false() {
+        final Boolean result = productDao.exists(new ProductId(4));
+
+        assertThat(result).isFalse();
     }
 }
