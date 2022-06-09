@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.dto.request;
 
+import javax.validation.constraints.Positive;
+
 public class CartIdRequest {
 
+    @Positive
     private Long id;
 
     public CartIdRequest() {

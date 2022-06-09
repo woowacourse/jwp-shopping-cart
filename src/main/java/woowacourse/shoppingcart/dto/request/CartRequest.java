@@ -1,15 +1,21 @@
 package woowacourse.shoppingcart.dto.request;
 
+import javax.validation.constraints.Positive;
+
 public class CartRequest {
 
+    @Positive
     private Long productId;
-    private int quantity;
-    private boolean checked;
+
+    @Positive
+    private Integer quantity;
+
+    private Boolean checked;
 
     public CartRequest() {
     }
 
-    public CartRequest(Long productId, int quantity, boolean checked) {
+    public CartRequest(Long productId, Integer quantity, Boolean checked) {
         this.productId = productId;
         this.quantity = quantity;
         this.checked = checked;
@@ -19,11 +25,11 @@ public class CartRequest {
         return productId;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public boolean getChecked() {
+    public Boolean getChecked() {
         return checked;
     }
 }

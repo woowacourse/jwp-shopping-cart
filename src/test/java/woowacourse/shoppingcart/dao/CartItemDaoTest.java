@@ -16,36 +16,47 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Email;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Username;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
 
     private final CartItemDao cartItemDao;
+    private final CustomerDao customerDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDaoTest(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
         cartItemDao = new CartItemDao(dataSource);
+        customerDao = new CustomerDao(dataSource);
         productDao = new ProductDao(dataSource);
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
-        productDao.save(new Product("chicken", 3_000, "woowa3.com"));
+        Long customerId = customerDao.save(
+                new Customer(new Username("rennon"), new Email("rennon@woowa.com"), new Password("123456"))).getId();
+        Long productId1 = productDao.save(new Product("banana", 1_000, "woowa1.com")).getId();
+        Long productId2 = productDao.save(new Product("apple", 2_000, "woowa2.com")).getId();
+        Long productId3 = productDao.save(new Product("chicken", 3_000, "woowa3.com")).getId();
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity, checked) VALUES(?, ?, ?, ?)", 1L,
-                1L, 1, true);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity, checked) VALUES(?, ?, ?, ?)", 1L,
-                2L, 1, true);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity, checked) VALUES(?, ?, ?, ?)", 1L,
-                3L, 1, true);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity, checked) VALUES(?, ?, ?, ?)",
+                customerId,
+                productId1, 1, true);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity, checked) VALUES(?, ?, ?, ?)",
+                customerId,
+                productId2, 1, true);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity, checked) VALUES(?, ?, ?, ?)",
+                customerId,
+                productId3, 1, true);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다.")

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.request.CartRequest;
-import woowacourse.shoppingcart.dto.response.CartResponses;
 import woowacourse.shoppingcart.dto.request.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequests;
+import woowacourse.shoppingcart.dto.response.CartResponses;
 
 @RestController
 @RequestMapping("/cart")
@@ -27,7 +28,7 @@ public class CartItemController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal String usernameByToken,
-                                            @RequestBody CartRequest cartRequest) {
+                                            @RequestBody @Valid CartRequest cartRequest) {
         cartService.addCart(usernameByToken, cartRequest);
         return ResponseEntity.created(URI.create("/cart")).build();
     }
@@ -39,13 +40,13 @@ public class CartItemController {
 
     @PatchMapping
     public ResponseEntity<CartResponses> updateCartItems(@AuthenticationPrincipal String usernameByToken,
-                                                         @RequestBody UpdateCartRequests updateCartRequests) {
+                                                         @RequestBody @Valid UpdateCartRequests updateCartRequests) {
         return ResponseEntity.ok(cartService.updateCartItems(usernameByToken, updateCartRequests));
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String usernameByToken,
-                                               @RequestBody DeleteProductRequest deleteProductRequest) {
+                                               @RequestBody @Valid DeleteProductRequest deleteProductRequest) {
         cartService.deleteCart(deleteProductRequest);
         return ResponseEntity.noContent().build();
     }

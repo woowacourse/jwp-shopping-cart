@@ -19,12 +19,12 @@ import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.shoppingcart.dto.request.CartIdRequest;
 import woowacourse.shoppingcart.dto.request.CartRequest;
-import woowacourse.shoppingcart.dto.response.CartResponse;
-import woowacourse.shoppingcart.dto.response.CartResponses;
 import woowacourse.shoppingcart.dto.request.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequests;
+import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.dto.response.CartResponses;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {

@@ -3,20 +3,21 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dto.request.CartIdRequest;
 import woowacourse.shoppingcart.dto.request.CartRequest;
-import woowacourse.shoppingcart.dto.response.CartResponses;
 import woowacourse.shoppingcart.dto.request.DeleteProductRequest;
-import woowacourse.shoppingcart.dto.response.ProductRequest;
+import woowacourse.shoppingcart.dto.request.ProductRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequests;
+import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.dto.response.CartResponses;
 
 @SpringBootTest
 @Sql("classpath:schema.sql")
@@ -30,9 +31,6 @@ class CartServiceTest {
 
     @Autowired
     private ProductService productService;
-
-    @Autowired
-    private CartItemDao cartItemDao;
 
     @Test
     @DisplayName("장바구니에 상품을 추가할 수 있다.")
@@ -73,9 +71,10 @@ class CartServiceTest {
 
         // when
         CartResponses cartResponses = cartService.findCartsByUsername("rennon");
+        List<CartResponse> cartResponse = cartResponses.getCartItems();
 
         // then
-        assertThat(cartResponses.getCartItems()).size().isEqualTo(1);
+        assertThat(cartResponse).size().isEqualTo(1);
     }
 
     @Test
@@ -93,11 +92,13 @@ class CartServiceTest {
         // when
         UpdateCartRequests updateCartRequests = new UpdateCartRequests(List.of(new UpdateCartRequest(1L, 10, true)));
         cartService.updateCartItems("rennon", updateCartRequests);
-
+        List<CartResponse> cartItems = cartService.findCartsByUsername("rennon").getCartItems();
         // then
-        assertThat(cartService.findCartsByUsername("rennon").getCartItems().get(0).getQuantity()).isEqualTo(10);
-        assertThat(cartService.findCartsByUsername("rennon").getCartItems().get(1).getQuantity()).isEqualTo(1);
-        assertThat(cartService.findCartsByUsername("rennon").getCartItems().get(2).getQuantity()).isEqualTo(1);
+        Assertions.assertAll(
+                () -> assertThat(cartItems.get(0).getQuantity()).isEqualTo(10),
+                () -> assertThat(cartItems.get(1).getQuantity()).isEqualTo(1),
+                () -> assertThat(cartItems.get(2).getQuantity()).isEqualTo(1)
+        );
     }
 
     @Test
@@ -114,9 +115,10 @@ class CartServiceTest {
 
         // when
         cartService.deleteCart(new DeleteProductRequest(List.of(new CartIdRequest(1L), new CartIdRequest(3L))));
+        List<CartResponse> cartResponse = cartService.findCartsByUsername("rennon").getCartItems();
 
         // then
-        assertThat(cartService.findCartsByUsername("rennon").getCartItems()).size().isEqualTo(1);
+        assertThat(cartResponse).size().isEqualTo(1);
     }
 
     @Test
@@ -129,8 +131,9 @@ class CartServiceTest {
 
         // when
         cartService.deleteAllCart("rennon");
+        List<CartResponse> cartResponse = cartService.findCartsByUsername("rennon").getCartItems();
 
         // then
-        assertThat(cartService.findCartsByUsername("rennon").getCartItems()).size().isEqualTo(0);
+        assertThat(cartResponse).size().isEqualTo(0);
     }
 }

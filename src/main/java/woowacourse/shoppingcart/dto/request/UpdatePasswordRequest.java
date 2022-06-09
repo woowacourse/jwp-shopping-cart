@@ -1,16 +1,13 @@
 package woowacourse.shoppingcart.dto.request;
 
-import org.hibernate.validator.constraints.Length;
-import woowacourse.auth.support.PasswordCheck;
+import javax.validation.constraints.NotBlank;
 
 public class UpdatePasswordRequest {
 
-    @PasswordCheck
-    @Length(min = 6)
+    @NotBlank
     private String password;
 
-    @PasswordCheck
-    @Length(min = 6)
+    @NotBlank
     private String newPassword;
 
     public UpdatePasswordRequest() {

@@ -1,11 +1,13 @@
-package woowacourse.shoppingcart.dto.response;
+package woowacourse.shoppingcart.dto.request;
 
 import woowacourse.shoppingcart.domain.Product;
 
 public class ProductRequest {
 
     private String name;
+
     private Integer price;
+
     private String imageUrl;
 
     public ProductRequest() {
