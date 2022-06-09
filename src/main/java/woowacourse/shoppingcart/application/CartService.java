@@ -42,8 +42,9 @@ public class CartService {
 
     private Cart assembleCartWithId(Long cartId) {
         final Long productId = cartItemDao.findProductIdById(cartId);
+        final int quantity = cartItemDao.findQuantityById(cartId);
         final Product product = productDao.findProductById(productId);
-        return new Cart(cartId, product);
+        return new Cart(cartId, product, quantity);
     }
 
     public Long addCart(final String userName, final Long productId) {
