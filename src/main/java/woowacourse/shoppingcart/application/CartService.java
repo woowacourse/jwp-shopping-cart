@@ -41,10 +41,18 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public CartItemsResponse getCart(String customerName) {
-        List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        return new CartItemsResponse(cartIds.stream()
+        List<CartItem> cartItems = findCartIdsByCustomerName(customerName).stream()
                 .map(cartItemDao::findCartIdById)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+
+        return new CartItemsResponse(mapToCartItemResponse(cartItems));
+    }
+
+    private List<CartItemResponse> mapToCartItemResponse(List<CartItem> cartItems) {
+        return cartItems.stream().map(cartItem -> new CartItemResponse(cartItem.getId(), cartItem.getProduct().getId(),
+                        cartItem.getProduct().getName(), cartItem.getProduct().getPrice(), cartItem.getProduct().getImageUrl(),
+                        cartItem.getQuantity(), cartItem.isChecked()))
+                .collect(Collectors.toList());
     }
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
@@ -61,11 +69,13 @@ public class CartService {
     }
 
     private CartItemsResponse getModifyCartProducts(ModifyProductRequests modifyProductRequests) {
-        return new CartItemsResponse(modifyProductRequests
+        List<CartItem> cartItems = modifyProductRequests
                 .getCartItems()
                 .stream()
                 .map(item -> cartItemDao.findCartIdById(item.getId()))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+
+        return new CartItemsResponse(mapToCartItemResponse(cartItems));
     }
 
     @Transactional
