@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
@@ -28,8 +29,8 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<Void> signUp(@RequestBody @Valid CustomerRequest customerRequest) {
         customerService.addCustomer(customerRequest);
-        return ResponseEntity.created(
-                URI.create("/api/customers/" + customerRequest.getUserName())).build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/me")

@@ -25,7 +25,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> createResponse = 회원_가입("testx", "1A2B5c78!");
 
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(createResponse.header("Location")).isEqualTo("/api/customers/testx");
     }
 
     @Test
