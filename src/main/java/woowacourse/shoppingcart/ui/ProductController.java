@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductDto;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.Request;
@@ -31,7 +31,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products() {
+    public ResponseEntity<List<ProductDto>> products() {
         return ResponseEntity.ok(productService.findProducts());
     }
 
