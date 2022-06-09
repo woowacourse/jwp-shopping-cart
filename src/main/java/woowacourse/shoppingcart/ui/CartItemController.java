@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartHasProductDto;
 import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
 
 @RestController
 @RequestMapping("/api/customers/carts")
@@ -28,7 +29,7 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@AuthenticationPrincipal final Long customerId) {
+    public ResponseEntity<List<CartResponse>> getCartItems(@AuthenticationPrincipal final Long customerId) {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerId(customerId));
     }
 

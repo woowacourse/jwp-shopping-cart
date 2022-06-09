@@ -46,6 +46,12 @@ public class CartItemDao {
         }
     }
 
+    public int findQuantityById(final Long cartId) {
+        final String sql = "SELECT quantity FROM cart_item WHERE id=:cartId";
+        final SqlParameterSource params = new MapSqlParameterSource(Map.of("cartId", cartId));
+        return namedJdbcTemplate.queryForObject(sql, params, Integer.class);
+    }
+
     public Long addCartItem(final Long customerId, final Long productId, final int quantity) {
         final Map<String, Object> params = Map.ofEntries(
                 Map.entry("customer_id", customerId),
