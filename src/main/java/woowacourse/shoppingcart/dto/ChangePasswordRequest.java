@@ -2,12 +2,12 @@ package woowacourse.shoppingcart.dto;
 
 public class ChangePasswordRequest {
 
-    private final String oldPassword;
+    private final String password;
 
     private final String newPassword;
 
-    public ChangePasswordRequest(String oldPassword, String newPassword) {
-        this.oldPassword = oldPassword;
+    public ChangePasswordRequest(String password, String newPassword) {
+        this.password = password;
         this.newPassword = newPassword;
     }
 
@@ -15,7 +15,7 @@ public class ChangePasswordRequest {
         return newPassword;
     }
 
-    public String getOldPassword() {
-        return oldPassword;
+    public String getPassword() {
+        return password;
     }
 }

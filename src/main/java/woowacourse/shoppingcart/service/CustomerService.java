@@ -63,7 +63,7 @@ public class CustomerService {
 
     public void changePassword(String username, ChangePasswordRequest changePasswordRequest) {
         Customer customer = customerDao.findCustomerByUserName(username);
-        Customer requestCustomer = new Customer(username, customer.getEmail(), changePasswordRequest.getOldPassword());
+        Customer requestCustomer = new Customer(username, customer.getEmail(), changePasswordRequest.getPassword());
         customer.validateSamePassword(requestCustomer);
         Customer responseCustomer = customer.changePassword(changePasswordRequest.getNewPassword());
         String newEncodedPassword = responseCustomer.generateEncodedPassword();
