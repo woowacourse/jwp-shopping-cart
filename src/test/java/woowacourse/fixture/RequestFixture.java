@@ -9,6 +9,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.customer.PasswordRequest;
+import woowacourse.shoppingcart.dto.product.ProductCreateRequest;
 
 public class RequestFixture {
 
@@ -83,5 +84,49 @@ public class RequestFixture {
     public static long ID_추출(ExtractableResponse<Response> response) {
         String[] locations = response.header("Location").split("/");
         return Long.parseLong(locations[locations.length - 1]);
+    }
+
+    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl, int quantity) {
+        ProductCreateRequest productRequest = new ProductCreateRequest(name, price, imageUrl, quantity);
+
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequest)
+                .when().post("/api/products")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 상품_목록_조회_요청() {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/products")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 상품_조회_요청(Long productId) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/products/{productId}", productId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/api/products/{productId}", productId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static Long 상품_등록되어_있음(String name, int price, String imageUrl, int quantity) {
+        ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl, quantity);
+        return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 }

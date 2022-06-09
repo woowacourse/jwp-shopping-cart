@@ -2,8 +2,8 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.fixture.RequestFixture.로그인_요청_및_토큰발급;
+import static woowacourse.fixture.RequestFixture.상품_등록되어_있음;
 import static woowacourse.fixture.RequestFixture.회원가입_요청_및_ID_추출;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
