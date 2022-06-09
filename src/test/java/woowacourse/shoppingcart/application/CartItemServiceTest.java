@@ -3,11 +3,14 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.Fixture.맥주;
 import static woowacourse.Fixture.치킨;
 import static woowacourse.Fixture.페퍼_비밀번호;
 import static woowacourse.Fixture.페퍼_아이디;
 import static woowacourse.Fixture.페퍼_이름;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -90,6 +93,29 @@ class CartItemServiceTest {
             assertThatThrownBy(() -> cartItemService.add(loginCustomer, cartItemCreateRequest))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("이미 장바구니에 상품이 존재합니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("findByCustomer 메서드는")
+    class findByCustomer {
+        @Test
+        @DisplayName("고객의 장바구니 아이템을 모두 조회한다.")
+        void success() {
+            // given
+            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            Long productId1 = productService.addProduct(치킨);
+            Long productId2 = productService.addProduct(맥주);
+            cartItemService.add(new LoginCustomer(페퍼_아이디), new CartItemCreateRequest(productId1));
+            cartItemService.add(new LoginCustomer(페퍼_아이디), new CartItemCreateRequest(productId2));
+
+            // when
+            List<CartItemResponse> response = cartItemService.findByCustomer(new LoginCustomer(페퍼_아이디));
+
+            // then
+            List<Long> cartItemProductIds = response.stream().map(CartItemResponse::getProductId)
+                    .collect(Collectors.toList());
+            assertThat(cartItemProductIds).containsExactly(productId1, productId2);
         }
     }
 }

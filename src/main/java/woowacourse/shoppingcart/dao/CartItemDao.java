@@ -42,6 +42,23 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
+    public List<CartItem> findCartItemsByLoginId(Long customerId) {
+        try {
+            final String sql = "SELECT cart_item.id, product.id, product.name, product.price, product.image_url, "
+                    + "cart_item.quantity FROM cart_item JOIN product ON cart_item.product_id = product.id "
+                    + "WHERE cart_item.customer_id = ?";
+            return jdbcTemplate.query(sql, (rs, rowNum) ->
+                    new CartItem(rs.getLong("cart_item.id"),
+                            rs.getLong("product.id"),
+                            rs.getString("product.name"),
+                            rs.getInt("product.price"),
+                            rs.getString("product.image_url"),
+                            rs.getInt("cart_item.quantity")), customerId);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
     public List<Long> findIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
 

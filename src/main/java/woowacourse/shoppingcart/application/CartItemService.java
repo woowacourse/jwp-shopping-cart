@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,16 +42,10 @@ public class CartItemService {
         return CartItemResponse.of(cartItemId, cartItem);
     }
 
-    public List<CartItem> findCartsByCustomerName(final LoginCustomer loginCustomer) {
-        final List<Long> cartIds = findCartIdsByCustomerName(loginCustomer);
-
-        final List<CartItem> cartItems = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            cartItems.add(new CartItem(cartId, product));
-        }
-        return cartItems;
+    public List<CartItemResponse> findByCustomer(final LoginCustomer loginCustomer) {
+        final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
+        final List<CartItem> cartItems = cartItemDao.findCartItemsByLoginId(customer.getId());
+        return CartItemResponse.of(cartItems);
     }
 
     private List<Long> findCartIdsByCustomerName(final LoginCustomer loginCustomer) {

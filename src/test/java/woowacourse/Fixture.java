@@ -14,4 +14,5 @@ public class Fixture {
     public static final String 다른_비밀번호 = "Fake1234!";
 
     public static final Product 치킨 = new Product("치킨", 10_000, "http://example.com/chicken.jpg");
+    public static final Product 맥주 = new Product("맥주", 20_000, "http://example.com/beer.jpg");
 }

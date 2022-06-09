@@ -24,7 +24,7 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@DisplayName("CustomerDao 테스트의")
+@DisplayName("CustomerDao 클래스의")
 class CustomerDaoTest {
 
     private final CustomerDao customerDao;

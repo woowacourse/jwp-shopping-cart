@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import java.util.ArrayList;
+import java.util.List;
 import woowacourse.shoppingcart.domain.CartItem;
 
 public class CartItemResponse {
@@ -25,6 +27,19 @@ public class CartItemResponse {
     public static CartItemResponse of(Long id, CartItem cartItem) {
         return new CartItemResponse(id, cartItem.getProductId(), cartItem.getName(), cartItem.getImageUrl(),
                 cartItem.getPrice(), cartItem.getQuantity());
+    }
+
+    public static List<CartItemResponse> of(List<CartItem> cartItems) {
+        List<CartItemResponse> response = new ArrayList<>();
+        for (CartItem cartItem:cartItems) {
+            response.add(CartItemResponse.from(cartItem));
+        }
+        return response;
+    }
+
+    private static CartItemResponse from(CartItem cartItem) {
+        return new CartItemResponse(cartItem.getId(), cartItem.getProductId(), cartItem.getName(),
+                cartItem.getImageUrl(), cartItem.getPrice(), cartItem.getQuantity());
     }
 
     public Long getId() {
