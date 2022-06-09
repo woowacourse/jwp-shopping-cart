@@ -29,7 +29,7 @@ public class CustomerDaoImpl implements CustomerDao {
     public CustomerDaoImpl(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("CUSTOMER")
+                .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -94,7 +94,7 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     public void updatePassword(Long id, String password) {
-        final String query = "UPDATE CUSTOMER SET password = ? WHERE id = ?";
+        final String query = "UPDATE customer SET password = ? WHERE id = ?";
         jdbcTemplate.update(query, password, id);
     }
 
