@@ -4,7 +4,7 @@ create table customer
     email             varchar(255) not null unique,
     password          varchar(255) not null,
     profile_image_url varchar(255) not null,
-    created_at        timestamp default current_timestamp,
+    created_at        timestamp not null default current_timestamp,
     terms             tinyint(1) not null,
     primary key (id)
 );
