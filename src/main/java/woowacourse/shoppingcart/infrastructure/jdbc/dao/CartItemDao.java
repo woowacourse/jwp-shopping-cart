@@ -57,7 +57,7 @@ public class CartItemDao {
     public List<CartItem> findByCustomerId(final Long customerId) {
         final String sql = "SELECT c.id, c.customer_id, c.quantity, "
                 + "c.product_id, p.name, p.price, p.image_url FROM cart_item c "
-                + "JOIN PRODUCT p ON c.product_id = p.id where c.customer_id = (:id)";
+                + "JOIN product p ON c.product_id = p.id where c.customer_id = (:id)";
 
         final SqlParameterSource parameters = new MapSqlParameterSource("id", customerId);
         return jdbcTemplate.query(sql, parameters, ROW_MAPPER);
@@ -78,7 +78,7 @@ public class CartItemDao {
     }
 
     public void update(Long customerId, Long productId, int quantity) {
-        final String sql = "UPDATlsE cart_item SET quantity=(:quantity) WHERE customer_id = (:customerId) and "
+        final String sql = "UPDATE cart_item SET quantity=(:quantity) WHERE customer_id = (:customerId) and "
                 + "product_id = (:productId)";
 
         final SqlParameterSource parameters = new MapSqlParameterSource("quantity", quantity)

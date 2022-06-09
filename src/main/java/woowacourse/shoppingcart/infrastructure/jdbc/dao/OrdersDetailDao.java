@@ -33,7 +33,6 @@ public class OrdersDetailDao {
     }
 
     public Long addOrdersDetail(final Long orderId, final CartItem cartItem) {
-        final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)";
         Map<String, Object> params = new HashMap<>();
         params.put("orders_id", orderId);
         params.put("product_id", cartItem.getProduct().getId());
