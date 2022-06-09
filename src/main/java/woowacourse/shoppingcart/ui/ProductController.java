@@ -29,6 +29,8 @@ import woowacourse.shoppingcart.dto.Request;
 @RequestMapping("/products")
 public class ProductController {
 
+    private static final int DEFAULT_QUANTITY = 0;
+
     private final ProductService productService;
     private final CartService cartService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -72,7 +74,7 @@ public class ProductController {
         List<Product> products = productService.findProducts();
         if (token == null) {
             return products.stream()
-                    .map(product -> new ProductResponse(product, 0))
+                    .map(product -> new ProductResponse(product, DEFAULT_QUANTITY))
                     .collect(Collectors.toList());
         }
         List<Cart> carts = cartService.findCartsByCustomerId(Long.valueOf(jwtTokenProvider.getPayload(token)));
@@ -87,6 +89,6 @@ public class ProductController {
         if (quantityMap.containsKey(product.getId())) {
             return quantityMap.get(product.getId());
         }
-        return 0;
+        return DEFAULT_QUANTITY;
     }
 }

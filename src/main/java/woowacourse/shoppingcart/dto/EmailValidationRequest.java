@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 public class EmailValidationRequest {
+
     private String email;
 
     private EmailValidationRequest() {

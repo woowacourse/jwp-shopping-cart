@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import woowacourse.shoppingcart.domain.CustomerInformationValidator;
-
 public class Customer {
 
     private final Long id;
@@ -12,7 +10,6 @@ public class Customer {
     private final Password password;
 
     public Customer(Long id, String email, String name, String phone, String address, Password password) {
-        CustomerInformationValidator.validateAddress(address);
         this.id = id;
         this.email = new Email(email);
         this.name = new Name(name);

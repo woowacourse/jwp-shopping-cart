@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 public class CartService {
 
     public static final int MINIMUM_CART_QUANTITY = 0;
+
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
 

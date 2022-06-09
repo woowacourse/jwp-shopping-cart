@@ -53,7 +53,8 @@ public class CustomerController {
 
     @GetMapping("/name")
     public ResponseEntity<CustomerNameResponse> findCustomerName(@AuthenticationPrincipal Long id) {
-        CustomerNameResponse customerNameResponse = new CustomerNameResponse(customerService.findCustomerById(id).getName());
+        CustomerNameResponse customerNameResponse = new CustomerNameResponse(
+                customerService.findCustomerById(id).getName());
         return ResponseEntity.ok().body(customerNameResponse);
     }
 
