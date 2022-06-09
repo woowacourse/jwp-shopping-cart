@@ -20,6 +20,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.DeleteProductIds;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateProductQuantityRequest;
+import woowacourse.shoppingcart.dto.response.AlreadyExistCartItemResponse;
 import woowacourse.shoppingcart.dto.response.GetCartItemsResponse;
 
 @DisplayName("장바구니 관련 기능")
@@ -49,6 +50,22 @@ public class CartAcceptanceTest extends AcceptanceTest2 {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(productId1);
 
         장바구니_아이템_추가됨(response);
+    }
+
+    @DisplayName("이미 존재하는 장바구이 아이템을 추가하면 400을 던진다")
+    @Test
+    void addCartItem_already_exist() {
+        장바구니_아이템_추가_요청(productId1);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(productId1);
+
+        이미_존재하는_장바구니_아이템(response);
+    }
+
+    private void 이미_존재하는_장바구니_아이템(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        AlreadyExistCartItemResponse body = response.jsonPath().getObject(".", AlreadyExistCartItemResponse.class);
+        assertThat(body.getRedirect()).isTrue();
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
