@@ -268,4 +268,20 @@ public class CartAcceptanceTest extends AcceptanceTest {
         List<CartResponseElement> cartResponseElements = extract.body().jsonPath().getList("cartItems", CartResponseElement.class);
         assertThat(cartResponseElements.size()).isEqualTo(0);
     }
+
+    @Test
+    void 장바구니에_상품을_넣은_후_회원탈퇴() {
+        String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
+
+        createCartItem(accessToken, new AddCartItemRequest(1L, 10, true), HttpStatus.CREATED);
+
+        var deleteCustomerRequest = new DeleteCustomerRequest(VALID_PASSWORD);
+
+        createDeleteCustomerResult(accessToken, deleteCustomerRequest, HttpStatus.NO_CONTENT);
+
+        var response = createSignInResult(SIGN_IN_REQUEST, HttpStatus.BAD_REQUEST);
+
+        assertThat(response.body().jsonPath().getString("message"))
+                .isEqualTo("[ERROR] 존재하지 않는 이메일 입니다.");
+    }
 }

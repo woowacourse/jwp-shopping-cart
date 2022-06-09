@@ -11,13 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.dto.ChangePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
-import woowacourse.shoppingcart.dto.SignInRequest;
-import woowacourse.shoppingcart.dto.SignInResponse;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.SignUpResponse;
+import woowacourse.shoppingcart.dto.*;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -406,7 +400,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         createDeleteCustomerResult(accessToken, deleteCustomerRequest, HttpStatus.NO_CONTENT);
 
         var response = createSignInResult(SIGN_IN_REQUEST, HttpStatus.BAD_REQUEST);
-        
+
         assertThat(response.body().jsonPath().getString("message"))
                 .isEqualTo("[ERROR] 존재하지 않는 이메일 입니다.");
     }
