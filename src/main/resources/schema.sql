@@ -14,7 +14,7 @@ create table customer
     username     varchar(15) not null,
     password     varchar(64)  not null,
     phone_number varchar(11)  not null,
-    address      varchar(255) not null,
+    address      varchar(80) not null,
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
