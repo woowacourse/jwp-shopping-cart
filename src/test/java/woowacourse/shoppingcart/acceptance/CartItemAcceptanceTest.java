@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static woowacourse.fixture.CartItemFixture.createCartItems;
 import static woowacourse.fixture.CustomerFixture.login;
@@ -52,7 +53,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .body(cartItemCreateRequests)
                 .when().post("/auth/customer/cartItems")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("id", hasItems(1, 2))
+                .body("addedQuantity", hasItems(1, 1));
     }
 
     @DisplayName("존재하지 않는 상품을 장바구니에 추가하면 상태코드 401을 반환한다.")
@@ -142,7 +145,13 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/auth/customer/cartItems")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("id", hasItems(1, 2))
+                .body("productId", hasItems(1, 2))
+                .body("name", hasItems("치킨", "맥주"))
+                .body("imageUrl", hasItems("http://example.com/chicken.jpg", "http://example.com/beer.jpg"))
+                .body("price", hasItems(10000, 20000))
+                .body("quantity", hasItems(1, 1));
     }
 
     @DisplayName("장바구니 물건 삭제")
