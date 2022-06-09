@@ -52,7 +52,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(ShoppingCartException.class)
-    public ResponseEntity handleShoppingCartException(final ShoppingCartException e) {
+    public ResponseEntity<ErrorResponse> handleShoppingCartException(final ShoppingCartException e) {
         return ResponseEntity.badRequest().body(e.getErrorResponse());
     }
 
