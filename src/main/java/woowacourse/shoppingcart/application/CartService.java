@@ -8,7 +8,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.response.CartResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -54,7 +54,7 @@ public class CartService {
         validateCustomerCart(cartId, customerId);
         cartItemDao.updateQuantity(quantity, cartId);
     }
-    
+
     private void validateCustomerCart(final Long cartId, final Long customerId) {
         final Customer customer = customerDao.findById(customerId)
                 .orElseThrow(InvalidCustomerException::new);

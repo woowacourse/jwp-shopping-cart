@@ -16,10 +16,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.dto.CartItemQuantityRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.request.CartItemQuantityRequest;
+import woowacourse.shoppingcart.dto.request.ProductRequest;
+import woowacourse.shoppingcart.dto.request.Request;
+import woowacourse.shoppingcart.dto.response.CartResponse;
 
 @RestController
 @RequestMapping("/api/customers/me/carts")

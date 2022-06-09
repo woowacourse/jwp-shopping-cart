@@ -19,11 +19,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUserNameRequest;
-import woowacourse.shoppingcart.dto.DuplicateResponse;
-import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUserNameRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.DuplicateResponse;
+import woowacourse.shoppingcart.dto.response.ErrorResponse;
 
 @DisplayName("회원 관련 기능")
 @SuppressWarnings("NonAsciiCharacters")

@@ -34,8 +34,8 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.OrderRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc

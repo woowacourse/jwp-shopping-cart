@@ -12,7 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = "/set_up_shopping_cart.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)

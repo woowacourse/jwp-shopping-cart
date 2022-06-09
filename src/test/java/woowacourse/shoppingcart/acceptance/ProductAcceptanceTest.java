@@ -18,8 +18,8 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
 
 @DisplayName("상품 관련 기능")
 @SuppressWarnings("NonAsciiCharacters")

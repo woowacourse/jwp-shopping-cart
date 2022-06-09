@@ -11,7 +11,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service

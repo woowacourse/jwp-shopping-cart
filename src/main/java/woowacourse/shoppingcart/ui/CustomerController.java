@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.DuplicateResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.DuplicateResponse;
 
 @RestController
 @RequestMapping("/api/customers")

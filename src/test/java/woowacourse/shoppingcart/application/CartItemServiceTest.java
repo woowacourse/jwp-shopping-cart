@@ -22,7 +22,7 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.UserName;
-import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.response.CartResponse;
 
 @ExtendWith(MockitoExtension.class)
 class CartItemServiceTest {

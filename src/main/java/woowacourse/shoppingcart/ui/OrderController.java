@@ -15,7 +15,7 @@ import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.request.OrderRequest;
 
 @Validated
 @RestController

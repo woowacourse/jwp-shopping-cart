@@ -16,8 +16,8 @@ import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.request.Request;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
 
 @RestController
 @RequestMapping("/api/products")

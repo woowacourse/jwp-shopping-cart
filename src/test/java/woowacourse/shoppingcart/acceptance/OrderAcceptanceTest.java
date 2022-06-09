@@ -23,13 +23,13 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.OrderRequest;
 
 @DisplayName("주문 관련 기능")
 @SuppressWarnings("NonAsciiCharacters")
 public class OrderAcceptanceTest extends AcceptanceShoppingCartTest {
-    
+
     private Long cartId1;
     private Long cartId2;
     private String accessToken;
