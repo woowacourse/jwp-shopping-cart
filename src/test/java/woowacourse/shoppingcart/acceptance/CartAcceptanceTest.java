@@ -25,7 +25,6 @@ import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_�
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
 
-    private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;
 
@@ -88,6 +87,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_응답됨(response);
     }
 
+    @DisplayName("장바구니 전체 삭제")
+    @Test
+    void deleteAllCart() {
+        TokenResponse tokenResponse = 로그인_후_토큰_반환();
+        장바구니_아이템_추가되어_있음(productId1, tokenResponse.getAccessToken());
+        장바구니_아이템_추가되어_있음(productId2, tokenResponse.getAccessToken());
+
+        ExtractableResponse<Response> response = 장바구니_전체_삭제_요청(tokenResponse.getAccessToken());
+        장바구니_삭제됨(response);
+    }
+
     private ExtractableResponse<Response> 장바구니_개수_수정_요청(Long cartId, int quantity, String token) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("quantity", quantity);
@@ -132,6 +142,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
             .auth().oauth2(token)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when().delete("/customers/carts/{cartId}", cartId)
+            .then().log().all()
+            .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_전체_삭제_요청(String token) {
+        return RestAssured
+            .given().log().all()
+            .auth().oauth2(token)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().delete("/customers/carts")
             .then().log().all()
             .extract();
     }
