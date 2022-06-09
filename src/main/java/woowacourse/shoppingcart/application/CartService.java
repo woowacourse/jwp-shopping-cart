@@ -34,9 +34,10 @@ public class CartService {
         final List<CartItem> cartItems = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
+            final int quantity = cartItemDao.findQuantityByProductIdAndCustomerId(productId, customer.getId());
             final Product product = productDao.findProductById(productId)
                     .orElseThrow(InvalidProductBadRequestException::new);
-            cartItems.add(new CartItem(cartId, product));
+            cartItems.add(new CartItem(cartId, product, quantity));
         }
         return cartItems;
     }
@@ -76,8 +77,8 @@ public class CartService {
 
         cartItemDao.updateQuantity(customer.getId(), productId, request.getQuantity());
 
-        return new CartItem(product, request.getQuantity());
-
+        int newQuantity = cartItemDao.findQuantityByProductIdAndCustomerId(productId, customer.getId());
+        return new CartItem(product, newQuantity);
     }
 
     private void validateQuantity(int quantity) {

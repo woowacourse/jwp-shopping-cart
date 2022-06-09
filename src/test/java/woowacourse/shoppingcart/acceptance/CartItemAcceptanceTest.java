@@ -10,6 +10,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.cart.CartItemResponse;
+import woowacourse.shoppingcart.dto.cart.CartItemsResponse;
+import woowacourse.shoppingcart.dto.product.ProductRequest;
+import woowacourse.shoppingcart.dto.product.ProductResponse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -226,6 +229,22 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getLong("id")).isEqualTo(productId1);
         assertThat(response.jsonPath().getInt("quantity")).isEqualTo(3);
+    }
+
+    @DisplayName("아이템 수량 수정 요청 후 아이템 목록 재요청시 수량 확인")
+    @Test
+    void updateCartItemQuantityAndCheck() {
+        장바구니_아이템_추가_요청2(productId1, token);
+
+        장바구니_아이템_수량_수정_요청(token, productId1,3);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청2(token);
+
+        List<CartItemResponse> productList = response.jsonPath().getList("cartList", CartItemResponse.class);
+
+        assertThat(productList.size()).isOne();
+        assertThat(productList.get(0).getId()).isEqualTo(productId1);
+        assertThat(productList.get(0).getQuantity()).isEqualTo(3);
     }
 
     private void BAD_REQUEST_400_응답됨(ExtractableResponse<Response> response, int errorCode) {

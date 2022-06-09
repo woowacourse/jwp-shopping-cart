@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.cartItem.ItemNotExistedInCartBadRequestException;
 import woowacourse.shoppingcart.exception.cartItem.ShoppingCartNotFoundCartItemException;
 
@@ -61,6 +62,11 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new ShoppingCartNotFoundCartItemException();
         }
+    }
+
+    public int findQuantityByProductIdAndCustomerId(Long productId, Long customerId) {
+        final String query = "SELECT quantity FROM cart_item WHERE customer_id = ? and product_id = ?";
+        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getInt("quantity"), customerId, productId);
     }
 
     public boolean existByProductIdAndCustomerId(Long productId, Long customerId) {
