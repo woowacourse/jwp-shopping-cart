@@ -1,7 +1,6 @@
 package woowacourse.auth.config;
 
 import java.util.List;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -23,7 +22,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
         argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
     }
 
-    @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
         return new AuthenticationPrincipalArgumentResolver(jwtTokenProvider);
     }
@@ -34,7 +32,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
                 .addPathPatterns("/auth/**");
     }
 
-    @Bean
     public TokenInterceptor createTokenInterceptor() {
         return new TokenInterceptor(jwtTokenProvider);
     }
