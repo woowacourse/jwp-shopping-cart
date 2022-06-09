@@ -12,17 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.EmailAuthentication;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.EmailDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
-import woowacourse.shoppingcart.application.dto.SignInDto;
-import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.dto.request.ModifiedCustomerRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.dto.response.DuplicateEmailResponse;
 
 @RestController
@@ -45,12 +42,6 @@ public class CustomerController {
     public ResponseEntity<Void> createCustomers(@RequestBody final SignUpRequest request) {
         final Long customerId = customerService.createCustomer(CustomerDto.fromCustomerRequest(request));
         return ResponseEntity.created(URI.create("/api/customers/" + customerId)).build();
-    }
-
-    @PostMapping("/customer/authentication/sign-in")
-    public ResponseEntity<TokenResponse> signIn(@RequestBody final TokenRequest tokenRequest) {
-        final TokenResponse tokenResponse = customerService.signIn(SignInDto.fromTokenRequest(tokenRequest));
-        return ResponseEntity.ok().body(tokenResponse);
     }
 
     @GetMapping("/customers/{customerId}")

@@ -1,23 +1,14 @@
 package woowacourse.shoppingcart.application;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.EmailAuthentication;
-import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.EmailDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
-import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.domain.customer.password.Password;
-import woowacourse.shoppingcart.domain.customer.password.PasswordFactory;
-import woowacourse.shoppingcart.domain.customer.password.PasswordType;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.repository.CustomerRepository;
 
@@ -26,11 +17,9 @@ import woowacourse.shoppingcart.repository.CustomerRepository;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final JwtTokenProvider provider;
 
-    public CustomerService(final CustomerRepository customerRepository, final JwtTokenProvider provider) {
+    public CustomerService(final CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
-        this.provider = provider;
     }
 
     public boolean checkEmailDuplication(final EmailDto emailDto) {
@@ -43,32 +32,6 @@ public class CustomerService {
             return customerRepository.createCustomer(customer);
         } catch (DuplicateKeyException e) {
             throw new IllegalArgumentException("이미 가입한 사용자입니다.");
-        }
-    }
-
-    public TokenResponse signIn(final SignInDto signInDto) {
-        final Email email = new Email(signInDto.getEmail());
-        final Password password = PasswordFactory.of(PasswordType.HASHED, signInDto.getPassword());
-
-        final Password foundPassword = customerRepository.findPasswordByEmail(email);
-        verifyPassword(password, foundPassword);
-        Customer tokenPayloadDto = customerRepository.findByUserEmail(email);
-        String payload = createPayload(new EmailAuthentication(email.getValue()));
-        return new TokenResponse(tokenPayloadDto.getId(), provider.createToken(payload));
-    }
-
-    private void verifyPassword(final Password hashedPassword, final Password existedPassword) {
-        if (!hashedPassword.isSamePassword(existedPassword)) {
-            throw new IllegalArgumentException("올바르지 않은 비밀번호입니다.");
-        }
-    }
-
-    private String createPayload(final EmailAuthentication email) {
-        try {
-            ObjectMapper mapper = new JsonMapper();
-            return mapper.writeValueAsString(email);
-        } catch (JsonProcessingException e) {
-            throw new UnsupportedOperationException(e.getMessage());
         }
     }
 
