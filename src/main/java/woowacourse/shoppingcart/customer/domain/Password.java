@@ -27,7 +27,7 @@ public class Password {
         return !PASSWORD_PATTERN.matcher(value).matches();
     }
 
-    public boolean equalsPassword(final String password) {
+    public boolean equalsValue(final String password) {
         return value.equals(password);
     }
 

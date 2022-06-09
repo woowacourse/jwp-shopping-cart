@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.customer.domain;
 
+import woowacourse.shoppingcart.customer.support.exception.CustomerException;
+import woowacourse.shoppingcart.customer.support.exception.CustomerExceptionCode;
+
 public class Customer {
 
     private final Long id;
@@ -14,6 +17,10 @@ public class Customer {
         this.password = password;
     }
 
+    public Customer(final Email email, final Nickname nickname, final Password password) {
+        this(null, email, nickname, password);
+    }
+
     public Customer(final Long id, final String email, final String nickname, final String password) {
         this(id, new Email(email), new Nickname(nickname), new Password(password));
     }
@@ -26,16 +33,23 @@ public class Customer {
         this.nickname = new Nickname(nickname);
     }
 
-    public void updatePassword(final String password) {
-        this.password = new Password(password);
+    public void updatePassword(final String originPassword, final String newPassword) {
+        updatePassword(new Password(originPassword), new Password(newPassword));
     }
 
-    public boolean equalsPassword(final Password other) {
-        return password.equals(other);
+    public void updatePassword(final Password originPassword, final Password newPassword) {
+        validatePasswordMatch(originPassword);
+        this.password = newPassword;
     }
 
-    public boolean equalsPassword(final String other) {
-        return password.equalsPassword(other);
+    private void validatePasswordMatch(final Password originPassword) {
+        if (!password.equals(originPassword)) {
+            throw new CustomerException(CustomerExceptionCode.MISMATCH_PASSWORD);
+        }
+    }
+
+    public boolean isPasswordDisMatch(final String otherPassword) {
+        return !password.equalsValue(otherPassword);
     }
 
     public Long getId() {

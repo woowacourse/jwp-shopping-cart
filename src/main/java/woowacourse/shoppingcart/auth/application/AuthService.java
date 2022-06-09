@@ -24,7 +24,7 @@ public class AuthService {
     public TokenResponse login(final TokenRequest tokenRequest) {
         final Customer customer = getCustomer(tokenRequest.getEmail());
 
-        if (!customer.equalsPassword(tokenRequest.getPassword())) {
+        if (customer.isPasswordDisMatch(tokenRequest.getPassword())) {
                 throw new CustomerException(CustomerExceptionCode.MISMATCH_EMAIL_OR_PASSWORD);
         }
 

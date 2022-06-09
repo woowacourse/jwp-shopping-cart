@@ -38,8 +38,8 @@ class PasswordTest {
     @DisplayName("비밀번호 VO 의 값과 일치하는지 확인한다.")
     @ParameterizedTest
     @CsvSource(value = {"1234567890a!,1234567890a!,true", "1234567890a!,12345,false"})
-    void equalsPassword(final String source, final String target, final boolean expected) {
+    void equalsValue(final String source, final String target, final boolean expected) {
         final Password sourcePassword = new Password(source);
-        assertThat(sourcePassword.equalsPassword(target)).isEqualTo(expected);
+        assertThat(sourcePassword.equalsValue(target)).isEqualTo(expected);
     }
 }

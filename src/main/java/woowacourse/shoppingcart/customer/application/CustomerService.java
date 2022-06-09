@@ -12,7 +12,6 @@ import woowacourse.shoppingcart.customer.application.dto.request.CustomerRemoveR
 import woowacourse.shoppingcart.customer.application.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.customer.application.dto.response.CustomerUpdateResponse;
 import woowacourse.shoppingcart.customer.domain.Customer;
-import woowacourse.shoppingcart.customer.domain.Password;
 import woowacourse.shoppingcart.customer.support.exception.CustomerException;
 import woowacourse.shoppingcart.customer.support.exception.CustomerExceptionCode;
 import woowacourse.shoppingcart.customer.support.jdbc.dao.CustomerDao;
@@ -61,9 +60,11 @@ public class CustomerService {
     @Transactional
     public void updateCustomerPassword(final Long customerId,
                                        final CustomerPasswordUpdateRequest customerPasswordUpdateRequest) {
+        final String originPassword = customerPasswordUpdateRequest.getPassword();
+        final String newPassword = customerPasswordUpdateRequest.getNewPassword();
+
         final Customer customer = getById(customerId);
-        validatePassword(customer, new Password(customerPasswordUpdateRequest.getPassword()));
-        customer.updatePassword(customerPasswordUpdateRequest.getNewPassword());
+        customer.updatePassword(originPassword, newPassword);
         customerDao.update(customer);
     }
 
@@ -75,14 +76,8 @@ public class CustomerService {
         customerDao.deleteById(customerId);
     }
 
-    private void validatePassword(final Customer customer, final Password password) {
-        if (!customer.equalsPassword(password)) {
-            throw new CustomerException(CustomerExceptionCode.MISMATCH_PASSWORD);
-        }
-    }
-
     private void validatePassword(final Customer customer, final String password) {
-        if (!customer.equalsPassword(password)) {
+        if (customer.isPasswordDisMatch(password)) {
             throw new CustomerException(CustomerExceptionCode.MISMATCH_PASSWORD);
         }
     }
