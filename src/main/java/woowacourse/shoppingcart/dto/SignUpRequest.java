@@ -1,17 +1,15 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.auth.support.EmailCheck;
-import woowacourse.auth.support.PasswordCheck;
-import woowacourse.auth.support.UsernameCheck;
+import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.domain.Customer;
 
 public class SignUpRequest {
 
-    @UsernameCheck
+    @NotBlank
     private String username;
-    @EmailCheck
+    @NotBlank
     private String email;
-    @PasswordCheck
+    @NotBlank
     private String password;
 
     private SignUpRequest() {

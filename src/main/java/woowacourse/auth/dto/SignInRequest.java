@@ -1,14 +1,13 @@
 package woowacourse.auth.dto;
 
+import javax.validation.constraints.NotBlank;
 import woowacourse.auth.domain.SignIn;
-import woowacourse.auth.support.EmailCheck;
-import woowacourse.auth.support.PasswordCheck;
 
 public class SignInRequest {
 
-    @EmailCheck
+    @NotBlank
     private String email;
-    @PasswordCheck
+    @NotBlank
     private String password;
 
     private SignInRequest() {
