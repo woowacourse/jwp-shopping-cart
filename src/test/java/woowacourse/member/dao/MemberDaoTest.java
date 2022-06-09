@@ -7,8 +7,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.domain.Member;
-import woowacourse.member.domain.password.UnencryptedPassword;
 import woowacourse.member.domain.password.Password;
+import woowacourse.member.domain.password.UnencryptedPassword;
 
 import javax.sql.DataSource;
 import java.util.Optional;

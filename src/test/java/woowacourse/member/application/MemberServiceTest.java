@@ -11,7 +11,10 @@ import woowacourse.member.dto.FindMemberInfoResponse;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.dto.UpdateNameRequest;
 import woowacourse.member.dto.UpdatePasswordRequest;
-import woowacourse.member.exception.*;
+import woowacourse.member.exception.DuplicateEmailException;
+import woowacourse.member.exception.InvalidMemberNameException;
+import woowacourse.member.exception.InvalidPasswordException;
+import woowacourse.member.exception.MemberNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

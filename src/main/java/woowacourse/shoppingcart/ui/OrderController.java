@@ -9,7 +9,6 @@ import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrdersResponse;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 

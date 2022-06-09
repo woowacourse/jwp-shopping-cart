@@ -9,8 +9,8 @@ import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
-import woowacourse.member.domain.password.UnencryptedPassword;
 import woowacourse.member.domain.password.Password;
+import woowacourse.member.domain.password.UnencryptedPassword;
 import woowacourse.member.exception.MemberNotFoundException;
 import woowacourse.member.exception.WrongPasswordException;
 

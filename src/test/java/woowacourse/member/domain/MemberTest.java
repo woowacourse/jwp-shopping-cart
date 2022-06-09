@@ -2,8 +2,8 @@ package woowacourse.member.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.member.domain.password.UnencryptedPassword;
 import woowacourse.member.domain.password.Password;
+import woowacourse.member.domain.password.UnencryptedPassword;
 import woowacourse.member.exception.InvalidMemberEmailException;
 import woowacourse.member.exception.InvalidMemberNameException;
 

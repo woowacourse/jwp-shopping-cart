@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.dto.EnrollCartDto;
 import woowacourse.shoppingcart.domain.Cart;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
