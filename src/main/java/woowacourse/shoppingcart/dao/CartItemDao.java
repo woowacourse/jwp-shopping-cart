@@ -73,14 +73,6 @@ public class CartItemDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void deleteCartItemByCartId(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
-        final int rowCount = jdbcTemplate.update(sql, id);
-        if (rowCount == 0) {
-            throw new InvalidCartItemException();
-        }
-    }
-
     public void deleteCartItem(final Long customerId, final Long productId) {
         final String sql = "DELETE FROM cart_item WHERE customer_id = :customerId and product_id = :productId";
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -94,7 +86,6 @@ public class CartItemDao {
     }
 
     public boolean isExistItem(Long customerId, Long productId) {
-        //"select exists (select 1 from customer where username = :username)"
         String sql = "select exists (select 1 from cart_item where customer_id = :customerId and product_id = :productId)";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("customerId", customerId);
