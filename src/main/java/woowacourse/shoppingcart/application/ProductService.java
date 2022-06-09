@@ -1,10 +1,10 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.dto.request.ProductRequest;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.dto.response.ProductResponses;
@@ -25,9 +25,8 @@ public class ProductService {
     }
 
     public ProductResponses findProducts(int size, int page) {
-        Products products = productDao.findProducts();
-        Products productsOfPage = products.getProductsOfPage(size, page);
-        return ProductResponses.from(productsOfPage);
+        List<Product> products = productDao.findProducts(size, size * (page - 1));
+        return ProductResponses.from(products);
     }
 
     public ProductResponse findProductById(Long productId) {

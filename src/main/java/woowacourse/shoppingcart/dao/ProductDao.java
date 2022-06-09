@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
@@ -52,11 +51,10 @@ public class ProductDao {
         }
     }
 
-    public Products findProducts() {
-거        try {
-            String query = "SELECT id, name, price, image_url FROM product";
-            List<Product> products = jdbcTemplate.query(query, productRowMapper);
-            return new Products(products);
+    public List<Product> findProducts(int size, int offset) {
+        try {
+            String query = "SELECT id, name, price, image_url FROM product LIMIT ? OFFSET ?";
+            return jdbcTemplate.query(query, productRowMapper, size, offset);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();
         }

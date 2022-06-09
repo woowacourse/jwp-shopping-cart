@@ -1,7 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,11 +13,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.domain.Products;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:schema.sql")
+@Sql({"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class ProductDaoTest {
 
@@ -38,7 +40,7 @@ public class ProductDaoTest {
         Long productId = product.getId();
 
         // then
-        assertThat(productId).isEqualTo(1L);
+        assertThat(productId).isNotNull();
     }
 
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
@@ -58,17 +60,33 @@ public class ProductDaoTest {
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
     }
 
-    @DisplayName("상품 목록 조회")
     @Test
-    void getProducts() {
+    @DisplayName("페이지별 상품 목록 조회")
+    void findProducts() {
         // given
-        final int size = 0;
+        int size = 12;
+        int offset = 0;
 
         // when
-        final Products products = productDao.findProducts();
+        List<Product> products = productDao.findProducts(size, offset);
 
         // then
-        assertThat(products.getValue()).size().isEqualTo(size);
+        assertThat(products.get(0).getId()).isEqualTo(1L);
+        assertThat(products).size().isEqualTo(12);
+    }
+
+    @Test
+    @DisplayName("페이지별 상품 목록 조회에서 상품이 없으면 빈 리스트를 반환한다.")
+    void findProductsWithEmpty() {
+        // given
+        int size = 1000;
+        int offset = 1000;
+
+        // when
+        List<Product> products = productDao.findProducts(size, offset);
+
+        // then
+        assertThat(products).size().isEqualTo(0);
     }
 
     @DisplayName("싱품 삭제")
@@ -80,13 +98,12 @@ public class ProductDaoTest {
         String imageUrl = "www.test.com";
 
         Long productId = productDao.save(new Product(name, price, imageUrl)).getId();
-        int beforeSize = productDao.findProducts().getValue().size();
 
         // when
         productDao.delete(productId);
 
         // then
-        int afterSize = productDao.findProducts().getValue().size();
-        assertThat(beforeSize - 1).isEqualTo(afterSize);
+        assertThatThrownBy(() -> productDao.findProductById(productId))
+                .isInstanceOf(InvalidProductException.class);
     }
 }

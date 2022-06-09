@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.dto.response;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import woowacourse.shoppingcart.domain.Products;
+import woowacourse.shoppingcart.domain.Product;
 
 public class ProductResponses {
 
@@ -15,8 +15,8 @@ public class ProductResponses {
         this.products = products;
     }
 
-    public static ProductResponses from(Products products) {
-        List<ProductResponse> productResponses = products.getValue().stream()
+    public static ProductResponses from(List<Product> products) {
+        List<ProductResponse> productResponses = products.stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
         return new ProductResponses(productResponses);
