@@ -87,6 +87,24 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         assertThat(orders.get(0).getOrderedProducts().size()).isEqualTo(2);
     }
 
+    @DisplayName("주문 수량이 재고보다 많을 경우 7001번 에러를 반환한다.")
+    @Test
+    void addOrderOutOfStock() {
+        // given
+        CartItemRequest cartItemRequest = new CartItemRequest(productId1, 11);
+        CartItemResponse cartItemResponse = extractCartItem(
+            AcceptanceFixture.post(cartItemRequest, "/api/mycarts", header));
+
+        // when
+        OrderRequest orderRequest = new OrderRequest(
+            List.of(cartItemResponse.getId()));
+        ExtractableResponse<Response> orderResponse = AcceptanceFixture.post(orderRequest, "/api/myorders", header);
+
+        // then
+        assertThat(orderResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(extractErrorCode(orderResponse)).isEqualTo(7001);
+    }
+
     @DisplayName("주문 후에 재고가 차감이 되는 지 확인한다.")
     @Test
     void reduceStock() {
@@ -121,5 +139,9 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         final String accessToken = extractAccessToken(loginResponse);
 
         return new Header("Authorization", BEARER + accessToken);
+    }
+
+    private int extractErrorCode(ExtractableResponse<Response> response) {
+        return response.jsonPath().getInt("errorCode");
     }
 }

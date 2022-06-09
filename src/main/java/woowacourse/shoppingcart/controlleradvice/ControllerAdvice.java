@@ -112,7 +112,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(final OutOfStockException e) {
-        return ResponseEntity.status(NOT_FOUND).body(ErrorResponse.OUT_OF_STOCK);
+        return ResponseEntity.badRequest().body(ErrorResponse.OUT_OF_STOCK);
     }
 
     @ExceptionHandler
