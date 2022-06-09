@@ -1,17 +1,16 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -19,12 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrderDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private final OrderDao orderDao;
 
-    public OrderDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.orderDao = new OrderDao(jdbcTemplate);
+    public OrderDaoTest(DataSource dataSource) {
+        this.orderDao = new OrderDao(dataSource);
     }
 
     @DisplayName("Order를 추가하는 기능")
@@ -45,8 +42,8 @@ class OrderDaoTest {
     void findOrderIdsByCustomerId() {
         //given
         final Long customerId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+        orderDao.addOrders(customerId);
+        orderDao.addOrders(customerId);
 
         //when
         final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
@@ -55,4 +52,31 @@ class OrderDaoTest {
         assertThat(orderIdsByCustomerId).hasSize(2);
     }
 
+    @DisplayName("CustomerId에 해당하는 OrderId가 존재하는지 확인하는 기능 - 존재O")
+    @Test
+    void isValidOrderId_true() {
+        //given
+        final Long customerId = 1L;
+        final Long orderId = orderDao.addOrders(customerId);
+
+        //when
+        final boolean actual = orderDao.isValidOrderId(customerId, orderId);
+
+        //then
+        assertThat(actual).isTrue();
+    }
+
+    @DisplayName("CustomerId에 해당하는 OrderId가 존재하는지 확인하는 기능 - 존재X")
+    @Test
+    void isValidOrderId_false() {
+        //given
+        final Long customerId = 1L;
+        final Long invalidOrderId = -1L;
+
+        //when
+        final boolean actual = orderDao.isValidOrderId(customerId, invalidOrderId);
+
+        //then
+        assertThat(actual).isFalse();
+    }
 }

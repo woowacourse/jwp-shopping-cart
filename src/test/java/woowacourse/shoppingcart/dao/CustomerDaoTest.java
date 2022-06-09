@@ -19,7 +19,6 @@ import woowacourse.shoppingcart.domain.Customer;
 public class CustomerDaoTest {
 
     private final CustomerDao customerDao;
-    private DataSource dataSource;
 
     public CustomerDaoTest(DataSource dataSource) {
         this.customerDao = new CustomerDao(dataSource);

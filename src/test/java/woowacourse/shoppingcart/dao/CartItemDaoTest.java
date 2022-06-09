@@ -27,7 +27,7 @@ public class CartItemDaoTest {
     public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         cartItemDao = new CartItemDao(dataSource);
-        productDao = new ProductDao(jdbcTemplate);
+        productDao = new ProductDao(dataSource);
     }
 
     @BeforeEach
@@ -53,20 +53,6 @@ public class CartItemDaoTest {
         // then
         assertThat(cartId).isEqualTo(3L);
     }
-//
-//    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
-//    @Test
-//    void findProductIdsByCustomerId() {
-//
-//        // given
-//        final Long customerId = 1L;
-//
-//        // when
-//        final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
-//
-//        // then
-//        assertThat(productsIds).containsExactly(1L, 2L);
-//    }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
@@ -81,21 +67,4 @@ public class CartItemDaoTest {
         // then
         assertThat(cartIds).containsExactly(1L, 2L);
     }
-
-//    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-//    @Test
-//    void deleteCartItem() {
-//
-////        // given
-////        final Long cartId = 1L;
-////
-////        // when
-////        cartItemDao.deleteCartItem(cartId);
-////
-////        // then
-////        final Long customerId = 1L;
-////        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-////
-////        assertThat(productIds).containsExactly(2L);
-//    }
 }
