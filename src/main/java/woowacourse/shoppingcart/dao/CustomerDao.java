@@ -42,15 +42,6 @@ public class CustomerDao {
         return simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
     }
 
-    public Long findIdByName(String name) {
-        String query = "SELECT id FROM CUSTOMER WHERE name = ?";
-        try {
-            return jdbcTemplate.queryForObject(query, Long.class, name.toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
-    }
-
     public boolean existByEmail(String email) {
         String query = "SELECT EXISTS (SELECT id FROM CUSTOMER WHERE email = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, email);

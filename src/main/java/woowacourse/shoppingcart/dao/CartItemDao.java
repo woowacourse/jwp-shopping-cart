@@ -75,23 +75,4 @@ public class CartItemDao {
         final String sql = "DELETE FROM CART_ITEM WHERE customer_id = ? AND product_id = ?";
         jdbcTemplate.update(sql, customerId, productId);
     }
-
-    public List<Long> findProductIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
-    }
-
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
-    }
-
-    public Long findProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-    }
 }
