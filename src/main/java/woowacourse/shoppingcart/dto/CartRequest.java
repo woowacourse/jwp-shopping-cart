@@ -5,7 +5,7 @@ public class CartRequest {
     private Long productId;
     private int quantity;
 
-    public CartRequest() {
+    private CartRequest() {
     }
 
     public CartRequest(Long productId, int quantity) {

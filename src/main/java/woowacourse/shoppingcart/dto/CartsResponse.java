@@ -6,7 +6,7 @@ public class CartsResponse {
 
     private List<CartResponse> carts;
 
-    public CartsResponse() {
+    private CartsResponse() {
     }
 
     public CartsResponse(List<CartResponse> carts) {

@@ -5,7 +5,10 @@ import java.util.List;
 
 public class ProductsResponse {
 
-    private final List<ProductResponse> products;
+    private List<ProductResponse> products;
+
+    private ProductsResponse() {
+    }
 
     public ProductsResponse(List<ProductResponse> products) {
         this.products = new ArrayList<>(products);

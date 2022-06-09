@@ -10,7 +10,7 @@ public class CartResponse {
     private String thumbnail;
     private int quantity;
 
-    public CartResponse() {
+    private CartResponse() {
     }
 
     public CartResponse(Long productId, String name, Integer price, String thumbnail, int quantity) {

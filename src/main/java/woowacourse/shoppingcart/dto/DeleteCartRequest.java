@@ -6,7 +6,7 @@ public class DeleteCartRequest {
 
     private List<Long> productIds;
 
-    public DeleteCartRequest() {
+    private DeleteCartRequest() {
     }
 
     public DeleteCartRequest(List<Long> productIds) {

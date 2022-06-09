@@ -8,7 +8,7 @@ public class CustomerResponse {
     private String phone;
     private String address;
 
-    public CustomerResponse() {
+    private CustomerResponse() {
     }
 
     public CustomerResponse(Long id, String email, String name, String phone, String address) {

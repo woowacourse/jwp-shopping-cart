@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.dto;
 public class EmailValidationRequest {
     private String email;
 
-    public EmailValidationRequest() {
+    private EmailValidationRequest() {
     }
 
     public EmailValidationRequest(String email) {

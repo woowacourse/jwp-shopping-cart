@@ -4,7 +4,7 @@ public class CustomerNameResponse {
 
     private String name;
 
-    public CustomerNameResponse() {
+    private CustomerNameResponse() {
     }
 
     public CustomerNameResponse(String name) {

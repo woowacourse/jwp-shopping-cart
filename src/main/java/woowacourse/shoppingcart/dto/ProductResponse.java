@@ -10,7 +10,7 @@ public class ProductResponse {
     private String thumbnail;
     private int quantity;
 
-    public ProductResponse() {
+    private ProductResponse() {
     }
 
     public ProductResponse(Product product, int quantity) {

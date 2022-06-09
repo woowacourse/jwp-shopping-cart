@@ -43,7 +43,7 @@
     - [ ] `Service`에서 DTO 응답
         - Controller 가 아닌 Service에서 응답한 이유
     - [ ] `CustomerResponse.from(customer)`, 정적 팩터리 메서드 활용
-- [ ] DTO 클래스 기본 생성자의 접근제어자 private
+- [x] DTO 클래스 기본 생성자의 접근제어자 private
 
 ### 시나리오
 
