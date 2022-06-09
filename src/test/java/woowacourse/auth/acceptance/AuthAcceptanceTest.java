@@ -2,6 +2,7 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -80,7 +81,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when(발급 받은 토큰을 사용하여 내 정보 조회를 요청하면)
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + token)
+                .header(AUTHORIZATION, "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users/me")
                 .then().log().all()
@@ -155,7 +156,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String wrongToken = "dummy";
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                .header("Authorization", "Bearer " + wrongToken)
+                .header(AUTHORIZATION, "Bearer " + wrongToken)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users/me")
                 .then().log().all()
@@ -199,7 +200,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String newToken = RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer " + token)
+                .header(AUTHORIZATION, "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/token/refresh")
                 .then().log().all().extract().as(SignInResponse.class).getToken();

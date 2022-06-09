@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
@@ -101,7 +102,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer " + token)
+                .header(AUTHORIZATION, "Bearer " + token)
                 .body(requestBody)
                 .when().post("/cart")
                 .then().log().all()
@@ -112,7 +113,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer " + token)
+                .header(AUTHORIZATION, "Bearer " + token)
                 .when().get("/cart")
                 .then().log().all()
                 .extract();
@@ -122,7 +123,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer " + token)
+                .header(AUTHORIZATION, "Bearer " + token)
                 .body(new DeleteCartItemRequests(List.of(new DeleteCartItemRequest(cartId))))
                 .when().delete("/cart")
                 .then().log().all()

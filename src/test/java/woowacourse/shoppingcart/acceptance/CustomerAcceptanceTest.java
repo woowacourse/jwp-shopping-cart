@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -77,7 +78,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
+                .header(AUTHORIZATION, "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users/me")
                 .then().log().all()
@@ -124,7 +125,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(ContentType.JSON)
                 .body(updatePasswordRequest)
-                .header("Authorization", "Bearer " + token)
+                .header(AUTHORIZATION, "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().patch("/users/me")
                 .then().log().all()
@@ -164,7 +165,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
+                .header(AUTHORIZATION, "Bearer " + token)
                 .body(deleteCustomerRequest)
                 .when().delete("/users/me")
                 .then().log().all()
