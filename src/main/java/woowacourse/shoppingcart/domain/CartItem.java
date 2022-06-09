@@ -12,7 +12,6 @@ public class CartItem {
         this.count = count;
     }
 
-
     public Long getId() {
         return id;
     }

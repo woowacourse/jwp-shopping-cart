@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto.request;
 
 public class AddCartItemRequestDto {
+
     private final Long productId;
     private final Integer count;
 

@@ -43,11 +43,14 @@ class CartItemDaoTest {
     @DisplayName("주문 수량을 수정한다.")
     void updateCartItem() {
 
+        //given
         final int expected = 2;
         cartItemDao.addCartItem(customerId, productId, 1);
 
+        //when
         cartItemDao.updateCartItem(customerId, productId, expected);
 
+        //then
         final CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
         assertThat(cartItem.getCount()).isEqualTo(expected);
     }
@@ -55,8 +58,10 @@ class CartItemDaoTest {
     @Test
     @DisplayName("주문 수량을 수정할때 존재하지 않는 품목이면 예외가 발생한다.")
     void updateCartItem_NotFoundException() {
+        //when
         cartItemDao.addCartItem(customerId, productId, 1);
 
+        //then
         assertThatThrownBy(() -> cartItemDao.updateCartItem(customerId, 2L, 2))
                 .isInstanceOf(NotFoundProductException.class)
                 .hasMessage("존재하지 않는 상품 ID입니다.");
@@ -65,17 +70,25 @@ class CartItemDaoTest {
     @Test
     @DisplayName("장바구니에 담긴 물건을 삭제한다.")
     void deleteCartItem() {
+
+        //given
         cartItemDao.addCartItem(customerId, productId, 1);
+
+        //when
         cartItemDao.deleteCartItem(customerId, productId);
 
+        //then
         assertThat(cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId)).isEmpty();
     }
 
     @Test
     @DisplayName("장바구니에 담긴 물건을 삭제할때 존재하지 않는 상품이면 예외가 발생한다.")
     void deleteCartItem_NotFoundException() {
+
+        //when
         cartItemDao.addCartItem(customerId, productId, 1);
 
+        //then
         assertThatThrownBy(() -> cartItemDao.deleteCartItem(customerId, 2L))
                 .isInstanceOf(NotFoundProductException.class)
                 .hasMessage("존재하지 않는 상품 ID입니다.");
@@ -84,8 +97,11 @@ class CartItemDaoTest {
     @Test
     @DisplayName("장바구니에 물건을 담는다.")
     void addCartItem() {
+
+        //when
         cartItemDao.addCartItem(customerId, productId, 1);
 
+        //then
         final CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
         assertThat(cartItem.getName()).isEqualTo(PRODUCT_NAME);
     }

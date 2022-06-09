@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto.response;
 
 public class ProductResponseDto {
+
     private final Long productId;
     private final String thumbnailUrl;
     private final String name;

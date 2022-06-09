@@ -11,6 +11,7 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.LoginCustomer;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
+
     private final AuthService authService;
 
     public AuthenticationPrincipalArgumentResolver(AuthService authService) {

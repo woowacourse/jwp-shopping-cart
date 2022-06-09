@@ -58,14 +58,16 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니에 담긴 물건들을 불러온다.")
     void getCartItems() {
 
+        //given
         final AddCartItemRequestDto addCartItemRequestDto1 = new AddCartItemRequestDto(productId1, 1);
         final AddCartItemRequestDto addCartItemRequestDto2 = new AddCartItemRequestDto(productId2, 1);
 
+        //then
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto1);
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto2);
-
         final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
 
+        //then
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
@@ -77,10 +79,13 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("장바구니에 물건을 담는다.")
     void addCartItem() {
+        //given
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
 
+        //when
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
 
+        //then
         final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
@@ -92,33 +97,42 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("장바구니에 물건을 담을때 이미 담겨있는 품목이면 예외가 발생한다.")
     void addCartItem_DuplicateProductException() {
+        //given
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
 
+        //when
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
         final ExtractableResponse<Response> response = post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
 
+        //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
     @DisplayName("장바구니에 물건을 담을때 재고가 수량보다 적을경우 예외가 발생한다.")
     void addCartItem_DupalicateProductException() {
+        //given
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 11);
 
+        //when
         final ExtractableResponse<Response> response = post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
 
+        //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
     @DisplayName("장바구니에 담긴 물건의 수량을 변경한다.")
     void updateCartItems() {
+        //given
         final AddCartItemRequestDto addCartItemRequestDto1 = new AddCartItemRequestDto(productId1, 1);
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto1);
 
+        //when
         final UpdateCartItemCountItemRequest updateCartItemCountItemRequest = new UpdateCartItemCountItemRequest(2);
         patch("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader, updateCartItemCountItemRequest);
 
+        //then
         final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
@@ -130,12 +144,14 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("장바구니에 담긴 물건을 삭제한다.")
     void deleteCartItem() {
+        //given
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
-
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
 
+        //when
         delete("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader);
 
+        //then
         final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);

@@ -27,7 +27,6 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     public String extractEmail(final String token) {
         return jwtTokenProvider.extractClaim(token);
     }

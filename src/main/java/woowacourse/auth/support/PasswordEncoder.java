@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 
 @Component
 public class PasswordEncoder {
+
     public String encrypt(final String text) {
         try {
             final MessageDigest md = MessageDigest.getInstance("SHA-256"); // or MD5, SHA-1

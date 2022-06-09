@@ -52,6 +52,8 @@ class CartItemControllerTest extends ControllerTest {
     @Test
     @DisplayName("장바구니에 담긴 물건들을 가져온다.")
     void getCartItems() throws Exception {
+
+        //given
         final CartItemResponseDto cartItemResponseDto1 = new CartItemResponseDto(1L, THUMBNAIL_URL, PRODUCT_NAME, PRICE, 10, 1);
         final CartItemResponseDto cartItemResponseDto2 = new CartItemResponseDto(2L, THUMBNAIL_URL, PRODUCT_NAME, PRICE, 10, 1);
         final List<CartItemResponseDto> cartItems = List.of(
@@ -60,6 +62,7 @@ class CartItemControllerTest extends ControllerTest {
         );
         when(cartService.findCartsByCustomerId(any())).thenReturn(cartItems);
 
+        //when
         final MockHttpServletResponse response = mockMvc.perform(get("/api/customers/1/carts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
@@ -68,6 +71,7 @@ class CartItemControllerTest extends ControllerTest {
                 .andReturn()
                 .getResponse();
 
+        //then
         final List<CartItemResponseDto> cartItemResponseDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(), CartItemResponseDto[].class));
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -80,11 +84,13 @@ class CartItemControllerTest extends ControllerTest {
     @Test
     @DisplayName("장바구니에 물건을 담는다.")
     void addCartItem() throws Exception {
+
+        //given
         doNothing().when(authService).checkAuthorization(any(), any());
         when(cartService.addCart(any(), any())).thenReturn(1L);
-
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
 
+        //when
         final MockHttpServletResponse response = mockMvc.perform(post("/api/customers/1/carts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
@@ -94,16 +100,20 @@ class CartItemControllerTest extends ControllerTest {
                 .andReturn()
                 .getResponse();
 
+        //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
     @DisplayName("장바구니에 담긴 물건을 삭제한다.")
     void deleteCartItem() throws Exception {
+
+        //given
         doNothing().when(authService).checkAuthorization(any(), any());
         doNothing().when(cartService).deleteCart(any(), any());
         when(cartService.addCart(any(), any())).thenReturn(1L);
 
+        //when
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
         mockMvc.perform(post("/api/customers/1/carts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -114,6 +124,7 @@ class CartItemControllerTest extends ControllerTest {
                 .andReturn()
                 .getResponse();
 
+        //then
         final MockHttpServletResponse response = mockMvc.perform(delete("/api/customers/1/carts?productId=1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
@@ -128,9 +139,11 @@ class CartItemControllerTest extends ControllerTest {
     @Test
     @DisplayName("장바구니에 담긴 물건의 수량을 수정한다.")
     void updateCartItem() throws Exception {
+        //given
         doNothing().when(authService).checkAuthorization(any(), any());
         when(cartService.addCart(any(), any())).thenReturn(1L);
 
+        //when
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
         mockMvc.perform(post("/api/customers/1/carts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -141,6 +154,7 @@ class CartItemControllerTest extends ControllerTest {
                 .andReturn()
                 .getResponse();
 
+        //then
         final UpdateCartItemCountItemRequest updateCartItemCountItemRequest = new UpdateCartItemCountItemRequest(2);
         final MockHttpServletResponse response = mockMvc.perform(patch("/api/customers/1/carts?productId=1")
                 .contentType(MediaType.APPLICATION_JSON)

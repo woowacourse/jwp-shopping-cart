@@ -37,7 +37,11 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품을 추가한다.")
     void addProduct() {
+
+        //when
         final Long addedId = productService.addProduct(product1);
+
+        //then
         final ProductResponseDto productDto = productService.findProductById(addedId);
         assertThat(productDto.getName()).isEqualTo(product1.getName());
     }
@@ -45,10 +49,14 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품을 삭제한다.")
     void deleteProductById() {
+
+        //given
         final Long addedId = productService.addProduct(product1);
 
+        //when
         productService.deleteProductById(addedId);
 
+        //then
         assertThatThrownBy(() -> productService.findProductById(addedId))
                 .isInstanceOf(NotFoundProductException.class)
                 .hasMessage("존재하지 않는 상품 ID입니다.");
@@ -57,13 +65,17 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품들을 추가한다.")
     void addProducts() {
+
+        //given
         final List<ProductRequestDto> productRequestDtos = List.of(
                 new ProductRequestDto("product1", 10000, null, 10),
                 new ProductRequestDto("product2", 11000, null, 10)
         );
 
+        //when
         int actual = productService.addProducts(productRequestDtos);
 
+        //then
         assertThat(actual).isEqualTo(2);
     }
 }
