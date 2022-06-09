@@ -32,7 +32,7 @@ public class Member {
 
     private void validateEmailForm(String email) {
         if (!EMAIL_REGEX_PATTERN.matcher(email).find()) {
-            throw new InvalidMemberEmailException("올바르지 못한 이메일 형식입니다.");
+            throw new InvalidMemberEmailException();
         }
     }
 
