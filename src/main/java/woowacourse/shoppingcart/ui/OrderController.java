@@ -36,7 +36,8 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderResponse> findOrder(@PathVariable final Long orderId, @AuthenticationPrincipal String username) {
+    public ResponseEntity<OrderResponse> findOrder(@PathVariable final Long orderId,
+                                                   @AuthenticationPrincipal String username) {
         return ResponseEntity.ok(orderService.findOrderById(username, orderId));
     }
 

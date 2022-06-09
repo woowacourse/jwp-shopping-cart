@@ -8,7 +8,7 @@ public class ProductsResponse {
 
     private List<ProductsInnerResponse> products;
 
-    private ProductsResponse(){
+    private ProductsResponse() {
     }
 
     public ProductsResponse(List<Product> products) {

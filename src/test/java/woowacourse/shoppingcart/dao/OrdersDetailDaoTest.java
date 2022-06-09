@@ -49,7 +49,6 @@ class OrdersDetailDaoTest {
 
         Long orderDetailId = ordersDetailDao.save(ordersId, orderDetail);
 
-        //then
         assertThat(orderDetailId).isEqualTo(1L);
     }
 
@@ -66,7 +65,6 @@ class OrdersDetailDaoTest {
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
                 .findOrderDetailsByOrderId(ordersId);
 
-        //then
         assertThat(ordersDetailsByOrderId).hasSize(insertCount);
     }
 }

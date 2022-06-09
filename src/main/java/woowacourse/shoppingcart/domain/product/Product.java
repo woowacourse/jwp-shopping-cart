@@ -20,7 +20,8 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Product(final Long id, final ProductName productName, final Price price, final Stock stock, final String imageUrl) {
+    public Product(final Long id, final ProductName productName, final Price price, final Stock stock,
+                   final String imageUrl) {
         this.id = id;
         this.productName = productName;
         this.price = price;

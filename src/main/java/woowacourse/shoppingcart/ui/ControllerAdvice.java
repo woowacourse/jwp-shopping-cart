@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
 import javax.validation.ConstraintViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
