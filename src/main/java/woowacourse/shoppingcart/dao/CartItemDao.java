@@ -42,7 +42,7 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
-    public List<CartItem> findCartItemsByLoginId(Long customerId) {
+    public List<CartItem> findCartItemsByCustomerId(Long customerId) {
         try {
             final String sql = "SELECT cart_item.id, product.id, product.name, product.price, product.image_url, "
                     + "cart_item.quantity FROM cart_item JOIN product ON cart_item.product_id = product.id "

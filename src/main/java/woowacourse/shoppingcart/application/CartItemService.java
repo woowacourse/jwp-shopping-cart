@@ -33,24 +33,26 @@ public class CartItemService {
         final Product product = productDao.findProductById(cartItemCreateRequest.getProductId());
         final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
         final CartItem cartItem = cartItemCreateRequest.toCartItem(product);
-        List<Long> cartProductIds = cartItemDao.findProductIdsByCustomerId(customer.getId());
+        validateAddable(product, customer);
 
-        if (cartProductIds.contains(product.getId())) {
-            throw new IllegalArgumentException("이미 장바구니에 상품이 존재합니다.");
-        }
-        Long cartItemId = cartItemDao.add(customer.getId(), cartItem);
+        final Long cartItemId = cartItemDao.add(customer.getId(), cartItem);
         return CartItemResponse.of(cartItemId, cartItem);
+    }
+
+    private void validateAddable(Product product, Customer customer) {
+        List<CartItem> customerCartItems = cartItemDao.findCartItemsByCustomerId(customer.getId());
+        customerCartItems.stream()
+                .filter(it -> it.getProductId().equals(product.getId()))
+                .findAny()
+                .ifPresent(it -> {
+                    throw new IllegalArgumentException("이미 장바구니에 상품이 존재합니다.");
+                });
     }
 
     public List<CartItemResponse> findByCustomer(final LoginCustomer loginCustomer) {
         final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
-        final List<CartItem> cartItems = cartItemDao.findCartItemsByLoginId(customer.getId());
+        final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customer.getId());
         return CartItemResponse.of(cartItems);
-    }
-
-    private List<Long> findCartIdsByCustomerName(final LoginCustomer loginCustomer) {
-        final Long customerId = customerDao.findByLoginId(loginCustomer.getLoginId()).getId();
-        return cartItemDao.findIdsByCustomerId(customerId);
     }
 
     public CartItemResponse updateQuantity(LoginCustomer loginCustomer, Long cartItemId,
@@ -80,5 +82,10 @@ public class CartItemService {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    private List<Long> findCartIdsByCustomerName(final LoginCustomer loginCustomer) {
+        final Long customerId = customerDao.findByLoginId(loginCustomer.getLoginId()).getId();
+        return cartItemDao.findIdsByCustomerId(customerId);
     }
 }

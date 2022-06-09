@@ -88,7 +88,7 @@ class CartItemDaoTest {
             final Long customerId = 1L;
 
             // when
-            final List<CartItem> cartItems = cartItemDao.findCartItemsByLoginId(customerId);
+            final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
 
             // then
             List<Long> productsIds = cartItems.stream()
