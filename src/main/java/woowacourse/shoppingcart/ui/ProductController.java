@@ -50,8 +50,6 @@ public class ProductController {
         return ResponseEntity.ok(productService.findProductById(productId));
     }
 
-    private String juhyungTicon = "ㅎㅅㅎ";
-
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> delete(@PathVariable final Long productId) {
         productService.deleteProductById(productId);
