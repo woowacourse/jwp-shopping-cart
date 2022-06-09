@@ -7,10 +7,6 @@ public class CartItem {
     private final Long productId;
     private final Amount count;
 
-    public CartItem(Long customerId, Long productId, int count) {
-        this(null, customerId, productId, count);
-    }
-
     public CartItem(Long id, Long customerId, Long productId, int count) {
         this(id, customerId, productId, new Amount(count));
     }

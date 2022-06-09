@@ -39,12 +39,12 @@ public class CustomerService {
                 .orElseThrow(InvalidCustomerException::new);
     }
 
-    public Customer findByEmail(String email) {
+    public Customer getByEmail(String email) {
         return customerDao.findByEmail(email)
                 .orElseThrow(InvalidCustomerException::new);
     }
 
-    public Customer findByEmailAndPassword(String email, String password) {
+    public Customer getByEmailAndPassword(String email, String password) {
         return customerDao.findByEmailAndPassword(email, password)
                 .orElseThrow(InvalidCustomerException::new);
     }

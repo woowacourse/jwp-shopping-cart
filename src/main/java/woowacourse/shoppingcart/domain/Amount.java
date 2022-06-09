@@ -18,6 +18,10 @@ public class Amount {
         }
     }
 
+    public boolean isBiggerThan(Amount other) {
+        return this.value > other.value;
+    }
+
     public int getValue() {
         return value;
     }

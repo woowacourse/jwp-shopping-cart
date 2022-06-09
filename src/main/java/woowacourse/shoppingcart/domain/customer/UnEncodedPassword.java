@@ -6,9 +6,9 @@ import java.util.regex.Pattern;
 
 public class UnEncodedPassword {
 
+    private static final Pattern PATTERN = Pattern.compile("\\S*");
     private static final int MIN_LENGTH = 8;
     private static final int MAX_LENGTH = 20;
-    private static Pattern PATTERN = Pattern.compile("\\S*");
 
     private final String value;
 

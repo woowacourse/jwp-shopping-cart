@@ -8,10 +8,6 @@ public class Product {
     private final String imageUrl;
     private final Amount quantity;
 
-    public Product(String name, int price, String imageUrl, int quantity) {
-        this(null, name, price, imageUrl, quantity);
-    }
-
     public Product(Long id, String name, int price, String imageUrl, Integer quantity) {
         this(id, name, price, imageUrl, new Amount(quantity));
     }
@@ -22,6 +18,10 @@ public class Product {
         this.price = price;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
+    }
+
+    public boolean isAvailable(Amount count) {
+        return quantity.isBiggerThan(count);
     }
 
     public String getName() {

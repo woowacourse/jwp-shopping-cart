@@ -77,7 +77,7 @@ public class CustomerServiceTest {
     @Test
     void findByEmail() {
         // when
-        Customer customer = customerService.findByEmail("puterism@naver.com");
+        Customer customer = customerService.getByEmail("puterism@naver.com");
 
         // then
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism",
@@ -93,7 +93,7 @@ public class CustomerServiceTest {
     void findByEmailAndPassword() {
         // when
         EncodedPassword encodedPassword = passwordEncoder.encode(new UnEncodedPassword("12349053145"));
-        Customer customer = customerService.findByEmailAndPassword("puterism@naver.com", encodedPassword.getValue());
+        Customer customer = customerService.getByEmailAndPassword("puterism@naver.com", encodedPassword.getValue());
 
         // then
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", encodedPassword);
@@ -116,7 +116,7 @@ public class CustomerServiceTest {
     @Test
     void findByEmail_throwNotExistId() {
         // when then
-        assertThatThrownBy(() -> customerService.findByEmail("rorororo@naver.com"))
+        assertThatThrownBy(() -> customerService.getByEmail("rorororo@naver.com"))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
@@ -129,7 +129,7 @@ public class CustomerServiceTest {
             "failemail@naver.com:failpassword"}, delimiter = ':')
     void findByEmailAndPassword_throwNotExistId(String email, String password) {
         // when then
-        assertThatThrownBy(() -> customerService.findByEmailAndPassword(email, password))
+        assertThatThrownBy(() -> customerService.getByEmailAndPassword(email, password))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }

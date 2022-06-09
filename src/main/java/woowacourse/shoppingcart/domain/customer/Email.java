@@ -7,6 +7,8 @@ public class Email {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$");
+    private static final int MIN_LENGTH = 8;
+    private static final int MAX_LENGTH = 50;
 
     private final String value;
 
@@ -18,7 +20,7 @@ public class Email {
     }
 
     private void validateLength(String value) {
-        if (value.length() < 8 || value.length() > 50) {
+        if (value.length() < MIN_LENGTH || value.length() > MAX_LENGTH) {
             throw new IllegalArgumentException("이메일은 8자 이상 50자 이하여야합니다.");
         }
     }

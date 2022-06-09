@@ -40,7 +40,7 @@ public class AuthService {
 
     private Customer fetchUser(TokenRequest request, String encodedPassword) {
         try {
-            return customerService.findByEmailAndPassword(request.getEmail(), encodedPassword);
+            return customerService.getByEmailAndPassword(request.getEmail(), encodedPassword);
         } catch (InvalidCustomerException exception) {
             throw new LoginFailException();
         }
@@ -48,13 +48,13 @@ public class AuthService {
 
     public Customer findCustomerByToken(String token) {
         String email = jwtTokenProvider.getPayload(token);
-        return customerService.findByEmail(email);
+        return customerService.getByEmail(email);
     }
 
     public void validateExistCustomerByToken(String token) {
         String email = jwtTokenProvider.getPayload(token);
         try {
-            customerService.findByEmail(email);
+            customerService.getByEmail(email);
         } catch (InvalidCustomerException customerException) {
             throw new NoCustomerTokenException();
         }
