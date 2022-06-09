@@ -94,6 +94,21 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(response.body().jsonPath().getInt("quantity")).isEqualTo(5);
     }
 
+    @DisplayName("장바구니 전체 삭제")
+    @Test
+    void deleteAllCartItems() {
+        createCustomer(페퍼);
+        ExtractableResponse<Response> login = login(페퍼_아이디, 페퍼_비밀번호);
+        String accessToken = login.as(TokenResponse.class).getAccessToken();
+
+        Long cartId1 = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+        Long cartId2 = 장바구니_아이템_추가되어_있음(accessToken, productId2);
+
+        ExtractableResponse<Response> response = 장바구니_전체_삭제_요청(accessToken);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("productId", productId);
@@ -124,6 +139,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/customers/carts/{cartId}", cartId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_전체_삭제_요청(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/customers/carts")
                 .then().log().all()
                 .extract();
     }
