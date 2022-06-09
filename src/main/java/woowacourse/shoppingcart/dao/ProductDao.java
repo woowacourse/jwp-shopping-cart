@@ -53,9 +53,13 @@ public class ProductDao {
     }
 
     public Products findProducts() {
-        String query = "SELECT id, name, price, image_url FROM product";
-        List<Product> products = jdbcTemplate.query(query, productRowMapper);
-        return new Products(products);
+거        try {
+            String query = "SELECT id, name, price, image_url FROM product";
+            List<Product> products = jdbcTemplate.query(query, productRowMapper);
+            return new Products(products);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidProductException();
+        }
     }
 
     public void delete(Long productId) {

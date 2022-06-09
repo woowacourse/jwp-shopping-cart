@@ -13,16 +13,20 @@ public class Products {
     }
 
     public Products getProductsOfPage(Integer size, Integer page) {
-        int countOfPage = value.size() / size + 1;
-        int sizeOfLastPage = value.size() % size;
+        int countOfPage = getProductsCount() / size + 1;
+        int sizeOfLastPage = getProductsCount() % size;
 
         if (page < countOfPage) {
             return new Products(value.subList(size * (page - 1), size * page));
         }
         if (page == countOfPage) {
-            return new Products(value.subList(value.size() - sizeOfLastPage, value.size()));
+            return new Products(value.subList(getProductsCount() - sizeOfLastPage, getProductsCount()));
         }
         return new Products(new ArrayList<>());
+    }
+
+    public int getProductsCount() {
+        return value.size();
     }
 
     public List<Product> getValue() {
