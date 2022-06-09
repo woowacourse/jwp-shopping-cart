@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.ui;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.shoppingcart.LookUpCustomer;
+import woowacourse.shoppingcart.support.LookUpCustomer;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.dto.LookUpUser;
 import woowacourse.shoppingcart.dto.ProductRequest;

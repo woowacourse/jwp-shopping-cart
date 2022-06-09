@@ -9,7 +9,7 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipalArgumentResolver;
 import woowacourse.auth.support.JwtTokenInterceptor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.CustomerArgumentResolver;
+import woowacourse.shoppingcart.support.CustomerArgumentResolver;
 
 import java.util.List;
 

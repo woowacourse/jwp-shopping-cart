@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart;
+package woowacourse.shoppingcart.support;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

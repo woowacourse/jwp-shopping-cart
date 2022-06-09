@@ -4,3 +4,4 @@
 - link:/docs/customer.html[유저 관련 API]
 - link:/docs/cart.html[장바구니 관련 API]
 - link:/docs/order.html[주문 관련 API]
+- link:/docs/product.html[상품 관련 API]
