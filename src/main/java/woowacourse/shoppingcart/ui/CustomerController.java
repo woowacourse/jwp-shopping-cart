@@ -5,7 +5,6 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,14 +37,16 @@ public class CustomerController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerResponse findCustomer(@PathVariable long id, @AuthenticationPrincipal Customer customer) {
+    public CustomerResponse findCustomer(@PathVariable long id,
+                                         @AuthenticationPrincipal Customer customer) {
         validateAuthorizedUser(customer, id);
         return new CustomerResponse(customer);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerResponse update(@PathVariable long id, @Valid @RequestBody CustomerUpdateRequest request,
+    public CustomerResponse update(@PathVariable long id,
+                                   @Valid @RequestBody CustomerUpdateRequest request,
                                    @AuthenticationPrincipal Customer customer) {
         validateAuthorizedUser(customer, id);
         customerService.update(id, request);
@@ -57,8 +58,8 @@ public class CustomerController {
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id,
-                                        @RequestBody CustomerDeleteRequest request,
-                                        @AuthenticationPrincipal Customer customer) {
+                       @RequestBody CustomerDeleteRequest request,
+                       @AuthenticationPrincipal Customer customer) {
         validateAuthorizedUser(customer, id);
         customerService.delete(id, request.getPassword());
     }
