@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.AccountDao;
 import woowacourse.shoppingcart.domain.Account;
 import woowacourse.auth.support.PasswordEncoder;
@@ -10,6 +11,7 @@ import woowacourse.shoppingcart.exception.DuplicateAccountException;
 import woowacourse.shoppingcart.exception.InvalidAccountException;
 
 @Service
+@Transactional(readOnly = true)
 public class AccountService {
 
     private final AccountDao accountDao;
@@ -18,6 +20,7 @@ public class AccountService {
         this.accountDao = accountDao;
     }
 
+    @Transactional
     public Long saveAccount(SignUpRequest request) {
         if (accountDao.existByEmail(request.getEmail())) {
             throw new DuplicateAccountException();
@@ -33,6 +36,7 @@ public class AccountService {
                 .orElseThrow(InvalidAccountException::new);
     }
 
+    @Transactional
     public void deleteByEmail(String email) {
         if (!accountDao.existByEmail(email)) {
             throw new InvalidAccountException();
@@ -40,6 +44,7 @@ public class AccountService {
         accountDao.deleteByEmail(email);
     }
 
+    @Transactional
     public void updateCustomer(String email, AccountUpdateRequest request) {
         Account account = findByEmail(email);
         String encryptPassword = PasswordEncoder.encrypt(request.getPassword());

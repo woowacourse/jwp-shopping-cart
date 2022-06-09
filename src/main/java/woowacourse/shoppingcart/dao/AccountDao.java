@@ -47,15 +47,6 @@ public class AccountDao {
         return new Account(customerId, account.getEmail(), account.getPassword(), account.getNickname());
     }
 
-    public Long findIdByUserName(final String userName) {
-        try {
-            final String query = "SELECT id FROM accounts WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidAccountException();
-        }
-    }
-
     public Optional<Account> findByEmail(String email) {
         try {
             final String query = "SELECT email, password, nickname, id, is_admin FROM accounts WHERE email = ?";

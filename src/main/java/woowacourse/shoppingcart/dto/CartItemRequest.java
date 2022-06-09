@@ -1,13 +1,13 @@
 package woowacourse.shoppingcart.dto;
 
-public class CartProductRequest {
+public class CartItemRequest {
 
     private long productId;
 
-    public CartProductRequest() {
+    public CartItemRequest() {
     }
 
-    public CartProductRequest(long productId) {
+    public CartItemRequest(long productId) {
         this.productId = productId;
     }
 

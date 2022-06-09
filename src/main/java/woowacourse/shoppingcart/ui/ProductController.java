@@ -27,11 +27,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @ExceptionHandler(NotFoundProductException.class)
-    public ResponseEntity<Void> handleNotFoundProductException() {
-        return ResponseEntity.notFound().build();
-    }
-
     @GetMapping("/products")
     public ResponseEntity<ProductsResponse> getProducts() {
         List<Product> products = productService.findProducts();

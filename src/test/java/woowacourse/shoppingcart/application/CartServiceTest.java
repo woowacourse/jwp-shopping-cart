@@ -16,9 +16,9 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.exception.DuplicateCartProductException;
+import woowacourse.shoppingcart.exception.DuplicateCartItemException;
 import woowacourse.shoppingcart.exception.InvalidAccountException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 @SpringBootTest
 @Transactional
@@ -62,7 +62,7 @@ class CartServiceTest {
     @Test
     void addNotFoundProduct() {
         assertThatThrownBy(() -> cartService.addProduct(EMAIL, notFoundProductId))
-            .isInstanceOf(InvalidProductException.class);
+            .isInstanceOf(NotFoundProductException.class);
     }
 
     @DisplayName("상품 장바구니에 추가")
@@ -83,7 +83,7 @@ class CartServiceTest {
         cartService.addProduct(EMAIL, 칫솔.getId());
 
         assertThatThrownBy(() -> cartService.addProduct(EMAIL, 칫솔.getId()))
-            .isInstanceOf(DuplicateCartProductException.class);
+            .isInstanceOf(DuplicateCartItemException.class);
     }
 
     @Test

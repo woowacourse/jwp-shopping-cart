@@ -16,13 +16,14 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 @Repository
 public class CartItemDao {
 
-    public static final RowMapper<CartItem> ROM_MAPPER = (rs, rn) -> {
+    private static final RowMapper<CartItem> ROM_MAPPER = (rs, rn) -> {
         Product product = new Product(
             rs.getLong("product_id"), rs.getString("product_name"),
             rs.getInt("product_price"), rs.getString("product_image_url"));
         return new CartItem(rs.getLong("id"), rs.getLong("account_id"),
             product, rs.getInt("quantity"));
     };
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
@@ -100,5 +101,14 @@ public class CartItemDao {
     public void updateCartItem(Long accountId, Long productId, int quantity) {
         String sql = "update cart_item set quantity = ? where account_id = ? and product_id = ?";
         jdbcTemplate.update(sql, quantity, accountId, productId);
+    }
+
+    public CartItem findByAccountIdAndProductId(Long accountId, Long productId) {
+        String sql = "select c.id as id, c.account_id as account_id, c.quantity as quantity, "
+            + "p.id as product_id, p.name as product_name, p.price as product_price, "
+            + "p.image_url as product_image_url "
+            + "from cart_item as c join product as p on c.product_id = p.id "
+            + "where c.account_id = ? and p.id = ?";
+        return jdbcTemplate.queryForObject(sql, ROM_MAPPER, accountId, productId);
     }
 }

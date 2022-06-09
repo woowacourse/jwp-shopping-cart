@@ -153,4 +153,36 @@ public class AcceptanceTest {
             .then().log().all()
             .extract();
     }
+
+    protected ExtractableResponse<Response> 장바구니_목록_조회(String token) {
+        return RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .when().log().all()
+                .get("/users/me/carts")
+                .then().log().all()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> 장바구니_삭제(String token, Long productId) {
+        return RestAssured
+            .given().log().all()
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .when().log().all()
+            .delete("/users/me/carts/{productId}", productId)
+            .then().log().all()
+            .extract();
+    }
+
+    protected ExtractableResponse<Response> 장바구니_수정(String quantity, String token, Long productId) {
+        return RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .body(Map.of("quantity", quantity))
+            .when().log().all()
+            .put("/users/me/carts/{productId}", productId)
+            .then().log().all()
+            .extract();
+    }
 }
