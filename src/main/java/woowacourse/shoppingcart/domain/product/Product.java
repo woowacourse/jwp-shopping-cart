@@ -8,8 +8,16 @@ public class Product {
     private final Stock stock;
     private final String imageUrl;
 
-    public Product(final ProductName productName, final Price price, final Stock stock, final String imageUrl) {
+    public Product(final String productName, final int price, final int stock, final String imageUrl) {
         this(null, productName, price, stock, imageUrl);
+    }
+
+    public Product(final Long id, final String productName, final int price, final int stock, final String imageUrl) {
+        this.id = id;
+        this.productName = new ProductName(productName);
+        this.price = new Price(price);
+        this.stock = new Stock(stock);
+        this.imageUrl = imageUrl;
     }
 
     public Product(final Long id, final ProductName productName, final Price price, final Stock stock, final String imageUrl) {
