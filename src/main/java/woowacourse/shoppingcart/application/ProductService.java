@@ -41,7 +41,7 @@ public class ProductService {
     }
 
     private Long getCartIdByUserAndProduct(UserName userName, Product product) {
-        if (Objects.isNull(userName)) {
+        if (userName == null) {
             return null;
         }
 
@@ -52,7 +52,7 @@ public class ProductService {
     }
 
     private int getQuantityByUserAndProduct(UserName userName, Product product) {
-        if (Objects.isNull(userName)) {
+        if (userName == null) {
             return 0;
         }
 

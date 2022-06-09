@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.*;
@@ -40,7 +39,7 @@ public class OrderService {
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
+            final Long productId = cartItemDao.findProductIdByCartId(cartId);
             final int quantity = orderDetail.getQuantity();
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);

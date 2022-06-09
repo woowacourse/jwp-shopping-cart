@@ -7,7 +7,6 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cartitem.CartItem;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.domain.cartitem.Quantity;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.exception.AlreadyExistException;
@@ -36,7 +35,7 @@ public class CartService {
         final List<CartItem> carts = new ArrayList<>();
 
         for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
+            final Long productId = cartItemDao.findProductIdByCartId(cartId);
             final Product product = productDao.findProductById(productId);
             final int quantity = cartItemDao.findQuantityById(cartId);
             carts.add(new CartItem(cartId, product, quantity));
@@ -91,7 +90,7 @@ public class CartService {
     }
 
     private CartItem getCartItemById(Long cartId) {
-        Long productId = cartItemDao.findProductIdById(cartId);
+        Long productId = cartItemDao.findProductIdByCartId(cartId);
         Product product = productDao.findProductById(productId);
         int quantity = cartItemDao.findQuantityById(productId);
         return new CartItem(cartId, product, quantity);
