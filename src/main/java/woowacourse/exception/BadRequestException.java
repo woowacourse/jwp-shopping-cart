@@ -1,4 +1,4 @@
-package woowacourse.member.exception;
+package woowacourse.exception;
 
 public class BadRequestException extends RuntimeException {
 

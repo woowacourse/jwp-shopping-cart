@@ -1,6 +1,6 @@
 package woowacourse.auth.exception;
 
-import woowacourse.member.exception.BadRequestException;
+import woowacourse.exception.BadRequestException;
 
 public class WrongTokenException extends BadRequestException {
 
