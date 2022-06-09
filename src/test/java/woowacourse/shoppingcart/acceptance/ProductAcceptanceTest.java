@@ -88,6 +88,13 @@ public class ProductAcceptanceTest extends AcceptanceTest {
             .containsExactly(productRequest.getThumbnailImage().getUrl(), productRequest.getThumbnailImage().getAlt());
     }
 
+    @DisplayName("조회한 상품이 없는 경우")
+    @Test
+    void getNotExistProduct() {
+        ExtractableResponse<Response> productFoundByIdResponse = AcceptanceFixture.get("/api/products/" + 1L);
+        assertThat(extractErrorCode(productFoundByIdResponse)).isEqualTo(6001);
+    }
+
     @DisplayName("상품을 삭제한다")
     @Test
     void deleteProduct() {
@@ -110,5 +117,9 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     public static Long getAddedProductId(ProductRequest productRequest) {
         ExtractableResponse<Response> response = requestToAddProduct(productRequest);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
+    }
+
+    private int extractErrorCode(ExtractableResponse<Response> response) {
+        return response.jsonPath().getInt("errorCode");
     }
 }
