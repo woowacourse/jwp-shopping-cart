@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.Optional;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -11,7 +10,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import java.sql.ResultSet;
@@ -83,7 +83,7 @@ public class CustomerDao {
                     rs.getString("name"),
                     rs.getString("phone"),
                     rs.getString("address"),
-                    rs.getString("password"));
+                    Password.fromEncrypt(rs.getString("password")));
         }
     }
 }

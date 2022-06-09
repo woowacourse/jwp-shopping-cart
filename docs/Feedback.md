@@ -25,9 +25,9 @@
 
 - [ ] `CustomerController`
     - [ ] 기존 CustomerRequest 외 Request 객체 활용
-- [ ] `Domain`
-    - [ ] `Email`, `Password`를 객체로 분리하여 검증 관리
-        - 현재 코드에서 Validator로 분리하여 처리하는 것에 대해 객체지향의 역활과 책임의 관점에서 고민
+- [x] `Domain`
+    - [x] `Email`, `Password`를 객체로 분리하여 검증 관리
+        - 현재 코드에서 Validator로 분리하여 처리하는 것에 대해 객체지향의 역할과 책임의 관점에서 고민
 - [ ] `Exception`
     - [ ] `Exception.class` -> `RuntimeException.class`
         - 500 에러 반환 처리
