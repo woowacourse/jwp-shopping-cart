@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -75,6 +76,9 @@ class CartItemControllerTest extends ControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(cartItemResponseDtos.size()).isEqualTo(2);
+        assertThat(cartItemResponseDtos).extracting("productId", "name")
+                .contains(tuple(1L, PRODUCT_NAME),
+                        tuple(2L, PRODUCT_NAME));
     }
 
     @Test
