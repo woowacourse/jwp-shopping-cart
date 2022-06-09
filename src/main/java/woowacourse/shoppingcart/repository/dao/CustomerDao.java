@@ -19,6 +19,7 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CustomerDao {
 
     public static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname from customer where withdrawal = false) rcq ";
+    public static final String REAL_CUSTOMER_QUERY2 = " (select id, username, password, nickname from customer where withdrawal = false) ";
     private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) -> new Customer(
             resultSet.getLong("id"),
             resultSet.getString("username"),
@@ -136,7 +137,7 @@ public class CustomerDao {
     }
 
     public int delete(final Long id) {
-        String query = "update customer set withdrawal = true where id = :id and exists" + REAL_CUSTOMER_QUERY;
+        String query = "update customer set withdrawal = true where id = :id";
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
         return namedParameterJdbcTemplate.update(query, params);
