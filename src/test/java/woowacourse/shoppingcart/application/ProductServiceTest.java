@@ -10,7 +10,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.request.ProductRequest;
 import woowacourse.shoppingcart.application.dto.response.ProductResponse;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundException;
 
 import java.util.List;

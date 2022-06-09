@@ -41,11 +41,6 @@ public class ProductService {
         return ProductResponse.from(products);
     }
 
-    @Transactional
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
-    }
-
     private void validatePage(final Long pageNum, final Long limitCount) {
         if (pageNum <= MINIMUM_PAGE_NUM) {
             throw new ProductDataNotFoundException("페이지는 1 이상이어야 합니다.");
