@@ -80,10 +80,11 @@ public class CartService {
         throw new NotInCustomerCartItemException();
     }
 
-    public void updateQuantity(Long cartId, CartItemRequest cartItemRequest) {
+    public void updateQuantity(Long cartId, UserName userName, CartItemRequest cartItemRequest) {
         final CartItem cartItem = getCartItemById(cartId);
+        final Long customerId = customerDao.findIdByUserName(userName);
         cartItem.updateQuantity(cartItemRequest.getQuantity());
-        cartItemDao.updateQuantity(cartItem);
+        cartItemDao.updateQuantity(customerId, cartItem);
     }
 
     private CartItem getCartItemById(Long cartId) {

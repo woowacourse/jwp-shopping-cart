@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.cartitem.CartItem;
+import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
@@ -75,10 +76,11 @@ public class CartItemDao {
         }
     }
 
-    public void updateQuantity(CartItem cartItem) {
-        final String sql = "UPDATE cart_item set quantity=:quantity where id = :id";
+    public void updateQuantity(Long customerId, CartItem cartItem) {
+        final String sql = "UPDATE cart_item set quantity=:quantity where customer_id=:customerid and id = :id";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource("quantity", cartItem.getQuantity());
         parameterSource.addValue("id", cartItem.getId());
+        parameterSource.addValue("customerid", customerId);
         namedParameterJdbcTemplate.update(sql, parameterSource);
     }
 
