@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
@@ -29,13 +30,13 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    private ExtractableResponse<Response> 이메일_중복_체크(final String email) {
-        return RestAssured
+    private void 이메일_중복_체크(final String email) {
+        RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/members/email-check?email=" + email)
                 .then().log().all()
-                .extract();
+                .statusCode(HttpStatus.OK.value());
     }
 
     protected ExtractableResponse<Response> 회원가입(final CustomerRequest customerRequest) {
