@@ -22,6 +22,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.dto.request.ModifiedCustomerRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.response.DuplicateEmailResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -59,6 +60,28 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.getUserId()).isNotNull()
         );
 
+    }
+
+    @DisplayName("회원가입시 이메일 중복 여부를 검사한다.")
+    @Test
+    void isDuplicatedEmail() {
+        회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
+                "희봉", "male", "1998-08-07", "12345678910",
+                "address", "detailAddress", "12345", true));
+        ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/validation?email=example@example.com")
+                .then()
+                .log().all()
+                .extract();
+
+        boolean isDuplicated = response.body()
+                .jsonPath()
+                .getObject("", DuplicateEmailResponse.class)
+                .getIsDuplicated();
+        assertThat(isDuplicated).isTrue();
     }
 
     @DisplayName("내 정보를 조회하려할 때")

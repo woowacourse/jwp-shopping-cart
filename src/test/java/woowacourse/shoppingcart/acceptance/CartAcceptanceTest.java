@@ -19,6 +19,7 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.response.ExistedProductResponse;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -64,6 +65,14 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
+    @DisplayName("장바구니 특정 아이템 존재 여부 조회")
+    @Test
+    void doesItemExistInCart() {
+        장바구니_아이템_추가되어_있음(USER, productId1, token);
+        장바구니_특정_아이템_존재_확인(token, productId1);
+
+    }
+
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
@@ -87,6 +96,19 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .when().post("/api/customers/cart")
                 .then().log().all()
                 .extract();
+    }
+
+    public static boolean 장바구니_특정_아이템_존재_확인(String token, Long productId) {
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", token)
+                .when().get("/api/customers/cart/" + productId)
+                .then().log().all()
+                .extract();
+        return response.body()
+                .jsonPath()
+                .getObject("", ExistedProductResponse.class).isExists();
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token) {
