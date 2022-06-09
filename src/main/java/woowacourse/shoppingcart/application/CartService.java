@@ -46,9 +46,9 @@ public class CartService {
 
     public void deleteCart(final long customerId, final Long productId) {
         customerSpec.validateCustomerExists(customerId);
-        validateCustomerCart(customerId, productId);
+        validateCustomersCart(customerId, productId);
 
-        cartItemDao.deleteCartItemById(productId);
+        cartItemDao.deleteCartItemByProductId(productId);
     }
 
     private void validateExistCartItem(long customerId, long productId) throws AlreadyCartItemExistException {
@@ -81,7 +81,7 @@ public class CartService {
         }
     }
 
-    private void validateCustomerCart(final long customerId, final Long productId) {
+    private void validateCustomersCart(final long customerId, final Long productId) {
         final List<Long> cartIds = findCartIdsByCustomerId(customerId);
         if (cartIds.contains(productId)) {
             return;
@@ -91,6 +91,6 @@ public class CartService {
 
     private List<Long> findCartIdsByCustomerId(final long customerId) {
         customerSpec.validateCustomerExists(customerId);
-        return cartItemDao.findIdsByCustomerId(customerId);
+        return cartItemDao.findProductIdsByCustomerId(customerId);
     }
 }

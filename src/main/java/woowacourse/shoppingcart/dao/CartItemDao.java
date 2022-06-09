@@ -65,9 +65,9 @@ public class CartItemDao {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> rs.getBoolean("exists")));
     }
 
-    public void deleteCartItemById(final Long cartId) {
-        final String query = "DELETE FROM cart_item WHERE id = :cartId";
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource("cartId", cartId);
+    public void deleteCartItemByProductId(final Long productId) {
+        final String query = "DELETE FROM cart_item WHERE product_id = :productId";
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource("productId", productId);
 
         int rowCount = jdbcTemplate.update(query, namedParameters);
 

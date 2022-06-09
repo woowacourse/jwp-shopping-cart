@@ -82,7 +82,7 @@ public class CartItemDaoTest extends DaoTest {
         final Long cartId = 1L;
 
         // when
-        cartItemDao.deleteCartItemById(cartId);
+        cartItemDao.deleteCartItemByProductId(cartId);
 
         // then
         final Long customerId = 1L;
