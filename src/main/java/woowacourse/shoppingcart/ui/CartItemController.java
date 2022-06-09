@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.application.CartItemService;
 import woowacourse.shoppingcart.dto.CartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
@@ -22,27 +22,27 @@ import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 @RestController
 @RequestMapping("/api/mycarts")
 public class CartItemController {
-    private final CartService cartService;
+    private final CartItemService cartItemService;
 
-    public CartItemController(final CartService cartService) {
-        this.cartService = cartService;
+    public CartItemController(final CartItemService cartItemService) {
+        this.cartItemService = cartItemService;
     }
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal String email) {
-        final List<CartItemResponse> cartItemsResponse = cartService.findCartItems(email);
+        final List<CartItemResponse> cartItemsResponse = cartItemService.findCartItems(email);
         return ResponseEntity.ok(cartItemsResponse);
     }
 
     @GetMapping("/{cartItemId}")
     public ResponseEntity<CartItemResponse> getCartItem(@PathVariable Long cartItemId, @AuthenticationPrincipal String email) {
-        final CartItemResponse cartItemResponse = cartService.findCartItem(email, cartItemId);
+        final CartItemResponse cartItemResponse = cartItemService.findCartItem(email, cartItemId);
         return ResponseEntity.ok(cartItemResponse);
     }
 
     @PostMapping
     public ResponseEntity<CartItemResponse> addCartItem(@Valid @RequestBody CartItemRequest cartItemRequest, @AuthenticationPrincipal String email) {
-        final CartItemResponse cartItemResponse = cartService
+        final CartItemResponse cartItemResponse = cartItemService
                 .addCartItem(cartItemRequest.getProductId(), cartItemRequest.getQuantity(), email);
         return ResponseEntity.created(URI.create("/api/mycarts/" + cartItemResponse.getId())).body(cartItemResponse);
     }
@@ -50,7 +50,7 @@ public class CartItemController {
     @PatchMapping
     public ResponseEntity<Void> updateCartItemQuantity(@Valid @RequestBody CartItemQuantityRequest cartItemQuantityRequest,
                                                        @AuthenticationPrincipal String email) {
-        cartService.updateQuantity(email, cartItemQuantityRequest.getCartItemId(), cartItemQuantityRequest.getQuantity());
+        cartItemService.updateQuantity(email, cartItemQuantityRequest.getCartItemId(), cartItemQuantityRequest.getQuantity());
         return ResponseEntity.ok().build();
     }
 
@@ -58,7 +58,7 @@ public class CartItemController {
     public ResponseEntity<Void> deleteCartItem(@RequestBody DeleteCartItemRequest deleteCartItemRequest,
                                                @AuthenticationPrincipal String email) {
         final List<Long> cartItemIds = deleteCartItemRequest.getCartItemIds();
-        cartService.deleteCartItem(email, cartItemIds);
+        cartItemService.deleteCartItem(email, cartItemIds);
         return ResponseEntity.noContent().build();
     }
 }

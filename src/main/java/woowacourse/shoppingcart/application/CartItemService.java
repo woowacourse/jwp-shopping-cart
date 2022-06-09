@@ -20,13 +20,13 @@ import woowacourse.shoppingcart.exception.NotExistException;
 
 @Service
 @Transactional(readOnly = true)
-public class CartService {
+public class CartItemService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartItemService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
@@ -62,7 +62,8 @@ public class CartService {
     public void updateQuantity(String email, Long cartItemId, Integer quantity) {
         final Customer customer = customerDao.findByEmail(email);
         if (cartItemDao.notExistByIdAndCustomerId(cartItemId, customer.getId())) {
-            throw new NotExistException("존재하지 않는 장바구니 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
+            throw new NotExistException("존재하지 않는 장바구니 "
+                    + "아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
         }
         cartItemDao.updateQuantityByCustomerId(customer.getId(), cartItemId, quantity);
     }
