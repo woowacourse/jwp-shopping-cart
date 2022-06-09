@@ -10,7 +10,9 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.request.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
-import woowacourse.shoppingcart.exception.*;
+import woowacourse.shoppingcart.exception.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
+import woowacourse.shoppingcart.exception.OverQuantityException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,7 +59,7 @@ public class CartService {
     private void compareCountAndQuantity(final Integer count, final Long productId) {
         Product product = productDao.findProductById(productId)
                 .orElseThrow(NotFoundProductException::new);
-        if(product.getQuantity() < count){
+        if (product.getQuantity() < count) {
             throw new OverQuantityException();
         }
     }
@@ -73,7 +75,7 @@ public class CartService {
         cartItemDao.deleteCartItem(customerId, productId);
     }
 
-    public void updateCart(final Long customerId, final Long productId ,final UpdateCartItemCountItemRequest updateCartItemCountItemRequest){
+    public void updateCart(final Long customerId, final Long productId, final UpdateCartItemCountItemRequest updateCartItemCountItemRequest) {
         compareCountAndQuantity(updateCartItemCountItemRequest.getCount(), productId);
         cartItemDao.updateCartItem(customerId, productId, updateCartItemCountItemRequest.getCount());
     }

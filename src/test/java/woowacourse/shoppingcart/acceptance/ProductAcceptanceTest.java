@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.response.ProductResponseDto;
 
@@ -19,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        final Product productRequest = new Product(name, price, imageUrl ,10);
+        final Product productRequest = new Product(name, price, imageUrl, 10);
 
         return RestAssured
                 .given().log().all()

@@ -66,7 +66,7 @@ public class CartItemController {
                                                @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
-        cartService.updateCart(customerId, productId,updateCartItemCountItemRequest);
+        cartService.updateCart(customerId, productId, updateCartItemCountItemRequest);
         return ResponseEntity.ok().build();
     }
 }

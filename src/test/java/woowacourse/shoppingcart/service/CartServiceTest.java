@@ -10,8 +10,8 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.request.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
@@ -21,9 +21,8 @@ import woowacourse.shoppingcart.exception.OverQuantityException;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.fixture.Fixture.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -43,7 +42,7 @@ class CartServiceTest {
     private Long productId;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         customerId = customerDao.save(Customer.createWithoutId(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
         productId = productDao.save(new Product(PRODUCT_NAME, PRICE, THUMBNAIL_URL, QUANTITY));
     }
@@ -67,8 +66,8 @@ class CartServiceTest {
         cartService.addCart(addCartItemRequestDto, customerId);
 
         assertThatThrownBy(() -> cartService.addCart(addCartItemRequestDto, customerId))
-                        .isInstanceOf(DuplicateCartItemException.class)
-                        .hasMessage("이미 담겨있는 상품입니다.");
+                .isInstanceOf(DuplicateCartItemException.class)
+                .hasMessage("이미 담겨있는 상품입니다.");
     }
 
     @Test
@@ -76,8 +75,8 @@ class CartServiceTest {
     void addCart_OverQuantityException() {
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 11);
         assertThatThrownBy(() -> cartService.addCart(addCartItemRequestDto, customerId))
-                        .isInstanceOf(OverQuantityException.class)
-                        .hasMessage("재고가 부족합니다.");
+                .isInstanceOf(OverQuantityException.class)
+                .hasMessage("재고가 부족합니다.");
     }
 
 
@@ -98,8 +97,8 @@ class CartServiceTest {
         cartItemDao.addCartItem(customerId, productId, 1);
 
         assertThatThrownBy(() -> cartService.updateCart(customerId, 2L, new UpdateCartItemCountItemRequest(2)))
-                        .isInstanceOf(NotFoundProductException.class)
-                        .hasMessage("존재하지 않는 상품 ID입니다.");
+                .isInstanceOf(NotFoundProductException.class)
+                .hasMessage("존재하지 않는 상품 ID입니다.");
     }
 
     @Test
@@ -108,8 +107,8 @@ class CartServiceTest {
         cartItemDao.addCartItem(customerId, productId, 1);
 
         assertThatThrownBy(() -> cartService.updateCart(customerId, productId, new UpdateCartItemCountItemRequest(11)))
-                        .isInstanceOf(OverQuantityException.class)
-                        .hasMessage("재고가 부족합니다.");
+                .isInstanceOf(OverQuantityException.class)
+                .hasMessage("재고가 부족합니다.");
     }
 
     @Test

@@ -55,7 +55,7 @@ public class AuthService {
 
     public void checkAuthorization(final Long id, final String email) {
         final Customer customer = customerDao.findByEmail(email)
-                        .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(InvalidCustomerException::new);
         if (!customer.getId().equals(id)) {
             throw new ForbiddenException();
         }

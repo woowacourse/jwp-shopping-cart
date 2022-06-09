@@ -8,13 +8,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.Fixture.*;
 
 @JdbcTest
@@ -78,8 +77,8 @@ class CartItemDaoTest {
         cartItemDao.addCartItem(customerId, productId, 1);
 
         assertThatThrownBy(() -> cartItemDao.deleteCartItem(customerId, 2L))
-                        .isInstanceOf(NotFoundProductException.class)
-                        .hasMessage("존재하지 않는 상품 ID입니다.");
+                .isInstanceOf(NotFoundProductException.class)
+                .hasMessage("존재하지 않는 상품 ID입니다.");
     }
 
     @Test

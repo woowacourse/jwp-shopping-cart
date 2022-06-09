@@ -9,7 +9,8 @@ public class Product {
     private String thumbnailUrl;
     private Integer quantity;
 
-    public Product(){}
+    public Product() {
+    }
 
     public Product(final Long id, final String name, final int price, final String thumbnailUrl, final Integer quantity) {
         this.id = id;

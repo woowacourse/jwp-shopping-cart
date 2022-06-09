@@ -51,7 +51,7 @@ public class ProductDaoTest {
         final int price = 1_000;
         final String imageUrl = "www.test.com";
         final Long productId = productDao.save(new Product(name, price, imageUrl, 10));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl,10);
+        final Product expectedProduct = new Product(productId, name, price, imageUrl, 10);
 
         // when
         final Product product = productDao.findProductById(productId).get();

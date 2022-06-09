@@ -72,9 +72,9 @@ class CartItemControllerTest extends ControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(cartItemResponseDtos.size()).isEqualTo(2);
-        assertThat(cartItemResponseDtos).extracting("productId","name")
-        .contains(tuple(1L, PRODUCT_NAME),
-                tuple(2L, PRODUCT_NAME));
+        assertThat(cartItemResponseDtos).extracting("productId", "name")
+                .contains(tuple(1L, PRODUCT_NAME),
+                        tuple(2L, PRODUCT_NAME));
     }
 
     @Test

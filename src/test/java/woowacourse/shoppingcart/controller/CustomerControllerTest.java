@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -18,14 +15,11 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.SignInDto;
 import woowacourse.auth.dto.TokenResponseDto;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
-import woowacourse.shoppingcart.dto.response.CustomerDto;
 import woowacourse.shoppingcart.dto.request.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.request.SignUpDto;
 import woowacourse.shoppingcart.dto.request.UpdateCustomerDto;
+import woowacourse.shoppingcart.dto.response.CustomerDto;
 import woowacourse.shoppingcart.service.CustomerService;
-
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
