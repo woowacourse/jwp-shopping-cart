@@ -105,13 +105,13 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
     public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
         List<Long> resultOrderIds = response.jsonPath().getList(".", OrdersResponse.class).stream()
-                .map(OrdersResponse::getId)
+                .map(OrdersResponse::getOrderId)
                 .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
     }
 
     private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
         OrdersResponse resultOrder = response.as(OrdersResponse.class);
-        assertThat(resultOrder.getId()).isEqualTo(orderId);
+        assertThat(resultOrder.getOrderId()).isEqualTo(orderId);
     }
 }

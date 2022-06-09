@@ -11,4 +11,8 @@ public class ProductFixture {
     public static Product createProduct(String name, int price, String imageUrl) {
         return new Product(name, price, imageUrl);
     }
+
+    public static Product createProductWithId(Long id, String name, int price, String imageUrl) {
+        return new Product(id, name, price, imageUrl);
+    }
 }

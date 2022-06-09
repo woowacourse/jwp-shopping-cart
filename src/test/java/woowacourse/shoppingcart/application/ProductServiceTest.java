@@ -29,10 +29,11 @@ class ProductServiceTest {
     @DisplayName("상품을 추가한다.")
     @Test
     void save() {
+        int beforeSize = productService.findProducts().size();
         ProductRequest productRequest = new ProductRequest(PRICE, ProductFixture.NAME, IMAGE);
-        Long productId = productService.addProduct(productRequest);
+        productService.addProduct(productRequest);
 
-        assertThat(productId).isNotNull();
+        assertThat(productService.findProducts().size()).isGreaterThan(beforeSize);
     }
 
     @DisplayName("상품을 조회한다.")
@@ -59,10 +60,11 @@ class ProductServiceTest {
     @DisplayName("상품을 삭제한다.")
     @Test
     void delete() {
+        int beforeSize = productService.findProducts().size();
         Long productId = productDao.save(createProduct(ProductFixture.NAME, PRICE, IMAGE));
 
         productService.deleteProductById(productId);
 
-        assertThat(productService.findProducts().size()).isEqualTo(0);
+        assertThat(productService.findProducts().size()).isEqualTo(beforeSize);
     }
 }
