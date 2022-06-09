@@ -55,6 +55,7 @@ public class OrderService {
     }
 
     public List<OrderResponse> findOrdersByCustomerId(final Long customerId) {
+        validateCustomerExists(customerId);
         validateCustomerOrderExists(customerId);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
@@ -75,12 +76,11 @@ public class OrderService {
     private void validateOrderIdByCustomerId(final Long customerId, final Long orderId) {
         validateCustomerExists(customerId);
         if (!orderDao.isValidOrderId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+            throw new InvalidOrderException("주문 내역이 존재하지 않습니다.");
         }
     }
 
     private void validateCustomerOrderExists(final Long customerId) {
-        validateCustomerExists(customerId);
         if (!orderDao.existsOrderByCustomerId(customerId)) {
             throw new OrderNotFoundException();
         }
