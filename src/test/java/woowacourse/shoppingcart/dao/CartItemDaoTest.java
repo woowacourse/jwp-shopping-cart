@@ -83,7 +83,7 @@ class CartItemDaoTest {
     }
 
     @Test
-    void deleteCartItem() {
+    void deleteCartItem_메서드는_장바구니_id로_장바구니를_삭제한다() {
 
         // given
         final Long cartId = 1L;
@@ -99,16 +99,19 @@ class CartItemDaoTest {
     }
 
     @Test
-    void findByCartId() {
+    void findByCartId메서드는_장바구니_id로_장바구니를_조회한다() {
         final Long cartId = 1L;
 
         Cart cart = cartItemDao.findByCartId(cartId);
 
-        System.out.println(cart);
+        assertThat(cart).extracting("id", "productId", "name", "price", "imageUrl", "quantity")
+            .containsExactly(1L, 1L, "[승팡] 칠레산 코호 냉동 연어필렛 trim D(껍질있음) 1.1~1.3kg", 24500,
+                "https://cdn-mart.baemin.com/sellergoods/main/92438f0e-0c4b-425e-b03b-999cee7cdca2.jpg",
+                5);
     }
 
     @Test
-    void update() {
+    void updateCartItemQuantity메서드는_장바구니의_상품_개수를_업데이트한다() {
         final Long cartId = 1L;
 
         cartItemDao.updateCartItemQuantity(cartId, 5);
