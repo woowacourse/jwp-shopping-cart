@@ -22,12 +22,6 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
-    }
-
     public Optional<CartItem> findCartItemByCustomerIdAndProductId(final Long customerId, final Long productId) {
         final String sql = "SELECT " +
                 "product.id as product_id, " +
