@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
 
 public class OrderResponse {

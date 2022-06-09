@@ -17,7 +17,7 @@ public class OrderDetail {
     }
 
     public OrderDetail(Long id, Long productId, int quantity) {
-       this(id, productId, null, null, null, quantity);
+        this(id, productId, null, null, null, quantity);
     }
 
     public OrderDetail(Long id, Long productId, Integer price, String name, String imageUrl, Integer quantity) {
@@ -30,7 +30,8 @@ public class OrderDetail {
     }
 
     public static OrderDetail of(Product product, Integer quantity) {
-        return new OrderDetail(null, product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), quantity);
+        return new OrderDetail(null, product.getId(), product.getPrice(), product.getName(), product.getImageUrl(),
+                quantity);
     }
 
     public Long getId() {
