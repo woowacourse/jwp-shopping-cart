@@ -21,6 +21,7 @@ import woowacourse.shoppingcart.dto.CartUpdateRequest;
 public class CartService {
 
     private static final int DEFAULT_QUANTITY = 1;
+
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
@@ -52,7 +53,7 @@ public class CartService {
 
     public Cart addCart(final LoginCustomer loginCustomer, final CartAddRequest cartAddRequest) {
         Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
-        final Long customerId = customerDao.findIdByUserName(customer.getName());
+        Long customerId = customer.getId();
         try {
             Long cartId = cartItemDao.addCartItem(customerId, cartAddRequest.getProductId(), DEFAULT_QUANTITY);
             Long productId = cartItemDao.findProductIdById(cartId);

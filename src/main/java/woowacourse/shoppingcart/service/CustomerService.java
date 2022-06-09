@@ -40,8 +40,7 @@ public class CustomerService {
         Customer savedCustomer = customerDao.findByLoginId(loginCustomer.getLoginId());
         savedCustomer.checkPasswordWithEncryption(request.getPassword());
 
-        customerDao.update(new Customer(loginCustomer.getLoginId(), request.getName(),
-                CryptoUtils.encrypt(request.getPassword())));
+        customerDao.update(new Customer(loginCustomer.getLoginId(), request.getName(), savedCustomer.getPassword()));
         Customer updatedCustomer = customerDao.findByLoginId(loginCustomer.getLoginId());
         return CustomerResponse.of(updatedCustomer);
     }
