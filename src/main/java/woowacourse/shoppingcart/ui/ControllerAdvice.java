@@ -23,6 +23,6 @@ public class ControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleInternalServerError(RuntimeException e) {
         e.printStackTrace();
-        return ResponseEntity.internalServerError().body(new ErrorResponse("internal server error"));
+        return ResponseEntity.internalServerError().body(new ErrorResponse("예기치 못한 오류가 발생하였습니다."));
     }
 }
