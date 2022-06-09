@@ -1,11 +1,9 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductsRequest;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @SpringBootTest
-@Sql("/cartInitSchema.sql")
+@Sql("/initSchema.sql")
 @Transactional
 class CartServiceTest {
 

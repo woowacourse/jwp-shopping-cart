@@ -19,7 +19,7 @@ import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("/cartInitSchema.sql")
+@Sql("/initSchema.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
 
@@ -38,7 +38,7 @@ public class CartItemDaoTest {
     @Test
     void save() {
         // given
-        Long customerId = 2L;
+        Long customerId = 1L;
 
         // when
         final Long cartId = cartItemDao.save(customerId, product1.getId(), 10);
