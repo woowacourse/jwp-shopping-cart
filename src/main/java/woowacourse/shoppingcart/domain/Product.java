@@ -10,11 +10,18 @@ public class Product {
     private final String imageUrl;
 
     public Product(final Long id, final String name, final int price, final int stock, final String imageUrl) {
+        validMinusStock(stock);
         this.id = id;
         this.name = name;
         this.price = price;
         this.stock = stock;
         this.imageUrl = imageUrl;
+    }
+
+    private void validMinusStock(final int stock) {
+        if (stock < 0) {
+            throw new InvalidProductException("제품의 수량은 0보다 작을 수 없습니다.");
+        }
     }
 
     public Product(final String name, final int price, final int stock, final String imageUrl) {
