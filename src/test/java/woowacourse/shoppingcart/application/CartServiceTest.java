@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.application;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
@@ -14,8 +16,7 @@ import woowacourse.shoppingcart.application.dto.request.ProductRequest;
 import woowacourse.shoppingcart.application.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.application.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.application.dto.response.CartResponse;
-import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.dataformat.QuantityDataFormatException;
 import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundException;
 
 import java.util.List;
@@ -126,6 +127,28 @@ class CartServiceTest {
                 () -> assertThat(cartItemResponse.getId()).isEqualTo(cartItemResponses.get(0).getId()),
                 () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(1)
         );
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, -1})
+    @DisplayName("장바구니에 담긴 상품 개수를 수정할 때 개수가 1 미만이면 예외가 발생한다.")
+    void updateQuantityPriceException(int quantity) {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerService.signUp(signUpRequest);
+        CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
+
+        Long productId = productService.addProduct(new ProductRequest("초콜렛", 1_000, "www.test.com"));
+        ProductIdRequest productIdRequest = new ProductIdRequest(productId);
+
+        List<CartItemResponse> cartItemResponses = cartService.addCartItems(customerIdentificationRequest, List.of(productIdRequest));
+
+        // when & then
+        assertThatThrownBy(() -> cartService.updateQuantity(
+                customerIdentificationRequest, new CartItemRequest(cartItemResponses.get(0).getId(), quantity)
+        ))
+        .isInstanceOf(QuantityDataFormatException.class)
+        .hasMessage("수량은 1 이상이어야 합니다.");
     }
 
     @DisplayName("장바구니에 담긴 상품을 제거한다.")
