@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
@@ -63,7 +62,6 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void login_wrongPassword_badRequest() {
         // given 회원이 등록되어 있고
         AuthAcceptanceFixture.registerCustomer(new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
-
 
         // when 이메일에 일치하지 않는 비밀번호를 사용해 토큰을 요청하면
         TokenRequest invalidRequest = new TokenRequest(EMAIL, "1111111111");

@@ -14,7 +14,7 @@ public class Orders {
 
     public Long calculateTotalPrice() {
         long result = 0;
-        for(OrderDetail orderDetail : orderDetails) {
+        for (OrderDetail orderDetail : orderDetails) {
             result += orderDetail.calculateTotalPrice();
         }
         return result;

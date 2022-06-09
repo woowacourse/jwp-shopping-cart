@@ -5,9 +5,9 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 
 public class OrdersResponse {
-    private Long id;
-    private Long totalPrice;
-    private List<OrderDetail> orderDetails;
+    private final Long id;
+    private final Long totalPrice;
+    private final List<OrderDetail> orderDetails;
 
     public OrdersResponse(final Long id,
                           final Long totalPrice,
