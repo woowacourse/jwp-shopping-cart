@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -48,25 +47,10 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public List<Long> findProductIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
-    }
-
     public List<Long> findIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
-    }
-
-    public Long findProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
     }
 
     public Optional<CartItem> findCartItemById(final Long cartId) {
