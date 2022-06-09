@@ -29,8 +29,8 @@ public class CartItemService {
         this.productDao = productDao;
     }
 
-    public CartItemsResponse findCartsByCustomerName(final String customerName) {
-        final List<Long> cartItemIds = findCartIdsByCustomerName(customerName);
+    public CartItemsResponse findCartItemsByCustomerName(final String customerName) {
+        final List<Long> cartItemIds = findCartItemIdsByCustomerName(customerName);
 
         final List<CartItem> cartItems = new ArrayList<>();
         for (final Long cartItemId : cartItemIds) {
@@ -40,7 +40,7 @@ public class CartItemService {
     }
 
     @Transactional
-    public CartItemResponse addCart(final CartItemSaveRequest request, final String customerName) {
+    public CartItemResponse addCartItem(final CartItemSaveRequest request, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         checkAvaliableForPurchaseProduct(request.getProductId(), request.getQuantity());
         try {
@@ -64,7 +64,7 @@ public class CartItemService {
         cartItemDao.deleteCartItem(cartItemId);
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
+    private List<Long> findCartItemIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
@@ -75,7 +75,7 @@ public class CartItemService {
     }
 
     private void validateCustomerHasCartItem(final Long cartItemId, final String customerName) {
-        final List<Long> cartItemIds = findCartIdsByCustomerName(customerName);
+        final List<Long> cartItemIds = findCartItemIdsByCustomerName(customerName);
         if (cartItemIds.contains(cartItemId)) {
             return;
         }

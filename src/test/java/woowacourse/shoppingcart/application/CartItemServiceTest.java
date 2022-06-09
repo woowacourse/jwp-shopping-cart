@@ -61,7 +61,7 @@ class CartItemServiceTest {
     @DisplayName("카트에 담을 때 존재 수량보다 크게 담을 경우 예외 발생")
     void addCartLargePurchaseQuantity_throwException() {
         CartItemSaveRequest request = new CartItemSaveRequest(productId, 11);
-        assertThatThrownBy(() -> cartItemService.addCart(request, USERNAME))
+        assertThatThrownBy(() -> cartItemService.addCartItem(request, USERNAME))
                 .isInstanceOf(InvalidProductException.class)
                 .hasMessage("제품의 수량보다 더 주문할 수 없습니다.");
     }
@@ -70,13 +70,13 @@ class CartItemServiceTest {
     @DisplayName("정상적으로 카트 추가")
     void addCart() {
         CartItemSaveRequest request = new CartItemSaveRequest(productId, 10);
-        assertThat(cartItemService.addCart(request, USERNAME)).isNotNull();
+        assertThat(cartItemService.addCartItem(request, USERNAME)).isNotNull();
     }
 
     @Test
     @DisplayName("카트 수정 시 존재 수량보다 크게 수정할 경우 예외 발생")
     void updateCartItemQuantityLargeQuantity_throwException() {
-        CartItemResponse cartItemResponse = cartItemService.addCart(new CartItemSaveRequest(productId, 10), USERNAME);
+        CartItemResponse cartItemResponse = cartItemService.addCartItem(new CartItemSaveRequest(productId, 10), USERNAME);
 
         assertThatThrownBy(() -> cartItemService.updateCartItemQuantity(USERNAME, cartItemResponse.getCartItem().getId(), 11))
                 .isInstanceOf(InvalidProductException.class)
@@ -86,7 +86,7 @@ class CartItemServiceTest {
     @Test
     @DisplayName("정상적으로 카트 수량 수정")
     void updateCartItemQuantity() {
-        CartItemResponse cartItemResponse = cartItemService.addCart(new CartItemSaveRequest(productId, 10), USERNAME);
+        CartItemResponse cartItemResponse = cartItemService.addCartItem(new CartItemSaveRequest(productId, 10), USERNAME);
 
         assertDoesNotThrow(() -> cartItemService.updateCartItemQuantity(USERNAME, cartItemResponse.getCartItem().getId(), 8));
     }

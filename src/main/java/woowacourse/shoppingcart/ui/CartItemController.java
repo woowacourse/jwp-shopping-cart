@@ -27,14 +27,14 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<CartItemsResponse> getCartItems(@AuthenticationPrincipal final String customerName) {
-        return ResponseEntity.ok().body(cartItemService.findCartsByCustomerName(customerName));
+        return ResponseEntity.ok().body(cartItemService.findCartItemsByCustomerName(customerName));
     }
 
     @PostMapping
     public ResponseEntity<CartItemResponse> addCartItem(@RequestBody final CartItemSaveRequest cartItemSaveRequest,
                                                         @AuthenticationPrincipal String customerName) {
         // TODO 반환 status code 체크
-        return ResponseEntity.ok(cartItemService.addCart(cartItemSaveRequest, customerName));
+        return ResponseEntity.ok(cartItemService.addCartItem(cartItemSaveRequest, customerName));
     }
 
     @PatchMapping({"/{cartItemId}"})
