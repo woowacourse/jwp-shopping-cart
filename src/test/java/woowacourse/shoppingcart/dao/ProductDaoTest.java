@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql("classpath:schema.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@DisplayName("Product DAO 테스트")
 public class ProductDaoTest {
 
     private final ProductDao productDao;

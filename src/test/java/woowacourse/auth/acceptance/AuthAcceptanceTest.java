@@ -1,46 +1,53 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.fixture.CustomerFixture.findById;
+import static woowacourse.fixture.AuthFixture.login;
+import static woowacourse.fixture.CustomerFixture.signUp;
+
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import org.springframework.http.HttpStatus;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
-@DisplayName("인증 관련 기능")
+@DisplayName("인증 관련 기능 인수테스트")
 public class AuthAcceptanceTest extends AcceptanceTest {
+
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
         // given
-        // 회원이 등록되어 있고
-        // id, password를 사용해 토큰을 발급받고
+        signUp("test@woowacourse.com", "test", "123$ddddd");
+        ExtractableResponse<Response> secondResponse = login("test@woowacourse.com", "123$ddddd");
+        String token = secondResponse.body().jsonPath().getString("accessToken");
 
         // when
-        // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
+        ExtractableResponse<Response> thirdResponse = findById(token);
 
         // then
-        // 내 정보가 조회된다
-    }
-
-    @DisplayName("Bearer Auth 로그인 실패")
-    @Test
-    void myInfoWithBadBearerAuth() {
-        // given
-        // 회원이 등록되어 있고
-
-        // when
-        // 잘못된 id, password를 사용해 토큰을 요청하면
-
-        // then
-        // 토큰 발급 요청이 거부된다
+        assertAll(
+                () -> assertThat(thirdResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(thirdResponse.body().jsonPath().getString("userId")).isEqualTo(
+                        "test@woowacourse.com"),
+                () -> assertThat(thirdResponse.body().jsonPath().getString("nickname")).isEqualTo("test")
+        );
     }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
     void myInfoWithWrongBearerAuth() {
         // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
+        ExtractableResponse<Response> thirdResponse = findById("invalidToken");
 
         // then
-        // 내 정보 조회 요청이 거부된다
+        assertAll(
+                () -> assertThat(thirdResponse.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value()),
+                () -> assertThat(thirdResponse.body().jsonPath().getString("message")).isEqualTo(
+                        "로그인을 해주세요."
+                )
+        );
     }
 }

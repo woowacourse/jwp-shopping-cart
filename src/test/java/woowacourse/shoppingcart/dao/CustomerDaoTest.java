@@ -8,13 +8,18 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.customer.Customer;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@DisplayName("Customer DAO 테스트")
 public class CustomerDaoTest {
 
     private final CustomerDao customerDao;
@@ -23,31 +28,105 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
+    @DisplayName("디비 ID 를 이용하여 회원 정보를 조회한다.")
     @Test
-    void findIdByUserNameTest() {
-
+    void findById() {
         // given
-        final String userName = "puterism";
+        Customer savedCustomer = Customer.from(null, "test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerDao.save(savedCustomer);
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        Customer customer = customerDao.findById(customerId).get();
 
         // then
-        assertThat(customerId).isEqualTo(1L);
+        assertAll(
+                () -> assertThat(customer.getUserId()).isEqualTo("test@woowacourse.com"),
+                () -> assertThat(customer.getNickname()).isEqualTo("test"),
+                () -> assertThat(customer.getPassword()).isEqualTo("1234asdf!")
+        );
     }
 
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
+    @DisplayName("사용자 ID 를 이용하여 회원 정보를 조회한다.")
     @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
-        // given
-        final String userName = "gwangyeol-iM";
-
+    void findByUserId() {
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        Customer customer = customerDao.findByUserId("puterism@woowacourse.com").get();
 
         // then
-        assertThat(customerId).isEqualTo(16L);
+        assertAll(
+                () -> assertThat(customer.getUserId()).isEqualTo("puterism@woowacourse.com"),
+                () -> assertThat(customer.getNickname()).isEqualTo("nickname"),
+                () -> assertThat(customer.getPassword()).isEqualTo("1338ad00357397e37ec3990310efd04f767ab485fa8e69f2d06df186f9327372")
+        );
+    }
+
+    @DisplayName("사용자 닉네임을 이용하여 회원 정보를 조회한다.")
+    @Test
+    void findByNickname() {
+        // when
+        Customer customer = customerDao.findByNickname("nickname").get();
+
+        // then
+        assertAll(
+                () -> assertThat(customer.getUserId()).isEqualTo("puterism@woowacourse.com"),
+                () -> assertThat(customer.getNickname()).isEqualTo("nickname"),
+                () -> assertThat(customer.getPassword()).isEqualTo("1338ad00357397e37ec3990310efd04f767ab485fa8e69f2d06df186f9327372")
+        );
+    }
+
+    @DisplayName("회원 정보를 수정한다.")
+    @Test
+    void update() {
+        // given
+        Customer savedCustomer = Customer.from(null, "test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerDao.save(savedCustomer);
+
+        // when
+        customerDao.updateNickname(customerId, "test2");
+
+        // then
+        Customer customer = customerDao.findById(customerId).get();
+        assertAll(
+                () -> assertThat(customer.getId()).isEqualTo(customerId),
+                () -> assertThat(customer.getUserId()).isEqualTo("test@woowacourse.com"),
+                () -> assertThat(customer.getNickname()).isEqualTo("test2"),
+                () -> assertThat(customer.getPassword()).isEqualTo("1234asdf!")
+        );
+    }
+
+    @DisplayName("회원 비밀번호를 수정한다.")
+    @Test
+    void updatePassword() {
+        // given
+        Customer savedCustomer = Customer.from(null, "test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerDao.save(savedCustomer);
+
+        // when
+        customerDao.updatePassword(customerId, "123dkhsd!");
+
+        // then
+        Customer customer = customerDao.findById(customerId).get();
+        assertAll(
+                () -> assertThat(customer.getId()).isEqualTo(customerId),
+                () -> assertThat(customer.getUserId()).isEqualTo("test@woowacourse.com"),
+                () -> assertThat(customer.getNickname()).isEqualTo("test"),
+                () -> assertThat(customer.getPassword()).isEqualTo("123dkhsd!")
+        );
+    }
+
+    @DisplayName("회원정보를 지운다.")
+    @Test
+    void delete() {
+        // given
+        Customer savedCustomer = Customer.from(null, "test@woowacourse.com", "test", "1234asdf!");
+        Long customerId = customerDao.save(savedCustomer);
+
+        // when
+        customerDao.delete(customerId);
+
+        // then
+        Optional<Customer> customer = customerDao.findById(customerId);
+
+        assertThat(customer.isEmpty()).isTrue();
     }
 }

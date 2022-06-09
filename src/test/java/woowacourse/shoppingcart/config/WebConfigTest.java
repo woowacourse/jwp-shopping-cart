@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.config;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,7 +16,9 @@ import static woowacourse.shoppingcart.config.WebConfig.ALLOWED_METHOD_NAMES;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DisplayName("WebConfig 테스트")
 public class WebConfigTest {
+
     @Autowired
     private MockMvc mockMvc;
 
