@@ -45,10 +45,8 @@ class OrdersDetailDaoTest {
     @DisplayName("OrderDatail을 추가하는 기능")
     @Test
     void save() {
-        //given
         OrderDetail orderDetail = new OrderDetail(5, productId, 1_000, "coffee", "coffee.png");
 
-        //when
         Long orderDetailId = ordersDetailDao.save(ordersId, orderDetail);
 
         //then
@@ -58,7 +56,6 @@ class OrdersDetailDaoTest {
     @DisplayName("OrderId로 OrderDetails 조회하는 기능")
     @Test
     void findOrderDetailsByOrderId() {
-        //given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
             jdbcTemplate
@@ -66,7 +63,6 @@ class OrdersDetailDaoTest {
                             ordersId, productId, 3);
         }
 
-        //when
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
                 .findOrderDetailsByOrderId(ordersId);
 

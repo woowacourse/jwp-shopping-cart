@@ -14,10 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.product.Price;
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.domain.product.ProductName;
-import woowacourse.shoppingcart.domain.product.Stock;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -45,7 +42,6 @@ public class CartItemDaoTest {
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {
-        // given
         final Long customerId = 1L;
         Product product = Product.builder()
                 .id(1L)
@@ -53,17 +49,14 @@ public class CartItemDaoTest {
                 .price(1_000)
                 .stock(100)
                 .build();
-        // when
         final Long cartId = cartItemDao.save(customerId, new CartItem(product, 1));
 
-        // then
         assertThat(cartId).isEqualTo(3L);
     }
 
     @DisplayName("id로 카트 아이템을 조회한다.")
     @Test
     void findById() {
-        // given
         final Long customerId = 1L;
         Product product = Product.builder()
                 .id(1L)
@@ -75,10 +68,8 @@ public class CartItemDaoTest {
         CartItem cartItem = new CartItem(product, 1);
         final Long cartItemId = cartItemDao.save(customerId, cartItem);
 
-        // when
         CartItem result = cartItemDao.findById(cartItemId);
 
-        // then
         assertThat(result).usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(cartItem);
@@ -112,33 +103,26 @@ public class CartItemDaoTest {
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머 카트 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
-        // given
         final Long customerId = 1L;
 
-        // when
         final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
-        // then
         assertThat(productsIds).containsExactly(1L, 2L);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 카트 아이템 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
-        // given
         final Long customerId = 1L;
 
-        // when
         final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
 
-        // then
         assertThat(cartIds).containsExactly(1L, 2L);
     }
 
     @DisplayName("수량을 변경한다.")
     @Test
     void updateQuantity() {
-        // given
         final Long customerId = 1L;
         Product product = Product.builder()
                 .id(1L)
@@ -150,7 +134,6 @@ public class CartItemDaoTest {
         Long cartItemId = cartItemDao.save(customerId, new CartItem(product, 1));
         CartItem cartItem = cartItemDao.findById(cartItemId);
 
-        // when
         cartItem.changeQuantity(10);
         assertDoesNotThrow(() -> cartItemDao.updateQuantity(cartItem));
     }
@@ -158,13 +141,10 @@ public class CartItemDaoTest {
     @DisplayName("해당 id의 카트 아이템을 삭제한다.")
     @Test
     void deleteCartItem() {
-        // given
         final Long cartId = 1L;
 
-        // when
         cartItemDao.deleteById(cartId);
 
-        // then
         final Long customerId = 1L;
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 

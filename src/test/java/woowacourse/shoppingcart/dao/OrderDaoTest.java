@@ -28,10 +28,8 @@ class OrderDaoTest {
     @DisplayName("Order를 추가하는 기능")
     @Test
     void addOrders() {
-        //given
         final Long customerId = 1L;
 
-        //when
         final Long orderId = orderDao.save(customerId);
 
         //then
