@@ -96,7 +96,7 @@ class CartServiceTest {
         // when & then
         assertThatThrownBy(() -> cartService.deleteCart(cartId1, customerId + 1))
                 .isInstanceOf(NotInCustomerCartItemException.class)
-                .hasMessage("장바구니 아이템이 없습니다.");
+                .hasMessage("일치하는 장바구니 아이템이 없습니다.");
     }
 
     @DisplayName("cartItem을 삭제한다.")
