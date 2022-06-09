@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class DeleteCartItemRequest {
 
+    @NotNull
     private Long id;
 
     private DeleteCartItemRequest() {

@@ -1,9 +1,14 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class AddCartItemRequest {
 
+    @NotNull
     private Long productId;
+    @NotNull
     private Long quantity;
+    @NotNull
     private Boolean checked;
 
     private AddCartItemRequest() {

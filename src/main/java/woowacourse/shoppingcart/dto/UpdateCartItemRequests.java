@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.dto;
 
 import java.util.List;
+import javax.validation.constraints.NotNull;
 
 public class UpdateCartItemRequests {
 
+    @NotNull
     private List<UpdateCartItemRequest> cartItems;
 
     private UpdateCartItemRequests() {
