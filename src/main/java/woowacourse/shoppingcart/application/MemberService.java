@@ -2,16 +2,16 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.shoppingcart.dao.MemberDao;
+import woowacourse.shoppingcart.domain.Member;
 import woowacourse.shoppingcart.domain.value.Email;
-import woowacourse.shoppingcart.domain.value.Member;
 import woowacourse.shoppingcart.domain.value.Nickname;
 import woowacourse.shoppingcart.domain.value.Password;
 import woowacourse.shoppingcart.dto.request.MemberCreateRequest;
 import woowacourse.shoppingcart.dto.request.MemberUpdateRequest;
 import woowacourse.shoppingcart.dto.request.PasswordUpdateRequest;
 import woowacourse.shoppingcart.dto.response.MemberResponse;
-import woowacourse.auth.exception.AuthorizationException;
 
 @Service
 @Transactional(readOnly = true)

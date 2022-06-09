@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dto.response;
 
-import woowacourse.shoppingcart.domain.value.Member;
+import woowacourse.shoppingcart.domain.Member;
 
 public class MemberResponse {
 

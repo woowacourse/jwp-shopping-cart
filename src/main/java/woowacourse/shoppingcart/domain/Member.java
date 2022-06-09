@@ -1,6 +1,9 @@
-package woowacourse.shoppingcart.domain.value;
+package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
+import woowacourse.shoppingcart.domain.value.Email;
+import woowacourse.shoppingcart.domain.value.Nickname;
+import woowacourse.shoppingcart.domain.value.Password;
 
 public class Member {
 

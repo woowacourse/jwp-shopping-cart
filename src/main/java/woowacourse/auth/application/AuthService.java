@@ -2,13 +2,13 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.MemberDao;
-import woowacourse.shoppingcart.domain.value.Member;
 import woowacourse.auth.dto.request.LoginRequest;
 import woowacourse.auth.dto.request.PasswordCheckRequest;
 import woowacourse.auth.dto.response.LoginResponse;
 import woowacourse.auth.dto.response.PasswordCheckResponse;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.dao.MemberDao;
+import woowacourse.shoppingcart.domain.Member;
 
 @Service
 @Transactional(readOnly = true)
