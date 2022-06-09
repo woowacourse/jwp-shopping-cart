@@ -29,7 +29,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     private void validateToken(final String accessToken) {
         if (accessToken == null || !jwtTokenProvider.validateToken(accessToken)) {
-            throw new InvalidTokenException("로그인을 해주세요.");
+            throw new InvalidTokenException("권한이 없습니다.");
         }
     }
 }

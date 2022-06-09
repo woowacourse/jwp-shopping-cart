@@ -20,7 +20,7 @@ public class Customer {
 
     public void comparePasswordFrom(final String password) {
         if (!this.password.equals(password)) {
-            throw new IllegalArgumentException("입력한 비밀번호가 올바르지 않습니다.");
+            throw new IllegalArgumentException("아아디 또는 비밀번호를 확인하여주세요.");
         }
     }
 

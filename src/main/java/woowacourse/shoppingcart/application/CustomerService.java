@@ -35,7 +35,7 @@ public class CustomerService {
 
     private void validateNotDuplicateUserId(final String userId) {
         if (customerDao.existCustomerByUserId(userId)) {
-            throw new CustomerDuplicatedDataException("이미 존재하는 아이디입니다.");
+            throw new CustomerDuplicatedDataException("이미 가입된 이메일입니다.");
         }
     }
 

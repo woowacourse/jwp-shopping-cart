@@ -64,7 +64,7 @@ public class CustomerDao {
         try {
             return jdbcTemplate.queryForObject(query, CUSTOMER_ROW_MAPPER, userId, NOT_WITHDRAWAL);
         } catch (EmptyResultDataAccessException exception) {
-            throw new LoginDataNotFoundException("존재하지 않는 회원입니다.");
+            throw new LoginDataNotFoundException("아아디 또는 비밀번호를 확인하여주세요.");
         }
     }
 
