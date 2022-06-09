@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.dto.ProductIdRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.QuantityRequest;
 import woowacourse.shoppingcart.dto.Request;
@@ -29,9 +30,9 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<CartResponse> addCartItem(@Validated(Request.id.class) @RequestBody final ProductRequest productRequest,
+    public ResponseEntity<CartResponse> addCartItem(@Validated(Request.id.class) @RequestBody final ProductIdRequest productIdRequest,
                                       @AuthenticationPrincipal LoginCustomer loginCustomer) {
-        final CartResponse cartResponse = cartService.addCart(productRequest.getProductId(), loginCustomer.getUsername());
+        final CartResponse cartResponse = cartService.addCart(productIdRequest.getProductId(), loginCustomer.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED).body(cartResponse);
     }
 
