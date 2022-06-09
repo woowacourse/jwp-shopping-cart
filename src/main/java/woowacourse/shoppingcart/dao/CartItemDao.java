@@ -38,7 +38,7 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, CART_ITEM_ROW_MAPPER, customerId);
     }
 
-    private static RowMapper<CartItem> CART_ITEM_ROW_MAPPER = (rs, rowNum) -> new CartItem(
+    private static final RowMapper<CartItem> CART_ITEM_ROW_MAPPER = (rs, rowNum) -> new CartItem(
       rs.getLong("id"),
       rs.getLong("customer_id"),
       rs.getLong("product_id"),
