@@ -4,10 +4,10 @@ import woowacourse.shoppingcart.domain.Product;
 
 public class ProductResponse {
 
-    Long id;
-    String name;
-    int price;
-    String imageUrl;
+    private Long id;
+    private String name;
+    private int price;
+    private String imageUrl;
 
     public ProductResponse() {
     }

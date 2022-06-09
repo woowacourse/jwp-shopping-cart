@@ -1,6 +1,7 @@
 package woowacourse.auth.application.dto;
 
 public class TokenResponse {
+
     private String accessToken;
 
     public TokenResponse() {

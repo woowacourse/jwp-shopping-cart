@@ -4,9 +4,9 @@ import woowacourse.shoppingcart.domain.Product;
 
 public class ProductSaveRequest {
 
-    String name;
-    int price;
-    String imageUrl;
+    private String name;
+    private int price;
+    private String imageUrl;
 
     public ProductSaveRequest() {
     }

@@ -2,11 +2,11 @@ package woowacourse.shoppingcart.application.dto;
 
 public class CartResponse {
 
-    Long id;
-    String name;
-    int price;
-    int quantity;
-    String imageUrl;
+    private Long id;
+    private String name;
+    private int price;
+    private int quantity;
+    private String imageUrl;
 
     public CartResponse() {
     }

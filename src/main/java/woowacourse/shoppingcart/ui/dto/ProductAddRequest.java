@@ -8,11 +8,11 @@ import javax.validation.constraints.Positive;
 public class ProductAddRequest {
 
     @NotBlank(message = "[ERROR] 상품명은 공백일 수 없습니다.")
-    String name;
+    private String name;
     @Positive(message = "[ERROR] 가격은 양수입니다.")
-    int price;
+    private int price;
     @NotBlank(message = "[ERROR] 이미지 url은 공백일 수 없습니다.")
-    String imageUrl;
+    private String imageUrl;
 
     public ProductAddRequest() {
     }
