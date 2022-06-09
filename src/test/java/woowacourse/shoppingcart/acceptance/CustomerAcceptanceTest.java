@@ -45,22 +45,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertEquals(response.response().statusCode(), HttpStatus.CREATED.value());
     }
 
-    @DisplayName("로그인")
-    @Test
-    void signIn() {
-        회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
-                "희봉", "male", "1998-08-07", "12345678910",
-                "address", "detailAddress", "12345", true));
-
-        TokenResponse response =
-                로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
-
-        assertAll(
-                () -> assertThat(response.getAccessToken()).isNotNull(),
-                () -> assertThat(response.getUserId()).isNotNull()
-        );
-
-    }
 
     @DisplayName("회원가입시 이메일 중복 여부를 검사한다.")
     @Test
