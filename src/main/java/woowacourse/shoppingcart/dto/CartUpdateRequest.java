@@ -1,6 +1,9 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.PositiveOrZero;
+
 public class CartUpdateRequest {
+    @PositiveOrZero
     private int quantity;
 
     public CartUpdateRequest() {

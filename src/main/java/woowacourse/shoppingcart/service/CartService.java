@@ -51,11 +51,11 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Cart addCart(final LoginCustomer loginCustomer, final CartAddRequest cartAddRequest) {
+    public Cart addCart(final LoginCustomer loginCustomer, final CartAddRequest request) {
         Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
         Long customerId = customer.getId();
         try {
-            Long cartId = cartItemDao.addCartItem(customerId, cartAddRequest.getProductId(), DEFAULT_QUANTITY);
+            Long cartId = cartItemDao.addCartItem(customerId, request.getProductId(), DEFAULT_QUANTITY);
             Long productId = cartItemDao.findProductIdById(cartId);
             return new Cart(cartId, productDao.findProductById(productId), cartItemDao.findQuantityById(cartId));
         } catch (Exception e) {
