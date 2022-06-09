@@ -28,6 +28,7 @@ public class AuthService {
         String email = tokenRequest.getEmail();
         String password = tokenRequest.getPassword();
         validateEmailExisting(email);
+
         CustomerEntity customerEntity = customerDao.findByEmail(email);
         validatePassword(password, customerEntity);
 
@@ -51,15 +52,22 @@ public class AuthService {
         }
     }
 
-    public void validateToken(String accessToken) {
+    public int getCustomerId(String token) {
+        final String accessToken = AuthorizationExtractor.extract(token);
+
+        validateToken(accessToken);
+
+        final int customerId = Integer.parseInt(jwtTokenProvider.getPayload(accessToken));
+        validateCustomerId(customerId);
+
+        return customerId;
+    }
+
+    private void validateToken(String accessToken) {
         jwtTokenProvider.validateToken(accessToken);
     }
 
-    public void validateCustomerId(int customerId) {
+    private void validateCustomerId(int customerId) {
         customerDao.findById(customerId);
-    }
-
-    public int getCustomerId(String accessToken) {
-        return Integer.parseInt(jwtTokenProvider.getPayload(accessToken));
     }
 }
