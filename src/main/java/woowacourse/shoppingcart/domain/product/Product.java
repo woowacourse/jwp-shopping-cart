@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.domain.product;
 
-import java.util.List;
-
 public class Product {
 
     private final ProductId productId;
