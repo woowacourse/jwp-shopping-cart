@@ -56,13 +56,6 @@ public class CustomerDao {
         }
     }
 
-    public boolean existByLoginId(final String loginId) {
-        final String query = "SELECT EXISTS (SELECT 1 FROM customer WHERE loginId = :loginId)";
-        MapSqlParameterSource parameters = new MapSqlParameterSource("loginId", loginId);
-
-        return namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class) != 0;
-    }
-
     public Optional<Customer> save(Customer customer) {
         try {
             SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
