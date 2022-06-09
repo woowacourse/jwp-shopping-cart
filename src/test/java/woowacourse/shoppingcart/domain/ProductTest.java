@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 public class ProductTest {
 
@@ -19,7 +20,7 @@ public class ProductTest {
                 .stock(100)
                 .imageUrl("coffee.png")
                 .build())
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidProductException.class)
                 .hasMessage("상품 이름은 비워둘 수 없습니다.");
     }
 
@@ -33,7 +34,7 @@ public class ProductTest {
                 .stock(100)
                 .imageUrl("coffee.png")
                 .build())
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidProductException.class)
                 .hasMessage("가격은 최소 1원이어야 합니다.");
     }
 
@@ -46,7 +47,7 @@ public class ProductTest {
                 .stock(-1)
                 .imageUrl("coffee.png")
                 .build())
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidProductException.class)
                 .hasMessage("재고는 음수가 될 수 없습니다.");
     }
 }

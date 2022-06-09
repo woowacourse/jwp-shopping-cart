@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 public class CartItem {
 
@@ -24,7 +25,7 @@ public class CartItem {
 
     private void validateProductIsAvailable(Product product, int quantity) {
         if (!product.isStockAvailable(quantity)) {
-            throw new IllegalArgumentException(String.format("해당 상품은 %d개 남아있습니다", product.getStock()));
+            throw new InvalidCartItemException(String.format("해당 상품은 %d개 남아있습니다", product.getStock()));
         }
     }
 

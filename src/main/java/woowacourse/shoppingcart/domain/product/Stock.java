@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain.product;
 
+import woowacourse.shoppingcart.exception.InvalidProductException;
+
 public class Stock {
 
     private final int stock;
@@ -11,7 +13,7 @@ public class Stock {
 
     private void validateNotNegative(int stock) {
         if (stock < 0) {
-            throw new IllegalArgumentException("재고는 음수가 될 수 없습니다.");
+            throw new InvalidProductException("재고는 음수가 될 수 없습니다.");
         }
     }
 

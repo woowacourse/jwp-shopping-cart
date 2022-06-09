@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 public class CartItemTest {
 
@@ -30,7 +31,7 @@ public class CartItemTest {
     @Test
     void cartItemQuantity_overProductStock_throwsException() {
         assertThatThrownBy(() -> new CartItem(product, 11))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidCartItemException.class)
                 .hasMessage("해당 상품은 10개 남아있습니다");
     }
 }
