@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.dto.response.ExceptionResponse;
 
 @DisplayName("장바구니 관련 기능")
 @Sql("/truncate.sql")
@@ -43,6 +44,15 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
+    }
+
+    @DisplayName("해당하는 제품이 없는 경우, 장바구니에 제품을 추가할 수 없다.")
+    @Test
+    void addCartItemWithNotFoundProductShouldFail() {
+        final ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(token, productId1 + productId2);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("올바르지 않은 사용자 이름이거나 상품 아이디 입니다.");
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
@@ -91,6 +101,19 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         장바구니_삭제됨(deleteResponse);
         assertThat(carts.size()).isEqualTo(0);
+    }
+
+    @DisplayName("장바구에 해당 제품이 없는 경우, 장바구니에서 제품을 삭제할 수 없다.")
+    @Test
+    void deleteCartItemWithNotFountProductShouldFail() {
+        final Long cartId1 = 장바구니_아이템_추가되어_있음(token, productId1);
+        final Long cartId2 = 장바구니_아이템_추가되어_있음(token, productId2);
+
+        final List<Long> cartIds = List.of(cartId1 + cartId2);
+        final ExtractableResponse<Response> response = 장바구니_삭제_요청(token, cartIds);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("장바구니 아이템이 없습니다.");
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, Long productId) {

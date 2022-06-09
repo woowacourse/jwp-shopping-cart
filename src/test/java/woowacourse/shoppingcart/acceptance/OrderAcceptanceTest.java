@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.response.ExceptionResponse;
 import woowacourse.shoppingcart.dto.response.OrdersResponse;
 
 @DisplayName("주문 관련 기능")
@@ -89,6 +90,20 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(주문_조회_응답.getTotalPrice()).isEqualTo(100000),
                 () -> assertThat(주문_조회_응답.getOrderDetails().size()).isEqualTo(2)
         );
+    }
+
+    @DisplayName("해당 주문이 없는 경우, 주문을 조회할 수 없다.")
+    @Test
+    void getOrderWith() {
+        Long orderId = 주문하기_요청_성공되어_있음(token, Arrays.asList(
+                new OrderRequest(cartId1, 2),
+                new OrderRequest(cartId2, 4)
+        ));
+
+        ExtractableResponse<Response> response = 주문_단일_조회_요청(token, orderId + orderId);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("유저에게는 해당 order_id가 없습니다.");
     }
 
     public static ExtractableResponse<Response> 주문하기_요청(String token, List<OrderRequest> orderRequests) {
