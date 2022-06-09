@@ -16,8 +16,8 @@ import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
-import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.DeleteCustomerRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {

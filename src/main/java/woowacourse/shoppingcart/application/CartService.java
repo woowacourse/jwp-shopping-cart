@@ -10,11 +10,11 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.Username;
-import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.CartResponses;
-import woowacourse.shoppingcart.dto.DeleteProductRequest;
-import woowacourse.shoppingcart.dto.UpdateCartRequests;
+import woowacourse.shoppingcart.dto.request.CartRequest;
+import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.dto.response.CartResponses;
+import woowacourse.shoppingcart.dto.request.DeleteProductRequest;
+import woowacourse.shoppingcart.dto.request.UpdateCartRequests;
 
 @Service
 @Transactional(rollbackFor = Exception.class, readOnly = true)

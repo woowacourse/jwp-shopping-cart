@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;

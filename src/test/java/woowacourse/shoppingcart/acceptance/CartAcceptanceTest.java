@@ -17,14 +17,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
-import woowacourse.shoppingcart.dto.CartIdRequest;
-import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.CartResponses;
-import woowacourse.shoppingcart.dto.DeleteProductRequest;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.UpdateCartRequest;
-import woowacourse.shoppingcart.dto.UpdateCartRequests;
+import woowacourse.shoppingcart.dto.request.CartIdRequest;
+import woowacourse.shoppingcart.dto.request.CartRequest;
+import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.dto.response.CartResponses;
+import woowacourse.shoppingcart.dto.request.DeleteProductRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.UpdateCartRequest;
+import woowacourse.shoppingcart.dto.request.UpdateCartRequests;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {

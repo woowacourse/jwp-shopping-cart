@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.request;
 
 import org.hibernate.validator.constraints.Length;
 import woowacourse.auth.support.PasswordCheck;

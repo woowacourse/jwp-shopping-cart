@@ -9,14 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dto.CartIdRequest;
-import woowacourse.shoppingcart.dto.CartRequest;
-import woowacourse.shoppingcart.dto.CartResponses;
-import woowacourse.shoppingcart.dto.DeleteProductRequest;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.UpdateCartRequest;
-import woowacourse.shoppingcart.dto.UpdateCartRequests;
+import woowacourse.shoppingcart.dto.request.CartIdRequest;
+import woowacourse.shoppingcart.dto.request.CartRequest;
+import woowacourse.shoppingcart.dto.response.CartResponses;
+import woowacourse.shoppingcart.dto.request.DeleteProductRequest;
+import woowacourse.shoppingcart.dto.response.ProductRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.UpdateCartRequest;
+import woowacourse.shoppingcart.dto.request.UpdateCartRequests;
 
 @SpringBootTest
 @Sql("classpath:schema.sql")
