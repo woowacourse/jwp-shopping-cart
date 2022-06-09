@@ -14,6 +14,7 @@ import woowacourse.auth.exception.NoCustomerTokenException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.UnEncodedPassword;
 
 @SpringBootTest
 class AuthServiceTest {
@@ -52,7 +53,7 @@ class AuthServiceTest {
         Customer customer = authService.findCustomerByToken(tokenResponse.getAccessToken());
 
         Customer expected = new Customer("puterism@naver.com", "puterism",
-                passwordEncoder.encode(request.getPassword()));
+                passwordEncoder.encode(new UnEncodedPassword(request.getPassword())));
         // then
 
         assertThat(customer).usingRecursiveComparison()

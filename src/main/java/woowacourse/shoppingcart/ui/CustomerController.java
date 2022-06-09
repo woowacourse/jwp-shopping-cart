@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.UnEncodedPassword;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
@@ -61,7 +62,7 @@ public class CustomerController {
                        @RequestBody PasswordRequest request,
                        @AuthenticationPrincipal Customer customer) {
         validateAuthorizedUser(id, customer);
-        customerService.checkSamePassword(customer.getPassword(), request.getPassword());
+        customerService.checkSamePassword(customer, new UnEncodedPassword(request.getPassword()));
         customerService.delete(id);
     }
 

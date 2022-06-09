@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.EncodedPassword;
+import woowacourse.shoppingcart.domain.customer.UnEncodedPassword;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
@@ -25,7 +27,9 @@ public class CustomerService {
     public Long save(CustomerCreateRequest request) {
         validateUsernameDuplication(request.getUsername());
         validateEmailDuplication(request.getEmail());
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        UnEncodedPassword password = new UnEncodedPassword(request.getPassword());
+        request.setPassword(passwordEncoder.encode(password).getValue());
 
         return customerDao.save(request);
     }
@@ -82,9 +86,9 @@ public class CustomerService {
         getById(id);
     }
 
-    public void checkSamePassword(String savedPassword, String enteredPassword) {
-        String encodedPassword = passwordEncoder.encode(enteredPassword);
-        if (!savedPassword.equals(encodedPassword)) {
+    public void checkSamePassword(Customer customer, UnEncodedPassword enteredPassword) {
+        EncodedPassword encodedPassword = passwordEncoder.encode(enteredPassword);
+        if (!customer.isSamePassword(encodedPassword)) {
             throw new NotMatchPasswordException();
         }
     }

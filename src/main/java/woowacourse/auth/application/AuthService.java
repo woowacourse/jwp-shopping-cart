@@ -9,6 +9,8 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.EncodedPassword;
+import woowacourse.shoppingcart.domain.customer.UnEncodedPassword;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -28,8 +30,8 @@ public class AuthService {
     }
 
     public TokenResponse createToken(TokenRequest request) {
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-        Customer loginCustomer = fetchUser(request, encodedPassword);
+        EncodedPassword encodedPassword = passwordEncoder.encode(new UnEncodedPassword(request.getPassword()));
+        Customer loginCustomer = fetchUser(request, encodedPassword.getValue());
         String token = jwtTokenProvider.createToken(loginCustomer.getEmail());
 
         return new TokenResponse(token, jwtTokenProvider.getValidityInMilliseconds(),

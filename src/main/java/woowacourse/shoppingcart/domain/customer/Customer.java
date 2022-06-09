@@ -5,21 +5,25 @@ public class Customer {
     private final Long id;
     private final Email email;
     private final Username username;
-    private final String password;
+    private final EncodedPassword password;
 
-    public Customer(String email, String username, String password) {
+    public Customer(String email, String username, EncodedPassword password) {
         this(null, email, username, password);
     }
 
-    public Customer(Long id, String email, String username, String password) {
+    public Customer(Long id, String email, String username, EncodedPassword password) {
         this(id, new Email(email), new Username(username), password);
     }
 
-    public Customer(Long id, Email email, Username username, String password) {
+    public Customer(Long id, Email email, Username username, EncodedPassword password) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
+    }
+
+    public boolean isSamePassword(EncodedPassword otherPassword) {
+        return password.isSamePassword(otherPassword);
     }
 
     public Long getId() {
@@ -35,6 +39,6 @@ public class Customer {
     }
 
     public String getPassword() {
-        return password;
+        return password.getValue();
     }
 }

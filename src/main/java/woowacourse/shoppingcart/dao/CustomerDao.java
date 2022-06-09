@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.EncodedPassword;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -117,7 +118,7 @@ public class CustomerDao {
                 rs.getLong("id"),
                 rs.getString("email"),
                 rs.getString("username"),
-                rs.getString("password")
+                new EncodedPassword(rs.getString("password"))
         ));
     }
 }
