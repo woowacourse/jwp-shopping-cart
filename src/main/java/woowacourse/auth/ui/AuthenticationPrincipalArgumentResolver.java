@@ -2,6 +2,7 @@ package woowacourse.auth.ui;
 
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -29,9 +30,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                 NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String token = AuthorizationExtractor.extract(webRequest.getNativeRequest(HttpServletRequest.class));
-
-        System.out.println("test");
-
+      
         if (token == null || token.isEmpty()) {
             //throw new InvalidTokenException("토큰 정보가 존재하지 않습니다.");
             return 0L;
@@ -40,6 +39,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         if (!jwtTokenProvider.validateToken(token)) {
             //throw new InvalidTokenException("유효하지 않거나 만료된 토큰입니다.");
             return 0L;
+
         }
 
         return Long.valueOf(jwtTokenProvider.getPayload(token));

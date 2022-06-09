@@ -1,140 +1,177 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import woowacourse.auth.dto.ExceptionResponse;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CustomerNameResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
-@SpringBootTest
-@Sql(scripts = {"classpath:schema.sql"})
-@Transactional
-class CustomerServiceTest {
+@DisplayName("회원 관련 기능")
+public class CustomerAcceptanceTest extends AcceptanceTest {
 
-    @Autowired
-    private CustomerService customerService;
-
-    @DisplayName("이메일 중복 조회를 할 때, 중복이 발생하면 예외를 반환한다.")
+    @DisplayName("이메일 중복 확인할 때, 중복인 경우 예외 메세지를 반환 반환한다.")
     @Test
-    void checkDuplicationEmail() {
-        CustomerRequest customer =
-                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
-        customerService.save(customer);
+    void isDuplicationEmail() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+        saveCustomerApi(customerRequest);
 
-        assertThatThrownBy(() -> customerService.checkDuplicationEmail("email"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("중복된 email 입니다.");
+        // when
+        String email = "email";
+        ExceptionResponse response = RestAssured.given().log().all()
+                .param("email", email)
+                .when()
+                .post("/customers/email/validate")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract().as(ExceptionResponse.class);
+
+        //then
+        assertThat(response.getMessage()).isEqualTo("중복된 email 입니다.");
     }
 
-    @DisplayName("회원을 등록한다.")
+    @DisplayName("이메일 중복 확인할 때, 중복이 아닌 경우 예외가 발생하지 않는다.")
     @Test
-    void saveCustomer() {
-        CustomerRequest customer =
-                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
-        CustomerResponse response = customerService.save(customer);
+    void isNotDuplicationEmail() {
+        //then
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .param("email", "email")
+                .when()
+                .post("/customers/email/validate")
+                .then().log().all()
+                .extract();
 
-        assertThat(response).extracting("email", "name", "phone", "address")
-                .containsExactly("email", "name", "010-2222-3333", "address");
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    @DisplayName("중복되는 email이면 예외가 발생한다.")
+    @DisplayName("회원가입")
     @Test
-    void existEmailException() {
-        CustomerRequest customer =
-                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
-        customerService.save(customer);
-        assertThatThrownBy(() -> customerService.save(customer))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("중복된 email 입니다.");
+    void addCustomer() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+
+        // when
+        ExtractableResponse<Response> response = saveCustomerApi(customerRequest);
+        CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(customerResponse).extracting("email", "name", "phone", "address")
+                .containsExactly("email", "name", "010-1234-5678", "address");
     }
 
-    @DisplayName("customer id을 이용하여 회원 정보를 조회한다.")
+    @DisplayName("내 정보 수정")
     @Test
-    void findCustomer() {
-        CustomerRequest customer =
-                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
-        CustomerResponse savedResponse = customerService.save(customer);
+    void updateMe() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+        saveCustomerApi(customerRequest);
 
-        CustomerResponse customerResponse = customerService.find(1L);
+        TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
+        String accessToken = getAccessToken(tokenRequest);
+        //when
+        RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .body(new CustomerRequest("email", "Pw123456!", "judy", "010-1111-2222", "address2"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put("/customers")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+        //then
+        CustomerResponse customerResponse = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/customers")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(CustomerResponse.class);
 
         assertThat(customerResponse).extracting("email", "name", "phone", "address")
-                .containsExactly(savedResponse.getEmail(), savedResponse.getName(),
-                        savedResponse.getPhone(), savedResponse.getAddress());
+                .containsExactly("email", "judy", "010-1111-2222", "address2");
     }
 
-    @DisplayName("존재하지 않는 id를 이용하여 회원 정보를 조회하면 예외가 발생한다.")
+    @DisplayName("회원 이름 조회")
     @Test
-    void checkExistByIdExceptionWhenFind() {
-        assertThatThrownBy(() -> customerService.find(1L))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 회원입니다.");
-    }
+    void findName() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+        saveCustomerApi(customerRequest);
 
-    @DisplayName("customer id을 이용하여 회원 이름을 조회한다.")
-    @Test
-    void findCustomerNameById() {
-        CustomerRequest customer =
-                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
-        customerService.save(customer);
+        TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
+        String accessToken = getAccessToken(tokenRequest);
 
-        CustomerNameResponse name = customerService.findNameById(1L);
+        //then
+        CustomerNameResponse name = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .when()
+                .get("/customers/name")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(CustomerNameResponse.class);
 
         assertThat(name.getName()).isEqualTo("name");
     }
 
-    @DisplayName("회원 정보를 수정한다.")
+    @DisplayName("회원탈퇴")
     @Test
-    void update() {
-        CustomerRequest customer =
-                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
-        customerService.save(customer);
+    void deleteMe() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+        saveCustomerApi(customerRequest);
 
-        CustomerRequest customerRequest =
-                new CustomerRequest("email", "Pw123456~~", "eve", "010-1111-2222", "address2");
-        customerService.update(1L, customerRequest);
+        TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
+        String accessToken = getAccessToken(tokenRequest);
+        //when
+        RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .when()
+                .delete("/customers")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value())
+                .extract();
+        //then
+        ExceptionResponse response = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/customers")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract().as(ExceptionResponse.class);
 
-        CustomerResponse customerResponse = customerService.find(1L);
-        assertThat(customerResponse).extracting("email", "name", "phone", "address")
-                .containsExactly("email", "eve", "010-1111-2222", "address2");
+        assertThat(response.getMessage()).isEqualTo("존재하지 않는 회원입니다.");
     }
 
-    @DisplayName("존재하지 않는 id를 이용하여 회원 정보를 수정하면 예외가 발생한다.")
-    @Test
-    void checkExistByIdExceptionWhenUpdate() {
-        CustomerRequest customerRequest =
-                new CustomerRequest("email", "Pw123456~~", "eve", "010-1111-2222", "address2");
-        assertThatThrownBy(() -> customerService.update(1L, customerRequest))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 회원입니다.");
+    public static ExtractableResponse<Response> saveCustomerApi(CustomerRequest customerRequest) {
+        return RestAssured.given().log().all()
+                .body(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/customers")
+                .then().log().all()
+                .extract();
     }
 
-    @DisplayName("id를 이용하여 customer를 삭제한다.")
-    @Test
-    void deleteById() {
-        CustomerRequest customer =
-                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
-        customerService.save(customer);
-
-        customerService.delete(1L);
-
-        assertThatThrownBy(() -> customerService.find(1L))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 회원입니다.");
-    }
-
-    @DisplayName("존재하지 않는 id를 이용하여 회원을 삭제하면 예외가 발생한다.")
-    @Test
-    void checkExistByIdExceptionWhenDelete() {
-        assertThatThrownBy(() -> customerService.delete(1L))
-                .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 회원입니다.");
+    private String getAccessToken(TokenRequest tokenRequest) {
+        return RestAssured.given().log().all()
+                .body(tokenRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/auth/login")
+                .then().log().all()
+                .extract().as(TokenResponse.class).getAccessToken();
     }
 }
