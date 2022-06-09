@@ -85,7 +85,7 @@ public class CartItemDao {
         jdbcTemplate.update(sql, customerId);
     }
 
-    public void deleteCartItem(final Long id) {
+    public void delete(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         final int updatedRows = jdbcTemplate.update(sql, id);
         checkReflected(updatedRows);

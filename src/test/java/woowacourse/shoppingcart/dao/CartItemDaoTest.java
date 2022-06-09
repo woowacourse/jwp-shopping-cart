@@ -167,20 +167,35 @@ class CartItemDaoTest {
         }
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    @Test
-    void deleteCartItem() {
+    @Nested
+    @DisplayName("delete 메서드는")
+    class delete {
 
-        // given
-        final Long cartId = 1L;
+        @DisplayName("장바구니의 아이템을 삭제한다.")
+        @Test
+        void success() {
+            // given
+            final Long cartId = 1L;
 
-        // when
-        cartItemDao.deleteCartItem(cartId);
+            // when
+            cartItemDao.delete(cartId);
 
-        // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+            // then
+            final Long customerId = 1L;
+            final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
-        assertThat(productIds).containsExactly(2L);
+            assertThat(productIds).containsExactly(2L);
+        }
+
+        @DisplayName("장바구니 아이템이 존재하지 않는 경우, 예외를 던진다.")
+        @Test
+        void item_notExist() {
+            // given
+            final Long id = 3L;
+
+            // when & then
+            assertThatThrownBy(() -> cartItemDao.delete(id))
+                    .isInstanceOf(InvalidCartItemException.class);
+        }
     }
 }

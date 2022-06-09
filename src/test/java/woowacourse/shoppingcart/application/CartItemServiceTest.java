@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.Fixture.맥주;
@@ -174,6 +175,40 @@ class CartItemServiceTest {
             // then
             List<CartItemResponse> customerCartItems = cartItemService.findByCustomer(new LoginCustomer(페퍼_아이디));
             assertThat(customerCartItems).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("delete 메서드는")
+    class delete {
+        @Test
+        @DisplayName("고객의 장바구니에 담긴 상품을 삭제한다.")
+        void success() {
+            // given
+            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            Long productId1 = productService.addProduct(치킨);
+            CartItemResponse cartItem = cartItemService.add(new LoginCustomer(페퍼_아이디),
+                    new CartItemCreateRequest(productId1));
+
+            // when & then
+            assertThatNoException().isThrownBy(
+                    () -> cartItemService.delete(new LoginCustomer(페퍼_아이디), cartItem.getId())
+            );
+        }
+
+        @Test
+        @DisplayName("고객의 장바구니에 담긴 상품이 아닌 경우, 예외를 던진다.")
+        void item_notExist() {
+            // given
+            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            Long productId = productService.addProduct(치킨);
+            Long deletedItemId = cartItemService.add(new LoginCustomer(페퍼_아이디), new CartItemCreateRequest(productId)).getId();
+            LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
+            cartItemService.deleteAll(loginCustomer);
+
+            // when & then
+            assertThatThrownBy(() -> cartItemService.delete(loginCustomer, deletedItemId))
+                    .isInstanceOf(InvalidCartItemException.class);
         }
     }
 }

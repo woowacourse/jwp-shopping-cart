@@ -45,7 +45,7 @@ public class OrderService {
             final int quantity = orderDetail.getQuantity();
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+            cartItemDao.delete(cartId);
         }
 
         return ordersId;
