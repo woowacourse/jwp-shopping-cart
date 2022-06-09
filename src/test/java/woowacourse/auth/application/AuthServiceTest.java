@@ -44,7 +44,7 @@ class AuthServiceTest {
         // then
         assertAll(
                 () -> assertThat(tokenResponse.getAccessToken()).isNotBlank(),
-                () -> assertThat(tokenResponse.getCustomerId()).isPositive()
+                () -> assertThat(tokenResponse.getUserId()).isPositive()
         );
     }
 
