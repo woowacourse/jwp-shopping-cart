@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.member.dto.response.ErrorResponse;
 
 @RestControllerAdvice
-public class ControllerAdvice {
+public class ShoppingCartControllerAdvice {
 
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ErrorResponse> handleBindException() {
@@ -21,7 +21,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleInternalServerError(RuntimeException e) {
-        e.printStackTrace();
         return ResponseEntity.internalServerError().body(new ErrorResponse("예기치 못한 오류가 발생하였습니다."));
     }
 }
