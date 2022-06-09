@@ -3,8 +3,8 @@ package woowacourse.shoppingcart.application;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.exception.InvalidCustomerException;
 import woowacourse.exception.InvalidProductException;
+import woowacourse.exception.InvalidTokenException;
 import woowacourse.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
@@ -93,6 +93,6 @@ public class CartItemService {
 
     private Customer getByCustomerId(long customerId) {
         return customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(InvalidTokenException::new);
     }
 }

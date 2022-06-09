@@ -13,7 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.exception.DuplicatedCustomerEmailException;
-import woowacourse.exception.InvalidCustomerException;
+import woowacourse.exception.InvalidTokenException;
 import woowacourse.exception.WrongPasswordException;
 import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRemoveRequest;
@@ -111,6 +111,6 @@ class CustomerServiceTest {
         customerService.removeCustomer(customerId, new CustomerRemoveRequest(CUSTOMER_PASSWORD));
 
         assertThatThrownBy(() -> customerService.findById(customerId))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(InvalidTokenException.class);
     }
 }

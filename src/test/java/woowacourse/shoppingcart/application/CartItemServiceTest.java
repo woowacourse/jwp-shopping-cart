@@ -14,7 +14,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.exception.InvalidCustomerException;
+import woowacourse.exception.InvalidTokenException;
 import woowacourse.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.cartItem.CartItemDeleteRequest;
@@ -74,7 +74,7 @@ public class CartItemServiceTest {
     @Test
     void findCartItemsByInvalidCustomerId() {
         assertThatThrownBy(() -> cartItemService.findCartItemsByCustomerId(2L))
-                .isInstanceOf(InvalidCustomerException.class);
+                .isInstanceOf(InvalidTokenException.class);
     }
 
     @DisplayName("삭제할 CartItem들의 productId를 받아 해당 고객의 장바구니에서 삭제한다.")

@@ -78,7 +78,7 @@ public class OrderService {
 
     private Customer getByCustomerId(Long customerId) {
         return customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(InvalidTokenException::new);
     }
 
     private void validateOrderIdByCustomerId(final Long customerId, final Long orderId) {

@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.exception.DuplicatedCustomerEmailException;
-import woowacourse.exception.InvalidCustomerException;
+import woowacourse.exception.InvalidTokenException;
 import woowacourse.exception.WrongPasswordException;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
@@ -72,7 +72,7 @@ public class CustomerService {
 
     private Customer getById(final Long customerId) {
         return customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(InvalidTokenException::new);
     }
 
     private void validatePassword(final Customer customer, final String password) {
