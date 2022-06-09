@@ -61,7 +61,7 @@ public class OrderService {
 
     public OrderResponse findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
-        return OrderResponse.from(findOrderResponseDtoByOrderId(orderId));
+        return OrderResponse.from(findOrdersByOrderId(orderId));
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
@@ -77,11 +77,11 @@ public class OrderService {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return OrdersResponse.from(orderIds.stream()
-                .map(this::findOrderResponseDtoByOrderId)
+                .map(this::findOrdersByOrderId)
                 .collect(Collectors.toList()));
     }
 
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
+    private Orders findOrdersByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
             final Product product = productDao.findProductById(orderDetail.getProductId());
