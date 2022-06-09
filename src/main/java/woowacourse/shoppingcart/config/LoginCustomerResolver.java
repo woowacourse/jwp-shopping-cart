@@ -9,15 +9,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.CustomerService;
 
 public class LoginCustomerResolver implements HandlerMethodArgumentResolver {
 
-    private final CustomerService customerService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public LoginCustomerResolver(CustomerService customerService, JwtTokenProvider jwtTokenProvider) {
-        this.customerService = customerService;
+    public LoginCustomerResolver(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -31,22 +28,6 @@ public class LoginCustomerResolver implements HandlerMethodArgumentResolver {
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = AuthorizationExtractor.extract(request);
-
-//        boolean isValidToken = jwtTokenProvider.validateToken(token);
-//        if (!isValidToken) {
-//            throw new UnauthorizedTokenException();
-//        }
-
-        String email = jwtTokenProvider.getPayload(token);
-
-        return customerService.getByEmail(email);
-    }
-
-    @Override
-    public String toString() {
-        return "LoginCustomerResolver{" +
-                "customerService=" + customerService +
-                ", jwtTokenProvider=" + jwtTokenProvider +
-                '}';
+        return jwtTokenProvider.getPayload(token);
     }
 }

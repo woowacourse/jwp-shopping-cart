@@ -9,17 +9,14 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.CustomerService;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     public static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH";
 
-    private final CustomerService customerService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public WebConfig(CustomerService customerService, JwtTokenProvider jwtTokenProvider) {
-        this.customerService = customerService;
+    public WebConfig(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -43,6 +40,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public LoginCustomerResolver loginCustomerResolver() {
-        return new LoginCustomerResolver(customerService, jwtTokenProvider);
+        return new LoginCustomerResolver(jwtTokenProvider);
     }
 }

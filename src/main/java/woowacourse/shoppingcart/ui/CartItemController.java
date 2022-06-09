@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CartAdditionRequest;
@@ -25,20 +26,25 @@ import woowacourse.shoppingcart.dto.CartsResponse;
 @RequestMapping("/users/me/carts")
 public class CartItemController {
     private final CartService cartService;
+    private final CustomerService customerService;
 
-    public CartItemController(final CartService cartService) {
+    public CartItemController(final CartService cartService,
+                              CustomerService customerService) {
         this.cartService = cartService;
+        this.customerService = customerService;
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal Customer customer,
+    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal String email,
                                             @RequestBody CartAdditionRequest request) {
+        Customer customer = customerService.getByEmail(email);
         cartService.addCart(request.getProductId(), customer);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity<CartsResponse> getCartItems(@AuthenticationPrincipal Customer customer) {
+    public ResponseEntity<CartsResponse> getCartItems(@AuthenticationPrincipal String email) {
+        Customer customer = customerService.getByEmail(email);
         List<Cart> carts = cartService.getCarts(customer);
 
         List<CartResponse> cartResponses = carts.stream()
@@ -49,17 +55,19 @@ public class CartItemController {
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<CartResponse> updateCartItem(@AuthenticationPrincipal Customer customer, @Valid @RequestBody
+    public ResponseEntity<CartResponse> updateCartItem(@AuthenticationPrincipal String email, @Valid @RequestBody
             CartUpdationRequest request, @PathVariable Long productId) {
 
+        Customer customer = customerService.getByEmail(email);
         Cart cart = cartService.updateProductInCart(customer, request, productId);
 
         return ResponseEntity.ok(new CartResponse(cart));
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal Customer customer,
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String email,
                                                @PathVariable Long productId) {
+        Customer customer = customerService.getByEmail(email);
         cartService.deleteProductInCart(customer, productId);
         return ResponseEntity.noContent().build();
     }

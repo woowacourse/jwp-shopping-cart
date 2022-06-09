@@ -34,7 +34,8 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal Customer customer) {
+    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal String email) {
+        Customer customer = customerService.getByEmail(email);
         CustomerResponse response = new CustomerResponse(
                 customer.getEmail(),
                 customer.getNickname()
@@ -43,14 +44,16 @@ public class CustomerController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal Customer customer) {
+    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal String email) {
+        Customer customer = customerService.getByEmail(email);
         customerService.delete(customer);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> updateMe(@AuthenticationPrincipal Customer customer,
+    public ResponseEntity<Void> updateMe(@AuthenticationPrincipal String email,
                                          @Valid @RequestBody CustomerUpdationRequest request) {
+        Customer customer = customerService.getByEmail(email);
         customerService.update(customer, request);
         return ResponseEntity.noContent().build();
     }
