@@ -11,8 +11,8 @@ public class Customer {
         this.password = new Password(password);
     }
 
-    public boolean isSamePassword(String password) {
-        return this.password.isSamePassword(password);
+    public boolean isSamePassword(Password password) {
+        return this.password.equals(password);
     }
 
     public String getUsername() {

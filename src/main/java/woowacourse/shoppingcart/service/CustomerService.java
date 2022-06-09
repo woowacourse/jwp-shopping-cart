@@ -63,14 +63,12 @@ public class CustomerService {
     public void changePassword(AuthorizedCustomer authorizedCustomer, ChangePasswordRequest changePasswordRequest) {
         var customer = convertCustomer(authorizedCustomer);
 
-        var password = changePasswordRequest.getPassword();
-        new Password(password);
-        var newPassword = changePasswordRequest.getNewPassword();
-        new Password(newPassword);
-
+        var password = new Password(changePasswordRequest.getPassword());
         validateSamePassword(password, customer);
 
-        customerDao.updatePassword(customer.getUsername(), newPassword);
+        var newPassword = new Password(changePasswordRequest.getNewPassword());
+
+        customerDao.updatePassword(customer.getUsername(), newPassword.get());
     }
 
     private Customer convertCustomer(AuthorizedCustomer authorizedCustomer) {
@@ -81,15 +79,14 @@ public class CustomerService {
         );
     }
 
-    private void validateSamePassword(String password, Customer customer) {
+    private void validateSamePassword(Password password, Customer customer) {
         if (!customer.isSamePassword(password)) {
             throw new InvalidCustomerException(NOT_MATCH_PASSWORD);
         }
     }
 
     public void deleteUser(AuthorizedCustomer authorizedCustomer, DeleteCustomerRequest deleteCustomerRequest) {
-        var password = deleteCustomerRequest.getPassword();
-        new Password(password);
+        var password = new Password(deleteCustomerRequest.getPassword());
 
         var customer = convertCustomer(authorizedCustomer);
         validateSamePassword(password, customer);
