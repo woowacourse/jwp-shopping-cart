@@ -49,6 +49,6 @@ public class CustomerService {
     }
 
     public void deleteCustomer(FindCustomerRequest findCustomerRequest) {
-        customerDao.deleteById(customerDao.findIdByName(findCustomerRequest.getName()));
+        customerDao.deleteByName(findCustomerRequest.getName());
     }
 }
