@@ -26,7 +26,7 @@ public class ProductDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Product findById(final Long productId) {
+    public Product selectById(final Long productId) {
         String query = "select id, name, price, image_url from product where id = :id";
         Map<String, Object> params = new HashMap<>();
         params.put("id", productId);
@@ -37,7 +37,7 @@ public class ProductDao {
         }
     }
 
-    public List<Product> findProductsOfPage(final int page, final int limit) {
+    public List<Product> selectProductsOfPage(final int page, final int limit) {
         int offset = (page - 1) * limit;
         String query = "select id, name, price, image_url from product orders LIMIT :limit OFFSET :offset";
         Map<String, Object> params = new HashMap<>();
@@ -46,7 +46,7 @@ public class ProductDao {
         return namedParameterJdbcTemplate.query(query, params, ROW_MAPPER);
     }
 
-    public List<Product> findAll() {
+    public List<Product> selectAll() {
         String query = "select id, name, price, image_url from product";
         return namedParameterJdbcTemplate.query(query, ROW_MAPPER);
     }

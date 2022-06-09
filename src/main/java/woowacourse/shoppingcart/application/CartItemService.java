@@ -28,9 +28,9 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findCartItemsByCustomerId(final TokenRequest request) {
-        List<CartItem> cartItems = cartItemRepository.findCartItemsByCustomerId(request.getId());
+        List<CartItem> cartItems = cartItemRepository.selectCartItemsByCustomerId(request.getId());
         return cartItems.stream()
-                .map(it -> CartItemResponse.of(it, productRepository.findById(it.getProductId())))
+                .map(it -> CartItemResponse.of(it, productRepository.selectById(it.getProductId())))
                 .collect(Collectors.toList());
     }
 
@@ -48,7 +48,7 @@ public class CartItemService {
                 tokenRequest.getId(),
                 cartItemQuantityRequest.getQuantity()
         );
-        return CartItemQuantityResponse.of(cartItemRepository.updateCartItem(cartItem));
+        return CartItemQuantityResponse.of(cartItemRepository.updateQuantity(cartItem));
     }
 
     public void delete(final List<CartItemIdRequest> cartItemIdRequests) {

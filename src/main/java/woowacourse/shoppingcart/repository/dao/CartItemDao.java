@@ -31,7 +31,7 @@ public class CartItemDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Long create(final Long customerId, final Long productId) {
+    public Long insert(final Long customerId, final Long productId) {
         String query = "insert into cart_item (customer_id, product_id, quantity)"
                 + " values (:customerId, :productId, 1)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -43,14 +43,14 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public List<CartItem> findCartItemsByCustomerId(final Long customerId) {
+    public List<CartItem> selectCartItemsByCustomerId(final Long customerId) {
         String query = "select id, customer_id, product_id, quantity from cart_item where customer_id = :customerId";
         Map<String, Object> params = new HashMap<>();
         params.put("customerId", customerId);
         return namedParameterJdbcTemplate.query(query, params, ROW_MAPPER);
     }
 
-    public boolean isExist(final Long customerId, final Long productId) {
+    public boolean existsCustomerIdAndProductId(final Long customerId, final Long productId) {
         String query = "select exists"
                 + " (select id from cart_item where customer_id = :customerId and product_id = :productId)";
         Map<String, Object> params = new HashMap<>();
@@ -59,7 +59,7 @@ public class CartItemDao {
         return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
     }
 
-    public CartItem findByCustomerIdAndProductId(final Long customerId, final Long productId) {
+    public CartItem selectByCustomerIdAndProductId(final Long customerId, final Long productId) {
         String query = "select id, customer_id, product_id, quantity from cart_item"
                 + " where customer_id = :customerId and product_id = :productId";
         Map<String, Object> params = new HashMap<>();
@@ -72,7 +72,7 @@ public class CartItemDao {
         }
     }
 
-    public void updateCartItem(final Long cartItemId, final int quantity) {
+    public void updateQuantity(final Long cartItemId, final int quantity) {
         String query = "update cart_item set quantity = :quantity where id = :cartItemId";
         Map<String, Object> params = new HashMap<>();
         params.put("cartItemId", cartItemId);

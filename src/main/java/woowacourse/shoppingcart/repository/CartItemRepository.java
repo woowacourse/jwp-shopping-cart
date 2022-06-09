@@ -15,8 +15,8 @@ public class CartItemRepository {
         this.cartItemDao = cartItemDao;
     }
 
-    public List<CartItem> findCartItemsByCustomerId(final Long customerId) {
-        return cartItemDao.findCartItemsByCustomerId(customerId);
+    public List<CartItem> selectCartItemsByCustomerId(final Long customerId) {
+        return cartItemDao.selectCartItemsByCustomerId(customerId);
     }
 
     public List<CartItem> addCartItems(final Long customerId, final List<Long> productIds) {
@@ -24,23 +24,23 @@ public class CartItemRepository {
             addCartItem(customerId, productId);
         }
         return productIds.stream()
-                .map(it -> cartItemDao.findByCustomerIdAndProductId(customerId, it))
+                .map(it -> cartItemDao.selectByCustomerIdAndProductId(customerId, it))
                 .collect(Collectors.toList());
     }
 
     private void addCartItem(final Long customerId, final Long productId) {
-        boolean isExist = cartItemDao.isExist(customerId, productId);
+        boolean isExist = cartItemDao.existsCustomerIdAndProductId(customerId, productId);
         if (isExist) {
-            CartItem cartItem = cartItemDao.findByCustomerIdAndProductId(customerId, productId);
-            cartItemDao.updateCartItem(cartItem.getId(), cartItem.getQuantity() + 1);
+            CartItem cartItem = cartItemDao.selectByCustomerIdAndProductId(customerId, productId);
+            cartItemDao.updateQuantity(cartItem.getId(), cartItem.getQuantity() + 1);
         }
         if (!isExist) {
-            cartItemDao.create(customerId, productId);
+            cartItemDao.insert(customerId, productId);
         }
     }
 
-    public CartItem updateCartItem(final CartItem cartItem) {
-        cartItemDao.updateCartItem(cartItem.getId(), cartItem.getQuantity());
+    public CartItem updateQuantity(final CartItem cartItem) {
+        cartItemDao.updateQuantity(cartItem.getId(), cartItem.getQuantity());
         return cartItem;
     }
 

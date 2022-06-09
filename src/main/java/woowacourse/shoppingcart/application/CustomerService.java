@@ -25,21 +25,21 @@ public class CustomerService {
     }
 
     public Long signUp(final CustomerRequest request) {
-        return customerRepository.create(request.toInitCustomer());
+        return customerRepository.insert(request.toInitCustomer());
     }
 
     public CustomerLoginResponse login(final CustomerLoginRequest request) {
-        Customer customer = customerRepository.login(request.getUserId(), request.getPassword());
+        Customer customer = customerRepository.selectByUsernameAndPassword(request.getUserId(), request.getPassword());
         return CustomerLoginResponse.ofExceptToken(customer);
     }
 
     public CustomerResponse findById(final TokenRequest request) {
-        Customer customer = customerRepository.findById(request.getId());
+        Customer customer = customerRepository.selectById(request.getId());
         return CustomerResponse.of(customer);
     }
 
     public void update(final TokenRequest tokenRequest, final CustomerUpdateRequest customerUpdateRequest) {
-        Customer oldCustomer = customerRepository.findById(tokenRequest.getId());
+        Customer oldCustomer = customerRepository.selectById(tokenRequest.getId());
         Customer newCustomer = customerUpdateRequest.updatedCustomer(oldCustomer);
         customerRepository.update(newCustomer);
     }

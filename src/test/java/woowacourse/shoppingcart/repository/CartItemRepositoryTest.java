@@ -35,7 +35,7 @@ class CartItemRepositoryTest {
         Long customerId = 1L;
 
         // when
-        List<CartItem> cartItems = cartItemRepository.findCartItemsByCustomerId(customerId);
+        List<CartItem> cartItems = cartItemRepository.selectCartItemsByCustomerId(customerId);
 
         // then
         assertAll(
@@ -74,7 +74,7 @@ class CartItemRepositoryTest {
         CartItem cartItem = CartItem.ofNullProductId(1L, 1L, 100);
 
         // when
-        CartItem updatedCartItem = cartItemRepository.updateCartItem(cartItem);
+        CartItem updatedCartItem = cartItemRepository.updateQuantity(cartItem);
 
         // then
         assertThat(updatedCartItem.getQuantity()).isEqualTo(100);
@@ -90,6 +90,6 @@ class CartItemRepositoryTest {
         cartItemRepository.delete(cartItemId);
 
         // then
-        assertThat(cartItemRepository.findCartItemsByCustomerId(1L).size()).isEqualTo(2);
+        assertThat(cartItemRepository.selectCartItemsByCustomerId(1L).size()).isEqualTo(2);
     }
 }

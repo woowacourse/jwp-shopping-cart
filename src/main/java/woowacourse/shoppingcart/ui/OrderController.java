@@ -14,7 +14,7 @@ import woowacourse.shoppingcart.dto.TokenRequest;
 public class OrderController {
 
     @PostMapping("/auth/customer/orders")
-    public ResponseEntity<Void> creat(final @AuthenticationPrincipal TokenRequest tokenRequest,
+    public ResponseEntity<Void> order(final @AuthenticationPrincipal TokenRequest tokenRequest,
                                       final @RequestBody List<OrderRequest> orderRequests) {
         return ResponseEntity.created(URI.create("/orders/")).build();
     }

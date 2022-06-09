@@ -35,7 +35,7 @@ class ProductRepositoryTest {
         Long productId = 1L;
 
         // when
-        Product product = productRepository.findById(productId);
+        Product product = productRepository.selectById(productId);
 
         // then
         assertAll(
@@ -56,7 +56,7 @@ class ProductRepositoryTest {
         int limit = 5;
 
         // when
-        List<Product> productsOfPage = productRepository.findProductsOfPage(page, limit);
+        List<Product> productsOfPage = productRepository.selectProductsOfPage(page, limit);
 
         // then
         assertAll(
@@ -70,7 +70,7 @@ class ProductRepositoryTest {
     @Test
     void findAll() {
         // given when
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.selectAll();
 
         // then
         assertThat(products.size()).isEqualTo(99);

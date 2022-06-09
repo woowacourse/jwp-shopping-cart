@@ -14,15 +14,15 @@ public class ProductRepository {
         this.productDao = productDao;
     }
 
-    public Product findById(final Long productId) {
-        return productDao.findById(productId);
+    public Product selectById(final Long productId) {
+        return productDao.selectById(productId);
     }
 
-    public List<Product> findProductsOfPage(final int page, final int limit) {
-        return productDao.findProductsOfPage(page, limit);
+    public List<Product> selectProductsOfPage(final int page, final int limit) {
+        return productDao.selectProductsOfPage(page, limit);
     }
 
-    public List<Product> findAll() {
-        return productDao.findAll();
+    public List<Product> selectAll() {
+        return productDao.selectAll();
     }
 }

@@ -19,12 +19,12 @@ public class ProductService {
     }
 
     public ProductResponse findById(final Long productId) {
-        Product product = productRepository.findById(productId);
+        Product product = productRepository.selectById(productId);
         return ProductResponse.of(product);
     }
 
     public List<ProductResponse> findProductsOfPage(final int page, final int limit) {
-        List<Product> productsOfPage = productRepository.findProductsOfPage(page, limit);
+        List<Product> productsOfPage = productRepository.selectProductsOfPage(page, limit);
         return productsOfPage.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 }

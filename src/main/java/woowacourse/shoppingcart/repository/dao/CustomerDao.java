@@ -33,7 +33,7 @@ public class CustomerDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Long create(final Customer customer) {
+    public Long insert(final Customer customer) {
         String query = "insert into customer (username, password, nickname, withdrawal)"
                 + " values (:username, :password, :nickname, false)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -42,7 +42,7 @@ public class CustomerDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Customer findById(final Long id) {
+    public Customer selectById(final Long id) {
         String query = "select id, username, password, nickname from"
                 + REAL_CUSTOMER_QUERY
                 + "where id = :id";
@@ -55,7 +55,7 @@ public class CustomerDao {
         }
     }
 
-    public Customer login(final String username, final String password) {
+    public Customer selectByUsernameAndPassword(final String username, final String password) {
         String query = "select id, username, password, nickname from"
                 + REAL_CUSTOMER_QUERY
                 + "where username = :username and password = :password";
@@ -103,21 +103,21 @@ public class CustomerDao {
         }
     }
 
-    public boolean checkDuplicatedUsername(final String username) {
+    public boolean existsUsername(final String username) {
         String query = "select EXISTS (select id from customer where username = :username)";
         Map<String, Object> params = new HashMap<>();
         params.put("username", username);
         return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
     }
 
-    public boolean checkDuplicatedNickname(final String nickname) {
+    public boolean existNickname(final String nickname) {
         String query = "select EXISTS (select id from customer where nickname = :nickname)";
         Map<String, Object> params = new HashMap<>();
         params.put("nickname", nickname);
         return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(query, params, Boolean.class));
     }
 
-    public boolean matchPassword(final Long id, final String password) {
+    public boolean existsPasswordOfId(final Long id, final String password) {
         String query = "select EXISTS (select id from"
                 + REAL_CUSTOMER_QUERY
                 + "where id = :id and password = :password)";
