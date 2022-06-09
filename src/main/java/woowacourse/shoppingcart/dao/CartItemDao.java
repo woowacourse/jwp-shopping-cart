@@ -36,10 +36,14 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
+    public List<CartItem> findAllByCustomerId(final Long customerId) {
+        final String sql = "SELECT c.id as id, c.product_id as productId, p.name as name, p.price as price, "
+                + "c.quantity as quantity, p.image_url as imageUrl "
+                + "FROM cart_item c "
+                + "JOIN product p ON c.product_id = p.id "
+                + "WHERE c.customer_id = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+        return jdbcTemplate.query(sql, cartItemRowMapper, customerId);
     }
 
     public CartItem findById(final Long id) {

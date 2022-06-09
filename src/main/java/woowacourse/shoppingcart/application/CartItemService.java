@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +29,7 @@ public class CartItemService {
     }
 
     public CartItemsResponse findCartItemsByCustomerName(final String customerName) {
-        final List<Long> cartItemIds = findCartItemIdsByCustomerName(customerName);
-
-        final List<CartItem> cartItems = new ArrayList<>();
-        for (final Long cartItemId : cartItemIds) {
-            cartItems.add(cartItemDao.findById(cartItemId));
-        }
+        final List<CartItem> cartItems = findCartItemIdsByCustomerName(customerName);
         return CartItemsResponse.from(cartItems);
     }
 
@@ -64,9 +58,9 @@ public class CartItemService {
         cartItemDao.deleteCartItem(cartItemId);
     }
 
-    private List<Long> findCartItemIdsByCustomerName(final String customerName) {
+    private List<CartItem> findCartItemIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+        return cartItemDao.findAllByCustomerId(customerId);
     }
 
     private void checkAvaliableForPurchaseProduct(final Long productId, final int quantity) {
@@ -75,10 +69,10 @@ public class CartItemService {
     }
 
     private void validateCustomerHasCartItem(final Long cartItemId, final String customerName) {
-        final List<Long> cartItemIds = findCartItemIdsByCustomerName(customerName);
-        if (cartItemIds.contains(cartItemId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
+        findCartItemIdsByCustomerName(customerName).stream()
+                .map(CartItem::getId)
+                .filter(id -> id.equals(cartItemId))
+                .findAny()
+                .orElseThrow(NotInCustomerCartItemException::new);
     }
 }

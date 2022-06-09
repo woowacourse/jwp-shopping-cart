@@ -77,10 +77,10 @@ public class CartItemDaoTest {
         final Long customerId = 1L;
 
         // when
-        final List<Long> cartItemIds = cartItemDao.findIdsByCustomerId(customerId);
+        final List<CartItem> cartItemIds = cartItemDao.findAllByCustomerId(customerId);
 
         // then
-        assertThat(cartItemIds).containsExactly(1L, 2L);
+        assertThat(cartItemIds).hasSize(2);
     }
 
     @DisplayName("장바구니 정보를 반환한다.")
