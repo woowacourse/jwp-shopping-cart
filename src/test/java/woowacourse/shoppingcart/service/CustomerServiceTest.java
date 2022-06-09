@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:testData.sql"})
+@Sql("/init.sql")
 public class CustomerServiceTest {
 
     @Autowired

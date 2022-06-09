@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
@@ -16,8 +15,7 @@ import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@Sql(scripts = {"classpath:schema.sql", "classpath:testData.sql"})
+@Sql(scripts = {"/init.sql"})
 @ActiveProfiles("test")
 public class AcceptanceTest {
     @LocalServerPort
