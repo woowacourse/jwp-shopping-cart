@@ -16,12 +16,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import woowacourse.ControllerTestConfig;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 @WebMvcTest(ProductController.class)
-@Import(ControllerTestConfig.class)
+@Import(JwtTokenProvider.class)
 class ProductControllerTest {
 
     @Autowired

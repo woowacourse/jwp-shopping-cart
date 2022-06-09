@@ -20,7 +20,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.ControllerTestConfig;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
@@ -32,7 +31,7 @@ import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 import woowacourse.shoppingcart.dto.TokenRequest;
 
 @WebMvcTest(CustomerController.class)
-@Import(ControllerTestConfig.class)
+@Import(JwtTokenProvider.class)
 class CustomerControllerTest {
 
     @Autowired

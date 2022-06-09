@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import woowacourse.ControllerTestConfig;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CartItemService;
 import woowacourse.shoppingcart.dto.CartItemIdRequest;
@@ -32,7 +31,7 @@ import woowacourse.shoppingcart.dto.ProductIdRequest;
 import woowacourse.shoppingcart.dto.TokenRequest;
 
 @WebMvcTest(CartItemController.class)
-@Import(ControllerTestConfig.class)
+@Import(JwtTokenProvider.class)
 class CartItemControllerTest {
 
     @Autowired
