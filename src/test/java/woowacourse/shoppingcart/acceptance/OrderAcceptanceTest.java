@@ -49,11 +49,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        List<OrderRequest> orderRequests = new ArrayList<>();
-        orderRequests.add(new OrderRequest(1L, 10));
-        orderRequests.add(new OrderRequest(2L, 20));
-
-        ExtractableResponse<Response> response = 주문하기_요청(token, orderRequests);
+        ExtractableResponse<Response> response = 주문하기_요청(token, new OrderRequest(1L, 10));
 
         주문하기_성공함(response);
     }
@@ -61,8 +57,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(token, Collections.singletonList(new OrderRequest(1L, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(token, Collections.singletonList(new OrderRequest(2L, 5)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(token, new OrderRequest(1L, 2));
+        Long orderId2 = 주문하기_요청_성공되어_있음(token, new OrderRequest(2L, 5));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(token);
 
@@ -73,10 +69,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 단일 조회")
     @Test
     void getOrder() {
-        Long orderId = 주문하기_요청_성공되어_있음(token, Arrays.asList(
-                new OrderRequest(1L, 2),
-                new OrderRequest(2L, 4)
-        ));
+        Long orderId = 주문하기_요청_성공되어_있음(token, new OrderRequest(2L, 4));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(token, orderId);
 
@@ -84,8 +77,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         주문_조회됨(response, orderId);
     }
 
-    public static ExtractableResponse<Response> 주문하기_요청(String token, List<OrderRequest> orderRequests) {
-        return requestHttpPost(token, orderRequests, "/customers/orders").extract();
+    public static ExtractableResponse<Response> 주문하기_요청(String token, OrderRequest orderRequest) {
+        return requestHttpPost(token, orderRequest, "/customers/orders").extract();
     }
 
     public static ExtractableResponse<Response> 주문_내역_조회_요청(String token) {
@@ -101,8 +94,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 주문하기_요청_성공되어_있음(String userName, List<OrderRequest> orderRequests) {
-        ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
+    public static Long 주문하기_요청_성공되어_있음(String userName, OrderRequest orderRequest) {
+        ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequest);
         return Long.parseLong(response.header("Location").split("/orders/")[1]);
     }
 

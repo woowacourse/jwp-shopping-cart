@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import javax.sql.DataSource;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,47 +15,40 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Disabled
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"/orderInitSchema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrderDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private final OrderDao orderDao;
 
-    public OrderDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.orderDao = new OrderDao(jdbcTemplate);
+    public OrderDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+        this.orderDao = new OrderDao(jdbcTemplate, dataSource);
     }
 
-    @DisplayName("Order를 추가하는 기능")
+    @DisplayName("Order를 추가한다.")
     @Test
     void addOrders() {
-        //given
-        final Long customerId = 1L;
-
-        //when
-        final Long orderId = orderDao.addOrders(customerId);
+        final Long orderId = orderDao.save(1L);
 
         //then
         assertThat(orderId).isNotNull();
     }
 
-    @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
+    @DisplayName("Orders를 조회한다.")
     @Test
     void findOrderIdsByCustomerId() {
         //given
-        final Long customerId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+        Long customerId = 1L;
+        orderDao.save(1L);
+        orderDao.save(1L);
 
         //when
-        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
+        List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
 
         //then
-        assertThat(orderIdsByCustomerId).hasSize(2);
+        assertThat(orderIdsByCustomerId).containsExactly(1L, 2L, 3L);
     }
 
 }
