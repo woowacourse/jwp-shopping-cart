@@ -23,11 +23,11 @@ public class ControllerAdvice {
 //    public ResponseEntity<ErrorResponse> handleUnhandledException() {
 //        return ResponseEntity.internalServerError().body(new ErrorResponse("Unhandled Exception"));
 //    }
-
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<ErrorResponse> handle() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("존재하지 않는 데이터 요청입니다."));
-    }
+//
+//    @ExceptionHandler(EmptyResultDataAccessException.class)
+//    public ResponseEntity<ErrorResponse> handle() {
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("존재하지 않는 데이터 요청입니다."));
+//    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final BindingResult bindingResult) {
