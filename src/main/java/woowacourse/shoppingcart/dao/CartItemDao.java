@@ -77,6 +77,11 @@ public class CartItemDao {
         return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getInt("quantity"), customerId);
     }
 
+    public int findQuantityByCartId(Long cartId) {
+        final String query = "SELECT quantity FROM cart_item WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getInt("quantity"), cartId);
+    }
+
     public void updateProductQuantity(Long cartId, int quantity) {
         final String query = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(query, quantity, cartId);

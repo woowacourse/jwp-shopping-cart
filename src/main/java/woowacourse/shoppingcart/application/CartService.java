@@ -42,7 +42,7 @@ public class CartService {
 
     private Cart assembleCartWithId(Long cartId) {
         final Long productId = cartItemDao.findProductIdById(cartId);
-        final int quantity = cartItemDao.findQuantityById(cartId);
+        final int quantity = cartItemDao.findQuantityByCartId(cartId);
         final Product product = productDao.findProductById(productId);
         return new Cart(cartId, product, quantity);
     }
