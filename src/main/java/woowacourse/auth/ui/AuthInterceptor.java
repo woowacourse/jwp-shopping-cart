@@ -4,7 +4,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpMethod;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.exception.UnauthorizedException;
@@ -19,7 +19,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+        if (CorsUtils.isPreFlightRequest(request)) {
             return true;
         }
         String header = request.getHeader(AUTHORIZATION);
