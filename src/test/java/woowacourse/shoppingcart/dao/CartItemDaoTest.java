@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dao.dto.EnrollCartDto;
+import woowacourse.shoppingcart.dao.dto.SaveCartDto;
 import woowacourse.shoppingcart.domain.Cart;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class CartItemDaoTest {
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다.")
     @Test
     void save() {
-        Long cartItemId = cartItemDao.save(new EnrollCartDto(memberId, 1L));
+        Long cartItemId = cartItemDao.save(new SaveCartDto(memberId, 1L));
 
         assertThat(cartItemId).isEqualTo(6L);
     }

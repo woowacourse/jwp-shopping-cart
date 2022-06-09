@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.dao.dto.EnrollCartDto;
+import woowacourse.shoppingcart.dao.dto.SaveCartDto;
 import woowacourse.shoppingcart.domain.Cart;
 
 import java.util.List;
@@ -26,8 +26,8 @@ public class CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(EnrollCartDto enrollCartDto) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(enrollCartDto);
+    public Long save(SaveCartDto saveCartDto) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(saveCartDto);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 

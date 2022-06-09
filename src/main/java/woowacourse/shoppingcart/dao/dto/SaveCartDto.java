@@ -1,12 +1,12 @@
 package woowacourse.shoppingcart.dao.dto;
 
-public class EnrollCartDto {
+public class SaveCartDto {
 
     private final Long memberId;
     private final Long productId;
     private final int quantity;
 
-    public EnrollCartDto(Long memberId, Long productId) {
+    public SaveCartDto(Long memberId, Long productId) {
         this.memberId = memberId;
         this.productId = productId;
         this.quantity = 1;

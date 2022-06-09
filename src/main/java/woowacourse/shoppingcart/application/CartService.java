@@ -7,7 +7,7 @@ import woowacourse.member.domain.Member;
 import woowacourse.member.exception.MemberNotFoundException;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.dao.dto.EnrollCartDto;
+import woowacourse.shoppingcart.dao.dto.SaveCartDto;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartResponse;
@@ -40,8 +40,8 @@ public class CartService {
         validateExistProduct(productId);
         Optional<Cart> existCartWithProduct = findExistCartWithProduct(memberId, productId);
         if (existCartWithProduct.isEmpty()) {
-            EnrollCartDto enrollCartDto = new EnrollCartDto(memberId, productId);
-            return cartItemDao.save(enrollCartDto);
+            SaveCartDto saveCartDto = new SaveCartDto(memberId, productId);
+            return cartItemDao.save(saveCartDto);
         }
 
         Long cartId = existCartWithProduct.get().getId();
