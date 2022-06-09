@@ -6,7 +6,7 @@ public class CartsResponse {
 
     private final List<CartResponse> carts;
 
-    public CartsResponse(List<CartResponse> carts) {
+    public CartsResponse(final List<CartResponse> carts) {
         this.carts = carts;
     }
 

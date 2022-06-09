@@ -17,14 +17,14 @@ public class AuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final CustomerDao customerDao;
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
+    public AuthService(final CustomerDao customerDao, final JwtTokenProvider jwtTokenProvider) {
         this.customerDao = customerDao;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public TokenResponse login(TokenRequest tokenRequest) {
+    public TokenResponse login(final TokenRequest tokenRequest) {
         log.info("login : {}", tokenRequest.getEmail());
         final Customer customer = customerDao.findByEmail(new Email(tokenRequest.getEmail()));
         if (!customer.isSame(Password.of(tokenRequest.getPassword()))) {

@@ -5,7 +5,7 @@ public class CartItemResponse {
     private final Long productId;
     private final int quantity;
 
-    public CartItemResponse(Long id, int quantity) {
+    public CartItemResponse(final Long id, final int quantity) {
         this.productId = id;
         this.quantity = quantity;
     }

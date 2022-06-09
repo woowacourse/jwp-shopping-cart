@@ -8,12 +8,12 @@ public class Email {
 
     private final String email;
 
-    public Email(String email) {
+    public Email(final String email) {
         validateEmail(email);
         this.email = email;
     }
 
-    public static void validateEmail(String email) {
+    public static void validateEmail(final String email) {
         if (email.isBlank() || !email.matches(EMAIL_FORMAT)) {
             throw new IllegalArgumentException("올바르지 않은 이메일 형식입니다.");
         }

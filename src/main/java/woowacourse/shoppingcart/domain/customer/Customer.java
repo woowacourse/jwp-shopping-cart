@@ -9,7 +9,7 @@ public class Customer {
     private final Address address;
     private final Password password;
 
-    public Customer(CustomerId id, Email email, Name name, Phone phone, Address address, Password password) {
+    public Customer(final CustomerId id, final Email email, final Name name, final Phone phone, final Address address, final Password password) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -18,15 +18,15 @@ public class Customer {
         this.password = password;
     }
 
-    public Customer(Email email, Name name, Phone phone, Address address, Password password) {
+    public Customer(final Email email, final Name name, final Phone phone, final Address address, final Password password) {
         this(null, email, name, phone, address, password);
     }
 
-    public Customer(CustomerId id, Customer customer) {
+    public Customer(final CustomerId id, final Customer customer) {
         this(id, customer.email, customer.name, customer.phone, customer.address, customer.password);
     }
 
-    public boolean isSame(Password password) {
+    public boolean isSame(final Password password) {
         return this.password.isSame(password);
     }
 

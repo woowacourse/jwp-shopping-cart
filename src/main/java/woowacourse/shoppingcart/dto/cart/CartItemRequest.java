@@ -5,7 +5,7 @@ public class CartItemRequest {
     private final int productId;
     private final int quantity;
 
-    public CartItemRequest(int id, int quantity) {
+    public CartItemRequest(final int id, final int quantity) {
         this.productId = id;
         this.quantity = quantity;
     }

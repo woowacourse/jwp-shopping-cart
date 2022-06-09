@@ -5,7 +5,7 @@ import java.util.Objects;
 public class CustomerId {
     private final Long id;
 
-    public CustomerId(Long id) {
+    public CustomerId(final Long id) {
         this.id = id;
     }
 

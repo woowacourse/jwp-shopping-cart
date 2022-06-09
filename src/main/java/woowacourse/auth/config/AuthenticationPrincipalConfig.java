@@ -12,12 +12,12 @@ import java.util.List;
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationPrincipalConfig(JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationPrincipalConfig(final JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public void addArgumentResolvers(List argumentResolvers) {
+    public void addArgumentResolvers(final List argumentResolvers) {
         argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
     }
 

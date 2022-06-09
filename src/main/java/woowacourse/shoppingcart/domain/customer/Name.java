@@ -8,12 +8,12 @@ public class Name {
 
     private final String name;
 
-    public Name(String name) {
+    public Name(final String name) {
         validateName(name);
         this.name = name;
     }
 
-    public static void validateName(String name) {
+    public static void validateName(final String name) {
         if (name.isBlank() || name.length() > MAXIMUM_NAME_LENGTH) {
             throw new IllegalArgumentException("올바르지 않은 이름 형식입니다.");
         }

@@ -4,7 +4,7 @@ public class Name {
 
     private final String name;
 
-    public Name(String name) {
+    public Name(final String name) {
         this.name = name;
     }
 

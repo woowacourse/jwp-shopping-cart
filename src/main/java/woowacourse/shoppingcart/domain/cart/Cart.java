@@ -8,13 +8,13 @@ public class Cart {
     private final Product product;
     private final Quantity quantity;
 
-    public Cart(CartId cartId, Product product, Quantity quantity) {
+    public Cart(final CartId cartId, final Product product, final Quantity quantity) {
         this.cartId = cartId;
         this.product = product;
         this.quantity = quantity;
     }
 
-    public boolean isSame(Product product) {
+    public boolean isSame(final Product product) {
         return product.isSame(this.product);
     }
 

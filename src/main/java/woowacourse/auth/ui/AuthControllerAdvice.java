@@ -17,13 +17,13 @@ public class AuthControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(CustomerControllerAdvice.class);
 
     @ExceptionHandler(InvalidCustomerException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidCustomerException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleInvalidCustomerException(final Exception e) {
         log.error("e :", e);
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidTokenException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleInvalidTokenException(final Exception e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
     }
 }

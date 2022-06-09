@@ -10,7 +10,7 @@ public class Carts {
 
     private final List<Cart> carts;
 
-    public Carts(List<Cart> carts) {
+    public Carts(final List<Cart> carts) {
         this.carts = carts;
     }
 
@@ -18,7 +18,7 @@ public class Carts {
         return carts;
     }
 
-    public Quantity findQuantity(Product product) {
+    public Quantity findQuantity(final Product product) {
         return carts.stream()
                 .filter(cart -> cart.isSame(product))
                 .findFirst()

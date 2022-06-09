@@ -59,7 +59,7 @@ public class CustomerDao {
         }
     }
 
-    public Customer findById(CustomerId customerId) {
+    public Customer findById(final CustomerId customerId) {
         final String sql = "select * from customer where id = :id";
         try {
             return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", customerId.getValue()), new CustomerMapper());
@@ -68,12 +68,12 @@ public class CustomerDao {
         }
     }
 
-    public void delete(CustomerId customerId) {
+    public void delete(final CustomerId customerId) {
         final String sql = "delete from customer where id = :id";
         jdbcTemplate.update(sql, new MapSqlParameterSource("id", customerId.getValue()));
     }
 
-    public Boolean isDuplication(Email email) {
+    public Boolean isDuplication(final Email email) {
         final String sql = "select exists(select * from customer where email = :email)";
         return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email.getValue()), Boolean.class);
     }

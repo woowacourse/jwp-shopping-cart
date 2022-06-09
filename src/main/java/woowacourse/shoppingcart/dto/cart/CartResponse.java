@@ -8,7 +8,7 @@ public class CartResponse {
     private final String thumbnail;
     private final int quantity;
 
-    public CartResponse(int productId, String name, int price, String thumbnail, int quantity) {
+    public CartResponse(final int productId, final String name, final int price, final String thumbnail, int quantity) {
         this.productId = productId;
         this.name = name;
         this.price = price;

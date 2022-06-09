@@ -33,7 +33,7 @@ public class CartItemDao {
         jdbcTemplate.update(sql, query);
     }
 
-    public void deleteCartItems(CustomerId customerId, List<ProductId> productIds) {
+    public void deleteCartItems(final CustomerId customerId, final List<ProductId> productIds) {
         final List<Integer> ids = productIds.stream()
                 .map(ProductId::getValue)
                 .collect(Collectors.toList());
@@ -45,19 +45,19 @@ public class CartItemDao {
         jdbcTemplate.update(sql, query);
     }
 
-    public List<Cart> getAllCartsBy(CustomerId customerId) {
+    public List<Cart> getAllCartsBy(final CustomerId customerId) {
         final String sql = "select c.id id, p.id productId, p.name name, p.price price, p.thumbnail thumbnail, c.quantity quantity from cart_item c inner join product p on p.id = c.product_id where c.customer_id = :customerId";
         return jdbcTemplate.query(sql, new MapSqlParameterSource("customerId", customerId.getValue()), new CartMapper());
     }
 
-    public boolean exists(CustomerId customerId, ProductId productId) {
+    public boolean exists(final CustomerId customerId, final ProductId productId) {
         final String sql = "select exists(select customer_id, product_id from cart_item where customer_id = :customerId and product_id = :productId)";
         final MapSqlParameterSource query = new MapSqlParameterSource("customerId", customerId.getValue());
         query.addValue("productId", productId.getValue());
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, query, Boolean.class));
     }
 
-    public void edit(CustomerId customerId, ProductId productId, Quantity quantity) {
+    public void edit(final CustomerId customerId, final ProductId productId, final Quantity quantity) {
         final String sql = "update cart_item set quantity = :quantity where customer_id = :customerId and product_id = :productId";
         final MapSqlParameterSource query = new MapSqlParameterSource("customerId", customerId.getValue());
         query.addValue("productId", productId.getValue());
@@ -67,13 +67,13 @@ public class CartItemDao {
 
     private static class CartMapper implements RowMapper<Cart> {
         @Override
-        public Cart mapRow(ResultSet rs, int rowNum) throws SQLException {
+        public Cart mapRow(final ResultSet rs, final int rowNum) throws SQLException {
             return new Cart(new CartId(rs.getInt("id")),
                     new Product(
-                    new ProductId(rs.getInt("productId")),
-                    new Name(rs.getString("name")),
-                    new Price(rs.getInt("price")),
-                    new Thumbnail(rs.getString("thumbnail"))),
+                            new ProductId(rs.getInt("productId")),
+                            new Name(rs.getString("name")),
+                            new Price(rs.getInt("price")),
+                            new Thumbnail(rs.getString("thumbnail"))),
                     new Quantity(rs.getInt("quantity"))
             );
         }
