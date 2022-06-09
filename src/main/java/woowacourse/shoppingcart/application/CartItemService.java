@@ -65,7 +65,7 @@ public class CartItemService {
 
     private void checkAvaliableForPurchaseProduct(final Long productId, final int quantity) {
         final Product product = productDao.findProductById(productId);
-        product.purchaseProduct(quantity);
+        product.checkAvaliablePurchaseProduct(quantity);
     }
 
     private void validateCustomerHasCartItem(final Long cartItemId, final String customerName) {

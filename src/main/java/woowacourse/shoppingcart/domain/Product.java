@@ -40,10 +40,14 @@ public class Product {
     }
 
     public Product purchaseProduct(final int purchaseQuantity) {
+        checkAvaliablePurchaseProduct(purchaseQuantity);
+        return new Product(this, stock - purchaseQuantity);
+    }
+
+    public void checkAvaliablePurchaseProduct(final int purchaseQuantity) {
         if (stock < purchaseQuantity) {
             throw new InvalidProductException("제품의 수량보다 더 주문할 수 없습니다.");
         }
-        return new Product(this, stock - purchaseQuantity);
     }
 
     public Long getId() {
