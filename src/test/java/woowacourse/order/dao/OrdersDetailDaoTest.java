@@ -20,7 +20,7 @@ import woowacourse.product.domain.Stock;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrdersDetailDaoTest {
 
@@ -58,23 +58,4 @@ class OrdersDetailDaoTest {
         //then
         assertThat(orderDetailId).isEqualTo(1L);
     }
-
-    // @DisplayName("OrderId로 OrderDetails 조회하는 기능")
-    // @Test
-    // void findOrdersDetailsByOrderId() {
-    //     //given
-    //     final int insertCount = 3;
-    //     for (int i = 0; i < insertCount; i++) {
-    //         jdbcTemplate
-    //                 .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-    //                         ordersId, productId, 3);
-    //     }
-    //
-    //     //when
-    //     final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-    //             .findOrdersDetailsByOrderId(ordersId);
-    //
-    //     //then
-    //     assertThat(ordersDetailsByOrderId).hasSize(insertCount);
-    // }
 }
