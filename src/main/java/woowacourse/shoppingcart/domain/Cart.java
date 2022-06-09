@@ -7,7 +7,7 @@ public class Cart {
     private String name;
     private int price;
     private String imageUrl;
-    private int quantity;
+    private Quantity quantity;
 
     public Cart() {
     }
@@ -17,6 +17,10 @@ public class Cart {
     }
 
     public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl, final int quantiy) {
+        this(id, productId, name, price, imageUrl, new Quantity(quantiy));
+    }
+
+    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl, final Quantity quantiy) {
         this.id = id;
         this.productId = productId;
         this.name = name;
@@ -45,7 +49,7 @@ public class Cart {
         return imageUrl;
     }
 
-    public int getQuantity() {
+    public Quantity getQuantity() {
         return quantity;
     }
 

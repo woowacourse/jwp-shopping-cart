@@ -236,6 +236,45 @@ public class OrderControllerTest {
                                 fieldWithPath("orderDetailDtos[].imageUrl").type(JsonFieldType.STRING).description("상품 이미지 url")
                         )
                 ));
+    }
+    @DisplayName("주문 전체 조회 문서화")
+    @Test
+    void findOrders() throws Exception {
+        // given
+        Customer customer = new Customer(1L, "giron", "passwrdd1@A");
+        Orders orders1 = new Orders(1L, Collections.singletonList(
+                new OrderDetail(1L, 1_000, "banana", "www.imageUr123l.com", 2)));
+        Orders orders2 = new Orders(2L, Collections.singletonList(
+                new OrderDetail(2L, 5_000, "apple", "www.imageUrl", 50)));
+
+        List<Orders> orders = List.of(orders1, orders2);
+        List<OrdersResponse> ordersResponses = orders.stream()
+                .map(OrdersResponse::new).collect(Collectors.toList());
+
+        given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
+        given(orderService.findOrdersByCustomerName(any())).willReturn(ordersResponses);
+
+        ResultActions results = mockMvc.perform(get("/api/customers/me/orders")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .characterEncoding("UTF-8"));
+
+        results.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("orders-get",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 뒤에 accessToken이 들어있습니다")
+                        ),
+                        responseFields(
+                                fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("주문 식별자"),
+                                fieldWithPath("[].orderDetailDtos[].productId").type(JsonFieldType.NUMBER).description("상품의 식별자"),
+                                fieldWithPath("[].orderDetailDtos[].quantity").type(JsonFieldType.NUMBER).description("상품의 수량"),
+                                fieldWithPath("[].orderDetailDtos[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("[].orderDetailDtos[].name").type(JsonFieldType.STRING).description("상품의 이름"),
+                                fieldWithPath("[].orderDetailDtos[].imageUrl").type(JsonFieldType.STRING).description("상품 이미지 url")
+                        )
+                ));
 
     }
 }

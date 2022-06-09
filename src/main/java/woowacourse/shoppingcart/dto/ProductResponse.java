@@ -31,7 +31,7 @@ public class ProductResponse {
 
     public void addCartQuantity(final Cart cart) {
         this.cartId = cart.getId();
-        this.quantity = cart.getQuantity();
+        this.quantity = cart.getQuantity().getValue();
     }
 
     public Long getId() {

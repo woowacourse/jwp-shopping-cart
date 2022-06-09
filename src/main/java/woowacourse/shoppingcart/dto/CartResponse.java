@@ -14,7 +14,7 @@ public class CartResponse {
     }
 
     public CartResponse(final Cart cart) {
-        this(cart.getId(), cart.getProductId(), cart.getName(), cart.getPrice(), cart.getImageUrl(), cart.getQuantity());
+        this(cart.getId(), cart.getProductId(), cart.getName(), cart.getPrice(), cart.getImageUrl(), cart.getQuantity().getValue());
     }
 
     public CartResponse(final Long id, final Long productId, final String name, final int price,

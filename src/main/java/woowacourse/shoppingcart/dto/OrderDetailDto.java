@@ -3,14 +3,14 @@ package woowacourse.shoppingcart.dto;
 import woowacourse.shoppingcart.domain.OrderDetail;
 
 public class OrderDetailDto {
-    private Long productId;
-    private int quantity;
-    private int price;
-    private String name;
-    private String imageUrl;
+    private final Long productId;
+    private final int quantity;
+    private final int price;
+    private final String name;
+    private final String imageUrl;
 
     public OrderDetailDto(OrderDetail orderDetail) {
-        this(orderDetail.getProductId(), orderDetail.getQuantity(), orderDetail.getPrice(),
+        this(orderDetail.getProductId(), orderDetail.getQuantity().getValue(), orderDetail.getPrice(),
                 orderDetail.getName(), orderDetail.getImageUrl());
     }
 

@@ -120,7 +120,7 @@ public class CartItemDaoTest {
                 .findFirst()
                 .get();
 
-        assertThat(findCart.getQuantity()).isEqualTo(30);
+        assertThat(findCart.getQuantity().getValue()).isEqualTo(30);
     }
 
     @DisplayName("Cart에 productId를 기준으로 cartId와 quantity를 찾는다.")
@@ -130,7 +130,7 @@ public class CartItemDaoTest {
         final Long customerId = 1L;
         Cart cart = cartItemDao.findIdAndQuantityByProductId(productId, customerId).get();
         assertAll(
-                () -> assertThat(cart.getQuantity()).isEqualTo(5),
+                () -> assertThat(cart.getQuantity().getValue()).isEqualTo(5),
                 () -> assertThat(cart.getId()).isEqualTo(1L)
         );
     }

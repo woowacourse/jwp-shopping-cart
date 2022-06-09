@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.dao.*;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrdersResponse;
 
@@ -77,7 +78,7 @@ public class OrderService {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
             final Product product = productDao.findProductById(productQuantity.getProductId());
-            final int quantity = productQuantity.getQuantity();
+            final Quantity quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }
 

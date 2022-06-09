@@ -44,3 +44,18 @@ include::{snippets}/orders-get-one/request-headers.adoc[]
 
 include::{snippets}/orders-get-one/http-response.adoc[]
 include::{snippets}/orders-get-one/response-fields.adoc[]
+
+=== 주문 전체 조회
+
+요청 HTTP
+
+include::{snippets}/orders-get/http-request.adoc[]
+
+요청 헤더
+
+include::{snippets}/orders-get/request-headers.adoc[]
+
+성공 응답 HTTP
+
+include::{snippets}/orders-get/http-response.adoc[]
+include::{snippets}/orders-get/response-fields.adoc[]
