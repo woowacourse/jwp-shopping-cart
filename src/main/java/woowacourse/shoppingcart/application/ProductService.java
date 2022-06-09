@@ -37,6 +37,12 @@ public class ProductService {
                 .orElseThrow(() -> new InvalidProductException("[ERROR] ID가 존재하지 않습니다.")));
     }
 
+    public List<ProductResponse> findByIds(List<Long> ids) {
+        return productDao.findByIds(ids).stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toList());
+    }
+
     public List<ProductResponse> findAll() {
         return productDao.findAll().stream()
                 .map(ProductResponse::new)

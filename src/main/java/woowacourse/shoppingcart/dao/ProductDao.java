@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.domain.Product;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProductDao {
@@ -63,5 +64,14 @@ public class ProductDao {
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("name", name);
         int count = template.queryForObject(query, nameParameters, Integer.class);
         return count != 0;
+    }
+
+    public List<Product> findByIds(List<Long> ids) {
+        String productIds = ids.stream()
+                .map(it -> String.valueOf(it))
+                .collect(Collectors.joining(",", "(", ")"));
+        String sql = "SELECT * FROM product WHERE id in " + productIds;
+
+        return template.query(sql, PRODUCT_ROW_MAPPER);
     }
 }

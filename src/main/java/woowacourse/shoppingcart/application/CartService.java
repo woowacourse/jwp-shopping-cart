@@ -9,8 +9,9 @@ import woowacourse.shoppingcart.application.dto.ProductResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.Cart;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -53,13 +54,14 @@ public class CartService {
 
     public List<CartResponse> findAll(Long customerId) {
         List<Cart> carts = cartItemDao.findAllByCustomerId(customerId);
-        List<CartResponse> cartResponses = new ArrayList<>();
-        for (Cart cart : carts) {
-            ProductResponse product = productService.findById(cart.getProductId());
-            cartResponses.add(new CartResponse(product.getId(), product.getName(), product.getPrice(), cart.getQuantity(), product.getImageUrl()));
-        }
-
-        return cartResponses;
+        Map<Long, Integer> productIdByQuantity = carts.stream()
+                .collect(Collectors.toMap(Cart::getProductId, Cart::getQuantity));
+        List<Long> productIds = carts.stream()
+                .map(it -> it.getProductId())
+                .collect(Collectors.toList());
+        return productService.findByIds(productIds).stream()
+                .map(it -> new CartResponse(it.getId(), it.getName(), it.getPrice(), productIdByQuantity.get(it.getId()), it.getImageUrl()))
+                .collect(Collectors.toList());
     }
 
     @Transactional
