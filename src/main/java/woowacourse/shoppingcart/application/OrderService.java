@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.exception.OrderNotFoundException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, readOnly = true)
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -36,6 +36,7 @@ public class OrderService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
         final Long customerId = customerDao.findIdByName(customerName);
         final Long orderId = orderDao.addOrders(customerId);

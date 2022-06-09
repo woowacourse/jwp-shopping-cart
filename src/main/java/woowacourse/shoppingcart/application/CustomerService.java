@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -11,6 +12,7 @@ import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -31,6 +33,7 @@ public class CustomerService {
                 .orElseThrow(DuplicateCustomerException::new);
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse findCustomer(FindCustomerRequest findCustomerRequest) {
         Customer customer = customerDao.findByName(findCustomerRequest.getName())
                 .orElseThrow(InvalidCustomerException::new);

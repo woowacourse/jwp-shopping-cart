@@ -9,7 +9,7 @@ import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, readOnly = true)
 public class ProductService {
 
     private final ProductDao productDao;
@@ -24,6 +24,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public Long addProduct(final ProductRequest productRequest) {
         return productDao.save(productRequest);
     }
@@ -32,6 +33,7 @@ public class ProductService {
         return ProductResponse.from(productDao.findProductById(productId));
     }
 
+    @Transactional
     public void deleteProductById(final Long productId) {
         productDao.delete(productId);
     }
