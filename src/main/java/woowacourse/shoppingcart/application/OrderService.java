@@ -58,9 +58,13 @@ public class OrderService {
     private void validateOrderIdByCustomerName(final UserName userName, final Long orderId) {
         final Long customerId = customerDao.findIdByUserName(userName);
 
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
+        if (checkInvalidOrderId(orderId, customerId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
+    }
+
+    private boolean checkInvalidOrderId(Long orderId, Long customerId) {
+        return !orderDao.isValidOrderId(customerId, orderId);
     }
 
     public List<Orders> findOrdersByCustomerName(final UserName userName) {

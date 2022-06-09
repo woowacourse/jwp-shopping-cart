@@ -75,11 +75,11 @@ public class CustomerDao {
         namedParameterJdbcTemplate.update(query, parameterSource);
     }
 
-    public boolean existsCustomer(Customer customer) {
+    public boolean checkNotExistsCustomer(Customer customer) {
         final String query = "SELECT EXISTS (SELECT id FROM customer where username = :username and password = :password)";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource("username", customer.getName().value());
         parameterSource.addValue("password", customer.getPassword().value());
-        return namedParameterJdbcTemplate.queryForObject(query, parameterSource, Boolean.class);
+        return !namedParameterJdbcTemplate.queryForObject(query, parameterSource, Boolean.class);
     }
 
     public boolean existsByName(UserName userName) {

@@ -73,11 +73,14 @@ public class CartService {
     }
 
     private void validateCustomerCart(final Long cartId, final UserName userName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(userName);
-        if (cartIds.contains(cartId)) {
-            return;
+        if (checkNotContainsCartId(cartId, userName)) {
+            throw new NotInCustomerCartItemException();
         }
-        throw new NotInCustomerCartItemException();
+    }
+
+    private boolean checkNotContainsCartId(final Long cartId, final UserName userName) {
+        final List<Long> cartIds = findCartIdsByCustomerName(userName);
+        return !cartIds.contains(cartId);
     }
 
     public void updateQuantity(Long cartId, UserName userName, CartItemRequest cartItemRequest) {

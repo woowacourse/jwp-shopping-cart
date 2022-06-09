@@ -34,11 +34,10 @@ public class CustomerService {
     }
 
     public void deleteCustomerByName(final UserName userName) {
-        if (customerDao.existsByName(userName)) {
-            customerDao.deleteByName(userName);
-            return;
+        if (notExistCustomerName(userName)) {
+            throw new NoExistUserException();
         }
-        throw new NoExistUserException();
+        customerDao.deleteByName(userName);
     }
 
     public CustomerResponse findCustomerByName(final UserName userName) {
@@ -47,21 +46,25 @@ public class CustomerService {
     }
 
     public void editCustomerByName(final UserName userName, final CustomerRequest editRequest) {
-        if (customerDao.existsByName(userName)) {
-            Customer customer = customerDao.findCustomerByName(userName);
-            customer.update(userName.value(), editRequest.getPassword(), encryptor);
-            customerDao.updateByName(userName, customer);
-            return;
+        if (notExistCustomerName(userName)) {
+            throw new NoExistUserException();
         }
-        throw new NoExistUserException();
+
+        Customer customer = customerDao.findCustomerByName(userName);
+        customer.update(userName.value(), editRequest.getPassword(), encryptor);
+        customerDao.updateByName(userName, customer);
+        return;
+    }
+
+    private boolean notExistCustomerName(UserName userName) {
+        return !customerDao.existsByName(userName);
     }
 
     public void validateNameAndPassword(final String userName, final String rawPassword) {
         Customer customer = new Customer(userName, rawPassword, encryptor);
-        if (customerDao.existsCustomer(customer)) {
-            return;
+        if (customerDao.checkNotExistsCustomer(customer)) {
+            throw new AuthorizationException("로그인에 실패했습니다.");
         }
-        throw new AuthorizationException("로그인에 실패했습니다.");
     }
 
     public CheckDuplicateResponse isExistUser(final String rawUserName) {
