@@ -4,13 +4,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
-import woowacourse.member.domain.password.NewPassword;
 import woowacourse.member.domain.password.Password;
+import woowacourse.member.domain.password.UnencryptedPassword;
 import woowacourse.member.dto.FindMemberInfoResponse;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.dto.UpdateNameRequest;
 import woowacourse.member.dto.UpdatePasswordRequest;
-import woowacourse.member.exception.*;
+import woowacourse.member.exception.DuplicateEmailException;
+import woowacourse.member.exception.InvalidMemberNameException;
+import woowacourse.member.exception.InvalidPasswordException;
+import woowacourse.member.exception.MemberNotFoundException;
 
 import java.util.Optional;
 
@@ -27,7 +30,7 @@ public class MemberService {
     @Transactional
     public void signUp(SignUpRequest request) {
         checkDuplicateEmail(request.getEmail());
-        Password password = new NewPassword(request.getPassword());
+        Password password = new UnencryptedPassword(request.getPassword());
         Member member = new Member(request.getEmail(), request.getName(), password);
         memberDao.save(member);
     }
@@ -58,7 +61,7 @@ public class MemberService {
         Member member = validateExistMember(memberDao.findMemberById(id));
         validateUpdatePassword(request, member);
 
-        Password newPassword = new NewPassword(request.getNewPassword());
+        Password newPassword = new UnencryptedPassword(request.getNewPassword());
         memberDao.updatePassword(id, newPassword.getValue());
     }
 
@@ -67,7 +70,7 @@ public class MemberService {
     }
 
     private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {
-        Password requestPassword = new NewPassword(request.getOldPassword());
+        Password requestPassword = new UnencryptedPassword(request.getOldPassword());
         if (!member.isSamePassword(requestPassword)) {
             throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
         }

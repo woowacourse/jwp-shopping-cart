@@ -5,13 +5,13 @@ import woowacourse.member.exception.InvalidPasswordException;
 
 import java.util.regex.Pattern;
 
-public class NewPassword extends Password {
+public class UnencryptedPassword extends Password {
 
     private static final Pattern CASE_PATTERN = Pattern.compile("(?=.*?[a-z])(?=.*?[A-Z])");
     private static final Pattern SPECIAL_CHARACTER_PATTERN = Pattern.compile("(?=.*?[!@?-])");
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
 
-    public NewPassword(String value) {
+    public UnencryptedPassword(String value) {
         super(PasswordEncoder.encrypt(value));
         validate(value);
     }
