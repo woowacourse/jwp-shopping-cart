@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.dto.CartItemCreateRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
@@ -57,13 +58,16 @@ public class CartItemService {
 
     public CartItemResponse updateQuantity(LoginCustomer loginCustomer, Long cartItemId,
                                            CartItemUpdateRequest cartItemUpdateRequest) {
-        customerDao.findByLoginId(loginCustomer.getLoginId());
-        final Long productId = cartItemDao.findProductIdById(cartItemId);
-        final Product product = productDao.findProductById(productId);
+        final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
+        final List<CartItem> customerCartItems = cartItemDao.findCartItemsByCustomerId(customer.getId());
+        final CartItem savedCartItem = customerCartItems.stream()
+                .filter(item -> item.getId().equals(cartItemId))
+                .findFirst()
+                .orElseThrow(InvalidCartItemException::new);
 
-        int quantity = cartItemUpdateRequest.getQuantity();
-        cartItemDao.updateById(quantity, cartItemId);
-        return CartItemResponse.of(cartItemId, new CartItem(cartItemId, product, quantity));
+        final CartItem updatedCartItem = cartItemUpdateRequest.toCartItem(savedCartItem);
+        cartItemDao.update(updatedCartItem);
+        return CartItemResponse.of(cartItemId, updatedCartItem);
     }
 
     public void deleteAll(LoginCustomer loginCustomer) {

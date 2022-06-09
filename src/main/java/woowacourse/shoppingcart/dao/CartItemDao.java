@@ -74,13 +74,10 @@ public class CartItemDao {
         }
     }
 
-    public void updateById(int quantity, Long id) {
+    public void update(CartItem cartItem) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        final int rowCount = jdbcTemplate.update(sql, quantity, id);
-
-        if (rowCount == 0) {
-            throw new InvalidCartItemException();
-        }
+        final int updatedRows = jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+        checkReflected(updatedRows);
     }
 
     public void deleteAllByCustomerId(Long customerId) {
@@ -97,6 +94,12 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    private void checkReflected(int updatedRows) {
+        if (updatedRows == 0) {
             throw new InvalidCartItemException();
         }
     }

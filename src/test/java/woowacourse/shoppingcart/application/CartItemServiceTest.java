@@ -19,8 +19,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dto.CartItemCreateRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @SpringBootTest
@@ -116,6 +118,40 @@ class CartItemServiceTest {
             List<Long> cartItemProductIds = response.stream().map(CartItemResponse::getProductId)
                     .collect(Collectors.toList());
             assertThat(cartItemProductIds).containsExactly(productId1, productId2);
+        }
+    }
+
+    @Nested
+    @DisplayName("updateQuantity 메서드는")
+    class updateQuantity {
+        @Test
+        @DisplayName("고객의 장바구니 아이템의 수량을 수정한다.")
+        void success() {
+            // given
+            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            Long productId = productService.addProduct(치킨);
+            CartItemResponse cartItem = cartItemService.add(new LoginCustomer(페퍼_아이디),
+                    new CartItemCreateRequest(productId));
+
+            // when
+            CartItemResponse response = cartItemService.updateQuantity(new LoginCustomer(페퍼_아이디),
+                    cartItem.getId(), new CartItemUpdateRequest(10));
+
+            // then
+            assertThat(response.getQuantity()).isEqualTo(10);
+        }
+
+        @Test
+        @DisplayName("수정하고자 하는 아이템이 존재하지 않는 경우, 예외를 던진다.")
+        void item_notExist() {
+            // given
+            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
+            CartItemUpdateRequest request = new CartItemUpdateRequest(10);
+
+            // when & then
+            assertThatThrownBy(() -> cartItemService.updateQuantity(loginCustomer, 1L, request))
+                    .isInstanceOf(InvalidCartItemException.class);
         }
     }
 }

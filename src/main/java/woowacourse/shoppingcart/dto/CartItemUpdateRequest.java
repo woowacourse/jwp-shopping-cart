@@ -19,7 +19,8 @@ public class CartItemUpdateRequest {
         return quantity;
     }
 
-    public CartItem toCartItem() {
-        return null;
+    public CartItem toCartItem(CartItem cartItem) {
+        return new CartItem(cartItem.getId(), cartItem.getProductId(), cartItem.getName(), cartItem.getPrice(),
+                cartItem.getImageUrl(), this.quantity);
     }
 }

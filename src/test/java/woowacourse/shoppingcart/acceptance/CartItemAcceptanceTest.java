@@ -73,26 +73,6 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_수량_응답됨(response);
     }
 
-    private void 장바구니_아이템_수량_응답됨(ExtractableResponse<Response> response) {
-        CartItemResponse cartItemResponse = response.as(CartItemResponse.class);
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(10)
-        );
-    }
-
-    private ExtractableResponse<Response> 장바구니_아이템_수량_수정_요청(String accessToken, CartItemUpdateRequest request,
-                                                            Long cartItemId) {
-        return RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().put("/customers/carts/" + cartItemId)
-                .then().log().all()
-                .extract();
-    }
-
     @DisplayName("장바구니 모두 삭제")
     @Test
     void deleteAllCartItem() {
@@ -147,6 +127,26 @@ class CartItemAcceptanceTest extends AcceptanceTest {
                 .when().get("/customers/carts")
                 .then().log().all()
                 .extract();
+    }
+
+    private ExtractableResponse<Response> 장바구니_아이템_수량_수정_요청(String accessToken, CartItemUpdateRequest request,
+                                                            Long cartItemId) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/customers/carts/" + cartItemId)
+                .then().log().all()
+                .extract();
+    }
+
+    private void 장바구니_아이템_수량_응답됨(ExtractableResponse<Response> response) {
+        CartItemResponse cartItemResponse = response.as(CartItemResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(10)
+        );
     }
 
     private ExtractableResponse<Response> 장바구니_전체_삭제_요청(String accessToken) {

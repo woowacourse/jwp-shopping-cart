@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +17,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -112,15 +113,39 @@ class CartItemDaoTest {
         assertThat(cartIds).containsExactly(1L, 2L);
     }
 
-    @DisplayName("id에 해당하는 장바구니 아이템의 수량을 수정한다.")
-    @Test
-    void updateById() {
-        // given
-        final Long cartId = 1L;
-        final int quantity = 10;
+    @Nested
+    @DisplayName("update 메서드는")
+    class update {
 
-        // when & then
-        assertDoesNotThrow(() -> cartItemDao.updateById(quantity, cartId));
+        @DisplayName("장바구니 아이템의 수량을 수정한다.")
+        @Test
+        void success() {
+            // given
+            Long cartItemId = 1L;
+            int quantity = 10;
+            CartItem cartItem = new CartItem(cartItemId, 1L, "banana", 1_000, "woowa1.com", quantity);
+
+            // when & then
+            cartItemDao.update(cartItem);
+
+            // then
+            CartItem updatedItem = cartItemDao.findCartItemsByCustomerId(1L).stream()
+                    .filter(it -> it.getId().equals(cartItemId))
+                    .findFirst()
+                    .get();
+            assertThat(updatedItem.getQuantity()).isEqualTo(quantity);
+        }
+
+        @DisplayName("장바구니 아이템이 존재하지 않은 경우, 예외를 던진다.")
+        @Test
+        void item_notExist() {
+            // given
+            CartItem cartItem = new CartItem(3L, 1L, "banana", 1_000, "woowa1.com", 10);
+
+            // when & then
+            assertThatThrownBy(() -> cartItemDao.update(cartItem))
+                    .isInstanceOf(InvalidCartItemException.class);
+        }
     }
 
     @DisplayName("Customer Id에 해당하는 장바구니 아이템을 모두 삭제한다.")
