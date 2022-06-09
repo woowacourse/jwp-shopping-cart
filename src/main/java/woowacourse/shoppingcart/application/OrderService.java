@@ -15,6 +15,7 @@ import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.response.OrdersResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
@@ -55,9 +56,10 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Orders findOrderById(final Long customerId, final Long orderId) {
+    public OrdersResponse findOrderById(final Long customerId, final Long orderId) {
         validateOrderIdByCustomerName(customerId, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+        final Orders orders = findOrderResponseDtoByOrderId(orderId);
+        return new OrdersResponse(orders);
     }
 
     private void validateOrderIdByCustomerName(final Long customerId, final Long orderId) {
@@ -70,13 +72,16 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<Orders> findOrdersByCustomerId(final Long customerId) {
+    public List<OrdersResponse> findOrdersByCustomerId(final Long customerId) {
         final Customer customer = customerDao.findById(customerId)
                 .orElseThrow(InvalidCustomerException::new);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customer.getId());
 
-        return orderIds.stream()
+        final List<Orders> ordersByCustomerId = orderIds.stream()
                 .map(this::findOrderResponseDtoByOrderId)
+                .collect(Collectors.toList());
+        return ordersByCustomerId.stream()
+                .map(OrdersResponse::new)
                 .collect(Collectors.toList());
     }
 

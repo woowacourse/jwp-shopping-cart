@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.response.OrdersResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -106,7 +108,7 @@ class OrderControllerTest {
                 Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
 
         when(orderService.findOrderById(customerId, orderId))
-                .thenReturn(expected);
+                .thenReturn(new OrdersResponse(expected));
 
         // when // then
         mockMvc.perform(get("/api/customers/me/orders/" + orderId)
@@ -133,7 +135,9 @@ class OrderControllerTest {
         );
 
         when(orderService.findOrdersByCustomerId(customerId))
-                .thenReturn(expected);
+                .thenReturn(expected.stream()
+                        .map(OrdersResponse::new)
+                        .collect(Collectors.toList()));
 
         // when // then
         mockMvc.perform(get("/api/customers/me/orders/")

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.response.OrdersResponse;
 
 @Validated
 @RestController
@@ -37,15 +37,15 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal final LoginCustomer loginCustomer,
-                                            @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(loginCustomer.getId(), orderId);
-        return ResponseEntity.ok(order);
+    public ResponseEntity<OrdersResponse> findOrder(@AuthenticationPrincipal final LoginCustomer loginCustomer,
+                                                    @PathVariable final Long orderId) {
+        final OrdersResponse ordersResponse = orderService.findOrderById(loginCustomer.getId(), orderId);
+        return ResponseEntity.ok(ordersResponse);
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@AuthenticationPrincipal final LoginCustomer loginCustomer) {
-        final List<Orders> orders = orderService.findOrdersByCustomerId(loginCustomer.getId());
-        return ResponseEntity.ok(orders);
+    public ResponseEntity<List<OrdersResponse>> findOrders(@AuthenticationPrincipal final LoginCustomer loginCustomer) {
+        final List<OrdersResponse> ordersByCustomerId = orderService.findOrdersByCustomerId(loginCustomer.getId());
+        return ResponseEntity.ok(ordersByCustomerId);
     }
 }
