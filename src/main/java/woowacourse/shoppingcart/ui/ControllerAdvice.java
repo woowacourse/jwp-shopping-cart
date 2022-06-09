@@ -38,6 +38,7 @@ public class ControllerAdvice {
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
+            IllegalArgumentException.class,
             NotInCustomerCartItemException.class,
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
