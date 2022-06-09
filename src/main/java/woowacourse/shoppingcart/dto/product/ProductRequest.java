@@ -1,13 +1,25 @@
 package woowacourse.shoppingcart.dto.product;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import woowacourse.shoppingcart.domain.Product;
 
 public class ProductRequest {
 
+    @NotNull
     private Long id;
+
+    @NotBlank
     private String name;
+
+    @Positive
     private int price;
+
+    @NotBlank
     private String imageUrl;
+
+    @Positive
     private int stock;
 
     private ProductRequest() {

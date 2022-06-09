@@ -1,8 +1,14 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 public class CartRequest {
 
+    @NotNull
     private Long productId;
+
+    @Positive
     private int quantity;
 
     private CartRequest() {
