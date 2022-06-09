@@ -75,3 +75,14 @@ alter table ORDERS_DETAIL
 alter table ORDERS_DETAIL
     add constraint fk_orders_detail_to_product
         foreign key (product_id) references PRODUCT (id) on delete cascade;
+
+INSERT INTO CUSTOMER(email, password, name, phone, address) VALUES('email', 'Pw123456!', 'name', '010-1234-5678', 'address');
+
+INSERT INTO PRODUCT(name, price, image_url) VALUES('banana', 1000, 'woowa1.com');
+INSERT INTO PRODUCT(name, price, image_url) VALUES('apple', 2000, 'woowa2.com');
+
+INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(1L, 1L, 10);
+INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(1L, 2L, 20);
+
+INSERT INTO ORDERS(customer_id) VALUES(1L);
+INSERT INTO ORDERS_DETAIL(orders_id, product_id, quantity) VALUES(1L, 1L, 3);
