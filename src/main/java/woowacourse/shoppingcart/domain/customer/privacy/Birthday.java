@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Birthday {
-    private static final Birthday EMPTY = new Birthday(LocalDate.MIN);
+    private static final Birthday EMPTY = new Birthday(null);
 
     private final LocalDate value;
 
