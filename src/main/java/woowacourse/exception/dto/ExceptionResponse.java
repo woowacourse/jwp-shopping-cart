@@ -2,14 +2,13 @@ package woowacourse.exception.dto;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName(value = "error")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class ExceptionResponse {
-    @JsonProperty("message")
+
     private List<String> messages;
 
     private ExceptionResponse() {
