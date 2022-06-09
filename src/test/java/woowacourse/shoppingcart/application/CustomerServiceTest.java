@@ -55,7 +55,7 @@ class CustomerServiceTest {
         // when & then
         assertThatThrownBy(() -> customerService.signUp(customerSignUpRequest))
                 .isInstanceOf(CustomerDuplicatedDataException.class)
-                .hasMessage("이미 존재하는 아이디입니다.");
+                .hasMessage("이미 가입된 이메일입니다.");
     }
 
     @DisplayName("중복된 닉네임을 가입할 수 없다.")
@@ -81,7 +81,7 @@ class CustomerServiceTest {
         // when & then
         assertThatThrownBy(() -> customerService.login(customerLoginRequest))
                 .isInstanceOf(LoginDataNotFoundException.class)
-                .hasMessage("존재하지 않는 회원입니다.");
+                .hasMessage("아아디 또는 비밀번호를 확인하여주세요.");
     }
 
     @DisplayName("로그인한다.")
@@ -278,6 +278,6 @@ class CustomerServiceTest {
         // when & then
         assertThatThrownBy(() -> customerService.withdraw(tokenRequest, customerPasswordRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("입력한 비밀번호가 올바르지 않습니다.");
+                .hasMessage("아아디 또는 비밀번호를 확인하여주세요.");
     }
 }

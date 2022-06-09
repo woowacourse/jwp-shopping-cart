@@ -52,7 +52,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/customers/signUp")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("이미 존재하는 아이디입니다."));
+                .body("message", is("이미 가입된 이메일입니다."));
     }
 
     @DisplayName("중복된 닉네임으로 회원가입을 하면 예외가 발생한다.")
@@ -162,7 +162,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/customers/login")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .body("message", is("존재하지 않는 회원입니다."));
+                .body("message", is("아아디 또는 비밀번호를 확인하여주세요."));
     }
 
     @DisplayName("비밀번호가 틀리면 로그인이 안된다.")
@@ -329,7 +329,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().patch("/auth/customers/profile/password")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("입력한 비밀번호가 올바르지 않습니다."));
+                .body("message", is("아아디 또는 비밀번호를 확인하여주세요."));
     }
 
     @DisplayName("수정하려는 비밀번호가 올바른 형식이 아닐 경우 비밀번호 변경이 안된다.")
@@ -418,7 +418,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().delete("/auth/customers/profile")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("입력한 비밀번호가 올바르지 않습니다."));
+                .body("message", is("아아디 또는 비밀번호를 확인하여주세요."));
     }
 
     @DisplayName("회원가입시 기존에 존재하는 아이디를 입력하면 안된다.")
@@ -430,7 +430,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().get("/customers/check?userId=puterism@woowacourse.com")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("이미 존재하는 아이디입니다."));
+                .body("message", is("이미 가입된 이메일입니다."));
     }
 
     @DisplayName("회원가입시 기존에 존재하는 닉네임을 입력하면 안된다.")
