@@ -30,6 +30,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     private Long cartId1;
     private Long cartId2;
 
+    private TokenResponse tokenResponse;
+
     @Override
     @BeforeEach
     public void setUp() {
@@ -41,7 +43,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         사용자_생성_요청("loginId", "seungpapang", "12345678aA!");
         LoginRequest loginRequest = new LoginRequest("loginId", "12345678aA!");
         ExtractableResponse<Response> loginResponse = 로그인_요청(loginRequest);
-        TokenResponse tokenResponse = loginResponse.as(TokenResponse.class);
+        tokenResponse = loginResponse.as(TokenResponse.class);
 
         cartId1 = 장바구니_아이템_추가되어_있음(productId1, tokenResponse.getAccessToken()).getId();
         cartId2 = 장바구니_아이템_추가되어_있음(productId2, tokenResponse.getAccessToken()).getId();
@@ -54,7 +56,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .map(cartId -> new OrderRequest(cartId, 10))
                 .collect(Collectors.toList());
 
-        ExtractableResponse<Response> response = 주문하기_요청(USER, orderRequests);
+        ExtractableResponse<Response> response = 주문하기_요청(orderRequests, tokenResponse.getAccessToken());
 
         주문하기_성공함(response);
     }
@@ -62,10 +64,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(Collections.singletonList(new OrderRequest(cartId1, 2)), tokenResponse.getAccessToken());
+        Long orderId2 = 주문하기_요청_성공되어_있음(Collections.singletonList(new OrderRequest(cartId2, 5)), tokenResponse.getAccessToken());
 
-        ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
+        ExtractableResponse<Response> response = 주문_내역_조회_요청(tokenResponse.getAccessToken());
 
         주문_조회_응답됨(response);
         주문_내역_포함됨(response, orderId1, orderId2);
@@ -74,41 +76,44 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 단일 조회")
     @Test
     void getOrder() {
-        Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
+        Long orderId = 주문하기_요청_성공되어_있음(Arrays.asList(
                 new OrderRequest(cartId1, 2),
                 new OrderRequest(cartId2, 4)
-        ));
+        ), tokenResponse.getAccessToken());
 
-        ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
+        ExtractableResponse<Response> response = 주문_단일_조회_요청(orderId, tokenResponse.getAccessToken());
 
         주문_조회_응답됨(response);
         주문_조회됨(response, orderId);
     }
 
-    public static ExtractableResponse<Response> 주문하기_요청(String userName, List<OrderRequest> orderRequests) {
+    public static ExtractableResponse<Response> 주문하기_요청(List<OrderRequest> orderRequests, String accessToken) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().oauth2(accessToken)
                 .body(orderRequests)
-                .when().post("/api/customers/{customerName}/orders", userName)
+                .when().post("/customers/orders")
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 주문_내역_조회_요청(String userName) {
+    public static ExtractableResponse<Response> 주문_내역_조회_요청(String accessToken) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders", userName)
+                .auth().oauth2(accessToken)
+                .when().get("/customers/orders")
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 주문_단일_조회_요청(String userName, Long orderId) {
+    public static ExtractableResponse<Response> 주문_단일_조회_요청(Long orderId, String accessToken) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
+                .auth().oauth2(accessToken)
+                .when().get("/customers/orders/{orderId}", orderId)
                 .then().log().all()
                 .extract();
     }
@@ -118,8 +123,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 주문하기_요청_성공되어_있음(String userName, List<OrderRequest> orderRequests) {
-        ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
+    public static Long 주문하기_요청_성공되어_있음(List<OrderRequest> orderRequests, String accessToken) {
+        ExtractableResponse<Response> response = 주문하기_요청(orderRequests, accessToken);
         return Long.parseLong(response.header("Location").split("/orders/")[1]);
     }
 
