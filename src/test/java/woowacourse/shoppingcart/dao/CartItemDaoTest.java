@@ -24,10 +24,8 @@ public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final CustomerDao customerDao;
-    private final JdbcTemplate jdbcTemplate;
 
     public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
         cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
         customerDao = new CustomerDao(jdbcTemplate);
@@ -40,9 +38,9 @@ public class CartItemDaoTest {
         // given
         Long customerId = customerDao.save(new Customer("awesomeo@gmail.com", "awesome", "Password123!"));
         Long productId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
-
+        CartItem cartItem = CartItem.from(customerId, new Product(productId, "banana", 1_000, "woowa1.com"));
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(cartItem);
 
         // then
         assertThat(cartId).isNotNull();
@@ -57,17 +55,16 @@ public class CartItemDaoTest {
         Long productId1 = productDao.save(new Product("banana", 1_000, "woowa1.com"));
         Long productId2 = productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
-        Long cartItemId1 = cartItemDao.addCartItem(customerId, productId1);
-        Long cartItemId2 = cartItemDao.addCartItem(customerId, productId2);
+        CartItem cartItem1 = CartItem.from(customerId, new Product(productId1, "banana", 1_000, "woowa1.com"));
+        CartItem cartItem2 = CartItem.from(customerId, new Product(productId2, "apple", 2_000, "woowa2.com"));
+        cartItemDao.addCartItem(cartItem1);
+        cartItemDao.addCartItem(cartItem2);
 
         // when
         List<CartItem> carts = cartItemDao.findCartItemsByCustomerId(customerId);
 
         // then
-        assertThat(carts).usingRecursiveComparison().isEqualTo(
-                List.of(new CartItem(cartItemId1, productId1, "banana", 1_000, 1, "woowa1.com"),
-                        new CartItem(cartItemId2, productId2, "apple", 2_000, 1, "woowa2.com"))
-        );
+        assertThat(carts).usingRecursiveComparison().ignoringFields("id").isEqualTo(List.of(cartItem1, cartItem2));
     }
 
     @DisplayName("커스터머 아이디와 프로덕트 아이디로 장바구니 아이템의 수량을 증가시킨다.")
@@ -76,8 +73,8 @@ public class CartItemDaoTest {
         // given
         Long customerId = customerDao.save(new Customer("awesomeo@gmail.com", "awesome", "Password123!"));
         Long productId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
-
-        Long cartItemId = cartItemDao.addCartItem(customerId, productId);
+        CartItem cartItem = CartItem.from(customerId, new Product(productId, "banana", 1_000, "woowa1.com"));
+        Long cartItemId = cartItemDao.addCartItem(cartItem);
 
         // when
         int quantity = 2;
@@ -86,7 +83,7 @@ public class CartItemDaoTest {
         // then
         List<CartItem> carts = cartItemDao.findCartItemsByCustomerId(customerId);
         assertThat(carts).usingRecursiveComparison().isEqualTo(
-                List.of(new CartItem(cartItemId, productId, "banana", 1_000, quantity, "woowa1.com"))
+                List.of(new CartItem(cartItemId, customerId, productId, "banana", 1_000, quantity, "woowa1.com"))
         );
     }
 
@@ -97,8 +94,12 @@ public class CartItemDaoTest {
         Long customerId = customerDao.save(new Customer("awesomeo@gmail.com", "awesome", "Password123!"));
         Long productId1 = productDao.save(new Product("banana", 1_000, "woowa1.com"));
         Long productId2 = productDao.save(new Product("apple", 2_000, "woowa2.com"));
-        cartItemDao.addCartItem(customerId, productId1);
-        cartItemDao.addCartItem(customerId, productId2);
+
+        CartItem cartItem1 = CartItem.from(customerId, new Product(productId1, "banana", 1_000, "woowa1.com"));
+        CartItem cartItem2 = CartItem.from(customerId, new Product(productId2, "apple", 2_000, "woowa2.com"));
+
+        cartItemDao.addCartItem(cartItem1);
+        cartItemDao.addCartItem(cartItem2);
 
         // when
         final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
@@ -113,7 +114,10 @@ public class CartItemDaoTest {
         // given
         Long customerId = customerDao.save(new Customer("awesomeo@gmail.com", "awesome", "Password123!"));
         Long productId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        Long cartItemId = cartItemDao.addCartItem(customerId, productId);
+
+        CartItem cartItem = CartItem.from(customerId, new Product(productId, "banana", 1_000, "woowa1.com"));
+
+        Long cartItemId = cartItemDao.addCartItem(cartItem);
 
         // when
         final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
@@ -127,7 +131,10 @@ public class CartItemDaoTest {
     void deleteCartItem() {
         Long customerId = customerDao.save(new Customer("awesomeo@gmail.com", "awesome", "Password123!"));
         Long productId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        cartItemDao.addCartItem(customerId, productId);
+
+        CartItem cartItem = CartItem.from(customerId, new Product(productId, "banana", 1_000, "woowa1.com"));
+
+        cartItemDao.addCartItem(cartItem);
 
         cartItemDao.deleteCartItem(customerId, productId);
 
@@ -140,7 +147,8 @@ public class CartItemDaoTest {
     void existsByCustomerIdAndProductIdReturnTrue() {
         Long customerId = customerDao.save(new Customer("awesomeo@gmail.com", "awesome", "Password123!"));
         Long productId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        cartItemDao.addCartItem(customerId, productId);
+        CartItem cartItem = CartItem.from(customerId, new Product(productId, "banana", 1_000, "woowa1.com"));
+        cartItemDao.addCartItem(cartItem);
 
         boolean actual = cartItemDao.existsByCustomerIdAndProductId(customerId, productId);
 
@@ -152,7 +160,8 @@ public class CartItemDaoTest {
     void existsByCustomerIdAndProductIdReturnFalse() {
         Long customerId = customerDao.save(new Customer("awesomeo@gmail.com", "awesome", "Password123!"));
         Long productId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        cartItemDao.addCartItem(customerId, productId);
+        CartItem cartItem = CartItem.from(customerId, new Product(productId, "banana", 1_000, "woowa1.com"));
+        cartItemDao.addCartItem(cartItem);
         cartItemDao.deleteCartItem(customerId, productId);
 
         boolean actual = cartItemDao.existsByCustomerIdAndProductId(customerId, productId);

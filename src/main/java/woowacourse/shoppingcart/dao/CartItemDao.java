@@ -40,14 +40,14 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
+    public Long addCartItem(final CartItem cartItem) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
+            preparedStatement.setLong(1, cartItem.getCustomerId());
+            preparedStatement.setLong(2, cartItem.getProductId());
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -63,13 +63,14 @@ public class CartItemDao {
     }
 
     public List<CartItem> findCartItemsByCustomerId(Long customerId) {
-        final String sql = "SELECT c.id, p.id as product_id, p.name, c.quantity, p.price, p.image_url " +
+        final String sql = "SELECT c.id, c.customer_id, p.id as product_id, p.name, c.quantity, p.price, p.image_url " +
                 "FROM cart_item as c " +
                 "INNER JOIN product as p ON p.id = c.product_id " +
                 "WHERE c.customer_id = ?";
 
         List<CartItem> query = jdbcTemplate.query(sql, (resultSet, rowNum) -> new CartItem(
                 resultSet.getLong("id"),
+                resultSet.getLong("customer_id"),
                 resultSet.getLong("product_id"),
                 resultSet.getString("name"),
                 resultSet.getInt("price"),

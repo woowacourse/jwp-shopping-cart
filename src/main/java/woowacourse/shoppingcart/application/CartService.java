@@ -41,7 +41,7 @@ public class CartService {
             throw new IllegalArgumentException("이미 추가된 상품입니다.");
         }
 
-        return cartItemDao.addCartItem(customer.getId(), product.getId());
+        return cartItemDao.addCartItem(CartItem.from(customer.getId(), product));
     }
 
     public void updateQuantity(String email, Long productId, int quantity) {
