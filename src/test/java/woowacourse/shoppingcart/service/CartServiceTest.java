@@ -17,6 +17,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartAddRequest;
+import woowacourse.shoppingcart.dto.CartUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
 @SpringBootTest
@@ -86,5 +87,23 @@ class CartServiceTest {
         //then
         List<Cart> carts = cartService.findCartsByLoginCustomer(loginCustomer);
         Assertions.assertThat(carts).isEmpty();
+    }
+
+    @Test
+    @DisplayName("장바구니 물품 개수를 수정할 수 있다.")
+    void updateQuantity() {
+        //given
+        Long bananaId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
+
+        customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+
+        LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
+        Cart cart = cartService.addCart(loginCustomer, new CartAddRequest(bananaId));
+
+        //when
+        Cart updateCart = cartService.updateQuantity(loginCustomer, new CartUpdateRequest(5), cart.getId());
+
+        //then
+        assertThat(updateCart.getQuantity()).isEqualTo(5);
     }
 }

@@ -6,6 +6,10 @@ public class CartUpdateRequest {
     public CartUpdateRequest() {
     }
 
+    public CartUpdateRequest(int quantity) {
+        this.quantity = quantity;
+    }
+
     public int getQuantity() {
         return quantity;
     }
