@@ -8,6 +8,8 @@ import woowacourse.member.domain.Member;
 import woowacourse.member.domain.Nickname;
 import woowacourse.member.domain.Password;
 import woowacourse.member.dto.request.PasswordRequest;
+import woowacourse.member.dto.response.PasswordCheckResponse;
+import woowacourse.member.dto.response.UniqueEmailCheckResponse;
 import woowacourse.member.exception.AuthorizationException;
 import woowacourse.member.support.TokenManager;
 import woowacourse.member.dto.request.LoginRequest;
@@ -39,15 +41,19 @@ public class MemberService {
     }
 
     private void validateUniqueEmail(MemberCreateRequest memberCreateRequest) {
-        if (checkEmailExistence(memberCreateRequest.getEmail())) {
+        if (!isUniqueEmail(memberCreateRequest.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일 주소입니다.");
         }
     }
 
     @Transactional(readOnly = true)
-    public boolean checkEmailExistence(String email) {
+    public UniqueEmailCheckResponse checkUniqueEmail(String email) {
+        return new UniqueEmailCheckResponse(isUniqueEmail(email));
+    }
+
+    private boolean isUniqueEmail(String email) {
         String validatedEmail = new Email(email).getValue();
-        return memberDao.existsEmail(validatedEmail);
+        return !memberDao.existsEmail(validatedEmail);
     }
 
     @Transactional(readOnly = true)
@@ -63,8 +69,9 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public boolean checkPassword(long memberId, PasswordRequest passwordRequest) {
-        return memberDao.checkPassword(memberId, passwordRequest.getPassword());
+    public PasswordCheckResponse checkPassword(long memberId, PasswordRequest passwordRequest) {
+        boolean isRightPassword = memberDao.checkPassword(memberId, passwordRequest.getPassword());
+        return new PasswordCheckResponse(isRightPassword);
     }
 
     @Transactional(readOnly = true)

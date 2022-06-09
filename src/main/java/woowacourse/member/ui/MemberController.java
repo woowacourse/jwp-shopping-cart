@@ -18,7 +18,7 @@ import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.member.dto.request.MemberCreateRequest;
 import woowacourse.member.dto.request.MemberUpdateRequest;
 import woowacourse.member.dto.request.PasswordRequest;
-import woowacourse.member.dto.response.CheckResponse;
+import woowacourse.member.dto.response.UniqueEmailCheckResponse;
 import woowacourse.member.dto.response.LoginResponse;
 import woowacourse.member.dto.response.MemberResponse;
 import woowacourse.member.dto.response.PasswordCheckResponse;
@@ -43,9 +43,8 @@ public class MemberController {
     }
 
     @GetMapping("/members/email-check")
-    public ResponseEntity<CheckResponse> checkDuplicatedEmail(@RequestParam @NotBlank String email) {
-        CheckResponse checkResponse = new CheckResponse(!memberService.checkEmailExistence(email));
-        return ResponseEntity.ok(checkResponse);
+    public ResponseEntity<UniqueEmailCheckResponse> checkDuplicatedEmail(@RequestParam @NotBlank String email) {
+        return ResponseEntity.ok(memberService.checkUniqueEmail(email));
     }
 
     @PostMapping("/login")
@@ -56,8 +55,7 @@ public class MemberController {
     @PostMapping("/members/password-check")
     public ResponseEntity<PasswordCheckResponse> confirmPassword(@AuthenticationPrincipal long memberId,
                                                                  @RequestBody PasswordRequest passwordRequest) {
-        boolean actual = memberService.checkPassword(memberId, passwordRequest);
-        return ResponseEntity.ok(new PasswordCheckResponse(actual));
+        return ResponseEntity.ok(memberService.checkPassword(memberId, passwordRequest));
     }
 
     @GetMapping("/members/me")

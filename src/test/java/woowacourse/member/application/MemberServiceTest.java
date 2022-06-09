@@ -80,7 +80,8 @@ class MemberServiceTest {
     @ParameterizedTest
     @CsvSource({"1q2w3e4r!, true", "asda1234!, false"})
     void checkPassword(String password, boolean expected) {
-        boolean actual = memberService.checkPassword(MEMBER_ID, new PasswordRequest(password));
+        boolean actual = memberService.checkPassword(MEMBER_ID, new PasswordRequest(password))
+                .isSuccess();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -170,16 +171,18 @@ class MemberServiceTest {
     void deleteMember() {
         memberService.deleteMember(MEMBER_ID);
 
-        boolean actual = memberService.checkEmailExistence(EMAIL);
+        boolean actual = memberService.checkUniqueEmail(EMAIL)
+                .isUnique();
 
-        assertThat(actual).isFalse();
+        assertThat(actual).isTrue();
     }
 
-    @DisplayName("존재하는 이메일인지 반환한다.")
+    @DisplayName("존재하지 않는 이메일인지 반환한다.")
     @ParameterizedTest
-    @CsvSource({"abc@woowahan.com, true", "abc@naver.com, false"})
+    @CsvSource({"abc@woowahan.com, false", "abc@naver.com, true"})
     void existsEmail(String email, boolean expected) {
-        boolean actual = memberService.checkEmailExistence(email);
+        boolean actual = memberService.checkUniqueEmail(email)
+                .isUnique();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -189,7 +192,7 @@ class MemberServiceTest {
     void existsEmail_InvalidFormat() {
         String invalidEmail = "abc";
 
-        assertThatThrownBy(() -> memberService.checkEmailExistence(invalidEmail))
+        assertThatThrownBy(() -> memberService.checkUniqueEmail(invalidEmail))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이메일 형식이 올바르지 않습니다.");
     }

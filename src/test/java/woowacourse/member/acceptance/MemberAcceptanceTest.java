@@ -35,7 +35,7 @@ import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.member.dto.request.MemberCreateRequest;
 import woowacourse.member.dto.request.MemberUpdateRequest;
 import woowacourse.member.dto.request.PasswordRequest;
-import woowacourse.member.dto.response.CheckResponse;
+import woowacourse.member.dto.response.UniqueEmailCheckResponse;
 import woowacourse.member.dto.response.ErrorResponse;
 import woowacourse.member.dto.response.LoginResponse;
 import woowacourse.member.dto.response.MemberResponse;
@@ -90,7 +90,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         post(SIGN_UP_URI, MEMBER_CREATE_REQUEST);
 
         ExtractableResponse<Response> response = get(EMAIL_DUPLICATION_CHECK_URI + email);
-        boolean success = response.as(CheckResponse.class)
+        boolean success = response.as(UniqueEmailCheckResponse.class)
                 .isUnique();
 
         assertAll(

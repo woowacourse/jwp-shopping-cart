@@ -1,13 +1,13 @@
 package woowacourse.member.dto.response;
 
-public class CheckResponse {
+public class UniqueEmailCheckResponse {
 
     private boolean unique;
 
-    public CheckResponse() {
+    public UniqueEmailCheckResponse() {
     }
 
-    public CheckResponse(boolean unique) {
+    public UniqueEmailCheckResponse(boolean unique) {
         this.unique = unique;
     }
 
