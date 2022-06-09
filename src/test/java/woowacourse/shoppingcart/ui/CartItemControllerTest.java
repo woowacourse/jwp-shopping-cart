@@ -120,7 +120,8 @@ public class CartItemControllerTest {
     void deleteCartItem() throws Exception {
         // given
         Long customerId = 1L;
-        DeleteCartRequest deleteCartRequest = new DeleteCartRequest(List.of(cartItem1.getProductId(), cartItem2.getProductId()));
+        DeleteCartRequest deleteCartRequest = new DeleteCartRequest(
+                List.of(cartItem1.getProductId(), cartItem2.getProductId()));
         List<Long> productIds = List.of(cartItem1.getProductId(), cartItem2.getProductId());
 
         when(authenticationPrincipalArgumentResolver.supportsParameter((MethodParameter) notNull()))

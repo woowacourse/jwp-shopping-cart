@@ -26,6 +26,7 @@ class OrdersDetailDaoTest {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final OrdersDetailDao ordersDetailDao;
     private final CustomerDao customerDao;
+
     private long ordersId;
     private long productId;
     private long customerId;
@@ -69,11 +70,9 @@ class OrdersDetailDaoTest {
         //given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
-            jdbcTemplate
-                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
+            jdbcTemplate.update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
                             ordersId, productId, 3);
         }
-
         //when
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
                 .findOrdersDetailsByOrderId(ordersId);
