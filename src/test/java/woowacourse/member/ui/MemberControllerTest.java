@@ -116,29 +116,19 @@ public class MemberControllerTest extends RestDocsTest {
     @DisplayName("멤버가 회원가입에 실패한다.")
     @ParameterizedTest
     @MethodSource("provideMemberRegisterRequest")
-    void failedRegister(MemberRegisterRequest request, String errorMessage) throws Exception {
+    void failedRegister(MemberRegisterRequest request) throws Exception {
         mockMvc.perform(post("/api/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(errorMessage));
+                .andExpect(status().isBadRequest());
     }
 
     private static Stream<Arguments> provideMemberRegisterRequest() {
         return Stream.of(
-                Arguments.of(
-                        createMemberRegisterRequest("email", PASSWORD, NAME),
-                        "올바른 이메일 형식으로 입력해주세요."
-                ),
-                Arguments.of(
-                        createMemberRegisterRequest(EMAIL, "password", NAME),
-                        "올바른 비밀번호 형식으로 입력해주세요."
-                ),
-                Arguments.of(
-                        createMemberRegisterRequest(EMAIL, PASSWORD, "namenamename"),
-                        "이름은 1자 이상 10자 이하여야합니다."
-                )
+                Arguments.of(createMemberRegisterRequest("email", PASSWORD, NAME)),
+                Arguments.of(createMemberRegisterRequest(EMAIL, "password", NAME)),
+                Arguments.of(createMemberRegisterRequest(EMAIL, PASSWORD, "namenamename"))
         );
     }
 
@@ -223,8 +213,7 @@ public class MemberControllerTest extends RestDocsTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memberNameUpdateRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("이름은 1자 이상 10자 이하여야합니다."));
+                .andExpect(status().isBadRequest());
     }
 
     @DisplayName("토큰이 유효하지 않아 이름 수정에 실패한다.")
@@ -286,8 +275,7 @@ public class MemberControllerTest extends RestDocsTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memberPasswordUpdateRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("올바른 비밀번호 형식으로 입력해주세요."));
+                .andExpect(status().isBadRequest());
     }
 
     @DisplayName("토큰이 유효하지 않아 비밀번호 수정을 실패한다.")

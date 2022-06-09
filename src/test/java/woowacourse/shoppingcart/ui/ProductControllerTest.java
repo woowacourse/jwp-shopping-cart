@@ -2,8 +2,10 @@ package woowacourse.shoppingcart.ui;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -29,6 +31,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.helper.restdocs.RestDocsTest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @DisplayName("상품 컨트롤러 단위테스트")
 class ProductControllerTest extends RestDocsTest {
@@ -80,6 +83,18 @@ class ProductControllerTest extends RestDocsTest {
                 )));
     }
 
+    @DisplayName("상품을 조회에 실패한다.")
+    @Test
+    void failedGetOrder() throws Exception {
+        doThrow(InvalidProductException.class).when(productService).findProductById(anyLong());
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        mockMvc.perform(get("/api/products/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
     @DisplayName("상품 목록을 조회한다.")
     @Test
     void getProducts() throws Exception {
@@ -114,5 +129,16 @@ class ProductControllerTest extends RestDocsTest {
         resultActions.andDo(document("product-delete",
                 getRequestPreprocessor(),
                 getResponsePreprocessor()));
+    }
+
+    @DisplayName("상품 삭제에 실패한다.")
+    @Test
+    void failedDeleteProduct() throws Exception {
+        doThrow(InvalidProductException.class).when(productService).deleteProductById(anyLong());
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        mockMvc.perform(delete("/api/products/1"))
+                .andExpect(status().isBadRequest());
     }
 }

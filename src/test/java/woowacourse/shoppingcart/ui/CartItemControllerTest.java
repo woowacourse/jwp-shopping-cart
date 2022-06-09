@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -39,6 +40,8 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @DisplayName("카트 컨트롤러 단위테스트")
 class CartItemControllerTest extends RestDocsTest {
@@ -68,6 +71,22 @@ class CartItemControllerTest extends RestDocsTest {
                 requestFields(
                         fieldWithPath("productId").type(NUMBER).description("id")
                 )));
+    }
+
+    @DisplayName("장바구니 물품 등록에 실패한다.")
+    @Test
+    void failedRegister() throws Exception {
+        AddCartItemRequest request = new AddCartItemRequest(1L);
+
+        doThrow(InvalidProductException.class).when(cartService).addCart(anyLong(), anyLong());
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        mockMvc.perform(post("/api/members/me/carts")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
     }
 
     @DisplayName("장바구니 물품 조회한다.")
@@ -104,6 +123,19 @@ class CartItemControllerTest extends RestDocsTest {
                 )));
     }
 
+    @DisplayName("장바구니 물품 조회에 실패한다.")
+    @Test
+    void failedGetCartItems() throws Exception {
+        doThrow(InvalidCartItemException.class).when(cartService).findCartsByMemberId(anyLong());
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        mockMvc.perform(get("/api/members/me/carts")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
     @DisplayName("장바구니 물품 수량을 수정한다.")
     @Test
     void updateQuantity() throws Exception {
@@ -132,6 +164,22 @@ class CartItemControllerTest extends RestDocsTest {
 
     }
 
+    @DisplayName("장바구니 물품 수량을 수정에 실패한다.")
+    @Test
+    void failedUpdateQuantity() throws Exception {
+        UpdateQuantityRequest updateQuantityRequest = new UpdateQuantityRequest(5);
+        doThrow(InvalidCartItemException.class)
+                .when(cartService).updateCartItemQuantity(anyLong(), any(UpdateQuantityRequest.class));
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        mockMvc.perform(put("/api/members/me/carts/1")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateQuantityRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
     @DisplayName("장바구니 물품을 삭제한다.")
     @Test
     void deleteCartItem() throws Exception {
@@ -149,5 +197,17 @@ class CartItemControllerTest extends RestDocsTest {
                 requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
                 )));
+    }
+
+    @DisplayName("장바구니 물품을 삭제에 실패한다.")
+    @Test
+    void failedDeleteCartItem() throws Exception {
+        doThrow(InvalidCartItemException.class).when(cartService).deleteCart(anyLong(), anyLong());
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        mockMvc.perform(delete("/api/members/me/carts/1")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN))
+                .andExpect(status().isBadRequest());
     }
 }

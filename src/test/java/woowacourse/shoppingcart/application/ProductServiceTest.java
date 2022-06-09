@@ -52,9 +52,10 @@ class ProductServiceTest {
     @DisplayName("상품 목록을 조회한다.")
     @Test
     void findProducts() {
+        int beforeSize = productService.findProducts().size();
         productDao.save(createProduct(ProductFixture.NAME, PRICE, IMAGE));
 
-        assertThat(productService.findProducts().size()).isEqualTo(1);
+        assertThat(productService.findProducts().size()).isEqualTo(beforeSize + 1);
     }
 
     @DisplayName("상품을 삭제한다.")
