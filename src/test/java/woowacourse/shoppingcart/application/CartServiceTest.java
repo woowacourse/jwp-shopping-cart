@@ -84,6 +84,7 @@ class CartServiceTest {
             .isInstanceOf(DuplicateCartItemException.class);
     }
 
+    @DisplayName("존재하지 않는 사용자로 장바구니 조회 시 예외 발생")
     @Test
     void findCartItemsByNotExistAccount() {
         assertThatThrownBy(() -> cartService.findCartsByEmail(NOT_FOUND_EMAIL))
