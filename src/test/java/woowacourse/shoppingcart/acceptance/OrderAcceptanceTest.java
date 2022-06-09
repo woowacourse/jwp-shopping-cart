@@ -29,7 +29,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
     private CartResponse cartResponse1;
     private CartResponse cartResponse2;
-    private String token;
+    private static String token;
 
     @Override
     @BeforeEach
@@ -53,7 +53,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .map(cartId -> new OrderRequest(cartId, 10))
                 .collect(Collectors.toList());
 
-        ExtractableResponse<Response> response = 주문하기_요청(USER, orderRequests);
+        ExtractableResponse<Response> response = 주문하기_요청(orderRequests);
 
         주문하기_성공함(response);
     }
@@ -61,10 +61,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartResponse1.getId(), 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartResponse2.getId(), 5)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(Collections.singletonList(new OrderRequest(cartResponse1.getId(), 2)));
+        Long orderId2 = 주문하기_요청_성공되어_있음(Collections.singletonList(new OrderRequest(cartResponse2.getId(), 5)));
 
-        ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
+        ExtractableResponse<Response> response = 주문_내역_조회_요청();
 
         주문_조회_응답됨(response);
         주문_내역_포함됨(response, orderId1, orderId2);
@@ -73,52 +73,54 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 단일 조회")
     @Test
     void getOrder() {
-        Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
+        Long orderId = 주문하기_요청_성공되어_있음(Arrays.asList(
                 new OrderRequest(cartResponse1.getId(), 2),
                 new OrderRequest(cartResponse2.getId(), 4)
         ));
 
-        ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
+        ExtractableResponse<Response> response = 주문_단일_조회_요청(orderId);
 
         주문_조회_응답됨(response);
         주문_조회됨(response, orderId);
     }
 
-    public static ExtractableResponse<Response> 주문하기_요청(String userName, List<OrderRequest> orderRequests) {
+    public static ExtractableResponse<Response> 주문하기_요청(List<OrderRequest> orderRequests) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(orderRequests)
-                .when().post("/api/customers/{customerName}/orders", userName)
+                .when().post("/customers/orders")
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 주문_내역_조회_요청(String userName) {
+    public static ExtractableResponse<Response> 주문_내역_조회_요청() {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders", userName)
+                .when().get("/customers/orders")
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 주문_단일_조회_요청(String userName, Long orderId) {
+    public static ExtractableResponse<Response> 주문_단일_조회_요청(Long orderId) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
+                .when().get("/customers/orders/{orderId}", orderId)
                 .then().log().all()
                 .extract();
     }
 
     public static void 주문하기_성공함(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 주문하기_요청_성공되어_있음(String userName, List<OrderRequest> orderRequests) {
-        ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
+    public static Long 주문하기_요청_성공되어_있음(List<OrderRequest> orderRequests) {
+        ExtractableResponse<Response> response = 주문하기_요청(orderRequests);
         return Long.parseLong(response.header("Location").split("/orders/")[1]);
     }
 

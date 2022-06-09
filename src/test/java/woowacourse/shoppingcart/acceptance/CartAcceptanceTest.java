@@ -42,7 +42,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @Test
     void addCartItem() {
         TokenResponse tokenResponse = 로그인_후_토큰_반환();
-        System.out.println(productId1);
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(productId1,
             tokenResponse.getAccessToken());
 

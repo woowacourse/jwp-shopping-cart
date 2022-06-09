@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.OrdersResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 import java.util.ArrayList;
@@ -48,9 +49,10 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
+    public OrdersResponse findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+        Orders orders = findOrderResponseDtoByOrderId(orderId);
+        return OrdersResponse.of(orders);
     }
 
     private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {

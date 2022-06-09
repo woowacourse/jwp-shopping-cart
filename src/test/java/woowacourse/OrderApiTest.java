@@ -16,31 +16,25 @@ class OrderApiTest extends TestSupport {
     @Test
     void addOrder_test() throws Exception {
         mockMvc.perform(
-                post("/api/customers/{customerName}/orders", "sunhpark42")
+                post("/customers/orders")
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header("Authorization", "Bearer " + accessToken)
                     .content(readJson("/json/orders/orders-create.json"))
             )
-            .andExpect(status().isCreated())
-            .andDo(
-                restDocs.document(
-                    pathParameters(
-                        parameterWithName("customerName").description("customer name")
-                    )
-                )
-            );
+            .andExpect(status().isCreated());
     }
 
     @Test
     void findOrder_test() throws Exception {
         mockMvc.perform(
-                get("/api/customers/{customerName}/orders/{orderId}", "sunhpark42", 1L)
+                get("/customers/orders/{orderId}", 1L)
+                    .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
             .andDo(
                 restDocs.document(
                     pathParameters(
-                        parameterWithName("customerName").description("customer name"),
                         parameterWithName("orderId").description("order id")
                     ),
                     responseFields(
@@ -58,15 +52,13 @@ class OrderApiTest extends TestSupport {
     @Test
     void findOrders_test() throws Exception {
         mockMvc.perform(
-                get("/api/customers/{customerName}/orders", "sunhpark42")
+                get("/customers/orders")
+                    .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
             .andDo(
                 restDocs.document(
-                    pathParameters(
-                        parameterWithName("customerName").description("customer name")
-                    ),
                     responseFields(
                         fieldWithPath("[].id").description("order id"),
                         fieldWithPath("[].orderDetails.[].productId").description("product id"),
