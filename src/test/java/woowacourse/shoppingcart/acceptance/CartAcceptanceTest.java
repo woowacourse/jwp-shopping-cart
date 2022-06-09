@@ -105,7 +105,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         postWithBodyByToken("/customers/carts", accessToken, cartRequestProduct1);
         postWithBodyByToken("/customers/carts", accessToken, cartRequestProduct2);
 
-        CartRequest cartRequest = new CartRequest(1L, 11);
+        CartRequest cartRequest = new CartRequest(productId1, 11);
         ExtractableResponse<Response> response = patchByTokenWithBody("/customers/carts", accessToken, cartRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());

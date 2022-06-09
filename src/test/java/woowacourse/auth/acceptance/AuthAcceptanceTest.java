@@ -39,7 +39,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(
-                () -> assertThat(customerResponse.getId()).isEqualTo(26L),
+                () -> assertThat(customerResponse.getId()).isEqualTo(1L),
                 () -> assertThat(customerResponse.getEmail()).isEqualTo(EMAIL),
                 () -> assertThat(customerResponse.getName()).isEqualTo(NAME),
                 () -> assertThat(customerResponse.getPhone()).isEqualTo(PHONE),

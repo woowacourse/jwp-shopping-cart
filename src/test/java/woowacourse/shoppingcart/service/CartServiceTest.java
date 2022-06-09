@@ -102,7 +102,7 @@ public class CartServiceTest {
     @Test
     @DisplayName("장바구니 상품 추가 시 상품 목록에 존재하지 않는 상품 추가할 경우 예외를 반환한다.")
     void addCart_whenNonExistProduct_fail() {
-        assertThatThrownBy(() -> cartService.addCart(customerId, 11L, 10))
+        assertThatThrownBy(() -> cartService.addCart(customerId, 18L, 10))
                 .isInstanceOf(InvalidProductException.class)
                 .hasMessage("해당하는 상품이 없습니다.");
     }

@@ -93,7 +93,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .map(ProductResponse::getQuantity)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
-        assertThat(resultIsStored).containsExactly(5, 0);
+        assertThat(resultIsStored).containsExactly(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0);
     }
 
     @DisplayName("상품을 삭제한다")

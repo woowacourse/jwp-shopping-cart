@@ -34,7 +34,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(registerCustomerResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(customerResponse.getId()).isEqualTo(26L),
+                () -> assertThat(customerResponse.getId()).isEqualTo(1L),
                 () -> assertThat(customerResponse.getEmail()).isEqualTo(EMAIL),
                 () -> assertThat(customerResponse.getName()).isEqualTo(NAME),
                 () -> assertThat(customerResponse.getPhone()).isEqualTo(PHONE),
@@ -57,7 +57,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         CustomerResponse customerResponse = getByToken("/customers", accessToken).as(CustomerResponse.class);
         assertAll(
-                () -> assertThat(customerResponse.getId()).isEqualTo(26L),
+                () -> assertThat(customerResponse.getId()).isEqualTo(1L),
                 () -> assertThat(customerResponse.getEmail()).isEqualTo(EMAIL),
                 () -> assertThat(customerResponse.getName()).isEqualTo("bani"),
                 () -> assertThat(customerResponse.getPhone()).isEqualTo(PHONE),
