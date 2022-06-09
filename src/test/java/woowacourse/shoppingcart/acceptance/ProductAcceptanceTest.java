@@ -18,7 +18,6 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 @DisplayName("상품 관련 기능")
-@Sql(scripts = "classpath:product-data.sql")
 public class ProductAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("상품 목록을 조회한다")

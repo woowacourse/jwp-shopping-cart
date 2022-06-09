@@ -13,7 +13,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:product-data.sql"})
+@Sql(scripts = {"classpath:schema.sql"})
 @Transactional
 class ProductServiceTest {
 
