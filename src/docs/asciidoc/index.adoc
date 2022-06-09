@@ -37,8 +37,14 @@ operation::cart-item-api-test/add-cart-item_test[snippets='http-request,http-res
 === CartItem 전체 조회
 operation::cart-item-api-test/get-cart-items_test[snippets='http-request,http-response']
 
+=== CartItem 개수 수정
+operation::cart-item-api-test/update-cart-item-quantity_test[snippets='http-request,http-response,response-fields']
+
 === CartItem 삭제
 operation::cart-item-api-test/delete-cart-item_test[snippets='http-request,http-response']
+
+=== Cart 전체 삭제
+operation::cart-item-api-test/delete-all-cart_test[snippets='http-request,http-response']
 
 === Order 추가
 operation::order-api-test/add-order_test[snippets='http-request,http-response']
