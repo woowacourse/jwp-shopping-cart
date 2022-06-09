@@ -30,7 +30,7 @@ create table privacy
     gender      varchar(9)   not null,
     contact     varchar(11)  not null,
     birth_day   timestamp,
-    foreign key (customer_id) references customer (id),
+    foreign key (customer_id) references customer (id) on delete cascade,
     primary key (customer_id)
 );
 
@@ -40,7 +40,7 @@ create table full_address
     address        varchar(255) not null,
     detail_address varchar(255),
     zone_code      char(5)      not null,
-    foreign key (customer_id) references customer (id),
+    foreign key (customer_id) references customer (id) on delete cascade,
     primary key (customer_id)
 );
 
@@ -61,8 +61,8 @@ create table cart_item
     customer_id bigint  not null,
     product_id  bigint  not null,
     quantity    integer not null,
-    foreign key (customer_id) references customer (id),
-    foreign key (product_id) references product (id),
+    foreign key (customer_id) references customer (id) on delete cascade,
+    foreign key (product_id) references product (id) on delete cascade,
     primary key (id)
 );
 
@@ -70,7 +70,7 @@ create table orders
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,
-    foreign key (customer_id) references customer (id),
+    foreign key (customer_id) references customer (id) on delete cascade,
     primary key (id)
 );
 
@@ -80,7 +80,7 @@ create table order_detail
     order_id   bigint  not null,
     product_id bigint  not null,
     quantity   integer not null,
-    foreign key (order_id) references orders (id),
-    foreign key (product_id) references product (id),
+    foreign key (order_id) references orders (id) on delete cascade,
+    foreign key (product_id) references product (id) on delete cascade,
     primary key (id)
 )
