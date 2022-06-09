@@ -154,4 +154,26 @@ class CartItemServiceTest {
                     .isInstanceOf(InvalidCartItemException.class);
         }
     }
+
+    @Nested
+    @DisplayName("deleteAll 메서드는")
+    class deleteAll {
+        @Test
+        @DisplayName("고객의 장바구니에 담긴 상품을 모두 삭제한다.")
+        void success() {
+            // given
+            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            Long productId1 = productService.addProduct(치킨);
+            Long productId2 = productService.addProduct(맥주);
+            cartItemService.add(new LoginCustomer(페퍼_아이디), new CartItemCreateRequest(productId1));
+            cartItemService.add(new LoginCustomer(페퍼_아이디), new CartItemCreateRequest(productId2));
+
+            // when
+            cartItemService.deleteAll(new LoginCustomer(페퍼_아이디));
+
+            // then
+            List<CartItemResponse> customerCartItems = cartItemService.findByCustomer(new LoginCustomer(페퍼_아이디));
+            assertThat(customerCartItems).isEmpty();
+        }
+    }
 }

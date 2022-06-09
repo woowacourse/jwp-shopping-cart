@@ -148,18 +148,23 @@ class CartItemDaoTest {
         }
     }
 
-    @DisplayName("Customer Id에 해당하는 장바구니 아이템을 모두 삭제한다.")
-    @Test
-    void deleteAllByCustomerId() {
-        // given
-        final Long customerId = 1L;
+    @Nested
+    @DisplayName("deleteAll 메서드는")
+    class deleteAll {
 
-        // when
-        cartItemDao.deleteAllByCustomerId(customerId);
+        @DisplayName("Customer Id에 해당하는 장바구니 아이템을 모두 삭제한다.")
+        @Test
+        void success() {
+            // given
+            final Long customerId = 1L;
 
-        // then
-        assertThat(cartItemDao.findIdsByCustomerId(customerId))
-                .isEmpty();
+            // when
+            cartItemDao.deleteAllByCustomerId(customerId);
+
+            // then
+            assertThat(cartItemDao.findIdsByCustomerId(customerId))
+                    .isEmpty();
+        }
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
