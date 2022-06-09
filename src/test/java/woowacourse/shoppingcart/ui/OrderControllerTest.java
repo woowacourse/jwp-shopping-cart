@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,6 +30,7 @@ import woowacourse.shoppingcart.dto.OrdersResponse;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -141,12 +141,15 @@ public class OrderControllerTest {
     @Test
     void findOrdersTest() throws Exception {
         // given
-        final List<Orders> expected = Arrays.asList(
+        final List<Orders> orders = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
                         new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
                 new Orders(2L, Collections.singletonList(
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
+        List<OrdersResponse> expected = orders.stream()
+                .map(OrdersResponse::new)
+                .collect(Collectors.toList());
 
         given(authService.getAuthenticatedCustomer(ACCESS_TOKEN)).willReturn(customer);
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
@@ -158,18 +161,18 @@ public class OrderControllerTest {
                 ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))
-                .andExpect(jsonPath("$[0].orderDetails[0].price").value(1_000))
-                .andExpect(jsonPath("$[0].orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("$[0].orderDetails[0].imageUrl").value("imageUrl"))
-                .andExpect(jsonPath("$[0].orderDetails[0].quantity").value(2))
+                .andExpect(jsonPath("$[0].orderDetailDtos[0].productId").value(1L))
+                .andExpect(jsonPath("$[0].orderDetailDtos[0].price").value(1_000))
+                .andExpect(jsonPath("$[0].orderDetailDtos[0].name").value("banana"))
+                .andExpect(jsonPath("$[0].orderDetailDtos[0].imageUrl").value("imageUrl"))
+                .andExpect(jsonPath("$[0].orderDetailDtos[0].quantity").value(2))
 
                 .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].orderDetails[0].productId").value(2L))
-                .andExpect(jsonPath("$[1].orderDetails[0].price").value(2_000))
-                .andExpect(jsonPath("$[1].orderDetails[0].name").value("apple"))
-                .andExpect(jsonPath("$[1].orderDetails[0].imageUrl").value("imageUrl2"))
-                .andExpect(jsonPath("$[1].orderDetails[0].quantity").value(4));
+                .andExpect(jsonPath("$[1].orderDetailDtos[0].productId").value(2L))
+                .andExpect(jsonPath("$[1].orderDetailDtos[0].price").value(2_000))
+                .andExpect(jsonPath("$[1].orderDetailDtos[0].name").value("apple"))
+                .andExpect(jsonPath("$[1].orderDetailDtos[0].imageUrl").value("imageUrl2"))
+                .andExpect(jsonPath("$[1].orderDetailDtos[0].quantity").value(4));
     }
 
     @DisplayName("주문 추가 문서화")

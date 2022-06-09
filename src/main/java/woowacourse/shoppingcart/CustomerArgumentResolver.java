@@ -31,7 +31,7 @@ public class CustomerArgumentResolver implements HandlerMethodArgumentResolver {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = AuthorizationExtractor.extract(request);
 
-        if(token == null){
+        if (token == null) {
             return new LookUpUser(null);
         }
         if (!jwtTokenProvider.validateToken(token)) {

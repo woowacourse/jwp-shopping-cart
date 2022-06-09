@@ -19,7 +19,7 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
-        if(HttpMethod.OPTIONS.matches(request.getMethod())){
+        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
             return true;
         }
         String token = AuthorizationExtractor.extract(request);

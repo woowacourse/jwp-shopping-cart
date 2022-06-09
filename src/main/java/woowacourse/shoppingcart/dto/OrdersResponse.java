@@ -9,7 +9,7 @@ public class OrdersResponse {
     private final Long id;
     private final List<OrderDetailDto> orderDetailDtos;
 
-    public OrdersResponse(Orders orders){
+    public OrdersResponse(Orders orders) {
         List<OrderDetailDto> orderDetailDtos = orders.getOrderDetails().stream()
                 .map(OrderDetailDto::new)
                 .collect(Collectors.toList());

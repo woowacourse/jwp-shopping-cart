@@ -17,7 +17,6 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.config.RestDocsConfig;
-import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CartRequest;

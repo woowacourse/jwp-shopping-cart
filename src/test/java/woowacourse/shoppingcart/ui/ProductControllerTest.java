@@ -132,7 +132,7 @@ class ProductControllerTest {
         ProductResponse response = new ProductResponse(1L, "상품 이름", 50000, "www.imageUrl.com", 2L, 5000);
         given(productService.findProductById(any())).willReturn(response);
 
-        ResultActions results = mvc.perform(get("/api/products/{productId}",1)
+        ResultActions results = mvc.perform(get("/api/products/{productId}", 1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
 
@@ -155,7 +155,7 @@ class ProductControllerTest {
     void deleteTest() throws Exception {
         doNothing().when(productService).deleteProductById(1L);
 
-        ResultActions results = mvc.perform(delete("/api/products/{productId}",1)
+        ResultActions results = mvc.perform(delete("/api/products/{productId}", 1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
 

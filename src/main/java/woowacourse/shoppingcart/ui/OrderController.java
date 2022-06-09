@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrdersResponse;
 
@@ -38,8 +37,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@AuthenticationPrincipal final Customer customer) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(customer.getUserName());
+    public ResponseEntity<List<OrdersResponse>> findOrders(@AuthenticationPrincipal final Customer customer) {
+        final List<OrdersResponse> orders = orderService.findOrdersByCustomerName(customer.getUserName());
         return ResponseEntity.ok(orders);
     }
 }

@@ -6,7 +6,6 @@ import woowacourse.shoppingcart.application.exception.InvalidProductException;
 import woowacourse.shoppingcart.application.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.dto.CartResponse;
 

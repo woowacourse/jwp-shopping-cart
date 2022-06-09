@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.support.JwtTokenInterceptor;
 import woowacourse.auth.support.AuthenticationPrincipalArgumentResolver;
+import woowacourse.auth.support.JwtTokenInterceptor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.CustomerArgumentResolver;
 
@@ -36,7 +36,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public CustomerArgumentResolver customerArgumentResolver(){
+    public CustomerArgumentResolver customerArgumentResolver() {
         return new CustomerArgumentResolver(jwtTokenProvider);
     }
 

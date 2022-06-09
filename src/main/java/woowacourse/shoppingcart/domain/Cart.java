@@ -12,7 +12,7 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart( final Long productId, final String name, final int price, final String imageUrl, final int quantity) {
+    public Cart(final Long productId, final String name, final int price, final String imageUrl, final int quantity) {
         this(null, productId, name, price, imageUrl, quantity);
     }
 

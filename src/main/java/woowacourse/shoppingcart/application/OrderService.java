@@ -63,12 +63,13 @@ public class OrderService {
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
+    public List<OrdersResponse> findOrdersByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
+                .map(this::findOrderResponseDtoByOrderId)
+                .map(OrdersResponse::new)
                 .collect(Collectors.toList());
     }
 

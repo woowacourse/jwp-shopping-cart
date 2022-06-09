@@ -8,10 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 import java.util.HashMap;
@@ -94,7 +92,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return Long.parseLong(response.header("Location").split("/carts/")[1]);
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(Long productId,String token) {
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(Long productId, String token) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", productId);
 

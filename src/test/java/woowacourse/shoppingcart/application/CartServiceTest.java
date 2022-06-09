@@ -28,6 +28,7 @@ class CartServiceTest {
     private CartItemDao cartItemDao;
     @Mock
     private CustomerDao customerDao;
+
     @Test
     void updateQuantity() {
         Long cartItemId = 1L;

@@ -3,11 +3,8 @@ package woowacourse.shoppingcart.ui;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.LookUpCustomer;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.LookUpUser;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
@@ -32,7 +29,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Valid @RequestBody final ProductRequest.AllProperties  productRequest) {
+    public ResponseEntity<Void> add(@Valid @RequestBody final ProductRequest.AllProperties productRequest) {
         final Long productId = productService.addProduct(productRequest);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()

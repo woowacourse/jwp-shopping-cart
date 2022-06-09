@@ -129,8 +129,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-                .map(Orders::getId)
+        List<Long> resultOrderIds = response.jsonPath().getList(".", OrdersResponse.class).stream()
+                .map(OrdersResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
     }

@@ -9,10 +9,11 @@ public class OrderDetailDto {
     private String name;
     private String imageUrl;
 
-    public OrderDetailDto(OrderDetail orderDetail){
+    public OrderDetailDto(OrderDetail orderDetail) {
         this(orderDetail.getProductId(), orderDetail.getQuantity(), orderDetail.getPrice(),
                 orderDetail.getName(), orderDetail.getImageUrl());
     }
+
     public OrderDetailDto(final Long productId, final int quantity, final int price, final String name, final String imageUrl) {
         this.productId = productId;
         this.quantity = quantity;

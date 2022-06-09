@@ -11,7 +11,7 @@ public class LookUpUser {
         return id;
     }
 
-    public boolean isNotLogin(){
+    public boolean isNotLogin() {
         return id == null;
     }
 }
