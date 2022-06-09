@@ -130,11 +130,11 @@ public class OrderControllerTest {
                 ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
-                .andExpect(jsonPath("orderDetails[0].productId").value(2L))
-                .andExpect(jsonPath("orderDetails[0].price").value(1_000))
-                .andExpect(jsonPath("orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("orderDetails[0].imageUrl").value("imageUrl"))
-                .andExpect(jsonPath("orderDetails[0].quantity").value(2));
+                .andExpect(jsonPath("orderDetailDtos[0].productId").value(2L))
+                .andExpect(jsonPath("orderDetailDtos[0].price").value(1_000))
+                .andExpect(jsonPath("orderDetailDtos[0].name").value("banana"))
+                .andExpect(jsonPath("orderDetailDtos[0].imageUrl").value("imageUrl"))
+                .andExpect(jsonPath("orderDetailDtos[0].quantity").value(2));
     }
 
     @DisplayName("사용자 이름을 통해 주문 내역 목록을 조회하면, 주문 내역 목록을 받는다.")

@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrdersResponse;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -135,7 +136,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-        Orders resultOrder = response.as(Orders.class);
+        OrdersResponse resultOrder = response.as(OrdersResponse.class);
         assertThat(resultOrder.getId()).isEqualTo(orderId);
     }
 }

@@ -70,8 +70,8 @@ public class ProductService {
         return productDao.save(productRequest.toEntity());
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductResponse findProductById(final Long productId) {
+        return new ProductResponse(productDao.findProductById(productId));
     }
 
     public void deleteProductById(final Long productId) {
