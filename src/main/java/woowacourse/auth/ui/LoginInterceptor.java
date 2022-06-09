@@ -1,5 +1,6 @@
 package woowacourse.auth.ui;
 
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
@@ -18,6 +19,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
+        if (CorsUtils.isPreFlightRequest(request)) {
+            return true;
+        }
         String accessToken = AuthorizationExtractor.extract(request);
         validateToken(accessToken);
         return true;
