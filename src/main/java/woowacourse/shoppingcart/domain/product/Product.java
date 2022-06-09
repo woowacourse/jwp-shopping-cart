@@ -2,11 +2,11 @@ package woowacourse.shoppingcart.domain.product;
 
 public class Product {
 
-    private final Long id;
-    private final ProductName productName;
-    private final Price price;
-    private final Stock stock;
-    private final String imageUrl;
+    private Long id;
+    private ProductName productName;
+    private Price price;
+    private Stock stock;
+    private String imageUrl;
 
     public Product(final String productName, final int price, final int stock, final String imageUrl) {
         this(null, productName, price, stock, imageUrl);
@@ -30,6 +30,10 @@ public class Product {
 
     public boolean isStockAvailable(int quantity) {
         return stock.isRemain(quantity);
+    }
+
+    public void reduceStock(int quantity) {
+        this.stock = new Stock(stock.getStock() - quantity);
     }
 
     public Long getId() {

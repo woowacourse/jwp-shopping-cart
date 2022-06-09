@@ -60,6 +60,14 @@ public class ProductDao {
         return jdbcTemplate.query(query, productRowMapper);
     }
 
+    public void updateStock(final Product product) {
+        final String query = "UPDATE product SET stock = ? WHERE id = ?";
+        int rowCount = jdbcTemplate.update(query, product.getStock(), product.getId());
+        if (rowCount == 0) {
+            throw new InvalidProductException();
+        }
+    }
+
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);
