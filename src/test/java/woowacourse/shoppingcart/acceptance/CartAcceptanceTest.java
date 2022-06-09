@@ -73,11 +73,22 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void updateQuantity() {
         장바구니_아이템_추가되어_있음(productId1);
 
-        SimpleResponse response = 장바구니_아이템_수량_수정_요청(productId1);
+        SimpleResponse response = 장바구니_아이템_수량_수정_요청(productId1, 3);
         장바구니_수량_수정_요청_응답됨(response);
 
         SimpleResponse itemsResponse = 장바구니_아이템_목록_조회_요청();
         장바구니_아이템_수량_일치함(itemsResponse, productId1, 3);
+    }
+
+    @DisplayName("장바구니 아이템 수량이 0 이하이면 예외가 발생한다")
+    @Test
+    void updateQuantity_under_0() {
+        장바구니_아이템_추가되어_있음(productId1);
+
+        SimpleResponse response = 장바구니_아이템_수량_수정_요청(productId1, 0);
+
+        response.assertStatus(HttpStatus.BAD_REQUEST);
+        response.containsExceptionMessage("1 이상");
     }
 
     @DisplayName("장바구니 삭제")
@@ -115,9 +126,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
         return SimpleRestAssured.getWithToken("/cart", getTokenByLogin());
     }
 
-    private static SimpleResponse 장바구니_아이템_수량_수정_요청(Long productId) {
+    private static SimpleResponse 장바구니_아이템_수량_수정_요청(Long productId, int quantity) {
         String path = "/cart/" + productId + "/quantity";
-        Map<String, Integer> param = Map.of("quantity", 3);
+        Map<String, Integer> param = Map.of("quantity", quantity);
         SimpleResponse response = SimpleRestAssured.putWithToken(path, getTokenByLogin(), param);
         return response;
     }
