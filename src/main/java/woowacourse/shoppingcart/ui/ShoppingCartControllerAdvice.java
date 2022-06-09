@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.exception.NotFoundException;
 import woowacourse.shoppingcart.exception.ShoppingCartException;
 
 @RestControllerAdvice
-public class ControllerAdvice {
+public class ShoppingCartControllerAdvice {
 
     @ExceptionHandler(ShoppingCartException.class)
     public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
@@ -55,10 +55,10 @@ public class ControllerAdvice {
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handle() {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 데이터 요청입니다.");
     }
 
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleUnhandledException() {
         return ResponseEntity.internalServerError().body("알 수 없는 에러입니다.");
     }
