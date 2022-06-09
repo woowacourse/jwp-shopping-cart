@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 
@@ -18,14 +20,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.로그인_후_토큰_반환;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
-    private Long cartId1;
-    private Long cartId2;
+    private CartResponse cartResponse1;
+    private CartResponse cartResponse2;
+    private String token;
 
     @Override
     @BeforeEach
@@ -35,14 +39,17 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        TokenResponse tokenResponse = 로그인_후_토큰_반환();
+        token = tokenResponse.getAccessToken();
+
+        cartResponse1 = 장바구니_아이템_추가되어_있음(productId1, token);
+        cartResponse2 = 장바구니_아이템_추가되어_있음(productId2, token);
     }
 
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
+        List<OrderRequest> orderRequests = Stream.of(cartResponse1.getId(), cartResponse2.getId())
                 .map(cartId -> new OrderRequest(cartId, 10))
                 .collect(Collectors.toList());
 
@@ -54,8 +61,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartResponse1.getId(), 2)));
+        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartResponse2.getId(), 5)));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
 
@@ -67,8 +74,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Test
     void getOrder() {
         Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
-                new OrderRequest(cartId1, 2),
-                new OrderRequest(cartId2, 4)
+                new OrderRequest(cartResponse1.getId(), 2),
+                new OrderRequest(cartResponse2.getId(), 4)
         ));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);

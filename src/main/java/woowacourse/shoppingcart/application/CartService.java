@@ -7,7 +7,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.exception.DuplicateCartItemByProduct;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 import java.util.ArrayList;
@@ -27,30 +28,33 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
+    public List<CartResponse> findCartsByCustomerName(final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
 
-        final List<Cart> carts = new ArrayList<>();
+        final List<CartResponse> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
+            final int productQuantity = cartItemDao.findQuantityById(cartId);
             final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            carts.add(CartResponse.of(cartId, product, productQuantity));
         }
         return carts;
     }
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
+
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
+    public CartResponse addCart(final Long productId, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
+        if (cartItemDao.existByProduct(customerId, productId)) {
+            throw new DuplicateCartItemByProduct();
         }
+
+        final Product product = productDao.findProductById(productId);
+        return CartResponse.of(cartItemDao.addCartItem(customerId, product));
     }
 
     public void deleteCart(final String customerName, final Long cartId) {
@@ -64,5 +68,17 @@ public class CartService {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    public CartResponse updateCardItemQuantity(Long cartId, int quantity) {
+        Cart cart = cartItemDao.findByCartId(cartId);
+        cartItemDao.updateCartItemQuantity(cartId, quantity);
+        cart.updateQuantity(quantity);
+        return CartResponse.of(cart);
+    }
+
+    public void deleteAllCart(String customerName) {
+        Long customerId = customerDao.findIdByUserName(customerName);
+        cartItemDao.deleteCart(customerId);
     }
 }

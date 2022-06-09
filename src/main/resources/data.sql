@@ -27,22 +27,36 @@ values ('puterism@gmail.com', 'puterism', '3ff9c39a6c154bf5c37a02c5bfc4656cca8b8
        ('sunhpark42@gmail.com','sunhpark42', '3ff9c39a6c154bf5c37a02c5bfc4656cca8b8d588d70dcd5eb6654b59ca06b56')
 ;
 
-insert into product (id, name, price, image_url)
-values (1, '테스트 1', '1000', 'test'),
-       (2, '테스트 2', '2000', 'test'),
-       (3, '테스트 3', '3000', 'test');
-
-insert into cart_item (id, customer_id, product_id)
-values (1, 25, 1),
-       (2, 25, 2);
-
-insert into orders (id, customer_id)
-values (1, 25),
-       (2, 25);
-
-insert into orders_detail (id, orders_id, product_id, quantity)
-values (1, 1, 1, 1),
-       (2, 1, 2, 2),
-       (3, 2, 2, 3),
-       (4, 2, 3, 4);
+insert into product (name, price, image_url)
+values ('[승팡] 칠레산 코호 냉동 연어필렛 trim D(껍질있음) 1.1~1.3kg', 24500,'https://cdn-mart.baemin.com/sellergoods/main/92438f0e-0c4b-425e-b03b-999cee7cdca2.jpg'),
+       ('[승팡] LEROY 노르웨이 생연어 원물 1마리 6~7kg', 193800,'https://cdn-mart.baemin.com/sellergoods/main/03751585-2305-4999-85dd-7d3aba184fe6.jpg'),
+       ('[승팡] 옥구농협 못잊어 신동진(신동진/보통/21년)20KG', 54300, 'https://cdn-mart.baemin.com/sellergoods/bulk/20220203-195555/23358-main-01.jpg'),
+       ('[승팡] 국내산 양상추 300g이상 1개', 2500,'https://cdn-mart.baemin.com/sellergoods/main/2a69b1c6-fa88-49f0-b049-0259674580f8.png'),
+       ('[승팡] 페루산 냉동 애플망고(2cmx2cm다이스) 1kg', 5090,'https://cdn-mart.baemin.com/sellergoods/main/2bb8dfcb-e4b0-48ff-a028-05aa9d9c2f19.jpg'),
+       ('[승팡] 국내산 팽이버섯 150g', 570, 'https://cdn-mart.baemin.com/sellergoods/bulk/20200902-201039/14900-main-01.jpg'),
+       ('[승팡] 냉동 브로콜리 (중국산) 1kg', 2820,'https://cdn-mart.baemin.com/sellergoods/main/d71a6c1d-2ff4-421f-bfa0-1080bcdaaa06.jpg'),
+       ('[승팡] 천일 갈릭라이스N 200g', 870,'https://cdn-mart.baemin.com/sellergoods/main/a7b26c35-e160-4d54-8889-bf2bf361e273.jpg'),
+       ('[승팡] 냉동다진마늘 1kg', 2670, 'https://cdn-mart.baemin.com/sellergoods/bulk/20220331-112605/24908-main-01.jpg'),
+       ('[승팡] 카벤디쉬 크링클컷 2kg', 6890,'https://cdn-mart.baemin.com/sellergoods/main/197d5058-373b-4bea-9a79-a0a30576765c.jpg'),
+       ('[승팡] 칠레산 코호 냉동 연어필렛 trim D(껍질있음) 1.1~1.3kg', 24500,'https://cdn-mart.baemin.com/sellergoods/main/92438f0e-0c4b-425e-b03b-999cee7cdca2.jpg'),
+       ('[승팡] LEROY 노르웨이 생연어 원물 1마리 6~7kg', 193800,'https://cdn-mart.baemin.com/sellergoods/main/03751585-2305-4999-85dd-7d3aba184fe6.jpg'),
+       ('[승팡] 옥구농협 못잊어 신동진(신동진/보통/21년)20KG', 54300,'https://cdn-mart.baemin.com/sellergoods/bulk/20220203-195555/23358-main-01.jpg'),
+       ('[승팡] 국내산 양상추 300g이상 1개', 2500,'https://cdn-mart.baemin.com/sellergoods/main/2a69b1c6-fa88-49f0-b049-0259674580f8.png'),
+       ('[승팡] 페루산 냉동 애플망고(2cmx2cm다이스) 1kg', 5090,'https://cdn-mart.baemin.com/sellergoods/main/2bb8dfcb-e4b0-48ff-a028-05aa9d9c2f19.jpg'),
+       ('[승팡] 국내산 팽이버섯 150g', 570, 'https://cdn-mart.baemin.com/sellergoods/bulk/20200902-201039/14900-main-01.jpg'),
+       ('[승팡] 냉동 브로콜리 (중국산) 1kg', 2820,'https://cdn-mart.baemin.com/sellergoods/main/d71a6c1d-2ff4-421f-bfa0-1080bcdaaa06.jpg'),
+       ('[승팡] 천일 갈릭라이스N 200g', 870,'https://cdn-mart.baemin.com/sellergoods/main/a7b26c35-e160-4d54-8889-bf2bf361e273.jpg'),
+       ('[승팡] 냉동다진마늘 1kg', 2670, 'https://cdn-mart.baemin.com/sellergoods/bulk/20220331-112605/24908-main-01.jpg'),
+       ('[승팡] 카벤디쉬 크링클컷 2kg', 6890,'https://cdn-mart.baemin.com/sellergoods/main/197d5058-373b-4bea-9a79-a0a30576765c.jpg'),
+       ('[승팡] 칠레산 코호 냉동 연어필렛 trim D(껍질있음) 1.1~1.3kg', 24500,'https://cdn-mart.baemin.com/sellergoods/main/92438f0e-0c4b-425e-b03b-999cee7cdca2.jpg'),
+       ('[승팡] LEROY 노르웨이 생연어 원물 1마리 6~7kg', 193800,'https://cdn-mart.baemin.com/sellergoods/main/03751585-2305-4999-85dd-7d3aba184fe6.jpg'),
+       ('[승팡] 옥구농협 못잊어 신동진(신동진/보통/21년)20KG', 54300, 'https://cdn-mart.baemin.com/sellergoods/bulk/20220203-195555/23358-main-01.jpg'),
+       ('[승팡] 국내산 양상추 300g이상 1개', 2500, 'https://cdn-mart.baemin.com/sellergoods/main/2a69b1c6-fa88-49f0-b049-0259674580f8.png'),
+       ('[승팡] 페루산 냉동 애플망고(2cmx2cm다이스) 1kg', 5090, 'https://cdn-mart.baemin.com/sellergoods/main/2bb8dfcb-e4b0-48ff-a028-05aa9d9c2f19.jpg'),
+       ('[승팡] 국내산 팽이버섯 150g', 570, 'https://cdn-mart.baemin.com/sellergoods/bulk/20200902-201039/14900-main-01.jpg'),
+       ('[승팡] 냉동 브로콜리 (중국산) 1kg', 2820, 'https://cdn-mart.baemin.com/sellergoods/main/d71a6c1d-2ff4-421f-bfa0-1080bcdaaa06.jpg'),
+       ('[승팡] 천일 갈릭라이스N 200g', 870, 'https://cdn-mart.baemin.com/sellergoods/main/a7b26c35-e160-4d54-8889-bf2bf361e273.jpg'),
+       ('[승팡] 냉동다진마늘 1kg', 2670, 'https://cdn-mart.baemin.com/sellergoods/bulk/20220331-112605/24908-main-01.jpg'),
+       ('[승팡] 카벤디쉬 크링클컷 2kg', 6890, 'https://cdn-mart.baemin.com/sellergoods/main/197d5058-373b-4bea-9a79-a0a30576765c.jpg')
+;
 
