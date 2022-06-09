@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Repository
 public class CustomerDao {
 
-    public static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname from customer where withdrawal = false) ";
+    public static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname from customer where withdrawal = false) rcq ";
     private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) -> new Customer(
             resultSet.getLong("id"),
             resultSet.getString("username"),
