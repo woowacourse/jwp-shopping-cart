@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain;
 
 public class Cart {
 
-    private Long id;
+    private Long cartItemId;
     private Product product;
     private int quantity;
 
@@ -10,7 +10,7 @@ public class Cart {
     }
 
     public Cart(final Long id, final Product product, final int quantity) {
-        this.id = id;
+        this.cartItemId = id;
         this.product = product;
         this.quantity = quantity;
     }
@@ -20,8 +20,8 @@ public class Cart {
         this(id, new Product(productId, name, price, imageUrl, description, stock), 0);
     }
 
-    public Long getId() {
-        return id;
+    public Long getCartItemId() {
+        return cartItemId;
     }
 
     public Long getProductId() {
