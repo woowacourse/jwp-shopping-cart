@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.domain.customer.privacy.Birthday;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
@@ -48,7 +49,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                                 "detailAddress", "zonecode", "terms")
                         .containsExactly(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getProfileImageUrl(),
                                 CUSTOMER_REQUEST_1.getName(), CUSTOMER_REQUEST_1.getGender(),
-                                CUSTOMER_REQUEST_1.getBirthday(), CUSTOMER_REQUEST_1.getContact(),
+                                Birthday.empty().getValue().toString(), CUSTOMER_REQUEST_1.getContact(),
                                 CUSTOMER_REQUEST_1.getAddress(), CUSTOMER_REQUEST_1.getDetailAddress(),
                                 CUSTOMER_REQUEST_1.getZonecode(), CUSTOMER_REQUEST_1.isTerms())
         );

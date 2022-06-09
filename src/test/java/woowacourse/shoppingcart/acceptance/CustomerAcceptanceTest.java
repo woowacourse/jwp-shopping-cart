@@ -9,6 +9,7 @@ import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_REQUEST
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.domain.customer.privacy.Birthday;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
@@ -92,7 +94,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                         .extracting("email", "profileImageUrl", "name", "gender", "birthday", "contact", "terms")
                         .containsExactly(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getProfileImageUrl(),
                                 CUSTOMER_REQUEST_1.getName(), CUSTOMER_REQUEST_1.getGender(),
-                                CUSTOMER_REQUEST_1.getBirthday(), CUSTOMER_REQUEST_1.getContact(),
+                                Birthday.empty().getValue().toString(), CUSTOMER_REQUEST_1.getContact(),
                                 CUSTOMER_REQUEST_1.isTerms())
         );
 

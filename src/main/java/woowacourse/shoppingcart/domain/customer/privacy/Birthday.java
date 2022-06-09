@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Birthday {
-    private static final Birthday EMPTY = new Birthday(null);
+    private static final Birthday EMPTY = new Birthday(LocalDate.parse("1900-01-01", DateTimeFormatter.ISO_DATE));
 
     private final LocalDate value;
 
@@ -18,6 +18,10 @@ public class Birthday {
             return EMPTY;
         }
         return new Birthday(LocalDate.parse(value, DateTimeFormatter.ISO_DATE));
+    }
+
+    public static Birthday empty() {
+        return EMPTY;
     }
 
     public LocalDate getValue() {
