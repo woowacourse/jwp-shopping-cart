@@ -12,6 +12,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
+import woowacourse.auth.dto.CustomerDto;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.dto.ExceptionResponse;
@@ -97,12 +98,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         CustomerResponse customerResponse = 내_정보_조회해옴(accessToken);
+        CustomerDto customerDto = customerResponse.getCustomerDto();
 
         // then
         assertAll(
-            () -> assertThat(customerResponse.getUsername()).isEqualTo(signupRequest.getUsername()),
-            () -> assertThat(customerResponse.getPhoneNumber()).isEqualTo(signupRequest.getPhoneNumber()),
-            () -> assertThat(customerResponse.getAddress()).isEqualTo(signupRequest.getAddress())
+            () -> assertThat(customerDto.getUsername()).isEqualTo(signupRequest.getUsername()),
+            () -> assertThat(customerDto.getPhoneNumber()).isEqualTo(signupRequest.getPhoneNumber()),
+            () -> assertThat(customerDto.getAddress()).isEqualTo(signupRequest.getAddress())
         );
     }
 
@@ -121,11 +123,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ValidatableResponse validatableResponse = 내_정보_수정함(accessToken, updateCustomerRequest);
 
         CustomerResponse customerResponse = 내_정보_조회해옴(accessToken);
+        CustomerDto customerDto = customerResponse.getCustomerDto();
 
         assertAll(
             () -> validatableResponse.statusCode(HttpStatus.NO_CONTENT.value()),
-            () -> assertThat(customerResponse.getPhoneNumber()).isEqualTo(updateCustomerRequest.getPhoneNumber()),
-            () -> assertThat(customerResponse.getAddress()).isEqualTo(updateCustomerRequest.getAddress())
+            () -> assertThat(customerDto.getPhoneNumber()).isEqualTo(updateCustomerRequest.getPhoneNumber()),
+            () -> assertThat(customerDto.getAddress()).isEqualTo(updateCustomerRequest.getAddress())
         );
     }
 

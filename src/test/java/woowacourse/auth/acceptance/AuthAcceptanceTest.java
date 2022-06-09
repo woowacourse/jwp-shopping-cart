@@ -12,6 +12,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
+import woowacourse.auth.dto.CustomerDto;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.PasswordDto;
@@ -56,11 +57,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
             .then().log().all()
             .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
 
+        CustomerDto customerDto = customerResponse.getCustomerDto();
+
         // then
         assertAll(
-            () -> assertThat(customerResponse.getUsername()).isEqualTo(signupRequest.getUsername()),
-            () -> assertThat(customerResponse.getPhoneNumber()).isEqualTo(signupRequest.getPhoneNumber()),
-            () -> assertThat(customerResponse.getAddress()).isEqualTo(signupRequest.getAddress())
+            () -> assertThat(customerDto.getUsername()).isEqualTo(signupRequest.getUsername()),
+            () -> assertThat(customerDto.getPhoneNumber()).isEqualTo(signupRequest.getPhoneNumber()),
+            () -> assertThat(customerDto.getAddress()).isEqualTo(signupRequest.getAddress())
         );
     }
 
