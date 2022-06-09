@@ -4,9 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static woowacourse.auth.acceptance.AuthAcceptanceTest.*;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -67,6 +65,35 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 cartItemRequest.getQuantity());
     }
 
+    @DisplayName("이미 장바구니에 있는 제품을 추가할 경우 5001번 에러를 반환한다.")
+    @Test
+    void addCartAlreadyExistProduct() {
+        // given
+        CartItemRequest cartItemRequest = new CartItemRequest(productId1, 10);
+        AcceptanceFixture.post(cartItemRequest, URL, header);
+
+        // when
+        ExtractableResponse<Response> response = AcceptanceFixture.post(cartItemRequest, URL, header);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(extractErrorCode(response)).isEqualTo(5001);
+    }
+
+    @DisplayName("장바구니에 담으려는 수량이 음수이면 5002번 에러를 반환한다.")
+    @Test
+    void addCartInvalidQuantity() {
+        // given
+        CartItemRequest cartItemRequest = new CartItemRequest(productId1, -1);
+
+        // when
+        ExtractableResponse<Response> response = AcceptanceFixture.post(cartItemRequest, URL, header);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(extractErrorCode(response)).isEqualTo(5002);
+    }
+
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
@@ -120,14 +147,32 @@ public class CartAcceptanceTest extends AcceptanceTest {
         CartItemResponse createdCartItemResponse = extractCartItem(responseAboutCreatedCartItem1);
 
         // when
-        ExtractableResponse<Response> patchResponse = AcceptanceFixture.patch(
-            new UpdateCartItemRequest(createdCartItemResponse.getId(), 15), URL, header);
+        AcceptanceFixture.patch(new UpdateCartItemRequest(createdCartItemResponse.getId(), 15), URL, header);
         ExtractableResponse<Response> responseAboutGetItem = AcceptanceFixture.get(
             URL + "/" + createdCartItemResponse.getId(), header);
         CartItemResponse cartItemResponse = extractCartItem(responseAboutGetItem);
 
         // then
         assertThat(cartItemResponse.getQuantity()).isEqualTo(15);
+    }
+
+    @DisplayName("장바구니 갯수 업데이트 시 수량이 음수이면 5002번 에러를 반환한다.")
+    @Test
+    void updateInvalidQuantity() {
+        // given
+        ExtractableResponse<Response> responseAboutCreatedCartItem1 = AcceptanceFixture.post(
+            new CartItemRequest(productId1, 10), URL,
+            header);
+        AcceptanceFixture.post(new CartItemRequest(productId2, 10), URL, header);
+        CartItemResponse createdCartItemResponse = extractCartItem(responseAboutCreatedCartItem1);
+
+        // when
+        ExtractableResponse<Response> patchResponse = AcceptanceFixture.patch(
+            new UpdateCartItemRequest(createdCartItemResponse.getId(), -1), URL, header);
+
+        // then
+        assertThat(patchResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(extractErrorCode(patchResponse)).isEqualTo(5002);
     }
 
     @DisplayName("장바구니에서 선택적으로 삭제")
@@ -141,7 +186,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
             new CartItemRequest(productId2, 10), URL,
             header);
         CartItemResponse createdCartItemResponse1 = extractCartItem(responseAboutCreatedCartItem1);
-        CartItemResponse createdCartItemResponse2 = extractCartItem(responseAboutCreatedCartItem2);
+        extractCartItem(responseAboutCreatedCartItem2);
 
         // when
         CartItemDeletionRequest cartItemDeletionRequest = new CartItemDeletionRequest(
@@ -152,13 +197,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = AcceptanceFixture.get(URL, header);
         List<CartItemResponse> cartItemResponses = response.jsonPath().getList(".", CartItemResponse.class);
         assertThat(cartItemResponses.size()).isEqualTo(1);
-    }
-
-    public static ExtractableResponse<Response> requestToAddCartItem(String userName, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
-        return AcceptanceFixture.post(requestBody, "/api/customers/" + userName + "/carts");
     }
 
     private Header getTokenHeader() {
@@ -177,5 +215,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
     public static CartItemResponse extractCartItem(ExtractableResponse<Response> response) {
         return response.jsonPath()
             .getObject(".", CartItemResponse.class);
+    }
+
+    private int extractErrorCode(ExtractableResponse<Response> response) {
+        return response.jsonPath().getInt("errorCode");
     }
 }
