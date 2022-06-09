@@ -1,12 +1,17 @@
 package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.PositiveOrZero;
 
 public class ProductRequest {
 
     private String name;
+
+    @PositiveOrZero(message = "4004")
     private int price;
+
     private int stockQuantity;
+
     @JsonProperty("thumbnailImage")
     private ImageDto thumbnailImage;
 

@@ -2,14 +2,17 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.NotExistException;
 
 @Repository
 public class ProductDao {
@@ -49,12 +52,15 @@ public class ProductDao {
     }
 
     public Product findProductById(final Long productId) {
-        final String query = "SELECT product.id, product.name, product.price, product.stock_quantity,"
-                + " image_url, image_alt"
-                + " FROM product INNER JOIN image ON product.id = image.product_id"
-                + " WHERE product.id = :productId";
-
-        return jdbcTemplate.queryForObject(query, Map.of("productId", productId), PRODUCT_ROW_MAPPER);
+        try {
+            final String query = "SELECT product.id, product.name, product.price, product.stock_quantity,"
+                    + " image_url, image_alt"
+                    + " FROM product INNER JOIN image ON product.id = image.product_id"
+                    + " WHERE product.id = :productId";
+            return jdbcTemplate.queryForObject(query, Map.of("productId", productId), PRODUCT_ROW_MAPPER);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotExistException("존재하지 않는 상품입니다.", ErrorResponse.NOT_EXIST_PRODUCT);
+        }
     }
 
     public List<Product> findProducts() {

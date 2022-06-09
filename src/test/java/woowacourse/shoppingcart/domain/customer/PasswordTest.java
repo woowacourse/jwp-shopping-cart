@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.customer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.exception.InputFormatException;
-import woowacourse.shoppingcart.domain.customer.Password;
+import woowacourse.shoppingcart.exception.InputFormatException;
 
 public class PasswordTest {
 
@@ -27,7 +26,7 @@ public class PasswordTest {
     @ParameterizedTest
     @DisplayName("패스워드가 8~12글자이고 알파벳, 숫자, 특수문자의 조합이라면 정상적으로 생성된다.")
     @ValueSource(strings = {"password1!", "Password012="})
-    void InputWrightPassword(String value) {
+    void InputRightPassword(String value) {
         //then
         assertThatCode(() -> Password.ofWithEncryption(value))
                 .doesNotThrowAnyException();

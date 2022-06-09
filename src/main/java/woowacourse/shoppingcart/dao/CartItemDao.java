@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.entity.CartItemEntity;
-import woowacourse.shoppingcart.exception.NotExistCartItemException;
+import woowacourse.shoppingcart.exception.NotExistException;
 
 @Repository
 public class CartItemDao {
@@ -52,7 +52,7 @@ public class CartItemDao {
                     resultSet.getLong("product_id"),
                     resultSet.getInt("quantity")), customerId, cartItemId);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotExistCartItemException("장바구니에 없는 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
+            throw new NotExistException("장바구니에 없는 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
         }
     }
 
@@ -61,7 +61,7 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
-            throw new NotExistCartItemException("장바구니에 없는 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
+            throw new NotExistException("장바구니에 없는 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
         }
     }
 

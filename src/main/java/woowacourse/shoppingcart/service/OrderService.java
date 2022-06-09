@@ -13,7 +13,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.OrdersDto;
 import woowacourse.shoppingcart.entity.OrderDetailEntity;
-import woowacourse.shoppingcart.exception.NotExistOrderException;
+import woowacourse.shoppingcart.exception.NotExistException;
 
 @Service
 @Transactional
@@ -76,7 +76,7 @@ public class OrderService {
     private void validateExistOrder(Customer customer, Long orderId) {
         final boolean result = orderDao.isValidOrderId(customer.getId(), orderId);
         if (!result) {
-            throw new NotExistOrderException("주문 번호가 없습니다.", ErrorResponse.NOT_EXIST_ORDER);
+            throw new NotExistException("주문 번호가 없습니다.", ErrorResponse.NOT_EXIST_ORDER);
         }
     }
 

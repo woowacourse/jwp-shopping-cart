@@ -39,14 +39,4 @@ public class OrdersDetailDao {
                 rs.getLong("product_id"),
                 rs.getInt("quantity")), orderId);
     }
-
-//    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-//        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
-//        return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-//                productDao.findProductById(rs.getLong("product_id")),
-//                rs.getInt("quantity")
-//        ), orderId);
-//    }
-
-
 }

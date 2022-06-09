@@ -11,8 +11,8 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CartItemIds;
 import woowacourse.shoppingcart.entity.CartItemEntity;
-import woowacourse.shoppingcart.exception.AlreadyExistCartItemException;
-import woowacourse.shoppingcart.exception.NotExistCartItemException;
+import woowacourse.shoppingcart.exception.AlreadyExistException;
+import woowacourse.shoppingcart.exception.NotExistException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -62,14 +62,14 @@ public class CartItemService {
     private void validateAlreadyExistCartItem(Customer customer, Long productId) {
         boolean result = cartItemDao.hasCustomerProductItem(customer.getId(), productId);
         if (result) {
-            throw new AlreadyExistCartItemException("이미 장바구니에 담긴 상품입니다.", ErrorResponse.ALREADY_EXIST_CART_ITEM);
+            throw new AlreadyExistException("이미 장바구니에 담긴 상품입니다.", ErrorResponse.ALREADY_EXIST_CART_ITEM);
         }
     }
 
     private void validateCustomerCartItem(Customer customer, Long cartItemId) {
         boolean result = cartItemDao.hasCustomerCartItem(customer.getId(), cartItemId);
         if (!result) {
-            throw new NotExistCartItemException("장바구니에 없는 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
+            throw new NotExistException("장바구니에 없는 아이템입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
         }
     }
 

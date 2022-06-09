@@ -2,11 +2,11 @@ package woowacourse.shoppingcart.exception;
 
 import woowacourse.exception.dto.ErrorResponse;
 
-public class NotExistCartItemException extends RuntimeException {
+public class ShoppingCartException extends RuntimeException {
 
-    private final ErrorResponse errorResponse;
+    private ErrorResponse errorResponse;
 
-    public NotExistCartItemException(String message, ErrorResponse errorResponse) {
+    public ShoppingCartException(String message, ErrorResponse errorResponse) {
         super(message);
         this.errorResponse = errorResponse;
     }
