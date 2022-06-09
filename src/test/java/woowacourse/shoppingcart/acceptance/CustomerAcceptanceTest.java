@@ -160,7 +160,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         }
     }
 
-    @DisplayName("내 정보 조회")
+    @DisplayName("내 정보를 조회할 때")
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class Find {
@@ -204,7 +204,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         }
     }
 
-    @DisplayName("내 정보 수정")
+    @DisplayName("내 정보를 수정할 때")
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class Update {
@@ -306,12 +306,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         }
     }
 
-    @DisplayName("내 정보 삭제")
+    @DisplayName("내 계정을 삭제할 때")
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class Delete {
 
-        @DisplayName("정상 케이스")
+        @DisplayName("정상적인 요청이라면 200을 반환한다.")
         @Test
         void delete() {
             long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
@@ -323,7 +323,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         }
 
-        @DisplayName("비정상 케이스")
+        @DisplayName("비밀번호가 다른 경우 400을 반환한다.")
         @Test
         void delete_other_case() {
             long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
@@ -336,7 +336,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
             assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
             assertThat(errorResponse.getMessage()).isEqualTo("비밀번호가 일치하지 않습니다.");
-
         }
 
         @DisplayName("다른 사람의 정보를 삭제하면 403을 반환한다")

@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
+import woowacourse.shoppingcart.exception.InValidPassword;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.utils.CryptoUtils;
 
@@ -60,10 +61,17 @@ public class CustomerService {
     }
 
     @Transactional
-    public void delete(Long id, String password) {
-        customerSpec.validateCustomerExists(id);
+    public void delete(Long customerId, String password) {
+        customerSpec.validateCustomerExists(customerId);
         String encryptPassword = encryptPassword(password);
-        customerDao.deleteById(id, encryptPassword);
+        validatePasswordMatches(customerId);
+        customerDao.deleteById(customerId, encryptPassword);
+    }
+
+    private void validatePasswordMatches(Long customerId) {
+        customerDao
+                .findById(customerId)
+                .orElseThrow(() -> new InValidPassword());
     }
 
     private String encryptPassword(String password) {

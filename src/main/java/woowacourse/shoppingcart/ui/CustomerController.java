@@ -54,7 +54,7 @@ public class CustomerController {
         return new CustomerResponse(updatedCustomer);
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id,
                                         @RequestBody CustomerDeleteRequest request,
