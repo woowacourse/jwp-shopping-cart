@@ -57,7 +57,9 @@ public class CartService {
     @Transactional(rollbackFor = Exception.class)
     public CartResponses updateCartItems(String username, UpdateCartRequests updateCartRequests) {
         List<Cart> carts = updateCartRequests.carts();
-        cartItemDao.updateCartItem(carts);
+        for (Cart cart : carts) {
+            cartItemDao.updateCartItem(cart);
+        }
 
         List<Long> cartIds = updateCartRequests.cartIds();
         List<Cart> foundCarts = findCartIdsByUsername(username);
