@@ -12,8 +12,8 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), 0, product.getImageUrl());
+    public Cart(final Long id, final Product product, int quantity) {
+        this(id, product.getId(), product.getName(), product.getPrice(), quantity, product.getImageUrl());
     }
 
     public Cart(final Long id, final Long productId, final String name, final int price, final int quantity, final String imageUrl) {
