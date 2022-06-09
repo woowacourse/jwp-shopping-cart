@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class OrderService {
 
     private static final int MINIMUM_QUANTITY = 1;
@@ -36,6 +36,7 @@ public class OrderService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public void addOrder(final CustomerIdentificationRequest customerIdentificationRequest, final CartItemRequest cartItemRequest) {
         validateQuantity(cartItemRequest.getQuantity());
     }

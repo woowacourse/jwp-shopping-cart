@@ -132,7 +132,7 @@ class CartServiceTest {
     @ParameterizedTest
     @ValueSource(ints = {0, -1})
     @DisplayName("장바구니에 담긴 상품 개수를 수정할 때 개수가 1 미만이면 예외가 발생한다.")
-    void updateQuantityPriceException(int quantity) {
+    void updateQuantityException(int quantity) {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("test@woowacourse.com", "test", "1234asdf!");
         Long customerId = customerService.signUp(signUpRequest);
