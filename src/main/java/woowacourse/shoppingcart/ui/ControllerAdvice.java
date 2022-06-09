@@ -25,7 +25,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleUnhandledException(Exception e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(e + "Unhandled Exception"));
+        return ResponseEntity.badRequest().body(new ErrorResponse("Unhandled Exception"));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
@@ -71,7 +71,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        System.out.println("e = " + e);
         return ResponseEntity.internalServerError().body(new ErrorResponse("서버에 에러가 발생했습니다."));
     }
 }
