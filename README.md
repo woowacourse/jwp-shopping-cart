@@ -40,6 +40,11 @@
     - [x] 상품 복수 삭제 | 204
     - [x] 상품 전체 삭제 | 204
     - [x] 장바구니 상품 정보 수정 (수량, 구매체크) 복수 | 200
+  
+  - [x] 주문
+    - [x] 주문 추가 | 201
+    - [x] 주문 전체 조회 | 200
+    - [x] 주문 단일 조회 | 200
 
 [API 문서](https://brorae.notion.site/API-c10e17f6fdc940bbb2379ec7e07b1cb4)
 ## ✏️ Code Review Process
