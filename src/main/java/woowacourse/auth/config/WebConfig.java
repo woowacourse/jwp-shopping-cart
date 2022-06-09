@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.config;
+package woowacourse.auth.config;
 
 import java.util.List;
 import org.springframework.context.annotation.Bean;

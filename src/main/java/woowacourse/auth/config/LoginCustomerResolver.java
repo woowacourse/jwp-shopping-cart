@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.config;
+package woowacourse.auth.config;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;

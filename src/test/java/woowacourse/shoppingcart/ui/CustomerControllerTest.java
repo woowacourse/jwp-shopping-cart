@@ -16,9 +16,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import woowacourse.auth.config.LoginCustomerResolver;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.config.LoginCustomerResolver;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.exception.bodyexception.DuplicateEmailException;
 
