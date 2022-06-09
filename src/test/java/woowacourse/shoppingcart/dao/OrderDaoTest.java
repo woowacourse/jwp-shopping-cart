@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -32,23 +33,19 @@ class OrderDaoTest {
 
         final Long orderId = orderDao.save(customerId);
 
-        //then
         assertThat(orderId).isNotNull();
     }
 
-//    @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
-//    @Test
-//    void findOrderIdsByCustomerId() {
-//        //given
-//        final Long customerId = 1L;
-//        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-//        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-//
-//        //when
-//        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
-//
-//        //then
-//        assertThat(orderIdsByCustomerId).hasSize(2);
-//    }
+    @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
+    @Test
+    void findOrderIdsByCustomerId() {
+        final Long customerId = 1L;
+        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+
+        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
+
+        assertThat(orderIdsByCustomerId).hasSize(2);
+    }
 
 }
