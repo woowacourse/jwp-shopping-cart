@@ -38,6 +38,7 @@ public class CartService {
     }
 
     public void changeCartItemCount(long customerId, int productId, long cartItemCount) {
+        customerSpec.validateCustomerExists(customerId);
         Product findProduct = validateExistProductAndGet(productId);
         validateOverQuantity(findProduct, cartItemCount);
 
