@@ -28,6 +28,10 @@ public class OrderDetail {
         this.quantity = quantity;
     }
 
+    public int calculatePrice() {
+        return price * quantity;
+    }
+
     public Long getProductId() {
         return productId;
     }

@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.exception.InvalidAccessException;
-import woowacourse.exception.InvalidCustomerException;
 import woowacourse.exception.InvalidOrderException;
 import woowacourse.exception.InvalidProductException;
+import woowacourse.exception.InvalidTokenException;
 import woowacourse.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderDetail;
@@ -90,21 +90,22 @@ public class OrderService {
     }
 
     private OrderResponse findOrderResponse(final Orders order) {
-        final List<OrderDetailResponse> ordersDetails = new ArrayList<>();
-        for (final OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(order.getId())) {
+        final List<OrderDetailResponse> ordersDetailResponses = new ArrayList<>();
+        List<OrderDetail> ordersDetails = ordersDetailDao.findOrdersDetailsByOrderId(order.getId());
+        for (final OrderDetail orderDetail : ordersDetails) {
             final Product product = productDao.findProductById(orderDetail.getProductId())
                     .orElseThrow(InvalidProductException::new);
-            ordersDetails.add(new OrderDetailResponse(product.getId(), product.getName(),
+            ordersDetailResponses.add(new OrderDetailResponse(product.getId(), product.getName(),
                     orderDetail.getQuantity(), product.getPrice(), product.getImage()));
         }
 
-        return new OrderResponse(order.getId(), ordersDetails, calculateTotalPrice(ordersDetails),
+        return new OrderResponse(order.getId(), ordersDetailResponses, calculateTotalPrice(ordersDetails),
                 order.getDate());
     }
 
-    private int calculateTotalPrice(List<OrderDetailResponse> ordersDetails) {
+    private int calculateTotalPrice(List<OrderDetail> ordersDetails) {
         return ordersDetails.stream()
-                .mapToInt(ordersDetail -> ordersDetail.getQuantity() * ordersDetail.getPrice())
+                .mapToInt(ordersDetail -> ordersDetail.calculatePrice())
                 .sum();
     }
 }
