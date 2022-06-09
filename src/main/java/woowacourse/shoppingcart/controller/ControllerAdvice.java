@@ -41,7 +41,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<CommonExceptionDto> handleUnhandledException(final RuntimeException e) {
-        e.printStackTrace();
         return ResponseEntity.internalServerError().body(new CommonExceptionDto("Unhandled Exception"));
     }
 

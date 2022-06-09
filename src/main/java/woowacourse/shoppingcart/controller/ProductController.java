@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequestDto;
 import woowacourse.shoppingcart.dto.ProductResponseDto;
 import woowacourse.shoppingcart.dto.Request;
@@ -34,7 +33,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> add(@RequestBody final ProductRequestDto productRequestDto) {
         final Long productId = productService.addProduct(productRequestDto);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -55,7 +54,7 @@ public class ProductController {
     }
 
     @PostMapping("/many")
-    public ResponseEntity<Void> addProducts(@RequestBody final List<ProductRequestDto> products){
+    public ResponseEntity<Void> addProducts(@RequestBody final List<ProductRequestDto> products) {
         productService.addProducts(products);
         return ResponseEntity.ok().build();
     }

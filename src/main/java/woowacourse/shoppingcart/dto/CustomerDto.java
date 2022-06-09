@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-@SuppressWarnings("")
 public class CustomerDto {
 
     private final Long id;

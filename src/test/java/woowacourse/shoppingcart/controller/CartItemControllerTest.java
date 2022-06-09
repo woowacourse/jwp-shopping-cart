@@ -72,7 +72,8 @@ class CartItemControllerTest extends ControllerTest {
                 .andReturn()
                 .getResponse();
 
-        final List<CartItemResponseDto> cartItemResponseDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(), CartItemResponseDto[].class));
+        final List<CartItemResponseDto> cartItemResponseDtos = Arrays.asList(
+                objectMapper.readValue(response.getContentAsString(), CartItemResponseDto[].class));
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(cartItemResponseDtos.size()).isEqualTo(2);
@@ -103,7 +104,7 @@ class CartItemControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("장바구니에 담긴 물건을 삭제한다.")
-    void deleteCartItem() throws Exception{
+    void deleteCartItem() throws Exception {
         doNothing().when(authService).checkAuthorization(any(), any());
         doNothing().when(cartService).deleteCart(any(), any());
         when(cartService.addCart(any(), any())).thenReturn(1L);
@@ -131,7 +132,7 @@ class CartItemControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("장바구니에 담긴 물건의 수량을 수정한다.")
-    void updateCartItem() throws Exception{
+    void updateCartItem() throws Exception {
         doNothing().when(authService).checkAuthorization(any(), any());
         when(cartService.addCart(any(), any())).thenReturn(1L);
 

@@ -20,8 +20,8 @@ import woowacourse.shoppingcart.domain.Product;
 public class ProductDaoTest {
 
     private final ProductDao productDao;
-    private Product product1 = new Product("product1", 10000, null, 10);
-    private Product product2 = new Product("product2", 11000, null, 10);
+    private final Product product1 = new Product("product1", 10000, null, 10);
+    private final Product product2 = new Product("product2", 11000, null, 10);
 
     public ProductDaoTest(JdbcTemplate jdbcTemplate) {
         this.productDao = new ProductDao(jdbcTemplate);
@@ -50,7 +50,7 @@ public class ProductDaoTest {
         final int price = 1_000;
         final String imageUrl = "www.test.com";
         final Long productId = productDao.save(new Product(name, price, imageUrl, 10));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl,10);
+        final Product expectedProduct = new Product(productId, name, price, imageUrl, 10);
 
         // when
         final Product product = productDao.findProductById(productId).get();

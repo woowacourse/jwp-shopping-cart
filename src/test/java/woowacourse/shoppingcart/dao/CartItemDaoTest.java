@@ -10,7 +10,6 @@ import static woowacourse.fixture.Fixture.TEST_PASSWORD;
 import static woowacourse.fixture.Fixture.TEST_USERNAME;
 import static woowacourse.fixture.Fixture.THUMBNAIL_URL;
 
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

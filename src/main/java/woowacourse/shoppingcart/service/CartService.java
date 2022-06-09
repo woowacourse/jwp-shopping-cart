@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,9 +14,7 @@ import woowacourse.shoppingcart.dto.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.CartItemResponseDto;
 import woowacourse.shoppingcart.dto.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.exception.DuplicateCartItemException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.OverQuantityException;
 
 @Service
@@ -32,11 +29,6 @@ public class CartService {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
-    }
-
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findByUsername(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
     }
 
     public Long addCart(final AddCartItemRequestDto addCartItemRequestDto, final Long customerId) {
@@ -55,7 +47,7 @@ public class CartService {
     private void compareCountAndQuantity(final Integer count, final Long productId) {
         final Product product = productDao.findProductById(productId)
                 .orElseThrow(NotFoundProductException::new);
-        if(product.getQuantity() < count){
+        if (product.getQuantity() < count) {
             throw new OverQuantityException();
         }
     }
@@ -85,7 +77,8 @@ public class CartService {
         cartItemDao.deleteCartItem(customerId, productId);
     }
 
-    public void updateCart(final Long customerId, final Long productId ,final UpdateCartItemCountItemRequest updateCartItemCountItemRequest){
+    public void updateCart(final Long customerId, final Long productId,
+                           final UpdateCartItemCountItemRequest updateCartItemCountItemRequest) {
         compareCountAndQuantity(updateCartItemCountItemRequest.getCount(), productId);
         cartItemDao.updateCartItem(customerId, productId, updateCartItemCountItemRequest.getCount());
     }

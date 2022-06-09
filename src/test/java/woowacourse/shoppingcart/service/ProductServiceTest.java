@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,19 +13,14 @@ import woowacourse.shoppingcart.dto.ProductRequestDto;
 import woowacourse.shoppingcart.dto.ProductResponseDto;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ProductServiceTest {
 
     @Autowired
     private ProductService productService;
-    private ProductRequestDto product1 = new ProductRequestDto("product1", 10000, null, 10);
-    private ProductRequestDto product2 = new ProductRequestDto("product2", 11000, null, 10);
+    private final ProductRequestDto product1 = new ProductRequestDto("product1", 10000, null, 10);
+    private final ProductRequestDto product2 = new ProductRequestDto("product2", 11000, null, 10);
 
     @Test
     @DisplayName("상품 전체 목록을 불러온다.")

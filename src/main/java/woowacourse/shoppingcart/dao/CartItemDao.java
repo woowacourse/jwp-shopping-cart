@@ -27,15 +27,6 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public Long findProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-    }
-
     public Long addCartItem(final Long customerId, final Long productId, final Integer count) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();

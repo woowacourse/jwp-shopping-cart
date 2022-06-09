@@ -3,15 +3,18 @@ package woowacourse.shoppingcart.domain;
 import java.util.Objects;
 
 public class Product {
+
     private Long id;
     private String name;
     private Integer price;
     private String thumbnailUrl;
     private Integer quantity;
 
-    public Product(){}
+    public Product() {
+    }
 
-    public Product(final Long id, final String name, final int price, final String thumbnailUrl, final Integer quantity) {
+    public Product(final Long id, final String name, final int price, final String thumbnailUrl,
+                   final Integer quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -45,10 +48,15 @@ public class Product {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         final Product product = (Product) o;
-        return Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(thumbnailUrl, product.thumbnailUrl) && Objects.equals(quantity, product.quantity);
+        return Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(
+                thumbnailUrl, product.thumbnailUrl) && Objects.equals(quantity, product.quantity);
     }
 
     @Override

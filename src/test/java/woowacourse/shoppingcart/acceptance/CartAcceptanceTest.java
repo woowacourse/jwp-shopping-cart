@@ -64,7 +64,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto1);
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto2);
 
-        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
+        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts",
+                authorizationHeader);
 
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
@@ -79,7 +80,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
 
-        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
+        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts",
+                authorizationHeader);
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
@@ -93,9 +95,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
         post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto1);
 
         final UpdateCartItemCountItemRequest updateCartItemCountItemRequest = new UpdateCartItemCountItemRequest(2);
-        patch("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader, updateCartItemCountItemRequest);
+        patch("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader,
+                updateCartItemCountItemRequest);
 
-        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
+        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts",
+                authorizationHeader);
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
@@ -112,7 +116,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         delete("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader);
 
-        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts", authorizationHeader);
+        final ExtractableResponse<Response> cartItemsResponse = get("/api/customers/" + customerId + "/carts",
+                authorizationHeader);
         final List<CartItemResponseDto> cartItemResponseDtos
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 

@@ -47,7 +47,7 @@ class CartServiceTest {
     private Long productId;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         customerId = customerDao.save(Customer.createWithoutId(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
         productId = productDao.save(new Product(PRODUCT_NAME, PRICE, THUMBNAIL_URL, QUANTITY));
     }
