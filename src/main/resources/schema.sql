@@ -44,7 +44,7 @@ create table cart_item
 
 alter table cart_item
     add constraint fk_cart_item_to_customer
-        foreign key (customer_id) references customer (id);
+        foreign key (customer_id) references customer (id) ON DELETE CASCADE;
 
 alter table cart_item
     add constraint fk_cart_item_to_product
