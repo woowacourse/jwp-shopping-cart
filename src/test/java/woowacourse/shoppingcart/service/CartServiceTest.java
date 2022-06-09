@@ -6,6 +6,8 @@ import static woowacourse.Fixture.페퍼_아이디;
 import static woowacourse.Fixture.페퍼_이름;
 
 import java.util.List;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +31,7 @@ class CartServiceTest {
     private CustomerService customerService;
 
     @Test
+    @DisplayName("로그인한 사용자의 장바구니 내역을 불러올 수 있다.")
     void findCartsByLoginCustomer() {
         //given
         Long bananaId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
@@ -50,16 +53,38 @@ class CartServiceTest {
     }
 
     @Test
+    @DisplayName("장바구니에 물건을 추가할 수 있다.")
     void addCart() {
+        //given
+        Long bananaId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
+        customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+        LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
+
+        //when
+        Cart cart = cartService.addCart(loginCustomer, new CartAddRequest(bananaId));
+
+        //then
+        assertThat(cart.getName()).isEqualTo("banana");
+    }
+
+    @Test
+    @DisplayName("장바구니 물건을 전체 삭제할 수 있다.")
+    void deleteAllCart() {
+        //given
         Long bananaId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
         Long appleId = productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
         customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
 
         LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
-        Cart cart = cartService.addCart(loginCustomer, new CartAddRequest(bananaId));
+        cartService.addCart(loginCustomer, new CartAddRequest(bananaId));
+        cartService.addCart(loginCustomer, new CartAddRequest(appleId));
 
-        assertThat(cart.getName()).isEqualTo("banana");
+        //when
+        cartService.deleteAllCart(loginCustomer);
+
+        //then
+        List<Cart> carts = cartService.findCartsByLoginCustomer(loginCustomer);
+        Assertions.assertThat(carts).isEmpty();
     }
-
 }
