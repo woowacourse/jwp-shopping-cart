@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductDao productDao;
@@ -20,6 +20,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public Long save(ProductSaveRequest request) {
         validateProductName(request.getName());
         return productDao.save(request.toEntity());
