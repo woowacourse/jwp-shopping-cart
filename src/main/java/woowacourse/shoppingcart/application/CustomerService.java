@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.exception.AuthException;
-import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
@@ -17,11 +16,9 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class CustomerService {
 
     private final CustomerDao customerDao;
-    private final CartItemDao cartItemDao;
 
-    public CustomerService(CustomerDao customerDao, CartItemDao cartItemDao) {
+    public CustomerService(CustomerDao customerDao) {
         this.customerDao = customerDao;
-        this.cartItemDao = cartItemDao;
     }
 
     public boolean isDistinctEmail(final String email) {
@@ -69,8 +66,6 @@ public class CustomerService {
     public void delete(final String emailValue) {
         Email email = new Email(emailValue);
         validateExists(email);
-        final Long customerId = customerDao.findIdByEmail(email);
-        cartItemDao.deleteAllCartItemByCustomerId(customerId);
         customerDao.delete(email);
     }
 
