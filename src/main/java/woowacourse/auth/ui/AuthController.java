@@ -21,8 +21,9 @@ public class AuthController {
     private AuthService authService;
     private CustomerService customerService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, CustomerService customerService) {
         this.authService = authService;
+        this.customerService = customerService;
     }
 
     @PostMapping("/customer/authentication/sign-in")
