@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CartService {
 
+    public static final int INIT_QUANTITY = 1;
     private final CartItemDao cartItemDao;
     private final CustomerService customerService;
     private final ProductService productService;
@@ -30,7 +31,7 @@ public class CartService {
     @Transactional
     public void save(final Long customerId, final Long productId) {
         validateSave(customerId, productId);
-        cartItemDao.save(customerId, productId, 1);
+        cartItemDao.save(customerId, productId, INIT_QUANTITY);
     }
 
     private void validateSave(Long customerId, Long productId) {
