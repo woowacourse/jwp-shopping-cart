@@ -1,0 +1,50 @@
+= EN_six 쇼핑카트
+Andy Wilkinson;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+=== auth 로그인
+operation::auth-api-test/login_customer_test[snippets='http-request,request-fields,http-response,response-fields']
+
+=== Customer 회원가입
+operation::customers-api-test/add-customers_test[snippets='http-request,request-fields,http-response,response-fields']
+
+=== Customer 조회
+operation::customers-api-test/get-me_test[snippets='http-request,request-headers,http-response,response-fields']
+
+=== Customer 수정
+operation::customers-api-test/update-me_test[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+=== Customer 삭제
+operation::customers-api-test/delete-me_test[snippets='http-request,request-headers,request-fields,http-response']
+
+=== Product 추가
+operation::product-api-test/add_test[snippets='http-request,request-fields,http-response']
+
+=== Product 단건 조회
+operation::product-api-test/product_test[snippets='http-request,http-response']
+
+=== Product 전체 조회
+operation::product-api-test/products_test[snippets='http-request,http-response']
+
+=== CartItem 추가
+operation::cart-item-api-test/add-cart-item_test[snippets='http-request,http-response']
+
+=== CartItem 전체 조회
+operation::cart-item-api-test/get-cart-items_test[snippets='http-request,http-response']
+
+=== CartItem 삭제
+operation::cart-item-api-test/delete-cart-item_test[snippets='http-request,http-response']
+
+=== Order 추가
+operation::order-api-test/add-order_test[snippets='http-request,http-response']
+
+=== Order 단건 조회
+operation::order-api-test/find-order_test[snippets='http-request,http-response,response-fields']
+
+=== Order 전체 조회
+operation::order-api-test/find-orders_test[snippets='http-request,http-response,response-fields']

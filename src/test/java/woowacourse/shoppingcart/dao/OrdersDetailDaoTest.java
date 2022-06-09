@@ -54,7 +54,7 @@ class OrdersDetailDaoTest {
                 .addOrdersDetail(ordersId, productId, quantity);
 
         //then
-        assertThat(orderDetailId).isEqualTo(1L);
+        assertThat(orderDetailId).isEqualTo(5L);
     }
 
     @DisplayName("OrderId로 OrderDetails 조회하는 기능")

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -43,13 +44,27 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
+            IllegalArgumentException.class,
             NotInCustomerCartItemException.class,
+            DuplicateCustomerException.class
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler({
+        InvalidCustomerLoginException.class,
+        InvalidTokenException.class
+    })
+    public ResponseEntity handleInvalidLogin(final RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCustomerException.class)
+    public ResponseEntity handleCustomerNotFound(final RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }
