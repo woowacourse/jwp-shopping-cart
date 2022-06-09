@@ -78,16 +78,16 @@ class AuthAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
-        void 토큰이_유효하지_않은_경우_인가_실패() {
+        void 토큰이_유효하지_않은_경우_인가_실패_401() {
             String 잘못된_토큰 = "안녕하세요.해커입니다.";
 
             ExtractableResponse<Response> response = 내_정보_조회_요청(잘못된_토큰);
 
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         }
 
         @Test
-        void 토큰이_없는_경우_인증_실패() {
+        void 토큰이_없는_경우_인증_실패_401() {
             ExtractableResponse<Response> response = RestAssured
                     .given().log().all()
                     .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -95,7 +95,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
                     .then().log().all()
                     .extract();
 
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         }
     }
 

@@ -1,15 +1,15 @@
 package woowacourse.auth.domain.token;
 
 import javax.crypto.SecretKey;
-import woowacourse.common.exception.ForbiddenException;
+import woowacourse.common.exception.AuthenticationException;
 
 public class NullToken implements Token {
 
     public String getPayload(SecretKey tokenKey) {
-        throw new ForbiddenException();
+        throw AuthenticationException.ofUnauthenticated();
     }
 
     public String getValue() {
-        throw new ForbiddenException();
+        throw AuthenticationException.ofUnauthenticated();
     }
 }

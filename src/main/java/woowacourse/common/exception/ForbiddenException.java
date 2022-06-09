@@ -7,6 +7,6 @@ public class ForbiddenException extends RuntimeException {
     }
 
     public ForbiddenException() {
-        this("로그인이 필요합니다.");
+        this("접근 권한이 없습니다.");
     }
 }

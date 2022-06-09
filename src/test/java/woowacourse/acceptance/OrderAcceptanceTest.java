@@ -80,7 +80,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
-        void 로그인_되어있지_않은_경우_403() {
+        void 로그인_되어있지_않은_경우_401() {
             String 토큰 = 회원가입_후_토큰_생성();
             장바구니_상품_복수_등록(토큰, 호박, 고구마);
 
@@ -92,7 +92,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
                     .then().log().all()
                     .extract();
 
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         }
 
         private ExtractableResponse<Response> 주문_요청(String accessToken, Product... products) {

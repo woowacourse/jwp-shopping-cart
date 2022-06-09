@@ -6,7 +6,6 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import javax.crypto.SecretKey;
 import woowacourse.common.exception.AuthenticationException;
-import woowacourse.common.exception.ForbiddenException;
 
 public class ValidToken implements Token {
 
@@ -22,7 +21,7 @@ public class ValidToken implements Token {
         } catch (ExpiredJwtException e) {
             throw AuthenticationException.ofInvalidToken();
         } catch (JwtException | IllegalArgumentException e) {
-            throw new ForbiddenException();
+            throw AuthenticationException.ofUnauthenticated();
         }
     }
 

@@ -75,13 +75,13 @@ class CartAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
-        void 로그인_되어있지_않은_경우_403() {
+        void 로그인_되어있지_않은_경우_401() {
             ExtractableResponse<Response> response = RestAssured.given().log().all()
                     .when().get("/cart")
                     .then().log().all()
                     .extract();
 
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         }
     }
 
@@ -112,13 +112,13 @@ class CartAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
-        void 로그인_되어있지_않은_경우_403() {
+        void 로그인_되어있지_않은_경우_401() {
             ExtractableResponse<Response> response = RestAssured.given().log().all()
                     .when().delete("/cart")
                     .then().log().all()
                     .extract();
 
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         }
 
         private ExtractableResponse<Response> 장바구니_비우기(String accessToken) {
@@ -173,13 +173,13 @@ class CartAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
-        void 로그인_되어있지_않은_경우_403() {
+        void 로그인_되어있지_않은_경우_401() {
             ExtractableResponse<Response> response = RestAssured.given().log().all()
                     .when().post("/cart/" + 1L)
                     .then().log().all()
                     .extract();
 
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         }
     }
 
@@ -226,7 +226,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
-        void 로그인_되어있지_않은_경우_403() {
+        void 로그인_되어있지_않은_경우_401() {
             String 토큰 = 회원가입_후_토큰_생성();
             장바구니_상품_등록(토큰, 호박);
 
@@ -237,7 +237,7 @@ class CartAcceptanceTest extends AcceptanceTest {
                     .then().log().all()
                     .extract();
 
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         }
     }
 
@@ -288,7 +288,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
-        void 로그인_되어있지_않은_경우_403() {
+        void 로그인_되어있지_않은_경우_401() {
             DeleteCartItemsRequest requestBody = new DeleteCartItemsRequest(List.of(1L, 2L));
             ExtractableResponse<Response> response = RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -296,7 +296,7 @@ class CartAcceptanceTest extends AcceptanceTest {
                     .when().delete("/cart/products")
                     .then().log().all()
                     .extract();
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         }
 
         private ExtractableResponse<Response> 장바구니_상품_부분_제거(String accessToken, Product... products) {

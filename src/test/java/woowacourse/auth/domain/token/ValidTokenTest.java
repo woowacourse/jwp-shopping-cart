@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import woowacourse.common.exception.AuthenticationException;
-import woowacourse.common.exception.ForbiddenException;
 
 @SuppressWarnings("NonAsciiCharacters")
 class ValidTokenTest {
@@ -42,7 +41,7 @@ class ValidTokenTest {
             Token token = new ValidToken(generateAccessToken("asd12!", 잘못된_키, 토큰_만료기간));
 
             assertThatThrownBy(() -> token.getPayload(올바른_토큰_키))
-                    .isInstanceOf(ForbiddenException.class);
+                    .isInstanceOf(AuthenticationException.class);
         }
 
         @Test
@@ -51,7 +50,7 @@ class ValidTokenTest {
             Token token = new ValidToken(JWT_형식에_부합하지_않는_값);
 
             assertThatThrownBy(() -> token.getPayload(올바른_토큰_키))
-                    .isInstanceOf(ForbiddenException.class);
+                    .isInstanceOf(AuthenticationException.class);
         }
 
         @Test
