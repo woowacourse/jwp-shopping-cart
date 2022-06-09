@@ -21,7 +21,7 @@ public class Product {
     }
 
     public boolean isAvailable(Amount count) {
-        return quantity.isBiggerThan(count);
+        return quantity.isMoreThan(count);
     }
 
     public String getName() {
