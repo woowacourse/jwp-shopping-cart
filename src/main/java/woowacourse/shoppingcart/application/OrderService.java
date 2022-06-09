@@ -99,13 +99,13 @@ public class OrderService {
                     orderDetail.getQuantity(), product.getPrice(), product.getImage()));
         }
 
-        return new OrderResponse(order.getId(), ordersDetailResponses, calculateTotalPrice(ordersDetails),
+        return new OrderResponse(order.getId(), ordersDetailResponses, calculateTotalPrice(ordersDetailResponses),
                 order.getDate());
     }
 
-    private int calculateTotalPrice(List<OrderDetail> ordersDetails) {
-        return ordersDetails.stream()
-                .mapToInt(ordersDetail -> ordersDetail.calculatePrice())
+    private int calculateTotalPrice(List<OrderDetailResponse> ordersDetailResponses) {
+        return ordersDetailResponses.stream()
+                .mapToInt(ordersDetailResponse -> ordersDetailResponse.getQuantity() * ordersDetailResponse.getPrice())
                 .sum();
     }
 }
