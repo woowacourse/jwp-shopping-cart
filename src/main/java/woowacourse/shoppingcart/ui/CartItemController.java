@@ -5,12 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.LoginCustomer;
-import woowacourse.shoppingcart.dto.ProductIdRequest;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.QuantityRequest;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.dto.request.LoginCustomer;
+import woowacourse.shoppingcart.dto.request.ProductIdRequest;
+import woowacourse.shoppingcart.dto.request.QuantityRequest;
+import woowacourse.shoppingcart.dto.request.Request;
 import woowacourse.shoppingcart.application.CartService;
 
 import java.util.List;

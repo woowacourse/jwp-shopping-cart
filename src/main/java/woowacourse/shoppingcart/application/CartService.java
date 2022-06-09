@@ -7,7 +7,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.response.CartResponse;
 import woowacourse.shoppingcart.exception.DuplicateCartItemByProduct;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 

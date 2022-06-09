@@ -4,15 +4,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.dto.LoginCustomer;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.request.LoginCustomer;
+import woowacourse.shoppingcart.dto.request.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.application.OrderService;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import woowacourse.shoppingcart.dto.OrdersResponse;
+import woowacourse.shoppingcart.dto.response.OrdersResponse;
 
 @Validated
 @RestController

@@ -18,11 +18,12 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
+@SuppressWarnings("NonAsciiChracters")
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql", "classpath:test.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CustomerDaoTest {
+class CustomerDaoTest {
 
     private final CustomerDao customerDao;
     private DataSource dataSource;

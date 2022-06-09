@@ -11,7 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
-import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.request.ProductRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

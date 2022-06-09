@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.LoginRequest;
+import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.dto.request.LoginRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.auth.acceptance.AuthAcceptanceTest.로그인_요청;
