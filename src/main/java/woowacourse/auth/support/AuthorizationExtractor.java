@@ -9,7 +9,7 @@ public class AuthorizationExtractor {
     public static String BEARER_TYPE = "Bearer";
 
     public static String extract(HttpServletRequest request) {
-        Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
+        Enumeration<String> headers = extractHeaders(request);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
             if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
@@ -24,5 +24,10 @@ public class AuthorizationExtractor {
         }
 
         return null;
+    }
+
+    private static Enumeration<String> extractHeaders(HttpServletRequest request) {
+        Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
+        return headers;
     }
 }
