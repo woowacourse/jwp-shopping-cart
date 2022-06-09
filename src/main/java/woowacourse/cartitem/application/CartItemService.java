@@ -17,8 +17,8 @@ import woowacourse.product.domain.Product;
 import woowacourse.product.exception.InvalidProductException;
 import woowacourse.cartitem.exception.InvalidCartItemException;
 
-@Service
 @Transactional(rollbackFor = Exception.class)
+@Service
 public class CartItemService {
 
     private final CustomerService customerService;
@@ -43,12 +43,7 @@ public class CartItemService {
         return cartItemDao.save(customerId, cartItemAddRequest.getProductId(), quantity.getValue());
     }
 
-    private void validateProductStock(final Long productId, final Integer quantity) {
-        final Product product = productDao.findById(productId)
-            .orElseThrow(() -> new InvalidProductException("해당 id에 따른 상품을 찾을 수 없습니다."));
-        product.checkProductAvailableForPurchase(quantity);
-    }
-
+    @Transactional(readOnly = true)
     public CartItemResponses findCartItemsByCustomerName(final String customerName) {
         final Long customerId = customerService.findCustomerIdByUsername(customerName);
         final List<CartItem> cartItems = cartItemDao.findAllByCustomerId(customerId);
@@ -56,6 +51,7 @@ public class CartItemService {
         return CartItemResponses.from(cartItems);
     }
 
+    @Transactional(readOnly = true)
     public CartItemResponse findCartItemById(final Long cartItemId) {
         final CartItem cartItem = cartItemDao.findById(cartItemId)
             .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
@@ -67,9 +63,17 @@ public class CartItemService {
         validateCustomerCart(cartItemId, customerName);
         final CartItem cartItem = cartItemDao.findById(cartItemId)
             .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
+
+        validateProductStock(cartItem.getProductId(), quantity);
         cartItem.updateQuantity(quantity);
 
         cartItemDao.update(cartItemId, cartItem);
+    }
+
+    private void validateProductStock(final Long productId, final Integer quantity) {
+        final Product product = productDao.findById(productId)
+            .orElseThrow(() -> new InvalidProductException("존재하지 않는 상품입니다."));
+        product.checkProductAvailableForPurchase(quantity);
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
