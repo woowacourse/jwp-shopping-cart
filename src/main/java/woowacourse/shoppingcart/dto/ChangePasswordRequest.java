@@ -14,7 +14,7 @@ public class ChangePasswordRequest {
     public ChangePasswordRequest() {
     }
 
-    public ChangePasswordRequest(String password, String newPassword) {
+    public ChangePasswordRequest(String password, String newPasxsword) {
         this.password = password;
         this.newPassword = newPassword;
     }

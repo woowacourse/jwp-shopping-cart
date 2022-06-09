@@ -64,6 +64,7 @@ public class CustomerDao {
         final String sql = "UPDATE customer SET password = (:password) WHERE username = (:username)";
         var namedParameters = new MapSqlParameterSource("password", newPassword);
         namedParameters.addValue("username", name);
+
         jdbcTemplate.update(sql, namedParameters);
     }
 

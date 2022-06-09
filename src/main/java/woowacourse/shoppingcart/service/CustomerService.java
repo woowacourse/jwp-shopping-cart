@@ -88,7 +88,7 @@ public class CustomerService {
     }
 
     public void deleteUser(AuthorizedCustomer authorizedCustomer, DeleteCustomerRequest deleteCustomerRequest) {
-        String password = deleteCustomerRequest.getPassword();
+        var password = deleteCustomerRequest.getPassword();
         new Password(password);
 
         var customer = convertCustomer(authorizedCustomer);
