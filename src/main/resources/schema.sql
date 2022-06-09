@@ -51,6 +51,9 @@ alter table cart_item
         foreign key (product_id) references product (id)
             on delete cascade on delete cascade;
 
+alter table cart_item
+    add unique key (product_id);
+
 create table orders
 (
     id          bigint not null auto_increment,
