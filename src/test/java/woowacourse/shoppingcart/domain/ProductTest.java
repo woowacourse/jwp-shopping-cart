@@ -10,6 +10,14 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 class ProductTest {
 
     @Test
+    @DisplayName("가격이 0보다 작게 저장될 경우 예외")
+    void createMinussPrice_throwException() {
+        assertThatThrownBy(() -> new Product(1L, "치킨", -1, 2, "url"))
+                .isInstanceOf(InvalidProductException.class)
+                .hasMessage("제품의 가격은 0보다 작을 수 없습니다.");
+    }
+
+    @Test
     @DisplayName("수량이 0보다 작게 저장될 경우 예외")
     void createMinusStock_throwException() {
         assertThatThrownBy(() -> new Product(1L, "치킨", 1000, -1, "url"))
