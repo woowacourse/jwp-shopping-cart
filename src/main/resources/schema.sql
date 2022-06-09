@@ -66,11 +66,11 @@ create table orders_detail
 
 alter table orders_detail
     add constraint fk_orders_detail_to_orders
-        foreign key (orders_id) references orders (id);
+        foreign key (orders_id) references orders (id) on delete cascade;
 
 alter table orders_detail
     add constraint fk_orders_detail_to_product
-        foreign key (product_id) references product (id);
+        foreign key (product_id) references product (id) on delete cascade;
 
 insert into product (name, price, image_url)
 values ('[아서] 칠레산 코호 냉동 연어필렛 trim D(껍질있음) 1.1~1.3kg', 24500,'https://cdn-mart.baemin.com/sellergoods/main/92438f0e-0c4b-425e-b03b-999cee7cdca2.jpg'),
