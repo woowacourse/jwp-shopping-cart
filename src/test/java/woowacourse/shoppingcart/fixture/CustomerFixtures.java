@@ -57,7 +57,7 @@ public class CustomerFixtures {
 
     public static CustomerRequest CUSTOMER_REQUEST_1 = new CustomerRequest("seongwoo0513@example.com", "string&123",
             "http://gravatar.com/avatar/1?d=identicon",
-            "박성우", "male", "1999-03-23", "01022223333", "서울특별시 강남구 선릉역", "이디야 1층", "12345", true);
+            "박성우", "male", "", "01022223333", "서울특별시 강남구 선릉역", "이디야 1층", "12345", true);
 
     public static CustomerRequest CUSTOMER_REQUEST_2 = new CustomerRequest("seongwoo0513@example.com", "string&123",
             "http://gravatar.com/avatar/1?d=identicon",
