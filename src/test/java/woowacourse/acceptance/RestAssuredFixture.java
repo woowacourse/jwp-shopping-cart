@@ -35,9 +35,7 @@ public class RestAssuredFixture {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post(path)
                 .then().log().all()
-                .statusCode(status)
-                .extract()
-                .as(LogInResponse.class);
+                .statusCode(status).extract().as(LogInResponse.class);
     }
 
     public static ValidatableResponse postCart(Object request, String token, String path, int status) {
