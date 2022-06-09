@@ -32,7 +32,7 @@ public class CartService {
     }
 
     public void deleteCart(final Long customerId, final DeleteCartItemRequests deleteCartItemIdsRequests) {
-        var cartItemIds = deleteCartItemIdsRequests.getCartItemIds().stream()
+        var cartItemIds = deleteCartItemIdsRequests.getCartItems().stream()
                 .map(it -> it.getId())
                 .collect(Collectors.toList());
 

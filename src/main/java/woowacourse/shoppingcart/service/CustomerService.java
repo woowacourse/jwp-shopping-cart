@@ -63,7 +63,7 @@ public class CustomerService {
     public void changePassword(AuthorizedCustomer authorizedCustomer, ChangePasswordRequest changePasswordRequest) {
         var customer = convertCustomer(authorizedCustomer);
 
-        var password = changePasswordRequest.getOldPassword();
+        var password = changePasswordRequest.getPassword();
         new Password(password);
         var newPassword = changePasswordRequest.getNewPassword();
         new Password(newPassword);

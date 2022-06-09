@@ -4,16 +4,16 @@ import java.util.List;
 
 public class DeleteCartItemRequests {
 
-    private List<DeleteCartItemRequest> cartItemIds;
+    private List<DeleteCartItemRequest> cartItems;
 
     public DeleteCartItemRequests() {
     }
 
     public DeleteCartItemRequests(List<DeleteCartItemRequest> deleteCartItemRequests) {
-        this.cartItemIds = deleteCartItemRequests;
+        this.cartItems = deleteCartItemRequests;
     }
 
-    public List<DeleteCartItemRequest> getCartItemIds() {
-        return cartItemIds;
+    public List<DeleteCartItemRequest> getCartItems() {
+        return cartItems;
     }
 }
