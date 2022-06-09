@@ -56,7 +56,7 @@ public class MemberController {
     @PostMapping("/members/password-check")
     public ResponseEntity<PasswordCheckResponse> confirmPassword(@AuthenticationPrincipal long memberId,
                                                                  @RequestBody PasswordRequest passwordRequest) {
-        boolean actual = memberService.checkPassword(memberId, passwordRequest.getPassword());
+        boolean actual = memberService.checkPassword(memberId, passwordRequest);
         return ResponseEntity.ok(new PasswordCheckResponse(actual));
     }
 
@@ -76,7 +76,7 @@ public class MemberController {
     @PatchMapping("/members/password")
     public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal long memberId,
                                                @RequestBody @Valid PasswordRequest passwordRequest) {
-        memberService.updatePassword(memberId, passwordRequest.getPassword());
+        memberService.updatePassword(memberId, passwordRequest);
         return ResponseEntity.noContent()
                 .build();
     }

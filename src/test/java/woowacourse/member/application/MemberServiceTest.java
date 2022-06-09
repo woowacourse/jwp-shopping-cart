@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.member.dto.request.PasswordRequest;
 import woowacourse.member.exception.AuthorizationException;
 import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.member.dto.request.MemberCreateRequest;
@@ -79,7 +80,7 @@ class MemberServiceTest {
     @ParameterizedTest
     @CsvSource({"1q2w3e4r!, true", "asda1234!, false"})
     void checkPassword(String password, boolean expected) {
-        boolean actual = memberService.checkPassword(MEMBER_ID, password);
+        boolean actual = memberService.checkPassword(MEMBER_ID, new PasswordRequest(password));
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -118,7 +119,7 @@ class MemberServiceTest {
     @DisplayName("이메일과 비밀번호를 받아 비밀번호를 수정한다.")
     @Test
     void updatePassword() {
-        memberService.updatePassword(MEMBER_ID, NEW_PASSWORD);
+        memberService.updatePassword(MEMBER_ID, new PasswordRequest(NEW_PASSWORD));
 
         LoginRequest loginRequest = new LoginRequest(EMAIL, NEW_PASSWORD);
 
@@ -141,7 +142,7 @@ class MemberServiceTest {
     @Test
     void updatePassword_NotFoundMember() {
         assertThatThrownBy(
-                () -> memberService.updatePassword(NON_EXISTING_MEMBER_ID, NEW_PASSWORD))
+                () -> memberService.updatePassword(NON_EXISTING_MEMBER_ID, new PasswordRequest(NEW_PASSWORD)))
                 .isInstanceOf(AuthorizationException.class)
                 .hasMessage("유효하지 않은 토큰입니다.");
     }
@@ -157,9 +158,9 @@ class MemberServiceTest {
     @DisplayName("올바르지 않은 형식의 비밀번호로 변경하려고 하면 예외를 반환한다.")
     @Test
     void updatePassword_InvalidPasswordFormat() {
-        String invalidPassword = "1234";
+        PasswordRequest invalidPasswordRequest = new PasswordRequest("1234");
 
-        assertThatThrownBy(() -> memberService.updatePassword(MEMBER_ID, invalidPassword))
+        assertThatThrownBy(() -> memberService.updatePassword(MEMBER_ID, invalidPasswordRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호 형식이 올바르지 않습니다.");
     }

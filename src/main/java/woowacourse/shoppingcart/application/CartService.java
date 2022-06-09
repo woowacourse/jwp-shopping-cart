@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dto.CartItemAddRequest;
+import woowacourse.shoppingcart.dto.CartItemQuantityUpdateRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @Service
@@ -21,7 +23,9 @@ public class CartService {
     }
 
     @Transactional
-    public void addCartItem(long memberId, long productId, int quantity) {
+    public void addCartItem(long memberId, CartItemAddRequest cartItemAddRequest) {
+        long productId = cartItemAddRequest.getProductId();
+        int quantity = cartItemAddRequest.getQuantity();
         productService.validateProductId(productId);
         productService.validateStock(productId, quantity);
         addCart(memberId, productId, quantity);
@@ -44,7 +48,10 @@ public class CartService {
     }
 
     @Transactional
-    public List<CartItemResponse> updateCartItemQuantity(long memberId, long productId, int quantity) {
+    public List<CartItemResponse> updateCartItemQuantity(long memberId,
+                                                         CartItemQuantityUpdateRequest cartItemQuantityUpdateRequest) {
+        long productId = cartItemQuantityUpdateRequest.getProductId();
+        int quantity = cartItemQuantityUpdateRequest.getQuantity();
         productService.validateProductId(productId);
         productService.validateStock(productId, quantity);
         cartItemDao.updateCartItemQuantity(memberId, productId, quantity);

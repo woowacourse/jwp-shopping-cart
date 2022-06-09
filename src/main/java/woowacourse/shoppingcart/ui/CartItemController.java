@@ -33,7 +33,7 @@ public class CartItemController {
     @PostMapping("/products")
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal long memberId,
                                             @Valid @RequestBody CartItemAddRequest cartItemAddRequest) {
-        cartService.addCartItem(memberId, cartItemAddRequest.getProductId(), cartItemAddRequest.getQuantity());
+        cartService.addCartItem(memberId, cartItemAddRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -46,8 +46,8 @@ public class CartItemController {
     public ResponseEntity<List<CartItemResponse>> updateQuantity(@AuthenticationPrincipal long memberId,
                                                                  @Valid @RequestBody CartItemQuantityUpdateRequest
                                                                          cartItemQuantityUpdateRequest) {
-        List<CartItemResponse> cartItemResponses = cartService.updateCartItemQuantity(
-                memberId, cartItemQuantityUpdateRequest.getProductId(), cartItemQuantityUpdateRequest.getQuantity());
+        List<CartItemResponse> cartItemResponses =
+                cartService.updateCartItemQuantity(memberId, cartItemQuantityUpdateRequest);
         return ResponseEntity.ok(cartItemResponses);
     }
 

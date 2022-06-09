@@ -7,6 +7,7 @@ import woowacourse.member.domain.Email;
 import woowacourse.member.domain.Member;
 import woowacourse.member.domain.Nickname;
 import woowacourse.member.domain.Password;
+import woowacourse.member.dto.request.PasswordRequest;
 import woowacourse.member.exception.AuthorizationException;
 import woowacourse.member.support.TokenManager;
 import woowacourse.member.dto.request.LoginRequest;
@@ -62,8 +63,8 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public boolean checkPassword(long memberId, String password) {
-        return memberDao.checkPassword(memberId, password);
+    public boolean checkPassword(long memberId, PasswordRequest passwordRequest) {
+        return memberDao.checkPassword(memberId, passwordRequest.getPassword());
     }
 
     @Transactional(readOnly = true)
@@ -82,9 +83,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void updatePassword(long memberId, String newPassword) {
+    public void updatePassword(long memberId, PasswordRequest passwordRequest) {
         validateId(memberId);
-        String password = new Password(newPassword).getValue();
+        String password = new Password(passwordRequest.getPassword()).getValue();
         memberDao.updatePasswordById(memberId, password);
     }
 
