@@ -33,11 +33,6 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
-    public List<ProductResponse> findProducts() {
-        List<Product> products = productDao.findProducts();
-        return ProductResponse.from(products);
-    }
-
     public List<ProductResponse> findProductsInPage(final Long pageNum, final Long limitCount) {
         validatePage(pageNum, limitCount);
         List<Product> products = productDao.findProductsInPage(pageNum, limitCount);

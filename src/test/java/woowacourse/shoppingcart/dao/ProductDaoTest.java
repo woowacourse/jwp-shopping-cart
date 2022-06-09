@@ -29,19 +29,21 @@ public class ProductDaoTest {
         this.productDao = new ProductDao(jdbcTemplate);
     }
 
-    @DisplayName("Product를 저장하면, id를 반환한다.")
+    @DisplayName("상품을 저장한다.")
     @Test
     void save() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        Long productId = productDao.save(new Product("초콜렛", 1_000, "www.test.com"));
 
         // then
-        assertThat(productId).isEqualTo(1L);
+        Product product = productDao.findById(productId).get();
+
+        assertAll(
+                () -> assertThat(product.getId()).isEqualTo(productId),
+                () -> assertThat(product.getName()).isEqualTo("초콜렛"),
+                () -> assertThat(product.getPrice()).isEqualTo(1_000),
+                () -> assertThat(product.getImageUrl()).isEqualTo("www.test.com")
+        );
     }
 
     @DisplayName("productID 를 이용하여 상품을 조회한다.")
@@ -81,22 +83,16 @@ public class ProductDaoTest {
         );
     }
 
-    @DisplayName("싱품 삭제")
+    @DisplayName("싱품을 삭제한다.")
     @Test
-    void deleteProduct() {
+    void delete() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final int beforeSize = productDao.findProducts().size();
+        Long productId = productDao.save(new Product("초콜렛", 1_000, "www.test.com"));
 
         // when
         productDao.delete(productId);
 
         // then
-        final int afterSize = productDao.findProducts().size();
-        assertThat(beforeSize - 1).isEqualTo(afterSize);
+        assertThat(productDao.findById(productId).isEmpty()).isTrue();
     }
 }

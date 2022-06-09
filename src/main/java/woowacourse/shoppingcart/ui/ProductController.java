@@ -21,11 +21,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/api/products")
-    public ResponseEntity<List<ProductResponse>> products() {
-        return ResponseEntity.ok(productService.findProducts());
-    }
-
     @PostMapping("/api/products")
     public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final Product product) {
         final Long productId = productService.addProduct(product);
