@@ -20,6 +20,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.response.CartResponse;
@@ -43,7 +44,7 @@ class CartItemServiceTest {
         final UserName userName = new UserName("giron");
         final Long customerId = 1L;
         final Customer customer = new Customer(customerId, userName, encryptedBasicPassword);
-        final Cart banana = new Cart(1L, 5, new Product("banana", 1_000, "woowa1.com"));
+        final Cart banana = new Cart(1L, new Quantity(5), new Product("banana", 1_000, "woowa1.com"));
         final List<Cart> carts = List.of(banana);
 
         given(customerDao.findById(customerId))

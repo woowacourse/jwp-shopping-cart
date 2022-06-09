@@ -38,6 +38,17 @@
 | POST   | /api/customers/duplication | 회원 중복 확인    |
 | POST   | /api/login                 | 로그인         |
 
+## 장바구니 기능
+
+- [X] 장바구니에 담은 상품의 수량은 0~99 까지 가능하다.
+- [X] 장바구니에 담은 상품의 수량을 변경할 수 있다.
+
+## 상품 기능
+
+- [X] 상품 목록 조회
+    - [X] 로그인이 되지 않은 상황이라면 장바구니에 담은 물품을 고려하지 않는다.
+    - [X] 로그인이 된 상황이라면 장바구니에 담겨져 있는 상품인지 확인 할 수 있도록 한다.
+
 ## ✏️ Code Review Process
 
 [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)

@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -38,7 +39,8 @@ public class CartItemDao {
             final String productName = rs.getString("name");
             final int productPrice = rs.getInt("price");
             final String productImageUrl = rs.getString("image_url");
-            return new Cart(id, quantity, new Product(product_id, productName, productPrice, productImageUrl));
+            return new Cart(id, new Quantity(quantity),
+                    new Product(product_id, productName, productPrice, productImageUrl));
         };
     }
 

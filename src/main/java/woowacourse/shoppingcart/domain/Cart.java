@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Cart {
 
     private Long id;
-    private int quantity;
+    private Quantity quantity;
     private Long productId;
     private String name;
     private int price;
@@ -14,11 +14,11 @@ public class Cart {
     private Cart() {
     }
 
-    public Cart(final Long id, final int quantity, final Product product) {
+    public Cart(final Long id, final Quantity quantity, final Product product) {
         this(id, quantity, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public Cart(final Long id, final int quantity, final Long productId, final String name, final int price,
+    public Cart(final Long id, final Quantity quantity, final Long productId, final String name, final int price,
                 final String imageUrl) {
         this.id = id;
         this.quantity = quantity;
@@ -33,7 +33,7 @@ public class Cart {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 
     public Long getProductId() {

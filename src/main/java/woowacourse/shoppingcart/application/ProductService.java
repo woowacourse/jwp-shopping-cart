@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -47,7 +48,7 @@ public class ProductService {
             final Cart cart = carts.stream()
                     .filter(each -> each.getProductId().equals(product.getId()))
                     .findFirst()
-                    .orElseGet(() -> new Cart(null, 0, product));
+                    .orElseGet(() -> new Cart(null, new Quantity(0), product));
             productResponses.add(ProductResponse.withCart(product, cart));
         }
         return productResponses;
