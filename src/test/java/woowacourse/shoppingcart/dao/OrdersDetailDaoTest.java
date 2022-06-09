@@ -1,19 +1,21 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+
 import woowacourse.shoppingcart.domain.OrderDetail;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Quantity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -47,11 +49,11 @@ class OrdersDetailDaoTest {
     @Test
     void addOrdersDetail() {
         //given
-        int quantity = 5;
+        Product product = new Product(productId, "상품", 1000, "image/product");
+        OrderDetail orderDetail = new OrderDetail(product, new Quantity(5));
 
         //when
-        Long orderDetailId = ordersDetailDao
-                .addOrdersDetail(ordersId, productId, quantity);
+        Long orderDetailId = ordersDetailDao.addOrdersDetail(orderDetail, ordersId);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);

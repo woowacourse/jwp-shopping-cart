@@ -11,6 +11,14 @@ public class CartItem {
         this.quantity = new Quantity(quantity);
     }
 
+    OrderDetail checkOut() {
+        return new OrderDetail(product, quantity);
+    }
+
+    boolean isProductId(Long id) {
+        return product.isId(id);
+    }
+
     public Product getProduct() {
         return product;
     }

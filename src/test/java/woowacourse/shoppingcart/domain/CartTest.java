@@ -1,8 +1,10 @@
 package woowacourse.shoppingcart.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.shoppingcart.exception.IllegalCartItemException;
@@ -22,5 +24,33 @@ class CartTest {
         assertThatExceptionOfType(IllegalCartItemException.class)
                 .isThrownBy(() -> cart.addItem(cartItem2))
                 .withMessageContaining("이미 담긴");
+    }
+
+    @DisplayName("원하는 상품을 골라 주문할 수 있다.")
+    @Test
+    void checkOut() {
+        Product carrot = new Product(1L, "당근", 1000, "image/carrot");
+        Product apple = new Product(2L, "사과", 1200, "image/apple");
+        Product potato = new Product(3L, "감자", 1300, "image/potato");
+
+        CartItem carrotInCart = new CartItem(carrot, 1);
+        CartItem appleInCart = new CartItem(apple, 1);
+        CartItem potatoInCart = new CartItem(potato, 1);
+
+        Cart cart = new Cart(List.of(carrotInCart, appleInCart, potatoInCart));
+        Orders orders = cart.checkOut(List.of(1L, 2L));
+
+        List<Long> orderedIds = orders.getOrderDetails()
+                .stream()
+                .map(OrderDetail::getProductId)
+                .collect(Collectors.toList());
+
+        List<Long> remainingIds = cart.getItems()
+                .stream()
+                .map(CartItem::getProductId)
+                .collect(Collectors.toList());
+
+        assertThat(orderedIds).containsExactlyInAnyOrder(1L, 2L);
+        assertThat(remainingIds).containsExactly(3L);
     }
 }

@@ -18,7 +18,6 @@ import woowacourse.shoppingcart.dto.response.CartItemsResponse;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
-
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
@@ -29,12 +28,22 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public CartItemsResponse findCartsByUsername(final String username) {
         final Cart cart = findCartByUsername(username);
         return CartItemsResponse.from(cart);
     }
 
-    private Cart findCartByUsername(String username) {
+    public Long addCart(final Long productId, final String username) {
+        Long customerId = customerDao.getIdByUsername(username);
+        Cart cart = findCartByUsername(username);
+        Product product = productDao.findProductById(productId);
+        CartItem cartItem = new CartItem(product, 1);
+        cart.addItem(cartItem);
+        return cartItemDao.addCartItem(cartItem, customerId);
+    }
+
+    Cart findCartByUsername(String username) {
         final Long customerId = customerDao.getIdByUsername(username);
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
@@ -45,15 +54,6 @@ public class CartService {
             cart.addItem(new CartItem(product, quantity));
         }
         return cart;
-    }
-
-    public Long addCart(final Long productId, final String username) {
-        Long customerId = customerDao.getIdByUsername(username);
-        Cart cart = findCartByUsername(username);
-        Product product = productDao.findProductById(productId);
-        CartItem cartItem = new CartItem(product, 1);
-        cart.addItem(cartItem);
-        return cartItemDao.addCartItem(cartItem, customerId);
     }
 
     public void updateQuantity(Long productId, QuantityRequest quantityRequest, String username) {

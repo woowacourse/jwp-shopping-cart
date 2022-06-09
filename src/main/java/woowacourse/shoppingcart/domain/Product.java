@@ -22,6 +22,10 @@ public class Product {
         this(null, name, price, imageUrl);
     }
 
+    boolean isId(Long id) {
+        return Objects.equals(this.id, id);
+    }
+
     public String getName() {
         return name;
     }
