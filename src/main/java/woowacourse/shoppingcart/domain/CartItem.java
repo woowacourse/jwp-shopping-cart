@@ -9,10 +9,6 @@ public class CartItem {
     private final int quantity;
     private final String imageUrl;
 
-    public CartItem(final Long id, final Product product, final int quentity) {
-        this(id, product.getId(), product.getName(), product.getPrice(), quentity, product.getImageUrl());
-    }
-
     public CartItem(final Long id, final Long productId, final String name, final int price, final int quantity, final String imageUrl) {
         this.id = id;
         this.productId = productId;
