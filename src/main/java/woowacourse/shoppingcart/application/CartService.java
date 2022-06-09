@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.exception.dataformat.QuantityDataFormatException;
 import woowacourse.shoppingcart.exception.datanotfound.CartItemDataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.CustomerDataNotFoundException;
 import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundException;
@@ -27,7 +28,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CartService {
 
-    private final int DEFAULT_CART_ITEM_QUANTITY = 1;
+    private static final int MINIMUM_QUANTITY = 1;
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
@@ -67,6 +68,7 @@ public class CartService {
     @Transactional
     public CartItemResponse updateQuantity(final CustomerIdentificationRequest customerIdentificationRequest,
                                                  final CartItemRequest cartItemRequest) {
+        validateQuantity(cartItemRequest.getQuantity());
         cartItemDao.updateQuantity(cartItemRequest.getId(), customerIdentificationRequest.getId(), cartItemRequest.getQuantity());
         return CartItemResponse.from(findCartItemById(cartItemRequest.getId()));
     }
@@ -80,7 +82,7 @@ public class CartService {
 
     private CartItem addCartItem(final Customer customer, final Long productId) {
         try {
-            Long cartItemId = cartItemDao.addCartItem(customer.getId(), productId, DEFAULT_CART_ITEM_QUANTITY);
+            Long cartItemId = cartItemDao.addCartItem(customer.getId(), productId, MINIMUM_QUANTITY);
             return findCartItemById(cartItemId);
         } catch (DataIntegrityViolationException exception) {
             throw new ProductDataNotFoundException("존재하지 않는 상품입니다.");
@@ -100,5 +102,11 @@ public class CartService {
     private CartItem findCartItemById(final Long cartItemId) {
         return cartItemDao.findCartItemById(cartItemId)
                 .orElseThrow(() -> new CartItemDataNotFoundException("존재하지 않는 장바구니 정보입니다."));
+    }
+
+    private void validateQuantity(final int quantity) {
+        if (quantity < MINIMUM_QUANTITY) {
+            throw new QuantityDataFormatException("수량은 1 이상이어야 합니다.");
+        }
     }
 }

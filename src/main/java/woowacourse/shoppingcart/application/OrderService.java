@@ -6,10 +6,10 @@ import woowacourse.shoppingcart.application.dto.request.CartItemRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.dao.*;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.application.dto.request.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.dataformat.QuantityDataFormatException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class OrderService {
+
+    private static final int MINIMUM_QUANTITY = 1;
 
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
@@ -35,7 +37,7 @@ public class OrderService {
     }
 
     public void addOrder(final CustomerIdentificationRequest customerIdentificationRequest, final CartItemRequest cartItemRequest) {
-
+        validateQuantity(cartItemRequest.getQuantity());
     }
 
     public Orders findOrderById(final String customerName, final Long orderId) {
@@ -69,5 +71,11 @@ public class OrderService {
         }
 
         return new Orders(orderId, ordersDetails);
+    }
+
+    private void validateQuantity(final int quantity) {
+        if (quantity < MINIMUM_QUANTITY) {
+            throw new QuantityDataFormatException("수량은 1 이상이어야 합니다.");
+        }
     }
 }
