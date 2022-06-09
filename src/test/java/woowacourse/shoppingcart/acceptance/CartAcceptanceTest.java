@@ -31,7 +31,6 @@ import woowacourse.shoppingcart.dto.CartsResponse;
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
 
-    private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;
     private Long notFoundProductId;
@@ -105,7 +104,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_추가_요청(token, productId1);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(1101);
+        assertThat(response.jsonPath().getInt("errorCode"))
+            .isEqualTo(DUPLICATE_CART_ITEM_ERROR_CODE);
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
@@ -120,7 +120,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
             .given(spec).log().all()
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
             .when().log().all()
-            .filter(document("query-cart-product",
+            .filter(document("query-cart-item",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestHeaders(
@@ -153,13 +153,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("잘못된 토큰으로 장바구니 아이템 목록 조회 시 401 반환")
     @Test
     void getCartItemsWithInvalidToken() {
-        ExtractableResponse<Response> response = RestAssured
-            .given(spec).log().all()
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + "invalid token")
-            .when().log().all()
-            .get("/users/me/carts")
-            .then().log().all()
-            .extract();
+        ExtractableResponse<Response> response = 장바구니_목록_조회("invalid token");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
@@ -213,7 +207,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_삭제(token, productId1);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(1102);
+        assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(
+            NOT_EXIST_CART_ITEM_ERROR_CODE);
     }
 
     @DisplayName("존재하지 않는 상품 장바구니에서 삭제")
@@ -317,6 +312,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_수정("2", token, productId1);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(1102);
+        assertThat(response.jsonPath().getInt("errorCode"))
+            .isEqualTo(NOT_EXIST_CART_ITEM_ERROR_CODE);
     }
 }

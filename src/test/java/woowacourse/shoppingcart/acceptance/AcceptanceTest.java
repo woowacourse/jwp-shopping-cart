@@ -32,6 +32,8 @@ public class AcceptanceTest {
     protected static final int INVALID_FORMAT_ERROR_CODE = 1000;
     protected static final int DUPLICATE_EMAIL_ERROR_CODE = 1001;
     protected static final int INVALID_LOGIN_ERROR_CODE = 1002;
+    protected static final int DUPLICATE_CART_ITEM_ERROR_CODE = 1101;
+    protected static final int NOT_EXIST_CART_ITEM_ERROR_CODE = 1102;
 
     @Value("${shopping.admin.email}")
     protected String adminEmail;

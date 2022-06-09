@@ -38,13 +38,11 @@ class CartServiceTest {
 
     private Product 칫솔;
     private Product 치약;
-    private long accountId;
     private long notFoundProductId;
 
     @BeforeEach
     void setUp() {
-        accountId = accountService
-            .saveAccount(new SignUpRequest(EMAIL, "12345678a", "tonic"));
+        accountService.saveAccount(new SignUpRequest(EMAIL, "12345678a", "tonic"));
 
         칫솔 = productService.save(new ProductRequest("칫솔", 1200, "image 칫솔"));
         치약 = productService.save(new ProductRequest("치약", 2300, "image 치약"));
