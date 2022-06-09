@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.request.ProductRequest;
 import woowacourse.shoppingcart.application.dto.response.ProductResponse;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
@@ -23,7 +24,8 @@ public class ProductService {
     }
 
     @Transactional
-    public Long addProduct(final Product product) {
+    public Long addProduct(final ProductRequest productRequest) {
+        Product product = productRequest.toEntity();
         return productDao.save(product);
     }
 

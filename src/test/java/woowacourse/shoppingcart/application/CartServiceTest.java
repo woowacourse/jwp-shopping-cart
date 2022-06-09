@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.application.dto.request.CartItemIdRequest;
 import woowacourse.shoppingcart.application.dto.request.CartItemRequest;
 import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.application.dto.request.ProductIdRequest;
+import woowacourse.shoppingcart.application.dto.request.ProductRequest;
 import woowacourse.shoppingcart.application.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.application.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.application.dto.response.CartResponse;
@@ -47,7 +48,7 @@ class CartServiceTest {
         Long customerId = customerService.signUp(signUpRequest);
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
 
-        Long productId = productService.addProduct(new Product("초콜렛", 1_000, "www.test.com"));
+        Long productId = productService.addProduct(new ProductRequest("초콜렛", 1_000, "www.test.com"));
         ProductIdRequest productIdRequest = new ProductIdRequest(productId);
         cartService.addCartItems(customerIdentificationRequest, List.of(productIdRequest));
 
@@ -73,7 +74,7 @@ class CartServiceTest {
         Long customerId = customerService.signUp(signUpRequest);
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
 
-        Long productId = productService.addProduct(new Product("초콜렛", 1_000, "www.test.com"));
+        Long productId = productService.addProduct(new ProductRequest("초콜렛", 1_000, "www.test.com"));
         ProductIdRequest productIdRequest = new ProductIdRequest(productId);
 
         // when
@@ -110,7 +111,7 @@ class CartServiceTest {
         Long customerId = customerService.signUp(signUpRequest);
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
 
-        Long productId = productService.addProduct(new Product("초콜렛", 1_000, "www.test.com"));
+        Long productId = productService.addProduct(new ProductRequest("초콜렛", 1_000, "www.test.com"));
         ProductIdRequest productIdRequest = new ProductIdRequest(productId);
 
         List<CartItemResponse> cartItemResponses = cartService.addCartItems(customerIdentificationRequest, List.of(productIdRequest));
@@ -135,7 +136,7 @@ class CartServiceTest {
         Long customerId = customerService.signUp(signUpRequest);
         CustomerIdentificationRequest customerIdentificationRequest = new CustomerIdentificationRequest(String.valueOf(customerId));
 
-        Long productId = productService.addProduct(new Product("초콜렛", 1_000, "www.test.com"));
+        Long productId = productService.addProduct(new ProductRequest("초콜렛", 1_000, "www.test.com"));
         ProductIdRequest productIdRequest = new ProductIdRequest(productId);
 
         List<CartItemResponse> cartItemResponses = cartService.addCartItems(customerIdentificationRequest, List.of(productIdRequest));

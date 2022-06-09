@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.request.ProductRequest;
 import woowacourse.shoppingcart.application.dto.response.ProductResponse;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.datanotfound.ProductDataNotFoundException;
@@ -32,7 +33,7 @@ class ProductServiceTest {
     @Test
     void findById() {
         // given
-        Long productId = productService.addProduct(new Product("초콜렛", 1_000, "www.test.com"));
+        Long productId = productService.addProduct(new ProductRequest("초콜렛", 1_000, "www.test.com"));
 
         // when
         ProductResponse productResponse = productService.findById(productId);
@@ -56,10 +57,10 @@ class ProductServiceTest {
     @Test
     void findProductsInPage() {
         // given
-        productService.addProduct(new Product("초콜렛", 1_000, "www.test.com"));
-        productService.addProduct(new Product("초콜렛2", 1_000, "www.test2.com"));
-        productService.addProduct(new Product("초콜렛3", 1_000, "www.test3.com"));
-        productService.addProduct(new Product("초콜렛4", 1_000, "www.test4.com"));
+        productService.addProduct(new ProductRequest("초콜렛", 1_000, "www.test.com"));
+        productService.addProduct(new ProductRequest("초콜렛2", 1_000, "www.test2.com"));
+        productService.addProduct(new ProductRequest("초콜렛3", 1_000, "www.test3.com"));
+        productService.addProduct(new ProductRequest("초콜렛4", 1_000, "www.test4.com"));
 
         // when
         List<ProductResponse> productResponses = productService.findProductsInPage(1L, 5L);
