@@ -6,7 +6,7 @@ public class InvalidCustomerException extends RuntimeException {
         this("존재하지 않는 유저입니다.");
     }
 
-    public InvalidCustomerException(final String msg) {
-        super(msg);
+    public InvalidCustomerException(final String message) {
+        super(message);
     }
 }

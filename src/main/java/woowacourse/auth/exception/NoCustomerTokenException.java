@@ -6,7 +6,7 @@ public class NoCustomerTokenException extends RuntimeException {
         this("존재하지 않는 유저의 토큰입니다.");
     }
 
-    public NoCustomerTokenException(final String msg) {
-        super(msg);
+    public NoCustomerTokenException(final String message) {
+        super(message);
     }
 }

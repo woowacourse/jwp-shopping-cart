@@ -6,7 +6,7 @@ public class OutOfStockException extends RuntimeException {
         this("재고가 부족합니다.");
     }
 
-    public OutOfStockException(final String msg) {
-        super(msg);
+    public OutOfStockException(final String message) {
+        super(message);
     }
 }

@@ -6,7 +6,7 @@ public class ForbiddenAccessException extends RuntimeException {
         this("권한이 없는 요청입니다.");
     }
 
-    public ForbiddenAccessException(final String msg) {
-        super(msg);
+    public ForbiddenAccessException(final String message) {
+        super(message);
     }
 }

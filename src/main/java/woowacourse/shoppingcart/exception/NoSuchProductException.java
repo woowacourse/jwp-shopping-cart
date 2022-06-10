@@ -6,7 +6,7 @@ public class NoSuchProductException extends RuntimeException {
         this("존재하지 않는 상품 ID입니다.");
     }
 
-    public NoSuchProductException(final String msg) {
-        super(msg);
+    public NoSuchProductException(final String message) {
+        super(message);
     }
 }
