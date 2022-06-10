@@ -34,11 +34,12 @@ public class ProductService {
 
     public Long addProduct(final ProductRequestDto productRequestDto) {
         return productDao.save(
-                new Product(
+                Product.createWithoutId(
                         productRequestDto.getName(),
                         productRequestDto.getPrice(),
                         productRequestDto.getThumbnailUrl(),
-                        productRequestDto.getQuantity())
+                        productRequestDto.getQuantity()
+                )
         );
     }
 
@@ -59,8 +60,12 @@ public class ProductService {
 
     public int addProducts(List<ProductRequestDto> productDtos) {
         List<Product> products = productDtos.stream()
-                .map(dto -> new Product(dto.getName(), dto.getPrice(), dto.getThumbnailUrl(), dto.getQuantity()))
-                .collect(Collectors.toList());
+                .map(dto -> Product.createWithoutId(
+                        dto.getName(),
+                        dto.getPrice(),
+                        dto.getThumbnailUrl(),
+                        dto.getQuantity())
+                ).collect(Collectors.toList());
         return productDao.saveAll(products);
     }
 }

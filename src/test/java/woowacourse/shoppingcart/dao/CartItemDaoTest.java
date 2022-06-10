@@ -46,7 +46,7 @@ public class CartItemDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
         customerId = customerDao.save(Customer.createWithoutId(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
-        productId = productDao.save(new Product(PRODUCT_NAME, PRICE, THUMBNAIL_URL, QUANTITY));
+        productId = productDao.save(Product.createWithoutId(PRODUCT_NAME, PRICE, THUMBNAIL_URL, QUANTITY));
     }
 
     @Test

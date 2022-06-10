@@ -22,8 +22,8 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public Product(final String name, final int price, final String thumbnailUrl, final Integer quantity) {
-        this(null, name, price, thumbnailUrl, quantity);
+    public static Product createWithoutId(final String name, final int price, final String thumbnailUrl, final Integer quantity) {
+        return new Product(null, name, price, thumbnailUrl, quantity);
     }
 
     public String getName() {

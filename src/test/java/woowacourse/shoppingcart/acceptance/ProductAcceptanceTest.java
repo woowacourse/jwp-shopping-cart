@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.dto.ProductResponseDto;
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        final Product productRequest = new Product(name, price, imageUrl, 10);
+        final Product productRequest = Product.createWithoutId(name, price, imageUrl, 10);
 
         return RestAssured
                 .given().log().all()

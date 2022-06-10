@@ -20,8 +20,8 @@ import woowacourse.shoppingcart.domain.Product;
 public class ProductDaoTest {
 
     private final ProductDao productDao;
-    private final Product product1 = new Product("product1", 10000, null, 10);
-    private final Product product2 = new Product("product2", 11000, null, 10);
+    private final Product product1 = Product.createWithoutId("product1", 10000, null, 10);
+    private final Product product2 = Product.createWithoutId("product2", 11000, null, 10);
 
     public ProductDaoTest(JdbcTemplate jdbcTemplate) {
         this.productDao = new ProductDao(jdbcTemplate);
@@ -36,7 +36,7 @@ public class ProductDaoTest {
         final String imageUrl = "www.test.com";
 
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl, 10));
+        final Long productId = productDao.save(Product.createWithoutId(name, price, imageUrl, 10));
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -49,7 +49,7 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl, 10));
+        final Long productId = productDao.save(Product.createWithoutId(name, price, imageUrl, 10));
         final Product expectedProduct = new Product(productId, name, price, imageUrl, 10);
 
         // when
@@ -81,7 +81,7 @@ public class ProductDaoTest {
         final int price = 1_000;
         final String imageUrl = "www.test.com";
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl, 10));
+        final Long productId = productDao.save(Product.createWithoutId(name, price, imageUrl, 10));
         final int beforeSize = productDao.findProducts().size();
 
         // when
