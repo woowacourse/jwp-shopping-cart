@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.helper.fixture.MemberFixture.EMAIL;
 import static woowacourse.helper.fixture.MemberFixture.NAME;
 import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
@@ -9,6 +10,7 @@ import static woowacourse.helper.fixture.ProductFixture.PRODUCT_NAME;
 import static woowacourse.helper.fixture.ProductFixture.PRODUCT_PRICE;
 import static woowacourse.helper.fixture.ProductFixture.createProduct;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,12 @@ public class CartServiceTest {
 
         final CartRequest cartRequest = new CartRequest(productId);
         cartService.addCart(memberId, cartRequest);
-        assertThat(cartDao.findCartsByMemberId(memberId).get(0).getQuantity()).isEqualTo(2);
+        final List<Cart> carts = cartDao.findCartsByMemberId(memberId);
+        assertAll(
+                () -> assertThat(carts.get(0).getQuantity()).isEqualTo(2),
+                () -> assertThat(carts).hasSize(1)
+        );
+
     }
 
     @DisplayName("제품이 없는 경우 새로 추가한다.")
