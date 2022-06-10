@@ -14,8 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductIdsRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
 
 @DisplayName("장바구니 관련 기능")
 @Sql(scripts = "classpath:product-data.sql")
@@ -30,17 +30,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         //when
         ExtractableResponse<Response> response = findCartItemsApi(accessToken);
-        List<ProductResponse> productResponses = response.jsonPath().getList(".", ProductResponse.class);
+        List<CartResponse> cartResponses = response.jsonPath().getList(".", CartResponse.class);
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(productResponses.size()).isEqualTo(1);
-        productResponses.forEach(
-                productResponse -> assertThat(productResponse).extracting("id", "name", "price", "imageUrl",
-                                "savedQuantity")
-                        .containsExactly(1L, "콜드 브루 몰트", 4800,
-                                "https://image.istarbucks.co.kr/upload/store/skuimg/2021/02/[9200000001636]_20210225093600536.jpg",
-                                5));
+        assertThat(cartResponses.size()).isEqualTo(1);
+        CartResponse cart = cartResponses.get(0);
+        assertThat(cart).extracting("id", "name", "price", "imageUrl", "quantity")
+                .containsExactly(1L, "콜드 브루 몰트", 4800,
+                        "https://image.istarbucks.co.kr/upload/store/skuimg/2021/02/[9200000001636]_20210225093600536.jpg",
+                        5);
     }
 
     @DisplayName("존재하지 않는 회원이 장바구니에 아이템을 담을 경우, 예외를 발생시킨다.")
@@ -50,7 +49,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = addCartItemApi("", 1L, 5);
 
         //then
-        assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("존재하지 않는 회원입니다.");
+        assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("토큰 정보가 없습니다.");
     }
 
     @DisplayName("장바구니에 양수가 아닌 수의 아이템을 담을 경우, 예외를 발생시킨다.")
@@ -79,10 +78,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         //then
         ExtractableResponse<Response> response = findCartItemsApi(accessToken);
-        List<ProductResponse> productResponses = response.jsonPath().getList(".", ProductResponse.class);
+        List<CartResponse> productResponses = response.jsonPath().getList(".", CartResponse.class);
 
         assertThat(productResponses.size()).isEqualTo(1);
-        productResponses.forEach(productResponse -> assertThat(productResponse.getSavedQuantity()).isEqualTo(10));
+        productResponses.forEach(cartResponse -> assertThat(cartResponse.getQuantity()).isEqualTo(10));
     }
 
     @DisplayName("장바구니 상품의 개수를 수정할 때, 음수인 경우 예외를 발생시킨다.")
@@ -113,11 +112,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> deleteResponse = deleteCartItemApi(accessToken, List.of(2L));
 
         ExtractableResponse<Response> response = findCartItemsApi(accessToken);
-        List<ProductResponse> productResponses = response.jsonPath().getList(".", ProductResponse.class);
+        List<CartResponse> cartResponses = response.jsonPath().getList(".", CartResponse.class);
 
         //then
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-        assertThat(productResponses.size()).isEqualTo(2);
+        assertThat(cartResponses.size()).isEqualTo(2);
 
     }
 

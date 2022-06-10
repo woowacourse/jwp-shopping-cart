@@ -42,7 +42,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/customers")
+                .get("/customers/me")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(CustomerResponse.class);
@@ -77,11 +77,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/customers")
+                .get("/customers/me")
                 .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .extract().as(ExceptionResponse.class);
-        // then
-        //assertThat(response.getMessage()).isEqualTo("유효하지 않거나 만료된 토큰입니다.");
+        //then
+        assertThat(response.getMessage()).isEqualTo("유효하지 않거나 만료된 토큰입니다.");
     }
 
     @DisplayName("Bearer Auth 토큰이 없는 경우 예외를 발생시킨다.")
@@ -91,10 +92,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         ExceptionResponse response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/customers")
+                .get("/customers/me")
                 .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .extract().as(ExceptionResponse.class);
         // then
-        //assertThat(response.getMessage()).isEqualTo("토큰 정보가 존재하지 않습니다.");
+        assertThat(response.getMessage()).isEqualTo("토큰 정보가 없습니다.");
     }
 }

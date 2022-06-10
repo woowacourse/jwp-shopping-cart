@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
@@ -22,8 +21,8 @@ public class ProductController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> products(@AuthenticationPrincipal Long customerId) {
-        return productService.findProducts(customerId);
+    public List<ProductResponse> products() {
+        return productService.findProducts();
     }
 
 }

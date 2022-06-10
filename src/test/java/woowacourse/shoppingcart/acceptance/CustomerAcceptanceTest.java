@@ -85,7 +85,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .body(new CustomerRequest("email", "Pw123456!", "judy", "010-1111-2222", "address2"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/customers")
+                .put("/customers/me")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
@@ -94,7 +94,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/customers")
+                .get("/customers/me")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(CustomerResponse.class);
@@ -138,7 +138,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .when()
-                .delete("/customers")
+                .delete("/customers/me")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value())
                 .extract();
@@ -147,7 +147,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/customers")
+                .get("/customers/me")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().as(ExceptionResponse.class);

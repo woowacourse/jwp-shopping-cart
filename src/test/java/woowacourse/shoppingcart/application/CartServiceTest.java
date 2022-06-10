@@ -10,8 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:product-data.sql"})
@@ -33,10 +33,10 @@ class CartServiceTest {
         CartRequest updatingCartItem = new CartRequest(1L, 10);
         cartService.updateCartQuantity(1L, updatingCartItem);
 
-        List<ProductResponse> cartProductsByCustomerId = cartService.findCartProductsByCustomerId(1L);
+        List<CartResponse> cartProductsByCustomerId = cartService.findCartProductsByCustomerId(1L);
 
         assertThat(cartProductsByCustomerId.size()).isEqualTo(1);
-        cartProductsByCustomerId.forEach(product -> assertThat(product.getSavedQuantity()).isEqualTo(10));
+        cartProductsByCustomerId.forEach(cart -> assertThat(cart.getQuantity()).isEqualTo(10));
     }
 
 

@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductIdsRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
 
 @RestController
 @RequestMapping("/customers/carts")
@@ -28,7 +28,7 @@ public class CartItemController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> getCartItems(@AuthenticationPrincipal Long customerId) {
+    public List<CartResponse> getCartItems(@AuthenticationPrincipal Long customerId) {
         return cartService.findCartProductsByCustomerId(customerId);
     }
 

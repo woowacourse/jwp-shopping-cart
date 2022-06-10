@@ -44,20 +44,20 @@ public class CustomerController {
         return customerService.findNameById(customerId);
     }
 
-    @GetMapping
+    @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public CustomerResponse showCustomer(@AuthenticationPrincipal Long customerId) {
         return customerService.find(customerId);
     }
 
-    @PutMapping
+    @PutMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public void updateCustomer(@AuthenticationPrincipal Long customerId,
                                @RequestBody CustomerRequest customerRequest) {
         customerService.update(customerId, customerRequest);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCustomer(@AuthenticationPrincipal Long customerId) {
         customerService.delete(customerId);

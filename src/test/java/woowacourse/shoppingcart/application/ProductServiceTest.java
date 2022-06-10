@@ -27,10 +27,9 @@ class ProductServiceTest {
     @Test
     void findProductsWhoCustomer() {
         saveCustomer();
-        List<ProductResponse> productResponses = productService.findProducts(1L);
+        List<ProductResponse> productResponses = productService.findProducts();
 
         assertThat(productResponses.size()).isEqualTo(12);
-        productResponses.forEach(productResponse -> assertThat(productResponse.getSavedQuantity()).isEqualTo(0));
     }
 
     void saveCustomer() {

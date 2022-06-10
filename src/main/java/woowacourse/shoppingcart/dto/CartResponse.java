@@ -2,26 +2,28 @@ package woowacourse.shoppingcart.dto;
 
 import woowacourse.shoppingcart.domain.Product;
 
-public class ProductResponse {
+public class CartResponse {
 
     private Long id;
     private String name;
     private Integer price;
     private String imageUrl;
+    private Integer quantity;
 
-    private ProductResponse() {
+    private CartResponse() {
 
     }
 
-    public ProductResponse(Product product) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    public CartResponse(Product product, int quantity) {
+        this(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
     }
 
-    private ProductResponse(Long id, String name, Integer price, String imageUrl) {
+    private CartResponse(Long id, String name, Integer price, String imageUrl, Integer quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -40,4 +42,7 @@ public class ProductResponse {
         return imageUrl;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
 }
