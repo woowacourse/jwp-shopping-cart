@@ -2,13 +2,16 @@ package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.exception.domain.CartItemNotFoundException;
@@ -78,19 +81,32 @@ public class CartItemDao {
         }
     }
 
-    public List<CartItem> findCartItemsByCustomerId(Long customerId) {
+    public Cart findCartByCustomerId(Long customerId) {
         final String query = "SELECT * FROM cart_item WHERE customer_id = ?";
-        return jdbcTemplate.query(query, (rs, rowNum) -> new CartItem(
+        return new Cart(jdbcTemplate.query(query, getCartItemRowMapper(), customerId));
+    }
+
+    private RowMapper<CartItem> getCartItemRowMapper() {
+        return (rs, rowNum) -> new CartItem(
             rs.getLong("id"),
             new Quantity(rs.getInt("quantity")),
             productDao.findProductById(rs.getLong("product_id"))
                 .orElseThrow(ProductNotFoundException::new)
-        ), customerId);
+        );
     }
 
     public void updateQuantity(Long customerId, Long cartId, Quantity quantity) {
         final String query = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? AND id = ?";
         final int updatedCount = jdbcTemplate.update(query, quantity.getAmount(), customerId, cartId);
         validateUpdated(updatedCount);
+    }
+
+    public Optional<CartItem> findCartItemById(Long id) {
+        final String query = "SELECT * FROM cart_item WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, getCartItemRowMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

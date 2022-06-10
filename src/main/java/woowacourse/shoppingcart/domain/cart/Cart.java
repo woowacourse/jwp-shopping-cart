@@ -13,4 +13,9 @@ public class Cart {
     public List<CartItem> getItems() {
         return items;
     }
+
+    public boolean contains(CartItem cartItem) {
+        return items.stream()
+            .anyMatch(item -> item.getId().equals(cartItem.getId()));
+    }
 }

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.domain.product.Product;
@@ -67,7 +68,7 @@ public class CartItemDaoTest {
         final Long cartId = cartItemDao.addCartItem(customerId, productId, quantity);
 
         // then
-        final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
+        final List<CartItem> cartItems = cartItemDao.findCartByCustomerId(customerId).getItems();
         final CartItem cartItem = cartItems.stream()
             .filter(item -> item.getId().equals(cartId))
             .findAny()
@@ -114,7 +115,7 @@ public class CartItemDaoTest {
         final Long customerId = 1L;
 
         // when
-        final List<CartItem> items = cartItemDao.findCartItemsByCustomerId(customerId);
+        final List<CartItem> items = cartItemDao.findCartByCustomerId(customerId).getItems();
 
         // then
         final List<Long> ids = items.stream().map(CartItem::getId).collect(Collectors.toList());
@@ -158,7 +159,7 @@ public class CartItemDaoTest {
 
         // when
         cartItemDao.updateQuantity(customerId, cartId, quantity);
-        final List<CartItem> items = cartItemDao.findCartItemsByCustomerId(customerId);
+        final List<CartItem> items = cartItemDao.findCartByCustomerId(customerId).getItems();
         final CartItem updatedCartItem = items.stream()
             .filter(item -> item.getId().equals(cartId))
             .findAny()

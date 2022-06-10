@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.cart.Quantity;
+import woowacourse.shoppingcart.exception.domain.CartItemNotFoundException;
 import woowacourse.shoppingcart.exception.domain.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.domain.ProductNotFoundException;
 
@@ -24,7 +25,7 @@ public class CartService {
     }
 
     public CartResponse findCartsByCustomerId(final Long customerId) {
-        final Cart cart = new Cart(cartItemDao.findCartItemsByCustomerId(customerId));
+        final Cart cart = cartItemDao.findCartByCustomerId(customerId);
         return CartResponse.from(cart);
     }
 
@@ -44,9 +45,9 @@ public class CartService {
     }
 
     private void validateCustomerHasCartItem(final Long cartId, final Long customerId) {
-        final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
-        if (cartItems.stream()
-            .noneMatch(item -> item.getId().equals(cartId))) {
+        final Cart cart = cartItemDao.findCartByCustomerId(customerId);
+        final CartItem cartItem = cartItemDao.findCartItemById(cartId).orElseThrow(CartItemNotFoundException::new);
+        if (!cart.contains(cartItem)) {
             throw new NotInCustomerCartItemException();
         }
     }
