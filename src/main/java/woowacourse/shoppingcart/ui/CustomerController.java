@@ -40,20 +40,19 @@ public class CustomerController {
 
     @GetMapping("/name")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerNameResponse findName(@AuthenticationPrincipal Long customerId) {
+    public CustomerNameResponse showCustomerName(@AuthenticationPrincipal Long customerId) {
         return customerService.findNameById(customerId);
     }
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public CustomerResponse showCustomer(@AuthenticationPrincipal Long customerId) {
-        return customerService.find(customerId);
+        return customerService.findById(customerId);
     }
 
     @PutMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public void updateCustomer(@AuthenticationPrincipal Long customerId,
-                               @RequestBody CustomerRequest customerRequest) {
+    public void updateCustomer(@AuthenticationPrincipal Long customerId, @RequestBody CustomerRequest customerRequest) {
         customerService.update(customerId, customerRequest);
     }
 

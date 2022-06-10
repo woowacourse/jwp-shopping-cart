@@ -36,7 +36,7 @@ public class CustomerService {
         return CustomerResponse.from(customer);
     }
 
-    public CustomerResponse find(Long customerId) {
+    public CustomerResponse findById(Long customerId) {
         checkExistById(customerId);
         Customer customer = customerDao.findById(customerId);
         return CustomerResponse.from(customer);
