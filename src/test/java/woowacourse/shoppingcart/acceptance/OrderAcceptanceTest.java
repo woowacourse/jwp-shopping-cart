@@ -35,10 +35,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         RestAssuredFixture.post(productRequest, "/products", HttpStatus.CREATED.value());
         RestAssuredFixture.post(productRequest2, "/products", HttpStatus.CREATED.value());
 
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then

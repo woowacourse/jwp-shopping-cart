@@ -31,7 +31,7 @@ class CartItemServiceTest {
     @DisplayName("장바구니 상품 담기")
     void addCart() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456q!");
         customerService.addCustomer(signUpRequest);
 
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
@@ -48,7 +48,7 @@ class CartItemServiceTest {
     @DisplayName("장바구니 상품 목록 조회")
     void getCart() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456q!");
         customerService.addCustomer(signUpRequest);
 
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
@@ -67,7 +67,7 @@ class CartItemServiceTest {
     @DisplayName("장바구니 전체 삭제")
     void deleteAllCarts() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456q!");
         customerService.addCustomer(signUpRequest);
 
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
@@ -89,7 +89,7 @@ class CartItemServiceTest {
     @DisplayName("장바구니 복수 삭제")
     void deleteCarts() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456q!");
         customerService.addCustomer(signUpRequest);
 
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
@@ -112,7 +112,7 @@ class CartItemServiceTest {
     @DisplayName("장바구니 복수 수정")
     void modifyCarts() {
         // given
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456q!");
         customerService.addCustomer(signUpRequest);
 
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");

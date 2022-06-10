@@ -27,7 +27,7 @@ class OrderServiceTest {
     @BeforeEach
     void setUp() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456q!");
         customerService.addCustomer(signUpRequest);
 
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/pizza.jpg");

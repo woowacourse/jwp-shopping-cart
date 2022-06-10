@@ -12,8 +12,7 @@ public class LogInRequest {
     @Size(max = 64)
     private String email;
     @NotBlank
-    @Size(min = 6)
-    @Pattern(regexp = "^[a-zA-Z\\\\d`~!@#$%^&*()-_=+]{6,}$")
+    @Pattern(regexp = "^.*(?=^.{8,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$")
     private String password;
 
     private LogInRequest() {

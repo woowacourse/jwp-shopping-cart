@@ -38,10 +38,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     void addCartItem() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
@@ -53,10 +53,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     void addCartItemQuantityException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
@@ -68,10 +68,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     void addCartItemQuantityNullException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
@@ -83,10 +83,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     void addCartItemIdNullException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
@@ -98,10 +98,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     void getCartItems() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         RestAssuredFixture.postCart(new CartProductRequest(1L, 1L, true),
@@ -117,10 +117,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteAllCartItem() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         RestAssuredFixture.postCart(new CartProductRequest(1L, 1L, true),
@@ -136,10 +136,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteCartItems() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         RestAssuredFixture.postCart(new CartProductRequest(1L, 1L, true),
@@ -160,10 +160,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     void modifyCartItem() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "/users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         RestAssuredFixture.postCart(new CartProductRequest(1L, 1L, true),

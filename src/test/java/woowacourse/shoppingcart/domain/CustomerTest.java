@@ -16,16 +16,16 @@ class CustomerTest {
     @Test
     @DisplayName("customer 객체 생성")
     void createCustomer() {
-        Customer customer = new Customer("green", "green@woowa.net", "123456");
+        Customer customer = new Customer("green", "green@woowa.net", "123456q!");
 
         assertThat(customer).usingRecursiveComparison()
-                .isEqualTo(new Customer("green", "green@woowa.net", "123456"));
+                .isEqualTo(new Customer("green", "green@woowa.net", "123456q!"));
     }
 
     @Test
     @DisplayName("유저네임이 공백인 경우 예외")
     void usernameNullException() {
-        assertThatThrownBy(() -> new Customer("", "green@woowa.net", "123456"))
+        assertThatThrownBy(() -> new Customer("", "green@woowa.net", "123456q!"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("유저 네임과 이메일, 비밀번호를 모두 입력해주세요.");
     }
@@ -37,7 +37,7 @@ class CustomerTest {
                 .mapToObj(Integer::toString)
                 .collect(Collectors.joining());
 
-        assertThatThrownBy(() -> new Customer(username, "green@woowa.net", "123456"))
+        assertThatThrownBy(() -> new Customer(username, "green@woowa.net", "123456q!"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("유저네임은 32자 이하로 작성해주세요.");
     }
@@ -45,7 +45,7 @@ class CustomerTest {
     @Test
     @DisplayName("이메일이 공백인 경우 예외")
     void emailNullException() {
-        assertThatThrownBy(() -> new Customer("green", "", "123456"))
+        assertThatThrownBy(() -> new Customer("green", "", "123456q!"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("유저 네임과 이메일, 비밀번호를 모두 입력해주세요.");
     }
@@ -57,7 +57,7 @@ class CustomerTest {
                 .mapToObj(Integer::toString)
                 .collect(Collectors.joining());
 
-        assertThatThrownBy(() -> new Customer("green", email, "123456"))
+        assertThatThrownBy(() -> new Customer("green", email, "123456q!"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이메일은 64자 이하로 작성해주세요.");
     }
@@ -65,7 +65,7 @@ class CustomerTest {
     @Test
     @DisplayName("이메일에 한글이 포함된 경우 예외")
     void emailHasWrongCharacterException() {
-        assertThatThrownBy(() -> new Customer("green", "green그린@woowa.net", "123456"))
+        assertThatThrownBy(() -> new Customer("green", "green그린@woowa.net", "123456q!"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이메일에 한글을 입력할 수 없습니다.");
     }
@@ -74,7 +74,7 @@ class CustomerTest {
     @DisplayName("이메일 형식이 맞지 않는 경우 예외")
     @CsvSource(value = {"@woowa.net", "greenwoowa.net"})
     void emailWrongFormat(String email) {
-        assertThatThrownBy(() -> new Customer("green", email, "123456"))
+        assertThatThrownBy(() -> new Customer("green", email, "123456q!"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이메일 형식에 맞춰주세요.");
     }

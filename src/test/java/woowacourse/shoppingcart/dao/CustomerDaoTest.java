@@ -27,7 +27,7 @@ public class CustomerDaoTest {
     @Test
     @DisplayName("회원을 저장한다.")
     void save() {
-        Customer customer = customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456"));
+        Customer customer = customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456q!"));
 
         assertThat(customer.getId()).isNotNull();
     }
@@ -35,7 +35,7 @@ public class CustomerDaoTest {
     @Test
     @DisplayName("유저이름으로 회원 정보를 찾는다.")
     void findByUsername() {
-        Customer customer = customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456"));
+        Customer customer = customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456q!"));
         Customer foundCustomer = customerDao.findByUsername(customer.getUsername());
 
         assertThat(foundCustomer.getEmail()).isEqualTo("rennon@woowa.com");
@@ -44,7 +44,7 @@ public class CustomerDaoTest {
     @Test
     @DisplayName("존재하는 이메일과 비밀번호 확인한다.")
     void existEmail() {
-        Customer customer = customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456"));
+        Customer customer = customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456q!"));
 
         assertThat(customerDao.isValidPasswordByEmail(customer.getEmail(), customer.getPassword())).isTrue();
     }
@@ -52,7 +52,7 @@ public class CustomerDaoTest {
     @Test
     @DisplayName("유저이름이 존재하는지 확인한다.")
     void existByUserName() {
-        customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456"));
+        customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456q!"));
 
         assertThat(customerDao.existByUserName("레넌")).isTrue();
     }
@@ -60,15 +60,15 @@ public class CustomerDaoTest {
     @Test
     @DisplayName("비밀번호가 일치한다.")
     void isValidPassword() {
-        customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456"));
+        customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456q!"));
 
-        assertThat(customerDao.isValidPasswordByUsername("레넌", "123456")).isTrue();
+        assertThat(customerDao.isValidPasswordByUsername("레넌", "123456q!")).isTrue();
     }
 
     @Test
     @DisplayName("비밀번호가 일치하지 않는다.")
     void isInvalidPassword() {
-        customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456"));
+        customerDao.save(new Customer("레넌", "rennon@woowa.com", "123456q!"));
 
         assertThat(customerDao.isValidPasswordByUsername("레넌", "123578")).isFalse();
     }
