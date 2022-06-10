@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.CartItemRequest;
@@ -14,16 +13,17 @@ import woowacourse.shoppingcart.dto.response.ProductExistingInCartResponse;
 import woowacourse.shoppingcart.entity.CartItemEntity;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.repository.ProductRepository;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
     private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public CartService(final CartItemDao cartItemDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final ProductRepository productRepository) {
         this.cartItemDao = cartItemDao;
-        this.productDao = productDao;
+        this.productRepository = productRepository;
     }
 
     public List<CartItemResponse> findCartItemsByCustomerId(final Long customerId) {
@@ -38,7 +38,7 @@ public class CartService {
     }
 
     private CartItem convertEntityToCartItem(CartItemEntity cartItemEntity) {
-        Product product = productDao.findById(cartItemEntity.getProductId());
+        Product product = productRepository.findById(cartItemEntity.getProductId());
         return new CartItem(cartItemEntity.getId(), product, cartItemEntity.getQuantity());
     }
 
@@ -46,7 +46,7 @@ public class CartService {
         Long productId = cartItemRequest.getProductId();
         validateAlreadyExistingProduct(customerId, productId);
 
-        Product product = productDao.findById(cartItemRequest.getProductId());
+        Product product = productRepository.findById(cartItemRequest.getProductId());
         CartItem cartItem = new CartItem(customerId, product, cartItemRequest.getQuantity());
 
         try {
@@ -71,7 +71,7 @@ public class CartService {
         validateCustomerCart(cartItemId, customerId);
         validateProductId(cartItemId, cartItemRequest.getProductId());
 
-        Product newProduct = productDao.findById(cartItemRequest.getProductId());
+        Product newProduct = productRepository.findById(cartItemRequest.getProductId());
         Integer newQuantity = cartItemRequest.getQuantity();
         CartItem newCartItem = new CartItem(cartItemId, newProduct, newQuantity);
 

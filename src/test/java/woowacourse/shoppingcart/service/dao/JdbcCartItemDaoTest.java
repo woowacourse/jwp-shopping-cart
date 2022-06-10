@@ -25,10 +25,10 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.JdbcCartItemDao;
 import woowacourse.shoppingcart.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.dao.JdbcProductDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.repository.ProductRepository;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -36,15 +36,15 @@ import woowacourse.shoppingcart.entity.CustomerEntity;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class JdbcCartItemDaoTest {
     private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
     private final CustomerDao customerDao;
+    private final ProductRepository productRepository;
 
     private Long customerId;
     private Long productId;
 
     public JdbcCartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         cartItemDao = new JdbcCartItemDao(jdbcTemplate, dataSource);
-        productDao = new JdbcProductDao(jdbcTemplate, dataSource);
+        productRepository = new ProductRepository(new JdbcProductDao(jdbcTemplate, dataSource));
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
     }
 
@@ -53,7 +53,7 @@ public class JdbcCartItemDaoTest {
         customerId = (long) customerDao.save(
                 new CustomerEntity(EMAIL_VALUE_1, PASSWORD_VALUE_1, PROFILE_IMAGE_URL_VALUE_1, TERMS_1));
 
-        productId = productDao.save(
+        productId = productRepository.save(
                 new Product(PRODUCT_NAME_VALUE_1, PRODUCT_DESCRIPTION_VALUE_1, PRODUCT_PRICE_VALUE_1,
                         PRODUCT_STOCK_VALUE_1, PROFILE_IMAGE_URL_VALUE_1));
     }
@@ -62,7 +62,7 @@ public class JdbcCartItemDaoTest {
     @Test
     void addCartItem() {
         // given
-        Product product = productDao.findById(productId);
+        Product product = productRepository.findById(productId);
         CartItem cartItem = new CartItem(customerId, product, 10);
 
         // when
@@ -76,7 +76,7 @@ public class JdbcCartItemDaoTest {
     @Test
     void updateCartItem() {
         // given
-        Product product = productDao.findById(productId);
+        Product product = productRepository.findById(productId);
         Long cartItemId = cartItemDao.save(customerId, new CartItem(customerId, product, 10));
 
         CartItem newCartItem = new CartItem(cartItemId, product, 100);
@@ -93,7 +93,7 @@ public class JdbcCartItemDaoTest {
     @Test
     void isProductExisting_existing() {
         // given
-        Product product = productDao.findById(productId);
+        Product product = productRepository.findById(productId);
         cartItemDao.save(customerId, new CartItem(customerId, product, 10));
 
         // when

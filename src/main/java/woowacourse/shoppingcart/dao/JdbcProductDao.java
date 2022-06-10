@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.entity.ProductEntity;
 import woowacourse.shoppingcart.exception.notfound.ProductNotFoundException;
 
 @Repository
@@ -17,8 +18,8 @@ public class JdbcProductDao implements ProductDao {
     private static final String TABLE_NAME = "product";
     private static final String KEY_COLUMN = "id";
 
-    private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (resultSet, rowNumber) ->
-            new Product(
+    private static final RowMapper<ProductEntity> PRODUCT_ROW_MAPPER = (resultSet, rowNumber) ->
+            new ProductEntity(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("description"),
@@ -38,7 +39,6 @@ public class JdbcProductDao implements ProductDao {
     }
 
     public Long save(Product product) {
-
         Map<String, Object> params = new HashMap<>();
         params.put("name", product.getName());
         params.put("description", product.getDescription());
@@ -49,7 +49,7 @@ public class JdbcProductDao implements ProductDao {
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public Product findById(long productId) {
+    public ProductEntity findById(long productId) {
         String query = "SELECT id, name, description, price, stock, image_url FROM product WHERE id = ?";
 
         try {
@@ -59,7 +59,7 @@ public class JdbcProductDao implements ProductDao {
         }
     }
 
-    public List<Product> findAll() {
+    public List<ProductEntity> findAll() {
         final String query = "SELECT id, name, description, price, stock, image_url FROM product";
         return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
     }

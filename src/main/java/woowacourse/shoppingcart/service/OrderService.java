@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.OrdersDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
@@ -13,22 +12,22 @@ import woowacourse.shoppingcart.dto.response.OrderProductResponse;
 import woowacourse.shoppingcart.dto.response.OrderResponse;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.repository.ProductRepository;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class OrderService {
-
     private final OrdersDao ordersDao;
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public OrderService(final OrdersDao ordersDao, final ProductDao productDao) {
+    public OrderService(OrdersDao ordersDao, ProductRepository productRepository) {
         this.ordersDao = ordersDao;
-        this.productDao = productDao;
+        this.productRepository = productRepository;
     }
 
     public Long addOrder(final List<OrderRequest> orderRequests, final Long customerId) {
         List<OrderDetail> orderDetails = orderRequests.stream()
-                .map(orderRequest -> new OrderDetail(productDao.findById(orderRequest.getProductId()),
+                .map(orderRequest -> new OrderDetail(productRepository.findById(orderRequest.getProductId()),
                         orderRequest.getQuantity())).collect(
                         Collectors.toList());
 

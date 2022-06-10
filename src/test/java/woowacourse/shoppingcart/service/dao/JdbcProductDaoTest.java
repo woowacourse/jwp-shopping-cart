@@ -15,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.JdbcProductDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.entity.ProductEntity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -54,10 +55,10 @@ public class JdbcProductDaoTest {
         final int stock = 10;
         final String imageUrl = "www.test.com";
         final Long productId = productDao.save(new Product(name, description, price, stock, imageUrl));
-        final Product expectedProduct = new Product(productId, name, description, price, stock, imageUrl);
+        final ProductEntity expectedProduct = new ProductEntity(productId, name, description, price, stock, imageUrl);
 
         // when
-        final Product product = productDao.findById(productId);
+        final ProductEntity product = productDao.findById(productId);
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -71,7 +72,7 @@ public class JdbcProductDaoTest {
         final int size = 0;
 
         // when
-        final List<Product> products = productDao.findAll();
+        final List<ProductEntity> products = productDao.findAll();
 
         // then
         assertThat(products).size().isEqualTo(size);

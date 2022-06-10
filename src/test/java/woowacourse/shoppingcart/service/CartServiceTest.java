@@ -23,20 +23,20 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.JdbcCartItemDao;
 import woowacourse.shoppingcart.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.dao.JdbcProductDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.CartItemRequest;
 import woowacourse.shoppingcart.dto.response.ProductExistingInCartResponse;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.exception.notfound.CartItemNotFoundException;
 import woowacourse.shoppingcart.exception.notfound.ProductNotFoundException;
+import woowacourse.shoppingcart.repository.ProductRepository;
 
 @JdbcTest
 class CartServiceTest {
     private final CartService cartService;
     private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
     private final CustomerDao customerDao;
+    private final ProductRepository productRepository;
 
     private Long customerId;
     private Long productId;
@@ -44,10 +44,10 @@ class CartServiceTest {
     @Autowired
     public CartServiceTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         cartItemDao = new JdbcCartItemDao(jdbcTemplate, dataSource);
-        productDao = new JdbcProductDao(jdbcTemplate, dataSource);
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
 
-        cartService = new CartService(cartItemDao, productDao);
+        productRepository = new ProductRepository(new JdbcProductDao(jdbcTemplate, dataSource));
+        cartService = new CartService(cartItemDao, productRepository);
     }
 
     @BeforeEach
@@ -55,7 +55,7 @@ class CartServiceTest {
         customerId = (long) customerDao.save(
                 new CustomerEntity(EMAIL_VALUE_1, PASSWORD_VALUE_1, PROFILE_IMAGE_URL_VALUE_1, TERMS_1));
 
-        productId = productDao.save(
+        productId = productRepository.save(
                 new Product(PRODUCT_NAME_VALUE_1, PRODUCT_DESCRIPTION_VALUE_1, PRODUCT_PRICE_VALUE_1,
                         PRODUCT_STOCK_VALUE_1, PROFILE_IMAGE_URL_VALUE_1));
     }

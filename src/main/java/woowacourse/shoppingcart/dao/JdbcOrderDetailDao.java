@@ -6,11 +6,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.repository.ProductRepository;
 
 @Repository
 public class JdbcOrderDetailDao implements OrderDetailDao {
     private final JdbcTemplate jdbcTemplate;
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
     private final RowMapper<OrderDetail> orderDetailRowMapper = (rs, rowNum) -> {
         Product product = findProductById(rs.getLong("product_id"));
@@ -18,9 +19,9 @@ public class JdbcOrderDetailDao implements OrderDetailDao {
         return new OrderDetail(product, quantity);
     };
 
-    public JdbcOrderDetailDao(JdbcTemplate jdbcTemplate, ProductDao productDao) {
+    public JdbcOrderDetailDao(JdbcTemplate jdbcTemplate, ProductRepository productRepository) {
         this.jdbcTemplate = jdbcTemplate;
-        this.productDao = productDao;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -34,9 +35,8 @@ public class JdbcOrderDetailDao implements OrderDetailDao {
         final String sql = "SELECT product_id, quantity FROM order_detail WHERE order_id = ?";
         return jdbcTemplate.query(sql, orderDetailRowMapper, orderId);
     }
-    
-    private Product findProductById(long productId) {
-        return productDao.findById(productId);
-    }
 
+    private Product findProductById(long productId) {
+        return productRepository.findById(productId);
+    }
 }
