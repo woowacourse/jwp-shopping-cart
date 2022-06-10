@@ -4,9 +4,9 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
-@Configuration
+@ConstructorBinding
 @ConfigurationProperties(prefix = "security.jwt.token")
 public class JwtAttribute {
 
@@ -15,11 +15,9 @@ public class JwtAttribute {
     @Positive(message = "토큰 만료 시간은 양수여야 합니다.")
     private Long expireLength;
 
-    public static JwtAttribute of(String secretKey, Long expireLength) {
-        JwtAttribute attribute = new JwtAttribute();
-        attribute.setSecretKey(secretKey);
-        attribute.setExpireLength(expireLength);
-        return attribute;
+    public JwtAttribute(String secretKey, Long expireLength) {
+        this.secretKey = secretKey;
+        this.expireLength = expireLength;
     }
 
     public String getSecretKey() {
