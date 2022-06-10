@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -39,7 +38,7 @@ public class OrderService {
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findCartIdById(cartId)
+            final Long productId = cartItemDao.findCartIdById(orderDetail.getCartId())
                     .getProduct()
                     .getId();
             final int quantity = orderDetail.getQuantity();
@@ -81,7 +80,6 @@ public class OrderService {
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }
-
         return new Orders(orderId, ordersDetails);
     }
 }
