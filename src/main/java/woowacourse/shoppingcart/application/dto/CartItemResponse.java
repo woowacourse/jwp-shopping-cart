@@ -1,8 +1,5 @@
 package woowacourse.shoppingcart.application.dto;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import woowacourse.shoppingcart.domain.cart.CartItem;
 
 public class CartItemResponse {
@@ -10,19 +7,17 @@ public class CartItemResponse {
     private final Long id;
     private final Integer quantity;
 
-    @JsonProperty("product")
-    private final ProductResponse productResponse;
-
+    private final ProductResponse product;
 
     public CartItemResponse() {
         this(null, null, null);
     }
 
     public CartItemResponse(Long id, Integer quantity,
-        ProductResponse productResponse) {
+        ProductResponse product) {
         this.id = id;
         this.quantity = quantity;
-        this.productResponse = productResponse;
+        this.product = product;
     }
 
     public static CartItemResponse from(CartItem cartItem) {
@@ -41,7 +36,7 @@ public class CartItemResponse {
         return quantity;
     }
 
-    public ProductResponse getProductResponse() {
-        return productResponse;
+    public ProductResponse getProduct() {
+        return product;
     }
 }
