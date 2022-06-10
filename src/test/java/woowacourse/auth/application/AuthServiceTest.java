@@ -19,7 +19,7 @@ import woowacourse.customer.dto.CustomerResponse;
 import woowacourse.customer.dto.SignupRequest;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql"})
 class AuthServiceTest {
 
     @Autowired

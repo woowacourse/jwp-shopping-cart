@@ -52,7 +52,7 @@ class CustomerServiceTest {
         // then
         assertThatThrownBy(() -> customerService.save(signupRequest))
             .isInstanceOf(InvalidCustomerException.class)
-            .hasMessage("이미 존재하는 username입니다.");
+            .hasMessage("이미 존재하는 사용자 이름입니다.");
     }
 
     @DisplayName("이름으로 회원을 조회한다.")

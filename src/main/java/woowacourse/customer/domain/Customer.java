@@ -42,11 +42,15 @@ public class Customer {
     }
 
     public void updatePhoneNumber(final String phoneNumber) {
-        this.phoneNumber = this.phoneNumber.update(phoneNumber);
+        if (!phoneNumber.isBlank()) {
+            this.phoneNumber = this.phoneNumber.update(phoneNumber);
+        }
     }
 
     public void updateAddress(final String address) {
-        this.address = address;
+        if (!address.isBlank()) {
+            this.address = address;
+        }
     }
 
     public void updatePassword(final String password) {

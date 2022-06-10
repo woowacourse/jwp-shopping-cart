@@ -93,7 +93,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
             () -> assertThat(exceptionResponse.getMessages())
                 .hasSize(1)
-                .containsExactly("이미 존재하는 username입니다.")
+                .containsExactly("이미 존재하는 사용자 이름입니다.")
         );
     }
 

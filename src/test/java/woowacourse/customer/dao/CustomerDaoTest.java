@@ -19,7 +19,7 @@ import woowacourse.customer.support.passwordencoder.SimplePasswordEncoder;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
 
@@ -34,19 +34,6 @@ public class CustomerDaoTest {
         passwordEncoder = new SimplePasswordEncoder();
         password = passwordEncoder.encode("ehdgh1234");
         customer = Customer.of("dongho108", password, "01012123232", "인천 서구 검단로");
-    }
-
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTest() {
-        // given
-        final String userName = "puterism";
-
-        // when
-        final Long customerId = customerDao.findIdByUsername(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(1L);
     }
 
     @DisplayName("입력할 username이 이미 존재하면 True를 반환한다.")
