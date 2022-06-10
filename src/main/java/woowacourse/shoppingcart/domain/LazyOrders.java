@@ -7,9 +7,9 @@ public class LazyOrders extends Orders {
 
     private Supplier<List<OrderDetail>> detailLoader;
 
-    public LazyOrders(final Long id,
+    public LazyOrders(final Long id, final Long memberId,
                       final Supplier<List<OrderDetail>> detailLoader) {
-        super(id, null);
+        super(id, memberId);
         this.detailLoader = detailLoader;
     }
 

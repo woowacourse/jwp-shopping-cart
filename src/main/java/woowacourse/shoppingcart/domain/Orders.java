@@ -6,13 +6,19 @@ import java.util.Objects;
 public class Orders {
 
     private Long id;
+    private Long memberId;
     private List<OrderDetail> orderDetails;
 
     private Orders() {
     }
 
-    public Orders(final Long id, final List<OrderDetail> orderDetails) {
+    public Orders(final Long id, final Long memberId) {
+        this(id, memberId, null);
+    }
+
+    public Orders(final Long id, final Long memberId, final List<OrderDetail> orderDetails) {
         this.id = id;
+        this.memberId = memberId;
         this.orderDetails = orderDetails;
     }
 
@@ -22,6 +28,10 @@ public class Orders {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getMemberId() {
+        return memberId;
     }
 
     public List<OrderDetail> getOrderDetails() {

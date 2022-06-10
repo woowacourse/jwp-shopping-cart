@@ -36,33 +36,44 @@ public class OrderDao {
     }
 
     public Orders findOrderByIdLazyOrderDetails(final Long orderId) {
-        String sql = "SELECT id FROM orders WHERE id = :orderId";
+        String sql = "SELECT id, member_id FROM orders WHERE id = :orderId";
         final SqlParameterSource parameter = new MapSqlParameterSource("orderId", orderId);
 
-        return new LazyOrders(namedParameterJdbcTemplate.queryForObject(sql, parameter, Long.class),
+        final Orders orders = namedParameterJdbcTemplate.queryForObject(sql, parameter, rowMapper());
+        return new LazyOrders(orders.getId(), orders.getMemberId(),
                 () -> namedParameterJdbcTemplate.query(LAZY_ORDER_DETAIL_QUERY, parameter, lazyRowMapper()));
     }
 
-    private List<Long> findOrdersIdsByMemberId(final Long memberId) {
-        String sql = "SELECT id FROM orders WHERE member_id = :memberId";
-        final SqlParameterSource parameter = new MapSqlParameterSource("memberId", memberId);
-        return namedParameterJdbcTemplate.query(sql, parameter, rowMapper());
-    }
-
     public List<Orders> findOrdersByIdLazyOrderDetails(final Long memberId) {
-        final List<Long> orderIds = findOrdersIdsByMemberId(memberId);
+        final List<Long> orderIds = getOrderIds(memberId);
         return orderIds.stream()
                 .map(orderId -> {
                     final SqlParameterSource parameter = new MapSqlParameterSource("orderId", orderId);
-                    return new LazyOrders(orderId,
+                    return new LazyOrders(orderId, memberId,
                             () -> namedParameterJdbcTemplate.query(LAZY_ORDER_DETAIL_QUERY, parameter,
                                     lazyRowMapper()));
                 })
                 .collect(Collectors.toList());
     }
 
-    private RowMapper<Long> rowMapper() {
-        return (rs, rowNum) -> rs.getLong("id");
+    private List<Orders> findOrdersIdsByMemberId(final Long memberId) {
+        String sql = "SELECT id, member_id FROM orders WHERE member_id = :memberId";
+        final SqlParameterSource parameter = new MapSqlParameterSource("memberId", memberId);
+        return namedParameterJdbcTemplate.query(sql, parameter, rowMapper());
+    }
+
+    private List<Long> getOrderIds(final Long memberId) {
+        return findOrdersIdsByMemberId(memberId)
+                .stream().map(Orders::getId)
+                .collect(Collectors.toList());
+    }
+
+    private RowMapper<Orders> rowMapper() {
+        return (rs, rowNum) -> {
+            final Long id = rs.getLong("id");
+            final Long memberId = rs.getLong("member_id");
+            return new Orders(id, memberId);
+        };
     }
 
     private RowMapper<OrderDetail> lazyRowMapper() {
