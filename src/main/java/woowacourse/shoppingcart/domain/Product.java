@@ -1,6 +1,9 @@
 package woowacourse.shoppingcart.domain;
 
 public class Product {
+
+    private static final int MINIMUM_SIZE = 1;
+
     private Long id;
     private String name;
     private Integer price;
@@ -24,7 +27,7 @@ public class Product {
         if (name.isBlank() || imageUrl.isBlank()) {
             throw new IllegalArgumentException("상품명과 이미지를 입력해주세요.");
         }
-        if (price <= 0) {
+        if (price < MINIMUM_SIZE) {
             throw new IllegalArgumentException("상품의 가격은 양수여야 합니다.");
         }
     }
