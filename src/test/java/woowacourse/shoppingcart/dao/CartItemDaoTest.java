@@ -37,6 +37,7 @@ public class CartItemDaoTest {
     void setUp() {
         productDao.save(new ProductCreateRequest("banana", 1_000, "woowa1.com", 10));
         productDao.save(new ProductCreateRequest("apple", 2_000, "woowa2.com", 10));
+        productDao.save(new ProductCreateRequest("tomato", 2_000, "woowa2.com", 10));
 
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, 1L, 3);
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, 2L, 4);
@@ -47,7 +48,7 @@ public class CartItemDaoTest {
     void addCartItem() {
         // given
         final Long customerId = 1L;
-        final Long productId = 1L;
+        final Long productId = 3L;
 
         // when
         final Long cartId = cartItemDao.addCartItem(customerId, new CartItemCreateRequest(productId, 2));
