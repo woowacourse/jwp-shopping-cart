@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.domain.customer.Customer;
+
 public class AuthorizedCustomer {
     private final Long id;
     private final String username;
@@ -27,5 +29,9 @@ public class AuthorizedCustomer {
 
     public Long getId() {
         return id;
+    }
+
+    public Customer toCustomer() {
+        return new Customer(username, email, password);
     }
 }

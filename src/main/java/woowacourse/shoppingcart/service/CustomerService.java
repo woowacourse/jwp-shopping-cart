@@ -29,7 +29,7 @@ public class CustomerService {
         String email = signUpRequest.getEmail();
         String password = signUpRequest.getPassword();
 
-        convertCustomer(signUpRequest);
+        signUpRequest.toCustomer();
 
         validateDuplicatedName(name);
 
@@ -38,14 +38,6 @@ public class CustomerService {
         customerDao.saveCustomer(name, email, password);
 
         return new SignUpResponse(name, email);
-    }
-
-    private Customer convertCustomer(SignUpRequest signUpRequest) {
-        return new Customer(
-                signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                signUpRequest.getPassword()
-        );
     }
 
     private void validatedDuplicatedEmail(String email) {
@@ -61,7 +53,7 @@ public class CustomerService {
     }
 
     public void changePassword(AuthorizedCustomer authorizedCustomer, ChangePasswordRequest changePasswordRequest) {
-        var customer = convertCustomer(authorizedCustomer);
+        var customer = authorizedCustomer.toCustomer();
 
         var password = new Password(changePasswordRequest.getPassword());
         validateSamePassword(password, customer);
@@ -69,14 +61,6 @@ public class CustomerService {
         var newPassword = new Password(changePasswordRequest.getNewPassword());
 
         customerDao.updatePassword(customer.getUsername(), newPassword.get());
-    }
-
-    private Customer convertCustomer(AuthorizedCustomer authorizedCustomer) {
-        return new Customer(
-                authorizedCustomer.getUsername(),
-                authorizedCustomer.getEmail(),
-                authorizedCustomer.getPassword()
-        );
     }
 
     private void validateSamePassword(Password password, Customer customer) {
@@ -88,8 +72,10 @@ public class CustomerService {
     public void deleteUser(AuthorizedCustomer authorizedCustomer, DeleteCustomerRequest deleteCustomerRequest) {
         var password = new Password(deleteCustomerRequest.getPassword());
 
-        var customer = convertCustomer(authorizedCustomer);
+        var customer = authorizedCustomer.toCustomer();
+
         validateSamePassword(password, customer);
+
         customerDao.deleteByName(customer.getUsername());
     }
 }

@@ -5,7 +5,6 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;
-import woowacourse.shoppingcart.dto.AuthorizedCustomer;
 import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.SignInResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -25,7 +24,7 @@ public class AuthService {
     public SignInResponse signIn(SignInRequest signInRequest) {
         var email = signInRequest.getEmail();
         var authorizedCustomer = customerDao.findCustomerByEmail(email);
-        var customer = convertCustomer(authorizedCustomer);
+        var customer = authorizedCustomer.toCustomer();
 
         var username = customer.getUsername();
 
@@ -34,14 +33,6 @@ public class AuthService {
         var token = jwtTokenProvider.createToken(username);
 
         return new SignInResponse(username, email, token);
-    }
-
-    private Customer convertCustomer(AuthorizedCustomer authorizedCustomer) {
-        return new Customer(
-                authorizedCustomer.getUsername(),
-                authorizedCustomer.getEmail(),
-                authorizedCustomer.getPassword()
-        );
     }
 
     private void validateSamePassword(SignInRequest signInRequest, Customer customer) {

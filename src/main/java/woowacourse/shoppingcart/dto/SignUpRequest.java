@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class SignUpRequest {
     private static final String BLANK_USERNAME = "[ERROR] 이름은 공백 또는 빈 값일 수 없습니다.";
@@ -37,5 +38,9 @@ public class SignUpRequest {
 
     public String getPassword() {
         return password;
+    }
+
+    public Customer toCustomer() {
+        return new Customer(username, email, password);
     }
 }
