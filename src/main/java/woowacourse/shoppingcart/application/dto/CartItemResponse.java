@@ -9,7 +9,7 @@ public class CartItemResponse {
 
     private final ProductResponse product;
 
-    public CartItemResponse() {
+    private CartItemResponse() {
         this(null, null, null);
     }
 

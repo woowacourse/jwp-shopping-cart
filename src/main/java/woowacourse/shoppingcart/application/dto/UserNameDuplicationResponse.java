@@ -5,7 +5,7 @@ public class UserNameDuplicationResponse {
     private final String username;
     private final Boolean duplicated;
 
-    public UserNameDuplicationResponse() {
+    private UserNameDuplicationResponse() {
         this(null, null);
     }
 

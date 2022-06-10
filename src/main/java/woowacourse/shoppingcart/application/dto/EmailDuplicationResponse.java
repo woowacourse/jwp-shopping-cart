@@ -5,7 +5,7 @@ public class EmailDuplicationResponse {
     private final String email;
     private final Boolean duplicated;
 
-    public EmailDuplicationResponse() {
+    private EmailDuplicationResponse() {
         this(null, null);
     }
 

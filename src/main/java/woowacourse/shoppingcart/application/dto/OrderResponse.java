@@ -10,7 +10,7 @@ public class OrderResponse {
     private final Long id;
     private final List<OrderDetailResponse> orderDetails;
 
-    public OrderResponse() {
+    private OrderResponse() {
         this(null, null);
     }
 
