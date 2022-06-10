@@ -22,6 +22,7 @@ import org.springframework.test.context.TestConstructor;
 import woowacourse.helper.annotations.DaoTest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
+import woowacourse.member.dto.OrderSaveServiceRequest;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
 
@@ -46,7 +47,7 @@ public class OrdersDetailDaoTest {
         final Long memberId = saveMember();
         final Long productId = saveProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE);
         final Long productId2 = saveProduct("김치볶음밥", 5000, "url.com");
-        final Long orderId = orderDao.save(memberId);
+        final Long orderId = orderDao.save(new OrderSaveServiceRequest(memberId));
 
         final OrderDetail orderDetail = new OrderDetail(orderId, productId, 10);
         final OrderDetail orderDetail2 = new OrderDetail(orderId, productId2, 10);

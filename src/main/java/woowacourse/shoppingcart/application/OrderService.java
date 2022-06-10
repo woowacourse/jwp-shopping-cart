@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.member.dto.OrderSaveServiceRequest;
 import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
@@ -36,14 +37,18 @@ public class OrderService {
     }
 
     public Long addOrder(final Long memberId, final List<OrderRequest> orderRequests) {
-        final Long orderId = orderDao.save(memberId);
-        final List<Long> cartIds = orderRequests.stream()
-                .map(OrderRequest::getCartId)
-                .collect(Collectors.toList());
-        final List<Cart> cart = cartDao.findCartsByIds(cartIds);
-        ordersDetailDao.addBatchOrderDetails(toOrderDetails(orderId, cart));
+        final Long orderId = orderDao.save(new OrderSaveServiceRequest(memberId));
+        final List<Long> cartIds = getCartIds(orderRequests);
+        final List<Cart> carts = cartDao.findCartsByIds(cartIds);
+        ordersDetailDao.addBatchOrderDetails(toOrderDetails(orderId, carts));
         cartDao.deleteBatch(cartIds);
         return orderId;
+    }
+
+    private List<Long> getCartIds(final List<OrderRequest> orderRequests) {
+        return orderRequests.stream()
+                .map(OrderRequest::getCartId)
+                .collect(Collectors.toList());
     }
 
     private List<OrderDetail> toOrderDetails(final Long orderId, final List<Cart> carts) {

@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.member.dto.OrderSaveServiceRequest;
 import woowacourse.shoppingcart.domain.LazyOrders;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
@@ -29,8 +30,8 @@ public class OrderDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(final Long memberId) {
-        final SqlParameterSource parameter = new MapSqlParameterSource("member_id", memberId);
+    public Long save(final OrderSaveServiceRequest orderSaveServiceRequest) {
+        final SqlParameterSource parameter = new MapSqlParameterSource("member_id", orderSaveServiceRequest.getMemberId());
         return simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
     }
 

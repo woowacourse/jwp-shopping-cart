@@ -23,6 +23,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import woowacourse.helper.annotations.DaoTest;
 import woowacourse.member.dao.MemberDao;
+import woowacourse.member.dto.OrderSaveServiceRequest;
 import woowacourse.shoppingcart.domain.LazyOrders;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
@@ -46,7 +47,7 @@ class OrderDaoTest {
     @Test
     void addOrders() {
         final Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
-        final Long orderId = orderDao.save(id);
+        final Long orderId = orderDao.save(new OrderSaveServiceRequest(id));
 
         assertThat(orderId).isNotNull();
     }
@@ -57,7 +58,7 @@ class OrderDaoTest {
         final Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
         final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
 
-        final Long orderId = orderDao.save(id);
+        final Long orderId = orderDao.save(new OrderSaveServiceRequest(id));
         ordersDetailDao.addBatchOrderDetails(Collections.singletonList(
                 new OrderDetail(orderId, productId, 10))
         );
@@ -73,7 +74,7 @@ class OrderDaoTest {
     @Test
     void isValid() {
         final Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
-        final Long orderId = orderDao.save(id);
+        final Long orderId = orderDao.save(new OrderSaveServiceRequest(id));
 
         assertThat(orderDao.isValidOrderId(id, orderId)).isTrue();
     }
@@ -84,12 +85,12 @@ class OrderDaoTest {
         final Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
         final Long productId = productDao.save(createProduct(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_IMAGE));
 
-        final Long orderId = orderDao.save(id);
+        final Long orderId = orderDao.save(new OrderSaveServiceRequest(id));
         ordersDetailDao.addBatchOrderDetails(Collections.singletonList(
                 new OrderDetail(orderId, productId, 10))
         );
 
-        final Long orderId2 = orderDao.save(id);
+        final Long orderId2 = orderDao.save(new OrderSaveServiceRequest(id));
         ordersDetailDao.addBatchOrderDetails(Collections.singletonList(
                 new OrderDetail(orderId2, productId, 20))
         );
