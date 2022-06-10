@@ -39,10 +39,10 @@ public class OrderService {
     }
 
     private List<OrderDetail> mapToOrderDetails(List<OrderDetailRequest> orderDetailRequests, Long customerId) {
-        final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
+        final List<CartItem> cartItems = cartItemDao.findCartByCustomerId(customerId).getItems();
         return orderDetailRequests.stream()
             .map(request -> new OrderDetail(request.getQuantity(), findProduct(request.getCartId(), cartItems)))
-            .collect(Collectors.toList());
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private Product findProduct(Long cartId, List<CartItem> cartItems) {
