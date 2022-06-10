@@ -15,7 +15,7 @@ public class EncodedPassword {
 
     public void matches(final PasswordEncoder passwordEncoder, final String raw) {
         if (!passwordEncoder.matches(raw, value)) {
-            throw new InvalidLoginException("비밀번호가 일치하지 않습니다.");
+            throw new InvalidLoginException("로그인 정보가 시스템에 있는 계정과 일치하지 않습니다.");
         }
     }
 

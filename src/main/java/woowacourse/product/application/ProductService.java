@@ -30,7 +30,7 @@ public class ProductService {
 
     public ProductResponse findProductById(final Long id) {
         final Product product = productDao.findById(id)
-            .orElseThrow(() -> new InvalidProductException("해당 id에 따른 상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new InvalidProductException("해당 상품을 찾을 수 없습니다."));
 
         return ProductResponse.from(product);
     }

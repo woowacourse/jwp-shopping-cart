@@ -39,17 +39,17 @@ public class OrderService {
 
     public Long addOrder(final String customerName, final List<OrderAddRequest> orderAddRequests) {
         final Long customerId = customerDao.findIdByUsername(customerName);
-        final Long ordersId = orderDao.save(customerId);
+        final Long orderId = orderDao.save(customerId);
 
         for (final OrderAddRequest orderAddRequest : orderAddRequests) {
             final CartItem cartItem = cartItemDao.findById(orderAddRequest.getCartItemId())
                 .orElseThrow(() -> new InvalidCartItemException("장바구니를 찾을 수 없습니다."));
 
-            ordersDetailDao.save(ordersId, cartItem.getProductId(), cartItem.getQuantity().getValue());
+            ordersDetailDao.save(orderId, cartItem.getProductId(), cartItem.getQuantity().getValue());
             cartItemDao.deleteByIdAndCustomerId(cartItem.getId(), customerId);
         }
 
-        return ordersId;
+        return orderId;
     }
 
     public OrderResponse findOrderById(final String customerName, final Long orderId) {
@@ -61,7 +61,7 @@ public class OrderService {
         final Long customerId = customerDao.findIdByUsername(customerName);
 
         if (!orderDao.existsByIdAndCustomerId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+            throw new InvalidOrderException("해당 주문을 찾을 수 없습니다.");
         }
     }
 
