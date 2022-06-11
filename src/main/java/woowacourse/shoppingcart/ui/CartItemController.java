@@ -44,7 +44,7 @@ public class CartItemController {
 
     @PatchMapping("/products")
     public ResponseEntity<List<CartResponse>> updateCartItem(@AuthenticationPrincipal final Email email,
-                                                     @RequestBody final CartUpdateRequest cartUpdateRequest) {
+                                                             @RequestBody final CartUpdateRequest cartUpdateRequest) {
         cartService.updateCartItem(email, cartUpdateRequest);
         List<CartResponse> responses = cartService.findCartsByEmail(email).stream()
                 .map(CartResponse::new)
@@ -59,5 +59,6 @@ public class CartItemController {
         List<CartResponse> responses = cartService.findCartsByEmail(email).stream()
                 .map(CartResponse::new)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(responses);    }
+        return ResponseEntity.ok().body(responses);
+    }
 }

@@ -2,8 +2,8 @@ package woowacourse.shoppingcart.domain;
 
 public class Cart {
 
-    private Product product;
-    private int quantity;
+    private final Product product;
+    private final int quantity;
 
     public Cart(Product product, int quantity) {
         this.product = product;

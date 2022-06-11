@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.dto.customer;
 
 public class PasswordCheckResponse {
 
-    private boolean success;
+    private final boolean success;
 
     public PasswordCheckResponse(boolean success) {
         this.success = success;

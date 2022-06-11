@@ -48,7 +48,7 @@ public class CustomerController {
 
     @PostMapping("/password-check")
     public ResponseEntity<PasswordCheckResponse> checkPassword(@AuthenticationPrincipal final Email email,
-                                              @RequestBody @Valid final PasswordRequest passwordRequest) {
+                                                               @RequestBody @Valid final PasswordRequest passwordRequest) {
         customerService.checkPassword(email, passwordRequest);
         return ResponseEntity.ok(new PasswordCheckResponse(true));
     }
