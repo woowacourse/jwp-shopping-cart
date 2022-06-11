@@ -35,7 +35,7 @@ public class CartService {
         final List<CartItem> carts = new ArrayList<>();
 
         for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdByCartId(cartId);
+            final long productId = cartItemDao.findProductIdByCartId(cartId);
             final Product product = productDao.findProductById(productId);
             final int quantity = cartItemDao.findQuantityById(cartId);
             carts.add(new CartItem(cartId, product, quantity));
@@ -44,13 +44,12 @@ public class CartService {
     }
 
     private List<Long> findCartIdsByCustomerName(final UserName userName) {
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final long customerId = customerDao.findIdByUserName(userName);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
     public Long addCart(final Long productId, final UserName userName) {
-        final Long customerId = customerDao.findIdByUserName(userName);
-
+        final long customerId = customerDao.findIdByUserName(userName);
         validateAlreadyExist(productId, customerId);
 
         try {
@@ -84,7 +83,7 @@ public class CartService {
 
     public void updateQuantity(Long cartId, UserName userName, CartItemRequest cartItemRequest) {
         final CartItem cartItem = getCartItemById(cartId);
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final long customerId = customerDao.findIdByUserName(userName);
         cartItem.updateQuantity(cartItemRequest.getQuantity());
         cartItemDao.updateQuantity(customerId, cartItem);
     }

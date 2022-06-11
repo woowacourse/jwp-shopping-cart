@@ -34,12 +34,12 @@ public class OrderService {
     }
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final UserName userName) {
-        final Long customerId = customerDao.findIdByUserName(userName);
-        final Long ordersId = orderDao.addOrders(customerId);
+        final long customerId = customerDao.findIdByUserName(userName);
+        final long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdByCartId(cartId);
+            final long cartId = orderDetail.getCartId();
+            final long productId = cartItemDao.findProductIdByCartId(cartId);
             final int quantity = orderDetail.getQuantity();
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
@@ -67,7 +67,7 @@ public class OrderService {
     }
 
     public List<Orders> findOrdersByCustomerName(final UserName userName) {
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final long customerId = customerDao.findIdByUserName(userName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
