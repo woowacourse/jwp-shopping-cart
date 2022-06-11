@@ -9,11 +9,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.api.Assertions.*;
 import static woowacourse.fixture.Fixture.PRODUCT_NAME;
 
 @JdbcTest
@@ -76,7 +76,7 @@ public class ProductDaoTest {
         assertThat(products).size().isEqualTo(size);
     }
 
-    @DisplayName("싱품 삭제")
+    @DisplayName("싱품을 삭제한다.")
     @Test
     void deleteProduct() {
         // given
@@ -93,6 +93,16 @@ public class ProductDaoTest {
         // then
         final int afterSize = productDao.findProducts().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
+    }
+
+
+    @Test
+    @DisplayName("상품을 삭제할떄 존재하지 않는 상품이면 예외가 발생한다.")
+    void deleteProductById_NotFoundException() {
+        //then
+        assertThatThrownBy(() -> productDao.delete(0L))
+                .isInstanceOf(NotFoundProductException.class)
+                .hasMessage("존재하지 않는 상품 ID입니다.");
     }
 
     @Test

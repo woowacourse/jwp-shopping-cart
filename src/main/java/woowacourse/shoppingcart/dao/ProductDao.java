@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -69,6 +70,7 @@ public class ProductDao {
 
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
+       findProductById(productId).orElseThrow(NotFoundProductException::new);
         jdbcTemplate.update(query, productId);
     }
 
