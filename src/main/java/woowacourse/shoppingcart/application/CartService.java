@@ -50,19 +50,23 @@ public class CartService {
             addQuantity(cartAdditionRequest, customerId, product);
             return;
         }
-        validateStock(product.getStock(), cartAdditionRequest.getQuantity());
-        try {
-            cartItemDao.save(customerId, cartAdditionRequest.getProductId(), cartAdditionRequest.getQuantity());
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
+        saveItem(cartAdditionRequest, customerId, product);
     }
 
     private void addQuantity(CartAdditionRequest cartAdditionRequest, Long customerId, Product product) {
         CartItemEntity cartItemEntity = cartItemDao.findByCustomerIdAndProductId(customerId, product.getId());
         int newQuantity = cartItemEntity.getQuantity() + cartAdditionRequest.getQuantity();
-        validateStock(product.getStock(), newQuantity);
+        product.validateStock(newQuantity);
         cartItemDao.updateQuantity(customerId, product.getId(), newQuantity);
+    }
+
+    private void saveItem(CartAdditionRequest cartAdditionRequest, Long customerId, Product product) {
+        product.validateStock(cartAdditionRequest.getQuantity());
+        try {
+            cartItemDao.save(customerId, cartAdditionRequest.getProductId(), cartAdditionRequest.getQuantity());
+        } catch (Exception e) {
+            throw new InvalidProductException();
+        }
     }
 
     @Transactional
@@ -71,7 +75,7 @@ public class CartService {
         final Product product = productService.findById(cartUpdateRequest.getProductId());
 
         validateExistProduct(customerId, product);
-        validateStock(product.getStock(), cartUpdateRequest.getQuantity());
+        product.validateStock(cartUpdateRequest.getQuantity());
 
         cartItemDao.updateQuantity(customerId, cartUpdateRequest.getProductId(), cartUpdateRequest.getQuantity());
     }
@@ -79,12 +83,6 @@ public class CartService {
     private void validateExistProduct(Long customerId, Product product) {
         if (!cartItemDao.existCartItem(customerId, product.getId())) {
             throw new InvalidCartItemException("장바구니에 해당 상품이 존재하지 않습니다.");
-        }
-    }
-
-    private void validateStock(int stock, int quantity) {
-        if (stock < quantity) {
-            throw new InvalidCartItemException("재고가 부족합니다. 현재 재고: " + stock);
         }
     }
 

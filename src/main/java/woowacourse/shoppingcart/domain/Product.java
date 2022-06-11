@@ -1,12 +1,14 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+
 public class Product {
 
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
-    private int stock;
+    private final Long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
+    private final int stock;
 
     public Product(final Long id, final String name, final int price, final String imageUrl, final int stock) {
         this.id = id;
@@ -14,6 +16,12 @@ public class Product {
         this.price = price;
         this.imageUrl = imageUrl;
         this.stock = stock;
+    }
+
+    public void validateStock(int quantity) {
+        if (stock < quantity) {
+            throw new InvalidCartItemException("재고가 부족합니다. 현재 재고: " + stock);
+        }
     }
 
     public String getName() {
