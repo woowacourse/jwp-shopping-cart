@@ -13,14 +13,14 @@ import woowacourse.shoppingcart.domain.customer.vo.EncryptPassword;
 import woowacourse.shoppingcart.domain.customer.vo.Nickname;
 import woowacourse.shoppingcart.domain.customer.vo.Password;
 import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.PhoneNumberRequest;
-import woowacourse.shoppingcart.dto.PhoneNumberResponse;
-import woowacourse.shoppingcart.dto.SignInRequest;
-import woowacourse.shoppingcart.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.request.PasswordRequest;
+import woowacourse.shoppingcart.dto.request.PhoneNumberRequest;
+import woowacourse.shoppingcart.dto.response.PhoneNumberResponse;
+import woowacourse.shoppingcart.dto.request.SignInRequest;
+import woowacourse.shoppingcart.dto.response.TokenResponse;
 import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @Service

@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.response;
 
 public class ProductResponse {
     private final Long id;
