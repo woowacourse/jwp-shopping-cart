@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 
 public class CustomerAddRequest {
 
+    @NotBlank
     @Email(regexp = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$", message = "이메일 형식이 아닙니다.")
     private String loginId;
 

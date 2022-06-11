@@ -24,8 +24,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerAddRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
 
 @AutoConfigureMockMvc
 @SpringBootTest
