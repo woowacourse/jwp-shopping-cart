@@ -27,14 +27,12 @@ public class CustomerService {
     }
 
     @Transactional
-    public Long registerCustomer(final CustomerRegisterRequest customerRegisterRequest) {
-        if (customerDao.existsByEmail(customerRegisterRequest.getEmail())) {
+    public Long registerCustomer(final CustomerRegisterRequest request) {
+        if (customerDao.existsByEmail(request.getEmail())) {
             throw new CustomerException(CustomerExceptionCode.ALREADY_EMAIL_EXIST);
         }
 
-        final Customer customer = new Customer(customerRegisterRequest.getEmail(),
-                customerRegisterRequest.getNickname(),
-                customerRegisterRequest.getPassword());
+        final Customer customer = new Customer(request.getEmail(), request.getNickname(), request.getPassword());
         return customerDao.save(customer);
     }
 
@@ -50,29 +48,24 @@ public class CustomerService {
 
     @Transactional
     public CustomerUpdateResponse updateCustomerProfile(final Long customerId,
-                                                        final CustomerProfileUpdateRequest customerUpdateRequest) {
+                                                        final CustomerProfileUpdateRequest request) {
         final Customer customer = getById(customerId);
-        customer.updateProfile(customerUpdateRequest.getNickname());
+        customer.updateProfile(request.getNickname());
         customerDao.update(customer);
         return new CustomerUpdateResponse(customer.getNickname());
     }
 
     @Transactional
-    public void updateCustomerPassword(final Long customerId,
-                                       final CustomerPasswordUpdateRequest customerPasswordUpdateRequest) {
-        final String originPassword = customerPasswordUpdateRequest.getPassword();
-        final String newPassword = customerPasswordUpdateRequest.getNewPassword();
-
+    public void updateCustomerPassword(final Long customerId, final CustomerPasswordUpdateRequest request) {
         final Customer customer = getById(customerId);
-        customer.updatePassword(originPassword, newPassword);
+        customer.updatePassword(request.getPassword(), request.getNewPassword());
         customerDao.update(customer);
     }
 
     @Transactional
-    public void removeCustomer(final Long customerId,
-                               final CustomerRemoveRequest customerRemoveRequest) {
+    public void removeCustomer(final Long customerId, final CustomerRemoveRequest request) {
         final Customer customer = getById(customerId);
-        validatePassword(customer, customerRemoveRequest.getPassword());
+        validatePassword(customer, request.getPassword());
         customerDao.deleteById(customerId);
     }
 
