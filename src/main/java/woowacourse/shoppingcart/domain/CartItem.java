@@ -14,10 +14,6 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public CartItem(Product product, Integer quantity) {
-        this(null, product, quantity);
-    }
-
     public Long getId() {
         return id;
     }
