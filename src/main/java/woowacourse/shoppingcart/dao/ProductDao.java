@@ -1,69 +1,53 @@
 package woowacourse.shoppingcart.dao;
 
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class ProductDao {
 
-    private final JdbcTemplate jdbcTemplate;
-
-    public ProductDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
-            return preparedStatement;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
-
-    public Product findProductById(final Long productId) {
-        try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
-                    ), productId
+    private static final RowMapper<Product> PRODUCT_MAPPER = (rs, rowNum) ->
+            new Product(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getInt("price"),
+                    rs.getInt("stock"),
+                    rs.getString("image_url")
             );
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
-        }
+
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public ProductDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image_url")
-                        ));
+    public List<Product> findProducts(int offset, int limit) {
+        String sql = "SELECT id, name, price, stock, image_url FROM PRODUCT LIMIT :limit OFFSET :offset";
+        SqlParameterSource params = new MapSqlParameterSource("offset", offset)
+                .addValue("limit", limit);
+        return jdbcTemplate.query(sql, params, PRODUCT_MAPPER);
     }
 
-    public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+    public Product findById(long id) {
+        String sql = "SELECT id, name, price, stock, image_url FROM PRODUCT WHERE id = :id";
+        SqlParameterSource params = new MapSqlParameterSource("id", id);
+        return jdbcTemplate.queryForObject(sql, params, PRODUCT_MAPPER);
+    }
+
+    public boolean checkIdExistence(long id) {
+        String sql = "SELECT EXISTS (SELECT id FROM PRODUCT WHERE id = :id)";
+        SqlParameterSource params = new MapSqlParameterSource("id", id);
+        return jdbcTemplate.queryForObject(sql, params, Boolean.class);
+    }
+
+    public int getTotalCount() {
+        String sql = "SELECT COUNT(*) FROM PRODUCT";
+        return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
     }
 }
