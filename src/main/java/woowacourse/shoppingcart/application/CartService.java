@@ -25,29 +25,36 @@ public class CartService {
     }
 
     public List<CartResponse> findCartsByCustomerId(final Long customerId) {
+        cartItemRepository.validateCustomerId(customerId);
         return cartItemRepository.findCartsByCustomerId(customerId)
                 .stream()
                 .map(CartResponse::of)
                 .collect(Collectors.toList());
     }
 
-    public List<CartProductInfoResponse> addCart(final List<ProductIdRequest> productIdRequests,
-                                                 final Long customerId) {
+    public List<CartProductInfoResponse> addCarts(final List<ProductIdRequest> productIdRequests,
+                                                  final Long customerId) {
         return productIdRequests.stream()
-                .map(ProductIdRequest::getId)
-                .map(productId -> cartItemRepository.create(customerId, productId))
-                .map(cartItemRepository::findById)
-                .map(cart -> new CartProductInfoResponse(cart.getId(), cart.getQuantity()))
+                .map(productIdRequest -> addCart(productIdRequest, customerId))
                 .collect(Collectors.toList());
+    }
+
+    private CartProductInfoResponse addCart(final ProductIdRequest productIdRequest, final Long customerId) {
+        Long productId = productIdRequest.getId();
+        cartItemRepository.validateCustomerId(customerId);
+        cartItemRepository.validateProductId(productId);
+        Long id = cartItemRepository.create(customerId, productId);
+        return new CartProductInfoResponse(id, cartItemRepository.findById(id).getQuantity());
     }
 
     public CartProductInfoResponse patchCart(final CartProductInfoRequest cartProductInfoRequest,
                                              final Long customerId) {
-        Cart cart = cartItemRepository.update(getCartEntity(cartProductInfoRequest.getId(), customerId, cartProductInfoRequest));
+        Cart cart = cartItemRepository.update(
+                getCartEntity(cartProductInfoRequest.getId(), customerId, cartProductInfoRequest));
         return new CartProductInfoResponse(cart.getId(), cart.getQuantity());
     }
 
-    private CartEntity getCartEntity(Long id, Long customerId, CartProductInfoRequest infoRequest) {
+    private CartEntity getCartEntity(final Long id, final Long customerId, final CartProductInfoRequest infoRequest) {
         return new CartEntity(id, customerId, infoRequest.getId(), infoRequest.getQuantity());
     }
 
@@ -64,13 +71,12 @@ public class CartService {
     }
 
     private void validateCustomerCart(final Long cartId, final Long customerId) {
-        if (cartItemRepository.findCartsByCustomerId(customerId).stream()
+        List<Cart> cartsByCustomerId = cartItemRepository.findCartsByCustomerId(customerId);
+        boolean noCustomerCart = cartsByCustomerId.stream()
                 .map(Cart::getId)
-                .collect(Collectors.toList())
-                .contains(cartId)
-        ) {
-            return;
+                .noneMatch(id -> id.equals(cartId));
+        if (noCustomerCart) {
+            throw new NotInCustomerCartItemException();
         }
-        throw new NotInCustomerCartItemException();
     }
 }

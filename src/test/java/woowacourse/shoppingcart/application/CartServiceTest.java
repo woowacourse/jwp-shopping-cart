@@ -68,7 +68,7 @@ class CartServiceTest {
         물품추가(jdbcTemplate, 치킨);
 
         //when
-        cartService.addCart(List.of(new ProductIdRequest(치킨.getId())), 사용자아이디);
+        cartService.addCarts(List.of(new ProductIdRequest(치킨.getId())), 사용자아이디);
 
         //then
         assertThat(cartService.findCartsByCustomerId(사용자아이디))
@@ -87,8 +87,8 @@ class CartServiceTest {
         물품추가(jdbcTemplate, 치킨);
 
         //when
-        cartService.addCart(List.of(new ProductIdRequest(치킨.getId())), 사용자아이디);
-        cartService.addCart(List.of(new ProductIdRequest(치킨.getId())), 사용자아이디);
+        cartService.addCarts(List.of(new ProductIdRequest(치킨.getId())), 사용자아이디);
+        cartService.addCarts(List.of(new ProductIdRequest(치킨.getId())), 사용자아이디);
 
         //then
         assertThat(cartService.findCartsByCustomerId(사용자아이디).get(0).getName())

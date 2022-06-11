@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.Entity.CartEntity;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.custum.ResourceNotFoundException;
 import woowacourse.shoppingcart.repository.dao.CartItemDao;
@@ -27,16 +29,23 @@ public class CartItemRepository {
     }
 
     public Long create(final Long customerId, final Long productId) {
-        customerDao.findById(customerId).orElseThrow(ResourceNotFoundException::new);
-        productDao.findById(productId);
+        return cartItemDao.findIdByProductId(productId)
+                .map(this::plusQuantity)
+                .orElseGet(() -> cartItemDao.create(customerId, productId));
+    }
 
-        Optional<Long> id = cartItemDao.findIdByProductId(productId);
-        if (id.isPresent()) {
-            CartEntity cartItemDaoById = cartItemDao.findById(id.get());
-            cartItemDao.update(cartItemDaoById.plusQuantity());
-            return id.get();
-        }
-        return cartItemDao.create(customerId, productId);
+    private Long plusQuantity(Long id) {
+        CartEntity cartItemDaoById = cartItemDao.findById(id);
+        cartItemDao.update(cartItemDaoById.plusQuantity());
+        return id;
+    }
+
+    public void validateCustomerId(final Long customerId) {
+        customerDao.findById(customerId).orElseThrow(ResourceNotFoundException::new);
+    }
+
+    public void validateProductId(Long productId) {
+        productDao.findById(productId);
     }
 
     public Cart findById(final Long id) {
@@ -55,7 +64,6 @@ public class CartItemRepository {
     }
 
     public List<Cart> findCartsByCustomerId(final Long customerId) {
-        customerDao.findById(customerId).orElseThrow(ResourceNotFoundException::new);
         return toCarts(cartItemDao.findCartsByCustomerId(customerId));
     }
 

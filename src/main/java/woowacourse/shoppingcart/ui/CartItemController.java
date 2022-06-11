@@ -31,7 +31,7 @@ public class CartItemController {
     public ResponseEntity<List<CartProductInfoResponse>> addCartItem(
             @AuthenticationPrincipal final TokenRequest tokenRequest,
             @RequestBody final List<ProductIdRequest> productIdRequests) {
-        return ResponseEntity.ok().body(cartService.addCart(productIdRequests, tokenRequest.getCustomerId()));
+        return ResponseEntity.ok().body(cartService.addCarts(productIdRequests, tokenRequest.getCustomerId()));
     }
 
     @GetMapping
