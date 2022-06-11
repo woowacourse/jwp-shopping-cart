@@ -11,7 +11,7 @@ public class CartResponse {
     public CartResponse() {
     }
 
-    public CartResponse(Long id, String name, int price, int quantity, String imageUrl) {
+    public CartResponse(final Long id, final String name, final int price, final int quantity, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;

@@ -13,12 +13,12 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public LoginInterceptor(JwtTokenProvider jwtTokenProvider) {
+    public LoginInterceptor(final JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
         if (request.getMethod().equals("OPTIONS")) {
             return true;
         }
@@ -32,13 +32,13 @@ public class LoginInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private void validateAvailableToken(String token) {
+    private void validateAvailableToken(final String token) {
         if (!jwtTokenProvider.validateToken(token)) {
             throw new InvalidTokenException("유효하지 않은 토큰입니다.");
         }
     }
 
-    private void validateNotToken(String token) {
+    private void validateNotToken(final String token) {
         if (Objects.isNull(token)) {
             throw new InvalidTokenException("토큰이 존재하지 않습니다.");
         }

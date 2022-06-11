@@ -20,7 +20,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@RequestBody @Valid ProductAddRequest productAddRequest) {
+    public ResponseEntity<Void> add(@RequestBody @Valid final ProductAddRequest productAddRequest) {
         productService.save(productAddRequest.toServiceRequest());
         return ResponseEntity.ok().build();
     }

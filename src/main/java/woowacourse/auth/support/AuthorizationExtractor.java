@@ -8,7 +8,7 @@ public class AuthorizationExtractor {
     public static String BEARER_TYPE = "Bearer";
     public static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName() + ".ACCESS_TOKEN_TYPE";
 
-    public static String extract(HttpServletRequest request) {
+    public static String extract(final HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();

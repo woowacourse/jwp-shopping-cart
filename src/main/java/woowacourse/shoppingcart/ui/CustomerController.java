@@ -18,38 +18,38 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(final CustomerService customerService) {
         this.customerService = customerService;
     }
 
     @PostMapping
-    public ResponseEntity<Void> saveCustomer(@RequestBody @Valid CustomerSignUpRequest customerSignUpRequest) {
+    public ResponseEntity<Void> saveCustomer(@RequestBody @Valid final CustomerSignUpRequest customerSignUpRequest) {
         customerService.save(customerSignUpRequest.toServiceRequest());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> showCustomer(@AuthenticationPrincipal @Valid LoginCustomer loginCustomer) {
+    public ResponseEntity<CustomerResponse> showCustomer(@AuthenticationPrincipal @Valid final LoginCustomer loginCustomer) {
         CustomerResponse customerResponse = customerService.findById(loginCustomer.getId());
         return ResponseEntity.ok(customerResponse);
     }
 
     @PatchMapping
-    public ResponseEntity<Void> updateCustomer(@AuthenticationPrincipal @Valid LoginCustomer loginCustomer,
-                                               @RequestBody @Valid CustomerChangeRequest customerChangeRequest) {
+    public ResponseEntity<Void> updateCustomer(@AuthenticationPrincipal @Valid final LoginCustomer loginCustomer,
+                                               @RequestBody @Valid final CustomerChangeRequest customerChangeRequest) {
         customerService.update(loginCustomer.getId(), customerChangeRequest.toServiceRequest());
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Void> updateCustomer(@AuthenticationPrincipal @Valid LoginCustomer loginCustomer,
-                                               @RequestBody @Valid CustomerChangePasswordRequest customerChangePasswordRequest) {
+    public ResponseEntity<Void> updateCustomer(@AuthenticationPrincipal @Valid final LoginCustomer loginCustomer,
+                                               @RequestBody @Valid final CustomerChangePasswordRequest customerChangePasswordRequest) {
         customerService.updatePassword(loginCustomer.getId(), customerChangePasswordRequest.toServiceRequest());
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal @Valid LoginCustomer loginCustomer) {
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal @Valid final LoginCustomer loginCustomer) {
         customerService.delete(loginCustomer.getId());
         return ResponseEntity.noContent().build();
     }

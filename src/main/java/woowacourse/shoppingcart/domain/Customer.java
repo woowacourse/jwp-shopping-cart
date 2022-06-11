@@ -15,11 +15,11 @@ public class Customer {
     private final String password;
     private final String nickname;
 
-    public Customer(String email, String password, String nickname) {
+    public Customer(final String email, final String password, final String nickname) {
         this(null, email, password, nickname);
     }
 
-    public Customer(Long id, String email, String password, String nickname) {
+    public Customer(final Long id, final String email, final String password, final String nickname) {
         validateCustomer(email, password, nickname);
         this.id = id;
         this.email = email;
@@ -27,37 +27,37 @@ public class Customer {
         this.nickname = nickname;
     }
 
-    private void validateCustomer(String email, String password, String nickname) {
+    private void validateCustomer(final String email, final String password, final String nickname) {
         validateEmail(email);
         validatePassword(password);
         validateNickname(nickname);
     }
 
-    private void validateEmail(String email) {
+    private void validateEmail(final String email) {
         if (email.isBlank() || !Pattern.matches(EMAIL_REGEX, email)) {
             throw new InvalidCustomerException("[ERROR] 이메일 기본 형식에 어긋납니다.");
         }
     }
 
-    public void validatePassword(String password) {
+    public void validatePassword(final String password) {
         if (password.isBlank() || !Pattern.matches(PASSWORD_REGEX, password)) {
             throw new InvalidCustomerException("[ERROR] 패스워드 기본 형식에 어긋납니다.");
         }
     }
 
-    public void validateNickname(String nickname) {
+    public void validateNickname(final String nickname) {
         if (nickname.isBlank() || !Pattern.matches(NICKNAME_REGEX, nickname)) {
             throw new InvalidCustomerException("[ERROR] 닉네임 기본 형식에 어긋납니다.");
         }
     }
 
-    public void equalPrevPassword(String prePassword) {
+    public void equalPrevPassword(final String prePassword) {
         if (!password.equals(prePassword)) {
             throw new InvalidCustomerException("[ERROR] 이전 비밀번호와 일치하지 않습니다.");
         }
     }
 
-    public void nonEqualNewPassword(String newPassword) {
+    public void nonEqualNewPassword(final String newPassword) {
         if (password.equals(newPassword)) {
             throw new InvalidCustomerException("[ERROR] 새로운 비밀번호가 이전 비밀번호와 동일합니다.");
         }

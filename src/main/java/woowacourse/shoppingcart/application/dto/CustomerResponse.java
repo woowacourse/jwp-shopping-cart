@@ -13,11 +13,11 @@ public class CustomerResponse {
     public CustomerResponse() {
     }
 
-    public CustomerResponse(Customer customer) {
+    public CustomerResponse(final Customer customer) {
         this(customer.getId(), customer.getEmail(), customer.getNickname());
     }
 
-    public CustomerResponse(Long id, String email, String nickname) {
+    public CustomerResponse(final Long id, final String email, final String nickname) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;

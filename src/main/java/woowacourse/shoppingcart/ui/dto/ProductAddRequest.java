@@ -17,7 +17,7 @@ public class ProductAddRequest {
     public ProductAddRequest() {
     }
 
-    public ProductAddRequest(String name, int price, String imageUrl) {
+    public ProductAddRequest(final String name, final int price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

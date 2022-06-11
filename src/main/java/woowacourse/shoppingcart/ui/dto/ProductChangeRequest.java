@@ -10,7 +10,7 @@ public class ProductChangeRequest {
     public ProductChangeRequest() {
     }
 
-    public ProductChangeRequest(int quantity) {
+    public ProductChangeRequest(final int quantity) {
         this.quantity = quantity;
     }
 

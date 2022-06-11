@@ -5,7 +5,7 @@ public class TokenCreateRequest {
     private final String email;
     private final String password;
 
-    public TokenCreateRequest(String email, String password) {
+    public TokenCreateRequest(final String email, final String password) {
         this.email = email;
         this.password = password;
     }

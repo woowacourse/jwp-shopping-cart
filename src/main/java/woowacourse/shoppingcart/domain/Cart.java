@@ -10,7 +10,7 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(Long id, Long customer_id, Long productId, int quantity) {
+    public Cart(final Long id, final Long customer_id, final Long productId, final int quantity) {
         this.id = id;
         this.customer_id = customer_id;
         this.productId = productId;

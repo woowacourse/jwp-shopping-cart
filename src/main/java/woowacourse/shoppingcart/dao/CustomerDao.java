@@ -25,14 +25,14 @@ public class CustomerDao {
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public CustomerDao(DataSource dataSource) {
+    public CustomerDao(final DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(Customer customer) {
+    public Long save(final Customer customer) {
         SqlParameterSource sqlParameter = new MapSqlParameterSource()
                 .addValue("email", customer.getEmail())
                 .addValue("password", customer.getPassword())
@@ -40,21 +40,21 @@ public class CustomerDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameter).longValue();
     }
 
-    public boolean existByEmail(String email) {
+    public boolean existByEmail(final String email) {
         String sql = "SELECT exists (SELECT * FROM customer WHERE email=:email)";
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("email", email);
         Long count = template.queryForObject(sql, nameParameters, Long.class);
         return count != 0L;
     }
 
-    public boolean existByNickname(String nickname) {
+    public boolean existByNickname(final String nickname) {
         String sql = "SELECT exists (SELECT * FROM customer WHERE nickname=:nickname)";
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("nickname", nickname);
         Long count = template.queryForObject(sql, nameParameters, Long.class);
         return count != 0;
     }
 
-    public Optional<Customer> findById(Long id) {
+    public Optional<Customer> findById(final Long id) {
         String query = "SELECT id, email, password, nickname FROM customer WHERE id=:id";
         SqlParameterSource nameParameters = new MapSqlParameterSource("id", id);
 

@@ -16,17 +16,17 @@ public class CustomerService {
 
     private final CustomerDao customerDao;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(final CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
 
     @Transactional
-    public Long save(CustomerSaveRequest request) {
+    public Long save(final CustomerSaveRequest request) {
         validateCustomerRequest(request);
         return customerDao.save(request.toEntity());
     }
 
-    private void validateCustomerRequest(CustomerSaveRequest request) {
+    private void validateCustomerRequest(final CustomerSaveRequest request) {
         if (customerDao.existByEmail(request.getEmail())) {
             throw new InvalidCustomerException("[ERROR] 이미 존재하는 이메일입니다.");
         }
@@ -36,14 +36,14 @@ public class CustomerService {
         }
     }
 
-    public CustomerResponse findById(Long id) {
+    public CustomerResponse findById(final Long id) {
         Customer customer = customerDao.findById(id)
                 .orElseThrow(() -> new InvalidCustomerException("[ERROR] ID가 존재하지 않습니다."));
         return new CustomerResponse(customer);
     }
 
     @Transactional
-    public void update(Long id, CustomerUpdateRequest customerUpdateRequest) {
+    public void update(final Long id, final CustomerUpdateRequest customerUpdateRequest) {
         Customer saveCustomer = customerDao.findById(id)
                 .orElseThrow(() -> new InvalidCustomerException("[ERROR] ID가 존재하지 않습니다."));
         validateUpdateNickname(id, customerUpdateRequest, saveCustomer);
@@ -56,7 +56,7 @@ public class CustomerService {
         );
     }
 
-    private void validateUpdateNickname(Long id, CustomerUpdateRequest customerUpdateRequest, Customer customer) {
+    private void validateUpdateNickname(final Long id, final CustomerUpdateRequest customerUpdateRequest, final Customer customer) {
         customer.validateNickname(customerUpdateRequest.getNickname());
         boolean existNickname = customerDao.existByNicknameExcludedId(id, customerUpdateRequest.getNickname());
         if (existNickname) {
@@ -65,7 +65,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public void updatePassword(Long id, CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
+    public void updatePassword(final Long id, final CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         Customer saveCustomer = customerDao.findById(id)
                 .orElseThrow(() -> new InvalidCustomerException("[ERROR] ID가 존재하지 않습니다."));
         validatePasswordUpdateNickname(customerUpdatePasswordRequest, saveCustomer);
@@ -78,14 +78,14 @@ public class CustomerService {
         );
     }
 
-    private void validatePasswordUpdateNickname(CustomerUpdatePasswordRequest customerUpdatePasswordRequest, Customer customer) {
+    private void validatePasswordUpdateNickname(final CustomerUpdatePasswordRequest customerUpdatePasswordRequest, final Customer customer) {
         customer.equalPrevPassword(customerUpdatePasswordRequest.getPrevPassword());
         customer.nonEqualNewPassword(customerUpdatePasswordRequest.getNewPassword());
         customer.validatePassword(customerUpdatePasswordRequest.getNewPassword());
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(final Long id) {
         customerDao.findById(id)
                 .orElseThrow(() -> new InvalidCustomerException("[ERROR] ID가 존재하지 않습니다."));
         customerDao.delete(id);

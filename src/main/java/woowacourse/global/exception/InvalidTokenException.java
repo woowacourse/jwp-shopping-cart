@@ -2,7 +2,7 @@ package woowacourse.global.exception;
 
 public class InvalidTokenException extends ShoppingCartException {
 
-    public InvalidTokenException(String message) {
+    public InvalidTokenException(final String message) {
         super(message);
     }
 }

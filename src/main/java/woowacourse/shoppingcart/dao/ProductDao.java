@@ -27,7 +27,7 @@ public class ProductDao {
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ProductDao(DataSource dataSource) {
+    public ProductDao(final DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("product")
@@ -42,7 +42,7 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
-    public Optional<Product> findById(Long id) {
+    public Optional<Product> findById(final Long id) {
         String query = "SELECT id, name, price, image_Url FROM product WHERE id=:id";
         SqlParameterSource nameParameters = new MapSqlParameterSource("id", id);
 
@@ -59,14 +59,14 @@ public class ProductDao {
         return template.query(query, PRODUCT_ROW_MAPPER);
     }
 
-    public boolean existByName(String name) {
+    public boolean existByName(final String name) {
         String query = "SELECT EXISTS (SELECT * FROM product WHERE name=:name)";
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("name", name);
         int count = template.queryForObject(query, nameParameters, Integer.class);
         return count != 0;
     }
 
-    public List<Product> findByIds(List<Long> ids) {
+    public List<Product> findByIds(final List<Long> ids) {
         String productIds = ids.stream()
                 .map(it -> String.valueOf(it))
                 .collect(Collectors.joining(",", "(", ")"));

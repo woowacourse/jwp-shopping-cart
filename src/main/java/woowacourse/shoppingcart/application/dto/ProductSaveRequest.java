@@ -11,7 +11,7 @@ public class ProductSaveRequest {
     public ProductSaveRequest() {
     }
 
-    public ProductSaveRequest(String name, int price, String imageUrl) {
+    public ProductSaveRequest(final String name, final int price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

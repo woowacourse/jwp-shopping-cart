@@ -22,7 +22,7 @@ public class CartService {
     private final CustomerService customerService;
     private final ProductService productService;
 
-    public CartService(CartItemDao cartItemDao, CustomerService customerService, ProductService productService) {
+    public CartService(final CartItemDao cartItemDao, final CustomerService customerService, final ProductService productService) {
         this.cartItemDao = cartItemDao;
         this.customerService = customerService;
         this.productService = productService;
@@ -34,26 +34,26 @@ public class CartService {
         cartItemDao.save(customerId, productId, INIT_QUANTITY);
     }
 
-    private void validateSave(Long customerId, Long productId) {
+    private void validateSave(final Long customerId, final Long productId) {
         customerService.findById(customerId);
         productService.findById(productId);
         validateCartInProductId(productId);
     }
 
-    private void validateCartInProductId(Long productId) {
+    private void validateCartInProductId(final Long productId) {
         if (cartItemDao.existProductId(productId)) {
             throw new InvalidCartItemException("[ERROR] 장바구니에 이미 등록된 상품입니다.");
         }
     }
 
-    public CartResponse findById(Long id) {
+    public CartResponse findById(final Long id) {
         Cart cart = cartItemDao.findById(id)
                 .orElseThrow(() -> new InvalidProductException("[ERROR] ID가 존재하지 않습니다."));
         ProductResponse product = productService.findById(cart.getProductId());
         return new CartResponse(cart.getId(), product.getName(), product.getPrice(), cart.getQuantity(), product.getImageUrl());
     }
 
-    public List<CartResponse> findAll(Long customerId) {
+    public List<CartResponse> findAll(final Long customerId) {
         List<Cart> carts = cartItemDao.findAllByCustomerId(customerId);
         Map<Long, Integer> productIdByQuantity = carts.stream()
                 .collect(Collectors.toMap(Cart::getProductId, Cart::getQuantity));
@@ -66,12 +66,12 @@ public class CartService {
     }
 
     @Transactional
-    public void updateQuantity(Long customerId, long productId, int quantity) {
+    public void updateQuantity(final Long customerId, final Long productId, final int quantity) {
         cartItemDao.updateQuantity(customerId, productId, quantity);
     }
 
     @Transactional
-    public void delete(Long customerId, Long productId) {
+    public void delete(final Long customerId, final Long productId) {
         cartItemDao.deleteByCustomerIdAndProductId(customerId, productId);
     }
 }

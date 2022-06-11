@@ -22,7 +22,7 @@ public class JwtTokenProvider {
         this.validityInMilliseconds = validityInMilliseconds;
     }
 
-    public String createToken(String payload) {
+    public String createToken(final String payload) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
@@ -34,12 +34,12 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getPayload(String token) {
+    public String getPayload(final String token) {
 
         return tokenToJws(token).getBody().getSubject();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(final String token) {
         try {
             Jws<Claims> claims = tokenToJws(token);
 
@@ -49,7 +49,7 @@ public class JwtTokenProvider {
         }
     }
 
-    private Jws<Claims> tokenToJws(String token) {
+    private Jws<Claims> tokenToJws(final String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
     }
 }

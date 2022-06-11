@@ -26,7 +26,7 @@ public class CartItemDao {
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public CartItemDao(DataSource dataSource) {
+    public CartItemDao(final DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("cart_item")
@@ -54,13 +54,13 @@ public class CartItemDao {
 
     }
 
-    public List<Cart> findAllByCustomerId(Long customerId) {
+    public List<Cart> findAllByCustomerId(final Long customerId) {
         String query = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE customer_id=:customer_Id";
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("customer_Id", customerId);
         return template.query(query, nameParameters, CART_ROW_MAPPER);
     }
 
-    public void updateQuantity(Long customerId, Long productId, int quantity) {
+    public void updateQuantity(final Long customerId, final Long productId, final int quantity) {
         String query = "UPDATE cart_item SET quantity=:quantity WHERE customer_id=:customer_id AND product_id=:product_id";
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("quantity", quantity)
                 .addValue("customer_id", customerId)
@@ -68,14 +68,14 @@ public class CartItemDao {
         template.update(query, nameParameters);
     }
 
-    public void deleteByCustomerIdAndProductId(Long customerId, Long productId) {
+    public void deleteByCustomerIdAndProductId(final Long customerId, final Long productId) {
         String query = "DELETE FROM cart_item WHERE customer_id=:customer_id AND product_id=:product_id";
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("customer_id", customerId)
                 .addValue("product_id", productId);
         template.update(query, nameParameters);
     }
 
-    public boolean existProductId(Long productId) {
+    public boolean existProductId(final Long productId) {
         String query = "SELECT EXISTS (SELECT * FROM cart_item WHERE product_id=:product_id)";
 
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("product_id", productId);

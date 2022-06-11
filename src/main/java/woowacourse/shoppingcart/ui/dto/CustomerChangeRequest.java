@@ -12,7 +12,7 @@ public class CustomerChangeRequest {
     public CustomerChangeRequest() {
     }
 
-    public CustomerChangeRequest(String nickname) {
+    public CustomerChangeRequest(final String nickname) {
         this.nickname = nickname;
     }
 

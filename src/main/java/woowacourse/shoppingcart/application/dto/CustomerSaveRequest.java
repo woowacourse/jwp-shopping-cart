@@ -12,7 +12,7 @@ public class CustomerSaveRequest {
 
     }
 
-    public CustomerSaveRequest(String email, String password, String nickname) {
+    public CustomerSaveRequest(final String email, final String password, final String nickname) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;

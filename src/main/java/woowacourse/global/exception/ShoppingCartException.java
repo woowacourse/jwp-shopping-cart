@@ -2,7 +2,7 @@ package woowacourse.global.exception;
 
 public abstract class ShoppingCartException extends RuntimeException {
 
-    public ShoppingCartException(String message) {
+    public ShoppingCartException(final String message) {
         super(message);
     }
 }

@@ -10,7 +10,7 @@ public class LoginCustomer {
     public LoginCustomer() {
     }
 
-    public LoginCustomer(Long id) {
+    public LoginCustomer(final Long id) {
         this.id = id;
     }
 

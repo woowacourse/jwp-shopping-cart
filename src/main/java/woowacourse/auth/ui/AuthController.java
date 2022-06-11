@@ -17,12 +17,12 @@ public class AuthController {
 
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(final AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping
-    public ResponseEntity<TokenResponse> login(@RequestBody @Valid TokenRequest tokenRequest) {
+    public ResponseEntity<TokenResponse> login(@RequestBody @Valid final TokenRequest tokenRequest) {
         TokenResponse accessToken = authService.createToken(tokenRequest.toServiceRequest());
         return ResponseEntity.ok(accessToken);
     }

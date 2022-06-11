@@ -21,23 +21,23 @@ public class ProductService {
     }
 
     @Transactional
-    public Long save(ProductSaveRequest request) {
+    public Long save(final ProductSaveRequest request) {
         validateProductName(request.getName());
         return productDao.save(request.toEntity());
     }
 
-    private void validateProductName(String name) {
+    private void validateProductName(final String name) {
         if (productDao.existByName(name)) {
             throw new InvalidProductException("[ERROR] 이미 존재하는 상품입니다.");
         }
     }
 
-    public ProductResponse findById(Long id) {
+    public ProductResponse findById(final Long id) {
         return new ProductResponse(productDao.findById(id)
                 .orElseThrow(() -> new InvalidProductException("[ERROR] ID가 존재하지 않습니다.")));
     }
 
-    public List<ProductResponse> findByIds(List<Long> ids) {
+    public List<ProductResponse> findByIds(final List<Long> ids) {
         return productDao.findByIds(ids).stream()
                 .map(ProductResponse::new)
                 .collect(Collectors.toList());

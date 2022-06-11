@@ -16,7 +16,7 @@ public class CustomerSignUpRequest {
     private CustomerSignUpRequest() {
     }
 
-    public CustomerSignUpRequest(String email, String password, String nickname) {
+    public CustomerSignUpRequest(final String email, final String password, final String nickname) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
