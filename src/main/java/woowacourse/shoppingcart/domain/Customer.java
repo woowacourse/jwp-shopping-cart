@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 public class Customer {
 
     private final long id;
@@ -44,5 +46,9 @@ public class Customer {
 
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public boolean isPasswordNotMatch(PasswordEncoder passwordEncoder, String password) {
+        return this.password.isNotMatch(passwordEncoder, password);
     }
 }
