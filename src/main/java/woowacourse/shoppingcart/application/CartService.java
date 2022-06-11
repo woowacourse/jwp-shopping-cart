@@ -34,16 +34,37 @@ public class CartService {
 
     public List<CartProductInfoResponse> addCarts(final List<ProductIdRequest> productIdRequests,
                                                   final Long customerId) {
+        plusQuantityCarts(productIdRequests, customerId);
+        createCarts(productIdRequests, customerId);
         return productIdRequests.stream()
-                .map(productIdRequest -> addCart(productIdRequest, customerId))
+                .map(productIdRequest -> toCartInfoRequest(productIdRequest, customerId))
                 .collect(Collectors.toList());
     }
 
-    private CartProductInfoResponse addCart(final ProductIdRequest productIdRequest, final Long customerId) {
+    private void plusQuantityCarts(List<ProductIdRequest> productIdRequests, Long customerId) {
+        List<Long> containedCartIds = productIdRequests.stream()
+                .map(ProductIdRequest::getId)
+                .filter(productId -> cartItemRepository.contains(productId, customerId))
+                .map(productId -> cartItemRepository.findIdByCustomerIdAndProductId(customerId, productId))
+                .collect(Collectors.toList());
+        cartItemRepository.plusQuantityByIds(containedCartIds);
+    }
+
+    private void createCarts(List<ProductIdRequest> productIdRequests, Long customerId) {
+        List<Long> notContainedProductIds = productIdRequests.stream()
+                .map(ProductIdRequest::getId)
+                .filter(productId -> !cartItemRepository.contains(productId, customerId))
+                .collect(Collectors.toList());
+        cartItemRepository.createAll(customerId, notContainedProductIds);
+    }
+
+    private CartProductInfoResponse toCartInfoRequest(final ProductIdRequest productIdRequest, final Long customerId) {
         Long productId = productIdRequest.getId();
+
         cartItemRepository.validateCustomerId(customerId);
         cartItemRepository.validateProductId(productId);
-        Long id = cartItemRepository.addCart(customerId, productId);
+
+        Long id = cartItemRepository.findIdByCustomerIdAndProductId(customerId, productId);
         return new CartProductInfoResponse(id, cartItemRepository.findById(id).getQuantity());
     }
 

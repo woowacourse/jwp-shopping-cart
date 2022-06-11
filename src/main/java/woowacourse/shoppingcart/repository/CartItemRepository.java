@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.Entity.CartEntity;
@@ -25,16 +26,24 @@ public class CartItemRepository {
         this.customerDao = customerDao;
     }
 
-    public Long addCart(final Long customerId, final Long productId) {
-        return cartItemDao.findIdByCustomerIdAndProductId(customerId, productId)
-                .map(this::plusQuantity)
-                .orElseGet(() -> cartItemDao.create(customerId, productId));
+    public Long findIdByCustomerIdAndProductId(Long customerId, Long productId) {
+        return cartItemDao.findIdByCustomerIdAndProductId(customerId, productId).orElseThrow(ResourceNotFoundException::new);
     }
 
-    private Long plusQuantity(Long id) {
-        CartEntity cartItemDaoById = cartItemDao.findById(id);
-        cartItemDao.update(cartItemDaoById.plusQuantity());
-        return id;
+    public void createAll(final Long customerId, final List<Long> productIds) {
+        cartItemDao.createAll(customerId, productIds);
+    }
+
+    public void plusQuantityByIds(List<Long> ids) {
+        List<CartEntity> cartEntities = ids.stream()
+                .map(cartItemDao::findById)
+                .map(CartEntity::plusQuantity)
+                .collect(Collectors.toList());
+        cartItemDao.updateAll(cartEntities);
+    }
+
+    public boolean contains(Long productId, Long customerId) {
+        return cartItemDao.findIdByCustomerIdAndProductId(customerId,productId).isPresent();
     }
 
     public void validateCustomerId(final Long customerId) {

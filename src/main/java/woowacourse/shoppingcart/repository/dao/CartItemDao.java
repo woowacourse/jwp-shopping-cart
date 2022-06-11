@@ -47,6 +47,27 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    public int[] createAll(Long customerId, List<Long> productIds) {
+        final String query = "INSERT INTO cart_item (customer_id, product_id, quantity) VALUES (:customer_id, :product_id, :quantity)";
+        return jdbcTemplate.batchUpdate(query, SqlParameterSourceUtils.createBatch(
+                productIds.stream()
+                        .map(productId -> Map.of("customer_id", customerId, "product_id", productId, "quantity", 1))
+                        .collect(Collectors.toList()))
+        );
+    }
+
+    public int[] updateAll(List<CartEntity> cartEntities) {
+        final String query = "UPDATE cart_item SET customer_id = :customer_id , product_id = :product_id, quantity = :quantity";
+        return jdbcTemplate.batchUpdate(query, SqlParameterSourceUtils.createBatch(
+                cartEntities.stream()
+                        .map(cartEntity -> Map.of(
+                                "customer_id", cartEntity.getCustomerId(),
+                                "product_id", cartEntity.getProductId(),
+                                "quantity", cartEntity.getQuantity()))
+                        .collect(Collectors.toList()))
+        );
+    }
+
     public CartEntity findById(Long id) {
         final String query = "SELECT * FROM cart_item WHERE id = :id";
         return jdbcTemplate.queryForObject(query, Map.of("id", id), ROW_MAPPER);
@@ -67,7 +88,7 @@ public class CartItemDao {
     }
 
     public Optional<Long> findIdByCustomerIdAndProductId(Long customerId, Long productId) {
-        final String query = "SELECT id FROM cart_item WHERE customer_id = :customerId AND product_id = :productId";
+        final String query = "SELECT id FROM cart_item WHERE customer_id = :customerId AND product_id = :productId LIMIT 1";
         try {
             Map<String, Long> map = Map.of("productId", productId, "customerId", customerId);
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, map, Long.class));
