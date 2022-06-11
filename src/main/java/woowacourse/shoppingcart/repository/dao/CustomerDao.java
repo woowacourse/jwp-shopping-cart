@@ -18,15 +18,14 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Repository
 public class CustomerDao {
 
-    public static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname from customer where withdrawal = false) rcq ";
-    public static final String REAL_CUSTOMER_QUERY2 = " (select id, username, password, nickname from customer where withdrawal = false) ";
+    private static final String REAL_CUSTOMER_QUERY = " (select id, username, password, nickname from customer where withdrawal = false) ";
+
     private static final RowMapper<Customer> ROW_MAPPER = (resultSet, rowNum) -> new Customer(
             resultSet.getLong("id"),
             resultSet.getString("username"),
             resultSet.getString("password"),
             resultSet.getString("nickname")
     );
-    private static final String NO_CUSTOMER_ERROR_MESSAGE = "존재하지 않는 유저입니다.";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -41,17 +40,6 @@ public class CustomerDao {
         SqlParameterSource source = new BeanPropertySqlParameterSource(customer);
         namedParameterJdbcTemplate.update(query, source, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
-
-    public Long findIdByUserName(final String username) {
-        final String query = "SELECT id FROM customer WHERE username = :username";
-        Map<String, Object> params = new HashMap<>();
-        params.put("username", username);
-        try {
-            return namedParameterJdbcTemplate.queryForObject(query, params, Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException(NO_CUSTOMER_ERROR_MESSAGE);
-        }
     }
 
     public Optional<Customer> findByUserName(final String username) {

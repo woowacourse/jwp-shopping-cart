@@ -37,6 +37,15 @@ public class ProductDao {
         }
     }
 
+    public List<Product> findByPage(final int pageNumber, final int limitCount) {
+        final int startProductIndex = (pageNumber - 1) * limitCount;
+        final String query = "SELECT id, name, price, image_url FROM product ORDERS LIMIT :limitCount OFFSET :pageNumber";
+        Map<String, Object> params = new HashMap<>();
+        params.put("limitCount", limitCount);
+        params.put("pageNumber", startProductIndex);
+        return jdbcTemplate.query(query, params, PRODUCT_ROW_MAPPER);
+    }
+
     public List<Product> findAll() {
         final String query = "SELECT id, name, price, image_url FROM product";
         return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);

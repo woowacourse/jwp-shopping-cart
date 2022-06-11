@@ -35,21 +35,6 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_목록_포함됨(치킨.getId(), 피자.getId(), response);
     }
 
-    @DisplayName("없는 페이지일 경우 조회할 수 없다.")
-    @Test
-    void getProductsOfPage_noPageError() {
-        // given
-        int page = 100;
-        int limit = 10;
-
-        // when
-        ExtractableResponse<Response> response = 상품_목록_조회_요청(page, limit);
-
-        // then
-        BAD_REQUEST(response);
-        예외메세지_검증(response, "올바르지 않은 포맷의 페이지 입니다.");
-    }
-
     @DisplayName("상품 개수가 1 이상이어야 한다.")
     @Test
     void getProductsOfPage_limitError() {

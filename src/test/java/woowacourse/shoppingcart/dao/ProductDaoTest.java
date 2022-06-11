@@ -19,7 +19,6 @@ import woowacourse.shoppingcart.repository.dao.ProductDao;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class ProductDaoTest {
-
     private final ProductDao productDao;
 
     public ProductDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -43,10 +42,10 @@ public class ProductDaoTest {
     @Test
     void getProducts() {
         // given
-        final int size = 101;
+        final int size = 10;
 
         // when
-        final List<Product> products = productDao.findAll();
+        final List<Product> products = productDao.findByPage(1,10);
 
         // then
         assertThat(products).size().isEqualTo(size);

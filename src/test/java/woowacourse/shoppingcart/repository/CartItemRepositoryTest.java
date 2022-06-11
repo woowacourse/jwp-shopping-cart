@@ -39,7 +39,8 @@ public class CartItemRepositoryTest {
         this.jdbcTemplate = jdbcTemplate;
         cartItemRepository = new CartItemRepository(new CartItemDao(jdbcTemplate),
                 new ProductDao(jdbcTemplate),
-                new CustomerDao(jdbcTemplate));
+                new CustomerDao(jdbcTemplate)
+        );
     }
 
     @BeforeEach
