@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.LoginCustomer;
@@ -11,20 +10,19 @@ import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.request.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
-import woowacourse.shoppingcart.service.CartService;
+import woowacourse.shoppingcart.service.CartItemService;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers/{customerId}/carts")
 public class CartItemController {
 
-    private final CartService cartService;
+    private final CartItemService cartItemService;
     private final AuthService authService;
 
-    public CartItemController(final CartService cartService, final AuthService authService) {
-        this.cartService = cartService;
+    public CartItemController(final CartItemService cartItemService, final AuthService authService) {
+        this.cartItemService = cartItemService;
         this.authService = authService;
     }
 
@@ -32,7 +30,7 @@ public class CartItemController {
     public ResponseEntity<List<CartItemResponseDto>> getCartItems(@PathVariable final Long customerId,
                                                                   @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(customerId));
+        return ResponseEntity.ok().body(cartItemService.findCartItemsByCustomerId(customerId));
     }
 
     @PostMapping
@@ -41,7 +39,7 @@ public class CartItemController {
                                             @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
-        cartService.addCart(addCartItemRequestDto, customerId);
+        cartItemService.addCart(addCartItemRequestDto, customerId);
         return ResponseEntity.noContent().build();
     }
 
@@ -51,7 +49,7 @@ public class CartItemController {
                                                @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
-        cartService.deleteCart(customerId, productId);
+        cartItemService.deleteCart(customerId, productId);
         return ResponseEntity.noContent().build();
     }
 
@@ -62,7 +60,7 @@ public class CartItemController {
                                                @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
-        cartService.updateCart(customerId, productId, updateCartItemCountItemRequest);
+        cartItemService.updateCart(customerId, productId, updateCartItemCountItemRequest);
         return ResponseEntity.ok().build();
     }
 }

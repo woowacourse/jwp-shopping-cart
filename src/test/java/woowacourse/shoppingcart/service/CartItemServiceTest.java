@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -28,10 +27,10 @@ import static woowacourse.fixture.Fixture.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = {"classpath:schema-reset.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class CartServiceTest {
+class CartItemServiceTest {
 
     @Autowired
-    private CartService cartService;
+    private CartItemService cartItemService;
     @Autowired
     private CartItemDao cartItemDao;
     @Autowired
@@ -54,10 +53,10 @@ class CartServiceTest {
 
         //given
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
-        cartService.addCart(addCartItemRequestDto, customerId);
+        cartItemService.addCart(addCartItemRequestDto, customerId);
 
         //when
-        final List<CartItemResponseDto> cartItems = cartService.findCartsByCustomerId(customerId);
+        final List<CartItemResponseDto> cartItems = cartItemService.findCartItemsByCustomerId(customerId);
 
         //then
         assertThat(cartItems.size()).isEqualTo(1);
@@ -69,10 +68,10 @@ class CartServiceTest {
     void addCart_DuplicateProductException() {
         //given
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
-        cartService.addCart(addCartItemRequestDto, customerId);
+        cartItemService.addCart(addCartItemRequestDto, customerId);
 
         //then
-        assertThatThrownBy(() -> cartService.addCart(addCartItemRequestDto, customerId))
+        assertThatThrownBy(() -> cartItemService.addCart(addCartItemRequestDto, customerId))
                 .isInstanceOf(DuplicateCartItemException.class)
                 .hasMessage("이미 담겨있는 상품입니다.");
     }
@@ -85,7 +84,7 @@ class CartServiceTest {
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 11);
 
         //then
-        assertThatThrownBy(() -> cartService.addCart(addCartItemRequestDto, customerId))
+        assertThatThrownBy(() -> cartItemService.addCart(addCartItemRequestDto, customerId))
                 .isInstanceOf(OverQuantityException.class)
                 .hasMessage("재고가 부족합니다.");
     }
@@ -99,7 +98,7 @@ class CartServiceTest {
         cartItemDao.addCartItem(customerId, productId, 1);
 
         //when
-        cartService.updateCart(customerId, productId, new UpdateCartItemCountItemRequest(2));
+        cartItemService.updateCart(customerId, productId, new UpdateCartItemCountItemRequest(2));
 
         //then
         final CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
@@ -111,7 +110,7 @@ class CartServiceTest {
     void updateCart_NotFoundProductException() {
         cartItemDao.addCartItem(customerId, productId, 1);
 
-        assertThatThrownBy(() -> cartService.updateCart(customerId, 0L, new UpdateCartItemCountItemRequest(2)))
+        assertThatThrownBy(() -> cartItemService.updateCart(customerId, 0L, new UpdateCartItemCountItemRequest(2)))
                 .isInstanceOf(NotFoundProductException.class)
                 .hasMessage("존재하지 않는 상품 ID입니다.");
     }
@@ -121,7 +120,7 @@ class CartServiceTest {
     void updateCart_() {
         cartItemDao.addCartItem(customerId, productId, 1);
 
-        assertThatThrownBy(() -> cartService.updateCart(customerId, productId, new UpdateCartItemCountItemRequest(11)))
+        assertThatThrownBy(() -> cartItemService.updateCart(customerId, productId, new UpdateCartItemCountItemRequest(11)))
                 .isInstanceOf(OverQuantityException.class)
                 .hasMessage("재고가 부족합니다.");
     }
@@ -134,7 +133,7 @@ class CartServiceTest {
         cartItemDao.addCartItem(customerId, productId, 1);
 
         //when
-        cartService.deleteCart(customerId, productId);
+        cartItemService.deleteCart(customerId, productId);
 
         //then
         final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);

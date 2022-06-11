@@ -16,7 +16,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.request.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
-import woowacourse.shoppingcart.service.CartService;
+import woowacourse.shoppingcart.service.CartItemService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +37,7 @@ class CartItemControllerTest extends ControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private CartService cartService;
+    private CartItemService cartItemService;
     @MockBean
     private AuthService authService;
     @Autowired
@@ -60,7 +60,7 @@ class CartItemControllerTest extends ControllerTest {
                 cartItemResponseDto1,
                 cartItemResponseDto2
         );
-        when(cartService.findCartsByCustomerId(any())).thenReturn(cartItems);
+        when(cartItemService.findCartItemsByCustomerId(any())).thenReturn(cartItems);
 
         //when
         final MockHttpServletResponse response = mockMvc.perform(get("/api/customers/1/carts")
@@ -87,7 +87,7 @@ class CartItemControllerTest extends ControllerTest {
 
         //given
         doNothing().when(authService).checkAuthorization(any(), any());
-        when(cartService.addCart(any(), any())).thenReturn(1L);
+        when(cartItemService.addCart(any(), any())).thenReturn(1L);
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
 
         //when
@@ -110,8 +110,8 @@ class CartItemControllerTest extends ControllerTest {
 
         //given
         doNothing().when(authService).checkAuthorization(any(), any());
-        doNothing().when(cartService).deleteCart(any(), any());
-        when(cartService.addCart(any(), any())).thenReturn(1L);
+        doNothing().when(cartItemService).deleteCart(any(), any());
+        when(cartItemService.addCart(any(), any())).thenReturn(1L);
 
         //when
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
@@ -141,7 +141,7 @@ class CartItemControllerTest extends ControllerTest {
     void updateCartItem() throws Exception {
         //given
         doNothing().when(authService).checkAuthorization(any(), any());
-        when(cartService.addCart(any(), any())).thenReturn(1L);
+        when(cartItemService.addCart(any(), any())).thenReturn(1L);
 
         //when
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
