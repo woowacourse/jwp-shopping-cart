@@ -51,6 +51,19 @@ public class RestHandler {
                 .extract();
     }
 
+    protected static <T> ExtractableResponse<Response> postRequest(final String url, final T requestBody,
+                                                                   final String accessToken) {
+        return RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .body(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post(url)
+                .then().log().all()
+                .extract();
+    }
+
     protected static <T> ExtractableResponse<Response> putRequest(final String url, final T requestBody) {
         return RestAssured.given().log().all()
                 .body(requestBody)
@@ -62,8 +75,21 @@ public class RestHandler {
                 .extract();
     }
 
+    protected static <T> ExtractableResponse<Response> putRequest(final String url, final T requestBody,
+                                                                  final String accessToken) {
+        return RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .body(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put(url)
+                .then().log().all()
+                .extract();
+    }
+
     protected static <T> ExtractableResponse<Response> patchRequest(final String url, final T requestBody,
-                                                                 final String accessToken) {
+                                                                    final String accessToken) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .body(requestBody)
@@ -85,7 +111,7 @@ public class RestHandler {
     }
 
     protected static <T> ExtractableResponse<Response> deleteRequest(final String url, final T requestBody,
-                                                                  final String accessToken) {
+                                                                     final String accessToken) {
         return RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .body(requestBody)
