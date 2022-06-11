@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.exception.InvalidCartQuantityException;
+import woowacourse.shoppingcart.exception.InvalidProductPriceException;
+
 import java.util.Objects;
 
 public class Cart {
@@ -13,6 +16,8 @@ public class Cart {
     private final int quantity;
 
     public Cart(Long id, Long productId, String name, int price, String imageUrl, int quantity) {
+        validatePrice(price);
+        validateQuantity(quantity);
         this.id = id;
         this.productId = productId;
         this.name = name;
@@ -20,6 +25,18 @@ public class Cart {
         this.imageUrl = imageUrl;
         this.quantity = quantity;
         this.totalPrice = calculateTotalPrice(quantity, price);
+    }
+
+    private void validatePrice(int price) {
+        if (price <= 0) {
+            throw new InvalidProductPriceException();
+        }
+    }
+
+    private void validateQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new InvalidCartQuantityException();
+        }
     }
 
     private int calculateTotalPrice(int quantity, int price) {
