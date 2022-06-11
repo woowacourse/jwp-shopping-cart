@@ -27,15 +27,28 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
     @DisplayName("회원이 이메일, 비밀번호, 기존에 등록된 닉네임을 입력해서 회원가입을 하면 상태코드 400 bad request와 에러 메시지를 반환한다.")
-    void failedSaveCustomer() {
+    void failedNicknameSaveCustomer() {
         // given
         ROOKIE.signUp();
 
         // when
-        ErrorResponse errorResponse = ROOKIE.signUpDuplicatedOfNickname();
+        ErrorResponse response = ROOKIE.signUpDuplicatedOfNickname();
 
         // then
-        assertThat(errorResponse.getMessage()).isEqualTo("[ERROR] 이미 존재하는 닉네임입니다.");
+        assertThat(response.getMessage()).isEqualTo("[ERROR] 이미 존재하는 닉네임입니다.");
+    }
+
+    @Test
+    @DisplayName("회원이 비밀번호, 닉네임을 기존에 등록된 이메일을 입력해서 회원가입을 하면 상태코드 400 bad request와 에러 메시지를 반환한다.")
+    void failedEmailSaveCustomer() {
+        // given
+        ROOKIE.signUp();
+
+        // when
+        ErrorResponse response = ROOKIE.signUpDuplicatedOfEmail();
+
+        // then
+        assertThat(response.getMessage()).isEqualTo("[ERROR] 이미 존재하는 이메일입니다.");
     }
 
     @Test
