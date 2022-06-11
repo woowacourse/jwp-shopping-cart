@@ -123,6 +123,7 @@ class CustomerServiceTest {
     @DisplayName("id와 변경할 회원 정보로 회원 정보를 수정한다.")
     void updateCustomer() {
         // given
+        given(customerDao.findById(any(Long.class))).willReturn(Optional.of(customer));
         given(customerDao.update(any(Long.class),
                 any(String.class),
                 any(String.class),
@@ -130,7 +131,7 @@ class CustomerServiceTest {
 
         // when
         final int affectedRows = customerService.update(1L,
-                new UpdateCustomerRequest("hamcheeseburger", "코린네", new PhoneNumberFormat("010", "1234", "1234")));
+                new UpdateCustomerRequest("hamcheese", "코린네", new PhoneNumberFormat("010", "1234", "1234")));
 
         // then
         assertThat(affectedRows).isEqualTo(1);

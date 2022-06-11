@@ -44,7 +44,7 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    public void validateToken(String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
@@ -53,6 +53,7 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtTokenException(e.getMessage());
         }
+        return true;
     }
 }
 
