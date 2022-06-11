@@ -79,6 +79,7 @@ class AuthServiceTest {
                 new EncodedPassword("Password123!"),
                 new Address("address"),
                 new PhoneNumber("01023456789"));
+
         given(customerDao.findByAccount("leo0842")).willReturn(Optional.of(customer));
 
         // when

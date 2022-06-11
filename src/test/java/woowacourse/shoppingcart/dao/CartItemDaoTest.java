@@ -23,21 +23,31 @@ public class CartItemDaoTest {
 
     public CartItemDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         cartItemDao = new CartItemDao(namedParameterJdbcTemplate);
-        ProductDao productDao = new ProductDao(namedParameterJdbcTemplate);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {
         // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
+        final long customerId = 1L;
+        final long productId = 1L;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.save(customerId, productId);
 
         // then
         assertThat(cartId).isEqualTo(3L);
+    }
+
+    @DisplayName("회원 아이디와 상품 아이디들로 카트 아이템 아이디들을 가져온다.")
+    @Test
+    void findIdsByCustomerIdAndProductIds() {
+        final long customerId = 1L;
+        final List<Long> productIds = List.of(1L, 2L);
+
+        final List<Long> cartIds = cartItemDao.findIdsByCustomerIdAndProductIds(customerId, productIds);
+
+        assertThat(cartIds).containsExactly(1L, 2L);
     }
 
     @DisplayName("회원 아이디를 넣으면, 해당 회원이 구매한 상품의 아이디 목록을 가져온다.")

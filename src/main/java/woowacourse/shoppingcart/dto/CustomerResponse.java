@@ -20,11 +20,8 @@ public class CustomerResponse {
 
     public static CustomerResponse of(final Customer customer) {
         final PhoneNumberFormat phoneNumberFormat = PhoneNumberFormat.of(customer.getPhoneNumber().getValue());
-        return new CustomerResponse(customer.getId(),
-                customer.getAccount().getValue(),
-                customer.getNickname().getValue(),
-                customer.getAddress().getValue(),
-                phoneNumberFormat);
+        return new CustomerResponse(customer.getId(), customer.getAccount().getValue(),
+                customer.getNickname().getValue(), customer.getAddress().getValue(), phoneNumberFormat);
     }
 
     public long getId() {

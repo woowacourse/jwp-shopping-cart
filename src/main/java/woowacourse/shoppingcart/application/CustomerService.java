@@ -28,7 +28,6 @@ public class CustomerService {
     public CustomerResponse create(final SignupRequest signupRequest) {
         final Customer customer = toCustomer(signupRequest);
         validateAccountDuplicated(customer);
-
         return CustomerResponse.of(customerDao.save(customer));
     }
 
@@ -40,38 +39,30 @@ public class CustomerService {
 
     private Customer toCustomer(final SignupRequest signupRequest) {
         final PlainPassword plainPassword = new PlainPassword(signupRequest.getPassword());
-        return new Customer(new Account(signupRequest.getAccount()),
-                new Nickname(signupRequest.getNickname()),
-                new EncodedPassword(plainPassword.encode(passwordEncoder)),
-                new Address(signupRequest.getAddress()),
-                new PhoneNumber(signupRequest.getPhoneNumber().appendNumbers()));
+        return new Customer(new Account(signupRequest.getAccount()), new Nickname(signupRequest.getNickname()), new EncodedPassword(plainPassword.encode(passwordEncoder)), new Address(signupRequest.getAddress()), new PhoneNumber(signupRequest.getPhoneNumber().appendNumbers()));
     }
 
     @Transactional(readOnly = true)
     public CustomerResponse getById(final long customerId) {
-        final Customer customer = customerDao.findById(customerId)
-                .orElseThrow(CustomerNotFoundException::new);
+        final Customer customer = customerDao.findById(customerId).orElseThrow(CustomerNotFoundException::new);
 
         return CustomerResponse.of(customer);
     }
 
     public int update(final long customerId, final UpdateCustomerRequest updateCustomerRequest) {
-        return customerDao.update(
-                customerId,
-                updateCustomerRequest.getNickname(),
-                updateCustomerRequest.getAddress(),
-                updateCustomerRequest.getPhoneNumber().appendNumbers());
+        return customerDao.update(customerId, updateCustomerRequest.getNickname(), updateCustomerRequest.getAddress(), updateCustomerRequest.getPhoneNumber().appendNumbers());
     }
 
     public int delete(final long id, final DeleteCustomerRequest deleteCustomerRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
+
         validatePasswordMatch(deleteCustomerRequest, customer);
 
         return customerDao.deleteById(id);
     }
 
     private void validatePasswordMatch(final DeleteCustomerRequest deleteCustomerRequest, final Customer customer) {
-        if (customer.getPassword().isNotMatch(passwordEncoder, deleteCustomerRequest.getPassword())) {
+        if (customer.checkPasswordNotMatch(passwordEncoder, deleteCustomerRequest.getPassword())) {
             throw new WrongPasswordException();
         }
     }

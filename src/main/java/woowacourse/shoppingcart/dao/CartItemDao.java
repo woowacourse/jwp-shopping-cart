@@ -40,6 +40,16 @@ public class CartItemDao {
         return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), cartItemIdMapper);
     }
 
+    public List<Long> findIdsByCustomerIdAndProductIds(final long customerId, List<Long> productIds) {
+        final String sql = "SELECT id FROM cart_item WHERE customer_id = :customerId AND product_id IN (:productIds)";
+
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("customerId", customerId);
+        parameters.put("productIds", productIds);
+
+        return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), cartItemIdMapper);
+    }
+
     public Long findIdByCustomerIdAndProductId(long customerId, long productId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = :customerId AND product_id = :productId";
 
@@ -52,7 +62,7 @@ public class CartItemDao {
         return result.orElseThrow(InvalidCartItemException::new);
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
+    public Long save(final Long customerId, final Long productId) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id");

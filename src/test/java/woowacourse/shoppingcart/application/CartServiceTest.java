@@ -21,6 +21,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 class CartServiceTest {
@@ -68,14 +69,14 @@ class CartServiceTest {
         // given
         given(productDao.findById(1L))
                 .willReturn(Optional.of(new Product(1L, new ProductName("상품명"), 1000, new ImageUrl("imageUrl"))));
-        given(cartItemDao.addCartItem(1L, 1L))
+        given(cartItemDao.save(any(), any()))
                 .willReturn(1L);
 
         // when
-        final Long cartId = cartService.addCart(1L, 1L);
+        final Long cartItemId = cartService.addCart(1L, 1L);
 
         // then
-        assertThat(cartId).isEqualTo(1L);
+        assertThat(cartItemId).isEqualTo(1L);
     }
 
     @DisplayName("카트에 등록하려는 상품이 존재하지 않으면 예외를 발생한다.")

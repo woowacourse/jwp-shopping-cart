@@ -3,13 +3,16 @@ package woowacourse.shoppingcart.dao;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.ImageUrl;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ProductName;
+import woowacourse.shoppingcart.entity.OrderDetailEntity;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +36,16 @@ public class OrderDetailDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Long addOrderDetail(final long orderId, final long productId, final int quantity) {
+    public int saveAll(final List<OrderDetailEntity> orderDetails) {
+        final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) " +
+                "VALUES (:orderId, :productId, :quantity)";
+
+        final int[] effectedRows = namedParameterJdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(orderDetails));
+        return Arrays.stream(effectedRows)
+                .sum();
+    }
+
+    public Long save(final long orderId, final long productId, final int quantity) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName("orders_detail")
                 .usingGeneratedKeyColumns("id");

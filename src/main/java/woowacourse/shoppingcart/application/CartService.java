@@ -28,8 +28,9 @@ public class CartService {
     }
 
     public Long addCart(final long productId, final long customerId) {
-        productDao.findById(productId).orElseThrow(InvalidProductException::new);
-        return cartItemDao.addCartItem(customerId, productId);
+        productDao.findById(productId)
+                .orElseThrow(InvalidProductException::new);
+        return cartItemDao.save(customerId, productId);
     }
 
     @Transactional(readOnly = true)

@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.*;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,6 @@ public class CustomerDao {
     public CustomerDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
-
 
     public Customer save(final Customer customer) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
@@ -58,12 +56,6 @@ public class CustomerDao {
 
         final List<Customer> query = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), customerRowMapper);
         return Optional.ofNullable(DataAccessUtils.singleResult(query));
-    }
-
-    public Long getIdByAccount(final String customerName) {
-        final Customer byAccount = findByAccount(customerName).orElseThrow(CustomerNotFoundException::new);
-
-        return byAccount.getId();
     }
 
     public Optional<Customer> findById(final long customerId) {

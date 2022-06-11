@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dto.OrderDetailRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.dto.OrdersResponse;
+import woowacourse.shoppingcart.entity.OrderDetailEntity;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 import java.util.List;
@@ -33,23 +34,27 @@ public class OrderService {
     public long addOrder(final OrderRequest ordersRequest, final long customerId) {
         final long ordersId = orderDao.addOrders(customerId);
 
-        for (final OrderDetailRequest orderDetail : ordersRequest.getOrder()) {
-            saveOrderDetail(ordersId, orderDetail);
-            deleteCartItem(customerId, orderDetail);
-        }
+        orderDetailDao.saveAll(convertOrderDetailEntities(ordersRequest, ordersId));
+
+        final List<Long> productIds = extractProductIds(ordersRequest);
+        final List<Long> cartIds = cartItemDao.findIdsByCustomerIdAndProductIds(customerId, productIds);
+        cartItemDao.deleteAll(cartIds);
 
         return ordersId;
     }
 
-    private void saveOrderDetail(final long orderId, final OrderDetailRequest orderDetail) {
-        final long productId = orderDetail.getId();
-        final int quantity = orderDetail.getQuantity();
-        orderDetailDao.addOrderDetail(orderId, productId, quantity);
+    private List<OrderDetailEntity> convertOrderDetailEntities(final OrderRequest ordersRequest, final long ordersId) {
+        return ordersRequest.getOrder()
+                .stream()
+                .map(it -> new OrderDetailEntity(ordersId, it.getId(), it.getQuantity()))
+                .collect(Collectors.toList());
     }
 
-    private void deleteCartItem(final long customerId, final OrderDetailRequest orderDetail) {
-        final long cartId = cartItemDao.findIdByCustomerIdAndProductId(customerId, orderDetail.getId());
-        cartItemDao.deleteById(cartId);
+    private List<Long> extractProductIds(final OrderRequest ordersRequest) {
+        return ordersRequest.getOrder()
+                .stream()
+                .map(OrderDetailRequest::getId)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

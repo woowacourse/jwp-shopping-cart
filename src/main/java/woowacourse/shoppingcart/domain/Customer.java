@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import woowacourse.shoppingcart.exception.LoginFailException;
 
 public class Customer {
 
@@ -48,7 +49,7 @@ public class Customer {
         return phoneNumber;
     }
 
-    public boolean isPasswordNotMatch(PasswordEncoder passwordEncoder, String password) {
+    public boolean checkPasswordNotMatch(PasswordEncoder passwordEncoder, String password) {
         return this.password.isNotMatch(passwordEncoder, password);
     }
 }

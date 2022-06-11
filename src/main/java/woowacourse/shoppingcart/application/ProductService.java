@@ -21,8 +21,11 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public Product addProduct(final ProductRequest product) {
-        return productDao.save(product.toEntity());
+    public long addProduct(final ProductRequest productRequest) {
+        final Product product = productRequest.toEntity();
+        final Product savedProduct = productDao.save(product);
+
+        return savedProduct.getId();
     }
 
     @Transactional(readOnly = true)

@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.domain.ImageUrl;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ProductName;
+import woowacourse.shoppingcart.entity.OrderDetailEntity;
 
 import java.util.List;
 
@@ -52,10 +53,21 @@ class OrderDetailDaoTest {
         int quantity = 5;
 
         //when
-        Long orderDetailId = orderDetailDao.addOrderDetail(ordersId, productId, quantity);
+        Long orderDetailId = orderDetailDao.save(ordersId, productId, quantity);
 
         //then
         assertThat(orderDetailId).isEqualTo(1L);
+    }
+
+    @DisplayName("여러 개의 상품을 주문 테이블에 batch insert 한다.")
+    @Test
+    void addAllOrdersDetails() {
+        long otherProductId = productDao.save(new Product(new ProductName("name"), 1000, new ImageUrl("imageUrl"))).getId();
+
+        final List<OrderDetailEntity> orderDetails = List.of(new OrderDetailEntity(ordersId, productId, 2), new OrderDetailEntity(ordersId, otherProductId, 3));
+        final int affectedRows = orderDetailDao.saveAll(orderDetails);
+
+        assertThat(affectedRows).isEqualTo(2);
     }
 
     @DisplayName("OrderId로 OrderDetails 조회하는 기능")
@@ -64,7 +76,7 @@ class OrderDetailDaoTest {
         //given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
-            orderDetailDao.addOrderDetail(ordersId, productId, 3);
+            orderDetailDao.save(ordersId, productId, 3);
         }
 
         //when
