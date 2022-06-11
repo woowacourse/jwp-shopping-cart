@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.dto.request.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.request.PasswordRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
 
 @RestController
 @RequestMapping

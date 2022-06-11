@@ -9,8 +9,13 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.request.CartRequest;
+import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.repository.CartItemRepository;
+import woowacourse.shoppingcart.repository.CustomerRepository;
 import woowacourse.shoppingcart.repository.ProductRepository;
 
 @Service
