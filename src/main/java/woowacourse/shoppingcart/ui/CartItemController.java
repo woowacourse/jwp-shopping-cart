@@ -27,7 +27,7 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<CartItemsResponse> getCartItems(@AuthenticationPrincipal String userNameByToken) {
+    public ResponseEntity<CartItemsResponse> findCartItems(@AuthenticationPrincipal String userNameByToken) {
         return ResponseEntity.ok().body(cartService.getCart(userNameByToken));
     }
 

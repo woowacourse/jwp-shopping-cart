@@ -37,7 +37,7 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> getMe(@AuthenticationPrincipal String userNameByToken) {
+    public ResponseEntity<CustomerResponse> findMe(@AuthenticationPrincipal String userNameByToken) {
         return ResponseEntity.ok().body(customerService.findMe(userNameByToken));
     }
 

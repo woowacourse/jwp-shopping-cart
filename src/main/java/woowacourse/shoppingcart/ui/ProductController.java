@@ -22,13 +22,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Valid @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductRequest productRequest) {
         Product product = productService.addProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + product.getId())).build();
     }
 
     @GetMapping
-    public ResponseEntity<ProductsResponse> getProducts(@RequestParam(required = false) Long size, @RequestParam(required = false) Long page) {
+    public ResponseEntity<ProductsResponse> findProducts(@RequestParam(required = false) Long size, @RequestParam(required = false) Long page) {
         if (size == null && page == null) {
             return ResponseEntity.ok(productService.findAllProducts());
         }
@@ -36,12 +36,12 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> product(@PathVariable final Long productId) {
+    public ResponseEntity<Product> findProduct(@PathVariable final Long productId) {
         return ResponseEntity.ok(productService.findProductById(productId));
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long productId) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId) {
         productService.deleteProductById(productId);
         return ResponseEntity.noContent().build();
     }
