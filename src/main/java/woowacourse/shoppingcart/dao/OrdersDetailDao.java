@@ -6,8 +6,11 @@ import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.order.Order;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.domain.order.Quantity;
 import woowacourse.shoppingcart.domain.product.ImageUrl;
@@ -57,22 +60,10 @@ public class OrdersDetailDao {
         return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), orderDetailRowMapper);
     }
 
-    public int addAllOrdersDetails(Long ordersId, List<Long> productIds, List<Integer> quantities) {
+    public int addAllOrdersDetails(List<Order> orders) {
         String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) " +
-                "values (:ordersId, :productId, :quantity)";
-        Map<String, Object>[] batchValues = toBatchValues(ordersId, productIds, quantities);
-        return namedParameterJdbcTemplate.batchUpdate(sql, batchValues).length;
-    }
-
-    private Map<String, Object>[] toBatchValues(Long ordersId, List<Long> productIds, List<Integer> quantities) {
-        Map<String, Object>[] batchValues = new Map[productIds.size()];
-        for (int i = 0; i < batchValues.length; i++) {
-            Map<String, Object> parameters = new MapSqlParameterSource("ordersId", ordersId)
-                    .addValue("productId", productIds.get(i))
-                    .addValue("quantity", quantities.get(i))
-                    .getValues();
-            batchValues[i] = parameters;
-        }
-        return batchValues;
+                "values (:orderId, :productId, :quantity)";
+        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(orders.toArray());
+        return namedParameterJdbcTemplate.batchUpdate(sql, batch).length;
     }
 }

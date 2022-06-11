@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.MockitoAnnotations.openMocks;
 
@@ -12,6 +13,7 @@ import org.mockito.Mock;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
+import woowacourse.shoppingcart.domain.order.Order;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.domain.order.Quantity;
 import woowacourse.shoppingcart.domain.product.ImageUrl;
@@ -52,8 +54,7 @@ class OrderServiceTest {
 
         //when
         given(orderDao.addOrders(customerId)).willReturn(ordersId);
-        given(ordersDetailDao.addAllOrdersDetails(ordersId, List.of(productId1, productId2), List.of(3, 5))).willReturn(
-                2);
+        given(ordersDetailDao.addAllOrdersDetails(any())).willReturn(2);
         Long createdOrdersId = orderService.addOrder(customerId, new OrdersRequest(orders));
 
         //then

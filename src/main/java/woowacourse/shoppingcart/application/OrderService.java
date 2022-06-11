@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.domain.order.Orders;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.dto.OrdersRequest;
@@ -31,16 +32,10 @@ public class OrderService {
 
     public Long addOrder(final long customerId, final OrdersRequest orderDetailRequests) {
         Long createdOrdersId = orderDao.addOrders(customerId);
-        List<Long> productIds = orderDetailRequests.getIds();
-        List<Integer> quantities = orderDetailRequests.getQuantities();
-        ordersDetailDao.addAllOrdersDetails(createdOrdersId, productIds, quantities);
-        cartItemDao.deleteAllCartItems(customerId, productIds);
+        Orders orders = new Orders(customerId, createdOrdersId, orderDetailRequests);
+        ordersDetailDao.addAllOrdersDetails(orders.getOrders());
+        cartItemDao.deleteAllCartItems(customerId, orders.getProductIds());
         return createdOrdersId;
-    }
-
-    public OrderResponse findOrderById(final long customerId, final Long orderId) {
-        validateOrderIdByCustomerId(customerId, orderId);
-        return toOrderResponse(orderId);
     }
 
     public OrdersResponse findOrdersByCustomerId(final long customerId) {
@@ -48,6 +43,11 @@ public class OrderService {
         return new OrdersResponse(orderIds.stream()
                 .map(this::toOrderResponse)
                 .collect(Collectors.toList()));
+    }
+
+    public OrderResponse findOrderById(final long customerId, final Long orderId) {
+        validateOrderIdByCustomerId(customerId, orderId);
+        return toOrderResponse(orderId);
     }
 
     private void validateOrderIdByCustomerId(final long customerId, final Long orderId) {

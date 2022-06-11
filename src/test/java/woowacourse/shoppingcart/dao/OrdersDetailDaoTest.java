@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.order.Order;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
@@ -96,12 +97,11 @@ class OrdersDetailDaoTest {
         long productId2 = namedParameterJdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", new HashMap<>(),
                 Long.class);
 
-        List<OrderRequest> orderRequests = new ArrayList<>();
-        orderRequests.add(new OrderRequest(productId, 3));
-        orderRequests.add(new OrderRequest(productId2, 5));
         //when
 
-        int affectedQuery = ordersDetailDao.addAllOrdersDetails(ordersId, List.of(1L, 2L), List.of(3, 5));
+        Order bananaOrder = new Order(ordersId, productId, 3);
+        Order appleOrder = new Order(ordersId, productId2, 5);
+        int affectedQuery = ordersDetailDao.addAllOrdersDetails(List.of(bananaOrder, appleOrder));
         //then
         assertThat(affectedQuery).isEqualTo(2);
     }
