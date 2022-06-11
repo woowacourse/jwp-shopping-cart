@@ -14,6 +14,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @SpringBootTest
 @Transactional
@@ -112,5 +113,23 @@ class CartServiceTest {
 
         // then
         assertThat(product.getStock()).isEqualTo(15);
+    }
+
+    @DisplayName("아이템 삭제시에 해당 customer의 cartItem이 맞지 않으면 예외를 반환해야 한다.")
+    @Test
+    void validateCustomerItem() {
+        // given
+        final Long productId = productDao.save(new Product("초콜렛", 1_000, 20, "www.test.com"));
+        String username1 = "dongho108";
+        String username2 = "dongho123";
+
+        // when
+        customerDao.save(Customer.of(username1, "password", "01022728572", "서울시 강남구"));
+        customerDao.save(Customer.of(username2, "password", "01022728572", "서울시 강남구"));
+        CartItemResponse cartItemResponse = cartService.addCart(productId, 10, username1);
+
+        // then
+        assertThatThrownBy(() -> cartService.deleteCart(username2, cartItemResponse.getId()))
+            .isInstanceOf(NotInCustomerCartItemException.class);
     }
 }
