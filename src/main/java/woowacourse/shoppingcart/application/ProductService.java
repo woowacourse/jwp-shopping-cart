@@ -43,22 +43,21 @@ public class ProductService {
                 .orElseThrow(InvalidCustomerException::new);
 
         List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customer.getId());
+        return markProducts(products, customer, productIds);
+    }
+
+    private List<ProductResponse> markProducts(final List<Product> products, final Customer customer, final List<Long> productIds) {
         List<ProductResponse> productResponses = new ArrayList<>();
         for (final Product product : products) {
-            addProduct(productIds, productResponses, product, customer);
+            ProductResponse productResponse = new ProductResponse(product);
+            checkSameProduct(productIds, product, productResponse, customer.getId());
+            productResponses.add(productResponse);
         }
         return productResponses;
     }
 
-    private void addProduct(final List<Long> productIds, final List<ProductResponse> productResponses,
-                            final Product product, final Customer customer) {
-        ProductResponse productResponse = new ProductResponse(product);
-        addCartItem(productIds, product, productResponse, customer.getId());
-        productResponses.add(productResponse);
-    }
-
-    private void addCartItem(final List<Long> productIds, final Product product,
-                             final ProductResponse productResponse, final Long customerId) {
+    private void checkSameProduct(final List<Long> productIds, final Product product,
+                                  final ProductResponse productResponse, final Long customerId) {
         if (productIds.contains(product.getId())) {
             Cart cart = cartItemDao.findIdAndQuantityByProductId(product.getId(), customerId)
                     .orElseThrow(InvalidCartItemException::new);
