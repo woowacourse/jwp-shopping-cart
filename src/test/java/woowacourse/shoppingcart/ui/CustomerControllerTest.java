@@ -117,7 +117,7 @@ class CustomerControllerTest {
 
         assertAll(
                 () -> assertThat(statusCode).isEqualTo(HttpStatus.OK),
-                () -> assertThat(actual.getEmail()).isEqualTo(EMAIL),
+                () -> assertThat(actual.getEmail()).isEqualTo(EMAIL.getValue()),
                 () -> assertThat(actual.getNickname()).isEqualTo("파랑")
         );
     }
