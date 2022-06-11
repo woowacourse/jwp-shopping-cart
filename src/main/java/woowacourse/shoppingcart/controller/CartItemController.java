@@ -41,12 +41,7 @@ public class CartItemController {
                                             @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
-        final Long cartId = cartService.addCart(addCartItemRequestDto, customerId);
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
-                .toUri();
+        cartService.addCart(addCartItemRequestDto, customerId);
         return ResponseEntity.noContent().build();
     }
 
