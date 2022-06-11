@@ -28,10 +28,11 @@ public class CartServiceTest {
     private static final long CUSTOMER_ID = 1L;
 
     private final CartItemDao cartItemDao;
+    private final ProductDao productDao;
     private final CartService cartService;
 
     public CartServiceTest(JdbcTemplate jdbcTemplate) {
-        ProductDao productDao = new ProductDao(jdbcTemplate);
+        productDao = new ProductDao(jdbcTemplate);
         cartItemDao = new CartItemDao(jdbcTemplate);
         cartService = new CartService(cartItemDao, productDao);
     }
@@ -79,10 +80,10 @@ public class CartServiceTest {
     @DisplayName("장바구니에 추가한 제품 목록을 조회한다.")
     void findCartItems() {
         //when
-        cartItemDao.addCartItem(CUSTOMER_ID, 1L, 1);
-        cartItemDao.addCartItem(CUSTOMER_ID, 2L, 1);
+        cartItemDao.addCartItem(CUSTOMER_ID, getCartItem(1L, 1));
+        cartItemDao.addCartItem(CUSTOMER_ID, getCartItem(2L, 1));
 
-        List<CartItem> cartItems = cartService.findCartItemsByCustomerId(CUSTOMER_ID);
+        List<CartItem> cartItems = cartService.findCartByCustomerId(CUSTOMER_ID).getValue();
 
         //then
         assertAll(
@@ -91,11 +92,16 @@ public class CartServiceTest {
         );
     }
 
+    private CartItem getCartItem(long productId, int count) {
+        return new CartItem(count, productDao.findProductById(productId));
+    }
+
     @Test
     @DisplayName("장바구니에 추가한 제품의 구매 수량을 수정한다.")
     void updateCount() {
         //when
-        Long cartItemId = cartItemDao.addCartItem(CUSTOMER_ID, 1L, 1);
+        Long cartItemId = cartItemDao.addCartItem(CUSTOMER_ID, getCartItem(1L, 1));
+
         cartService.updateCount(CUSTOMER_ID, 1L, 2);
 
         //then
@@ -106,7 +112,7 @@ public class CartServiceTest {
     @DisplayName("제품 재고보다 많은 수량을 수정 요청하면 예외를 던진다.")
     void updateCount_OverStock() {
         //given
-        cartItemDao.addCartItem(CUSTOMER_ID, 1L, 1);
+        cartItemDao.addCartItem(CUSTOMER_ID, getCartItem(1L, 1));
 
         //when, then
         assertThatThrownBy(() -> cartService.updateCount(1L, CUSTOMER_ID, 11))
@@ -118,7 +124,7 @@ public class CartServiceTest {
     @DisplayName("존재하지 않는 제품을 장바구니에 수정 요청하면 예외를 던진다.")
     void updateCount_productNotFound() {
         //given
-        cartItemDao.addCartItem(CUSTOMER_ID, 1L, 1);
+        cartItemDao.addCartItem(CUSTOMER_ID, getCartItem(1L, 1));
 
         //when, then
         assertThatThrownBy(() -> cartService.updateCount(CUSTOMER_ID, 99L, 5))
@@ -129,7 +135,7 @@ public class CartServiceTest {
     @DisplayName("장바구니에 추가한 제품을 삭제한다.")
     void deleteCartItem() {
         //when
-        cartItemDao.addCartItem(CUSTOMER_ID, 1L, 1);
+        cartItemDao.addCartItem(CUSTOMER_ID, getCartItem(1L, 1));
         cartService.deleteCartItem(CUSTOMER_ID, 1L);
 
         //then

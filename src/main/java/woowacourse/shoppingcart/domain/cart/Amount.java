@@ -1,10 +1,10 @@
 package woowacourse.shoppingcart.domain.cart;
 
-public class Amount {
+class Amount {
 
     private final int value;
 
-    public Amount(int value) {
+    Amount(int value) {
         validate(value);
         this.value = value;
     }
@@ -15,7 +15,7 @@ public class Amount {
         }
     }
 
-    public int getValue() {
+    int getValue() {
         return value;
     }
 }

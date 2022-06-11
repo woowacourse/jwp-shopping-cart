@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto.cartitem;
+package woowacourse.shoppingcart.dto.cart;
 
 import woowacourse.shoppingcart.domain.cart.CartItem;
 
@@ -27,6 +27,10 @@ public class CartItemResponse {
     public CartItemResponse(CartItem cart) {
         this(cart.getProductId(), cart.getImageUrl(), cart.getName(), cart.getPrice(), cart.getQuantity(),
             cart.getCount());
+    }
+
+    public static CartItemResponse from(CartItem cartItem) {
+        return new CartItemResponse(cartItem);
     }
 
     public Long getProductId() {

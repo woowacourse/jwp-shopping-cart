@@ -2,11 +2,11 @@ package woowacourse.shoppingcart.domain.cart;
 
 import java.util.Objects;
 
-public class Name {
+class Name {
 
     private final String value;
 
-    public Name(String value) {
+    Name(String value) {
         validate(value);
         this.value = value;
     }
@@ -29,7 +29,7 @@ public class Name {
         }
     }
 
-    public String getValue() {
+    String getValue() {
         return value;
     }
 }

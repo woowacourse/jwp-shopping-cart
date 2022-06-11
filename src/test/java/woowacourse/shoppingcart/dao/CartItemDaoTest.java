@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
+import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.cart.Product;
 
 @JdbcTest
@@ -50,7 +51,8 @@ public class CartItemDaoTest {
         final Long productId = 1L;
         final int count = 3;
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId, count);
+        CartItem cartItem = new CartItem(count, productDao.findProductById(productId));
+        final Long cartId = cartItemDao.addCartItem(customerId, cartItem);
 
         // then
         assertThat(cartId).isEqualTo(3L);

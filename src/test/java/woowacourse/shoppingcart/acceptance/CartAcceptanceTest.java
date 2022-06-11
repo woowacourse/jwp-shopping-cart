@@ -17,9 +17,9 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginTokenResponse;
-import woowacourse.shoppingcart.dto.cartitem.CartItemRequest;
-import woowacourse.shoppingcart.dto.cartitem.CartItemResponse;
-import woowacourse.shoppingcart.dto.cartitem.CartItemUpdateRequest;
+import woowacourse.shoppingcart.dto.cart.CartItemRequest;
+import woowacourse.shoppingcart.dto.cart.CartItemResponse;
+import woowacourse.shoppingcart.dto.cart.CartItemUpdateRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -87,8 +87,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void updateCount() {
         //given
         String token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId1, 5);
 
-        //then
+        //when
         ExtractableResponse<Response> response = 장바구니_아이템_구매_수_업데이트(token, CUSTOMER_ID, productId1, 7);
 
         //then

@@ -56,7 +56,7 @@ public class CustomerService {
             .orElseThrow(InvalidCustomerException::new);
     }
 
-    public void update(Long id, CustomerUpdateRequest request) {
+    public void update(long id, CustomerUpdateRequest request) {
         if (isSameOriginUsername(id, request)) {
             return;
         }
@@ -65,7 +65,7 @@ public class CustomerService {
         customerDao.update(id, request.getUsername());
     }
 
-    private boolean isSameOriginUsername(Long id, CustomerUpdateRequest request) {
+    private boolean isSameOriginUsername(long id, CustomerUpdateRequest request) {
         Customer foundCustomer = findById(id);
         return foundCustomer.isSameUsername(request.getUsername());
     }

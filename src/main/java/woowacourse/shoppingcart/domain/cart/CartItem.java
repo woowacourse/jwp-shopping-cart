@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain.cart;
 
+import java.util.Objects;
+
 import woowacourse.shoppingcart.exception.InvalidCartItemPropertyException;
 
 public class CartItem {
@@ -20,6 +22,10 @@ public class CartItem {
             count);
     }
 
+    public CartItem(int count, Product product) {
+        this(null, count, product);
+    }
+
     public CartItem(Long id, Long productId, String name, int price, String imageUrl,
         int quantity, int count) {
         this.id = id;
@@ -33,6 +39,10 @@ public class CartItem {
         } catch (IllegalArgumentException e) {
             throw new InvalidCartItemPropertyException(e.getMessage());
         }
+    }
+
+    boolean isProductOf(Product product) {
+        return product.isSameId(productId);
     }
 
     public Long getId() {
@@ -61,5 +71,23 @@ public class CartItem {
 
     public int getCount() {
         return count.getValue();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        CartItem cartItem = (CartItem)o;
+        return Objects.equals(id, cartItem.id) && Objects.equals(productId, cartItem.productId)
+            && Objects.equals(name, cartItem.name) && Objects.equals(price, cartItem.price)
+            && Objects.equals(imageUrl, cartItem.imageUrl) && Objects.equals(quantity,
+            cartItem.quantity) && Objects.equals(count, cartItem.count);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, productId, name, price, imageUrl, quantity, count);
     }
 }

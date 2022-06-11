@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -20,19 +21,19 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Long> findProductIdsByCustomerId(Long customerId) {
+    public List<Long> findProductIdsByCustomerId(long customerId) {
         final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
-    public List<Long> findIdsByCustomerId(Long customerId) {
+    public List<Long> findIdsByCustomerId(long customerId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public Integer findCountById(Long cartId) {
+    public Integer findCountById(long cartId) {
         try {
             final String sql = "SELECT count FROM cart_item WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("count"), cartId);
@@ -41,7 +42,7 @@ public class CartItemDao {
         }
     }
 
-    public Long findProductIdById(Long cartId) {
+    public Long findProductIdById(long cartId) {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
@@ -50,21 +51,21 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(Long customerId, Long productId, int count) {
+    public Long addCartItem(long customerId, CartItem cartItem) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[] {"id"});
             preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            preparedStatement.setInt(3, count);
+            preparedStatement.setLong(2, cartItem.getProductId());
+            preparedStatement.setInt(3, cartItem.getCount());
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
-    public void deleteCartItem(Long id) {
+    public void deleteCartItem(long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
         final int rowCount = jdbcTemplate.update(sql, id);
@@ -82,9 +83,9 @@ public class CartItemDao {
         }
     }
 
-    public void updateCount(long customerId, long productId, int count) {
+    public void updateCount(long customerId, CartItem cartItem) {
         final String sql = "UPDATE cart_item SET count = ? WHERE customer_id = ? AND product_id = ?";
 
-        jdbcTemplate.update(sql, count, customerId, productId);
+        jdbcTemplate.update(sql, cartItem.getCount(), customerId, cartItem.getProductId());
     }
 }

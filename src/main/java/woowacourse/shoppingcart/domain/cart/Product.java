@@ -10,7 +10,7 @@ public class Product {
     private String imageUrl;
     private Amount quantity;
 
-    public Product() {
+    private Product() {
     }
 
     public Product(Long id, String name, int price, String imageUrl, int quantity) {
@@ -27,6 +27,10 @@ public class Product {
 
     public Product(String name, int price, String imageUrl, int quantity) {
         this(null, name, price, imageUrl, quantity);
+    }
+
+    boolean isSameId(Long productId) {
+        return id.equals(productId);
     }
 
     public String getName() {

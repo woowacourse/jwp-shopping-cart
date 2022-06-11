@@ -1,12 +1,10 @@
 package woowacourse.shoppingcart.ui;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.cart.CartItem;
-import woowacourse.shoppingcart.dto.Request;
-import woowacourse.shoppingcart.dto.cartitem.CartItemRequest;
-import woowacourse.shoppingcart.dto.cartitem.CartItemResponse;
-import woowacourse.shoppingcart.dto.cartitem.CartItemUpdateRequest;
+import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.dto.cart.CartItemRequest;
+import woowacourse.shoppingcart.dto.cart.CartItemResponse;
+import woowacourse.shoppingcart.dto.cart.CartItemUpdateRequest;
+import woowacourse.shoppingcart.dto.cart.CartResponse;
 
 @RestController
 @RequestMapping("/api/customers/{customerId}/carts")
@@ -36,11 +34,9 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> getCartItems(@PathVariable long customerId) {
-        List<CartItem> carts = cartService.findCartItemsByCustomerId(customerId);
-        List<CartItemResponse> cartResponses = carts.stream()
-            .map(CartItemResponse::new)
-            .collect(Collectors.toList());
-        return ResponseEntity.ok().body(cartResponses);
+        Cart cart = cartService.findCartByCustomerId(customerId);
+        CartResponse cartResponse = CartResponse.from(cart);
+        return ResponseEntity.ok().body(cartResponse.getValue());
     }
 
     @PostMapping

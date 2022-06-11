@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.cart.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
@@ -26,39 +27,32 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<CartItem> findCartItemsByCustomerId(long customerId) {
+    public Cart findCartByCustomerId(long customerId) {
         List<Long> cartItemIds = cartItemDao.findIdsByCustomerId(customerId);
 
         final List<CartItem> cartItems = new ArrayList<>();
-        for (final Long cartItemId : cartItemIds) {
-            final Long productId = cartItemDao.findProductIdById(cartItemId);
-            final Product product = productDao.findProductById(productId);
-            final int count = cartItemDao.findCountById(cartItemId);
+        for (Long cartItemId : cartItemIds) {
+            Long productId = cartItemDao.findProductIdById(cartItemId);
+            Product product = productDao.findProductById(productId);
+            int count = cartItemDao.findCountById(cartItemId);
             cartItems.add(new CartItem(cartItemId, count, product));
         }
-        return cartItems;
+        return new Cart(cartItems);
     }
 
-    public Long addCartItem(Long productId, long customerId, int count) {
+    public Long addCartItem(long productId, long customerId, int count) {
         checkProductExist(productId);
-        int quantity = productDao.findProductById(productId).getQuantity();
-        checkAlreadyInCart(productId, customerId);
-        checkInStock(count, quantity);
+        Product product = productDao.findProductById(productId);
+        Cart cart = findCartByCustomerId(customerId);
         try {
-            return cartItemDao.addCartItem(customerId, productId, count);
+            cart.addCartItem(product, count);
+            return cartItemDao.addCartItem(customerId, cart.getItemOf(product));
         } catch (Exception e) {
-            throw new InvalidCartItemException();
+            throw new InvalidCartItemException(e.getMessage());
         }
     }
 
-    private void checkAlreadyInCart(Long productId, long customerId) {
-        boolean isInCart = cartItemDao.findProductIdsByCustomerId(customerId).contains(productId);
-        if (isInCart) {
-            throw new InvalidCartItemException("이미 담겨있는 상품입니다.");
-        }
-    }
-
-    private void checkProductExist(Long productId) {
+    private void checkProductExist(long productId) {
         try {
             productDao.findProductById(productId);
         } catch (InvalidProductException e) {
@@ -77,14 +71,9 @@ public class CartService {
 
     public void updateCount(long customerId, long productId, int count) {
         checkProductExist(productId);
-        int quantity = productDao.findProductById(productId).getQuantity();
-        checkInStock(count, quantity);
-        cartItemDao.updateCount(customerId, productId, count);
-    }
-
-    private void checkInStock(int count, int quantity) {
-        if (count > quantity) {
-            throw new InvalidCartItemException("재고가 부족합니다.");
-        }
+        Product product = productDao.findProductById(productId);
+        Cart cart = findCartByCustomerId(customerId);
+        cart.update(product, count);
+        cartItemDao.updateCount(customerId, cart.getItemOf(product));
     }
 }

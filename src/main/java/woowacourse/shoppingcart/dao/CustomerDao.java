@@ -41,7 +41,7 @@ public class CustomerDao {
         }
     }
 
-    public Optional<Customer> findById(Long id) {
+    public Optional<Customer> findById(long id) {
         try {
             final String query = "SELECT id, email, username, password FROM customer WHERE id = :id";
             Map<String, Long> params = Map.of("id", id);
@@ -97,7 +97,7 @@ public class CustomerDao {
         ).longValue();
     }
 
-    public void update(Long id, String username) {
+    public void update(long id, String username) {
         String sql = "update customer set username = :username "
             + "where id = :id";
         jdbcTemplate.update(sql, new MapSqlParameterSource()
@@ -115,7 +115,7 @@ public class CustomerDao {
         ));
     }
 
-    public void delete(Long id) {
+    public void delete(long id) {
         String sql = "delete from customer where id = :id";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
 

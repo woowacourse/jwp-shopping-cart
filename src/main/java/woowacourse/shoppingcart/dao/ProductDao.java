@@ -37,7 +37,7 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Product findProductById(Long productId) {
+    public Product findProductById(long productId) {
         try {
             final String query = "SELECT name, price, image_url, quantity FROM product WHERE id = ?";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
@@ -67,7 +67,7 @@ public class ProductDao {
                 ));
     }
 
-    public int delete(Long productId) {
+    public int delete(long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         return jdbcTemplate.update(query, productId);
     }

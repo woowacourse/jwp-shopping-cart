@@ -28,11 +28,11 @@ public class ProductService {
         return productDao.save(request.toEntity());
     }
 
-    public Product findProductById(Long productId) {
+    public Product findProductById(long productId) {
         return productDao.findProductById(productId);
     }
 
-    public void deleteProductById(Long productId) {
+    public void deleteProductById(long productId) {
         if (productDao.delete(productId) == 0) {
             throw new ProductNotFoundException();
         }
