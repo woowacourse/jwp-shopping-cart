@@ -48,7 +48,7 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/many")
+    @PostMapping("/newProducts")
     public ResponseEntity<Void> addProducts(@RequestBody final List<ProductRequestDto> products) {
         productService.addProducts(products);
         return ResponseEntity.ok().build();
