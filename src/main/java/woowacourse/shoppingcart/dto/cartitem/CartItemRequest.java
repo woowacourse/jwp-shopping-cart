@@ -1,8 +1,12 @@
 package woowacourse.shoppingcart.dto.cartitem;
 
+import javax.validation.constraints.NotNull;
+
 public class CartItemRequest {
 
+    @NotNull
     private Long productId;
+    @NotNull
     private Integer count;
 
     public CartItemRequest(Long productId, Integer count) {
