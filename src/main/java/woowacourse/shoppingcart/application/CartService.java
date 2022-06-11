@@ -56,7 +56,7 @@ public class CartService {
         List<CartItem> cartItems = cartItemDao.findByMemberId(memberId);
         return cartItems.stream()
                 .map(CartItemResponse::new)
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
     }
 
     @Transactional

@@ -33,6 +33,6 @@ public class ProductService {
         return productDao.findProductsByPaging(page, limit)
                 .stream()
                 .map(ProductResponse::new)
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
     }
 }
