@@ -9,11 +9,9 @@ import woowacourse.exception.shoppingcart.InvalidProductException;
 import woowacourse.exception.shoppingcart.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dao.dto.CartItem;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.cart.CartAddRequest;
 import woowacourse.shoppingcart.dto.cart.CartUpdateRequest;
 
@@ -25,14 +23,13 @@ public class CartService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<Cart> findCartsByLoginCustomer(LoginCustomer loginCustomer) {
         Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
         List<Long> cartIds = cartItemDao.findIdsByCustomerId(customer.getId());
@@ -55,8 +52,8 @@ public class CartService {
         Long customerId = customer.getId();
         try {
             Long cartId = cartItemDao.addCartItem(customerId, request.getProductId(), DEFAULT_QUANTITY);
-            Long productId = cartItemDao.findProductIdById(cartId);
-            return new Cart(cartId, productDao.findProductById(productId), cartItemDao.findQuantityById(cartId));
+            CartItem cartItem = cartItemDao.findCartByCartId(cartId);
+            return new Cart(cartId, cartItem.getProduct(), cartItem.getQuantity());
         } catch (Exception e) {
             throw new InvalidProductException();
         }
@@ -77,8 +74,8 @@ public class CartService {
         Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
         Long productId = cartItemDao.findProductIdById(cartId);
         cartItemDao.updateQuantity(customer.getId(), productId, request.getQuantity());
-        Product product = productDao.findProductById(productId);
-        return new Cart(cartId, product, cartItemDao.findQuantityById(cartId));
+        CartItem cartItem = cartItemDao.findCartByCartId(cartId);
+        return new Cart(cartId, cartItem.getProduct(), cartItemDao.findQuantityById(cartId));
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
