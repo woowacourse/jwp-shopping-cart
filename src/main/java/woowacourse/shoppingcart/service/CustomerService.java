@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.service;
 
-import java.time.format.DateTimeFormatter;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +38,7 @@ public class CustomerService {
     public CustomerResponse getCustomerById(long id) {
         try {
             Customer customer = customerRepository.findById(id);
-            return convertCustomerToResponse(customer);
+            return new CustomerResponse(customer);
         } catch (EmptyResultDataAccessException e) {
             throw new CustomerNotFoundException();
         }
@@ -64,21 +63,6 @@ public class CustomerService {
         if (!customerRepository.existsById(customerId)) {
             throw new CustomerNotFoundException();
         }
-    }
-
-    private CustomerResponse convertCustomerToResponse(Customer customer) {
-        return new CustomerResponse(
-                customer.getEmail().getValue(),
-                customer.getProfileImageUrl().getValue(),
-                customer.getPrivacy().getName().getValue(),
-                customer.getPrivacy().getGender().getValue(),
-                customer.getPrivacy().getBirthday().getValue().format(DateTimeFormatter.ISO_DATE),
-                customer.getPrivacy().getContact().getValue(),
-                customer.getFullAddress().getAddress().getValue(),
-                customer.getFullAddress().getDetailAddress().getValue(),
-                customer.getFullAddress().getZonecode().getValue(),
-                customer.isTerms()
-        );
     }
 
     private Customer convertRequestToCustomer(CustomerRequest customerRequest) {

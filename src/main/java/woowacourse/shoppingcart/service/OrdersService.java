@@ -11,7 +11,6 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.OrdersRequest;
 import woowacourse.shoppingcart.dto.response.OrderProductResponse;
 import woowacourse.shoppingcart.dto.response.OrdersResponse;
-import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.repository.OrdersRepository;
 import woowacourse.shoppingcart.repository.ProductRepository;
@@ -64,9 +63,9 @@ public class OrdersService {
     }
 
     private List<OrderProductResponse> getOrderProductResponseByOrder(Orders orders) {
-        return orders.getOrderDetails().stream()
-                .map(orderDetail -> new OrderProductResponse(new ProductResponse(orderDetail.getProduct()),
-                        orderDetail.getQuantity())).collect(
-                        Collectors.toList());
+        return orders.getOrderDetails()
+                .stream()
+                .map(OrderProductResponse::new)
+                .collect(Collectors.toList());
     }
 }

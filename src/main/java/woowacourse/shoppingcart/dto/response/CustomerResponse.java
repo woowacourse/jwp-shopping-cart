@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dto.response;
 
+import java.time.format.DateTimeFormatter;
+import woowacourse.shoppingcart.domain.customer.Customer;
+
 public class CustomerResponse {
     private String email;
     private String profileImageUrl;
@@ -27,6 +30,21 @@ public class CustomerResponse {
         this.detailAddress = detailAddress;
         this.zonecode = zonecode;
         this.terms = terms;
+    }
+
+    public CustomerResponse(Customer customer) {
+        this(
+                customer.getEmail().getValue(),
+                customer.getProfileImageUrl().getValue(),
+                customer.getPrivacy().getName().getValue(),
+                customer.getPrivacy().getGender().getValue(),
+                customer.getPrivacy().getBirthday().getValue().format(DateTimeFormatter.ISO_DATE),
+                customer.getPrivacy().getContact().getValue(),
+                customer.getFullAddress().getAddress().getValue(),
+                customer.getFullAddress().getDetailAddress().getValue(),
+                customer.getFullAddress().getZonecode().getValue(),
+                customer.isTerms()
+        );
     }
 
     public String getEmail() {
