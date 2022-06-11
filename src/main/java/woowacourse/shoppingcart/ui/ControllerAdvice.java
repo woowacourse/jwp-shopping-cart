@@ -20,10 +20,10 @@ import java.util.List;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<ErrorResponse> handleUnhandledException() {
-//        return ResponseEntity.internalServerError().body(ErrorResponse.toDto("Unhandled Exception"));
-//    }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+        return ResponseEntity.internalServerError().body(ErrorResponse.toDto("Unhandled Exception"));
+    }
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorResponse> handleDatabaseException() {
@@ -64,7 +64,10 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(ErrorResponse.toDto(e.getMessage()));
     }
 
-    @ExceptionHandler(AuthorizationException.class)
+    @ExceptionHandler({
+            AuthorizationException.class,
+            NotLoginException.class
+    })
     public ResponseEntity<ErrorResponse> handleUnAuthorizedAccess(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.toDto("인증되지 않은 사용자입니다."));
     }

@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain.User;
 
 import woowacourse.shoppingcart.domain.customer.UserName;
 
-public class Member implements woowacourse.shoppingcart.domain.User.User {
+public class Member implements User {
 
     private final UserName userName;
 
