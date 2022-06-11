@@ -6,11 +6,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.product.PageRequest;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
@@ -40,7 +40,7 @@ class ProductServiceTest {
         final PageRequest pageRequest = new PageRequest(10, 10);
 
         assertThatThrownBy(() -> productService.findByPage(pageRequest))
-                .isInstanceOf(EmptyResultDataAccessException.class)
-                .hasMessage("잘못된 페이지입니다.");
+                .isInstanceOf(InvalidProductException.class)
+                .hasMessage("상품 정보가 존재하지 않습니다.");
     }
 }

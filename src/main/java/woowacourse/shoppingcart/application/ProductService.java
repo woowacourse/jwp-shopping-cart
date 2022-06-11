@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.product.PageRequest;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,7 +22,7 @@ public class ProductService {
     public List<Product> findByPage(final PageRequest pageRequest) {
         List<Product> products = productDao.findByPage(pageRequest.getLimit(), pageRequest.calculateOffset());
         if (products.isEmpty()) {
-            throw new EmptyResultDataAccessException("잘못된 페이지입니다.", 1);
+            throw new InvalidProductException("상품 정보가 존재하지 않습니다.");
         }
         return products;
     }
