@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -48,6 +49,8 @@ public class JwtTokenProvider {
         try {
             final Claims claims = extractJwtClaims(token);
             return isJwtExpired(claims);
+        } catch (ExpiredJwtException e) {
+            throw new AuthException(AuthExceptionCode.EXPIRED_TOKEN);
         } catch (JwtException | IllegalArgumentException e) {
             throw new AuthException(AuthExceptionCode.INVALID_TOKEN);
         }
