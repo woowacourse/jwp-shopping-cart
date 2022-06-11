@@ -10,12 +10,26 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.product.ImageUrl;
+import woowacourse.shoppingcart.domain.product.Name;
+import woowacourse.shoppingcart.domain.product.Price;
+import woowacourse.shoppingcart.domain.product.Product;
 
 @Repository
 public class CartItemDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<Long> idRowMapper = (rs, rowNum) -> rs.getLong("id");
     private final RowMapper<Long> productIdRowMapper = (rs, rowNum) -> rs.getLong("product_id");
+
+    private final RowMapper<CartItem> cartItemRowMapper = (resultSet, rowNumber) ->
+            new CartItem(
+                    resultSet.getLong("product_id"),
+                    new Name(resultSet.getString("name")),
+                    new Price(resultSet.getInt("price")),
+                    new ImageUrl(resultSet.getString("image_url"))
+            );
+
 
     public CartItemDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -81,5 +95,14 @@ public class CartItemDao {
             batchValues[i] = parameters;
         }
         return batchValues;
+    }
+
+    public List<CartItem> findCartItemsByCustomerId(long customerId) {
+        String sql = "SELECT DISTINCT p.id product_id, p.name name, p.price price, p.image_url image_url FROM cart_item ci "
+                + "JOIN product p ON ci.product_id=p.id "
+                + "WHERE ci.customer_id=:customerId";
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("customerId", customerId);
+        return namedParameterJdbcTemplate.query(sql, sqlParameterSource, cartItemRowMapper);
     }
 }

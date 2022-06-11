@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.application.ProductFixture.바나나;
 import static woowacourse.shoppingcart.application.ProductFixture.사과;
 
@@ -15,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.CartItem;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -23,16 +25,11 @@ import org.springframework.test.context.jdbc.Sql;
 public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
-
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private long bananaId;
     private long appleId;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    public CartItemDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         cartItemDao = new CartItemDao(namedParameterJdbcTemplate);
         productDao = new ProductDao(namedParameterJdbcTemplate);
     }
@@ -114,5 +111,26 @@ public class CartItemDaoTest {
         int affectedQuery = cartItemDao.deleteAllCartItems(customerId, List.of(bananaId, appleId));
         //then
         assertThat(affectedQuery).isEqualTo(2);
+    }
+
+    @Test
+    void findCartItemsByCustomerId() {
+        //given
+        final Long customerId = 1L;
+        cartItemDao.addCartItem(customerId, bananaId);
+         cartItemDao.addCartItem(customerId, appleId);
+        List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
+        //when
+
+        //then
+        assertAll(
+                () -> assertThat(cartItems).hasSize(2),
+                () -> assertThat(cartItems.get(0).getProductId()).isEqualTo(1L),
+                () -> assertThat(cartItems.get(0).getProductName()).isEqualTo("바나나"),
+                () -> assertThat(cartItems.get(0).getProductPrice()).isEqualTo(1000),
+                () -> assertThat(cartItems.get(1).getProductId()).isEqualTo(2L),
+                () -> assertThat(cartItems.get(1).getProductName()).isEqualTo("사과"),
+                () -> assertThat(cartItems.get(1).getProductPrice()).isEqualTo(1500)
+        );
     }
 }

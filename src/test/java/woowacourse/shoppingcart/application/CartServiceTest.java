@@ -15,6 +15,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.product.ImageUrl;
+import woowacourse.shoppingcart.domain.product.Name;
+import woowacourse.shoppingcart.domain.product.Price;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -36,46 +40,16 @@ class CartServiceTest {
     @DisplayName("회원 아이디에 따라 가진 카트를 반환한다.")
     void findCartsByCustomerId() {
         //given
-        given(cartItemDao.findIdsByCustomerId(any(Long.class))).willReturn(List.of(1L, 2L));
-        given(cartItemDao.findProductIdById(1L)).willReturn(Optional.of(1L));
-        given(cartItemDao.findProductIdById(2L)).willReturn(Optional.of(2L));
-        given(productDao.findProductById(1L)).willReturn(Optional.of(바나나));
-        given(productDao.findProductById(2L)).willReturn(Optional.of(사과));
+        CartItem 장바구니_바나나 = new CartItem(1L, new Name("바나나"), new Price(1000), new ImageUrl("banana.com"));
+        CartItem 장바구니_사과 = new CartItem(2L, new Name("사과"), new Price(1500), new ImageUrl("apple.com"));
+
+        given(cartItemDao.findCartItemsByCustomerId(any(Long.class))).willReturn(List.of(장바구니_바나나, 장바구니_사과));
+
         //when
 
         CartResponse cartResponse = cartService.findCartsByCustomerId(1L);
         //then
         assertThat(cartResponse.getCart().size()).isEqualTo(2);
-    }
-
-    @Test
-    @DisplayName("cart id 가 존재하지 않으면 예외를 반환한다.")
-    void notExistCartId() {
-        //given
-        given(cartItemDao.findIdsByCustomerId(1L)).willReturn(List.of(1L, 2L));
-        given(cartItemDao.findProductIdById(1L)).willReturn(Optional.empty());
-        //when
-
-        //then
-        assertThatThrownBy(() -> cartService.findCartsByCustomerId(1L))
-                .isInstanceOf(InvalidCartItemException.class)
-                .hasMessage("유효하지 않은 장바구니입니다.");
-    }
-
-    @Test
-    @DisplayName("cart id 에 따른 product id 가 존재하지 않으면 예외를 반환한다.")
-    void notExistProductId() {
-        //given
-        given(cartItemDao.findIdsByCustomerId(1L)).willReturn(List.of(1L, 2L));
-        given(cartItemDao.findProductIdById(1L)).willReturn(Optional.of(1L));
-        given(cartItemDao.findProductIdById(2L)).willReturn(Optional.of(2L));
-        given(productDao.findProductById(1L)).willReturn(Optional.empty());
-        //when
-
-        //then
-        assertThatThrownBy(() -> cartService.findCartsByCustomerId(1L))
-                .isInstanceOf(InvalidProductException.class)
-                .hasMessage("올바르지 않은 상품 아이디 입니다.");
     }
 
     @Test
