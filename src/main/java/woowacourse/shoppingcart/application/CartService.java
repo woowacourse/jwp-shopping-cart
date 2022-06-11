@@ -90,15 +90,7 @@ public class CartService {
             cartItemDao.update(cart.getId(), cart);
 
             Product product = productDao.findProductById(cart.getProductId());
-            responses.add(new CartResponse(
-                    cart.getId(),
-                    product.getId(),
-                    product.getName(),
-                    product.getPrice(),
-                    product.getImageUrl(),
-                    cart.getQuantity(),
-                    cart.isChecked()
-            ));
+            responses.add(CartResponse.fromCartAndProduct(cart, product));
         }
 
         return new CartResponses(responses);

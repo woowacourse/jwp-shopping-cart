@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Product;
+
 public class CartResponse {
 
     private Long id;
@@ -22,6 +25,16 @@ public class CartResponse {
         this.imageUrl = imageUrl;
         this.quantity = quantity;
         this.checked = checked;
+    }
+
+    public static CartResponse fromCartAndProduct(Cart cart, Product product) {
+        return new CartResponse(cart.getId(),
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                cart.getQuantity(),
+                cart.isChecked());
     }
 
     public Long getId() {
