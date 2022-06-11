@@ -2,6 +2,10 @@ package woowacourse.shoppingcart.customer.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.support.TextFixture.EMAIL;
+import static woowacourse.support.TextFixture.NICKNAME;
+import static woowacourse.support.TextFixture.PASSWORD;
+import static woowacourse.support.TextFixture.PASSWORD_VALUE;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,11 +17,6 @@ import woowacourse.shoppingcart.customer.support.exception.CustomerException;
 import woowacourse.shoppingcart.customer.support.exception.CustomerExceptionCode;
 
 class CustomerTest {
-
-    private static final Email EMAIL = new Email("guest@woowa.com");
-    private static final Nickname NICKNAME = new Nickname("guest");
-    private static final String PASSWORD_VALUE = "qwer1234!@#$";
-    private static final Password PASSWORD = new Password(PASSWORD_VALUE);
 
     @DisplayName("개인정보를 수정한다.")
     @ParameterizedTest
