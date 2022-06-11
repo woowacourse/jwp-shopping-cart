@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dto.request.MemberCreateRequest;
 import woowacourse.shoppingcart.dto.request.CartItemRequest;
+import woowacourse.shoppingcart.dto.request.MemberCreateRequest;
 import woowacourse.shoppingcart.dto.request.ProductRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
@@ -33,7 +33,7 @@ class CartServiceTest {
         Long productId = productService.save(new ProductRequest("상품1", 1_000, 10, "www.woowa1.com"));
         CartItemRequest cartItemRequest = new CartItemRequest(productId, 1);
 
-        Long cartItemId = cartService.saveOrUpdateCartItem(memberId, cartItemRequest);
+        Long cartItemId = cartService.addCartItem(memberId, cartItemRequest);
 
         assertThat(cartItemId).isNotNull();
     }
@@ -44,7 +44,7 @@ class CartServiceTest {
         Long memberId = memberService.save(new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "우테코"));
         CartItemRequest cartItemRequest = new CartItemRequest(Long.MAX_VALUE, 1);
 
-        assertThatThrownBy(() -> cartService.saveOrUpdateCartItem(memberId, cartItemRequest))
+        assertThatThrownBy(() -> cartService.addCartItem(memberId, cartItemRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 상품입니다.");
     }
@@ -56,7 +56,7 @@ class CartServiceTest {
         Long productId = productService.save(new ProductRequest("상품1", 1_000, 1, "www.woowa1.com"));
         CartItemRequest cartItemRequest = new CartItemRequest(productId, 2);
 
-        assertThatThrownBy(() -> cartService.saveOrUpdateCartItem(memberId, cartItemRequest))
+        assertThatThrownBy(() -> cartService.addCartItem(memberId, cartItemRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("재고가 충분하지 않습니다.");
     }
@@ -69,8 +69,8 @@ class CartServiceTest {
         CartItemRequest cartItemRequest = new CartItemRequest(productId, 1);
         Long product2Id = productService.save(new ProductRequest("상품2", 1_000, 10, "www.woowa2.com"));
         CartItemRequest cartItem2Request = new CartItemRequest(product2Id, 1);
-        cartService.saveOrUpdateCartItem(memberId, cartItemRequest);
-        cartService.saveOrUpdateCartItem(memberId, cartItem2Request);
+        cartService.addCartItem(memberId, cartItemRequest);
+        cartService.addCartItem(memberId, cartItem2Request);
 
         List<CartItemResponse> cartItems = cartService.findAll(memberId);
 
@@ -86,9 +86,9 @@ class CartServiceTest {
         Long memberId = memberService.save(new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "우테코"));
         Long productId = productService.save(new ProductRequest("상품1", 1_000, 10, "www.woowa1.com"));
         CartItemRequest cartItemRequest = new CartItemRequest(productId, 1);
-        cartService.saveOrUpdateCartItem(memberId, cartItemRequest);
+        cartService.addCartItem(memberId, cartItemRequest);
 
-        cartService.saveOrUpdateCartItem(memberId, cartItemRequest);
+        cartService.addCartItem(memberId, cartItemRequest);
         CartItemResponse cartItemResponse = cartService.findAll(memberId)
                 .get(0);
 
@@ -101,12 +101,12 @@ class CartServiceTest {
         Long memberId = memberService.save(new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "우테코"));
         Long productId = productService.save(new ProductRequest("상품1", 1_000, 10, "www.woowa1.com"));
         CartItemRequest cartItemRequest = new CartItemRequest(productId, 1);
-        cartService.saveOrUpdateCartItem(memberId, cartItemRequest);
+        cartService.addCartItem(memberId, cartItemRequest);
         CartItemRequest updateRequest = new CartItemRequest(productId, 5);
 
         cartService.updateCartItemQuantity(memberId, updateRequest);
         CartItemResponse cartItemResponse = cartService.findAll(memberId)
-                        .get(0);
+                .get(0);
 
         assertThat(cartItemResponse.getQuantity()).isEqualTo(5);
     }
@@ -129,7 +129,7 @@ class CartServiceTest {
         Long memberId = memberService.save(new MemberCreateRequest("abc@woowahan.com", "1q2w3e4r!", "우테코"));
         Long productId = productService.save(new ProductRequest("상품1", 1_000, 10, "www.woowa1.com"));
         CartItemRequest cartItemRequest = new CartItemRequest(productId, 1);
-        cartService.saveOrUpdateCartItem(memberId, cartItemRequest);
+        cartService.addCartItem(memberId, cartItemRequest);
 
         cartService.deleteCartItem(memberId, productId);
         List<CartItemResponse> cartItems = cartService.findAll(memberId);

@@ -25,7 +25,7 @@ public class CartService {
     }
 
     @Transactional
-    public Long saveOrUpdateCartItem(Long memberId, CartItemRequest cartItemRequest) {
+    public Long addCartItem(Long memberId, CartItemRequest cartItemRequest) {
         Long productId = cartItemRequest.getProductId();
         Integer quantity = cartItemRequest.getQuantity();
         checkPurchasable(productId, quantity);

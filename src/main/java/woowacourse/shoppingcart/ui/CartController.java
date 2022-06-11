@@ -35,13 +35,13 @@ public class CartController {
     @PostMapping("/products")
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal Long memberId,
                                             @RequestBody CartItemRequest cartItemRequest) {
-        cartService.saveOrUpdateCartItem(memberId, cartItemRequest);
+        cartService.addCartItem(memberId, cartItemRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping("/products")
     public ResponseEntity<List<CartItemResponse>> updateItemAndShowCart(@AuthenticationPrincipal Long memberId,
-                                                                    @RequestBody CartItemRequest updateRequest) {
+                                                                        @RequestBody CartItemRequest updateRequest) {
         cartService.updateCartItemQuantity(memberId, updateRequest);
         return ResponseEntity.ok()
                 .body(cartService.findAll(memberId));

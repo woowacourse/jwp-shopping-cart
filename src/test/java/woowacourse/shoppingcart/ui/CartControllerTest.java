@@ -81,7 +81,7 @@ class CartControllerTest {
     @DisplayName("장바구니에 상품을 담는다. - 201 Created")
     @Test
     void addCartItem_Ok() throws Exception {
-        given(cartService.saveOrUpdateCartItem(eq(MEMBER_ID), any()))
+        given(cartService.addCartItem(eq(MEMBER_ID), any()))
                 .willReturn(1L);
         given(handlerInterceptor.preHandle(any(), any(), any()))
                 .willReturn(true);
@@ -98,7 +98,7 @@ class CartControllerTest {
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andExpect(status().isCreated());
         verify(cartService, times(1))
-                .saveOrUpdateCartItem(eq(MEMBER_ID), any());
+                .addCartItem(eq(MEMBER_ID), any());
     }
 
     @DisplayName("장바구니에 담긴 상품의 수량을 변경하고 변경된 장바구니를 조회한다. - 200 Ok")
