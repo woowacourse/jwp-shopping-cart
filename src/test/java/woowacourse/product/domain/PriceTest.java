@@ -16,11 +16,11 @@ public class PriceTest {
         assertDoesNotThrow(() -> new Price(100));
     }
 
-    @DisplayName("0 이하의 수가 입력된 경우 예외를 발생한다.")
+    @DisplayName("음수가 입력된 경우 예외를 발생한다.")
     @Test
     void createInvalidPrice() {
-        assertThatThrownBy(() -> new Price(0))
+        assertThatThrownBy(() -> new Price(-1))
             .isInstanceOf(InvalidPriceException.class)
-            .hasMessage("가격에는 0 이하의 수가 입력될 수 없습니다.");
+            .hasMessage("가격에는 음수가 입력될 수 없습니다.");
     }
 }

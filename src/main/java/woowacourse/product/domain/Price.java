@@ -6,16 +6,17 @@ import woowacourse.product.exception.InvalidPriceException;
 
 public class Price {
 
+    public static final int MINIMUM_PRICE = 0;
     private final int value;
 
     public Price(final int value) {
-        validatePositive(value);
+        validateNegative(value);
         this.value = value;
     }
 
-    private void validatePositive(final int value) {
-        if (value <= 0) {
-            throw new InvalidPriceException("가격에는 0 이하의 수가 입력될 수 없습니다.");
+    private void validateNegative(final int value) {
+        if (value < MINIMUM_PRICE) {
+            throw new InvalidPriceException("가격에는 음수가 입력될 수 없습니다.");
         }
     }
 
