@@ -1,17 +1,20 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.exception.shoppingcart.InvalidCartItemException;
-
-import java.sql.PreparedStatement;
-import java.util.List;
+import woowacourse.shoppingcart.dao.dto.CartItem;
+import woowacourse.shoppingcart.domain.Product;
 
 @Repository
 public class CartItemDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
@@ -43,6 +46,27 @@ public class CartItemDao {
         try {
             final String sql = "SELECT quantity FROM cart_item WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"), cartId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    private static RowMapper<CartItem> cartRowMapper = (rs, rowNum) -> new CartItem(
+            rs.getLong("cart_item.id"),
+            new Product(rs.getLong("product.id"),
+                    rs.getString("product.name"),
+                    rs.getInt("product.price"),
+                    rs.getString("product.image_url")),
+            rs.getInt("cart_item.quantity")
+    );
+
+    public CartItem findCartByCartId(Long cartId) {
+        try {
+            final String sql =
+                    "SELECT cart_item.id, product.id , product.name, product.price, product.image_url, cart_item.quantity "
+                            + "FROM cart_item INNER JOIN product ON cart_item.product_id = product.id "
+                            + "WHERE cart_item.id = ?";
+            return jdbcTemplate.queryForObject(sql, cartRowMapper, cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }

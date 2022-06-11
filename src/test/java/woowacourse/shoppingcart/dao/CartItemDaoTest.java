@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dao.dto.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
@@ -97,5 +98,18 @@ public class CartItemDaoTest {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);
+    }
+
+    @DisplayName("Cart Id를 넣으면, 해당 장바구니를 가져온다.")
+    @Test
+    void findCartByCartId() {
+        //given
+        final Long cartId = 1L;
+
+        //when
+        CartItem cartItem = cartItemDao.findCartByCartId(cartId);
+
+        //then
+        assertThat(cartItem).isEqualTo(new CartItem(1L, new Product(1L, "banana", 1_000, "woowa1.com"), 1));
     }
 }

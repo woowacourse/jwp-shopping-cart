@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Objects;
+
 public class Product {
     private Long id;
     private String name;
@@ -20,6 +22,24 @@ public class Product {
         this(null, name, price, imageUrl);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Product product = (Product) o;
+        return Objects.equals(id, product.id) && Objects.equals(name, product.name)
+                && Objects.equals(price, product.price) && Objects.equals(imageUrl, product.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, imageUrl);
+    }
+
     public String getName() {
         return name;
     }
@@ -34,5 +54,15 @@ public class Product {
 
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }
