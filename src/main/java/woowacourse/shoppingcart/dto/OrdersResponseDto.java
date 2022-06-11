@@ -7,7 +7,7 @@ public class OrdersResponseDto {
 
     private List<OrdersDetailDto> ordersDetails;
 
-    public OrdersResponseDto() {
+    private OrdersResponseDto() {
     }
 
     public OrdersResponseDto(final List<OrdersDetailDto> ordersDetails) {

@@ -57,4 +57,10 @@ public class OrdersDao {
     private List<OrdersDetail> findDetails(final Long ordersId) {
         return ordersDetailDao.findDetails(ordersId);
     }
+
+    public List<Orders> findOrdersByCustomerId(final Long customerId) {
+        final String sql = "SELECT id, customer_id FROM orders WHERE customer_id = ?";
+
+        return jdbcTemplate.query(sql, ordersRowMapper, customerId);
+    }
 }

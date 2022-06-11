@@ -7,7 +7,7 @@ public class OrdersRequestDto {
 
     private List<Long> productIds;
 
-    public OrdersRequestDto() {
+    private OrdersRequestDto() {
     }
 
     public OrdersRequestDto(final List<Long> productIds) {

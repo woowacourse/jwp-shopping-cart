@@ -42,7 +42,7 @@ public class CartItemController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(
-            @Validated(Request.id.class) @RequestBody final AddCartItemRequestDto addCartItemRequestDto,
+            @RequestBody final AddCartItemRequestDto addCartItemRequestDto,
             @PathVariable final Long customerId,
             @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());

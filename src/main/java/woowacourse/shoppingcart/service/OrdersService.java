@@ -66,12 +66,7 @@ public class OrdersService {
         final Orders orders = ordersDao.findById(ordersId)
                 .orElseThrow(NotFoundOrdersException::new);
 
-        final List<OrdersDetailDto> ordersDetailDtos = orders.getOrdersDetails()
-                .stream()
-                .map(this::convertOrdersDetailToDto)
-                .collect(Collectors.toList());
-
-        return new OrdersResponseDto(ordersDetailDtos);
+        return convertOrdersToDto(orders);
     }
 
     private OrdersDetailDto convertOrdersDetailToDto(final OrdersDetail ordersDetail) {
@@ -83,5 +78,20 @@ public class OrdersService {
                 product.getPrice()
         );
         return new OrdersDetailDto(productResponseDto, ordersDetail.getCount());
+    }
+
+    public List<OrdersResponseDto> findCustomerOrders(final Long customerId) {
+        final List<Orders> orders = ordersDao.findOrdersByCustomerId(customerId);
+        return orders.stream()
+                .map(this::convertOrdersToDto)
+                .collect(Collectors.toList());
+    }
+
+    private OrdersResponseDto convertOrdersToDto(final Orders orders) {
+        final List<OrdersDetailDto> ordersDetailDtos = orders.getOrdersDetails()
+                .stream()
+                .map(this::convertOrdersDetailToDto)
+                .collect(Collectors.toList());
+        return new OrdersResponseDto(ordersDetailDtos);
     }
 }
