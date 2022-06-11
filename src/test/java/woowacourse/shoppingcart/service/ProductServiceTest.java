@@ -30,7 +30,8 @@ class ProductServiceTest {
 
         final List<ProductResponseDto> actual = productService.findProducts();
 
-        assertThat(actual.size()).isEqualTo(2);
+        assertThat(actual).extracting("name")
+                .contains("product1", "product2");
     }
 
     @Test

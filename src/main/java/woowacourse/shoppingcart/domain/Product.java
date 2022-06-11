@@ -54,22 +54,4 @@ public class Product {
     public Integer getQuantity() {
         return quantity;
     }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final Product product = (Product) o;
-        return Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(
-                thumbnailUrl, product.thumbnailUrl) && Objects.equals(quantity, product.quantity);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, price, thumbnailUrl, quantity);
-    }
 }

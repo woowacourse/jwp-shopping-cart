@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -102,9 +103,11 @@ public class ProductDaoTest {
 
         productDao.saveAll(products);
 
-        assertThat(productDao.findProducts()).contains(
-                product1,
-                product2
-        );
+        assertThat(productDao.findProducts())
+                .extracting("name", "price", "quantity")
+                .contains(
+                        tuple(product1.getName(), product1.getPrice(), product1.getQuantity()),
+                        tuple(product2.getName(), product2.getPrice(), product2.getQuantity())
+                );
     }
 }
