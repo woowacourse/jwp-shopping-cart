@@ -1,7 +1,8 @@
 package woowacourse.shoppingcart.ui.dto;
 
-import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.application.dto.CustomerUpdatePasswordRequest;
+
+import javax.validation.constraints.NotBlank;
 
 public class CustomerChangePasswordRequest {
 
@@ -13,7 +14,7 @@ public class CustomerChangePasswordRequest {
     public CustomerChangePasswordRequest() {
     }
 
-    public CustomerChangePasswordRequest(String prevPassword, String newPassword) {
+    public CustomerChangePasswordRequest(final String prevPassword, final String newPassword) {
         this.prevPassword = prevPassword;
         this.newPassword = newPassword;
     }

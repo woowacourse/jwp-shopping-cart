@@ -16,6 +16,7 @@ import static woowacourse.shoppingcart.config.WebConfig.ALLOWED_METHOD_NAMES;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class WebConfigTest {
+
     @Autowired
     private MockMvc mockMvc;
 

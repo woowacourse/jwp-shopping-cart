@@ -1,12 +1,5 @@
 package woowacourse.shoppingcart.ui;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +16,12 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.ui.dto.CustomerChangePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerChangeRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerSignUpRequest;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
 class CustomerControllerTest {
@@ -52,7 +51,7 @@ class CustomerControllerTest {
         ResultActions 회원가입_응답 = postCustomers("email@email.com", "password123!Q", "rookie");
 
         // then
-        assertThat(회원가입_응답.andExpect(status().isCreated()));
+        assertThat(회원가입_응답.andExpect(status().isOk()));
     }
 
     @Test
@@ -68,17 +67,17 @@ class CustomerControllerTest {
         // then
         assertAll(
                 () -> 이메일_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이메일은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이메일은 공백일 수 없습니다.")),
                 () -> 이메일_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이메일은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이메일은 공백일 수 없습니다.")),
                 () -> 비밀번호_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 비밀번호는 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 비밀번호는 공백일 수 없습니다.")),
                 () -> 비밀번호_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 비밀번호는 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 비밀번호는 공백일 수 없습니다.")),
                 () -> 닉네임_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 닉네임은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 닉네임은 공백일 수 없습니다.")),
                 () -> 닉네임_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 닉네임은 공백일 수 없습니다."))
+                        .andExpect(jsonPath("$.message").value("[ERROR] 닉네임은 공백일 수 없습니다."))
         );
     }
 
@@ -95,17 +94,17 @@ class CustomerControllerTest {
         // then
         assertAll(
                 () -> 닉네임_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 닉네임은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 닉네임은 공백일 수 없습니다.")),
                 () -> 닉네임_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 닉네임은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 닉네임은 공백일 수 없습니다.")),
                 () -> 이전_패스워드_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이전 비밀번호는 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이전 비밀번호는 공백일 수 없습니다.")),
                 () -> 이전_패스워드_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이전 비밀번호는 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이전 비밀번호는 공백일 수 없습니다.")),
                 () -> 새로운_패스워드_공백1.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 새로운 비밀번호는 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 새로운 비밀번호는 공백일 수 없습니다.")),
                 () -> 새로운_패스워드_공백2.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 새로운 비밀번호는 공백일 수 없습니다."))
+                        .andExpect(jsonPath("$.message").value("[ERROR] 새로운 비밀번호는 공백일 수 없습니다."))
         );
     }
 

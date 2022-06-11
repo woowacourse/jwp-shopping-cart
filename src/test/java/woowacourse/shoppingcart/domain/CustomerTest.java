@@ -1,12 +1,13 @@
 package woowacourse.shoppingcart.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import woowacourse.global.exception.InvalidCustomerException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CustomerTest {
 
@@ -36,7 +37,7 @@ class CustomerTest {
 
         // when & then
         assertThatThrownBy(() -> new Customer(1L, email, password, nickname))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidCustomerException.class);
     }
 
     @ParameterizedTest
@@ -49,7 +50,7 @@ class CustomerTest {
 
         // when & then
         assertThatThrownBy(() -> new Customer(1L, email, password, nickname))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidCustomerException.class);
     }
 
     @ParameterizedTest
@@ -62,6 +63,6 @@ class CustomerTest {
 
         // when & then
         assertThatThrownBy(() -> new Customer(1L, email, password, nickname))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidCustomerException.class);
     }
 }

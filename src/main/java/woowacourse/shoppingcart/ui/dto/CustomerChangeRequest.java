@@ -1,7 +1,8 @@
 package woowacourse.shoppingcart.ui.dto;
 
-import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.application.dto.CustomerUpdateRequest;
+
+import javax.validation.constraints.NotBlank;
 
 public class CustomerChangeRequest {
 
@@ -11,7 +12,7 @@ public class CustomerChangeRequest {
     public CustomerChangeRequest() {
     }
 
-    public CustomerChangeRequest(String nickname) {
+    public CustomerChangeRequest(final String nickname) {
         this.nickname = nickname;
     }
 

@@ -1,19 +1,20 @@
 package woowacourse.auth.ui.dto;
 
-import javax.validation.constraints.NotBlank;
 import woowacourse.auth.application.dto.TokenCreateRequest;
 
-public class TokenRequest {
+import javax.validation.constraints.NotBlank;
+
+public class LoginRequest {
 
     @NotBlank(message = "[ERROR] 이메일은 공백일 수 없습니다.")
     private String email;
     @NotBlank(message = "[ERROR] 비밀번호는 공백일 수 없습니다.")
     private String password;
 
-    public TokenRequest() {
+    public LoginRequest() {
     }
 
-    public TokenRequest(String email, String password) {
+    public LoginRequest(final String email, final String password) {
         this.email = email;
         this.password = password;
     }

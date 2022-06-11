@@ -1,14 +1,5 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.deleteCustomers;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.getCustomers;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.patchCustomers;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.patchPasswordCustomers;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.postCustomers;
-import static woowacourse.shoppingcart.acceptance.ResponseCreator.postLogin;
-
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.application.dto.TokenResponse;
 import woowacourse.shoppingcart.application.dto.CustomerResponse;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.acceptance.ResponseCreator.*;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -27,7 +22,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = postCustomers("basic@email.com", "password123@Q", "rookie");
 
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("내 정보 조회")
@@ -79,6 +74,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         postCustomers("basic@email.com", "password123@Q", "rookie");
         ExtractableResponse<Response> 로그인_응답됨 = postLogin("basic@email.com", "password123@Q");
         TokenResponse tokenResponse = 로그인_응답됨.as(TokenResponse.class);
+
+        // when
+        ExtractableResponse<Response> 사용자_정보_삭제됨 = deleteCustomers(tokenResponse);
+
+        // then
+        assertThat(사용자_정보_삭제됨.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("회원탈퇴 시 연관된 장바구니 내역도 삭제된다.")
+    @Test
+    void deleteMeAdditionalCart() {
+        // given
+        postCustomers("basic@email.com", "password123@Q", "rookie");
+        ExtractableResponse<Response> 로그인_응답됨 = postLogin("basic@email.com", "password123@Q");
+        TokenResponse tokenResponse = 로그인_응답됨.as(TokenResponse.class);
+        postProduct("치킨", 20_000, "http://chicken.test.com");
+        postCart(tokenResponse, 1L);
 
         // when
         ExtractableResponse<Response> 사용자_정보_삭제됨 = deleteCustomers(tokenResponse);

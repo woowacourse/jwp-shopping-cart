@@ -1,14 +1,12 @@
 package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.application.ProductService;
+import woowacourse.shoppingcart.application.dto.ProductResponse;
+import woowacourse.shoppingcart.ui.dto.ProductAddRequest;
 
-import java.net.URI;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,29 +19,19 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Product>> products() {
-        return ResponseEntity.ok(productService.findProducts());
-    }
-
     @PostMapping
-    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final Product product) {
-        final Long productId = productService.addProduct(product);
-        final URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/" + productId)
-                .build().toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<Void> add(@RequestBody @Valid final ProductAddRequest productAddRequest) {
+        productService.save(productAddRequest.toServiceRequest());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> product(@PathVariable final Long productId) {
-        return ResponseEntity.ok(productService.findProductById(productId));
+    public ResponseEntity<ProductResponse> product(@PathVariable final Long productId) {
+        return ResponseEntity.ok(productService.findById(productId));
     }
 
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long productId) {
-        productService.deleteProductById(productId);
-        return ResponseEntity.noContent().build();
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> products() {
+        return ResponseEntity.ok(productService.findAll());
     }
 }

@@ -1,11 +1,5 @@
 package woowacourse.auth.ui;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +11,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.config.AuthenticationPrincipalConfig;
-import woowacourse.auth.ui.dto.TokenRequest;
+import woowacourse.auth.ui.dto.LoginRequest;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
 public class AuthControllerTest {
@@ -57,18 +56,18 @@ public class AuthControllerTest {
         // then
         assertAll(
                 () -> 이메일_공백.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이메일은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이메일은 공백일 수 없습니다.")),
                 () -> 비밀번호_공백.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 비밀번호는 공백일 수 없습니다."))
+                        .andExpect(jsonPath("$.message").value("[ERROR] 비밀번호는 공백일 수 없습니다."))
         );
     }
 
     private ResultActions postLogin(String email, String password) throws Exception {
-        TokenRequest tokenRequest = new TokenRequest(email, password);
+        LoginRequest loginRequest = new LoginRequest(email, password);
         return mockMvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
-                        objectMapper.writeValueAsString(tokenRequest)
+                        objectMapper.writeValueAsString(loginRequest)
                 ));
     }
 }

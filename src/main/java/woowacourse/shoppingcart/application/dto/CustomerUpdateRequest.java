@@ -7,7 +7,7 @@ public class CustomerUpdateRequest {
     public CustomerUpdateRequest() {
     }
 
-    public CustomerUpdateRequest(String nickname) {
+    public CustomerUpdateRequest(final String nickname) {
         this.nickname = nickname;
     }
 

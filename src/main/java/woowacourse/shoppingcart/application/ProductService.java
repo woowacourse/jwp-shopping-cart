@@ -2,33 +2,53 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.global.exception.InvalidProductException;
+import woowacourse.shoppingcart.application.dto.ProductResponse;
+import woowacourse.shoppingcart.application.dto.ProductSaveRequest;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class ProductService {
+
     private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    @Transactional
+    public Long save(final ProductSaveRequest request) {
+        validateProductName(request.getName());
+        return productDao.save(request.toEntity());
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    private void validateProductName(final String name) {
+        if (productDao.existByName(name)) {
+            throw new InvalidProductException("[ERROR] 이미 존재하는 상품입니다.");
+        }
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductResponse findById(final Long id) {
+        return new ProductResponse(productDao.findById(id)
+                .orElseThrow(() -> new InvalidProductException("[ERROR] ID가 존재하지 않습니다.")));
     }
 
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+    public List<ProductResponse> findByIds(final List<Long> ids) {
+        if (ids.isEmpty()) {
+            throw new InvalidProductException("장바구니가 비어있습니다.");
+        }
+        return productDao.findByIds(ids).stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductResponse> findAll() {
+        return productDao.findAll().stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toList());
     }
 }
