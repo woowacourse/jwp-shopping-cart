@@ -7,13 +7,13 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.CartItems;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartItemCreateRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -31,40 +31,28 @@ public class CartItemService {
 
     public CartItemResponse add(final LoginCustomer loginCustomer, final CartItemCreateRequest cartItemCreateRequest) {
         final Product product = productDao.findProductById(cartItemCreateRequest.getProductId());
-        final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
-        validateAddable(product, customer);
-
         final CartItem cartItem = cartItemCreateRequest.toCartItem(product);
+        final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
+        final CartItems cartItems = CartItems.of(cartItemDao.findCartItemsByCustomerId(customer.getId()));
+
+        cartItems.add(cartItem);
         final Long cartItemId = cartItemDao.add(customer.getId(), cartItem);
         return CartItemResponse.of(cartItemId, cartItem);
     }
 
-    private void validateAddable(Product product, Customer customer) {
-        List<CartItem> customerCartItems = cartItemDao.findCartItemsByCustomerId(customer.getId());
-        customerCartItems.stream()
-                .filter(it -> it.getProductId().equals(product.getId()))
-                .findAny()
-                .ifPresent(it -> {
-                    throw new IllegalArgumentException("이미 장바구니에 상품이 존재합니다.");
-                });
-    }
-
     public List<CartItemResponse> findByCustomer(final LoginCustomer loginCustomer) {
         final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
-        final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customer.getId());
+        final CartItems cartItems = CartItems.of(cartItemDao.findCartItemsByCustomerId(customer.getId()));
         return CartItemResponse.of(cartItems);
     }
 
     public CartItemResponse updateQuantity(LoginCustomer loginCustomer, Long cartItemId,
                                            CartItemUpdateRequest cartItemUpdateRequest) {
         final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
-        final List<CartItem> customerCartItems = cartItemDao.findCartItemsByCustomerId(customer.getId());
-        final CartItem savedCartItem = customerCartItems.stream()
-                .filter(item -> item.getId().equals(cartItemId))
-                .findFirst()
-                .orElseThrow(InvalidCartItemException::new);
+        final CartItems cartItems = CartItems.of(cartItemDao.findCartItemsByCustomerId(customer.getId()));
+        final CartItem cartItem = cartItems.findById(cartItemId);
 
-        final CartItem updatedCartItem = cartItemUpdateRequest.toCartItem(savedCartItem);
+        final CartItem updatedCartItem = cartItemUpdateRequest.toCartItem(cartItem);
         cartItemDao.update(updatedCartItem);
         return CartItemResponse.of(cartItemId, updatedCartItem);
     }
