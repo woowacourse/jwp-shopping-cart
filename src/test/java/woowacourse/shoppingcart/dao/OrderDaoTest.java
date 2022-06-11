@@ -3,11 +3,13 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.global.DaoTest;
 
+@Disabled
 class OrderDaoTest extends DaoTest {
 
     private final JdbcTemplate jdbcTemplate;

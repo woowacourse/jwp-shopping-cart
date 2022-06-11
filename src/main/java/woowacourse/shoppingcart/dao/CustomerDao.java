@@ -86,7 +86,7 @@ public class CustomerDao {
 
     public Optional<Customer> findByEmailAndPassword(String email, String password) {
         try {
-            final String query = "SELECT id, email, username, password FROM customer WHERE email = :email and password = :password";
+            final String query = "SELECT * FROM customer WHERE email = :email and password = :password";
             Map<String, String> params = Map.of("email", email, "password", password);
             Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
 

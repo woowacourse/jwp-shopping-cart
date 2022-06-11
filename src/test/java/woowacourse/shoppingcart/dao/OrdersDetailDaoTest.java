@@ -4,12 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.global.DaoTest;
 import woowacourse.shoppingcart.domain.OrderDetail;
 
+@Disabled
 class OrdersDetailDaoTest extends DaoTest {
 
     private final JdbcTemplate jdbcTemplate;

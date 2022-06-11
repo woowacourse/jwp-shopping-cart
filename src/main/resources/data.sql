@@ -1,10 +1,10 @@
 -- customer
 insert into customer (email, username, password)
-values ('puterism@naver.com', 'puterism', '12349053145'),
-       ('yujo@naver.com', 'yujo11', '123456789'),
-       ('sunhpark@naver.com', 'sunhpark42', 'sdakdasf1234');
+values ('puterism@naver.com', 'puterism', 'e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5'), -- 12349053145
+       ('yujo@naver.com', 'yujo11', '87cd084d190e436f147322b90e7384f6a8e0676c99d21ef519ea718e51d45f9c'), -- 123456789
+       ('sunhpark@naver.com', 'sunhpark42', '885126ceec07a2129eeec1f9b7823b24878fa7a98355a15ba7a98402c8851477'); -- sdakdasf1234
 
--- product
+-- product: 30EA
 insert into product (name, price, image_url, quantity)
 values ('[든든] 칠레산 코호 냉동 연어필렛 trim D(껍질있음) 1.1~1.3kg', 24500, 'https://cdn-mart.baemin.com/sellergoods/main/92438f0e-0c4b-425e-b03b-999cee7cdca2.jpg', 10),
        ('[든든] LEROY 노르웨이 생연어 원물 1마리 6~7kg', 193800, 'https://cdn-mart.baemin.com/sellergoods/main/03751585-2305-4999-85dd-7d3aba184fe6.jpg', 10),

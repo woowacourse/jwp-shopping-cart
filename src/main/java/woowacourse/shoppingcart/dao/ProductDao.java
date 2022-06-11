@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,15 +35,15 @@ public class ProductDao {
         ).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Optional<Product> findProductById(final Long productId) {
         try {
             final String query = "SELECT * FROM product WHERE id = :id";
-            // 주의
             Map<String, Long> params = Map.of("id", productId);
 
-            return jdbcTemplate.queryForObject(query, params, rowMapper());
+            Product product = jdbcTemplate.queryForObject(query, params, rowMapper());
+            return Optional.of(product);
         } catch (final EmptyResultDataAccessException e) {
-            throw new RuntimeException(e);
+            return Optional.empty();
         }
     }
 

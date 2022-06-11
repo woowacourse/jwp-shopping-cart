@@ -12,7 +12,7 @@ import static woowacourse.fixture.CartFixture.장바구니_상품_추가_요청�
 import static woowacourse.fixture.CustomerFixture.로그인_요청_및_토큰발급;
 import static woowacourse.fixture.CustomerFixture.회원가입_요청_및_ID_추출;
 import static woowacourse.fixture.Fixture.covertTypeList;
-import static woowacourse.fixture.ProductFixture.상품_등록되어_있음;
+import static woowacourse.fixture.ProductFixture.상품_등록후_ID반환;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -44,8 +44,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         super.setUp();
         토큰_및_회원_ID_초기화();
 
-        productId1 = 상품_등록되어_있음(token, "치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
-        productId2 = 상품_등록되어_있음(token, "맥주", 20_000, "http://example.com/beer.jpg", 30_000);
+        productId1 = 상품_등록후_ID반환(token, "치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
+        productId2 = 상품_등록후_ID반환(token, "맥주", 20_000, "http://example.com/beer.jpg", 30_000);
     }
 
     @DisplayName("장바구니 상품 추가 : 정상")
@@ -98,8 +98,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = 장바구니_상품_목록_조회_요청(token, customerId);
 
-        CartResponse expected1 = new CartResponse(1L, "http://example.com/chicken.jpg", "치킨", 10_000, 20_000, 2);
-        CartResponse expected2 = new CartResponse(2L, "http://example.com/beer.jpg", "맥주", 20_000, 30_000, 4);
+        CartResponse expected1 = new CartResponse(30 + 1L, "http://example.com/chicken.jpg", "치킨", 10_000, 20_000, 2);
+        CartResponse expected2 = new CartResponse(30 + 2L, "http://example.com/beer.jpg", "맥주", 20_000, 30_000, 4);
         List<CartResponse> cartResponses = covertTypeList(response, CartResponse.class);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -114,14 +114,14 @@ public class CartAcceptanceTest extends AcceptanceTest {
         @DisplayName("- 정상 요청")
         @Test
         void changeCartItemCount() {
-            long 장바구니_ID = 장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
+            장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
 
             ExtractableResponse<Response> response = given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .header("Authorization", "Bearer " + token)
                     .body(Map.of("count", 10))
                     .when()
-                    .patch("/api/customers/" + customerId + "/carts?productId=" + 장바구니_ID)
+                    .patch("/api/customers/" + customerId + "/carts?productId=" + productId1)
                     .then().log().all()
                     .extract();
 
@@ -169,9 +169,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제 : 정상")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
+        장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
 
-        ExtractableResponse<Response> response = 장바구니_상품_삭제_요청(token, customerId, cartId);
+        ExtractableResponse<Response> response = 장바구니_상품_삭제_요청(token, customerId, productId1);
 
         장바구니_삭제_검증(response);
     }

@@ -26,7 +26,7 @@ public class CartService {
     public Long addCartItem(long customerId, long productId, long cartItemCount) {
         customerSpec.validateCustomerExists(customerId);
         validateExistProduct(productId);
-        validateExistCartItem(customerId, productId);
+        validateAlreadyExistCartItem(customerId, productId);
         Product findProduct = validateExistProductAndGet(productId);
         validateOverQuantity(findProduct, cartItemCount);
 
@@ -52,7 +52,7 @@ public class CartService {
         cartItemDao.deleteCartItemByProductId(productId);
     }
 
-    private void validateExistCartItem(long customerId, long productId) throws AlreadyCartItemExistException {
+    private void validateAlreadyExistCartItem(long customerId, long productId) throws AlreadyCartItemExistException {
         boolean exist = cartItemDao.existCartItem(customerId, productId);
         if (exist) {
             throw new AlreadyCartItemExistException();
@@ -67,11 +67,9 @@ public class CartService {
     }
 
     private Product validateExistProductAndGet(long productId) {
-        try {
-            return productDao.findProductById(productId);
-        } catch (Exception e) {
-            throw new NotExistProductException();
-        }
+        return productDao.findProductById(productId)
+                .orElseThrow(NotExistProductException::new);
+
     }
 
     private void validateExistProduct(long productId) {

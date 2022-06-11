@@ -15,7 +15,7 @@ import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.utils.JwtTokenProvider;
 
 @SpringBootTest
-@Sql({"/clear-all-tables.sql", "/generate-data.sql"})
+@Sql({"/clear-all-tables.sql", "/data.sql"})
 class AuthServiceTest {
 
     @Autowired

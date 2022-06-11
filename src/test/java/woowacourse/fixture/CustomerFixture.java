@@ -39,12 +39,10 @@ public class CustomerFixture extends Fixture {
         return put(path, token, reuqestBody);
     }
 
-
     public static ExtractableResponse<Response> 회원탈퇴_요청(String token, long id, CustomerDeleteRequest reuqestBody) {
         String path = "/api/customers/" + id;
         return post(path, token, reuqestBody);
     }
-
 
     public static long ID_추출(ExtractableResponse<Response> response) {
         String location = response.header("Location");

@@ -66,7 +66,7 @@ public class CustomerDaoTest extends DaoTest {
         Customer customer = customerDao.findById(1L).orElse(null);
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
 
         assertThat(customer).usingRecursiveComparison()
                 .isEqualTo(expected);
@@ -79,7 +79,7 @@ public class CustomerDaoTest extends DaoTest {
         Customer customer = customerDao.findByEmail("puterism@naver.com").orElse(null);
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
 
         assertThat(customer).usingRecursiveComparison()
                 .isEqualTo(expected);
@@ -89,10 +89,10 @@ public class CustomerDaoTest extends DaoTest {
     @Test
     void findByEmailAndPassword() {
         // when
-        Customer customer = customerDao.findByEmailAndPassword("puterism@naver.com", "12349053145").orElse(null);
+        Customer customer = customerDao.findByEmailAndPassword("puterism@naver.com", "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5").orElse(null);
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
 
         assertThat(customer).usingRecursiveComparison()
                 .isEqualTo(expected);

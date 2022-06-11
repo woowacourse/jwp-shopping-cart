@@ -11,7 +11,7 @@ import static woowacourse.fixture.OrderFixture.주문_조회_응답_검증;
 import static woowacourse.fixture.OrderFixture.주문하기_성공함;
 import static woowacourse.fixture.OrderFixture.주문하기_요청;
 import static woowacourse.fixture.OrderFixture.주문하기_요청_성공_검증;
-import static woowacourse.fixture.ProductFixture.상품_등록되어_있음;
+import static woowacourse.fixture.ProductFixture.상품_등록후_ID반환;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.auth.dto.TokenRequest;
@@ -28,6 +29,7 @@ import woowacourse.global.AcceptanceTest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 
+@Disabled
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
 
@@ -44,8 +46,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         토큰_및_회원_ID_초기화();
 
-        Long productId1 = 상품_등록되어_있음(token, "치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
-        Long productId2 = 상품_등록되어_있음(token, "맥주", 20_000, "http://example.com/beer.jpg", 30_000);
+        Long productId1 = 상품_등록후_ID반환(token, "치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
+        Long productId2 = 상품_등록후_ID반환(token, "맥주", 20_000, "http://example.com/beer.jpg", 30_000);
 
         cartId1 = 장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
         cartId2 = 장바구니_상품_추가_요청후_ID_반환(token, customerId, productId2, 2);

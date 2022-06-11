@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.fixture.AuthFixture.로그인_요청;
 import static woowacourse.fixture.CustomerFixture.ID_추출;
 import static woowacourse.fixture.CustomerFixture.로그인_요청_및_토큰발급;
 import static woowacourse.fixture.CustomerFixture.회원가입_요청;
@@ -165,7 +166,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class Find {
 
-        @DisplayName("가입후 토큰을 통해서 정보를 조회할 수 있다")
+        @DisplayName("가입, 로그인 후 토큰을 통해서 정보를 조회할 수 있다")
         @Test
         void findCustomer() {
             ExtractableResponse<Response> createResponse = 회원가입_요청(
@@ -181,6 +182,21 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             assertAll(
                     () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                     () -> assertThat(customerResponse).usingRecursiveComparison().isEqualTo(expected)
+            );
+        }
+
+        @DisplayName("가입, 로그인 후 비밀번호가 다른 경우 401을 반환한다.")
+        @Test
+        void fail_login_when_wrong_password() {
+            회원가입_요청(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+
+            String 틀린_비밀번호 = "wrong_password";
+            ExtractableResponse<Response> loginResponse = 로그인_요청(new TokenRequest("roma@naver.com", 틀린_비밀번호));
+            ErrorResponse errorResponse = loginResponse.as(ErrorResponse.class);
+
+            assertAll(
+                    () -> assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
+                    () -> assertThat(errorResponse.getMessage()).isEqualTo("id 또는 비밀번호가 틀렸습니다.")
             );
         }
 

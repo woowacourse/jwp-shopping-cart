@@ -79,6 +79,7 @@ public class CartItemDao {
     public void updateCartItemDao(long customerId, int productId, long cartItemCount) {
         final String query =
                 "UPDATE cart_item SET count = :cartItemCount WHERE customer_id = :customerId and product_id = :productId";
+
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("customerId", customerId)
                 .addValue("productId", productId)
