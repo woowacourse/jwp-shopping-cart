@@ -32,7 +32,7 @@ class AuthServiceTest {
 
         final String accessToken = authService.createToken(tokenRequest);
 
-        assertThat(jwtTokenProvider.getPayload(accessToken)).isEqualTo("email@email.com");
+        assertThat(jwtTokenProvider.getSubject(accessToken)).isEqualTo("email@email.com");
     }
 
     @DisplayName("잘못된 이메일과 비밀번호를 통해 토큰 생성을 요청할 경우 예외가 발생한다.")

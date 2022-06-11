@@ -39,7 +39,7 @@ class AuthControllerTest {
 
         HttpStatus statusCode = response.getStatusCode();
         String accessToken = Objects.requireNonNull(response.getBody()).getToken();
-        String payload = jwtTokenProvider.getPayload(accessToken);
+        String payload = jwtTokenProvider.getSubject(accessToken);
 
         assertAll(
                 () -> assertThat(statusCode).isEqualTo(HttpStatus.OK),

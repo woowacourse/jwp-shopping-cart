@@ -38,7 +38,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getPayload(String token) {
+    public String getSubject(String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(secretKey).build()
