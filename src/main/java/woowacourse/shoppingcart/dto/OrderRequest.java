@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 public class OrderRequest {
     @NotNull
     private final Long cartId;
-    @Min(0)
+    @Min(value = 0, message = "수량은 0개 이상이어야 합니다. : ${validatedValue}")
     private final int quantity;
 
     public OrderRequest(final Long cartId, final int quantity) {
