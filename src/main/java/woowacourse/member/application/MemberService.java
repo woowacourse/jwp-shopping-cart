@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.domain.password.Password;
-import woowacourse.member.domain.password.UnencryptedPassword;
+import woowacourse.member.domain.password.PlainPassword;
 import woowacourse.member.dto.FindMemberInfoResponse;
 import woowacourse.member.dto.SignUpRequest;
 import woowacourse.member.dto.UpdateNameRequest;
@@ -30,7 +30,8 @@ public class MemberService {
     @Transactional
     public void signUp(SignUpRequest request) {
         checkDuplicateEmail(request.getEmail());
-        Password password = new UnencryptedPassword(request.getPassword());
+        PlainPassword plainPassword = new PlainPassword(request.getPassword());
+        Password password = plainPassword.encrypt();
         Member member = new Member(request.getEmail(), request.getName(), password);
         memberDao.save(member);
     }
@@ -61,7 +62,8 @@ public class MemberService {
         Member member = validateExistMember(memberDao.findMemberById(id));
         validateUpdatePassword(request, member);
 
-        Password newPassword = new UnencryptedPassword(request.getNewPassword());
+        PlainPassword plainPassword = new PlainPassword(request.getNewPassword());
+        Password newPassword = plainPassword.encrypt();
         memberDao.updatePassword(id, newPassword.getValue());
     }
 
@@ -70,7 +72,8 @@ public class MemberService {
     }
 
     private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {
-        Password requestPassword = new UnencryptedPassword(request.getOldPassword());
+        PlainPassword plainPassword = new PlainPassword(request.getOldPassword());
+        Password requestPassword = plainPassword.encrypt();
         if (!member.isSamePassword(requestPassword)) {
             throw new InvalidPasswordException("현재 비밀번호와 일치하지 않습니다.");
         }

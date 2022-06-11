@@ -5,15 +5,17 @@ import woowacourse.member.exception.InvalidPasswordException;
 
 import java.util.regex.Pattern;
 
-public class UnencryptedPassword extends Password {
+public class PlainPassword {
 
     private static final Pattern CASE_PATTERN = Pattern.compile("(?=.*?[a-z])(?=.*?[A-Z])");
     private static final Pattern SPECIAL_CHARACTER_PATTERN = Pattern.compile("(?=.*?[!@?-])");
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
 
-    public UnencryptedPassword(String value) {
-        super(PasswordEncoder.encrypt(value));
+    private final String value;
+
+    public PlainPassword(String value) {
         validate(value);
+        this.value = value;
     }
 
     private static void validate(String value) {
@@ -38,5 +40,9 @@ public class UnencryptedPassword extends Password {
         if (!SPECIAL_CHARACTER_PATTERN.matcher(value).find()) {
             throw new InvalidPasswordException("비밀번호는 특수문자(!,@,?,-)를 포함해야 합니다");
         }
+    }
+
+    public Password encrypt() {
+        return new Password(PasswordEncoder.encrypt(value));
     }
 }

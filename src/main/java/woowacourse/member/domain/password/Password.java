@@ -2,7 +2,7 @@ package woowacourse.member.domain.password;
 
 import java.util.Objects;
 
-public abstract class Password {
+public class Password {
 
     private final String value;
 

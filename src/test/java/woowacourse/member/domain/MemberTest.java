@@ -3,7 +3,7 @@ package woowacourse.member.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.member.domain.password.Password;
-import woowacourse.member.domain.password.UnencryptedPassword;
+import woowacourse.member.domain.password.PlainPassword;
 import woowacourse.member.exception.InvalidMemberEmailException;
 import woowacourse.member.exception.InvalidMemberNameException;
 
@@ -12,7 +12,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MemberTest {
 
-    private final Password password = new UnencryptedPassword("Wooteco1!");
+    private final PlainPassword plainPassword = new PlainPassword("Wooteco1!");
+    private final Password password = plainPassword.encrypt();
 
     @DisplayName("이름은 공백이 포함되지 않아야 한다.")
     @Test
@@ -42,7 +43,8 @@ class MemberTest {
     @DisplayName("비밀번호가 일치한다면 true를 반환한다.")
     @Test
     void isSamePassword() {
-        Password password = new UnencryptedPassword("Wooteco123!");
+        PlainPassword plainPassword = new PlainPassword("Wooteco123!");
+        Password password = plainPassword.encrypt();
         Member member = new Member("wooteco@naver.com", "우테코", password);
         boolean result = member.isSamePassword(password);
         assertThat(result).isTrue();
@@ -51,8 +53,10 @@ class MemberTest {
     @DisplayName("비밀번호가 일치하지 않는다면 false를 반환한다.")
     @Test
     void isNotSamePassword() {
-        Password password = new UnencryptedPassword("Wooteco123!");
-        Password wrongPassword = new UnencryptedPassword("Wooteco123?");
+        PlainPassword plainPassword = new PlainPassword("Wooteco123!");
+        Password password = plainPassword.encrypt();
+        PlainPassword wrongPlainPassword = new PlainPassword("Wooteco123?");
+        Password wrongPassword = wrongPlainPassword.encrypt();
         Member member = new Member("wooteco@naver.com", "우테코", password);
         boolean result = member.isSamePassword(wrongPassword);
         assertThat(result).isFalse();

@@ -8,7 +8,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.domain.Member;
 import woowacourse.member.domain.password.Password;
-import woowacourse.member.domain.password.UnencryptedPassword;
+import woowacourse.member.domain.password.PlainPassword;
 
 import javax.sql.DataSource;
 import java.util.Optional;
@@ -31,7 +31,8 @@ class MemberDaoTest {
     @Test
     void save() {
         String email = "wooteco@naver.com";
-        Password password = new UnencryptedPassword("Wooteco1!");
+        PlainPassword plainPassword = new PlainPassword("Wooteco1!");
+        Password password = plainPassword.encrypt();
         Member member = new Member(email, "wooteco", password);
         memberDao.save(member);
         assertThat(memberDao.existMemberByEmail(email)).isTrue();

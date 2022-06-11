@@ -10,7 +10,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.domain.password.Password;
-import woowacourse.member.domain.password.UnencryptedPassword;
+import woowacourse.member.domain.password.PlainPassword;
 import woowacourse.member.exception.MemberNotFoundException;
 import woowacourse.member.exception.WrongPasswordException;
 
@@ -35,7 +35,8 @@ public class AuthService {
 
     public Long authenticate(LoginRequest request) {
         Member member = validateExistMember(memberDao.findMemberByEmail(request.getEmail()));
-        Password requestPassword = new UnencryptedPassword(request.getPassword());
+        PlainPassword plainPassword = new PlainPassword(request.getPassword());
+        Password requestPassword = plainPassword.encrypt();
         if (!member.isSamePassword(requestPassword)) {
             throw new WrongPasswordException();
         }

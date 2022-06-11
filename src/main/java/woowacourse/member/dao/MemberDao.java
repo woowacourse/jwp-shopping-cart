@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.member.domain.Member;
-import woowacourse.member.domain.password.EncryptedPassword;
+import woowacourse.member.domain.password.Password;
 
 import javax.sql.DataSource;
 import java.util.Optional;
@@ -61,7 +61,7 @@ public class MemberDao {
                     resultSet.getLong("id"),
                     resultSet.getString("email"),
                     resultSet.getString("name"),
-                    new EncryptedPassword(resultSet.getString("password"))
+                    new Password(resultSet.getString("password"))
             );
 
     public void updateName(long id, String name) {
