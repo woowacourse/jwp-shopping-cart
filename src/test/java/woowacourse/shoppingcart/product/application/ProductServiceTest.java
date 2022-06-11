@@ -1,6 +1,12 @@
 package woowacourse.shoppingcart.product.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.support.TextFixture.PRODUCT_IMAGE_URL1;
+import static woowacourse.support.TextFixture.PRODUCT_IMAGE_URL2;
+import static woowacourse.support.TextFixture.PRODUCT_NAME1;
+import static woowacourse.support.TextFixture.PRODUCT_NAME2;
+import static woowacourse.support.TextFixture.PRODUCT_PRICE1;
+import static woowacourse.support.TextFixture.PRODUCT_PRICE2;
 
 import java.util.List;
 
@@ -23,13 +29,6 @@ import woowacourse.shoppingcart.product.support.jdbc.dao.ProductDao;
 @Sql("classpath:truncate.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class ProductServiceTest {
-
-    private static final String PRODUCT_NAME1 = "상품1";
-    private static final long PRODUCT_PRICE1 = 1000;
-    private static final String PRODUCT_IMAGE_URL1 = "http://img1.com";
-    private static final String PRODUCT_NAME2 = "상품2";
-    private static final long PRODUCT_PRICE2 = 2000;
-    private static final String PRODUCT_IMAGE_URL2 = "http://img2.com";
 
     private final ProductService productService;
     private final JdbcTemplate jdbcTemplate;
