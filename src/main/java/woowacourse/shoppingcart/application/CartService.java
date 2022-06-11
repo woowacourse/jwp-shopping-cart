@@ -63,6 +63,7 @@ public class CartService {
         return cartProducts;
     }
 
+    @Transactional
     public void deleteCart(String email, CartDeleteRequest cartDeleteRequest) {
         Long customerId = customerDao.findIdByEmail(email);
         cartDao.deleteByCustomerIdAndCartIds(customerId, cartDeleteRequest.getProductIds());
