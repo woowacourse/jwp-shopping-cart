@@ -28,7 +28,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> add(@Validated @RequestBody final ProductRequestDto productRequestDto) {
         final Long productId = productService.addProduct(productRequestDto);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -49,7 +49,7 @@ public class ProductController {
     }
 
     @PostMapping("/newProducts")
-    public ResponseEntity<Void> addProducts(@RequestBody final List<ProductRequestDto> products) {
+    public ResponseEntity<Void> addProducts(@Validated @RequestBody final List<ProductRequestDto> products) {
         productService.addProducts(products);
         return ResponseEntity.ok().build();
     }

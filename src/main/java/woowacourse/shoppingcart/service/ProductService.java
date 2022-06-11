@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.ProductRequestDto;
@@ -31,7 +32,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public Long addProduct(final ProductRequestDto productRequestDto) {
+    public Long addProduct(@Validated final ProductRequestDto productRequestDto) {
         return productDao.save(
                 new Product(
                         productRequestDto.getName(),

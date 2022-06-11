@@ -2,10 +2,12 @@ package woowacourse.shoppingcart.dto.request;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class ProductRequestDto {
 
     @NotBlank(message = "상품명은 비어있을 수 없습니다.")
+    @Size(min = 1, max = 254)
     private String name;
     private Integer price;
     private String thumbnailUrl;
