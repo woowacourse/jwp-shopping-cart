@@ -32,13 +32,13 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     private void validateAvailableToken(String token) {
         if (!jwtTokenProvider.validateToken(token)) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+            throw new IllegalArgumentException("[ERROR] 유효하지 않은 토큰입니다.");
         }
     }
 
     private void validateNotToken(String token) {
         if (Objects.isNull(token)) {
-            throw new IllegalArgumentException("토큰이 존재하지 않습니다.");
+            throw new IllegalArgumentException("[ERROR] 토큰이 존재하지 않습니다.");
         }
     }
 }

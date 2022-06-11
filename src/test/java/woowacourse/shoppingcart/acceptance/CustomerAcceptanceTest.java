@@ -64,7 +64,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ErrorResponse response = ROOKIE.noSignInAnd().showMyInfo();
 
         // then
-        assertThat(response.getMessage()).isEqualTo("토큰이 존재하지 않습니다.");
+        assertThat(response.getMessage()).isEqualTo("[ERROR] 토큰이 존재하지 않습니다.");
     }
 
 
@@ -106,8 +106,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(
-                () -> assertThat(responseNickname.getMessage()).isEqualTo("토큰이 존재하지 않습니다."),
-                () -> assertThat(responsePassword.getMessage()).isEqualTo("토큰이 존재하지 않습니다.")
+                () -> assertThat(responseNickname.getMessage()).isEqualTo("[ERROR] 토큰이 존재하지 않습니다."),
+                () -> assertThat(responsePassword.getMessage()).isEqualTo("[ERROR] 토큰이 존재하지 않습니다.")
         );
     }
 
@@ -134,7 +134,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ErrorResponse response = ROOKIE.noSignInAnd().deleteCustomer();
 
         // then
-        assertThat(response.getMessage()).isEqualTo("토큰이 존재하지 않습니다.");
+        assertThat(response.getMessage()).isEqualTo("[ERROR] 토큰이 존재하지 않습니다.");
     }
 
     public static TokenResponse 로그인_되어_있음(String email, String password) {
