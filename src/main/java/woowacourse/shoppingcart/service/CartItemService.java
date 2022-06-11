@@ -34,14 +34,8 @@ public class CartItemService {
         final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
 
         return cartItems.stream()
-                .map(cartItem -> new CartItemResponseDto(
-                        cartItem.getProductId(),
-                        cartItem.getImageUrl(),
-                        cartItem.getName(),
-                        cartItem.getPrice(),
-                        cartItem.getQuantity(),
-                        cartItem.getCount())
-                ).collect(Collectors.toList());
+                .map(CartItemResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     public Long addCartItem(@Validated final AddCartItemRequestDto addCartItemRequestDto, final Long customerId) {

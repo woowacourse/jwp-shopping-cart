@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto.response;
 
+import woowacourse.shoppingcart.domain.CartItem;
+
 public class CartItemResponseDto {
     private final Long productId;
     private final String thumbnailUrl;
@@ -20,6 +22,15 @@ public class CartItemResponseDto {
         this.price = price;
         this.quantity = quantity;
         this.count = count;
+    }
+
+    public CartItemResponseDto(CartItem cartItem){
+        this.productId = cartItem.getProductId();
+        this.thumbnailUrl = cartItem.getImageUrl();
+        this.name = cartItem.getName();
+        this.price = cartItem.getPrice();
+        this.quantity = cartItem.getQuantity();
+        this.count = cartItem.getCount();
     }
 
     public Long getProductId() {
