@@ -85,19 +85,4 @@ class CartServiceTest {
                 () -> assertThat(updated.getQuantity()).isEqualTo(2000)
         );
     }
-
-    @Test
-    @DisplayName("장바구니에 물건을 조회한다.")
-    void find_cart() {
-        // given
-        Cart cart = new Cart(1L, 1L, 1000);
-        given(cartDao.findByCustomerIdAndProductId(1L, cart.getProductId()))
-                .willReturn(Optional.of(cart));
-
-        // when
-        Cart find = cartService.findCartsByCustomerIdAndProductId(cart.getCustomerId(), cart.getProductId());
-
-        // then
-        assertThat(find).isEqualTo(cart);
-    }
 }

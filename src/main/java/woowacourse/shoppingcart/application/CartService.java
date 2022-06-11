@@ -67,9 +67,4 @@ public class CartService {
         Long customerId = customerDao.findIdByEmail(email);
         cartDao.deleteByCustomerIdAndCartIds(customerId, cartDeleteRequest.getProductIds());
     }
-
-    public Cart findCartsByCustomerIdAndProductId(Long customerId, Long productId) {
-        return cartDao.findByCustomerIdAndProductId(customerId, productId)
-                .orElseThrow(() -> new ProductNotFoundException(CODE_3001.getMessage()));
-    }
 }
