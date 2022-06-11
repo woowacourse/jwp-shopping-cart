@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.entity.CartItemEntity;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
@@ -21,12 +20,13 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
+    private final CustomerService customerService;
     private final ProductService productService;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductService productService) {
+    public CartService(final CartItemDao cartItemDao, final CustomerService customerService,
+                       final ProductService productService) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
+        this.customerService = customerService;
         this.productService = productService;
     }
 
@@ -43,7 +43,7 @@ public class CartService {
 
     @Transactional
     public void addCartItem(final Email email, final CartAdditionRequest cartAdditionRequest) {
-        final Long customerId = customerDao.findIdByEmail(email);
+        final Long customerId = customerService.findIdByEmail(email);
         final Product product = productService.findById(cartAdditionRequest.getProductId());
 
         if (cartItemDao.existCartItem(customerId, product.getId())) {
@@ -67,7 +67,7 @@ public class CartService {
 
     @Transactional
     public void updateCartItem(final Email email, final CartUpdateRequest cartUpdateRequest) {
-        final Long customerId = customerDao.findIdByEmail(email);
+        final Long customerId = customerService.findIdByEmail(email);
         final Product product = productService.findById(cartUpdateRequest.getProductId());
 
         validateExistProduct(customerId, product);
@@ -95,7 +95,7 @@ public class CartService {
     }
 
     private List<CartItemEntity> findCartItemEntitiesByEmail(final Email email) {
-        final Long customerId = customerDao.findIdByEmail(email);
+        final Long customerId = customerService.findIdByEmail(email);
         return cartItemDao.findAllByCustomerId(customerId);
     }
 

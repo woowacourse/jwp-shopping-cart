@@ -45,6 +45,11 @@ public class CustomerService {
         return customerDao.findByEmail(email).getCustomer();
     }
 
+    public Long findIdByEmail(final Email email) {
+        validateExists(email);
+        return customerDao.findIdByEmail(email);
+    }
+
     @Transactional
     public void updateProfile(final Email email, final CustomerProfileRequest customerProfileRequest) {
         validateExists(email);
