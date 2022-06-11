@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.SignInResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -13,8 +12,8 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 public class AuthService {
     private static final String DIFFERENT_PASSWORD = "[ERROR] 비밀번호가 일치하지 않습니다.";
 
-    private CustomerDao customerDao;
-    private JwtTokenProvider jwtTokenProvider;
+    private final CustomerDao customerDao;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public AuthService(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
         this.jwtTokenProvider = jwtTokenProvider;
@@ -36,9 +35,9 @@ public class AuthService {
     }
 
     private void validateSamePassword(SignInRequest signInRequest, Customer customer) {
-        var rowPassword = signInRequest.getPassword();
+        var password = signInRequest.getPassword();
 
-        if (!customer.isSamePassword(new Password(rowPassword))) {
+        if (!customer.isSamePassword(password)) {
             throw new InvalidCustomerException(DIFFERENT_PASSWORD);
         }
     }

@@ -15,6 +15,13 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
+
+    private static final String CUSTOMER_ID = "customer_id";
+    private static final String PRODUCT_ID = "product_id";
+    private static final String QUANTITY = "quantity";
+    private static final String CHECKED = "checked";
+    private static final String CART_ITEM_ID = "id";
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
 
@@ -26,13 +33,13 @@ public class CartItemDao {
     public List<Long> findIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong(CART_ITEM_ID), customerId);
     }
 
     public Long findProductIdById(final Long cartId) {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong(PRODUCT_ID), cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
@@ -43,10 +50,10 @@ public class CartItemDao {
                 + "VALUES(:customer_id, :product_id, :quantity, :checked)";
 
         var paramSource = Map.of(
-                "customer_id", customerId,
-                "product_id", addCartItemRequest.getProductId(),
-                "quantity", addCartItemRequest.getQuantity(),
-                "checked", addCartItemRequest.getChecked()
+                CUSTOMER_ID, customerId,
+                PRODUCT_ID, addCartItemRequest.getProductId(),
+                QUANTITY, addCartItemRequest.getQuantity(),
+                CHECKED, addCartItemRequest.getChecked()
         );
 
         namedParameterJdbcTemplate.update(sql, paramSource);
@@ -65,15 +72,15 @@ public class CartItemDao {
         final var sql = "SELECT * FROM cart_item WHERE customer_id = :customer_id";
 
         RowMapper<CartItem> rowMapper = (rs, rowNum) -> {
-            var id = rs.getLong("id");
-            var customer_id = rs.getLong("customer_id");
-            var product_id = rs.getLong("product_id");
-            var quantity = rs.getInt("quantity");
-            var checked = rs.getBoolean("checked");
+            var id = rs.getLong(CART_ITEM_ID);
+            var customer_id = rs.getLong(CUSTOMER_ID);
+            var product_id = rs.getLong(PRODUCT_ID);
+            var quantity = rs.getInt(QUANTITY);
+            var checked = rs.getBoolean(CHECKED);
             return new CartItem(id, customer_id, product_id, quantity, checked);
         };
 
-        return namedParameterJdbcTemplate.query(sql, Map.of("customer_id", customerId), rowMapper);
+        return namedParameterJdbcTemplate.query(sql, Map.of(CUSTOMER_ID, customerId), rowMapper);
     }
 
     public void deleteAllByCustomerId(Long customerId) {
@@ -86,10 +93,10 @@ public class CartItemDao {
         final String sql = "UPDATE cart_item SET quantity = (:quantity), checked = (:checked) WHERE customer_id = (:customer_id) AND id = (:id)";
 
         var paramSource = Map.of(
-                "id", updateCartItemRequest.getId(),
-                "customer_id", customerId,
-                "quantity", updateCartItemRequest.getQuantity(),
-                "checked", updateCartItemRequest.getChecked()
+                CART_ITEM_ID, updateCartItemRequest.getId(),
+                CUSTOMER_ID, customerId,
+                QUANTITY, updateCartItemRequest.getQuantity(),
+                CHECKED, updateCartItemRequest.getChecked()
         );
 
         namedParameterJdbcTemplate.update(sql, paramSource);

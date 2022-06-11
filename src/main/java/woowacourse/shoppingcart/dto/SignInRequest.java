@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import woowacourse.shoppingcart.domain.customer.Password;
 
 public class SignInRequest {
     private static final String INVALID_PASSWORD = "[ERROR] 비밀번호는 공백 또는 빈 값일 수 없습니다.";
@@ -22,8 +23,8 @@ public class SignInRequest {
         this.password = password;
     }
 
-    public String getPassword() {
-        return password;
+    public Password getPassword() {
+        return new Password(password);
     }
 
     public String getEmail() {
