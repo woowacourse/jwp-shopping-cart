@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.shoppingcart.domain.value.Password;
 
 class PasswordTest {
 
@@ -47,5 +47,16 @@ class PasswordTest {
         assertThatThrownBy(() -> new Password(value))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호 형식이 올바르지 않습니다.");
+    }
+
+    @DisplayName("문자열이 비밀번호와 일치하는지 여부를 반환한다.")
+    @ParameterizedTest
+    @CsvSource({"1q2w3e4r!,true", "1q2w3e4r@,false"})
+    void isSameValue(String value, boolean expected) {
+        Password password = new Password("1q2w3e4r!");
+
+        boolean actual = password.isSameValue(value);
+
+        assertThat(actual).isEqualTo(expected);
     }
 }

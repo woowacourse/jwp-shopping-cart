@@ -39,8 +39,7 @@ public class AuthService {
     public PasswordCheckResponse checkPassword(Long memberId, PasswordCheckRequest passwordCheckRequest) {
         Member member = memberDao.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("이메일과 비밀번호를 확인해주세요."));
-        boolean result = member.getPassword()
-                .equals(passwordCheckRequest.getPassword());
+        boolean result = member.matchPassword(passwordCheckRequest.getPassword());
         return new PasswordCheckResponse(result);
     }
 }

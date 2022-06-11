@@ -21,6 +21,10 @@ public class Password {
         }
     }
 
+    public boolean isSameValue(String value) {
+        return this.value.equals(value);
+    }
+
     public String getValue() {
         return value;
     }

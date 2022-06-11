@@ -23,6 +23,10 @@ public class Member {
         this.nickname = new Nickname(nickname);
     }
 
+    public boolean matchPassword(String password) {
+        return this.password.isSameValue(password);
+    }
+
     public Long getId() {
         return id;
     }
