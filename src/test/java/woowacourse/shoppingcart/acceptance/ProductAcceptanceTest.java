@@ -29,6 +29,33 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_추가됨(response);
     }
 
+    @DisplayName("상품을 추가할떄 name이 blank이면 안된다.")
+    @Test
+    void addBlankName() {
+        ProductRequest 치킨 = new ProductRequest(" ", 10_000, 20, "http://example.com/chicken.jpg");
+        ExtractableResponse<Response> response = 상품_등록_요청(치킨);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("상품을 추가할떄 가격이 음수이면 안된다.")
+    @Test
+    void addMinusPrice() {
+        ProductRequest 치킨 = new ProductRequest("치킨", -10, 20, "http://example.com/chicken.jpg");
+        ExtractableResponse<Response> response = 상품_등록_요청(치킨);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("상품을 추가할떄 재고가 음수이면 안된다.")
+    @Test
+    void addMinusStock() {
+        ProductRequest 치킨 = new ProductRequest("치킨", 10_000, -20, "http://example.com/chicken.jpg");
+        ExtractableResponse<Response> response = 상품_등록_요청(치킨);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
