@@ -16,15 +16,15 @@ public class JdbcOrderDetailDao implements OrderDetailDao {
     private static final String TABLE_NAME = "order_detail";
     private static final String KEY_COLUMN = "id";
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-
-    private final RowMapper<OrderDetailEntity> orderDetailRowMapper = (rs, rowNum) -> new OrderDetailEntity(
+    private static final RowMapper<OrderDetailEntity> ORDER_DETAIL_ENTITY_ROW_MAPPER = (rs, rowNum) -> new OrderDetailEntity(
             rs.getLong("id"),
             rs.getLong("order_id"),
             rs.getLong("product_id"),
             rs.getInt("quantity")
     );
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public JdbcOrderDetailDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -46,6 +46,6 @@ public class JdbcOrderDetailDao implements OrderDetailDao {
     @Override
     public List<OrderDetailEntity> findAllByOrderId(Long orderId) {
         String sql = "SELECT id, order_id, product_id, quantity FROM order_detail WHERE order_id = ?";
-        return jdbcTemplate.query(sql, orderDetailRowMapper, orderId);
+        return jdbcTemplate.query(sql, ORDER_DETAIL_ENTITY_ROW_MAPPER, orderId);
     }
 }
