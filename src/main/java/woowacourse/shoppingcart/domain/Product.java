@@ -6,12 +6,12 @@ import java.util.Objects;
 
 public class Product {
 
-    private final Long id;
+    private final long id;
     private final String name;
     private final int price;
     private final String imageUrl;
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public Product(long id, String name, int price, String imageUrl) {
         validatePrice(price);
         this.id = id;
         this.name = name;
@@ -20,7 +20,7 @@ public class Product {
     }
 
     public Product(String name, int price, String imageUrl) {
-        this(null, name, price, imageUrl);
+        this(0L, name, price, imageUrl);
     }
 
     private void validatePrice(int price) {
@@ -41,7 +41,7 @@ public class Product {
         return imageUrl;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

@@ -25,12 +25,12 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(Product product) {
+    public long save(Product product) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(product);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public Optional<Product> findProductById(Long productId) {
+    public Optional<Product> findProductById(long productId) {
         try {
             String SQL = "SELECT id, name, price, image_url FROM product WHERE id = ?";
             Product product = jdbcTemplate.queryForObject(SQL, rowMapper, productId);
@@ -53,7 +53,7 @@ public class ProductDao {
                     resultSet.getString("image_url")
             );
 
-    public void delete(Long productId) {
+    public void delete(long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);
     }

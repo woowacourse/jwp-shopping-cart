@@ -4,15 +4,15 @@ import woowacourse.shoppingcart.domain.Cart;
 
 public class CartResponse {
 
-    private final Long id;
-    private final Long productId;
+    private final long id;
+    private final long productId;
     private final String name;
     private final int price;
     private final String imageUrl;
     private final int totalPrice;
     private final int quantity;
 
-    private CartResponse(Long id, Long productId, String name, int price, String imageUrl, int totalPrice, int quantity) {
+    private CartResponse(long id, long productId, String name, int price, String imageUrl, int totalPrice, int quantity) {
         this.id = id;
         this.productId = productId;
         this.name = name;
@@ -27,11 +27,11 @@ public class CartResponse {
                 cart.getImageUrl(), cart.getTotalPrice(), cart.getQuantity());
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 

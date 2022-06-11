@@ -26,19 +26,19 @@ public class CartDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(SaveCartDto saveCartDto) {
+    public long save(SaveCartDto saveCartDto) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(saveCartDto);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<Cart> findCartByMemberId(Long memberId) {
+    public List<Cart> findCartByMemberId(long memberId) {
         String SQL = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
                 "FROM cart_item as c JOIN product as p ON c.product_id = p.id WHERE c.member_id = ?";
 
         return jdbcTemplate.query(SQL, cartMapper(), memberId);
     }
 
-    public Optional<Cart> findCartById(Long cartId) {
+    public Optional<Cart> findCartById(long cartId) {
         try {
             String SQL = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
                     "FROM cart_item as c JOIN product as p ON c.product_id = p.id WHERE c.id = ?";
@@ -60,12 +60,12 @@ public class CartDao {
                         rs.getInt("quantity"));
     }
 
-    public void updateQuantity(Long cartId, int quantity) {
+    public void updateQuantity(long cartId, int quantity) {
         String SQL = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(SQL, quantity, cartId);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         String SQL = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(SQL, id);
     }

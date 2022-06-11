@@ -12,12 +12,12 @@ public class Member {
     private static final int MAXIMUM_NAME_LENGTH = 10;
     private static final String SPACE_CHARACTER = " ";
 
-    private final Long id;
+    private final long id;
     private final String email;
     private final String name;
     private final Password password;
 
-    public Member(Long id, String email, String name, Password password) {
+    public Member(long id, String email, String name, Password password) {
         validateEmailForm(email);
         validateName(name);
         this.id = id;
@@ -27,7 +27,7 @@ public class Member {
     }
 
     public Member(String email, String name, Password password) {
-        this(null, email, name, password);
+        this(0L, email, name, password);
     }
 
     private void validateEmailForm(String email) {
@@ -61,7 +61,7 @@ public class Member {
         return name.equals(comparison);
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

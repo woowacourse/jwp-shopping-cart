@@ -50,7 +50,7 @@ class CartServiceTest {
 
         List<CartResponse> carts = cartService.findCarts(memberId);
         CartResponse cart = carts.stream()
-                .filter(v -> v.getId().equals(cartId))
+                .filter(v -> v.getId() == cartId)
                 .findFirst().orElseThrow();
         assertThat(cart.getQuantity()).isEqualTo(2);
     }
@@ -91,7 +91,7 @@ class CartServiceTest {
         cartService.updateQuantity(memberId, cartId, new UpdateQuantityRequest(quantityToBeUpdated));
         List<CartResponse> carts = cartService.findCarts(memberId);
         boolean result = carts.stream()
-                .filter(v -> v.getId().equals(cartId))
+                .filter(v -> v.getId() == cartId)
                 .anyMatch(v -> v.getQuantity() == quantityToBeUpdated);
 
         assertThat(result).isTrue();

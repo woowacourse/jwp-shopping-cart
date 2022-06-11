@@ -52,7 +52,7 @@ public class CartService {
     private Optional<Cart> findCartWithProduct(Long memberId, Long productId) {
         List<Cart> cartItems = cartDao.findCartByMemberId(memberId);
         return cartItems.stream()
-                .filter(v -> v.getProductId().equals(productId))
+                .filter(v -> v.getProductId() == productId)
                 .findAny();
     }
 

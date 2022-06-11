@@ -23,13 +23,13 @@ public class OrderDetailDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(Long ordersId, Long productId, int quantity) {
+    public long save(long ordersId, long productId, int quantity) {
         SaveOrderDetailDto orderDetail = new SaveOrderDetailDto(ordersId, productId, quantity);
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(orderDetail);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<OrderDetailResponse> findOrdersDetailsByOrderId(Long orderId) {
+    public List<OrderDetailResponse> findOrdersDetailsByOrderId(long orderId) {
         final String SQL = "SELECT p.id, od.quantity, p.price, p.name, p.image_url " +
                 "FROM orders_detail AS od JOIN product AS p ON od.product_id = p.id " +
                 "WHERE od.orders_id = ?";

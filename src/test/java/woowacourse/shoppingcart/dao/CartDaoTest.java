@@ -56,7 +56,7 @@ public class CartDaoTest {
 
         List<Cart> carts = cartDao.findCartByMemberId(memberId);
         Optional<Cart> updatedCart = carts.stream()
-                .filter(v -> v.getId().equals(1L))
+                .filter(v -> v.getId() == 1L)
                 .findAny();
 
         assertThat(updatedCart.get().getQuantity()).isEqualTo(10);

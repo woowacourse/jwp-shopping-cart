@@ -2,13 +2,13 @@ package woowacourse.shoppingcart.dto;
 
 public class OrderDetailResponse {
 
-    private final Long productId;
+    private final long productId;
     private final int quantity;
     private final int price;
     private final String name;
     private final String imageUrl;
 
-    public OrderDetailResponse(Long productId, int quantity, int price, String name, String imageUrl) {
+    public OrderDetailResponse(long productId, int quantity, int price, String name, String imageUrl) {
         this.productId = productId;
         this.quantity = quantity;
         this.price = price;
@@ -16,7 +16,7 @@ public class OrderDetailResponse {
         this.imageUrl = imageUrl;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 

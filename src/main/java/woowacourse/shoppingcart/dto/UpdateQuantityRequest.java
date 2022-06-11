@@ -1,17 +1,20 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class UpdateQuantityRequest {
 
-    private int quantity;
+    @NotNull(message = "상품 수량은 빈 값일 수 없습니다.")
+    private Integer quantity;
 
     public UpdateQuantityRequest() {
     }
 
-    public UpdateQuantityRequest(int quantity) {
+    public UpdateQuantityRequest(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 }
