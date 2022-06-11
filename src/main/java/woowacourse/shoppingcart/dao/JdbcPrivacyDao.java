@@ -2,7 +2,9 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -42,9 +44,13 @@ public class JdbcPrivacyDao implements PrivacyDao {
     }
 
     @Override
-    public PrivacyEntity findById(long customerId) {
-        String sql = "SELECT customer_id, name, gender, birth_day, contact FROM privacy WHERE customer_id = ?";
-        return jdbcTemplate.queryForObject(sql, PRIVACY_ENTITY_ROW_MAPPER, customerId);
+    public Optional<PrivacyEntity> findById(long customerId) {
+        try {
+            String sql = "SELECT customer_id, name, gender, birth_day, contact FROM privacy WHERE customer_id = ?";
+            return Optional.of(jdbcTemplate.queryForObject(sql, PRIVACY_ENTITY_ROW_MAPPER, customerId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

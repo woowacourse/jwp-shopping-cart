@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.PrivacyDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Id;
 import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.customer.ProfileImageUrl;
 import woowacourse.shoppingcart.domain.customer.address.FullAddress;
@@ -15,6 +16,9 @@ import woowacourse.shoppingcart.domain.customer.privacy.Privacy;
 import woowacourse.shoppingcart.entity.AddressEntity;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.entity.PrivacyEntity;
+import woowacourse.shoppingcart.exception.notfound.AddressNotFoundException;
+import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
+import woowacourse.shoppingcart.exception.notfound.PrivacyNotFoundException;
 
 @Component
 public class CustomerRepository {
@@ -52,13 +56,31 @@ public class CustomerRepository {
     }
 
     public Customer findById(long id) {
-        PrivacyEntity privacyEntity = privacyDao.findById(id);
+        PrivacyEntity privacyEntity = privacyDao.findById(id)
+                .orElseThrow(PrivacyNotFoundException::new);
         Privacy privacy = convertPrivacyEntityToDomain(privacyEntity);
 
-        AddressEntity addressEntity = addressDao.findById(id);
+        AddressEntity addressEntity = addressDao.findById(id)
+                .orElseThrow(AddressNotFoundException::new);
         FullAddress fullAddress = convertAddressEntityToDomain(addressEntity);
 
-        CustomerEntity customerEntity = customerDao.findById(id);
+        CustomerEntity customerEntity = customerDao.findById(id)
+                .orElseThrow(CustomerNotFoundException::new);
+        return convertCustomerEntityToDomain(customerEntity, privacy, fullAddress);
+    }
+
+    public Customer findByEmail(String email) {
+        CustomerEntity customerEntity = customerDao.findByEmail(email)
+                .orElseThrow(CustomerNotFoundException::new);
+
+        PrivacyEntity privacyEntity = privacyDao.findById(customerEntity.getId())
+                .orElseThrow(PrivacyNotFoundException::new);
+        Privacy privacy = convertPrivacyEntityToDomain(privacyEntity);
+
+        AddressEntity addressEntity = addressDao.findById(customerEntity.getId())
+                .orElseThrow(AddressNotFoundException::new);
+        FullAddress fullAddress = convertAddressEntityToDomain(addressEntity);
+
         return convertCustomerEntityToDomain(customerEntity, privacy, fullAddress);
     }
 
@@ -132,11 +154,13 @@ public class CustomerRepository {
 
     private Customer convertCustomerEntityToDomain(CustomerEntity customerEntity, Privacy privacy,
                                                    FullAddress fullAddress) {
+        Id id = new Id(customerEntity.getId());
         Email email = new Email(customerEntity.getEmail());
         Password password = new Password(customerEntity.getPassword(), new BCryptPasswordEncoder());
         ProfileImageUrl profileImageUrl = new ProfileImageUrl(customerEntity.getProfileImageUrl());
 
         return new Customer(
+                id,
                 email,
                 password,
                 profileImageUrl,

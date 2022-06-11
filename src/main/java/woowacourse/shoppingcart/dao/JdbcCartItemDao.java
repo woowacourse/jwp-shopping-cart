@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.entity.CartItemEntity;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.notfound.CartItemNotFoundException;
 
 @Repository
 public class JdbcCartItemDao implements CartItemDao {
@@ -42,12 +42,12 @@ public class JdbcCartItemDao implements CartItemDao {
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public CartItemEntity findById(Long cartItemId) {
+    public Optional<CartItemEntity> findById(Long cartItemId) {
+        final String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE id = ?";
         try {
-            final String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, CART_ITEM_ENTITY_MAPPER, cartItemId);
+            return Optional.of(jdbcTemplate.queryForObject(sql, CART_ITEM_ENTITY_MAPPER, cartItemId));
         } catch (EmptyResultDataAccessException e) {
-            throw new CartItemNotFoundException();
+            return Optional.empty();
         }
     }
 

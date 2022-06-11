@@ -78,7 +78,7 @@ class CartServiceTest {
 
         // when
         cartService.updateCartItem(customerId, cartItemId, new CartItemRequest(productId, 100));
-        Integer actual = cartItemDao.findById(cartItemId).getQuantity();
+        Integer actual = cartItemDao.findById(cartItemId).get().getQuantity();
 
         // then
         assertThat(actual).isEqualTo(100);

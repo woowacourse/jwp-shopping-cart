@@ -83,7 +83,7 @@ public class JdbcCartItemDaoTest {
 
         // when
         cartItemDao.update(cartItemId, newCartItem);
-        Integer actual = cartItemDao.findById(customerId).getQuantity();
+        Integer actual = cartItemDao.findById(customerId).get().getQuantity();
 
         // then
         assertThat(actual).isEqualTo(100);

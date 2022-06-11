@@ -58,7 +58,7 @@ public class JdbcProductDaoTest {
         final ProductEntity expectedProduct = new ProductEntity(productId, name, description, price, stock, imageUrl);
 
         // when
-        final ProductEntity product = productDao.findById(productId);
+        final ProductEntity product = productDao.findById(productId).get();
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);

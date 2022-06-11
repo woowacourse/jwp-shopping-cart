@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +10,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.entity.CustomerEntity;
-import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @Repository
 public class JdbcCustomerDao implements CustomerDao {
@@ -46,24 +46,24 @@ public class JdbcCustomerDao implements CustomerDao {
     }
 
     @Override
-    public CustomerEntity findById(long id) {
+    public Optional<CustomerEntity> findById(long id) {
         String sql = "SELECT id, email, password, profile_image_url, terms FROM customer WHERE id = ?";
 
         try {
-            return jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, id);
+            return Optional.of(jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
-            throw new CustomerNotFoundException();
+            return Optional.empty();
         }
     }
 
     @Override
-    public CustomerEntity findByEmail(String email) {
+    public Optional<CustomerEntity> findByEmail(String email) {
         String sql = "SELECT id, email, password, profile_image_url, terms FROM customer WHERE email = ?";
 
         try {
-            return jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, email);
+            return Optional.of(jdbcTemplate.queryForObject(sql, CUSTOMER_ENTITY_ROW_MAPPER, email));
         } catch (EmptyResultDataAccessException e) {
-            throw new CustomerNotFoundException();
+            return Optional.empty();
         }
     }
 

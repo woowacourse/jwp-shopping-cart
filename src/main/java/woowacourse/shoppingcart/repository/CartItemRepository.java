@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.entity.CartItemEntity;
+import woowacourse.shoppingcart.exception.notfound.CartItemNotFoundException;
 
 @Component
 public class CartItemRepository {
@@ -23,12 +24,15 @@ public class CartItemRepository {
     }
 
     public CartItem findById(long id) {
-        CartItemEntity cartItemEntity = cartItemDao.findById(id);
+        CartItemEntity cartItemEntity = cartItemDao.findById(id)
+                .orElseThrow(CartItemNotFoundException::new);
+
         return generateCartItem(cartItemEntity);
     }
 
     public List<CartItem> findAllByCustomerId(long customerId) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findAllByCustomerId(customerId);
+        
         return cartItemEntities.stream()
                 .map(this::generateCartItem)
                 .collect(Collectors.toList());

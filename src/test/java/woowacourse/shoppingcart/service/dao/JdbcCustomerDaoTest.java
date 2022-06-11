@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.service.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.Fixtures.CUSTOMER_ENTITY_1;
 
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.entity.CustomerEntity;
-import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
 
 @JdbcTest
 class JdbcCustomerDaoTest {
@@ -44,7 +43,7 @@ class JdbcCustomerDaoTest {
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
 
         // when
-        CustomerEntity actual = customerDao.findById(customerId);
+        CustomerEntity actual = customerDao.findById(customerId).get();
 
         // then
         assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
@@ -59,7 +58,7 @@ class JdbcCustomerDaoTest {
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
 
         // when
-        CustomerEntity actual = customerDao.findByEmail(CUSTOMER_ENTITY_1.getEmail());
+        CustomerEntity actual = customerDao.findByEmail(CUSTOMER_ENTITY_1.getEmail()).get();
 
         // then
         assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
@@ -80,7 +79,7 @@ class JdbcCustomerDaoTest {
 
         // when
         customerDao.update(customerId, newCustomerEntity);
-        CustomerEntity actual = customerDao.findById(customerId);
+        CustomerEntity actual = customerDao.findById(customerId).get();
 
         // then
         assertThat(actual).extracting("id", "email", "password", "profileImageUrl", "terms")
@@ -98,8 +97,7 @@ class JdbcCustomerDaoTest {
         customerDao.delete(customerId);
 
         // then
-        assertThatThrownBy(() -> customerDao.findById(customerId))
-                .isInstanceOf(CustomerNotFoundException.class);
+        assertThat(customerDao.findById(customerId)).isEqualTo(Optional.empty());
     }
 
     @DisplayName("email을 전달받아 존재여부를 반환한다.")

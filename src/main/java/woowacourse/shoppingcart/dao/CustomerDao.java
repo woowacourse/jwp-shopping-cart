@@ -1,13 +1,14 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.Optional;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 
 public interface CustomerDao {
     int save(CustomerEntity customerEntity);
 
-    CustomerEntity findById(long id);
+    Optional<CustomerEntity> findById(long id);
 
-    CustomerEntity findByEmail(String email);
+    Optional<CustomerEntity> findByEmail(String email);
 
     void update(long id, CustomerEntity customerEntity);
 

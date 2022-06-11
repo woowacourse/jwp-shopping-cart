@@ -1,11 +1,12 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.List;
+import java.util.Optional;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.entity.CartItemEntity;
 
 public interface CartItemDao {
-    CartItemEntity findById(Long cartItemId);
+    Optional<CartItemEntity> findById(Long cartItemId);
 
     List<CartItemEntity> findAllByCustomerId(Long customerId);
 

@@ -2,7 +2,9 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -35,9 +37,14 @@ public class JdbcOrdersDao implements OrdersDao {
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public OrdersEntity findById(Long id) {
+    public Optional<OrdersEntity> findById(Long id) {
         String sql = "SELECT id, customer_id FROM Orders WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, ORDERS_ENTITY_ROW_MAPPER, id);
+        
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, ORDERS_ENTITY_ROW_MAPPER, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<OrdersEntity> findAllByCustomerId(Long customerId) {

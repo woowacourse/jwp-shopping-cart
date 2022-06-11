@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.entity.OrderDetailEntity;
 import woowacourse.shoppingcart.entity.OrdersEntity;
+import woowacourse.shoppingcart.exception.notfound.OrdersNotFoundException;
 
 @Component
 public class OrdersRepository {
@@ -37,7 +38,9 @@ public class OrdersRepository {
     }
 
     public Orders findOrdersById(long id) {
-        OrdersEntity ordersEntity = ordersDao.findById(id);
+        OrdersEntity ordersEntity = ordersDao.findById(id)
+                .orElseThrow(OrdersNotFoundException::new);
+        
         return convertOrdersEntityToDomain(ordersEntity);
     }
 

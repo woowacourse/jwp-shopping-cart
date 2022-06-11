@@ -2,12 +2,12 @@ package woowacourse.auth.dto;
 
 public class TokenResponse {
     private String accessToken;
-    private int userId;
+    private long userId;
 
     public TokenResponse() {
     }
 
-    public TokenResponse(String accessToken, int userId) {
+    public TokenResponse(String accessToken, long userId) {
         this.accessToken = accessToken;
         this.userId = userId;
     }
@@ -16,7 +16,7 @@ public class TokenResponse {
         return accessToken;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 

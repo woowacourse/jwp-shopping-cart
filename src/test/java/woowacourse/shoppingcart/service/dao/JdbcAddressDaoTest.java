@@ -1,18 +1,17 @@
 package woowacourse.shoppingcart.service.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.Fixtures.ADDRESS_VALUE_1;
 import static woowacourse.Fixtures.CUSTOMER_ENTITY_1;
 import static woowacourse.Fixtures.DETAIL_ADDRESS_VALUE_1;
 import static woowacourse.Fixtures.ZONE_CODE_VALUE_1;
 
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.shoppingcart.dao.AddressDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -41,7 +40,7 @@ class JdbcAddressDaoTest {
 
         // when
         addressDao.save(customerId, addressEntity);
-        AddressEntity actual = addressDao.findById(customerId);
+        AddressEntity actual = addressDao.findById(customerId).get();
 
         // then
         assertThat(actual).isNotNull();
@@ -57,7 +56,7 @@ class JdbcAddressDaoTest {
         addressDao.save(customerId, addressEntity);
 
         // when
-        AddressEntity actual = addressDao.findById(customerId);
+        AddressEntity actual = addressDao.findById(customerId).get();
 
         // then
         assertThat(actual).extracting("customerId", "address", "detailAddress", "zonecode")
@@ -78,7 +77,7 @@ class JdbcAddressDaoTest {
         AddressEntity newAddressEntity = new AddressEntity(customerId, "경기도 양주시", "옥정동 배카라하우스", "12312");
         addressDao.update(customerId, newAddressEntity);
 
-        AddressEntity actual = addressDao.findById(customerId);
+        AddressEntity actual = addressDao.findById(customerId).get();
 
         // then
         assertThat(actual).extracting("customerId", "address", "detailAddress", "zonecode")
@@ -99,7 +98,6 @@ class JdbcAddressDaoTest {
         addressDao.delete(customerId);
 
         // then
-        assertThatThrownBy(() -> addressDao.findById(customerId))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+        assertThat(addressDao.findById(customerId)).isEqualTo(Optional.empty());
     }
 }

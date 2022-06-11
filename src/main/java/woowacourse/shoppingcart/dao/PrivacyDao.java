@@ -1,11 +1,12 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.Optional;
 import woowacourse.shoppingcart.entity.PrivacyEntity;
 
 public interface PrivacyDao {
     void save(long customerId, PrivacyEntity privacyEntity);
 
-    PrivacyEntity findById(long customerId);
+    Optional<PrivacyEntity> findById(long customerId);
 
     void update(long customerId, PrivacyEntity privacyEntity);
 

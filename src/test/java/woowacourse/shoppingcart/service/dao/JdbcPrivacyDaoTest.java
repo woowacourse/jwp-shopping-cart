@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.service.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.Fixtures.BIRTHDAY_VALUE_1;
 import static woowacourse.Fixtures.CONTACT_VALUE_1;
 import static woowacourse.Fixtures.CUSTOMER_ENTITY_1;
@@ -9,12 +8,12 @@ import static woowacourse.Fixtures.GENDER_MALE;
 import static woowacourse.Fixtures.NAME_VALUE_1;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.JdbcCustomerDao;
@@ -43,7 +42,7 @@ class JdbcPrivacyDaoTest {
 
         // when
         privacyDao.save(customerId, privacyEntity);
-        PrivacyEntity actual = privacyDao.findById(customerId);
+        PrivacyEntity actual = privacyDao.findById(customerId).get();
 
         // then
         assertThat(actual).isNotNull();
@@ -59,7 +58,7 @@ class JdbcPrivacyDaoTest {
         privacyDao.save(customerId, privacyEntity);
 
         // when
-        PrivacyEntity actual = privacyDao.findById(customerId);
+        PrivacyEntity actual = privacyDao.findById(customerId).get();
 
         // then
         assertThat(actual).extracting("customerId", "name", "gender", "birthday", "contact")
@@ -81,7 +80,7 @@ class JdbcPrivacyDaoTest {
                 "01033334444");
         privacyDao.update(customerId, newPrivacyEntity);
 
-        PrivacyEntity actual = privacyDao.findById(customerId);
+        PrivacyEntity actual = privacyDao.findById(customerId).get();
 
         // then
         assertThat(actual).extracting("customerId", "name", "gender", "birthday", "contact")
@@ -102,7 +101,6 @@ class JdbcPrivacyDaoTest {
         privacyDao.delete(customerId);
 
         // then
-        assertThatThrownBy(() -> privacyDao.findById(customerId))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+        assertThat(privacyDao.findById(customerId)).isEqualTo(Optional.empty());
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.entity.ProductEntity;
+import woowacourse.shoppingcart.exception.notfound.ProductNotFoundException;
 
 @Component
 public class ProductRepository {
@@ -20,7 +21,9 @@ public class ProductRepository {
     }
 
     public Product findById(long id) {
-        ProductEntity productEntity = productDao.findById(id);
+        ProductEntity productEntity = productDao.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+        
         return convertEntityToDomain(productEntity);
     }
 
