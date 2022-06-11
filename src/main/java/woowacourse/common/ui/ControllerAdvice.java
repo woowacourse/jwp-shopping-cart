@@ -15,7 +15,7 @@ import woowacourse.common.exception.AuthenticationException;
 import woowacourse.common.exception.ForbiddenException;
 import woowacourse.common.exception.InvalidRequestException;
 import woowacourse.common.exception.NotFoundException;
-import woowacourse.common.exception.RedirectException;
+import woowacourse.common.exception.CheckCartException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -70,7 +70,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<RedirectErrorResponse> handle(RedirectException e) {
+    public ResponseEntity<RedirectErrorResponse> handle(CheckCartException e) {
         return ResponseEntity.status(e.getStatus()).body(new RedirectErrorResponse(e));
     }
 

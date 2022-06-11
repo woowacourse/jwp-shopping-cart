@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import woowacourse.auth.domain.user.Customer;
 import woowacourse.auth.domain.user.EncryptedPassword;
 import woowacourse.common.exception.NotFoundException;
-import woowacourse.common.exception.RedirectException;
+import woowacourse.common.exception.CheckCartException;
 import woowacourse.setup.SpringBeanTest;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
@@ -70,7 +70,7 @@ class CartServiceTest extends SpringBeanTest {
             cartService.registerNewCartItem(고객, 호박_ID);
 
             assertThatThrownBy(() -> cartService.registerNewCartItem(고객, 호박_ID))
-                    .isInstanceOf(RedirectException.class);
+                    .isInstanceOf(CheckCartException.class);
         }
 
         @Test
@@ -81,7 +81,7 @@ class CartServiceTest extends SpringBeanTest {
             databaseFixture.save(고객, 호박_3개);
 
             assertThatThrownBy(() -> cartService.registerNewCartItem(고객, 호박_ID))
-                    .isInstanceOf(RedirectException.class);
+                    .isInstanceOf(CheckCartException.class);
         }
 
         @Test

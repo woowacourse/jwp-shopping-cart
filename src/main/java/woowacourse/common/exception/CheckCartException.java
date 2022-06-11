@@ -2,11 +2,11 @@ package woowacourse.common.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class RedirectException extends RuntimeException {
+public class CheckCartException extends RuntimeException {
 
     private static final HttpStatus STATUS = HttpStatus.BAD_REQUEST;
 
-    public RedirectException(String message) {
+    public CheckCartException(String message) {
         super(message);
     }
 
