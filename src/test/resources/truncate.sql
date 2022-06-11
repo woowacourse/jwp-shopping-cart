@@ -1,0 +1,5 @@
+TRUNCATE TABLE orders_detail;
+TRUNCATE TABLE orders;
+TRUNCATE TABLE cart_item;
+TRUNCATE TABLE product;
+TRUNCATE TABLE customer;
