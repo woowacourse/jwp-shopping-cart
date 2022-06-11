@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.repository;
 
 import java.time.format.DateTimeFormatter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import woowacourse.shoppingcart.dao.AddressDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -155,7 +154,7 @@ public class CustomerRepository {
                                                    FullAddress fullAddress) {
         Long id = customerEntity.getId();
         Email email = new Email(customerEntity.getEmail());
-        Password password = new Password(customerEntity.getPassword(), new BCryptPasswordEncoder());
+        Password password = new Password(customerEntity.getPassword());
         ProfileImageUrl profileImageUrl = new ProfileImageUrl(customerEntity.getProfileImageUrl());
 
         return new Customer(

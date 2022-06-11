@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import woowacourse.shoppingcart.domain.customer.address.FullAddress;
 import woowacourse.shoppingcart.domain.customer.privacy.Privacy;
 import woowacourse.shoppingcart.exception.DisagreeToTermsException;
@@ -35,8 +34,7 @@ public class Customer {
 
     public static Customer of(String email, String password, String profileImageUrl, Privacy privacy,
                               FullAddress fullAddress, boolean terms) {
-        return new Customer(new Email(email), Password.fromPlainText(password, new BCryptPasswordEncoder()),
-                new ProfileImageUrl(profileImageUrl),
+        return new Customer(new Email(email), Password.fromPlainText(password), new ProfileImageUrl(profileImageUrl),
                 privacy, fullAddress, terms);
     }
 

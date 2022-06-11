@@ -2,8 +2,6 @@ package woowacourse;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.entity.AddressEntity;
@@ -11,8 +9,6 @@ import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.entity.PrivacyEntity;
 
 public class Fixtures {
-    public static final PasswordEncoder BCRYPT_PASSWORD_ENCODER = new BCryptPasswordEncoder();
-
     // gender
     public static final String GENDER_MALE = "male";
     public static final String GENDER_FEMALE = "female";

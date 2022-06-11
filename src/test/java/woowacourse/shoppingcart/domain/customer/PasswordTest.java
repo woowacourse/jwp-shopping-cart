@@ -7,13 +7,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import woowacourse.shoppingcart.exception.format.InvalidPasswordFormatException;
+import woowacourse.shoppingcart.support.PasswordEncoder;
 
 class PasswordTest {
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     @DisplayName("평문을 전달받아 생성한다.")
     @Test
     void fromPlainText() {
@@ -21,7 +18,7 @@ class PasswordTest {
         String password = "a1@12345";
 
         // when
-        Password actual = Password.fromPlainText(password, passwordEncoder);
+        Password actual = Password.fromPlainText(password);
 
         // then
         assertThat(actual).isNotNull();
@@ -32,7 +29,7 @@ class PasswordTest {
     @ParameterizedTest
     void fromPlainText_invalidFormat(String input) {
         // when & then
-        assertThatThrownBy(() -> Password.fromPlainText(input, passwordEncoder))
+        assertThatThrownBy(() -> Password.fromPlainText(input))
                 .isInstanceOf(InvalidPasswordFormatException.class);
     }
 
@@ -43,7 +40,7 @@ class PasswordTest {
         String password = "a1!12345";
 
         // when
-        Password actual = new Password(password, passwordEncoder);
+        Password actual = new Password(password);
 
         // then
         assertThat(actual).isNotNull();
@@ -54,8 +51,8 @@ class PasswordTest {
     void matches() {
         // given
         String originalPassword = "a1!12345";
-        String cipherTextFromDatabase = passwordEncoder.encode(originalPassword);
-        Password passwordFromDatabase = new Password(cipherTextFromDatabase, passwordEncoder);
+        String cipherTextFromDatabase = PasswordEncoder.encrypt(originalPassword);
+        Password passwordFromDatabase = new Password(cipherTextFromDatabase);
         String passwordFromRequest = "a1!12345";
 
         // when

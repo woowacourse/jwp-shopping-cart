@@ -12,10 +12,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.JdbcCustomerDao;
 import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.support.PasswordEncoder;
 
 @JdbcTest
 class JdbcCustomerDaoTest {
@@ -71,8 +71,7 @@ class JdbcCustomerDaoTest {
     void update() {
         // given
         long customerId = customerDao.save(CUSTOMER_ENTITY_1);
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String cipherNewPassword = passwordEncoder.encode("newpassword1!");
+        String cipherNewPassword = PasswordEncoder.encrypt("newpassword1!");
         CustomerEntity newCustomerEntity = new CustomerEntity(customerId, CUSTOMER_ENTITY_1.getEmail(),
                 cipherNewPassword,
                 "http://gravatar.com/avatar/2?d=identicon", true);
