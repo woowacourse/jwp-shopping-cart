@@ -1,9 +1,12 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -106,5 +109,35 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new NotFoundProductException();
         }
+    }
+
+    public List<CartItem> findCartItemsByProductIdsAndCustomerId(final List<Long> productIds, final Long customerId) {
+        return findCartItemsByCustomerId(customerId)
+                .stream()
+                .filter(cartItem -> productIds.contains(cartItem.getProductId()))
+                .collect(Collectors.toList());
+    }
+
+    public void updateCartItemCount(final Long productId, final Integer quantity) {
+        final String sql = "UPDATE cart_item SET count = ? WHERE count > ? AND product_id = ?";
+
+        jdbcTemplate.update(sql, quantity, quantity, productId);
+    }
+
+    public int deleteCartItems(final List<Long> productIds, final Long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE product_id = ? AND customer_id = ?";
+
+        return jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, productIds.get(i));
+                ps.setLong(2, customerId);
+            }
+
+            @Override
+            public int getBatchSize() {
+                return productIds.size();
+            }
+        }).length;
     }
 }

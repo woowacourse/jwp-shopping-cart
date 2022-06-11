@@ -88,4 +88,10 @@ public class ProductDao {
             }
         }).length;
     }
+
+    public void updateQuantity(final Long productId, final int newQuantity) {
+        final String sql = "UPDATE product SET quantity = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql, newQuantity, productId);
+    }
 }

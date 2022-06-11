@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
+import woowacourse.shoppingcart.exception.InvalidQuantityException;
 
 public class Product {
 
@@ -24,6 +25,14 @@ public class Product {
 
     public static Product createWithoutId(final String name, final int price, final String thumbnailUrl, final Integer quantity) {
         return new Product(null, name, price, thumbnailUrl, quantity);
+    }
+
+    public void decreaseQuantity(final int count) {
+        if (quantity - count < 0) {
+            throw new InvalidQuantityException();
+        }
+
+        quantity = quantity - count;
     }
 
     public String getName() {
