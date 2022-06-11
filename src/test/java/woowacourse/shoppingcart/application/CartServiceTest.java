@@ -40,10 +40,10 @@ class CartServiceTest {
 
         // when
         cartService.save(1L, 1L);
-        CartResponse actualResponse = cartService.findById(1L);
+        List<CartResponse> actualResponse = cartService.findAll(1L);
 
         // then
-        assertThat(actualResponse).usingRecursiveComparison()
+        assertThat(actualResponse.get(0)).usingRecursiveComparison()
                 .isEqualTo(new CartResponse(1L, "치킨", 20_000, 1, "test.url.com"));
     }
 
@@ -98,10 +98,10 @@ class CartServiceTest {
         cartService.updateQuantity(1L, 1L, 2);
         cartService.updateQuantity(1L, 1L, 3);
         cartService.updateQuantity(1L, 1L, 2);
-        CartResponse actualResponse = cartService.findById(1L);
+        List<CartResponse> actualResponse = cartService.findAll(1L);
 
         // then
-        assertThat(actualResponse).usingRecursiveComparison()
+        assertThat(actualResponse.get(0)).usingRecursiveComparison()
                 .isEqualTo(new CartResponse(1L, "치킨", 20_000, 2, "chicken.url.com"));
     }
 
@@ -117,7 +117,7 @@ class CartServiceTest {
         cartService.delete(1L, 1L);
 
         // then
-        assertThatThrownBy(() -> cartService.findById(1L))
+        assertThatThrownBy(() -> cartService.findAll(1L))
                 .isInstanceOf(InvalidProductException.class);
     }
 }

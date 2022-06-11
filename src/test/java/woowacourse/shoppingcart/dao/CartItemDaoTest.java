@@ -77,7 +77,7 @@ public class CartItemDaoTest {
         cartItemDao.save(1L, 2L, 1);
 
         // when
-        final List<Cart> carts = cartItemDao.findAllByCustomerId(1L);
+        final List<Cart> carts = cartItemDao.findAllByCustomerId(1L).get();
 
         // then
         assertThat(carts).usingRecursiveComparison()

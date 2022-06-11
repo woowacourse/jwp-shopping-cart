@@ -71,7 +71,6 @@ public class ProductDao {
                 .map(it -> String.valueOf(it))
                 .collect(Collectors.joining(",", "(", ")"));
         String sql = "SELECT * FROM product WHERE id in " + productIds;
-
         return template.query(sql, PRODUCT_ROW_MAPPER);
     }
 }

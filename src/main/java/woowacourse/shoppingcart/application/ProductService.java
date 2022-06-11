@@ -38,6 +38,9 @@ public class ProductService {
     }
 
     public List<ProductResponse> findByIds(final List<Long> ids) {
+        if (ids.isEmpty()) {
+            throw new InvalidProductException("장바구니가 비어있습니다.");
+        }
         return productDao.findByIds(ids).stream()
                 .map(ProductResponse::new)
                 .collect(Collectors.toList());

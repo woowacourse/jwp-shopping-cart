@@ -54,10 +54,16 @@ public class CartItemDao {
 
     }
 
-    public List<Cart> findAllByCustomerId(final Long customerId) {
+    public Optional<List<Cart>> findAllByCustomerId(final Long customerId) {
         String query = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE customer_id=:customer_Id";
-        MapSqlParameterSource nameParameters = new MapSqlParameterSource("customer_Id", customerId);
-        return template.query(query, nameParameters, CART_ROW_MAPPER);
+        SqlParameterSource nameParameters = new MapSqlParameterSource("customer_Id", customerId);
+
+        try {
+            List<Cart> carts = template.query(query, nameParameters, CART_ROW_MAPPER);
+            return Optional.ofNullable(carts);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void updateQuantity(final Long customerId, final Long productId, final int quantity) {

@@ -46,15 +46,9 @@ public class CartService {
         }
     }
 
-    public CartResponse findById(final Long id) {
-        Cart cart = cartItemDao.findById(id)
-                .orElseThrow(() -> new InvalidProductException("[ERROR] ID가 존재하지 않습니다."));
-        ProductResponse product = productService.findById(cart.getProductId());
-        return new CartResponse(cart.getId(), product.getName(), product.getPrice(), cart.getQuantity(), product.getImageUrl());
-    }
-
     public List<CartResponse> findAll(final Long customerId) {
-        List<Cart> carts = cartItemDao.findAllByCustomerId(customerId);
+        List<Cart> carts = cartItemDao.findAllByCustomerId(customerId)
+                .orElseThrow(() -> new InvalidProductException("장바구니에 담은 제품이 않습니다."));
         Map<Long, Integer> productIdByQuantity = carts.stream()
                 .collect(Collectors.toMap(Cart::getProductId, Cart::getQuantity));
         List<Long> productIds = carts.stream()
