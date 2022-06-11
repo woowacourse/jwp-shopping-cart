@@ -33,6 +33,14 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
+    public List<Long> findIdsByLoginId(final String loginId) {
+        final String sql = "SELECT cart_item.id "
+                + "FROM cart_item INNER JOIN customer ON cart_item.customer_id = customer.id "
+                + "WHERE customer.login_id = ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("cart_item.id"), loginId);
+    }
+
     public Long findProductIdById(final Long cartId) {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
@@ -104,10 +112,10 @@ public class CartItemDao {
         }
     }
 
-    public void updateQuantity(Long customerId, Long productId, int quantity) {
-        final String query = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? AND product_id = ?";
+    public void updateQuantity(Long cartId, int quantity) {
+        final String query = "UPDATE cart_item SET quantity = ? WHERE id = ?";
 
-        final int rowCount = jdbcTemplate.update(query, quantity, customerId, productId);
+        final int rowCount = jdbcTemplate.update(query, quantity, cartId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }

@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.dao.dto.CartItem;
+
 public class Cart {
 
     private Long id;
@@ -10,6 +12,10 @@ public class Cart {
     private int quantity;
 
     public Cart() {
+    }
+
+    public Cart(final CartItem cartItem) {
+        this(cartItem.getId(), cartItem.getProduct(), cartItem.getQuantity());
     }
 
     public Cart(final Long id, final Product product, final int quantity) {
