@@ -35,18 +35,18 @@ public class CartService {
     @Transactional
     public CartSetResponse addCart(CartSetRequest cartSetRequest, String email, Long productId) {
         Long customerId = customerDao.findIdByEmail(email);
-        Optional<Cart> findCart = cartDao
+        Optional<Cart> fountCart = cartDao
                 .findByCustomerIdAndProductId(customerId, productId);
-        Product findProduct = productDao.findProductById(productId)
+        Product fountProduct = productDao.findProductById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(CODE_3001.getMessage()));
 
-        if (findCart.isPresent()) {
-            Cart update = cartDao.update(new Cart(findCart.get().getId(), productId, customerId,
-                    cartSetRequest.getQuantity()));
-            return new CartSetResponse(findProduct, update, false);
+        if (fountCart.isPresent()) {
+            Cart updatedCart = cartDao.update(new Cart(fountCart.get(), cartSetRequest));
+            return new CartSetResponse(fountProduct, updatedCart, false);
         }
-        Cart save = cartDao.save(new Cart(productId, customerId, cartSetRequest.getQuantity()));
-        return new CartSetResponse(findProduct, save, true);
+
+        Cart savedCart = cartDao.save(new Cart(productId, customerId, cartSetRequest));
+        return new CartSetResponse(fountProduct, savedCart, true);
     }
 
     public List<CartProduct> findCartsByCustomerEmail(final String email) {
@@ -54,11 +54,9 @@ public class CartService {
         List<Cart> carts = cartDao.findByCustomerId(customerId);
 
         List<CartProduct> cartProducts = new ArrayList<>();
-
         for (Cart cart : carts) {
             Product product = productDao.findProductById(cart.getProductId()).get();
-            cartProducts.add(new CartProduct(product.getId(), product.getImage(), product.getName(), product.getPrice(),
-                    cart.getQuantity()));
+            cartProducts.add(new CartProduct(product, cart));
         }
         return cartProducts;
     }

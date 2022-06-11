@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain.cart;
 
+import woowacourse.shoppingcart.dto.cart.CartSetRequest;
+
 public class Cart {
 
     private Long id;
@@ -19,6 +21,20 @@ public class Cart {
 
     public Cart(Long productId, Long customerId, int quantity) {
         this(null, productId, customerId, quantity);
+    }
+
+
+    public Cart(Cart cart, CartSetRequest cartSetRequest) {
+        this.id = cart.getId();
+        this.productId = cart.getProductId();
+        this.customerId = cart.getCustomerId();
+        this.quantity = cartSetRequest.getQuantity();
+    }
+
+    public Cart(Long productId, Long customerId, CartSetRequest cartSetRequest) {
+        this.productId = productId;
+        this.customerId = customerId;
+        this.quantity = cartSetRequest.getQuantity();
     }
 
     public Long getId() {
