@@ -55,13 +55,13 @@ class CartServiceTest {
     @DisplayName("구매자의 장바구니 상품 목록을 조회한다.")
     @Test
     void findCartsByCustomerName() {
-        CartsResponse cartsResponse = cartService.findCartsByCustomerName("kth990303");
-        CartResponse cartResponse1 = new CartResponse(productResponse1, 1);
-        CartResponse cartResponse2 = new CartResponse(productResponse2, 1);
+        CartResponse cartResponse = cartService.findCartsByCustomerName("kth990303");
+        CartItemResponse cartItemResponse1 = new CartItemResponse(productResponse1, 1);
+        CartItemResponse cartItemResponse2 = new CartItemResponse(productResponse2, 1);
 
-        assertThat(cartsResponse.getCartItems())
+        assertThat(cartResponse.getCartItems())
                 .usingRecursiveComparison()
-                .isEqualTo(List.of(cartResponse1, cartResponse2));
+                .isEqualTo(List.of(cartItemResponse1, cartItemResponse2));
     }
 
     @DisplayName("장바구니에 담긴 상품을 다시 장바구니에 넣을 경우 예외를 발생시킨다.")
@@ -77,13 +77,13 @@ class CartServiceTest {
     void updateCartItemQuantity() {
         cartService.updateCartItemQuantity(3, productResponse1.getId(), "kth990303");
 
-        CartsResponse cartsResponse = cartService.findCartsByCustomerName("kth990303");
-        CartResponse cartResponse1 = new CartResponse(productResponse1, 3);
-        CartResponse cartResponse2 = new CartResponse(productResponse2, 1);
+        CartResponse cartResponse = cartService.findCartsByCustomerName("kth990303");
+        CartItemResponse cartItemResponse1 = new CartItemResponse(productResponse1, 3);
+        CartItemResponse cartItemResponse2 = new CartItemResponse(productResponse2, 1);
 
-        assertThat(cartsResponse.getCartItems())
+        assertThat(cartResponse.getCartItems())
                 .usingRecursiveComparison()
-                .isEqualTo(List.of(cartResponse1, cartResponse2));
+                .isEqualTo(List.of(cartItemResponse1, cartItemResponse2));
     }
 
     @DisplayName("장바구니에 존재하지 않는 상품의 수량을 변경할 경우 예외를 발생시킨다.")
@@ -100,9 +100,9 @@ class CartServiceTest {
     void deleteCart() {
         cartService.deleteCart("kth990303");
 
-        CartsResponse cartsResponse = cartService.findCartsByCustomerName("kth990303");
+        CartResponse cartResponse = cartService.findCartsByCustomerName("kth990303");
 
-        assertThat(cartsResponse.getCartItems().size()).isEqualTo(0);
+        assertThat(cartResponse.getCartItems().size()).isEqualTo(0);
     }
 
     @DisplayName("장바구니에 존재하는 상품을 삭제한다.")
@@ -110,13 +110,13 @@ class CartServiceTest {
     void deleteCartItem() {
         cartService.deleteCartItem("kth990303", List.of(productResponse1.getId()));
 
-        CartsResponse cartsResponse = cartService.findCartsByCustomerName("kth990303");
-        CartResponse cartResponse1 = new CartResponse(productResponse1, 1);
-        CartResponse cartResponse2 = new CartResponse(productResponse2, 1);
+        CartResponse cartResponse = cartService.findCartsByCustomerName("kth990303");
+        CartItemResponse cartItemResponse1 = new CartItemResponse(productResponse1, 1);
+        CartItemResponse cartItemResponse2 = new CartItemResponse(productResponse2, 1);
 
-        assertThat(cartsResponse.getCartItems())
+        assertThat(cartResponse.getCartItems())
                 .usingRecursiveComparison()
-                .isNotEqualTo(List.of(cartResponse1))
-                .isEqualTo(List.of(cartResponse2));
+                .isNotEqualTo(List.of(cartItemResponse1))
+                .isEqualTo(List.of(cartItemResponse2));
     }
 }

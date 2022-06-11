@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.*;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
@@ -38,9 +38,9 @@ public class OrderService {
         final Long customerId = customerDao.findIdByUsername(customerUsername);
         final Long orderId = orderDao.addOrders(customerId);
         for (Long productId : productIds) {
-            final Cart cart = cartDao.findCartByProductId(productId, customerId)
+            final CartItem cartItem = cartDao.findCartByProductId(productId, customerId)
                     .orElseThrow(InvalidCartItemException::new);
-            ordersDetailDao.addOrdersDetail(orderId, productId, cart.getQuantity());
+            ordersDetailDao.addOrdersDetail(orderId, productId, cartItem.getQuantity());
         }
         return orderId;
     }

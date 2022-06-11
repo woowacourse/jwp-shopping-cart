@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
@@ -16,7 +16,7 @@ import java.util.Optional;
 public class CartDao {
     private static final int DEFAULT_ADD_ITEM_QUANTITY = 1;
 
-    private static final RowMapper<Cart> CART_ROW_MAPPER = (resultSet, rowNum) -> Cart.of(
+    private static final RowMapper<CartItem> CART_ROW_MAPPER = (resultSet, rowNum) -> CartItem.of(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getInt("price"),
@@ -30,7 +30,7 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Cart> findCartsByCustomerId(final Long customerId) {
+    public List<CartItem> findCartsByCustomerId(final Long customerId) {
         final String sql = "SELECT product.id as id, " +
                 "product.name as name, " +
                 "product.price as price, " +
@@ -49,7 +49,7 @@ public class CartDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
-    public Optional<Cart> findCartByProductId(final Long productId, final Long customerId) {
+    public Optional<CartItem> findCartByProductId(final Long productId, final Long customerId) {
         final String sql = "SELECT product.id as id, " +
                 "product.name as name, " +
                 "product.price as price, " +

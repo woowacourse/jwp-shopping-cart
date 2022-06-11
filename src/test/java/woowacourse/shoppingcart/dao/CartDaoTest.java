@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
@@ -46,12 +46,12 @@ public class CartDaoTest {
     @Test
     void findCartsByCustomerId() {
         // when
-        final List<Cart> carts = cartDao.findCartsByCustomerId(1L);
+        final List<CartItem> cartItems = cartDao.findCartsByCustomerId(1L);
 
         // then
         assertAll(
-                () -> assertThat(carts.get(0).getProduct().getName()).isEqualTo("banana"),
-                () -> assertThat(carts.get(1).getProduct().getName()).isEqualTo("apple")
+                () -> assertThat(cartItems.get(0).getProduct().getName()).isEqualTo("banana"),
+                () -> assertThat(cartItems.get(1).getProduct().getName()).isEqualTo("apple")
         );
     }
 
@@ -69,13 +69,13 @@ public class CartDaoTest {
     @Test
     void findCart() {
         // when
-        Cart cart = cartDao.findCartByProductId(1L, 1L)
+        CartItem cartItem = cartDao.findCartByProductId(1L, 1L)
                 .orElseThrow(InvalidCartItemException::new);
 
         // then
         assertAll(
-                () -> assertThat(cart.getProduct().getName()).isEqualTo("banana"),
-                () -> assertThat(cart.getQuantity()).isEqualTo(1)
+                () -> assertThat(cartItem.getProduct().getName()).isEqualTo("banana"),
+                () -> assertThat(cartItem.getQuantity()).isEqualTo(1)
         );
     }
 
@@ -97,9 +97,9 @@ public class CartDaoTest {
     void updateCartItemQuantity() {
         cartDao.updateCartItemQuantity(3, 2L, 1L);
 
-        final List<Cart> carts = cartDao.findCartsByCustomerId(1L);
+        final List<CartItem> cartItems = cartDao.findCartsByCustomerId(1L);
 
-        assertThat(carts.get(1).getQuantity()).isEqualTo(3);
+        assertThat(cartItems.get(1).getQuantity()).isEqualTo(3);
     }
 
     @DisplayName("장바구니 아이템을 성공적으로 삭제한다.")
@@ -122,7 +122,7 @@ public class CartDaoTest {
     void deleteCart() {
         // when
         cartDao.deleteCartByCustomerId(1L);
-        final List<Cart> actual = cartDao.findCartsByCustomerId(1L);
+        final List<CartItem> actual = cartDao.findCartsByCustomerId(1L);
 
         // then
         assertThat(actual.size()).isEqualTo(0);

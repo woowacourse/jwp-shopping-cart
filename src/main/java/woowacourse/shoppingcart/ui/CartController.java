@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CartsResponse;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductIdsRequest;
 import woowacourse.shoppingcart.dto.QuantityRequest;
 
@@ -22,7 +22,7 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<CartsResponse> getCartItems(@AuthenticationPrincipal Customer customer) {
+    public ResponseEntity<CartResponse> getCartItems(@AuthenticationPrincipal Customer customer) {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customer.getUsername()));
     }
 

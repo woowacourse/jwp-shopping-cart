@@ -1,18 +1,27 @@
 package woowacourse.shoppingcart.domain;
 
 public class CartItem {
+    private final CartItemInfo cartItemInfo;
+    private final int quantity;
 
-    private final Product product;
-
-    public CartItem(Product product) {
-        this.product = product;
+    public CartItem(CartItemInfo cartItemInfo, int quantity) {
+        this.cartItemInfo = cartItemInfo;
+        this.quantity = quantity;
     }
 
-    public static CartItem of(Long id, String name, int price, String thumbnail) {
-        return new CartItem(new Product(id, name, price, thumbnail));
+    public static CartItem of(Long id, String name, int price, String thumbnail, int quantity) {
+        return new CartItem(CartItemInfo.of(id, name, price, thumbnail), quantity);
+    }
+
+    public CartItemInfo getCartItem() {
+        return cartItemInfo;
     }
 
     public Product getProduct() {
-        return product;
+        return cartItemInfo.getProduct();
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }

@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.CartsResponse;
 import woowacourse.shoppingcart.exception.ExistCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -28,13 +28,13 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public CartsResponse findCartsByCustomerName(final String customerUsername) {
+    public CartResponse findCartsByCustomerName(final String customerUsername) {
         final Long customerId = customerDao.findIdByUsername(customerUsername);
-        final List<CartResponse> cartResponses = cartDao.findCartsByCustomerId(customerId)
+        final List<CartItemResponse> cartItemResponses = cartDao.findCartsByCustomerId(customerId)
                 .stream()
-                .map(CartResponse::from)
+                .map(CartItemResponse::from)
                 .collect(Collectors.toUnmodifiableList());
-        return new CartsResponse(cartResponses);
+        return new CartResponse(cartItemResponses);
     }
 
     public void addCart(final Long productId, final String customerUsername) {

@@ -54,9 +54,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
     void addCartItem() {
         장바구니_아이템_추가_요청(productId1);
 
-        CartResponse cartResponse1 = new CartResponse(productResponse1, 1);
+        CartItemResponse cartItemResponse1 = new CartItemResponse(productResponse1, 1);
 
-        장바구니_아이템_목록_조회(List.of(cartResponse1));
+        장바구니_아이템_목록_조회(List.of(cartItemResponse1));
     }
 
     @DisplayName("장바구니에 이미 존재하는 아이템을 추가할 경우 예외를 발생시킨다..")
@@ -79,10 +79,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         장바구니_아이템_목록_조회_요청();
 
-        CartResponse cartResponse1 = new CartResponse(productResponse1, 1);
-        CartResponse cartResponse2 = new CartResponse(productResponse2, 1);
+        CartItemResponse cartItemResponse1 = new CartItemResponse(productResponse1, 1);
+        CartItemResponse cartItemResponse2 = new CartItemResponse(productResponse2, 1);
 
-        장바구니_아이템_목록_조회(List.of(cartResponse1, cartResponse2));
+        장바구니_아이템_목록_조회(List.of(cartItemResponse1, cartItemResponse2));
     }
 
     @DisplayName("장바구니 아이템 수량을 변경한다.")
@@ -101,8 +101,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract();
 
-        CartResponse cartResponse1 = new CartResponse(productResponse1, expected);
-        장바구니_아이템_목록_조회(List.of(cartResponse1));
+        CartItemResponse cartItemResponse1 = new CartItemResponse(productResponse1, expected);
+        장바구니_아이템_목록_조회(List.of(cartItemResponse1));
     }
 
     @DisplayName("장바구니에 있는 일부 아이템을 삭제한다.")
@@ -114,8 +114,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_삭제_요청(productIdsRequest)
                 .then().log().all();
 
-        CartResponse cartResponse2 = new CartResponse(productResponse2, 1);
-        장바구니_아이템_목록_조회(List.of(cartResponse2));
+        CartItemResponse cartItemResponse2 = new CartItemResponse(productResponse2, 1);
+        장바구니_아이템_목록_조회(List.of(cartItemResponse2));
     }
 
     @DisplayName("존재하지 않는 장바구니 아이템을 삭제하려 할 경우 예외를 발생시킨다.")
@@ -188,7 +188,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private static void 장바구니_아이템_목록_조회(List<CartResponse> expected) {
+    private static void 장바구니_아이템_목록_조회(List<CartItemResponse> expected) {
         ExtractableResponse<Response> responseCart = RestAssured.given().log().all()
                 .auth().oauth2(testToken)
                 .when().get("/cart")
@@ -196,8 +196,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract();
 
-        List<CartResponse> actual = responseCart.jsonPath()
-                .getObject(".", CartsResponse.class)
+        List<CartItemResponse> actual = responseCart.jsonPath()
+                .getObject(".", CartResponse.class)
                 .getCartItems();
 
         assertThat(actual)
