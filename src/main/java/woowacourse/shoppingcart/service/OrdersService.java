@@ -14,6 +14,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrdersDetailDto;
 import woowacourse.shoppingcart.dto.OrdersDetailProductResponseDto;
 import woowacourse.shoppingcart.dto.OrdersResponseDto;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.NotFoundOrdersException;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
 
@@ -34,7 +35,7 @@ public class OrdersService {
     public Long order(final List<Long> productIds, final Long customerId) {
         final List<CartItem> orderCartItems
                 = cartItemDao.findCartItemsByProductIdsAndCustomerId(productIds, customerId);
-
+        checkProductsInCartItems(productIds, orderCartItems);
         orderCartItems.forEach(this::decreaseProductQuantity);
         final List<OrdersDetail> ordersDetails = orderCartItems.stream()
                 .map(this::convertCartItemToOrdersDetails)
@@ -44,6 +45,12 @@ public class OrdersService {
 
         final Orders orders = Orders.createWithoutId(customerId, ordersDetails);
         return ordersDao.save(orders);
+    }
+
+    private void checkProductsInCartItems(final List<Long> productIds, final List<CartItem> orderCartItems) {
+        if (productIds.size() != orderCartItems.size()) {
+            throw new InvalidOrderException();
+        }
     }
 
     private void decreaseProductQuantity(final CartItem cartItem) {

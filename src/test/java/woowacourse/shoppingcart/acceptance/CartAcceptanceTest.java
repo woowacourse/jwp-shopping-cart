@@ -23,6 +23,7 @@ import woowacourse.shoppingcart.dto.UpdateCartItemCountItemRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
+
     private String accessToken;
     private Long customerId;
     private Header authorizationHeader;
@@ -123,6 +124,4 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         assertThat(cartItemResponseDtos.size()).isEqualTo(0);
     }
-
-
 }

@@ -144,7 +144,6 @@ class OrdersControllerTest extends ControllerTest {
         // then
         final OrdersResponseDto ordersResponseDto
                 = objectMapper.readValue(response.getContentAsString(), OrdersResponseDto.class);
-
         final List<OrdersDetailDto> ordersDetails = ordersResponseDto.getOrdersDetails();
         final List<Long> productIds = ordersDetails.stream()
                 .map(ordersDetail -> ordersDetail.getProduct().getProductId())
