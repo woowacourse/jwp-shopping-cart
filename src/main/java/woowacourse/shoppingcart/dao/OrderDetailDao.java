@@ -2,9 +2,10 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.List;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.entity.OrderDetailEntity;
 
 public interface OrderDetailDao {
-    void save(long orderId, long productId, int quantity);
+    Long save(OrderDetail orderDetail, long orderId);
 
-    List<OrderDetail> findAllByOrderId(Long orderId);
+    List<OrderDetailEntity> findAllByOrderId(Long orderId);
 }

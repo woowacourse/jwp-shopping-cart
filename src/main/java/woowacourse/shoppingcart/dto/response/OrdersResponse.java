@@ -2,14 +2,14 @@ package woowacourse.shoppingcart.dto.response;
 
 import java.util.List;
 
-public class OrderResponse {
+public class OrdersResponse {
     private List<OrderProductResponse> products;
     private Integer totalPrice;
 
-    public OrderResponse() {
+    public OrdersResponse() {
     }
 
-    public OrderResponse(List<OrderProductResponse> products) {
+    public OrdersResponse(List<OrderProductResponse> products) {
         this.products = products;
         this.totalPrice = products.stream()
                 .mapToInt(orderProduct -> orderProduct.getProduct().getPrice())

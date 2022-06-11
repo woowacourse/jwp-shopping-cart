@@ -24,7 +24,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.acceptance.AuthAcceptanceTest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.request.OrdersRequest;
 
 @DisplayName("주문 관련 기능")
 @Sql("classpath:schema.sql")
@@ -34,12 +34,12 @@ public class OrdersAcceptanceTest extends AcceptanceTest {
     private Long productId1;
     private Long productId2;
 
-    public static ExtractableResponse<Response> 주문하기_요청(String accessToken, List<OrderRequest> orderRequests) {
+    public static ExtractableResponse<Response> 주문하기_요청(String accessToken, List<OrdersRequest> ordersRequests) {
         return RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(orderRequests)
+                .body(ordersRequests)
                 .when().post("/api/customers/orders")
                 .then().log().all()
                 .extract();
@@ -70,8 +70,8 @@ public class OrdersAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 주문하기_요청_성공되어_있음(String userName, List<OrderRequest> orderRequests) {
-        ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
+    public static Long 주문하기_요청_성공되어_있음(String userName, List<OrdersRequest> ordersRequests) {
+        ExtractableResponse<Response> response = 주문하기_요청(userName, ordersRequests);
         return Long.parseLong(response.header("Location").split("/orders/")[1]);
     }
 
@@ -96,11 +96,11 @@ public class OrdersAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        List<OrderRequest> orderRequests = Stream.of(productId1, productId2)
-                .map(productId -> new OrderRequest(productId, 10))
+        List<OrdersRequest> ordersRequests = Stream.of(productId1, productId2)
+                .map(productId -> new OrdersRequest(productId, 10))
                 .collect(Collectors.toList());
 
-        ExtractableResponse<Response> response = 주문하기_요청(accessToken, orderRequests);
+        ExtractableResponse<Response> response = 주문하기_요청(accessToken, ordersRequests);
 
         주문하기_성공함(response);
     }
@@ -109,30 +109,30 @@ public class OrdersAcceptanceTest extends AcceptanceTest {
     @ValueSource(strings = {"", "abcd"})
     @ParameterizedTest
     void addOrder_failWithInvalidToken(String accessToken) {
-        List<OrderRequest> orderRequests = Stream.of(productId1, productId2)
-                .map(productId -> new OrderRequest(productId, 10))
+        List<OrdersRequest> ordersRequests = Stream.of(productId1, productId2)
+                .map(productId -> new OrdersRequest(productId, 10))
                 .collect(Collectors.toList());
 
-        ExtractableResponse<Response> response = 주문하기_요청(accessToken, orderRequests);
+        ExtractableResponse<Response> response = 주문하기_요청(accessToken, ordersRequests);
         AuthAcceptanceTest.토큰이_유효하지_않음(response);
     }
 
     @DisplayName("주문하기 실패 - 만료된 토큰")
     @Test
     void addOrder_failWithExpiredToken() {
-        List<OrderRequest> orderRequests = Stream.of(productId1, productId2)
-                .map(productId -> new OrderRequest(productId, 10))
+        List<OrdersRequest> ordersRequests = Stream.of(productId1, productId2)
+                .map(productId -> new OrdersRequest(productId, 10))
                 .collect(Collectors.toList());
 
-        ExtractableResponse<Response> response = 주문하기_요청(EXPIRED_TOKEN, orderRequests);
+        ExtractableResponse<Response> response = 주문하기_요청(EXPIRED_TOKEN, ordersRequests);
         AuthAcceptanceTest.토큰이_만료됨(response);
     }
 
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(productId1, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(productId2, 5)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrdersRequest(productId1, 2)));
+        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrdersRequest(productId2, 5)));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(accessToken);
 
@@ -143,8 +143,8 @@ public class OrdersAcceptanceTest extends AcceptanceTest {
     @ValueSource(strings = {"", "abcd"})
     @ParameterizedTest
     void getOrders_failWithInvalidToken(String invalidToken) {
-        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(productId1, 2)));
-        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(productId2, 5)));
+        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrdersRequest(productId1, 2)));
+        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrdersRequest(productId2, 5)));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(invalidToken);
 
@@ -154,8 +154,8 @@ public class OrdersAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회 - 만료된 토큰")
     @Test
     void getOrders_failWithExpiredToken() {
-        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(productId1, 2)));
-        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(productId2, 5)));
+        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrdersRequest(productId1, 2)));
+        주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrdersRequest(productId2, 5)));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(EXPIRED_TOKEN);
 
@@ -166,8 +166,8 @@ public class OrdersAcceptanceTest extends AcceptanceTest {
     @Test
     void getOrder() {
         Long orderId = 주문하기_요청_성공되어_있음(accessToken, Arrays.asList(
-                new OrderRequest(productId1, 2),
-                new OrderRequest(productId2, 4)
+                new OrdersRequest(productId1, 2),
+                new OrdersRequest(productId2, 4)
         ));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(accessToken, orderId);
@@ -180,8 +180,8 @@ public class OrdersAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     void getOrder_failWithInvalidToken(String invalidToken) {
         Long orderId = 주문하기_요청_성공되어_있음(accessToken, Arrays.asList(
-                new OrderRequest(productId1, 2),
-                new OrderRequest(productId2, 4)
+                new OrdersRequest(productId1, 2),
+                new OrdersRequest(productId2, 4)
         ));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(invalidToken, orderId);
@@ -193,8 +193,8 @@ public class OrdersAcceptanceTest extends AcceptanceTest {
     @Test
     void getOrder_failWithExpiredToken() {
         Long orderId = 주문하기_요청_성공되어_있음(accessToken, Arrays.asList(
-                new OrderRequest(productId1, 2),
-                new OrderRequest(productId2, 4)
+                new OrdersRequest(productId1, 2),
+                new OrdersRequest(productId2, 4)
         ));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(EXPIRED_TOKEN, orderId);
