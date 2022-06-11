@@ -11,8 +11,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 
+@Transactional(readOnly = true)
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class CartService {
 
     private final CartItemDao cartItemDao;

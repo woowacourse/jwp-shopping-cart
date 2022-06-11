@@ -49,16 +49,6 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_조회됨(response, productId);
     }
 
-    @DisplayName("상품을 삭제한다")
-    @Test
-    void deleteProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-
-        ExtractableResponse<Response> response = 상품_삭제_요청(productId);
-
-        상품_삭제됨(response);
-    }
-
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
         Product productRequest = new Product(name, price, imageUrl);
 
@@ -122,9 +112,5 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
         ProductResponse resultProduct = response.as(ProductResponse.class);
         assertThat(resultProduct.getId()).isEqualTo(productId);
-    }
-
-    public static void 상품_삭제됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

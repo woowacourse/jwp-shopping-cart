@@ -39,8 +39,4 @@ public class ProductService {
     public Long addProduct(final Product product) {
         return productDao.save(product);
     }
-
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
-    }
 }

@@ -58,10 +58,4 @@ public class ProductDao {
 
         return template.query(query, PRODUCT_ROW_MAPPER);
     }
-
-    public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
-//        jdbcTemplate.update(query, productId);
-    }
-
 }
