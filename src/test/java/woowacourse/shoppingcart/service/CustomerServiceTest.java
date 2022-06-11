@@ -17,10 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.LoginCustomer;
-import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerAddRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.exception.shoppingcart.InvalidCustomerException;
 
 @SpringBootTest
@@ -39,10 +39,10 @@ class CustomerServiceTest {
         @DisplayName("고객 정보를 입력하면, 저장한다.")
         void success() {
             // given
-            CustomerRequest customerRequest = new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호);
+            CustomerAddRequest customerAddRequest = new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호);
 
             // when
-            CustomerResponse customerResponse = customerService.save(customerRequest);
+            CustomerResponse customerResponse = customerService.save(customerAddRequest);
 
             // then
             Assertions.assertAll(
@@ -55,14 +55,14 @@ class CustomerServiceTest {
         @DisplayName("로그인 아이디가 이미 존재하면, 예외를 던진다.")
         void fail_duplicateLoginId() {
             // given
-            CustomerRequest customerRequest = new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호);
+            CustomerAddRequest customerAddRequest = new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호);
 
             // when
-            customerService.save(customerRequest);
+            customerService.save(customerAddRequest);
 
             // then
             assertThatThrownBy(
-                    () -> customerService.save(customerRequest)
+                    () -> customerService.save(customerAddRequest)
             ).isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("이미 존재하는 아이디입니다.");
         }
@@ -75,7 +75,7 @@ class CustomerServiceTest {
         @DisplayName("존재하는 회원의 정보를 수정할 수 있다.")
         void success() {
             // given
-            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            customerService.save(new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
             CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(다른_이름, 페퍼_비밀번호);
 
             // when
@@ -89,7 +89,7 @@ class CustomerServiceTest {
         @DisplayName("회원 정보의 비밀번호를 수정하려고 하면, 예외를 던진다.")
         void fail_changePassword() {
             // given
-            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            customerService.save(new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
             CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(페퍼_이름, 다른_비밀번호);
 
             // when & then
@@ -120,7 +120,7 @@ class CustomerServiceTest {
         @DisplayName("존재하는 회원의 정보를 삭제할 수 있다.")
         void success() {
             // given
-            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            customerService.save(new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
             CustomerDeleteRequest customerDeleteRequest = new CustomerDeleteRequest(페퍼_비밀번호);
 
             // when & then
@@ -133,7 +133,7 @@ class CustomerServiceTest {
         @DisplayName("비밀번호가 일치하지 않으면, 예외를 던진다.")
         void fail_changeLoginId() {
             // given
-            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            customerService.save(new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
             CustomerDeleteRequest customerDeleteRequest = new CustomerDeleteRequest(다른_비밀번호);
 
             // when & then

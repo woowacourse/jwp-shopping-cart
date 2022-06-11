@@ -1,9 +1,9 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.customer;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-public class CustomerRequest {
+public class CustomerAddRequest {
 
     @Email(regexp = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$", message = "이메일 형식이 아닙니다.")
     private String loginId;
@@ -14,10 +14,10 @@ public class CustomerRequest {
     @NotBlank
     private String password;
 
-    private CustomerRequest() {
+    private CustomerAddRequest() {
     }
 
-    public CustomerRequest(String loginId, String name, String password) {
+    public CustomerAddRequest(String loginId, String name, String password) {
         this.loginId = loginId;
         this.name = name;
         this.password = password;

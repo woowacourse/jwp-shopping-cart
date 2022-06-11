@@ -6,10 +6,10 @@ import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.support.CryptoUtils;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerAddRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 
 @Service
 @Transactional
@@ -21,9 +21,9 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public CustomerResponse save(CustomerRequest customerRequest) {
-        Customer customer = new Customer(customerRequest.getLoginId(), customerRequest.getName(),
-                CryptoUtils.encrypt(customerRequest.getPassword()));
+    public CustomerResponse save(CustomerAddRequest customerAddRequest) {
+        Customer customer = new Customer(customerAddRequest.getLoginId(), customerAddRequest.getName(),
+                CryptoUtils.encrypt(customerAddRequest.getPassword()));
         Long customerId = customerDao.save(customer);
 
         Customer savedCustomer = customerDao.findById(customerId);

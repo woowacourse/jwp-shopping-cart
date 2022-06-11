@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerAddRequest;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -42,10 +42,10 @@ class AuthControllerTest {
     @DisplayName("로그인 성공 시 토큰을 반환한다.")
     void login() throws Exception {
         // given
-        CustomerRequest customerRequest = new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호);
+        CustomerAddRequest customerAddRequest = new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호);
         mockMvc.perform(post("/customers")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(customerRequest)))
+                        .content(objectMapper.writeValueAsString(customerAddRequest)))
                 .andDo(print());
 
         TokenRequest request = new TokenRequest(페퍼_아이디, 페퍼_비밀번호);

@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartAddRequest;
 import woowacourse.shoppingcart.dto.CartUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerAddRequest;
 
 @SpringBootTest
 @Transactional
@@ -38,7 +38,7 @@ class CartServiceTest {
         Long bananaId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
         Long appleId = productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
-        customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+        customerService.save(new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
 
         LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
         Cart bananaCart = cartService.addCart(loginCustomer, new CartAddRequest(bananaId));
@@ -58,7 +58,7 @@ class CartServiceTest {
     void addCart() {
         //given
         Long bananaId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+        customerService.save(new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
         LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
 
         //when
@@ -75,7 +75,7 @@ class CartServiceTest {
         Long bananaId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
         Long appleId = productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
-        customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+        customerService.save(new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
 
         LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
         cartService.addCart(loginCustomer, new CartAddRequest(bananaId));
@@ -95,7 +95,7 @@ class CartServiceTest {
         //given
         Long bananaId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
 
-        customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+        customerService.save(new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
 
         LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
         Cart cart = cartService.addCart(loginCustomer, new CartAddRequest(bananaId));

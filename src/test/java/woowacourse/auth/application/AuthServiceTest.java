@@ -16,7 +16,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.exception.shoppingcart.InvalidCustomerException;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerAddRequest;
 import woowacourse.shoppingcart.service.CustomerService;
 
 @SpringBootTest
@@ -36,7 +36,7 @@ class AuthServiceTest {
     @DisplayName("등록된 회원으로 로그인하면 accessToken을 발급한다.")
     void login() {
         // given
-        customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+        customerService.save(new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
         TokenRequest tokenRequest = new TokenRequest(페퍼_아이디, 페퍼_비밀번호);
 
         // when
@@ -50,7 +50,7 @@ class AuthServiceTest {
     @DisplayName("비밀번호가 일치하지 않으면 예외처리")
     void login_failByPassword() {
         // given
-        customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+        customerService.save(new CustomerAddRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
         TokenRequest tokenRequest = new TokenRequest(페퍼_아이디, "Fake1234!");
 
         // when & then
