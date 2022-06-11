@@ -17,7 +17,7 @@ public class JdbcCustomerDao implements CustomerDao {
     private static final String ID_COLUMN = "id";
 
     private static final RowMapper<CustomerEntity> CUSTOMER_ENTITY_ROW_MAPPER = (rs, rowNum) -> new CustomerEntity(
-            rs.getInt("id"),
+            rs.getLong("id"),
             rs.getString("email"),
             rs.getString("password"),
             rs.getString("profile_image_url"),
@@ -35,7 +35,7 @@ public class JdbcCustomerDao implements CustomerDao {
     }
 
     @Override
-    public int save(CustomerEntity customerEntity) {
+    public long save(CustomerEntity customerEntity) {
         Map<String, Object> params = new HashMap<>();
         params.put("email", customerEntity.getEmail());
         params.put("password", customerEntity.getPassword());

@@ -36,7 +36,7 @@ class JdbcPrivacyDaoTest {
     @Test
     void save() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
         PrivacyEntity privacyEntity = new PrivacyEntity(customerId, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_VALUE_1,
                 CONTACT_VALUE_1);
 
@@ -52,7 +52,7 @@ class JdbcPrivacyDaoTest {
     @Test
     void findById() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
         PrivacyEntity privacyEntity = new PrivacyEntity(customerId, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_VALUE_1,
                 CONTACT_VALUE_1);
         privacyDao.save(customerId, privacyEntity);
@@ -70,7 +70,7 @@ class JdbcPrivacyDaoTest {
     @Test
     void update() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
         PrivacyEntity privacyEntity = new PrivacyEntity(customerId, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_VALUE_1,
                 CONTACT_VALUE_1);
         privacyDao.save(customerId, privacyEntity);
@@ -92,7 +92,7 @@ class JdbcPrivacyDaoTest {
     @Test
     void delete() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
         PrivacyEntity privacyEntity = new PrivacyEntity(customerId, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_VALUE_1,
                 CONTACT_VALUE_1);
         privacyDao.save(customerId, privacyEntity);

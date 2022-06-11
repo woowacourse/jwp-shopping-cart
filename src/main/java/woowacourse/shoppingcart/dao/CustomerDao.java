@@ -4,7 +4,7 @@ import java.util.Optional;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 
 public interface CustomerDao {
-    int save(CustomerEntity customerEntity);
+    long save(CustomerEntity customerEntity);
 
     Optional<CustomerEntity> findById(long id);
 

@@ -8,7 +8,6 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.PrivacyDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.domain.customer.Id;
 import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.customer.ProfileImageUrl;
 import woowacourse.shoppingcart.domain.customer.address.FullAddress;
@@ -154,7 +153,7 @@ public class CustomerRepository {
 
     private Customer convertCustomerEntityToDomain(CustomerEntity customerEntity, Privacy privacy,
                                                    FullAddress fullAddress) {
-        Id id = new Id(customerEntity.getId());
+        Long id = customerEntity.getId();
         Email email = new Email(customerEntity.getEmail());
         Password password = new Password(customerEntity.getPassword(), new BCryptPasswordEncoder());
         ProfileImageUrl profileImageUrl = new ProfileImageUrl(customerEntity.getProfileImageUrl());

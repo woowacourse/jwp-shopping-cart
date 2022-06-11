@@ -30,7 +30,7 @@ class JdbcCustomerDaoTest {
     @Test
     void save() {
         // when
-        int actual = customerDao.save(CUSTOMER_ENTITY_1);
+        long actual = customerDao.save(CUSTOMER_ENTITY_1);
 
         // then
         assertThat(actual).isNotNull();
@@ -40,7 +40,7 @@ class JdbcCustomerDaoTest {
     @Test
     void findById() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
 
         // when
         CustomerEntity actual = customerDao.findById(customerId).get();
@@ -55,7 +55,7 @@ class JdbcCustomerDaoTest {
     @Test
     void findByEmail() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
 
         // when
         CustomerEntity actual = customerDao.findByEmail(CUSTOMER_ENTITY_1.getEmail()).get();
@@ -70,7 +70,7 @@ class JdbcCustomerDaoTest {
     @Test
     void update() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String cipherNewPassword = passwordEncoder.encode("newpassword1!");
         CustomerEntity newCustomerEntity = new CustomerEntity(customerId, CUSTOMER_ENTITY_1.getEmail(),
@@ -91,7 +91,7 @@ class JdbcCustomerDaoTest {
     @Test
     void delete() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
 
         // when
         customerDao.delete(customerId);

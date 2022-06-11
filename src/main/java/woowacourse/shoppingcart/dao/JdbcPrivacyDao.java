@@ -14,7 +14,7 @@ import woowacourse.shoppingcart.entity.PrivacyEntity;
 @Repository
 public class JdbcPrivacyDao implements PrivacyDao {
     private static final RowMapper<PrivacyEntity> PRIVACY_ENTITY_ROW_MAPPER = (rs, rowNum) -> new PrivacyEntity(
-            rs.getInt("customer_id"),
+            rs.getLong("customer_id"),
             rs.getString("name"),
             rs.getString("gender"),
             rs.getTimestamp("birth_day").toLocalDateTime().toLocalDate(),

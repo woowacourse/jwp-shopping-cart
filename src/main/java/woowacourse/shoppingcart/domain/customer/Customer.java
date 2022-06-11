@@ -7,7 +7,7 @@ import woowacourse.shoppingcart.domain.customer.privacy.Privacy;
 import woowacourse.shoppingcart.exception.DisagreeToTermsException;
 
 public class Customer {
-    private final Id id;
+    private final Long id;
     private final Email email;
     private final Password password;
     private final ProfileImageUrl profileImageUrl;
@@ -15,7 +15,7 @@ public class Customer {
     private final FullAddress fullAddress;
     private final boolean terms;
 
-    public Customer(Id id, Email email, Password password, ProfileImageUrl profileImageUrl, Privacy privacy,
+    public Customer(Long id, Email email, Password password, ProfileImageUrl profileImageUrl, Privacy privacy,
                     FullAddress fullAddress,
                     boolean terms) {
         validateTerms(terms);
@@ -30,7 +30,7 @@ public class Customer {
 
     public Customer(Email email, Password password, ProfileImageUrl profileImageUrl, Privacy privacy,
                     FullAddress fullAddress, boolean terms) {
-        this(Id.empty(), email, password, profileImageUrl, privacy, fullAddress, terms);
+        this(null, email, password, profileImageUrl, privacy, fullAddress, terms);
     }
 
     public static Customer of(String email, String password, String profileImageUrl, Privacy privacy,
@@ -46,7 +46,7 @@ public class Customer {
         }
     }
 
-    public Id getId() {
+    public Long getId() {
         return id;
     }
 

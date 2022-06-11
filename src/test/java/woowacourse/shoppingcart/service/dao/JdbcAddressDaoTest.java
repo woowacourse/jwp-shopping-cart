@@ -34,7 +34,7 @@ class JdbcAddressDaoTest {
     @Test
     void save() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
         AddressEntity addressEntity = new AddressEntity(customerId, ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
                 ZONE_CODE_VALUE_1);
 
@@ -50,7 +50,7 @@ class JdbcAddressDaoTest {
     @Test
     void findById() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
         AddressEntity addressEntity = new AddressEntity(customerId, ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
                 ZONE_CODE_VALUE_1);
         addressDao.save(customerId, addressEntity);
@@ -68,7 +68,7 @@ class JdbcAddressDaoTest {
     @Test
     void update() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
         AddressEntity addressEntity = new AddressEntity(customerId, ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
                 ZONE_CODE_VALUE_1);
         addressDao.save(customerId, addressEntity);
@@ -89,7 +89,7 @@ class JdbcAddressDaoTest {
     @Test
     void delete() {
         // given
-        int customerId = customerDao.save(CUSTOMER_ENTITY_1);
+        long customerId = customerDao.save(CUSTOMER_ENTITY_1);
         AddressEntity addressEntity = new AddressEntity(customerId, ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
                 ZONE_CODE_VALUE_1);
         addressDao.save(customerId, addressEntity);

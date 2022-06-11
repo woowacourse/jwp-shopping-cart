@@ -14,7 +14,7 @@ import woowacourse.shoppingcart.entity.AddressEntity;
 @Repository
 public class JdbcAddressDao implements AddressDao {
     private static final RowMapper<AddressEntity> ADDRESS_ENTITY_ROW_MAPPER = (rs, rowNum) -> new AddressEntity(
-            rs.getInt("customer_id"),
+            rs.getLong("customer_id"),
             rs.getString("address"),
             rs.getString("detail_address"),
             rs.getString("zone_code")

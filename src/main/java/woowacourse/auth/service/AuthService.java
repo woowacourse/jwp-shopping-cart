@@ -31,7 +31,7 @@ public class AuthService {
         Customer customer = customerRepository.findByEmail(email);
         validatePassword(password, customer);
 
-        long customerId = customer.getId().getValue();
+        long customerId = customer.getId();
         String token = jwtTokenProvider.createToken(String.valueOf(customerId));
 
         return new TokenResponse(token, customerId);

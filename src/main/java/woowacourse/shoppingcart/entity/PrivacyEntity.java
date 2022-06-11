@@ -3,13 +3,13 @@ package woowacourse.shoppingcart.entity;
 import java.time.LocalDate;
 
 public class PrivacyEntity {
-    private final Integer customerId;
+    private final Long customerId;
     private final String name;
     private final String gender;
     private final LocalDate birthday;
     private final String contact;
 
-    public PrivacyEntity(Integer customerId, String name, String gender, LocalDate birthday, String contact) {
+    public PrivacyEntity(Long customerId, String name, String gender, LocalDate birthday, String contact) {
         this.customerId = customerId;
         this.name = name;
         this.gender = gender;
@@ -21,7 +21,7 @@ public class PrivacyEntity {
         this(null, name, gender, birthday, contact);
     }
 
-    public Integer getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 

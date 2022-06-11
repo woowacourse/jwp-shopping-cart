@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.entity;
 
 public class CustomerEntity {
-    private final Integer id;
+    private final Long id;
     private final String email;
     private final String password;
     private final String profileImageUrl;
@@ -11,7 +11,7 @@ public class CustomerEntity {
         this(null, email, password, profileImageUrl, terms);
     }
 
-    public CustomerEntity(Integer id, String email, String password, String profileImageUrl, boolean terms) {
+    public CustomerEntity(Long id, String email, String password, String profileImageUrl, boolean terms) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -19,7 +19,7 @@ public class CustomerEntity {
         this.terms = terms;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
