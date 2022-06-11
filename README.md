@@ -76,7 +76,25 @@
   - interceptor와 resolver의 역할을 분리했다면 맞을 것 같은데 interceptor와 resolver의 역할을 어떻게 정의했을까요?
 - [ ] 전역 변수와 멤버변수 사이에 빈줄을 추가해주는게 더 명확한 거 같아요!
 - [ ] ValidtaionException을 만들고 메세지를 전달받아 생성할 수 있게 하는 방식으로 검증 exception 들을 줄일 수도 있을 거 같습니다~
-- [ ] productService가 있는데 productDao를 사용한 이유가 있을까요?
+- [x] productService가 있는데 productDao를 사용한 이유가 있을까요?
+  - 레거시 코드에 dao를 사용하고 있어서 그대로 사용했습니다.
+  - 크루들과 이야기하면서 Service가 다른 Dao를 가지는것과 Service를 가지는 것 중 무엇이 올바른지 이야기한 적이 있습니다.
+  - 당시 가장 큰 논쟁거리는 다음과 같습니다.
+    - Service -> Service인 경우 순환 참조를 하게 된다면 큰 문제가 발생한다 vs 순환 참조를 하지 않도록 주의하면된다.
+    - Dao를 직접 가지면 데이터를 더 쉽게 불러올 수 있어서 유연하게 데이터 활용이 가능하다 vs 여러 서비스가 같은 table에 직접 연결하면서 데이터 관리나 유지보수가 어려워 질 것 같다.
+  - 저는 규모가 작은 프로젝트라면 Dao를 직접 가져와도 된다고 생각했습니다. 구현이 간단해지고 빠르게 구현할 수 있다고 생각했습니다.
+  - 하지만 규모가 커져 하나의 Dao를 여서 Service에서 사용하게되는 경우가 많아지고 중복된 코드가 많아진다면 Service가 Service를 가지는 것도 좋다고 생각합니다.
+  - Service를 사용한다면 ProductService 뿐 아니라 CustomerService도 Dao 대신 사용할 수 있었을 것 같습니다.
+  - 피드백을 받고 이번 미션에서 CartService가 ProductService와 CustomerService를 가지도록 수정해도 큰 어려움은 없을 것 같았지만 문제가 하나 있었습니다.
+  - CartService는 CustomerDao.findByUsername()를 CustomerService.findMe()로 수정하면 Dao가 아닌 Serivce를 가지게 할 수 있었지만 CustomerService.findMe()에는 customer의 id가 포함되어있지 않습니다.
+  - 따라서 이 문제를 해결하기위해서 세 가지정도 방법을 생각해봤습니다.
+    - CustomerService.findMe()가 id를 포함하여 반환하도록 한다.
+      - (API 명세를 바꾸지 않는다면) Service -> Controller로 가는 반환 Dto를 id가 포함된 dto로 새로 만든다.
+      - (API 명세를 바꾼다면) CustomerResponse에 id를 포함하도록 수정한다.
+    - CustomerService.findMe()가 엔티티 또는 도메인 그 자체를 반환하도록 수정한다.
+      - 이 방법은 이전 피드백에서 로운이 말씀해주신 서비스 도메인 반환과 이어질 것 같습니다. 
+      - 단순히 서비스와 컨트롤러뿐 아니라 서비스와 서비스의 관계에서도 도메인 반환의 장점을 느끼게 되는 것 같습니다.
+      - 하지만 개인적인 기준에서는 Dao를 사용해도 될 것 같았고 서비스를 모두 도메인을 반환하는 서비스로 리펙터링 하기엔 너무 비효율적인 것 같아서 수정해보지는 않았습니다.
 - [x] CartResponse에 정적 팩토리 메서드를 만들어서 활용할 수도 있지 않을까요?
 - [ ] 순회를 하면서 조회를 하는데 한번에 조회하는 방법도 있지 않을까요?
 - [x] 서버에서 에러가 발생했습니다 와 같이 표현해주는게 더 파악하기 쉽지 않을까 하는 개인적인 의견입니다~
