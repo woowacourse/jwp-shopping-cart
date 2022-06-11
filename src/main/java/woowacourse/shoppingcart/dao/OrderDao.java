@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public class OrderDao {
+    private static final String ID = "id";
     private final JdbcTemplate jdbcTemplate;
 
     public OrderDao(final JdbcTemplate jdbcTemplate) {
@@ -21,7 +22,7 @@ public class OrderDao {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{ID});
             preparedStatement.setLong(1, customerId);
             return preparedStatement;
         }, keyHolder);
@@ -30,7 +31,7 @@ public class OrderDao {
 
     public List<Long> findOrderIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT id FROM orders WHERE customer_id = ? ";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong(ID), customerId);
     }
 
     public boolean isValidOrderId(final Long customerId, final Long orderId) {

@@ -12,6 +12,10 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
 public class ProductDao {
+    private static final String NAME = "name";
+    private static final String PRICE = "price";
+    private static final String IMAGE_URL = "image_url";
+    private static final String ID = "id";
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
@@ -23,7 +27,7 @@ public class ProductDao {
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
+                    connection.prepareStatement(query, new String[]{ID});
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getPrice());
             preparedStatement.setString(3, product.getImageUrl());
@@ -39,8 +43,9 @@ public class ProductDao {
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                     new Product(
                             productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
+                            resultSet.getString(NAME),
+                            resultSet.getInt(PRICE),
+                            resultSet.getString(IMAGE_URL)
                     ), productId
             );
         } catch (EmptyResultDataAccessException e) {
@@ -53,10 +58,10 @@ public class ProductDao {
         return jdbcTemplate.query(query,
                 (resultSet, rowNumber) ->
                         new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image_url")
+                                resultSet.getLong(ID),
+                                resultSet.getString(NAME),
+                                resultSet.getInt(PRICE),
+                                resultSet.getString(IMAGE_URL)
                         ));
     }
 
