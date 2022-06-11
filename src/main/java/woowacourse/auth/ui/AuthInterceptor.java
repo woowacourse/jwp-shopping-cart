@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import woowacourse.auth.exception.AuthException;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 
@@ -23,7 +24,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (isPreflight(request)) {
             return true;
         }
-        String accessToken = AuthorizationExtractor.extract(Objects.requireNonNull(request));
+        String accessToken = AuthorizationExtractor.extract(Objects.requireNonNull(request))
+                .orElseThrow(() -> new AuthException("토큰 값이 잘못되었습니다."));
         String payload = jwtTokenProvider.getPayload(accessToken);
         request.setAttribute("principal", payload);
         return true;
