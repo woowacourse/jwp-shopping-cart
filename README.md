@@ -65,3 +65,22 @@
   - 해당 토론에서는 이런 이야기들이 나왔던 것 같습니다. 저는 DTO 반환파의 1번째, 2번째 이유로 서비스에서 DTO를 반환하는 편입니다.
   - 코드를 다시 보니 서비스에서 로직으로 dto 생성까지 하고 있는데 이부분은 조금 수정할 수 있을 것이라고 생각하여 service가 아닌 dto에서 정적 팩터리 메서드를 이용하도록 수정했습니다.
 - [x] Request Dto 의 기본 생성자가 private여도 될 것 같다.
+
+## 2단게 수정 사항 & 피드백 정리
+
+- [ ] 로그인을 하지 않은 상태에서도 장바구니에 물품을 넣을 수 있어야 하지 않을까요?
+- [ ] interceptor 설정이 auth package에 있는데 해당 url의 controller 들은 shoppingcart에 있는데 auth에서 설정하는 것이 맞을까요?
+- [ ] (AuthorizationExtractor) extract 메서드를 분리하면 좋을 것 같아요ㅎㅎ
+- [ ] resolver에서 값을 넣어주기만 하고 있는데요. 검증을 하지 않아도 될까요? 
+  - interceptor가 적용된 url에서 모두 @AuthenticationPrincipal가 활용되고 있는데 interceptor에서 검증을 할 필요가 있을까요? 
+  - interceptor와 resolver의 역할을 분리했다면 맞을 것 같은데 interceptor와 resolver의 역할을 어떻게 정의했을까요?
+- [ ] 전역 변수와 멤버변수 사이에 빈줄을 추가해주는게 더 명확한 거 같아요!
+- [ ] ValidtaionException을 만들고 메세지를 전달받아 생성할 수 있게 하는 방식으로 검증 exception 들을 줄일 수도 있을 거 같습니다~
+- [ ] productService가 있는데 productDao를 사용한 이유가 있을까요?
+- [ ] CarResponse에 정적 팩토리 메서드를 만들어서 활용할 수도 있지 않을까요?
+- [ ] 순회를 하면서 조회를 하는데 한번에 조회하는 방법도 있지 않을까요?
+- [ ] 서버에서 에러가 발생했습니다 와 같이 표현해주는게 더 파악하기 쉽지 않을까 하는 개인적인 의견입니다~
+- [ ] 주문상세를 여러개 가진 주문 한건을 의미하는 것 같은데 Orders가 맞을까요?
+- [ ] 도메인과 service에 대한 테스트가 없는 것들이 있는것 같아요!
+- [ ] Impl을 붙이는 방식은 이제 사용을 권장하지 않는 것 같아서요. 
+  - CartItemRepository를 interface로 하고 CartItemDao가 implments하는 방식으로 해도되지 않을까 싶습니다
