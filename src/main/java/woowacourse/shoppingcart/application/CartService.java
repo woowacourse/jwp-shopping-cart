@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.application;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public CartItemsResponse findCartItemsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         List<CartItem> cartItems = cartItemDao.findAllByCustomerId(customerId);
@@ -58,7 +60,7 @@ public class CartService {
                 stock,
                 product.getImageUrl()
             );
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             throw new InvalidProductException();
         }
     }
@@ -84,7 +86,7 @@ public class CartService {
     private void updateProduct(Product product) {
         try {
             productDao.update(product);
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             throw new InvalidProductException();
         }
     }
