@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +15,7 @@ import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:product-data.sql"})
+@Sql(scripts = "classpath:schema.sql")
 @Transactional
 class CartServiceTest {
 
@@ -22,6 +23,17 @@ class CartServiceTest {
     private CustomerService customerService;
     @Autowired
     private CartService cartService;
+
+    @DisplayName("수량을 0 이하로 상품을 장바구니에 담으면 예외가 발생한다.")
+    @Test
+    void addCartItemQuantityException() {
+        saveCustomer();
+        CartRequest savingCartItem = new CartRequest(1L, 0);
+
+        assertThatThrownBy(() -> cartService.addCart(1L, savingCartItem))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("올바르지 않은 상품 수량 형식입니다.");
+    }
 
     @DisplayName("장바구니에 담긴 상품의 수량을 증가시킨다.")
     @Test
@@ -37,6 +49,20 @@ class CartServiceTest {
 
         assertThat(cartProductsByCustomerId.size()).isEqualTo(1);
         cartProductsByCustomerId.forEach(cart -> assertThat(cart.getQuantity()).isEqualTo(10));
+    }
+
+    @DisplayName("장바구니에 담긴 상품의 수량을 0이하로 감소시키면 예외가 발생한다.")
+    @Test
+    void updateCartItemQuantityException() {
+        saveCustomer();
+        CartRequest savingCartItem = new CartRequest(1L, 5);
+        cartService.addCart(1L, savingCartItem);
+
+        CartRequest updatingCartItem = new CartRequest(1L, 0);
+
+        assertThatThrownBy(() -> cartService.updateCartQuantity(1L, updatingCartItem))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("올바르지 않은 상품 수량 형식입니다.");
     }
 
 
