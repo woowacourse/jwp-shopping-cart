@@ -27,6 +27,7 @@ public class CartService {
     @Transactional(readOnly = true)
     public List<CartResponse> findCartsByCustomerId(final Long customerId) {
         cartItemRepository.validateCustomerId(customerId);
+
         return cartItemRepository.findCartsByCustomerId(customerId)
                 .stream()
                 .map(CartResponse::of)
@@ -35,6 +36,8 @@ public class CartService {
 
     public List<CartProductInfoResponse> addCarts(final List<ProductIdRequest> productIdRequests,
                                                   final Long customerId) {
+        cartItemRepository.validateCustomerId(customerId);
+
         plusQuantityCarts(productIdRequests, customerId);
         createCarts(productIdRequests, customerId);
         return productIdRequests.stream()
@@ -71,6 +74,11 @@ public class CartService {
 
     public CartProductInfoResponse patchCart(final CartProductInfoRequest cartProductInfoRequest,
                                              final Long customerId) {
+        Long productId = cartProductInfoRequest.getId();
+
+        cartItemRepository.validateProductId(productId);
+        cartItemRepository.validateCustomerId(customerId);
+
         Cart cart = cartItemRepository.update(
                 getCartEntity(cartProductInfoRequest.getId(), customerId, cartProductInfoRequest));
         return new CartProductInfoResponse(cart.getId(), cart.getQuantity());
@@ -84,7 +92,10 @@ public class CartService {
         List<Long> cartIds = cartIdRequests.stream()
                 .map(CartIdRequest::getId)
                 .collect(Collectors.toList());
+
+        cartItemRepository.validateCustomerId(customerId);
         validateCustomerCarts(cartIds, customerId);
+
         cartItemRepository.deleteByIds(cartIds);
     }
 
