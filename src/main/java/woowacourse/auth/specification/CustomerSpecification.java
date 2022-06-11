@@ -3,9 +3,9 @@ package woowacourse.auth.specification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.exception.DuplicateEmailException;
-import woowacourse.shoppingcart.exception.DuplicateUsernameException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.badrequest.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.badrequest.DuplicateUsernameException;
+import woowacourse.shoppingcart.exception.notfound.InvalidCustomerException;
 
 @Component
 @RequiredArgsConstructor

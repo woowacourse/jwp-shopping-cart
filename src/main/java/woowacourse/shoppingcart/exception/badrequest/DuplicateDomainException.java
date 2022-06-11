@@ -1,6 +1,6 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.exception.badrequest;
 
-public class DuplicateDomainException extends RuntimeException {
+public class DuplicateDomainException extends BadRequestException {
 
     private final String field;
 

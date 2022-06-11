@@ -18,18 +18,11 @@ import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.LoginFailException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.dto.FieldErrorResponse;
-import woowacourse.shoppingcart.exception.AlreadyCartItemExistException;
-import woowacourse.shoppingcart.exception.DuplicateDomainException;
-import woowacourse.shoppingcart.exception.DuplicateEmailException;
-import woowacourse.shoppingcart.exception.DuplicateUsernameException;
+import woowacourse.shoppingcart.exception.badrequest.DuplicateDomainException;
 import woowacourse.shoppingcart.exception.ForbiddenAccessException;
-import woowacourse.shoppingcart.exception.InValidPassword;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotExistProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-import woowacourse.shoppingcart.exception.OverQuantityException;
+import woowacourse.shoppingcart.exception.notfound.BadRequestException;
 
 @RestControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
@@ -41,13 +34,13 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({DuplicateUsernameException.class, DuplicateEmailException.class})
+    @ExceptionHandler(woowacourse.shoppingcart.exception.badrequest.BadRequestException.class)
     public FieldErrorResponse handleDuplicateDomainException(DuplicateDomainException exception) {
         return new FieldErrorResponse(exception.getField(), exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler({ConstraintViolationException.class, BadRequestException.class})
     public ErrorResponse handleInvalidRequest(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());
     }
@@ -56,19 +49,6 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
     public ErrorResponse handleUnAuthorizedException(RuntimeException ex) {
         return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({
-            InvalidCustomerException.class,
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            AlreadyCartItemExistException.class,
-            InValidPassword.class,
-            OverQuantityException.class
-    })
-    public ErrorResponse handleInvalidAccess(final RuntimeException e) {
-        return new ErrorResponse(e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

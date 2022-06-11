@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.shoppingcart.exception.badrequest;
 
 public class DuplicateUsernameException extends DuplicateDomainException {
 

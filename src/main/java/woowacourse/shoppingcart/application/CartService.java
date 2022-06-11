@@ -8,11 +8,11 @@ import woowacourse.auth.specification.CustomerSpecification;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.AlreadyCartItemExistException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.notfound.AlreadyCartItemExistException;
+import woowacourse.shoppingcart.exception.notfound.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotExistProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-import woowacourse.shoppingcart.exception.OverQuantityException;
+import woowacourse.shoppingcart.exception.notfound.OverQuantityException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)

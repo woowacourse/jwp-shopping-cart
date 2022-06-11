@@ -8,8 +8,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
-import woowacourse.shoppingcart.exception.InValidPassword;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.notfound.InValidPassword;
+import woowacourse.shoppingcart.exception.notfound.InvalidCustomerException;
 import woowacourse.utils.CryptoUtils;
 
 @Service
