@@ -11,6 +11,11 @@ import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
+    private static final String PATH_API_MEMBERS_ALL = "/api/members/**";
+    private static final String PATH_API_CARTS_ALL = "/api/carts/**";
+    private static final String PATH_API_MEMBERS = "/api/members";
+    private static final String PATH_API_MEMBERS_EMAIL_CHECK = "/api/members/email-check";
+
     private final AuthInterceptor authInterceptor;
     private final AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver;
 
@@ -23,9 +28,9 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/api/members/**")
-                .addPathPatterns("/api/carts/**")
-                .excludePathPatterns("/api/members", "/api/members/email-check");
+                .addPathPatterns(PATH_API_MEMBERS_ALL)
+                .addPathPatterns(PATH_API_CARTS_ALL)
+                .excludePathPatterns(PATH_API_MEMBERS, PATH_API_MEMBERS_EMAIL_CHECK);
     }
 
     @Override
