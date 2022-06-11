@@ -50,7 +50,7 @@ class EncodedPasswordTest {
         final EncodedPassword encodedPassword = new EncodedPassword(encodedValue);
 
         assertThatThrownBy(() -> encodedPassword.matches(passwordEncoder, wrongPassword))
-            .hasMessage("비밀번호가 일치하지 않습니다.")
+            .hasMessage("로그인 정보가 시스템에 있는 계정과 일치하지 않습니다.")
             .isInstanceOf(InvalidLoginException.class);
     }
 }

@@ -12,25 +12,29 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
+import woowacourse.customer.dao.CustomerDao;
+import woowacourse.customer.domain.Customer;
+
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrderDaoTest {
 
-    private final DataSource dataSource;
     private final OrderDao orderDao;
+    private final CustomerDao customerDao;
 
     public OrderDaoTest(final DataSource dataSource) {
-        this.dataSource = dataSource;
         this.orderDao = new OrderDao(dataSource);
+        this.customerDao = new CustomerDao(dataSource);
     }
 
     @DisplayName("Order를 추가하는 기능")
     @Test
     void addOrders() {
         //given
-        final Long customerId = 1L;
+        final Customer customer = Customer.of("username", "password1", "01011112222", "서울시");
+        final Long customerId = customerDao.save(customer).getId();
 
         //when
         final Long orderId = orderDao.save(customerId);

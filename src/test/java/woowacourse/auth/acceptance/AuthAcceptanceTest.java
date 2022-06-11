@@ -87,7 +87,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertAll(
             () -> response.statusCode(HttpStatus.UNAUTHORIZED.value()),
             () -> assertThat(exceptionResponse.getMessages())
-                .containsExactly("비밀번호가 일치하지 않습니다.")
+                .containsExactly("로그인 정보가 시스템에 있는 계정과 일치하지 않습니다.")
         );
     }
 
