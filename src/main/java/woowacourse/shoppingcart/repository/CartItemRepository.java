@@ -1,13 +1,10 @@
 package woowacourse.shoppingcart.repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.Entity.CartEntity;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.custum.ResourceNotFoundException;
 import woowacourse.shoppingcart.repository.dao.CartItemDao;
@@ -28,8 +25,8 @@ public class CartItemRepository {
         this.customerDao = customerDao;
     }
 
-    public Long create(final Long customerId, final Long productId) {
-        return cartItemDao.findIdByProductId(productId)
+    public Long addCart(final Long customerId, final Long productId) {
+        return cartItemDao.findIdByCustomerIdAndProductId(customerId, productId)
                 .map(this::plusQuantity)
                 .orElseGet(() -> cartItemDao.create(customerId, productId));
     }

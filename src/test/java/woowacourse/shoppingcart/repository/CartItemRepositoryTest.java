@@ -60,7 +60,7 @@ public class CartItemRepositoryTest {
         final Long productId = 10L;
 
         // when
-        final Long cartId = cartItemRepository.create(customerId, productId);
+        final Long cartId = cartItemRepository.addCart(customerId, productId);
 
         // then
         assertThat(cartId).isEqualTo(3L);
@@ -74,9 +74,9 @@ public class CartItemRepositoryTest {
         final Long productId = 3L;
 
         // when
-        cartItemRepository.create(customerId, productId);
+        cartItemRepository.addCart(customerId, productId);
         System.err.println("id1 = " + cartItemRepository.findCartsByCustomerId(customerId));
-        final Long cartId = cartItemRepository.create(customerId, productId);
+        final Long cartId = cartItemRepository.addCart(customerId, productId);
         System.err.println("id2 = " + cartItemRepository.findCartsByCustomerId(customerId));
 
         // then
@@ -89,7 +89,7 @@ public class CartItemRepositoryTest {
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
-        Long cartId = cartItemRepository.create(customerId, productId);
+        Long cartId = cartItemRepository.addCart(customerId, productId);
         Cart cartOne = cartItemRepository.findById(cartId);
 
         // when

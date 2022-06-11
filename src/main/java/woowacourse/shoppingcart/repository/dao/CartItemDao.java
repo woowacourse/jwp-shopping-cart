@@ -66,10 +66,11 @@ public class CartItemDao {
         return jdbcTemplate.update(query, Map.of("id", id));
     }
 
-    public Optional<Long> findIdByProductId(Long productId) {
-        final String query = "SELECT id FROM cart_item WHERE product_id = :productId LIMIT 1";
+    public Optional<Long> findIdByCustomerIdAndProductId(Long customerId, Long productId) {
+        final String query = "SELECT id FROM cart_item WHERE customer_id = :customerId AND product_id = :productId";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, Map.of("productId", productId), Long.class));
+            Map<String, Long> map = Map.of("productId", productId, "customerId", customerId);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, map, Long.class));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

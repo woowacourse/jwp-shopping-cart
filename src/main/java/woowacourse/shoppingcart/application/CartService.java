@@ -43,7 +43,7 @@ public class CartService {
         Long productId = productIdRequest.getId();
         cartItemRepository.validateCustomerId(customerId);
         cartItemRepository.validateProductId(productId);
-        Long id = cartItemRepository.create(customerId, productId);
+        Long id = cartItemRepository.addCart(customerId, productId);
         return new CartProductInfoResponse(id, cartItemRepository.findById(id).getQuantity());
     }
 
