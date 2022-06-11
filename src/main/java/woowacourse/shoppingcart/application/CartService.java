@@ -42,7 +42,9 @@ public class CartService {
     }
 
     private Long saveCartItem(Long memberId, Long productId, Integer quantity) {
-        CartItem cartItem = new CartItem(memberId, productId, quantity);
+        Product product = productDao.findProductById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+        CartItem cartItem = new CartItem(memberId, product, quantity);
         return cartItemDao.save(cartItem);
     }
 
@@ -66,8 +68,7 @@ public class CartService {
     }
 
     private CartItemResponse toCartItemResponse(CartItem cartItem) {
-        Product product = productDao.findProductById(cartItem.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+        Product product = cartItem.getProduct();
         return new CartItemResponse(new ProductResponse(product), cartItem.getQuantity());
     }
 

@@ -13,7 +13,8 @@ class CartItemTest {
     @DisplayName("장바구니에 담는 상품의 수량이 0 이하면 예외를 반환한다.")
     @Test
     void quantityCannotLessThanOrEqualTo0() {
-        assertThatThrownBy(() -> new CartItem(1L, 1L, 0))
+        Product product = new Product("banana", 1_000, 1, "woowa1.com");
+        assertThatThrownBy(() -> new CartItem(1L, product, 0))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("상품 수량은 0보다 커야 합니다.");
     }
@@ -21,7 +22,8 @@ class CartItemTest {
     @DisplayName("상품을 하나 더 추가한다.")
     @Test
     void addOne() {
-        CartItem cartItem = new CartItem(1L, 1L, 1);
+        Product product = new Product("banana", 1_000, 1, "woowa1.com");
+        CartItem cartItem = new CartItem(1L, product, 1);
 
         cartItem.addOne();
 
@@ -31,7 +33,8 @@ class CartItemTest {
     @DisplayName("상품을 여러 개 추가한다.")
     @Test
     void add() {
-        CartItem cartItem = new CartItem(1L, 1L, 1);
+        Product product = new Product("banana", 1_000, 1, "woowa1.com");
+        CartItem cartItem = new CartItem(1L, product, 1);
 
         cartItem.add(5);
 
@@ -41,7 +44,8 @@ class CartItemTest {
     @DisplayName("상품을 한 개 뺀다.")
     @Test
     void reduceOne() {
-        CartItem cartItem = new CartItem(1L, 1L, 1);
+        Product product = new Product("banana", 1_000, 1, "woowa1.com");
+        CartItem cartItem = new CartItem(1L, product, 1);
 
         cartItem.reduceOne();
 
@@ -51,7 +55,8 @@ class CartItemTest {
     @DisplayName("수량이 없는 상품은 뺄 수 없다.")
     @Test
     void cannotReduceEmptyCartItem() {
-        CartItem cartItem = new CartItem(1L, 1L, 1);
+        Product product = new Product("banana", 1_000, 1, "woowa1.com");
+        CartItem cartItem = new CartItem(1L, product, 1);
 
         cartItem.reduceOne();
 
@@ -64,7 +69,8 @@ class CartItemTest {
     @ParameterizedTest
     @CsvSource({"1,true", "2,false"})
     void isEmpty(int quantity, boolean expected) {
-        CartItem cartItem = new CartItem(1L, 1L, quantity);
+        Product product = new Product("banana", 1_000, 1, "woowa1.com");
+        CartItem cartItem = new CartItem(1L, product, quantity);
 
         cartItem.reduceOne();
 

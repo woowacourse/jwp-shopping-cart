@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Product;
 
 @Repository
 public class CartItemDao {
@@ -18,7 +18,8 @@ public class CartItemDao {
             new CartItem(
                     rs.getLong("id"),
                     rs.getLong("member_id"),
-                    rs.getLong("product_id"),
+                    new Product(rs.getLong("p_id"), rs.getString("p_name"), rs.getInt("p_price"), rs.getInt("p_stock"),
+                            rs.getString("p_image")),
                     rs.getInt("quantity")
             );
 
@@ -33,19 +34,29 @@ public class CartItemDao {
     }
 
     public Long save(CartItem cartItem) {
-        BeanPropertySqlParameterSource parameters = new BeanPropertySqlParameterSource(cartItem);
+        MapSqlParameterSource parameters = new MapSqlParameterSource("member_id", cartItem.getMemberId())
+                .addValue("product_id", cartItem.getProduct().getId())
+                .addValue("quantity", cartItem.getQuantity());
         return simpleJdbcInsert.executeAndReturnKey(parameters)
                 .longValue();
     }
 
     public List<CartItem> findByMemberId(Long memberId) {
-        String sql = "SELECT id, member_id, product_id, quantity FROM cart_item WHERE member_id = :member_id";
+        String sql = "SELECT c.id as id, c.member_id as member_id, c.product_id as product_id, c.quantity as quantity,"
+                + "p.id as p_id, p.name as p_name, p.price as p_price, p.stock as p_stock, p.image_url as p_image "
+                + "FROM cart_item AS c "
+                + "INNER JOIN product AS p on c.product_id = p.id "
+                + "WHERE c.member_id = :member_id";
         MapSqlParameterSource parameters = new MapSqlParameterSource("member_id", memberId);
         return namedParameterJdbcTemplate.query(sql, parameters, CART_ITEM_MAPPER);
     }
 
     public Optional<CartItem> findByMemberIdAndProductId(Long memberId, Long productId) {
-        String sql = "SELECT id, member_id, product_id, quantity FROM cart_item WHERE member_id = :member_id AND product_id = :product_id";
+        String sql = "SELECT c.id as id, c.member_id as member_id, c.product_id as product_id, c.quantity as quantity,"
+                + "p.id as p_id, p.name as p_name, p.price as p_price, p.stock as p_stock, p.image_url as p_image "
+                + "FROM cart_item AS c "
+                + "INNER JOIN product AS p on c.product_id = p.id "
+                + "WHERE c.member_id = :member_id AND c.product_id = :product_id";
         MapSqlParameterSource parameters = new MapSqlParameterSource("member_id", memberId)
                 .addValue("product_id", productId);
         return namedParameterJdbcTemplate.query(sql, parameters, CART_ITEM_MAPPER)

@@ -6,18 +6,18 @@ public class CartItem {
 
     private final Long id;
     private final Long memberId;
-    private final Long productId;
+    private final Product product;
     private Integer quantity;
 
-    public CartItem(Long memberId, Long productId, Integer quantity) {
-        this(null, memberId, productId, quantity);
+    public CartItem(Long memberId, Product product, Integer quantity) {
+        this(null, memberId, product, quantity);
     }
 
-    public CartItem(Long id, Long memberId, Long productId, Integer quantity) {
+    public CartItem(Long id, Long memberId, Product product, Integer quantity) {
         validateQuantity(quantity);
         this.id = id;
         this.memberId = memberId;
-        this.productId = productId;
+        this.product = product;
         this.quantity = quantity;
     }
 
@@ -55,8 +55,8 @@ public class CartItem {
         return memberId;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
     public int getQuantity() {
@@ -72,12 +72,13 @@ public class CartItem {
             return false;
         }
         CartItem cartItem = (CartItem) o;
-        return quantity == cartItem.quantity && Objects.equals(id, cartItem.id) && Objects.equals(
-                memberId, cartItem.memberId) && Objects.equals(productId, cartItem.productId);
+        return Objects.equals(id, cartItem.id) && Objects.equals(memberId, cartItem.memberId)
+                && Objects.equals(product, cartItem.product) && Objects.equals(quantity,
+                cartItem.quantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, memberId, productId, quantity);
+        return Objects.hash(id, memberId, product, quantity);
     }
 }
