@@ -25,6 +25,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrdersDetailDto;
 import woowacourse.shoppingcart.dto.OrdersResponseDto;
+import woowacourse.shoppingcart.exception.InvalidQuantityException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -89,5 +90,17 @@ class OrdersServiceTest {
                 .getQuantity();
 
         assertThat(decreasedQuantity).isEqualTo(QUANTITY - ORDER_COUNT);
+    }
+
+    @Test
+    @DisplayName("사용자의 주문을 처리시 상품의 재고보다 주문 수량이 높으면 예외가 발생한다.")
+    void order_orderCountOver() {
+        // given
+        final Product product2 = Product.createWithoutId("test2", 1000, "testUrl", QUANTITY);
+        final Long product2Id = productDao.save(product2);
+        cartItemDao.addCartItem(customerId, product2Id, QUANTITY + 1);
+
+        assertThatThrownBy(() -> ordersService.order(List.of(product2Id), customerId))
+                .isInstanceOf(InvalidQuantityException.class);
     }
 }
