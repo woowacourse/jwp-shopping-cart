@@ -32,9 +32,9 @@ public class CartItemService {
     public CartItemResponse add(final LoginCustomer loginCustomer, final CartItemCreateRequest cartItemCreateRequest) {
         final Product product = productDao.findProductById(cartItemCreateRequest.getProductId());
         final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
-        final CartItem cartItem = cartItemCreateRequest.toCartItem(product);
         validateAddable(product, customer);
 
+        final CartItem cartItem = cartItemCreateRequest.toCartItem(product);
         final Long cartItemId = cartItemDao.add(customer.getId(), cartItem);
         return CartItemResponse.of(cartItemId, cartItem);
     }
