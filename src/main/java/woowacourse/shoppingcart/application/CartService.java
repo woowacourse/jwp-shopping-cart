@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CartService {
 
-    public static final int INIT_QUANTITY = 1;
+    private static final int INIT_QUANTITY = 1;
     private final CartItemDao cartItemDao;
     private final CustomerService customerService;
     private final ProductService productService;
