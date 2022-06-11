@@ -33,7 +33,7 @@ public class CartService {
     }
 
     @Transactional
-    public CartSetResponse setCart(CartSetRequest cartSetRequest, String email, Long productId) {
+    public CartSetResponse addCart(CartSetRequest cartSetRequest, String email, Long productId) {
         Long customerId = customerDao.findIdByEmail(email);
         Optional<Cart> findCart = cartDao
                 .findByCustomerIdAndProductId(customerId, productId);

@@ -35,7 +35,7 @@ public class CartController {
     @PutMapping("/products/{productId}")
     public ResponseEntity<CartProduct> setCart(@Login String email, @RequestBody CartSetRequest cartSetRequest,
                                                @PathVariable Long productId) {
-        CartSetResponse response = cartService.setCart(cartSetRequest, email, productId);
+        CartSetResponse response = cartService.addCart(cartSetRequest, email, productId);
         if (response.isCreated()) {
             return ResponseEntity.created(createUri(response.getId()))
                     .body(new CartProduct(response.getProductId(), response.getImage(), response.getName(),

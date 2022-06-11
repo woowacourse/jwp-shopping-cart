@@ -50,7 +50,7 @@ class CartServiceTest {
                 .willReturn(Optional.of(치킨));
 
         // when
-        CartSetResponse saved = cartService.setCart(new CartSetRequest(1000), email, 1L);
+        CartSetResponse saved = cartService.addCart(new CartSetRequest(1000), email, 1L);
 
         // then
         assertAll(
@@ -75,7 +75,7 @@ class CartServiceTest {
                 .willReturn(new Cart(cart.getId(), cart.getCustomerId(), 2000));
         CartSetRequest cartSetRequest = new CartSetRequest(2000);
         // when
-        CartSetResponse updated = cartService.setCart(cartSetRequest, email, 1L);
+        CartSetResponse updated = cartService.addCart(cartSetRequest, email, 1L);
 
         // then
         assertAll(
