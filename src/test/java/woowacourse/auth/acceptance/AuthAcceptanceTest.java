@@ -43,7 +43,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         ErrorResponse response = ROOKIE.signInFailed();
 
         // then
-        assertThat(response.getMessage()).isEqualTo("로그인 정보가 일치하지 않습니다.");
+        assertThat(response.getMessage()).isEqualTo("[ERROR] 존재하지 않는 사용자 입니다.");
     }
 
     @Test

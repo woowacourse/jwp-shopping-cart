@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
@@ -59,6 +61,14 @@ class CustomerServiceTest {
 
         // when & then
         assertThatThrownBy(() -> customerService.save(new CustomerSaveRequest("email2@email.com", "password1234A!", "rookie")))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "pas12A!", "passwordPASSWORD1234!", "password123!", "PASSWORD123!", "password123A", "passwordA!"})
+    @DisplayName("패스워드는 8자 이상 20자 이하, 대소문자, 특수문자, 숫자 하나이상을 포함하지 않으면 예외가 발생한다.")
+    void wrongPasswordSaveCustomer(String password) {
+        assertThatThrownBy(() -> customerService.save(new CustomerSaveRequest("email2@email.com", password, "rookie")))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

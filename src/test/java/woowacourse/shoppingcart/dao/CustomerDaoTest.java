@@ -45,7 +45,7 @@ public class CustomerDaoTest {
         customerDao.save(new Customer("email@email.com", "password123!A", "rookie"));
 
         // when
-        Customer customer = customerDao.findByEmailAndPassword("email@email.com", "password123!A").get();
+        Customer customer = customerDao.findByEmail("email@email.com").get();
 
         // then
         assertThat(customer).usingRecursiveComparison()

@@ -65,10 +65,9 @@ public class CustomerDao {
         }
     }
 
-    public Optional<Customer> findByEmailAndPassword(String email, String password) {
-        String query = "SELECT id, email, password, nickname FROM customer WHERE email = :email AND password = :password";
-        MapSqlParameterSource nameParameters = new MapSqlParameterSource("email", email)
-                .addValue("password", password);
+    public Optional<Customer> findByEmail(String email) {
+        String query = "SELECT id, email, password, nickname FROM customer WHERE email = :email";
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource("email", email);
         try {
             Customer customer = template.queryForObject(query, nameParameters, CUSTOMER_ROW_MAPPER);
             return Optional.ofNullable(customer);

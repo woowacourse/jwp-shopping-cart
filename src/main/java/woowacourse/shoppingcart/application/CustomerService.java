@@ -2,27 +2,37 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.support.Encryption;
 import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.shoppingcart.application.dto.CustomerSaveRequest;
 import woowacourse.shoppingcart.application.dto.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.application.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.BasicPassword;
 
 @Transactional(readOnly = true)
 @Service
 public class CustomerService {
 
+    private final Encryption encryption;
     private final CustomerDao customerDao;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(Encryption encryption, CustomerDao customerDao) {
+        this.encryption = encryption;
         this.customerDao = customerDao;
     }
 
     @Transactional
     public Long save(CustomerSaveRequest request) {
         validateCustomerRequest(request);
-        return customerDao.save(request.toEntity());
+
+        Customer customer = request.toEntity(encoderPassword(request.getPassword()));
+        return customerDao.save(customer);
+    }
+
+    private String encoderPassword(String password) {
+        return encryption.encrypt(new BasicPassword(password));
     }
 
     private void validateCustomerRequest(CustomerSaveRequest request) {
@@ -42,21 +52,15 @@ public class CustomerService {
     }
 
     @Transactional
-    public void update(Long id, CustomerUpdateRequest customerUpdateRequest) {
-        Customer saveCustomer = customerDao.findById(id)
+    public void update(Long id, CustomerUpdateRequest request) {
+        Customer customer = customerDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
-        validateUpdateNickname(id, customerUpdateRequest, saveCustomer);
+        validateUpdateNickname(id, request, customer);
 
-        customerDao.update(new Customer(
-                id,
-                saveCustomer.getEmail(),
-                saveCustomer.getPassword(),
-                customerUpdateRequest.getNickname())
-        );
+        customerDao.update(customer.updateCustomer(request.getNickname()));
     }
 
     private void validateUpdateNickname(Long id, CustomerUpdateRequest customerUpdateRequest, Customer customer) {
-        customer.validateNickname(customerUpdateRequest.getNickname());
         boolean existNickname = customerDao.existByNicknameExcludedId(id, customerUpdateRequest.getNickname());
         if (existNickname) {
             throw new IllegalArgumentException("[ERROR] 중복되는 닉네임입니다.");
@@ -64,23 +68,25 @@ public class CustomerService {
     }
 
     @Transactional
-    public void updatePassword(Long id, CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
-        Customer saveCustomer = customerDao.findById(id)
+    public void updatePassword(Long id, CustomerUpdatePasswordRequest request) {
+        Customer customer = customerDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] ID가 존재하지 않습니다."));
-        validatePasswordUpdateNickname(customerUpdatePasswordRequest, saveCustomer);
 
-        customerDao.update(new Customer(
-                id,
-                saveCustomer.getEmail(),
-                customerUpdatePasswordRequest.getNewPassword(),
-                saveCustomer.getNickname())
-        );
+        CustomerUpdatePasswordRequest encoderRequest = encoderPassword(request);
+        validateUpdatePassword(encoderRequest, customer);
+
+        customerDao.update(customer.updatePassword(encoderRequest.getNewPassword()));
     }
 
-    private void validatePasswordUpdateNickname(CustomerUpdatePasswordRequest customerUpdatePasswordRequest, Customer customer) {
-        customer.equalPrevPassword(customerUpdatePasswordRequest.getPrevPassword());
-        customer.nonEqualNewPassword(customerUpdatePasswordRequest.getNewPassword());
-        customer.validatePassword(customerUpdatePasswordRequest.getNewPassword());
+    private CustomerUpdatePasswordRequest encoderPassword(CustomerUpdatePasswordRequest request) {
+        return new CustomerUpdatePasswordRequest(
+                encryption.encrypt(request.getPrevPassword()),
+                encryption.encrypt(new BasicPassword(request.getNewPassword())));
+    }
+
+    private void validateUpdatePassword(CustomerUpdatePasswordRequest request, Customer customer) {
+        customer.equalPrevPassword(request.getPrevPassword());
+        customer.nonEqualNewPassword(request.getNewPassword());
     }
 
     @Transactional
