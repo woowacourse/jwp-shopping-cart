@@ -7,7 +7,7 @@ public class ProductRequestDto {
     private String thumbnailUrl;
     private Integer quantity;
 
-    public ProductRequestDto() {
+    private ProductRequestDto() {
     }
 
     public ProductRequestDto(String name, Integer price, String thumbnailUrl, final Integer quantity) {

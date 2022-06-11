@@ -2,7 +2,10 @@ package woowacourse.shoppingcart.dto;
 
 public class CommonExceptionDto {
 
-    private final String message;
+    private String message;
+
+    public CommonExceptionDto() {
+    }
 
     public CommonExceptionDto(final String message) {
         this.message = message;

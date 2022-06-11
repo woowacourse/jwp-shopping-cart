@@ -2,8 +2,11 @@ package woowacourse.shoppingcart.dto;
 
 public class OrdersDetailDto {
 
-    private final OrdersDetailProductResponseDto product;
-    private final int count;
+    private OrdersDetailProductResponseDto product;
+    private int count;
+
+    private OrdersDetailDto() {
+    }
 
     public OrdersDetailDto(final OrdersDetailProductResponseDto product, final int count) {
         this.product = product;

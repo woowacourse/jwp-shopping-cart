@@ -2,9 +2,12 @@ package woowacourse.shoppingcart.dto;
 
 public class CustomerDto {
 
-    private final Long id;
-    private final String email;
-    private final String username;
+    private Long id;
+    private String email;
+    private String username;
+
+    private CustomerDto() {
+    }
 
     public CustomerDto(final Long id, final String email, final String username) {
         this.id = id;

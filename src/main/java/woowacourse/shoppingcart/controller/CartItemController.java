@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,7 +16,6 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.LoginCustomer;
 import woowacourse.shoppingcart.dto.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.CartItemResponseDto;
-import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.service.CartService;
 

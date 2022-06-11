@@ -4,7 +4,7 @@ public class UpdateCartItemCountItemRequest {
 
     private Integer count;
 
-    public UpdateCartItemCountItemRequest() {
+    private UpdateCartItemCountItemRequest() {
     }
 
     public UpdateCartItemCountItemRequest(final Integer count) {

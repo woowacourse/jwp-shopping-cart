@@ -7,7 +7,7 @@ public class DeleteCustomerDto {
     @NotBlank(message = "비밀번호에는 공백이 들어가면 안됩니다.")
     private String password;
 
-    public DeleteCustomerDto() {
+    private DeleteCustomerDto() {
     }
 
     public DeleteCustomerDto(final String password) {

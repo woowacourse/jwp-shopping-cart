@@ -7,7 +7,7 @@ public class UpdateCustomerDto {
     @NotBlank(message = "닉네임에는 공백이 들어가면 안됩니다.")
     private String username;
 
-    public UpdateCustomerDto() {
+    private UpdateCustomerDto() {
     }
 
     public UpdateCustomerDto(final String username) {

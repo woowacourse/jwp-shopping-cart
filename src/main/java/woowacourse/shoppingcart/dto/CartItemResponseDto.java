@@ -2,12 +2,15 @@ package woowacourse.shoppingcart.dto;
 
 public class CartItemResponseDto {
     
-    private final Long productId;
-    private final String thumbnailUrl;
-    private final String name;
-    private final Integer price;
-    private final Integer quantity;
-    private final Integer count;
+    private Long productId;
+    private String thumbnailUrl;
+    private String name;
+    private Integer price;
+    private Integer quantity;
+    private Integer count;
+
+    private CartItemResponseDto() {
+    }
 
     public CartItemResponseDto(final Long productId,
                                final String thumbnailUrl,

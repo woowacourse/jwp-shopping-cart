@@ -2,8 +2,11 @@ package woowacourse.shoppingcart.dto;
 
 public class ValidationExceptionDto {
 
-    private final String field;
-    private final String message;
+    private String field;
+    private String message;
+
+    private ValidationExceptionDto() {
+    }
 
     public ValidationExceptionDto(final String field, final String message) {
         this.field = field;
