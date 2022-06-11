@@ -33,7 +33,7 @@ public class JdbcCartItemDao implements CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(final Long customerId, final CartItem cartItem) {
+    public Long save(Long customerId, CartItem cartItem) {
         Map<String, Object> params = new HashMap<>();
         params.put("customer_id", customerId);
         params.put("product_id", cartItem.getProduct().getId());
@@ -43,7 +43,8 @@ public class JdbcCartItemDao implements CartItemDao {
     }
 
     public Optional<CartItemEntity> findById(Long cartItemId) {
-        final String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE id = ?";
+        String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE id = ?";
+
         try {
             return Optional.of(jdbcTemplate.queryForObject(sql, CART_ITEM_ENTITY_MAPPER, cartItemId));
         } catch (EmptyResultDataAccessException e) {
@@ -52,7 +53,7 @@ public class JdbcCartItemDao implements CartItemDao {
     }
 
     public List<CartItemEntity> findAllByCustomerId(Long customerId) {
-        final String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE customer_id = ?";
+        String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE customer_id = ?";
         return jdbcTemplate.query(sql, CART_ITEM_ENTITY_MAPPER, customerId);
     }
 
@@ -61,17 +62,17 @@ public class JdbcCartItemDao implements CartItemDao {
         jdbcTemplate.update(sql, newCartItem.getProduct().getId(), newCartItem.getQuantity(), cartItemId);
     }
 
-    public void delete(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
+    public void delete(Long id) {
+        String sql = "DELETE FROM cart_item WHERE id = ?";
 
-        final int rowCount = jdbcTemplate.update(sql, id);
+        int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
     }
 
     public boolean isProductExisting(Long customerId, Long productId) {
-        final String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE customer_id = ? AND product_id = ?) as is_product_existing";
+        String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE customer_id = ? AND product_id = ?) as is_product_existing";
         return Boolean.TRUE.equals(
                 jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getBoolean("is_product_existing"), customerId,
                         productId));

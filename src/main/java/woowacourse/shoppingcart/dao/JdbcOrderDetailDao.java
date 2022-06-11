@@ -45,7 +45,7 @@ public class JdbcOrderDetailDao implements OrderDetailDao {
 
     @Override
     public List<OrderDetailEntity> findAllByOrderId(Long orderId) {
-        final String sql = "SELECT id, order_id, product_id, quantity FROM order_detail WHERE order_id = ?";
+        String sql = "SELECT id, order_id, product_id, quantity FROM order_detail WHERE order_id = ?";
         return jdbcTemplate.query(sql, orderDetailRowMapper, orderId);
     }
 }

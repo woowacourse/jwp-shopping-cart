@@ -39,7 +39,7 @@ public class JdbcOrdersDao implements OrdersDao {
 
     public Optional<OrdersEntity> findById(Long id) {
         String sql = "SELECT id, customer_id FROM Orders WHERE id = ?";
-        
+
         try {
             return Optional.of(jdbcTemplate.queryForObject(sql, ORDERS_ENTITY_ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
@@ -50,10 +50,5 @@ public class JdbcOrdersDao implements OrdersDao {
     public List<OrdersEntity> findAllByCustomerId(Long customerId) {
         String sql = "SELECT id, customer_id FROM orders WHERE customer_id = ?";
         return jdbcTemplate.query(sql, ORDERS_ENTITY_ROW_MAPPER, customerId);
-    }
-
-    public boolean isValidOrderId(Long customerId, Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
     }
 }

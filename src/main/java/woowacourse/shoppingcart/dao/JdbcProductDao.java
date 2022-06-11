@@ -60,12 +60,12 @@ public class JdbcProductDao implements ProductDao {
     }
 
     public List<ProductEntity> findAll() {
-        final String query = "SELECT id, name, description, price, stock, image_url FROM product";
+        String query = "SELECT id, name, description, price, stock, image_url FROM product";
         return jdbcTemplate.query(query, PRODUCT_ROW_MAPPER);
     }
 
     public void delete(long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
+        String query = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(query, productId);
     }
 }

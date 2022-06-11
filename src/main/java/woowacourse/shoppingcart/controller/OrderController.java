@@ -26,22 +26,20 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@CustomerId final Long customerId,
-                                         @RequestBody final List<OrdersRequest> orderDetails) {
-        final Long orderId = ordersService.addOrder(orderDetails, customerId);
+    public ResponseEntity<Void> addOrder(@CustomerId Long customerId, @RequestBody List<OrdersRequest> orderDetails) {
+        Long orderId = ordersService.addOrder(orderDetails, customerId);
         return ResponseEntity.created(URI.create("/api/customers/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrdersResponse> findOrder(@CustomerId final Long customerId,
-                                                    @PathVariable final Long orderId) {
+    public ResponseEntity<OrdersResponse> findOrder(@CustomerId Long customerId, @PathVariable Long orderId) {
         OrdersResponse ordersResponse = ordersService.findOrdersById(customerId, orderId);
         return ResponseEntity.ok(ordersResponse);
     }
 
     @GetMapping
-    public ResponseEntity<List<OrdersResponse>> findOrders(@CustomerId final Long customerId) {
-        List<OrdersResponse> ordersRespons = ordersService.findOrdersByCustomerId(customerId);
-        return ResponseEntity.ok(ordersRespons);
+    public ResponseEntity<List<OrdersResponse>> findOrders(@CustomerId Long customerId) {
+        List<OrdersResponse> ordersResponses = ordersService.findOrdersByCustomerId(customerId);
+        return ResponseEntity.ok(ordersResponses);
     }
 }

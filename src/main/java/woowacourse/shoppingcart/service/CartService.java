@@ -40,7 +40,7 @@ public class CartService {
         }
     }
 
-    public List<CartItemResponse> findCartItemsByCustomerId(final Long customerId) {
+    public List<CartItemResponse> findCartItemsByCustomerId(Long customerId) {
         List<CartItem> cartItems = cartItemRepository.findAllByCustomerId(customerId);
 
         return cartItems.stream()
@@ -55,7 +55,7 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final Long customerId, final Long cartItemId) {
+    public void deleteCart(Long customerId, Long cartItemId) {
         validateCustomerCart(cartItemId, customerId);
         cartItemRepository.delete(cartItemId);
     }
@@ -71,7 +71,7 @@ public class CartService {
         cartItemRepository.update(cartItemId, newCartItem);
     }
 
-    private void validateCustomerCart(final Long cartItemId, final Long customerId) {
+    private void validateCustomerCart(Long cartItemId, Long customerId) {
         List<CartItem> cartItems = cartItemRepository.findAllByCustomerId(customerId);
         boolean noneMatch = cartItems.stream()
                 .noneMatch(cartItem -> Objects.equals(cartItem.getId(), cartItemId));
@@ -81,7 +81,7 @@ public class CartService {
         }
     }
 
-    private void validateProductId(final Long cartItemId, final Long productId) {
+    private void validateProductId(Long cartItemId, Long productId) {
         CartItem cartItem = cartItemRepository.findById(cartItemId);
 
         if (!cartItem.getProduct().getId().equals(productId)) {

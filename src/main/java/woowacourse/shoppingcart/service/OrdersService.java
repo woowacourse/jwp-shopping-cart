@@ -27,7 +27,7 @@ public class OrdersService {
         this.productRepository = productRepository;
     }
 
-    public Long addOrder(final List<OrdersRequest> ordersRequests, final Long customerId) {
+    public Long addOrder(List<OrdersRequest> ordersRequests, Long customerId) {
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (OrdersRequest ordersRequest : ordersRequests) {
             Product product = productRepository.findById(ordersRequest.getProductId());
@@ -40,7 +40,7 @@ public class OrdersService {
         return ordersRepository.save(orders);
     }
 
-    public OrdersResponse findOrdersById(final Long customerId, final Long orderId) {
+    public OrdersResponse findOrdersById(Long customerId, Long orderId) {
         Orders orders = ordersRepository.findOrdersById(orderId);
         validateOrderIdByCustomerId(orders, customerId);
         return convertOrderToResponse(orders);
@@ -52,7 +52,7 @@ public class OrdersService {
         }
     }
 
-    public List<OrdersResponse> findOrdersByCustomerId(final Long customerId) {
+    public List<OrdersResponse> findOrdersByCustomerId(Long customerId) {
         List<Orders> orders = ordersRepository.findAllByCustomerId(customerId);
 
         return orders.stream().map(this::convertOrderToResponse).collect(Collectors.toList());

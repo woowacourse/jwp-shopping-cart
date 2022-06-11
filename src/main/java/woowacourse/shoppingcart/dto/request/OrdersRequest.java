@@ -12,7 +12,7 @@ public class OrdersRequest {
     public OrdersRequest() {
     }
 
-    public OrdersRequest(final Long productId, final int quantity) {
+    public OrdersRequest(Long productId, int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }

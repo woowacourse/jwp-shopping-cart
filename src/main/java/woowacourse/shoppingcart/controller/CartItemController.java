@@ -23,20 +23,19 @@ import woowacourse.shoppingcart.service.CartService;
 public class CartItemController {
     private final CartService cartService;
 
-    public CartItemController(final CartService cartService) {
+    public CartItemController(CartService cartService) {
         this.cartService = cartService;
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> getCartItems(@CustomerId final Long customerId) {
+    public ResponseEntity<List<CartItemResponse>> getCartItems(@CustomerId Long customerId) {
         return ResponseEntity.ok().body(cartService.findCartItemsByCustomerId(customerId));
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@RequestBody final CartItemRequest cartItemRequest,
-                                            @CustomerId final Long customerId) {
-        final Long cartItemId = cartService.addCart(cartItemRequest, customerId);
-        final URI responseLocation = ServletUriComponentsBuilder
+    public ResponseEntity<Void> addCartItem(@RequestBody CartItemRequest cartItemRequest, @CustomerId Long customerId) {
+        Long cartItemId = cartService.addCart(cartItemRequest, customerId);
+        URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartItemId}")
                 .buildAndExpand(cartItemId)
@@ -45,22 +44,22 @@ public class CartItemController {
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity<Void> deleteCartItem(@CustomerId final Long customerId, @PathVariable final Long cartItemId) {
+    public ResponseEntity<Void> deleteCartItem(@CustomerId Long customerId, @PathVariable Long cartItemId) {
         cartService.deleteCart(customerId, cartItemId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{cartItemId}")
-    public ResponseEntity<Void> updateCartItem(@RequestBody final CartItemRequest cartItemRequest,
-                                               @PathVariable final Long cartItemId,
-                                               @CustomerId final Long customerId) {
+    public ResponseEntity<Void> updateCartItem(@RequestBody CartItemRequest cartItemRequest,
+                                               @PathVariable Long cartItemId,
+                                               @CustomerId Long customerId) {
         cartService.updateCartItem(customerId, cartItemId, cartItemRequest);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductExistingInCartResponse> checkIsProductExisting(@CustomerId final Long customerId,
-                                                                                @PathVariable final Long productId) {
+    public ResponseEntity<ProductExistingInCartResponse> checkIsProductExisting(@CustomerId Long customerId,
+                                                                                @PathVariable Long productId) {
         ProductExistingInCartResponse productExisting = cartService.isProductExisting(customerId, productId);
         return ResponseEntity.ok(productExisting);
     }
