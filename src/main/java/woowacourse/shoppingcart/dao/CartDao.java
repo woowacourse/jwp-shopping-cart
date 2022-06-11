@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CartItemDao {
+public class CartDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public CartItemDao(JdbcTemplate jdbcTemplate) {
+    public CartDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_item")

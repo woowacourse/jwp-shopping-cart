@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.exception.MemberNotFoundException;
-import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dao.dto.SaveCartDto;
 import woowacourse.shoppingcart.domain.Cart;
@@ -24,12 +24,12 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CartService {
 
-    private final CartItemDao cartItemDao;
+    private final CartDao cartDao;
     private final MemberDao memberDao;
     private final ProductDao productDao;
 
-    public CartService(CartItemDao cartItemDao, MemberDao memberDao, ProductDao productDao) {
-        this.cartItemDao = cartItemDao;
+    public CartService(CartDao cartDao, MemberDao memberDao, ProductDao productDao) {
+        this.cartDao = cartDao;
         this.memberDao = memberDao;
         this.productDao = productDao;
     }
@@ -41,7 +41,7 @@ public class CartService {
         Optional<Cart> cart = findCartWithProduct(memberId, productId);
         if (cart.isEmpty()) {
             SaveCartDto saveCartDto = new SaveCartDto(memberId, productId);
-            return cartItemDao.save(saveCartDto);
+            return cartDao.save(saveCartDto);
         }
 
         Long cartId = cart.get().getId();
@@ -50,7 +50,7 @@ public class CartService {
     }
 
     private Optional<Cart> findCartWithProduct(Long memberId, Long productId) {
-        List<Cart> cartItems = cartItemDao.findCartByMemberId(memberId);
+        List<Cart> cartItems = cartDao.findCartByMemberId(memberId);
         return cartItems.stream()
                 .filter(v -> v.getProductId().equals(productId))
                 .findAny();
@@ -58,7 +58,7 @@ public class CartService {
 
     public List<CartResponse> findCarts(Long memberId) {
         validateExistMember(memberId);
-        List<Cart> carts = cartItemDao.findCartByMemberId(memberId);
+        List<Cart> carts = cartDao.findCartByMemberId(memberId);
         return carts.stream()
                 .map(CartResponse::new)
                 .collect(Collectors.toList());
@@ -72,18 +72,18 @@ public class CartService {
         if (request.getQuantity() < 1) {
             throw new InvalidCartQuantityException();
         }
-        cartItemDao.updateQuantity(cartId, request.getQuantity());
+        cartDao.updateQuantity(cartId, request.getQuantity());
     }
 
     @Transactional
     public void deleteCart(Long memberId, Long cartId) {
         validateExistMember(memberId);
         validateExistMemberCart(memberId, cartId);
-        cartItemDao.deleteById(cartId);
+        cartDao.deleteById(cartId);
     }
 
     private void validateExistMemberCart(Long memberId, Long cartId) {
-        List<Cart> cartItems = cartItemDao.findCartByMemberId(memberId);
+        List<Cart> cartItems = cartDao.findCartByMemberId(memberId);
         List<Long> cartIds = cartItems.stream()
                 .map(Cart::getId)
                 .collect(Collectors.toList());

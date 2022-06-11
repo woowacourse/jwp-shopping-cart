@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.exception.MemberNotFoundException;
-import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
@@ -26,11 +26,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CartServiceTest {
 
     private final CartService cartService;
-    private final CartItemDao cartItemDao;
+    private final CartDao cartDao;
 
-    public CartServiceTest(CartService cartService, CartItemDao cartItemDao) {
+    public CartServiceTest(CartService cartService, CartDao cartDao) {
         this.cartService = cartService;
-        this.cartItemDao = cartItemDao;
+        this.cartDao = cartDao;
     }
 
     @DisplayName("올바른 데이터로 장바구니를 동록하면 장바구니 등록 ID를 반환한다.")
@@ -113,7 +113,7 @@ class CartServiceTest {
     void deleteCart() {
         Long cartId = 1L;
         cartService.deleteCart(1L, cartId);
-        Optional<Cart> result = cartItemDao.findCartById(cartId);
+        Optional<Cart> result = cartDao.findCartById(cartId);
 
         assertThat(result.isEmpty()).isTrue();
     }

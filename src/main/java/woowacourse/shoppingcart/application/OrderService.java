@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrderDetailDao;
 import woowacourse.shoppingcart.domain.Cart;
@@ -21,12 +21,12 @@ public class OrderService {
 
     private final OrderDao orderDao;
     private final OrderDetailDao orderDetailDao;
-    private final CartItemDao cartItemDao;
+    private final CartDao cartDao;
 
-    public OrderService(OrderDao orderDao, OrderDetailDao orderDetailDao, CartItemDao cartItemDao) {
+    public OrderService(OrderDao orderDao, OrderDetailDao orderDetailDao, CartDao cartDao) {
         this.orderDao = orderDao;
         this.orderDetailDao = orderDetailDao;
-        this.cartItemDao = cartItemDao;
+        this.cartDao = cartDao;
     }
 
     public Long addOrder(List<OrderRequest> orderDetailRequests, Long memberId) {
@@ -34,10 +34,10 @@ public class OrderService {
 
         for (OrderRequest orderDetail : orderDetailRequests) {
             Long cartId = orderDetail.getCartId();
-            Cart cart = cartItemDao.findCartById(cartId)
+            Cart cart = cartDao.findCartById(cartId)
                     .orElseThrow(CartNotFoundException::new);
             orderDetailDao.save(ordersId, cart.getProductId(), cart.getQuantity());
-            cartItemDao.deleteById(cartId);
+            cartDao.deleteById(cartId);
         }
         return ordersId;
     }
