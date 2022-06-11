@@ -27,7 +27,6 @@ public class ControllerAdvice {
             Exception.class,
     })
     public ResponseEntity<ErrorResponse> handleUnhandledException(Exception e) {
-        e.printStackTrace();
         final ErrorResponse errorResponse = new ErrorResponse("Unhandled Exception");
         return ResponseEntity.internalServerError().body(errorResponse);
     }
