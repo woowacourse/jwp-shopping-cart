@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.exception.AuthException;
 import woowacourse.auth.support.AuthenticationContext;
@@ -25,7 +26,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (isPreflight(request)) {
+        if (CorsUtils.isPreFlightRequest(request)) {
             return true;
         }
         String accessToken = AuthorizationExtractor.extract(Objects.requireNonNull(request))
@@ -33,9 +34,5 @@ public class AuthInterceptor implements HandlerInterceptor {
         String subject = jwtTokenProvider.getSubject(accessToken);
         authenticationContext.setEmail(new Email(subject));
         return true;
-    }
-
-    private boolean isPreflight(HttpServletRequest request) {
-        return HttpMethod.OPTIONS.matches(request.getMethod());
     }
 }
