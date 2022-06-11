@@ -37,7 +37,9 @@ public class CustomerDaoTest {
     @Test
     void save() {
         // given
-        CustomerCreateRequest customer = new CustomerCreateRequest("roma@naver.com", "roma", "12345678");
+        EncodedPassword encodedPassword = passwordEncoder.encode(new UnEncodedPassword("12345678"));
+        CustomerCreateRequest customer = new CustomerCreateRequest("roma@naver.com", "roma",
+                encodedPassword.getValue());
 
         // when
         Long savedId = customerDao.save(customer);
@@ -124,7 +126,9 @@ public class CustomerDaoTest {
     @Test
     void update() {
         // given
-        CustomerCreateRequest customer = new CustomerCreateRequest("roma@naver.com", "roma", "12345678");
+        EncodedPassword encodedPassword = passwordEncoder.encode(new UnEncodedPassword("12345678"));
+        CustomerCreateRequest customer = new CustomerCreateRequest("roma@naver.com", "roma",
+                encodedPassword.getValue());
 
         // when
         Long savedId = customerDao.save(customer);

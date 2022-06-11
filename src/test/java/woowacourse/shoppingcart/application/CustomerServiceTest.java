@@ -66,7 +66,8 @@ public class CustomerServiceTest {
         Customer customer = customerService.getById(1L);
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", new EncodedPassword("12349053145"));
+        EncodedPassword encodedPassword = passwordEncoder.encode(new UnEncodedPassword("12349053145"));
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", encodedPassword);
 
         assertThat(customer).usingRecursiveComparison()
                 .ignoringFields("password")
