@@ -1,6 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.PasswordDto;
@@ -12,6 +13,7 @@ import woowacourse.shoppingcart.exception.EmptyResultException;
 import woowacourse.shoppingcart.exception.UserNotFoundException;
 
 @Service
+@Transactional
 public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -27,6 +29,7 @@ public class AuthService {
         return new TokenResponse(accessToken);
     }
 
+    @Transactional(readOnly = true)
     public Customer findCustomerByUsername(String username) {
         try {
             return customerService.findByUsername(username);

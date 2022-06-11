@@ -21,6 +21,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findProducts() {
         return productDao.findProducts().stream()
             .map(ProductDto::of)
@@ -38,6 +39,7 @@ public class ProductService {
         return productDao.save(product);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         Product product = productDao.findProductById(productId);
         ProductDto productDto = ProductDto.of(product);
