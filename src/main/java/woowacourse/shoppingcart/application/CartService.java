@@ -10,7 +10,6 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.CartItemRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponse;
-import woowacourse.shoppingcart.dto.response.ProductResponse;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,30 +27,23 @@ public class CartService {
     public Long addCartItem(Long memberId, CartItemRequest cartItemRequest) {
         Long productId = cartItemRequest.getProductId();
         Integer quantity = cartItemRequest.getQuantity();
-        checkPurchasable(productId, quantity);
+        Product product = productDao.findProductById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
         if (cartItemDao.exists(memberId, productId)) {
-            return addCartItemQuantity(memberId, productId, quantity);
+            return addCartItemQuantity(memberId, product, quantity);
         }
-        return saveCartItem(memberId, productId, quantity);
+        return saveCartItem(memberId, product, quantity);
     }
 
-    private void checkPurchasable(Long productId, Integer quantity) {
-        Product product = productDao.findProductById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-        product.validateStock(quantity);
-    }
-
-    private Long saveCartItem(Long memberId, Long productId, Integer quantity) {
-        Product product = productDao.findProductById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+    private Long saveCartItem(Long memberId, Product product, Integer quantity) {
         CartItem cartItem = new CartItem(memberId, product, quantity);
         return cartItemDao.save(cartItem);
     }
 
-    private Long addCartItemQuantity(Long memberId, Long productId, Integer quantity) {
-        CartItem cartItem = findCartItem(memberId, productId);
+    private Long addCartItemQuantity(Long memberId, Product product, Integer quantity) {
+        CartItem cartItem = findCartItem(memberId, product.getId());
         cartItem.add(quantity);
-        cartItemDao.updateQuantity(memberId, productId, cartItem.getQuantity());
+        cartItemDao.updateQuantity(cartItem);
         return cartItem.getId();
     }
 
@@ -63,25 +55,21 @@ public class CartService {
     public List<CartItemResponse> findAll(Long memberId) {
         List<CartItem> cartItems = cartItemDao.findByMemberId(memberId);
         return cartItems.stream()
-                .map(this::toCartItemResponse)
+                .map(CartItemResponse::new)
                 .collect(Collectors.toUnmodifiableList());
-    }
-
-    private CartItemResponse toCartItemResponse(CartItem cartItem) {
-        Product product = cartItem.getProduct();
-        return new CartItemResponse(new ProductResponse(product), cartItem.getQuantity());
     }
 
     @Transactional
     public void updateCartItemQuantity(Long memberId, CartItemRequest updateRequest) {
         Long productId = updateRequest.getProductId();
         Integer quantity = updateRequest.getQuantity();
-        validateProductExist(memberId, productId);
-        checkPurchasable(productId, quantity);
-        cartItemDao.updateQuantity(memberId, updateRequest.getProductId(), updateRequest.getQuantity());
+        CartItem cartItem = cartItemDao.findByMemberIdAndProductId(memberId, productId)
+                .orElseThrow(() -> new IllegalArgumentException("장바구니에 존재하지 않는 상품입니다."));
+        cartItem.replaceQuantity(quantity);
+        cartItemDao.updateQuantity(cartItem);
     }
 
-    private void validateProductExist(Long memberId, Long productId) {
+    private void validateExist(Long memberId, Long productId) {
         if (!cartItemDao.exists(memberId, productId)) {
             throw new IllegalArgumentException("장바구니에 존재하지 않는 상품입니다.");
         }
@@ -89,7 +77,7 @@ public class CartService {
 
     @Transactional
     public void deleteCartItem(Long memberId, Long productId) {
-        validateProductExist(memberId, productId);
+        validateExist(memberId, productId);
         cartItemDao.deleteByMemberIdAndProductId(memberId, productId);
     }
 }

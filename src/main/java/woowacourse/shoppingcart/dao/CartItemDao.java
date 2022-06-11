@@ -71,11 +71,11 @@ public class CartItemDao {
         return namedParameterJdbcTemplate.queryForObject(sql, parameters, Boolean.class);
     }
 
-    public void updateQuantity(Long memberId, Long productId, Integer quantity) {
+    public void updateQuantity(CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = :quantity WHERE member_id = :member_id AND product_id = :product_id";
-        MapSqlParameterSource parameters = new MapSqlParameterSource("member_id", memberId)
-                .addValue("product_id", productId)
-                .addValue("quantity", quantity);
+        MapSqlParameterSource parameters = new MapSqlParameterSource("member_id", cartItem.getMemberId())
+                .addValue("product_id", cartItem.getProduct().getId())
+                .addValue("quantity", cartItem.getQuantity());
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 

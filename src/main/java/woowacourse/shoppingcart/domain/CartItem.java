@@ -14,33 +14,32 @@ public class CartItem {
     }
 
     public CartItem(Long id, Long memberId, Product product, Integer quantity) {
-        validateQuantity(quantity);
+        validateQuantity(product, quantity);
         this.id = id;
         this.memberId = memberId;
         this.product = product;
         this.quantity = quantity;
     }
 
-    private void validateQuantity(int quantity) {
+    private void validateQuantity(Product product, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("상품 수량은 0보다 커야 합니다.");
         }
-    }
-
-    public void addOne() {
-        this.quantity++;
+        product.validateStock(quantity);
     }
 
     public void add(int quantity) {
-        validateQuantity(quantity);
+        validateQuantity(this.product, quantity);
         this.quantity += quantity;
     }
 
-    public void reduceOne() {
+    public void replaceQuantity(int quantity) {
         if (quantity == 0) {
-            throw new IllegalArgumentException("더 이상 수량을 줄일 수 없습니다.");
+            this.quantity = quantity;
+            return;
         }
-        this.quantity--;
+        validateQuantity(this.product, quantity);
+        this.quantity = quantity;
     }
 
     public boolean isEmpty() {
