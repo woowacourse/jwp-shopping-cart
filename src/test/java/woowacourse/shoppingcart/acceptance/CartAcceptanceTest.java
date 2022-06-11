@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.getAccessToken;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -13,8 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.ExceptionResponse;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductIdsRequest;
 
 @DisplayName("장바구니 관련 기능")
@@ -135,6 +137,26 @@ public class CartAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(deleteResponse.as(ExceptionResponse.class).getMessage()).isEqualTo("유효하지 않은 장바구니입니다.");
+    }
+
+    public static String getAccessToken() {
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+
+        RestAssured.given().log().all()
+                .body(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/customers")
+                .then().log().all()
+                .extract();
+
+        return RestAssured.given().log().all()
+                .body(new TokenRequest("email", "Pw123456!"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/auth/login")
+                .then().log().all()
+                .extract().as(TokenResponse.class).getAccessToken();
     }
 
     public static ExtractableResponse<Response> addCartItemApi(String accessToken, Long productId, int quantity) {
