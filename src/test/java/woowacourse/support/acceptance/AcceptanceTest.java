@@ -8,7 +8,7 @@ import org.springframework.test.context.jdbc.Sql;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("classpath:truncate.sql")
+@Sql({"classpath:truncate.sql", "classpath:data.sql"})
 public class AcceptanceTest {
 
     @LocalServerPort
