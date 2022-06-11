@@ -16,8 +16,8 @@ import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartAddRequest;
-import woowacourse.shoppingcart.dto.CartUpdateRequest;
+import woowacourse.shoppingcart.dto.cart.CartAddRequest;
+import woowacourse.shoppingcart.dto.cart.CartUpdateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerAddRequest;
 
 @SpringBootTest

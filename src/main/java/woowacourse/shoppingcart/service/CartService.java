@@ -14,8 +14,8 @@ import woowacourse.shoppingcart.dao.dto.CartItem;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartAddRequest;
-import woowacourse.shoppingcart.dto.CartUpdateRequest;
+import woowacourse.shoppingcart.dto.cart.CartAddRequest;
+import woowacourse.shoppingcart.dto.cart.CartUpdateRequest;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
