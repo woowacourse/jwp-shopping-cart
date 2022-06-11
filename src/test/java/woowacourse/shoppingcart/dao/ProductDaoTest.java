@@ -13,6 +13,8 @@ import woowacourse.shoppingcart.domain.Product;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static woowacourse.fixture.Fixture.PRODUCT_NAME;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -103,9 +105,7 @@ public class ProductDaoTest {
 
         productDao.saveAll(products);
 
-        assertThat(productDao.findProducts()).contains(
-                product1,
-                product2
-        );
+        assertThat(productDao.findProducts()).extracting("name")
+                .contains("product1", "product2");
     }
 }
