@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Customer {
@@ -75,6 +76,23 @@ public class Customer {
 
     public String getNickname() {
         return nickname;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Customer)) {
+            return false;
+        }
+        Customer customer = (Customer) o;
+        return Objects.equals(id, customer.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
