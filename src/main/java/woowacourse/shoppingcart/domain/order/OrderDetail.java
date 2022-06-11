@@ -40,7 +40,7 @@ public class OrderDetail {
         return quantity.getValue();
     }
 
-    public int calculateCost() {
+    public int cost() {
         return price.getValue() * quantity.getValue();
     }
 }

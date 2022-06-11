@@ -68,7 +68,7 @@ public class OrderService {
         return new OrderDetailResponse(
                 orderDetail.getProductId(),
                 orderDetail.getName(),
-                orderDetail.calculateCost(),
+                orderDetail.cost(),
                 orderDetail.getQuantity(),
                 orderDetail.getImageUrl());
     }
