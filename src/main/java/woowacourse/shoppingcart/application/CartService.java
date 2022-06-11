@@ -30,21 +30,21 @@ public class CartService {
     @Transactional
     public void addCart(CartProductRequest cartProductRequest, String customerName) {
         Long customerId = customerDao.findByUsername(customerName).getId();
+
         Product product = productDao.findProductById(cartProductRequest.getProductId());
         if (cartItemDao.existByCustomerIdAndProductId(customerId, cartProductRequest.getProductId())) {
             CartItem cartItem = cartItemDao.findIdByCustomerIdAndProductId(customerId, product);
-            cartItemDao.updateById(cartItem.getId(), cartItem.getQuantity() + cartProductRequest.getQuantity(), cartItem.isChecked());
+            cartItemDao.updateById(cartItem.getId(), customerId, cartItem.getQuantity() + cartProductRequest.getQuantity(), cartItem.isChecked());
             return;
         }
         cartItemDao.addCartItem(customerId, cartProductRequest.getProductId(), cartProductRequest.getQuantity(), cartProductRequest.isChecked());
     }
 
     @Transactional(readOnly = true)
-    public CartItemsResponse getCart(String customerName) {
+    public CartItemsResponse findCart(String customerName) {
         List<CartItem> cartItems = findCartIdsByCustomerName(customerName).stream()
                 .map(cartItemDao::findCartIdById)
                 .collect(Collectors.toList());
-
         return CartItemsResponse.from(cartItems);
     }
 
@@ -54,33 +54,34 @@ public class CartService {
     }
 
     @Transactional
-    public CartItemsResponse modifyCartItems(ModifyProductRequests modifyProductRequests) {
-        for (ModifyProductRequest request : modifyProductRequests.getCartItems()) {
-            cartItemDao.updateById(request.getId(), request.getQuantity(), request.isChecked());
+    public CartItemsResponse updateCartItems(String customerName, UpdateCartItemsRequest updateCartItemsRequest) {
+        Long customerId = customerDao.findByUsername(customerName).getId();
+        for (UpdateCartItemRequest request : updateCartItemsRequest.getCartItems()) {
+            cartItemDao.updateById(request.getId(), customerId, request.getQuantity(), request.isChecked());
         }
-        return getModifyCartProducts(modifyProductRequests);
+        return findUpdateCartProducts(updateCartItemsRequest);
     }
 
-    private CartItemsResponse getModifyCartProducts(ModifyProductRequests modifyProductRequests) {
-        List<CartItem> cartItems = modifyProductRequests
+    private CartItemsResponse findUpdateCartProducts(UpdateCartItemsRequest updateCartItemsRequest) {
+        List<CartItem> cartItems = updateCartItemsRequest
                 .getCartItems()
                 .stream()
                 .map(item -> cartItemDao.findCartIdById(item.getId()))
                 .collect(Collectors.toList());
-
         return CartItemsResponse.from(cartItems);
     }
 
     @Transactional
-    public void deleteCart(DeleteProductRequest deleteProductRequest) {
+    public void deleteCart(String customerName, DeleteProductRequest deleteProductRequest) {
+        Long customerId = customerDao.findByUsername(customerName).getId();
         for (IdRequest idRequest : deleteProductRequest.getCartItems()) {
-            cartItemDao.deleteCartItemById(idRequest.getId());
+            cartItemDao.deleteCartItemById(idRequest.getId(), customerId);
         }
     }
 
     @Transactional
     public void deleteAll(String customerName) {
-        final Long customerId = customerDao.findByUsername(customerName).getId();
+        Long customerId = customerDao.findByUsername(customerName).getId();
         cartItemDao.deleteAll(customerId);
     }
 }

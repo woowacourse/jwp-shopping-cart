@@ -43,9 +43,8 @@ public class OrderService {
                     .getProduct()
                     .getId();
             int quantity = orderDetail.getQuantity();
-
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItemById(cartId);
+            cartItemDao.deleteCartItemById(cartId, customerId);
         }
         return ordersId;
     }
@@ -57,7 +56,7 @@ public class OrderService {
     }
 
     private void validateOrderIdByCustomerName(String customerName, Long orderId) {
-        final Long customerId = customerDao.findByUsername(customerName).getId();
+        Long customerId = customerDao.findByUsername(customerName).getId();
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");

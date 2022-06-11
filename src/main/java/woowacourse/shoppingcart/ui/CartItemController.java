@@ -28,7 +28,7 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<CartItemsResponse> findCartItems(@AuthenticationPrincipal String userNameByToken) {
-        return ResponseEntity.ok().body(cartService.getCart(userNameByToken));
+        return ResponseEntity.ok().body(cartService.findCart(userNameByToken));
     }
 
     @DeleteMapping("/all")
@@ -39,12 +39,12 @@ public class CartItemController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String userNameByToken, @RequestBody DeleteProductRequest deleteProductRequest) {
-        cartService.deleteCart(deleteProductRequest);
+        cartService.deleteCart(userNameByToken, deleteProductRequest);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping
-    public ResponseEntity<CartItemsResponse> modifyCartItem(@AuthenticationPrincipal String userNameByToken, @RequestBody ModifyProductRequests modifyProductRequests) {
-        return ResponseEntity.ok().body(cartService.modifyCartItems(modifyProductRequests));
+    public ResponseEntity<CartItemsResponse> updateCartItem(@AuthenticationPrincipal String userNameByToken, @RequestBody UpdateCartItemsRequest updateCartItemsRequest) {
+        return ResponseEntity.ok().body(cartService.updateCartItems(userNameByToken, updateCartItemsRequest));
     }
 }

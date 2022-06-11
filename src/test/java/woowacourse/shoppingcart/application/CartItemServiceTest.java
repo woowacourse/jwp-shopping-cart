@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.IdRequest;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.*;
 
 import java.util.List;
@@ -40,7 +39,7 @@ class CartItemServiceTest {
         //when & then
         cartService.addCart(new CartProductRequest(product.getId(), 1L, true), "greenlawn");
         cartService.addCart(new CartProductRequest(product.getId(), 3L, true), "greenlawn");
-        CartItemsResponse products = cartService.getCart("greenlawn");
+        CartItemsResponse products = cartService.findCart("greenlawn");
         assertThat(products.getCartItems().get(0).getQuantity()).isEqualTo(4);
     }
 
@@ -60,7 +59,7 @@ class CartItemServiceTest {
         cartService.addCart(new CartProductRequest(product1.getId(), 1L, true), "greenlawn");
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
 
-        assertThat(cartService.getCart("greenlawn").getCartItems().size()).isEqualTo(2);
+        assertThat(cartService.findCart("greenlawn").getCartItems().size()).isEqualTo(2);
     }
 
     @Test
@@ -85,8 +84,8 @@ class CartItemServiceTest {
         cartService.deleteAll("greenlawn");
 
         //then
-        assertThat(cartService.getCart("greenlawn").getCartItems().size()).isEqualTo(0);
-        assertThat(cartService.getCart("blue").getCartItems().size()).isEqualTo(1);
+        assertThat(cartService.findCart("greenlawn").getCartItems().size()).isEqualTo(0);
+        assertThat(cartService.findCart("blue").getCartItems().size()).isEqualTo(1);
     }
 
     @Test
@@ -106,10 +105,10 @@ class CartItemServiceTest {
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
 
         //when
-        cartService.deleteCart(new DeleteProductRequest(List.of(new IdRequest(1L), new IdRequest(2L))));
+        cartService.deleteCart("greenlawn", new DeleteProductRequest(List.of(new IdRequest(1L), new IdRequest(2L))));
 
         //then
-        assertThat(cartService.getCart("greenlawn").getCartItems().size()).isEqualTo(0);
+        assertThat(cartService.findCart("greenlawn").getCartItems().size()).isEqualTo(0);
     }
 
     @Test
@@ -129,9 +128,9 @@ class CartItemServiceTest {
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
 
         //when
-        cartService.modifyCartItems(new ModifyProductRequests(List.of(new ModifyProductRequest(1L, 3L, true))));
+        cartService.updateCartItems("greenlawn", new UpdateCartItemsRequest(List.of(new UpdateCartItemRequest(1L, 3L, true))));
 
         //then
-        assertThat(cartService.getCart("greenlawn").getCartItems().get(0).getQuantity()).isEqualTo(3L);
+        assertThat(cartService.findCart("greenlawn").getCartItems().get(0).getQuantity()).isEqualTo(3L);
     }
 }

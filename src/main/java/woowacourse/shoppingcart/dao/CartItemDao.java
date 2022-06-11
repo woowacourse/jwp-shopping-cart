@@ -87,14 +87,14 @@ public class CartItemDao {
         }
     }
 
-    public void updateById(Long id, Long quantity, boolean checked) {
-        final String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE id = ?";
-        jdbcTemplate.update(sql, quantity, checked, id);
+    public void updateById(Long id, Long customerId, Long quantity, boolean checked) {
+        final String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE id = ? AND customer_id = ?";
+        jdbcTemplate.update(sql, quantity, checked, id, customerId);
     }
 
-    public void deleteCartItemById(Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+    public void deleteCartItemById(Long id, Long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE id = ? AND customer_id = ?";
+        jdbcTemplate.update(sql, id, customerId);
     }
 
     public void deleteAll(Long id) {

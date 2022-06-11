@@ -174,7 +174,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 token, "/cart", HttpStatus.CREATED.value());
 
         //when & then
-        ModifyProductRequest request = new ModifyProductRequest(1L, 2L, false);
-        RestAssuredFixture.patch(new ModifyProductRequests(List.of(request)), token, "/cart", HttpStatus.OK.value());
+        UpdateCartItemRequest request = new UpdateCartItemRequest(1L, 2L, false);
+        RestAssuredFixture.patch(new UpdateCartItemsRequest(List.of(request)), token, "/cart", HttpStatus.OK.value());
     }
 }

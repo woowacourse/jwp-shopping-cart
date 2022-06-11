@@ -86,9 +86,9 @@ public class CartItemItemDaoTest {
         cartItemDao.addCartItem(1L, product.getId(), 1L, true);
 
         Product product2 = productDao.save(new Product("apple", 1000, "woowa2.com"));
-        final Long cartItemId2 = cartItemDao.addCartItem(1L, product2.getId(), 1L, true);
+        Long cartItemId2 = cartItemDao.addCartItem(1L, product2.getId(), 1L, true);
 
-        cartItemDao.updateById(cartItemId2, 3L, false);
+        cartItemDao.updateById(cartItemId2, 1L, 3L, false);
 
         assertThat(cartItemDao.findCartIdById(cartItemId2).getQuantity()).isEqualTo(3L);
     }
