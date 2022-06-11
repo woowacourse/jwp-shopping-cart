@@ -1,15 +1,12 @@
-package woowacourse.shoppingcart.dto.response;
+package woowacourse.shoppingcart.dao;
 
-public class ProductResponse {
-    private Long id;
-    private String name;
-    private Integer price;
-    private String imageUrl;
+public class CartEntity {
+    private final Long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
-    public ProductResponse() {
-    }
-
-    public ProductResponse(final Long id, final String name, final int price, final String imageUrl) {
+    public CartEntity(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;

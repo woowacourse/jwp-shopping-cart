@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -16,9 +17,9 @@ public class ProductRepository {
         this.productDao = productDao;
     }
 
-    public Product findById(Long productId) {
-        ProductEntity productEntity = productDao.findProductById(productId);
-        return toProduct(productEntity);
+    public Optional<Product> findById(Long productId) {
+        return productDao.findProductById(productId)
+                .map(this::toProduct);
     }
 
     public Long save(Product product) {
@@ -29,7 +30,6 @@ public class ProductRepository {
         return productDao.findProducts().stream()
                 .map(this::toProduct)
                 .collect(Collectors.toList());
-
     }
 
     private ProductEntity toProductEntity(Product product) {
@@ -49,5 +49,11 @@ public class ProductRepository {
 
     public void delete(Long productId) {
         productDao.delete(productId);
+    }
+
+    public List<Product> findProductsByCartByCustomerId(Long customerId) {
+        return productDao.findByCartByCustomerId(customerId).stream()
+                .map(this::toProduct)
+                .collect(Collectors.toList());
     }
 }

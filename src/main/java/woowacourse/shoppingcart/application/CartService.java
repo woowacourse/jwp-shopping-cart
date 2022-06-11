@@ -1,13 +1,11 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.common.exception.NotFoundException;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.request.CartRequest;
@@ -22,50 +20,57 @@ import woowacourse.shoppingcart.repository.ProductRepository;
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
-    private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
+    private final CartItemRepository cartItemRepository;
+    private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao,
+    public CartService(CustomerRepository customerRepository,
+            CartItemRepository cartItemRepository,
             ProductRepository productRepository) {
-        this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
+        this.customerRepository = customerRepository;
+        this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productRepository.findById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
+    public CartResponse findCartsByCustomerId(Long customerId) {
+        List<ProductResponse> products = productRepository.findProductsByCartByCustomerId(customerId)
+                .stream()
+                .map(this::toProductResponse)
+                .collect(Collectors.toList());
+        return new CartResponse(products);
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByAccount(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+    private ProductResponse toProductResponse(Product product) {
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl());
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByAccount(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
+    public Long addCart(final CartRequest request, final Long customerId) {
+        Customer customer = getCustomer(customerId);
+        Product product = getProduct(request);
+        return cartItemRepository.save(new CartItem(customer, product));
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    private Customer getCustomer(Long customerId) {
+        return customerRepository.findById(customerId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    private Product getProduct(CartRequest request) {
+        return productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 상품입니다."));
+    }
+
+    public void deleteCart(Long cartId, Long customerId) {
+        validateCustomerCart(cartId, customerId);
+        cartItemRepository.deleteCartItem(cartId);
+    }
+
+    private void validateCustomerCart(Long cartId, Long customerId) {
+        List<Long> cartIds = cartItemRepository.findIdsByCustomerId(customerId);
         if (cartIds.contains(cartId)) {
             return;
         }
