@@ -52,7 +52,7 @@ public class CartService {
         Map<Long, Integer> productIdByQuantity = carts.stream()
                 .collect(Collectors.toMap(Cart::getProductId, Cart::getQuantity));
         List<Long> productIds = carts.stream()
-                .map(it -> it.getProductId())
+                .map(Cart::getProductId)
                 .collect(Collectors.toList());
         return productService.findByIds(productIds).stream()
                 .map(it -> new CartResponse(it.getId(), it.getName(), it.getPrice(), productIdByQuantity.get(it.getId()), it.getImageUrl()))

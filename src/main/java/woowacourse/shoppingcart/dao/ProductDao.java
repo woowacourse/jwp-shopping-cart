@@ -68,7 +68,7 @@ public class ProductDao {
 
     public List<Product> findByIds(final List<Long> ids) {
         String productIds = ids.stream()
-                .map(it -> String.valueOf(it))
+                .map(String::valueOf)
                 .collect(Collectors.joining(",", "(", ")"));
         String sql = "SELECT * FROM product WHERE id in " + productIds;
         return template.query(sql, PRODUCT_ROW_MAPPER);
