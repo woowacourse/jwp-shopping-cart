@@ -57,10 +57,11 @@ public class CartService {
     }
 
     public void updateQuantity(Long productId, QuantityRequest quantityRequest, String username) {
+        Cart cart = findCartByUsername(username);
+        cart.changeQuantity(productId, quantityRequest.getQuantity());
+
         Long customerId = customerDao.getIdByUsername(username);
-        Product product = productDao.findProductById(productId);
-        CartItem cartItem = new CartItem(product, quantityRequest.getQuantity());
-        cartItemDao.updateQuantity(cartItem, customerId);
+        cartItemDao.updateQuantity(cart.getItemBy(productId), customerId);
     }
 
     public void deleteCart(final String username) {

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.shoppingcart.exception.IllegalCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 class CartTest {
 
@@ -24,6 +25,31 @@ class CartTest {
         assertThatExceptionOfType(IllegalCartItemException.class)
                 .isThrownBy(() -> cart.addItem(cartItem2))
                 .withMessageContaining("이미 담긴");
+    }
+
+    @DisplayName("장바구니에 이미 담긴 상품의 수량을 수정할 수 있다.")
+    @Test
+    void changeQuantity() {
+        Product product = new Product(1L, "당근", 1000, "image.com");
+        CartItem cartItem = new CartItem(product, 1);
+        Cart cart = new Cart(List.of(cartItem));
+
+        cart.changeQuantity(1L, 3);
+
+        CartItem actual = cart.getItemBy(1L);
+        assertThat(actual.getQuantity()).isEqualTo(3);
+    }
+
+    @DisplayName("장바구니에 담기지 않은 상품의 수량을 수정하면 예외가 발생한다.")
+    @Test
+    void changeQuantity_not_added() {
+        Product product = new Product(1L, "당근", 1000, "image.com");
+        CartItem cartItem = new CartItem(product, 1);
+        Cart cart = new Cart(List.of(cartItem));
+
+        assertThatExceptionOfType(InvalidCartItemException.class)
+                .isThrownBy(() -> cart.changeQuantity(2L, 3))
+                .withMessageContaining("추가되지 않은");
     }
 
     @DisplayName("원하는 상품을 골라 주문할 수 있다.")

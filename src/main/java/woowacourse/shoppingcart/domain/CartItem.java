@@ -4,10 +4,14 @@ import java.util.Objects;
 
 public class CartItem {
     private final Product product;
-    private final Quantity quantity;
+    private Quantity quantity;
 
     public CartItem(Product product, int quantity) {
         this.product = product;
+        this.quantity = new Quantity(quantity);
+    }
+
+    public void changeQuantity(int quantity) {
         this.quantity = new Quantity(quantity);
     }
 

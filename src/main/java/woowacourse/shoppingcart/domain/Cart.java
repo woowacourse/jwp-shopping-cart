@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import woowacourse.shoppingcart.exception.IllegalCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 public class Cart {
     private final Set<CartItem> items;
@@ -24,6 +25,11 @@ public class Cart {
         if (!added) {
             throw new IllegalCartItemException("이미 담긴 상품입니다.");
         }
+    }
+
+    public void changeQuantity(Long productId, int quantity) {
+        CartItem addingItem = getItemBy(productId);
+        addingItem.changeQuantity(quantity);
     }
 
     public Orders checkOut(List<Long> productIds) {
@@ -56,5 +62,12 @@ public class Cart {
 
     public Set<CartItem> getItems() {
         return Collections.unmodifiableSet(items);
+    }
+
+    public CartItem getItemBy(Long productId) {
+        return items.stream()
+                .filter(cartItem -> cartItem.isProductId(productId))
+                .findAny()
+                .orElseThrow(() -> new InvalidCartItemException("장바구니에 추가되지 않은 상품입니다."));
     }
 }
