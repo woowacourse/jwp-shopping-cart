@@ -8,7 +8,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +21,6 @@ import woowacourse.setup.AcceptanceTest;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.request.DeleteCartItemsRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.response.CartDto;
 import woowacourse.util.DatabaseFixture;
@@ -288,11 +286,22 @@ class CartAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
-        void 로그인_되어있지_않은_경우_401() {
-            DeleteCartItemsRequest requestBody = new DeleteCartItemsRequest(List.of(1L, 2L));
+        void 삭제_대상_정보가_누락된_경우_400() {
+            String 토큰 = 회원가입_후_토큰_생성();
             ExtractableResponse<Response> response = RestAssured.given().log().all()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(requestBody)
+                    .auth().oauth2(토큰)
+                    .params("id", "")
+                    .when().delete("/cart/products")
+                    .then().log().all()
+                    .extract();
+
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @Test
+        void 로그인_되어있지_않은_경우_401() {
+            ExtractableResponse<Response> response = RestAssured.given().log().all()
+                    .params("id", "1,2")
                     .when().delete("/cart/products")
                     .then().log().all()
                     .extract();
@@ -300,20 +309,18 @@ class CartAcceptanceTest extends AcceptanceTest {
         }
 
         private ExtractableResponse<Response> 장바구니_상품_부분_제거(String accessToken, Product... products) {
-            DeleteCartItemsRequest requestBody = new DeleteCartItemsRequest(toIdList(products));
             return RestAssured.given().log().all()
                     .auth().oauth2(accessToken)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(requestBody)
-                    .when().delete("/cart/products")
+                    .params("id", toIdList(products))
+                    .when().delete("/cart/products" )
                     .then().log().all()
                     .extract();
         }
 
-        private List<Long> toIdList(Product... products) {
+        private String toIdList(Product... products) {
             return Arrays.stream(products)
-                    .map(Product::getId)
-                    .collect(Collectors.toList());
+                    .map(it -> it.getId() + "")
+                    .collect(Collectors.joining(","));
         }
     }
 
