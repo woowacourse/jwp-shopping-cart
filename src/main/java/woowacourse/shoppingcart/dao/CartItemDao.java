@@ -40,13 +40,14 @@ public class CartItemDao {
     public Long addCartItem(final Long customerId, final Long productId, final Integer quantity) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) " +
                 "VALUES(:customer_id, :product_id, :quantity)";
-        final Map<String, Object> params = new HashMap<>();
-        params.put("customer_id", customerId);
-        params.put("product_id", productId);
-        params.put("quantity", quantity);
+
+        final MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("customer_id", customerId)
+                .addValue("product_id", productId)
+                .addValue("quantity", quantity);
 
         final KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(params), keyHolder);
+        namedParameterJdbcTemplate.update(sql, sqlParameterSource, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
