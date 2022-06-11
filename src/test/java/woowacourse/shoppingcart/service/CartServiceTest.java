@@ -29,6 +29,7 @@ import woowacourse.shoppingcart.dto.response.ProductExistingInCartResponse;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.exception.notfound.CartItemNotFoundException;
 import woowacourse.shoppingcart.exception.notfound.ProductNotFoundException;
+import woowacourse.shoppingcart.repository.CartItemRepository;
 import woowacourse.shoppingcart.repository.ProductRepository;
 
 @JdbcTest
@@ -47,7 +48,8 @@ class CartServiceTest {
         customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
 
         productRepository = new ProductRepository(new JdbcProductDao(jdbcTemplate, dataSource));
-        cartService = new CartService(cartItemDao, productRepository);
+        CartItemRepository cartItemRepository = new CartItemRepository(cartItemDao, productRepository);
+        cartService = new CartService(cartItemRepository, productRepository);
     }
 
     @BeforeEach
