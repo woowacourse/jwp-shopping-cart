@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.auth.application.dto.request.TokenRequest;
 import woowacourse.shoppingcart.auth.application.dto.response.TokenResponse;
@@ -11,6 +12,7 @@ import woowacourse.shoppingcart.customer.support.exception.CustomerExceptionCode
 import woowacourse.shoppingcart.customer.support.jdbc.dao.CustomerDao;
 
 @Service
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final CustomerDao customerDao;

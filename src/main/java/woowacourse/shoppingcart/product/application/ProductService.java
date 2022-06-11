@@ -13,8 +13,9 @@ import woowacourse.shoppingcart.product.support.exception.ProductExceptionCode;
 import woowacourse.shoppingcart.product.support.jdbc.dao.ProductDao;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class ProductService {
+
     private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {

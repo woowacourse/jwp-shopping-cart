@@ -29,7 +29,7 @@ import woowacourse.shoppingcart.product.support.exception.ProductExceptionCode;
 import woowacourse.shoppingcart.product.support.jdbc.dao.ProductDao;
 
 @Service
-@Transactional(readOnly = true, rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -74,7 +74,7 @@ public class OrderService {
     public OrderResponse findOrderById(final long customerId, final long orderId) {
         validateOrderAccessable(customerId, orderId);
 
-        final Customer customer = customerDao.findById(customerId)
+        customerDao.findById(customerId)
                 .orElseThrow(() -> new AuthException(AuthExceptionCode.REQUIRED_AUTHORIZATION));
 
         final List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();

@@ -22,7 +22,7 @@ import woowacourse.shoppingcart.product.support.exception.ProductExceptionCode;
 import woowacourse.shoppingcart.product.support.jdbc.dao.ProductDao;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class CartService {
 
     private final CartItemDao cartItemDao;
@@ -48,6 +48,7 @@ public class CartService {
         return cartItemResponses;
     }
 
+    @Transactional
     public CartItemResponse addCart(final long customerId, final long productId, final CartPutRequest cartPutRequest) {
         final Customer customer = customerDao.findById(customerId)
                 .orElseThrow(() -> new AuthException(AuthExceptionCode.REQUIRED_AUTHORIZATION));
@@ -62,12 +63,14 @@ public class CartService {
         return cartItemDao.existsProductByCustomer(customerId, productId);
     }
 
+    @Transactional
     public CartItemResponse updateCart(final long customerId, final long productId,
                                        final CartPutRequest cartPutRequest) {
         deleteCart(customerId, productId);
         return addCart(customerId, productId, cartPutRequest);
     }
 
+    @Transactional
     public void deleteCart(final long customerId, final CartDeleteRequest cartDeleteRequest) {
         cartDeleteRequest.getProductIds()
                 .forEach(productId -> deleteCart(customerId, productId));
