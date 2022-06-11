@@ -3,6 +3,7 @@ package woowacourse.auth.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.fixture.RestAssuredFixture.getCustomers;
 import static woowacourse.fixture.RestAssuredFixture.postLogin;
+import static woowacourse.fixture.shoppingcart.TCustomer.ROOKIE;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -11,49 +12,50 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.application.dto.TokenResponse;
+import woowacourse.fixture.shoppingcart.TCustomer;
+import woowacourse.global.exception.ErrorResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.fixture.RestAssuredFixture;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
 
-    @DisplayName("Bearer Auth 로그인 성공")
     @Test
-    void myInfoWithBearerAuth() {
+    @DisplayName("회원은 이메일, 비밀번호를 통해서 로그인을 하면 상태코드 200 Ok와 토큰을 반환한다.")
+    void login() {
         // given
-        RestAssuredFixture.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
+        ROOKIE.signUp();
 
         // when
-        ExtractableResponse<Response> 로그인_응답됨 = postLogin("wishoon@gmail.com", "qwer1234@Q");
+        TokenResponse response = ROOKIE.signIn();
 
         // then
-        assertThat(로그인_응답됨.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getAccessToken()).isNotNull();
     }
 
-    @DisplayName("Bearer Auth 로그인 실패")
     @Test
-    void myInfoWithBadBearerAuth() {
+    @DisplayName("회원이 잘못된 이메일, 비밀번호를 통해서 로그인을 하면 상태코드 400 bad request와 에러 메시지를 반환한다.")
+    void failedLogin() {
         // given
-        RestAssuredFixture.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
+        ROOKIE.signUp();
 
         // when
-        ExtractableResponse<Response> 로그인_응답됨 = postLogin("wishoon1@gmail.com", "qwer1234@Q");
+        ErrorResponse response = ROOKIE.signInFailed();
 
         // then
-        assertThat(로그인_응답됨.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.getMessage()).isEqualTo("로그인 정보가 일치하지 않습니다.");
     }
 
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
-    void myInfoWithWrongBearerAuth() {
+    @DisplayName("유효하지 않은 토큰으로 요청을 할 경우 상태코드 400과 bad request와 에러 메시지를 반환한다.")
+    void wrongToken() {
         // given
-        RestAssuredFixture.postCustomers("wishoon@gmail.com", "qwer1234@Q", "rookie");
-        TokenResponse 위변조_토큰 = new TokenResponse("Forgery_Token");
+        ROOKIE.signUp();
 
         // when
-        ExtractableResponse<Response> 회원_조회_응답됨 = getCustomers(위변조_토큰);
+        ErrorResponse response = ROOKIE.signInWrongToken();
 
         // then
-        assertThat(회원_조회_응답됨.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.getMessage()).isEqualTo("알 수 없는 에러가 발생했습니다.");
     }
 }

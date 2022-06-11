@@ -2,12 +2,8 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.RestAssuredFixture.deleteCustomers;
-import static woowacourse.fixture.RestAssuredFixture.getCustomers;
-import static woowacourse.fixture.RestAssuredFixture.patchCustomers;
-import static woowacourse.fixture.RestAssuredFixture.patchPasswordCustomers;
-import static woowacourse.fixture.RestAssuredFixture.postCustomers;
 import static woowacourse.fixture.RestAssuredFixture.postLogin;
+import static woowacourse.fixture.shoppingcart.TCustomer.ROOKIE;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -15,78 +11,131 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.application.dto.TokenResponse;
+import woowacourse.global.exception.ErrorResponse;
 import woowacourse.shoppingcart.application.dto.CustomerResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
-    @DisplayName("회원가입")
     @Test
-    void addCustomer() {
-        // given & when
-        ExtractableResponse<Response> response = postCustomers("basic@email.com", "password123@Q", "rookie");
+    @DisplayName("회원이 이메일, 비밀번호, 닉네임을 입력해서 회원가입을 하면 상태코드 200 Ok를 반환한다.")
+    void saveCustomer() {
+        ExtractableResponse<Response> response = ROOKIE.signUp();
 
-        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    @DisplayName("내 정보 조회")
     @Test
-    void getMe() {
+    @DisplayName("회원이 이메일, 비밀번호, 기존에 등록된 닉네임을 입력해서 회원가입을 하면 상태코드 400 bad request와 에러 메시지를 반환한다.")
+    void failedSaveCustomer() {
         // given
-        postCustomers("basic@email.com", "password123@Q", "rookie");
-        ExtractableResponse<Response> 로그인_응답됨 = postLogin("basic@email.com", "password123@Q");
+        ROOKIE.signUp();
 
         // when
-        TokenResponse tokenResponse = 로그인_응답됨.as(TokenResponse.class);
-        ExtractableResponse<Response> 사용자_정보_응답됨 = getCustomers(tokenResponse);
+        ErrorResponse errorResponse = ROOKIE.signUpDuplicatedOfNickname();
 
         // then
-        CustomerResponse 사용자_정보 = 사용자_정보_응답됨.as(CustomerResponse.class);
+        assertThat(errorResponse.getMessage()).isEqualTo("[ERROR] 이미 존재하는 닉네임입니다.");
+    }
+
+    @Test
+    @DisplayName("헤더에 토큰을 담아 회원 정보 조회를 요청하면 id, email, nickname을 반환하고 상태코드 200 Ok를 반환한다.")
+    void getMyInfo() {
+        // given
+        ROOKIE.signUp();
+
+        // when
+        CustomerResponse response = ROOKIE.signInAnd().showMyInfo();
+
+        // then
         assertAll(
-                () -> assertThat(사용자_정보_응답됨.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(사용자_정보).usingRecursiveComparison()
-                        .isEqualTo(new CustomerResponse(1L, "basic@email.com", "rookie"))
+                () -> assertThat(response.getId()).isNotNull(),
+                () -> assertThat(response.getEmail()).isEqualTo(ROOKIE.getEmail()),
+                () -> assertThat(response.getNickname()).isEqualTo(ROOKIE.getNickname()));
+    }
+
+    @Test
+    @DisplayName("헤더에 토큰을 보내지 않고 회원 정보 조회를 요청하면 상태코드 400 bad request와 에러 메시지를 반환한다.")
+    void failedGetMyInfo() {
+        // given
+        ROOKIE.signUp();
+
+        // when
+        ErrorResponse response = ROOKIE.noSignInAnd().showMyInfo();
+
+        // then
+        assertThat(response.getMessage()).isEqualTo("토큰이 존재하지 않습니다.");
+    }
+
+
+    @Test
+    @DisplayName("헤더에 토큰을 담아 회원 정보 수정을 요청하면 상태코드 204 no content를 반환한다.")
+    void updateNickname() {
+        // given
+        ROOKIE.signUp();
+
+        // when
+        ExtractableResponse<Response> response = ROOKIE.signInAnd().changeNickname("newRookie");
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("헤더에 토큰을 담아 비밀번호 수정을 요청하면 상태코드 204 no content를 반환한다.")
+    void updatePassword() {
+        // given
+        ROOKIE.signUp();
+
+        // when
+        ExtractableResponse<Response> response = ROOKIE.signInAnd().changePassword(ROOKIE.getPassword(), "qweR123!@");
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("헤더에 토큰을 보내지 않고 정보 수정을 요청하면 상태코드 400 bad request와 에러 메시지를 반환한다.")
+    void failedUpdateCustomerOrPassword() {
+        // given
+        ROOKIE.signUp();
+
+        // when
+        ErrorResponse responseNickname = ROOKIE.noSignInAnd().changeNickname("newRookie");
+        ErrorResponse responsePassword = ROOKIE.noSignInAnd().changePassword(ROOKIE.getPassword(), "qweR123!@");
+
+        // then
+        assertAll(
+                () -> assertThat(responseNickname.getMessage()).isEqualTo("토큰이 존재하지 않습니다."),
+                () -> assertThat(responsePassword.getMessage()).isEqualTo("토큰이 존재하지 않습니다.")
         );
     }
 
-    @DisplayName("내 정보 수정")
     @Test
-    void updateMe() {
+    @DisplayName("헤더에 토큰을 담아 회원 정보 삭제를 요청하면 상태코드 204 no content를 반환한다.")
+    void deleteCustomer() {
         // given
-        postCustomers("basic@email.com", "password123@Q", "rookie");
-        ExtractableResponse<Response> 로그인_응답됨 = postLogin("basic@email.com", "password123@Q");
-        TokenResponse tokenResponse = 로그인_응답됨.as(TokenResponse.class);
-        // when
-        ExtractableResponse<Response> 닉네임_수정_응답됨 = patchCustomers(tokenResponse, "zero");
-        ExtractableResponse<Response> 비밀번호_수정 = patchPasswordCustomers(tokenResponse, "password123@Q", "password123@A");
-        // then
-        ExtractableResponse<Response> 사용자_정보_응답됨 = getCustomers(tokenResponse);
-        CustomerResponse 사용자_정보 = 사용자_정보_응답됨.as(CustomerResponse.class);
-        assertAll(
-                () -> assertThat(닉네임_수정_응답됨.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(비밀번호_수정.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(사용자_정보_응답됨.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(사용자_정보).usingRecursiveComparison()
-                        .isEqualTo(new CustomerResponse(1L, "basic@email.com", "zero"))
-        );
-    }
-
-    @DisplayName("회원탈퇴")
-    @Test
-    void deleteMe() {
-        // given
-        postCustomers("basic@email.com", "password123@Q", "rookie");
-        ExtractableResponse<Response> 로그인_응답됨 = postLogin("basic@email.com", "password123@Q");
-        TokenResponse tokenResponse = 로그인_응답됨.as(TokenResponse.class);
+        ROOKIE.signUp();
 
         // when
-        ExtractableResponse<Response> 사용자_정보_삭제됨 = deleteCustomers(tokenResponse);
+        ExtractableResponse<Response> response = ROOKIE.signInAnd().deleteCustomer();
 
         // then
-        assertThat(사용자_정보_삭제됨.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
+    @Test
+    @DisplayName("헤더에 토큰을 보내지 않고 회원 정보 삭제를 요청하면 400 bad request와 에러 메시지를 반환한다.")
+    void failedDeleteCustomer() {
+        // given
+        ROOKIE.signUp();
+
+        // when
+        ErrorResponse response = ROOKIE.noSignInAnd().deleteCustomer();
+
+        // then
+        assertThat(response.getMessage()).isEqualTo("토큰이 존재하지 않습니다.");
+    }
 
     public static TokenResponse 로그인_되어_있음(String email, String password) {
         ExtractableResponse<Response> response = postLogin(email, password);
