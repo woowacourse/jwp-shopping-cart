@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.dto.customer.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
@@ -26,6 +27,8 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 class CustomerControllerTest {
 
+    public static final Email EMAIL = new Email("email@email.com");
+
     private final CustomerController customerController;
 
     @Autowired
@@ -37,7 +40,8 @@ class CustomerControllerTest {
     @ParameterizedTest
     @CsvSource(value = {"email@email.com, false", "distinctemail@email.com, true"})
     void checkDuplicateEmail(final String email, final boolean expected) {
-        final ResponseEntity<EmailUniqueCheckResponse> response = customerController.checkDuplicateEmail(email);
+        final ResponseEntity<EmailUniqueCheckResponse> response =
+                customerController.checkDuplicateEmail(new Email(email));
 
         final HttpStatus statusCode = response.getStatusCode();
         final EmailUniqueCheckResponse actual = Objects.requireNonNull(response.getBody());
@@ -88,7 +92,7 @@ class CustomerControllerTest {
     void checkPassword() {
         final PasswordRequest passwordRequest = new PasswordRequest("password123!");
 
-        final ResponseEntity<PasswordCheckResponse> response = customerController.checkPassword("email@email.com", passwordRequest);
+        final ResponseEntity<PasswordCheckResponse> response = customerController.checkPassword(EMAIL, passwordRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
@@ -98,7 +102,7 @@ class CustomerControllerTest {
     void checkInvalidPassword() {
         final PasswordRequest passwordRequest = new PasswordRequest("password486!");
 
-        assertThatThrownBy(() -> customerController.checkPassword("email@email.com", passwordRequest))
+        assertThatThrownBy(() -> customerController.checkPassword(EMAIL, passwordRequest))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
     }
@@ -106,14 +110,14 @@ class CustomerControllerTest {
     @DisplayName("회원 정보를 조회한다.")
     @Test
     void findProfile() {
-        final ResponseEntity<CustomerResponse> response = customerController.findProfile("email@email.com");
+        final ResponseEntity<CustomerResponse> response = customerController.findProfile(EMAIL);
 
         final HttpStatus statusCode = response.getStatusCode();
         final CustomerResponse actual = Objects.requireNonNull(response.getBody());
 
         assertAll(
                 () -> assertThat(statusCode).isEqualTo(HttpStatus.OK),
-                () -> assertThat(actual.getEmail()).isEqualTo("email@email.com"),
+                () -> assertThat(actual.getEmail()).isEqualTo(EMAIL),
                 () -> assertThat(actual.getNickname()).isEqualTo("파랑")
         );
     }
@@ -123,7 +127,7 @@ class CustomerControllerTest {
     void updateProfile() {
         final CustomerProfileRequest customerProfileRequest = new CustomerProfileRequest("파리채");
 
-        final ResponseEntity<Void> response = customerController.updateProfile("email@email.com",
+        final ResponseEntity<Void> response = customerController.updateProfile(EMAIL,
                 customerProfileRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -134,7 +138,7 @@ class CustomerControllerTest {
     void updateInvalidProfileFormat() {
         final CustomerProfileRequest customerProfileRequest = new CustomerProfileRequest("파리채채채채");
 
-        assertThatThrownBy(() -> customerController.updateProfile("email@email.com", customerProfileRequest))
+        assertThatThrownBy(() -> customerController.updateProfile(EMAIL, customerProfileRequest))
                 .isInstanceOf(InvalidCustomerException.class);
     }
 
@@ -143,7 +147,7 @@ class CustomerControllerTest {
     void updatePassword() {
         final PasswordRequest passwordRequest = new PasswordRequest("newpassword123!");
 
-        final ResponseEntity<Void> response = customerController.updatePassword("email@email.com",
+        final ResponseEntity<Void> response = customerController.updatePassword(EMAIL,
                 passwordRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -154,7 +158,7 @@ class CustomerControllerTest {
     void updateInvalidPassword() {
         final PasswordRequest passwordRequest = new PasswordRequest("invalidpassword");
 
-        assertThatThrownBy(() -> customerController.updatePassword("email@email.com", passwordRequest))
+        assertThatThrownBy(() -> customerController.updatePassword(EMAIL, passwordRequest))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("잘못된 비밀번호 형식입니다.");
     }
@@ -162,7 +166,7 @@ class CustomerControllerTest {
     @DisplayName("탈퇴한다.")
     @Test
     void signOut() {
-        final ResponseEntity<Void> response = customerController.signOut("email@email.com");
+        final ResponseEntity<Void> response = customerController.signOut(EMAIL);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }

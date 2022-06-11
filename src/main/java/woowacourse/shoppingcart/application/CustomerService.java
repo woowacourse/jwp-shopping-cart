@@ -21,8 +21,8 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public boolean isUniqueEmail(final String email) {
-        return !customerDao.existEmail(new Email(email));
+    public boolean isUniqueEmail(final Email email) {
+        return !customerDao.existEmail(email);
     }
 
     @Transactional
@@ -34,36 +34,31 @@ public class CustomerService {
         return customer;
     }
 
-    public void checkPassword(final String emailValue, final PasswordRequest passwordRequest) {
-        Email email = new Email(emailValue);
+    public void checkPassword(final Email email, final PasswordRequest passwordRequest) {
         validateExists(email);
         customerDao.findByEmailAndPassword(email, passwordRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("비밀번호가 일치하지 않습니다."));
     }
 
-    public Customer findByEmail(final String emailValue) {
-        Email email = new Email(emailValue);
+    public Customer findByEmail(final Email email) {
         validateExists(email);
         return customerDao.findByEmail(email).getCustomer();
     }
 
     @Transactional
-    public void updateProfile(final String emailValue, final CustomerProfileRequest customerProfileRequest) {
-        Email email = new Email(emailValue);
+    public void updateProfile(final Email email, final CustomerProfileRequest customerProfileRequest) {
         validateExists(email);
         customerDao.updateProfile(email, customerProfileRequest.toNickname());
     }
 
     @Transactional
-    public void updatePassword(final String emailValue, final PasswordRequest passwordRequest) {
-        Email email = new Email(emailValue);
+    public void updatePassword(final Email email, final PasswordRequest passwordRequest) {
         validateExists(email);
         customerDao.updatePassword(email, passwordRequest.toPassword());
     }
 
     @Transactional
-    public void delete(final String emailValue) {
-        Email email = new Email(emailValue);
+    public void delete(final Email email) {
         validateExists(email);
         customerDao.delete(email);
     }

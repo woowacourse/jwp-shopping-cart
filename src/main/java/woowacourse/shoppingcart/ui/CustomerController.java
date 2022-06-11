@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.dto.customer.CustomerProfileRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
@@ -32,7 +33,7 @@ public class CustomerController {
     }
 
     @GetMapping("/email-check")
-    public ResponseEntity<EmailUniqueCheckResponse> checkDuplicateEmail(@RequestParam final String email) {
+    public ResponseEntity<EmailUniqueCheckResponse> checkDuplicateEmail(@RequestParam final Email email) {
         final EmailUniqueCheckResponse emailUniqueCheckResponse =
                 new EmailUniqueCheckResponse(customerService.isUniqueEmail(email));
         return ResponseEntity.ok().body(emailUniqueCheckResponse);
@@ -46,35 +47,35 @@ public class CustomerController {
     }
 
     @PostMapping("/password-check")
-    public ResponseEntity<PasswordCheckResponse> checkPassword(@AuthenticationPrincipal final String email,
+    public ResponseEntity<PasswordCheckResponse> checkPassword(@AuthenticationPrincipal final Email email,
                                               @RequestBody @Valid final PasswordRequest passwordRequest) {
         customerService.checkPassword(email, passwordRequest);
         return ResponseEntity.ok(new PasswordCheckResponse(true));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> findProfile(@AuthenticationPrincipal final String email) {
+    public ResponseEntity<CustomerResponse> findProfile(@AuthenticationPrincipal final Email email) {
         final Customer customer = customerService.findByEmail(email);
         final CustomerResponse customerResponse = new CustomerResponse(customer.getEmail(), customer.getNickname());
         return ResponseEntity.ok().body(customerResponse);
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal final String email,
+    public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal final Email email,
                                               @RequestBody @Valid final CustomerProfileRequest customerProfileRequest) {
         customerService.updateProfile(email, customerProfileRequest);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal final String email,
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal final Email email,
                                                @RequestBody @Valid final PasswordRequest passwordRequest) {
         customerService.updatePassword(email, passwordRequest);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> signOut(@AuthenticationPrincipal final String email) {
+    public ResponseEntity<Void> signOut(@AuthenticationPrincipal final Email email) {
         customerService.delete(email);
         return ResponseEntity.noContent().build();
     }

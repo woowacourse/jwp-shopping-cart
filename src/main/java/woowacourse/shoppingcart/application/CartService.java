@@ -30,7 +30,7 @@ public class CartService {
         this.productService = productService;
     }
 
-    public List<Cart> findCartsByEmail(final String email) {
+    public List<Cart> findCartsByEmail(final Email email) {
         final List<CartItemEntity> cartItemEntities = findCartItemEntitiesByEmail(email);
 
         final List<Cart> carts = new ArrayList<>();
@@ -42,8 +42,8 @@ public class CartService {
     }
 
     @Transactional
-    public void addCartItem(final String email, final CartAdditionRequest cartAdditionRequest) {
-        final Long customerId = customerDao.findIdByEmail(new Email(email));
+    public void addCartItem(final Email email, final CartAdditionRequest cartAdditionRequest) {
+        final Long customerId = customerDao.findIdByEmail(email);
         final Product product = productService.findById(cartAdditionRequest.getProductId());
 
         if (cartItemDao.existCartItem(customerId, product.getId())) {
@@ -66,8 +66,8 @@ public class CartService {
     }
 
     @Transactional
-    public void updateCartItem(final String email, final CartUpdateRequest cartUpdateRequest) {
-        final Long customerId = customerDao.findIdByEmail(new Email(email));
+    public void updateCartItem(final Email email, final CartUpdateRequest cartUpdateRequest) {
+        final Long customerId = customerDao.findIdByEmail(email);
         final Product product = productService.findById(cartUpdateRequest.getProductId());
 
         validateExistProduct(customerId, product);
@@ -89,13 +89,13 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCartItem(final String email, final Long productId) {
+    public void deleteCartItem(final Email email, final Long productId) {
         List<CartItemEntity> cartItemEntities = findCartItemEntitiesByEmail(email);
         cartItemDao.delete(findCartId(cartItemEntities, productId));
     }
 
-    private List<CartItemEntity> findCartItemEntitiesByEmail(final String email) {
-        final Long customerId = customerDao.findIdByEmail(new Email(email));
+    private List<CartItemEntity> findCartItemEntitiesByEmail(final Email email) {
+        final Long customerId = customerDao.findIdByEmail(email);
         return cartItemDao.findAllByCustomerId(customerId);
     }
 

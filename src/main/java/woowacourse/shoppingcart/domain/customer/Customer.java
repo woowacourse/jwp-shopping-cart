@@ -8,7 +8,7 @@ public class Customer {
     private final Nickname nickname;
     private final Password password;
 
-    private Customer(Email email, Nickname nickname, Password password) {
+    public Customer(Email email, Nickname nickname, Password password) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
