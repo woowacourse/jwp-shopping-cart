@@ -71,7 +71,7 @@ public class Fixtures {
     public static final Integer PRODUCT_STOCK_VALUE_1 = 10;
     public static final String PRODUCT_IMAGE_URL_VALUE_1 = "http://image.com/1234";
     // invalid fixtures
-    public static CustomerRequest CUSTOMER_INVALID_REQUEST_1 = new CustomerRequest("seongwoo0513", "string&123",
+    public static final CustomerRequest CUSTOMER_INVALID_REQUEST_1 = new CustomerRequest("seongwoo0513", "string&123",
             "http://gravatar.com/avatar/1?d=identicon",
             "조동현", "male", "1999-03-23", "01012345678", "서울특별시 성동구 왕십리역", "길바닥", "54321", true);
 }
