@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.validation.ConstraintViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -28,6 +29,7 @@ import woowacourse.shoppingcart.exception.custum.ResourceNotFoundException;
 @RestControllerAdvice
 public class ControllerAdvice {
 
+    private static final Logger LOG = Logger.getGlobal();
     private static final String INVALID_DATA_ERROR_MESSAGE = "존재하지 않는 데이터 요청입니다.";
     private static final String UNHANDLED_ERROR_MESSAGE = "예상치못한 에러가 발생했습니다.";
 
@@ -103,8 +105,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String,String>> unhandledException(final Exception e) {
-        System.err.println(e.getMessage());
-        System.err.println(Arrays.toString(e.getStackTrace()));
+        LOG.warning(e.getMessage());
+        LOG.warning(Arrays.toString(e.getStackTrace()));
         return ResponseEntity.badRequest().body(toMessageMap(UNHANDLED_ERROR_MESSAGE));
     }
 
