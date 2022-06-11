@@ -3,11 +3,11 @@ package woowacourse.shoppingcart.dao;
 import woowacourse.shoppingcart.entity.PrivacyEntity;
 
 public interface PrivacyDao {
-    void save(PrivacyEntity privacyEntity);
+    void save(long customerId, PrivacyEntity privacyEntity);
 
-    PrivacyEntity findById(int id);
+    PrivacyEntity findById(long customerId);
 
-    void update(PrivacyEntity privacyEntity);
+    void update(long customerId, PrivacyEntity privacyEntity);
 
-    void delete(int id);
+    void delete(long customerId);
 }

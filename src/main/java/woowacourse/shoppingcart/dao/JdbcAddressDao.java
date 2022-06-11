@@ -1,11 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.entity.AddressEntity;
 
@@ -27,29 +27,39 @@ public class JdbcAddressDao implements AddressDao {
     }
 
     @Override
-    public void save(AddressEntity addressEntity) {
+    public void save(long customerId, AddressEntity addressEntity) {
         String sql = "INSERT INTO full_address (customer_id, address, detail_address, zone_code) VALUES(:customerId, :address, :detailAddress, :zonecode)";
 
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(addressEntity);
-        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+        Map<String, Object> params = new HashMap<>();
+        params.put("customerId", customerId);
+        params.put("address", addressEntity.getAddress());
+        params.put("detailAddress", addressEntity.getDetailAddress());
+        params.put("zonecode", addressEntity.getZonecode());
+
+        namedParameterJdbcTemplate.update(sql, params);
     }
 
     @Override
-    public AddressEntity findById(int id) {
+    public AddressEntity findById(long customerId) {
         String sql = "SELECT customer_id, address, detail_address, zone_code FROM full_address WHERE customer_id = ?";
-        return jdbcTemplate.queryForObject(sql, ADDRESS_ENTITY_ROW_MAPPER, id);
+        return jdbcTemplate.queryForObject(sql, ADDRESS_ENTITY_ROW_MAPPER, customerId);
     }
 
     @Override
-    public void update(AddressEntity addressEntity) {
+    public void update(long customerId, AddressEntity addressEntity) {
         String sql = "UPDATE full_address SET address = :address, detail_address = :detailAddress, zone_code = :zonecode WHERE customer_id = :customerId";
 
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(addressEntity);
-        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+        Map<String, Object> params = new HashMap<>();
+        params.put("address", addressEntity.getAddress());
+        params.put("detailAddress", addressEntity.getDetailAddress());
+        params.put("zonecode", addressEntity.getZonecode());
+        params.put("customerId", customerId);
+
+        namedParameterJdbcTemplate.update(sql, params);
     }
 
     @Override
-    public void delete(int customerId) {
+    public void delete(long customerId) {
         String sql = "DELETE FROM full_address WHERE customer_id = ?";
         jdbcTemplate.update(sql, customerId);
     }

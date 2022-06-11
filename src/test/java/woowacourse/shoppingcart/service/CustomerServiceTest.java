@@ -20,6 +20,7 @@ import woowacourse.shoppingcart.dao.PrivacyDao;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.dto.response.EmailDuplicationResponse;
 import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
+import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @JdbcTest
 class CustomerServiceTest {
@@ -30,15 +31,16 @@ class CustomerServiceTest {
         CustomerDao customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
         PrivacyDao privacyDao = new JdbcPrivacyDao(jdbcTemplate, dataSource);
         AddressDao addressDao = new JdbcAddressDao(jdbcTemplate, dataSource);
+        CustomerRepository customerRepository = new CustomerRepository(customerDao, privacyDao, addressDao);
 
-        this.customerService = new CustomerService(customerDao, privacyDao, addressDao);
+        this.customerService = new CustomerService(customerRepository);
     }
 
     @DisplayName("customer를 생성한다.")
     @Test
     void create() {
         // given
-        int id = customerService.create(CUSTOMER_REQUEST_1);
+        long id = customerService.create(CUSTOMER_REQUEST_1);
 
         // when & then
         assertThat(id).isNotNull();
@@ -61,7 +63,7 @@ class CustomerServiceTest {
     @Test
     void getCustomer() {
         // given
-        int id = customerService.create(CUSTOMER_REQUEST_1);
+        long id = customerService.create(CUSTOMER_REQUEST_1);
 
         // when
         CustomerResponse customerResponse = customerService.getCustomerById(id);
@@ -76,7 +78,7 @@ class CustomerServiceTest {
     @Test
     void getCustomer_throwsException() {
         // given
-        int id = customerService.create(CUSTOMER_REQUEST_1);
+        long id = customerService.create(CUSTOMER_REQUEST_1);
 
         // when & then
         assertThatThrownBy(() -> customerService.getCustomerById(id + 1))
@@ -87,7 +89,7 @@ class CustomerServiceTest {
     @Test
     void updateCustomer() {
         // given
-        int id = customerService.create(CUSTOMER_REQUEST_1);
+        long id = customerService.create(CUSTOMER_REQUEST_1);
 
         // when
         customerService.updateCustomerById(id, CUSTOMER_REQUEST_2);
@@ -103,7 +105,7 @@ class CustomerServiceTest {
     @Test
     void updateCustomer_throwsException() {
         // given
-        int id = customerService.create(CUSTOMER_REQUEST_1);
+        long id = customerService.create(CUSTOMER_REQUEST_1);
 
         // then
         assertThatThrownBy(() -> customerService.updateCustomerById(id + 1, CUSTOMER_REQUEST_2))
@@ -114,7 +116,7 @@ class CustomerServiceTest {
     @Test
     void deleteCustomer() {
         // given
-        int id = customerService.create(CUSTOMER_REQUEST_1);
+        long id = customerService.create(CUSTOMER_REQUEST_1);
 
         // when
         customerService.deleteCustomer(id);
@@ -128,7 +130,7 @@ class CustomerServiceTest {
     @Test
     void deleteCustomer_throwsException() {
         // given
-        int id = customerService.create(CUSTOMER_REQUEST_1);
+        long id = customerService.create(CUSTOMER_REQUEST_1);
 
         // then
         assertThatThrownBy(() -> customerService.deleteCustomer(id + 1))

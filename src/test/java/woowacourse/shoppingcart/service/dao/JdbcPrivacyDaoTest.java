@@ -42,7 +42,7 @@ class JdbcPrivacyDaoTest {
                 CONTACT_VALUE_1);
 
         // when
-        privacyDao.save(privacyEntity);
+        privacyDao.save(customerId, privacyEntity);
         PrivacyEntity actual = privacyDao.findById(customerId);
 
         // then
@@ -56,7 +56,7 @@ class JdbcPrivacyDaoTest {
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
         PrivacyEntity privacyEntity = new PrivacyEntity(customerId, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_VALUE_1,
                 CONTACT_VALUE_1);
-        privacyDao.save(privacyEntity);
+        privacyDao.save(customerId, privacyEntity);
 
         // when
         PrivacyEntity actual = privacyDao.findById(customerId);
@@ -74,12 +74,12 @@ class JdbcPrivacyDaoTest {
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
         PrivacyEntity privacyEntity = new PrivacyEntity(customerId, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_VALUE_1,
                 CONTACT_VALUE_1);
-        privacyDao.save(privacyEntity);
+        privacyDao.save(customerId, privacyEntity);
 
         // when
         PrivacyEntity newPrivacyEntity = new PrivacyEntity(customerId, "새로운 이름", "female", LocalDate.of(1999, 12, 21),
                 "01033334444");
-        privacyDao.update(newPrivacyEntity);
+        privacyDao.update(customerId, newPrivacyEntity);
 
         PrivacyEntity actual = privacyDao.findById(customerId);
 
@@ -96,7 +96,7 @@ class JdbcPrivacyDaoTest {
         int customerId = customerDao.save(CUSTOMER_ENTITY_1);
         PrivacyEntity privacyEntity = new PrivacyEntity(customerId, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_VALUE_1,
                 CONTACT_VALUE_1);
-        privacyDao.save(privacyEntity);
+        privacyDao.save(customerId, privacyEntity);
 
         // when
         privacyDao.delete(customerId);

@@ -46,7 +46,7 @@ public class JdbcCustomerDao implements CustomerDao {
     }
 
     @Override
-    public CustomerEntity findById(int id) {
+    public CustomerEntity findById(long id) {
         String sql = "SELECT id, email, password, profile_image_url, terms FROM customer WHERE id = ?";
 
         try {
@@ -68,14 +68,14 @@ public class JdbcCustomerDao implements CustomerDao {
     }
 
     @Override
-    public void update(int id, CustomerEntity customerEntity) {
+    public void update(long id, CustomerEntity customerEntity) {
         String sql = "UPDATE customer SET password = ?, profile_image_url = ?, terms = ? WHERE id = ?";
         jdbcTemplate.update(sql, customerEntity.getPassword(), customerEntity.getProfileImageUrl(),
                 customerEntity.isTerms(), id);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         String sql = "DELETE FROM customer WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

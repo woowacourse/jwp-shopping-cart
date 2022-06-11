@@ -27,7 +27,7 @@ public class CustomerController {
 
     @PostMapping("/customers")
     public ResponseEntity<Void> createCustomer(@RequestBody CustomerRequest customerRequest) {
-        int id = customerService.create(customerRequest);
+        long id = customerService.create(customerRequest);
         return ResponseEntity.created(URI.create("/api/customers/" + id)).build();
     }
 

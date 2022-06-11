@@ -1,11 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.entity.PrivacyEntity;
 
@@ -28,29 +28,41 @@ public class JdbcPrivacyDao implements PrivacyDao {
     }
 
     @Override
-    public void save(PrivacyEntity privacyEntity) {
-        String sql = "INSERT INTO privacy (customer_id, name, gender, birth_day, contact) VALUES(:customerId, :name, :gender, :birthday ,:contact)";
+    public void save(long customerId, PrivacyEntity privacyEntity) {
+        String sql = "INSERT INTO privacy (customer_id, name, gender, birth_day, contact) VALUES(:customerId, :name, :gender, :birthday, :contact)";
 
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(privacyEntity);
-        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+        Map<String, Object> params = new HashMap<>();
+        params.put("customerId", customerId);
+        params.put("name", privacyEntity.getName());
+        params.put("gender", privacyEntity.getGender());
+        params.put("birthday", privacyEntity.getBirthday());
+        params.put("contact", privacyEntity.getContact());
+
+        namedParameterJdbcTemplate.update(sql, params);
     }
 
     @Override
-    public PrivacyEntity findById(int id) {
+    public PrivacyEntity findById(long customerId) {
         String sql = "SELECT customer_id, name, gender, birth_day, contact FROM privacy WHERE customer_id = ?";
-        return jdbcTemplate.queryForObject(sql, PRIVACY_ENTITY_ROW_MAPPER, id);
+        return jdbcTemplate.queryForObject(sql, PRIVACY_ENTITY_ROW_MAPPER, customerId);
     }
 
     @Override
-    public void update(PrivacyEntity privacyEntity) {
+    public void update(long customerId, PrivacyEntity privacyEntity) {
         String sql = "UPDATE privacy SET name = :name, gender = :gender, birth_day = :birthday, contact = :contact WHERE customer_id = :customerId";
 
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(privacyEntity);
-        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", privacyEntity.getName());
+        params.put("gender", privacyEntity.getGender());
+        params.put("birthday", privacyEntity.getBirthday());
+        params.put("contact", privacyEntity.getContact());
+        params.put("customerId", customerId);
+
+        namedParameterJdbcTemplate.update(sql, params);
     }
 
     @Override
-    public void delete(int customerId) {
+    public void delete(long customerId) {
         String sql = "DELETE FROM privacy WHERE customer_id = ?";
         jdbcTemplate.update(sql, customerId);
     }
