@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.User.User;
 import woowacourse.shoppingcart.domain.cartitem.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.UserName;
@@ -30,8 +31,8 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<CartItem> findCartsByCustomerName(final UserName userName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(userName);
+    public List<CartItem> findCartsByCustomerName(final User user) {
+        final List<Long> cartIds = findCartIdsByCustomerName(user.getUserName());
         final List<CartItem> carts = new ArrayList<>();
 
         for (final Long cartId : cartIds) {
@@ -48,8 +49,8 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public Long addCart(final Long productId, final UserName userName) {
-        final long customerId = customerDao.findIdByUserName(userName);
+    public Long addCart(final Long productId, final User user) {
+        final long customerId = customerDao.findIdByUserName(user.getUserName());
         validateAlreadyExist(productId, customerId);
 
         try {
@@ -65,8 +66,8 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final UserName userName, final Long cartId) {
-        validateCustomerCart(cartId, userName);
+    public void deleteCart(final User user, final Long cartId) {
+        validateCustomerCart(cartId, user.getUserName());
         cartItemDao.deleteCartItem(cartId);
     }
 
@@ -81,9 +82,9 @@ public class CartService {
         return !cartIds.contains(cartId);
     }
 
-    public void updateQuantity(Long cartId, UserName userName, CartItemRequest cartItemRequest) {
+    public void updateQuantity(Long cartId, User user, CartItemRequest cartItemRequest) {
         final CartItem cartItem = getCartItemById(cartId);
-        final long customerId = customerDao.findIdByUserName(userName);
+        final long customerId = customerDao.findIdByUserName(user.getUserName());
         cartItem.updateQuantity(cartItemRequest.getQuantity());
         cartItemDao.updateQuantity(customerId, cartItem);
     }

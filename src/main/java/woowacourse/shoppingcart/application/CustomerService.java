@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.application.AuthorizationException;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.User.User;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.CheckDuplicateResponse;
@@ -11,6 +12,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.exception.NoExistUserException;
+import woowacourse.shoppingcart.exception.NotLoginException;
 import woowacourse.shoppingcart.support.Encryptor;
 
 @Service
@@ -33,19 +35,20 @@ public class CustomerService {
         customerDao.save(customer);
     }
 
-    public void deleteCustomerByName(final UserName userName) {
-        if (notExistCustomerName(userName)) {
+    public void deleteCustomerByName(final User user) {
+        if (notExistCustomerName(user.getUserName())) {
             throw new NoExistUserException();
         }
-        customerDao.deleteByName(userName);
+        customerDao.deleteByName(user.getUserName());
     }
 
-    public CustomerResponse findCustomerByName(final UserName userName) {
-        final Customer customer = customerDao.findCustomerByName(userName);
+    public CustomerResponse findCustomerByName(final User user) {
+        final Customer customer = customerDao.findCustomerByName(user.getUserName());
         return new CustomerResponse(customer.getName().value());
     }
 
-    public void editCustomerByName(final UserName userName, final CustomerRequest editRequest) {
+    public void editCustomerByName(final User user, final CustomerRequest editRequest) {
+        UserName userName = user.getUserName();
         if (notExistCustomerName(userName)) {
             throw new NoExistUserException();
         }
@@ -53,7 +56,6 @@ public class CustomerService {
         Customer customer = customerDao.findCustomerByName(userName);
         customer.update(userName.value(), editRequest.getPassword(), encryptor);
         customerDao.updateByName(userName, customer);
-        return;
     }
 
     private boolean notExistCustomerName(UserName userName) {

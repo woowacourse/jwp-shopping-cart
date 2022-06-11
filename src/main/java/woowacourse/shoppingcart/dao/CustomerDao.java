@@ -1,12 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -14,7 +11,6 @@ import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
-import java.sql.PreparedStatement;
 import java.util.Locale;
 
 @Repository
@@ -50,10 +46,10 @@ public class CustomerDao {
         namedParameterJdbcTemplate.update(query, parameterSource);
     }
 
-    public Customer findCustomerByName(UserName customerName) {
+    public Customer findCustomerByName(UserName userName) {
         try {
             final String query = "SELECT id, username, password FROM customer WHERE username = :username";
-            MapSqlParameterSource parameterSource = new MapSqlParameterSource("username", customerName.value());
+            MapSqlParameterSource parameterSource = new MapSqlParameterSource("username", userName.value());
             return namedParameterJdbcTemplate.queryForObject(query, parameterSource, rowMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidProductException();

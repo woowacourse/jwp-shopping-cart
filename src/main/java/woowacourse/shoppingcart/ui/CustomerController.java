@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.TokenProvider;
+import woowacourse.shoppingcart.domain.User.User;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.CheckDuplicateResponse;
 import woowacourse.shoppingcart.application.CustomerService;
@@ -12,7 +13,6 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -34,20 +34,20 @@ public class CustomerController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> edit(@AuthenticationPrincipal UserName userName,
+    public ResponseEntity<Void> edit(@AuthenticationPrincipal User user,
                                      @RequestBody @Valid CustomerRequest editRequest) {
-        customerService.editCustomerByName(userName, editRequest);
+        customerService.editCustomerByName(user, editRequest);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerResponse> customer(@AuthenticationPrincipal UserName userName) {
-        return ResponseEntity.ok(customerService.findCustomerByName(userName));
+    public ResponseEntity<CustomerResponse> customer(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(customerService.findCustomerByName(user));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> withDraw(@AuthenticationPrincipal UserName userName) {
-        customerService.deleteCustomerByName(userName);
+    public ResponseEntity<Void> withDraw(@AuthenticationPrincipal User user) {
+        customerService.deleteCustomerByName(user);
         return ResponseEntity.noContent().build();
     }
 

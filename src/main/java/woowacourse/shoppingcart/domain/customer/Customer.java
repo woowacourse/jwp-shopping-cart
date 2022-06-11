@@ -6,7 +6,9 @@ public class Customer {
 
     private long id;
     private UserName name;
+
     private Password password;
+
 
     public Customer(long id, String name, String password) {
         this.id = id;

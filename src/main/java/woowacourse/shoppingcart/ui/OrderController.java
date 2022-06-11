@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.User.User;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
@@ -25,23 +26,23 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final UserName userName,
+    public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final User user,
                                          @RequestBody @Valid final List<OrderRequest> orderDetails) {
-        final Long orderId = orderService.addOrder(orderDetails, userName);
+        final Long orderId = orderService.addOrder(orderDetails, user);
         return ResponseEntity.created(
-                URI.create("/api/customers/" + userName.value() + "/orders/" + orderId)).build();
+                URI.create("/api/customers/me/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal final UserName userName,
+    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal final User user,
                                             @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(userName, orderId);
+        final Orders order = orderService.findOrderById(user, orderId);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@AuthenticationPrincipal final UserName userName) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(userName);
+    public ResponseEntity<List<Orders>> findOrders(@AuthenticationPrincipal final User user) {
+        final List<Orders> orders = orderService.findOrdersByCustomerName(user);
         return ResponseEntity.ok(orders);
     }
 }

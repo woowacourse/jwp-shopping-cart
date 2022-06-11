@@ -20,10 +20,10 @@ import java.util.List;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
-        return ResponseEntity.internalServerError().body(ErrorResponse.toDto("Unhandled Exception"));
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+//        return ResponseEntity.internalServerError().body(ErrorResponse.toDto("Unhandled Exception"));
+//    }
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorResponse> handleDatabaseException() {

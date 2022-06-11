@@ -10,7 +10,7 @@ public class UserName {
     private final String name;
 
     public UserName(String name) {
-        this.name = name;
+        this.name = Objects.requireNonNull(name);
         validateUserName();
     }
 

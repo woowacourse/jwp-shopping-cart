@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.*;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.User.User;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
@@ -33,8 +34,8 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final UserName userName) {
-        final long customerId = customerDao.findIdByUserName(userName);
+    public Long addOrder(final List<OrderRequest> orderDetailRequests, final User user) {
+        final long customerId = customerDao.findIdByUserName(user.getUserName());
         final long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
@@ -49,8 +50,8 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final UserName userName, final Long orderId) {
-        validateOrderIdByCustomerName(userName, orderId);
+    public Orders findOrderById(final User user, final Long orderId) {
+        validateOrderIdByCustomerName(user.getUserName(), orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
@@ -66,8 +67,8 @@ public class OrderService {
         return !orderDao.isValidOrderId(customerId, orderId);
     }
 
-    public List<Orders> findOrdersByCustomerName(final UserName userName) {
-        final long customerId = customerDao.findIdByUserName(userName);
+    public List<Orders> findOrdersByCustomerName(final User user) {
+        final long customerId = customerDao.findIdByUserName(user.getUserName());
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
