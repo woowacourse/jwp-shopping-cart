@@ -14,13 +14,16 @@ import woowacourse.shoppingcart.entity.OrderDetailEntity;
 @Repository
 public class JdbcOrderDetailDao implements OrderDetailDao {
     private static final String TABLE_NAME = "order_detail";
-    private static final String KEY_COLUMN = "id";
+    private static final String ID_COLUMN = "id";
+    private static final String ORDER_ID_COLUMN = "order_id";
+    private static final String PRODUCT_ID_COLUMN = "product_id";
+    private static final String QUANTITY_COLUMN = "quantity";
 
     private static final RowMapper<OrderDetailEntity> ORDER_DETAIL_ENTITY_ROW_MAPPER = (rs, rowNum) -> new OrderDetailEntity(
-            rs.getLong("id"),
-            rs.getLong("order_id"),
-            rs.getLong("product_id"),
-            rs.getInt("quantity")
+            rs.getLong(ID_COLUMN),
+            rs.getLong(ORDER_ID_COLUMN),
+            rs.getLong(PRODUCT_ID_COLUMN),
+            rs.getInt(QUANTITY_COLUMN)
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -30,15 +33,15 @@ public class JdbcOrderDetailDao implements OrderDetailDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
-                .usingGeneratedKeyColumns(KEY_COLUMN);
+                .usingGeneratedKeyColumns(ID_COLUMN);
     }
 
     @Override
     public Long save(OrderDetail orderDetail, long orderId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("order_id", orderId);
-        params.put("product_id", orderDetail.getProduct().getId());
-        params.put("quantity", orderDetail.getQuantity());
+        params.put(ORDER_ID_COLUMN, orderId);
+        params.put(PRODUCT_ID_COLUMN, orderDetail.getProduct().getId());
+        params.put(QUANTITY_COLUMN, orderDetail.getQuantity());
 
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }

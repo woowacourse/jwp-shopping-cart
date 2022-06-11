@@ -15,13 +15,17 @@ import woowacourse.shoppingcart.entity.CustomerEntity;
 public class JdbcCustomerDao implements CustomerDao {
     private static final String TABLE_NAME = "customer";
     private static final String ID_COLUMN = "id";
+    private static final String EMAIL_COLUMN = "email";
+    private static final String PASSWORD_COLUMN = "password";
+    private static final String PROFILE_IMAGE_URL_COLUMN = "profile_image_url";
+    private static final String TERMS_COLUMN = "terms";
 
     private static final RowMapper<CustomerEntity> CUSTOMER_ENTITY_ROW_MAPPER = (rs, rowNum) -> new CustomerEntity(
-            rs.getLong("id"),
-            rs.getString("email"),
-            rs.getString("password"),
-            rs.getString("profile_image_url"),
-            rs.getBoolean("terms")
+            rs.getLong(ID_COLUMN),
+            rs.getString(EMAIL_COLUMN),
+            rs.getString(PASSWORD_COLUMN),
+            rs.getString(PROFILE_IMAGE_URL_COLUMN),
+            rs.getBoolean(TERMS_COLUMN)
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -37,10 +41,10 @@ public class JdbcCustomerDao implements CustomerDao {
     @Override
     public long save(CustomerEntity customerEntity) {
         Map<String, Object> params = new HashMap<>();
-        params.put("email", customerEntity.getEmail());
-        params.put("password", customerEntity.getPassword());
-        params.put("profile_image_url", customerEntity.getProfileImageUrl());
-        params.put("terms", customerEntity.isTerms());
+        params.put(EMAIL_COLUMN, customerEntity.getEmail());
+        params.put(PASSWORD_COLUMN, customerEntity.getPassword());
+        params.put(PROFILE_IMAGE_URL_COLUMN, customerEntity.getProfileImageUrl());
+        params.put(TERMS_COLUMN, customerEntity.isTerms());
 
         return jdbcInsert.executeAndReturnKey(params).intValue();
     }

@@ -13,12 +13,18 @@ import woowacourse.shoppingcart.entity.PrivacyEntity;
 
 @Repository
 public class JdbcPrivacyDao implements PrivacyDao {
+    private static final String CUSTOMER_ID_COLUMN = "customer_id";
+    private static final String NAME_COLUMN = "name";
+    private static final String GENDER_COLUMN = "gender";
+    private static final String BIRTH_DAY_COLUMN = "birth_day";
+    private static final String CONTACT_COLUMN = "contact";
+
     private static final RowMapper<PrivacyEntity> PRIVACY_ENTITY_ROW_MAPPER = (rs, rowNum) -> new PrivacyEntity(
-            rs.getLong("customer_id"),
-            rs.getString("name"),
-            rs.getString("gender"),
-            rs.getTimestamp("birth_day").toLocalDateTime().toLocalDate(),
-            rs.getString("contact")
+            rs.getLong(CUSTOMER_ID_COLUMN),
+            rs.getString(NAME_COLUMN),
+            rs.getString(GENDER_COLUMN),
+            rs.getTimestamp(BIRTH_DAY_COLUMN).toLocalDateTime().toLocalDate(),
+            rs.getString(CONTACT_COLUMN)
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -31,14 +37,14 @@ public class JdbcPrivacyDao implements PrivacyDao {
 
     @Override
     public void save(long customerId, PrivacyEntity privacyEntity) {
-        String sql = "INSERT INTO privacy (customer_id, name, gender, birth_day, contact) VALUES(:customerId, :name, :gender, :birthday, :contact)";
+        String sql = "INSERT INTO privacy (customer_id, name, gender, birth_day, contact) VALUES(:customer_id, :name, :gender, :birth_day, :contact)";
 
         Map<String, Object> params = new HashMap<>();
-        params.put("customerId", customerId);
-        params.put("name", privacyEntity.getName());
-        params.put("gender", privacyEntity.getGender());
-        params.put("birthday", privacyEntity.getBirthday());
-        params.put("contact", privacyEntity.getContact());
+        params.put(CUSTOMER_ID_COLUMN, customerId);
+        params.put(NAME_COLUMN, privacyEntity.getName());
+        params.put(GENDER_COLUMN, privacyEntity.getGender());
+        params.put(BIRTH_DAY_COLUMN, privacyEntity.getBirthday());
+        params.put(CONTACT_COLUMN, privacyEntity.getContact());
 
         namedParameterJdbcTemplate.update(sql, params);
     }
@@ -55,14 +61,14 @@ public class JdbcPrivacyDao implements PrivacyDao {
 
     @Override
     public void update(long customerId, PrivacyEntity privacyEntity) {
-        String sql = "UPDATE privacy SET name = :name, gender = :gender, birth_day = :birthday, contact = :contact WHERE customer_id = :customerId";
+        String sql = "UPDATE privacy SET name = :name, gender = :gender, birth_day = :birth_day, contact = :contact WHERE customer_id = :customer_id";
 
         Map<String, Object> params = new HashMap<>();
-        params.put("name", privacyEntity.getName());
-        params.put("gender", privacyEntity.getGender());
-        params.put("birthday", privacyEntity.getBirthday());
-        params.put("contact", privacyEntity.getContact());
-        params.put("customerId", customerId);
+        params.put(NAME_COLUMN, privacyEntity.getName());
+        params.put(GENDER_COLUMN, privacyEntity.getGender());
+        params.put(BIRTH_DAY_COLUMN, privacyEntity.getBirthday());
+        params.put(CONTACT_COLUMN, privacyEntity.getContact());
+        params.put(CUSTOMER_ID_COLUMN, customerId);
 
         namedParameterJdbcTemplate.update(sql, params);
     }

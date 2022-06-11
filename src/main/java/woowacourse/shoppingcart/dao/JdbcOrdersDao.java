@@ -15,11 +15,12 @@ import woowacourse.shoppingcart.entity.OrdersEntity;
 @Repository
 public class JdbcOrdersDao implements OrdersDao {
     private static final String TABLE_NAME = "orders";
-    private static final String KEY_COLUMN = "id";
+    private static final String ID_COLUMN = "id";
+    private static final String CUSTOMER_ID_COLUMN = "customer_id";
 
     private static final RowMapper<OrdersEntity> ORDERS_ENTITY_ROW_MAPPER = (rs, rowNum) -> new OrdersEntity(
-            rs.getLong("id"),
-            rs.getLong("customer_id")
+            rs.getLong(ID_COLUMN),
+            rs.getLong(CUSTOMER_ID_COLUMN)
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -29,11 +30,11 @@ public class JdbcOrdersDao implements OrdersDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
-                .usingGeneratedKeyColumns(KEY_COLUMN);
+                .usingGeneratedKeyColumns(ID_COLUMN);
     }
 
     public Long save(Orders orders) {
-        Map<String, Long> params = Map.of("customer_id", orders.getCustomerId());
+        Map<String, Long> params = Map.of(CUSTOMER_ID_COLUMN, orders.getCustomerId());
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 

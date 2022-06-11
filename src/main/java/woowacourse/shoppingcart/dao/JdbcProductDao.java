@@ -16,16 +16,21 @@ import woowacourse.shoppingcart.entity.ProductEntity;
 @Repository
 public class JdbcProductDao implements ProductDao {
     private static final String TABLE_NAME = "product";
-    private static final String KEY_COLUMN = "id";
+    private static final String ID_COLUMN = "id";
+    private static final String NAME_COLUMN = "name";
+    private static final String DESCRIPTION_COLUMN = "description";
+    private static final String PRICE_COLUMN = "price";
+    private static final String STOCK_COLUMN = "stock";
+    private static final String IMAGE_URL_COLUMN = "image_url";
 
     private static final RowMapper<ProductEntity> PRODUCT_ROW_MAPPER = (resultSet, rowNumber) ->
             new ProductEntity(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("description"),
-                    resultSet.getInt("price"),
-                    resultSet.getInt("stock"),
-                    resultSet.getString("image_url")
+                    resultSet.getLong(ID_COLUMN),
+                    resultSet.getString(NAME_COLUMN),
+                    resultSet.getString(DESCRIPTION_COLUMN),
+                    resultSet.getInt(PRICE_COLUMN),
+                    resultSet.getInt(STOCK_COLUMN),
+                    resultSet.getString(IMAGE_URL_COLUMN)
             );
 
     private final JdbcTemplate jdbcTemplate;
@@ -35,16 +40,16 @@ public class JdbcProductDao implements ProductDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
-                .usingGeneratedKeyColumns(KEY_COLUMN);
+                .usingGeneratedKeyColumns(ID_COLUMN);
     }
 
     public Long save(Product product) {
         Map<String, Object> params = new HashMap<>();
-        params.put("name", product.getName());
-        params.put("description", product.getDescription());
-        params.put("price", product.getPrice());
-        params.put("stock", product.getStock());
-        params.put("image_url", product.getImageUrl());
+        params.put(NAME_COLUMN, product.getName());
+        params.put(DESCRIPTION_COLUMN, product.getDescription());
+        params.put(PRICE_COLUMN, product.getPrice());
+        params.put(STOCK_COLUMN, product.getStock());
+        params.put(IMAGE_URL_COLUMN, product.getImageUrl());
 
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }

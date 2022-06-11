@@ -16,11 +16,17 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class JdbcCartItemDao implements CartItemDao {
+    private static final String TABLE_NAME = "cart_item";
+    private static final String ID_COLUMN = "id";
+    private static final String CUSTOMER_ID_COLUMN = "customer_id";
+    private static final String PRODUCT_ID_COLUMN = "product_id";
+    private static final String QUANTITY_COLUMN = "quantity";
+
     private static final RowMapper<CartItemEntity> CART_ITEM_ENTITY_MAPPER = (rs, rowNum) -> new CartItemEntity(
-            rs.getLong("id"),
-            rs.getLong("customer_id"),
-            rs.getLong("product_id"),
-            rs.getInt("quantity")
+            rs.getLong(ID_COLUMN),
+            rs.getLong(CUSTOMER_ID_COLUMN),
+            rs.getLong(PRODUCT_ID_COLUMN),
+            rs.getInt(QUANTITY_COLUMN)
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -29,15 +35,15 @@ public class JdbcCartItemDao implements CartItemDao {
     public JdbcCartItemDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("cart_item")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns(ID_COLUMN);
     }
 
     public Long save(Long customerId, CartItem cartItem) {
         Map<String, Object> params = new HashMap<>();
-        params.put("customer_id", customerId);
-        params.put("product_id", cartItem.getProduct().getId());
-        params.put("quantity", cartItem.getQuantity());
+        params.put(CUSTOMER_ID_COLUMN, customerId);
+        params.put(PRODUCT_ID_COLUMN, cartItem.getProduct().getId());
+        params.put(QUANTITY_COLUMN, cartItem.getQuantity());
 
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
