@@ -60,9 +60,6 @@ public class CartItemRepository {
     }
 
     public Cart update(CartEntity cartEntity) {
-        System.err.println("cartEntity = " + cartEntity);
-        System.err.println("cartEntity.getId() = " + cartEntity.getId());
-        System.err.println("cartEntity.getQuantity() = " + cartEntity.getQuantity());
         int updatedRowNum = cartItemDao.update(cartEntity);
         if (updatedRowNum == 0) {
             throw new InvalidCartItemException();
