@@ -7,12 +7,12 @@ public class SignUpResponse {
     private final String username;
     private final String email;
 
-    public SignUpResponse(String username, String email) {
+    private SignUpResponse(String username, String email) {
         this.username = username;
         this.email = email;
     }
 
-    public static SignUpResponse fromCustomer(Customer customer) {
+    public static SignUpResponse from(Customer customer) {
         return new SignUpResponse(
                 customer.getUsername(),
                 customer.getEmail()

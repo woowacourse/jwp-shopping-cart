@@ -35,7 +35,7 @@ class CartItemServiceTest {
         customerService.addCustomer(signUpRequest);
 
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
-        Product product = productService.addProduct(productRequest);
+        ProductResponse product = productService.addProduct(productRequest);
 
         //when & then
         cartService.addCart(new CartProductRequest(product.getId(), 1L, true), "greenlawn");
@@ -54,8 +54,8 @@ class CartItemServiceTest {
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
         ProductRequest productRequest2 = new ProductRequest("치킨", 20000, "http://example.com/chicken.jpg");
 
-        Product product1 = productService.addProduct(productRequest);
-        Product product2 = productService.addProduct(productRequest2);
+        ProductResponse product1 = productService.addProduct(productRequest);
+        ProductResponse product2 = productService.addProduct(productRequest2);
 
         cartService.addCart(new CartProductRequest(product1.getId(), 1L, true), "greenlawn");
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
@@ -73,8 +73,8 @@ class CartItemServiceTest {
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
         ProductRequest productRequest2 = new ProductRequest("치킨", 20000, "http://example.com/chicken.jpg");
 
-        Product product1 = productService.addProduct(productRequest);
-        Product product2 = productService.addProduct(productRequest2);
+        ProductResponse product1 = productService.addProduct(productRequest);
+        ProductResponse product2 = productService.addProduct(productRequest2);
 
         cartService.addCart(new CartProductRequest(product1.getId(), 1L, true), "greenlawn");
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
@@ -95,8 +95,8 @@ class CartItemServiceTest {
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
         ProductRequest productRequest2 = new ProductRequest("치킨", 20000, "http://example.com/chicken.jpg");
 
-        Product product1 = productService.addProduct(productRequest);
-        Product product2 = productService.addProduct(productRequest2);
+        ProductResponse product1 = productService.addProduct(productRequest);
+        ProductResponse product2 = productService.addProduct(productRequest2);
 
         cartService.addCart(new CartProductRequest(product1.getId(), 1L, true), "greenlawn");
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
@@ -118,8 +118,8 @@ class CartItemServiceTest {
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
         ProductRequest productRequest2 = new ProductRequest("치킨", 20000, "http://example.com/chicken.jpg");
 
-        Product product1 = productService.addProduct(productRequest);
-        Product product2 = productService.addProduct(productRequest2);
+        ProductResponse product1 = productService.addProduct(productRequest);
+        ProductResponse product2 = productService.addProduct(productRequest2);
 
         cartService.addCart(new CartProductRequest(product1.getId(), 1L, true), "greenlawn");
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");

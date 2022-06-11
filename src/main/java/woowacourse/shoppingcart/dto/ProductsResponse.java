@@ -14,6 +14,10 @@ public class ProductsResponse {
         this.products = new ArrayList<>(products);
     }
 
+    public static ProductsResponse from(List<Product> products) {
+        return new ProductsResponse(products);
+    }
+
     public List<Product> getProducts() {
         return Collections.unmodifiableList(products);
     }

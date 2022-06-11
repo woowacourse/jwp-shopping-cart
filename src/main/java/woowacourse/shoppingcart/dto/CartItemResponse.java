@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Product;
+
 public class CartItemResponse {
 
     private Long id;
@@ -13,7 +16,7 @@ public class CartItemResponse {
     private CartItemResponse() {
     }
 
-    public CartItemResponse(Long id, Long productId, String name, int price, String imageUrl, Long quantity, boolean checked) {
+    private CartItemResponse(Long id, Long productId, String name, int price, String imageUrl, Long quantity, boolean checked) {
         this.id = id;
         this.productId = productId;
         this.name = name;
@@ -21,6 +24,12 @@ public class CartItemResponse {
         this.imageUrl = imageUrl;
         this.quantity = quantity;
         this.checked = checked;
+    }
+
+    public static CartItemResponse from(CartItem cartItem) {
+        return new CartItemResponse(cartItem.getId(), cartItem.getProduct().getId(),
+                cartItem.getProduct().getName(), cartItem.getProduct().getPrice(), cartItem.getProduct().getImageUrl(),
+                cartItem.getQuantity(), cartItem.isChecked());
     }
 
     public Long getId() {

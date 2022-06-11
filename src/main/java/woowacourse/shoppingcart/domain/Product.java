@@ -9,9 +9,6 @@ public class Product {
     private Integer price;
     private String imageUrl;
 
-    private Product() {
-    }
-
     public Product(final Long id, final String name, final int price, final String imageUrl) {
         validateBlank(name, price, imageUrl);
         this.id = id;

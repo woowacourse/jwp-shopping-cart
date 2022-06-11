@@ -8,10 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartProductRequest;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,9 +31,9 @@ class OrderServiceTest {
         ProductRequest productRequest2 = new ProductRequest("치킨", 20000, "http://example.com/chicken.jpg");
         ProductRequest productRequest3 = new ProductRequest("국수", 20000, "http://example.com/noodle.jpg");
 
-        Product product1 = productService.addProduct(productRequest);
-        Product product2 = productService.addProduct(productRequest2);
-        Product product3 = productService.addProduct(productRequest3);
+        ProductResponse product1 = productService.addProduct(productRequest);
+        ProductResponse product2 = productService.addProduct(productRequest2);
+        ProductResponse product3 = productService.addProduct(productRequest3);
 
         cartService.addCart(new CartProductRequest(product1.getId(), 1L, true), "greenlawn");
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");

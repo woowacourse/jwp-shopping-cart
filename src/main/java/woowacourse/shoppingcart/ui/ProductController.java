@@ -5,7 +5,7 @@ import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.dto.ProductsResponse;
 import woowacourse.shoppingcart.dto.ProductRequest;
 
@@ -23,8 +23,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductRequest productRequest) {
-        Product product = productService.addProduct(productRequest);
-        return ResponseEntity.created(URI.create("/products/" + product.getId())).build();
+        ProductResponse productResponse = productService.addProduct(productRequest);
+        return ResponseEntity.created(URI.create("/products/" + productResponse.getId())).build();
     }
 
     @GetMapping
@@ -36,8 +36,9 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> findProduct(@PathVariable final Long productId) {
-        return ResponseEntity.ok(productService.findProductById(productId));
+    public ResponseEntity<ProductResponse> findProduct(@PathVariable final Long productId) {
+        ProductResponse product = productService.findProductById(productId);
+        return ResponseEntity.ok(product);
     }
 
     @DeleteMapping("/{productId}")

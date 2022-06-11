@@ -25,7 +25,7 @@ public class CustomerService {
         validateDuplicateUsername(signUpRequest);
         validateDuplicateEmail(signUpRequest);
         Customer customer = customerDao.save(signUpRequest.toCustomer());
-        return SignUpResponse.fromCustomer(customer);
+        return SignUpResponse.from(customer);
     }
 
     private void validateDuplicateUsername(SignUpRequest signUpRequest) {
@@ -43,13 +43,12 @@ public class CustomerService {
     @Transactional(readOnly = true)
     public CustomerResponse findMe(String username) {
         Customer customer = customerDao.findByUsername(username);
-        return new CustomerResponse(customer.getUsername(), customer.getEmail());
+        return CustomerResponse.from(customer);
     }
 
     @Transactional
     public void updateMe(String username, UpdatePasswordRequest updatePasswordRequest) {
         Customer customer = customerDao.findByUsername(username);
-
         if (!customerDao.isValidPasswordByUsername(username, updatePasswordRequest.getPassword())) {
             throw new InvalidPasswordException();
         }

@@ -21,14 +21,14 @@ public class CartService {
     private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, ProductDao productDao) {
+    public CartService(CartItemDao cartItemDao, CustomerDao customerDao, ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
     }
 
     @Transactional
-    public void addCart(final CartProductRequest cartProductRequest, final String customerName) {
+    public void addCart(CartProductRequest cartProductRequest, String customerName) {
         Long customerId = customerDao.findByUsername(customerName).getId();
         Product product = productDao.findProductById(cartProductRequest.getProductId());
         if (cartItemDao.existByCustomerIdAndProductId(customerId, cartProductRequest.getProductId())) {
@@ -45,17 +45,10 @@ public class CartService {
                 .map(cartItemDao::findCartIdById)
                 .collect(Collectors.toList());
 
-        return new CartItemsResponse(mapToCartItemResponse(cartItems));
+        return CartItemsResponse.from(cartItems);
     }
 
-    private List<CartItemResponse> mapToCartItemResponse(List<CartItem> cartItems) {
-        return cartItems.stream().map(cartItem -> new CartItemResponse(cartItem.getId(), cartItem.getProduct().getId(),
-                        cartItem.getProduct().getName(), cartItem.getProduct().getPrice(), cartItem.getProduct().getImageUrl(),
-                        cartItem.getQuantity(), cartItem.isChecked()))
-                .collect(Collectors.toList());
-    }
-
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
+    private List<Long> findCartIdsByCustomerName(String customerName) {
         final Long customerId = customerDao.findByUsername(customerName).getId();
         return cartItemDao.findIdsByCustomerId(customerId);
     }
@@ -75,7 +68,7 @@ public class CartService {
                 .map(item -> cartItemDao.findCartIdById(item.getId()))
                 .collect(Collectors.toList());
 
-        return new CartItemsResponse(mapToCartItemResponse(cartItems));
+        return CartItemsResponse.from(cartItems);
     }
 
     @Transactional

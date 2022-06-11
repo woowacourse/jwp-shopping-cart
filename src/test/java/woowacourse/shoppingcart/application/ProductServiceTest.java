@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -106,7 +107,7 @@ class ProductServiceTest {
     void getProduct() {
         // given
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
-        Product product = productService.addProduct(productRequest);
+        ProductResponse product = productService.addProduct(productRequest);
 
         //when & then
         assertThat(productService.findProductById(product.getId()))
@@ -135,7 +136,7 @@ class ProductServiceTest {
     void delete() {
         //given
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
-        Product product = productService.addProduct(productRequest);
+        ProductResponse product = productService.addProduct(productRequest);
 
         //when
         productService.deleteProductById(product.getId());

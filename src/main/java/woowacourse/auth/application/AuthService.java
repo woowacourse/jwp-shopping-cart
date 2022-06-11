@@ -24,21 +24,13 @@ public class AuthService {
         Customer customer = customerDao.findByEmail(logInRequest.getEmail());
         customer.isValidPassword(logInRequest.getPassword());
 
-        return new LogInResponse(
-                customer.getUsername(),
-                customer.getEmail(),
-                jwtTokenProvider.createToken(customer.getUsername())
-        );
+        return LogInResponse.from(customer, jwtTokenProvider.createToken(customer.getUsername()));
     }
 
     @Transactional(readOnly = true)
     public LogInResponse autoSignIn(String userName) {
         Customer customer = customerDao.findByUsername(userName);
 
-        return new LogInResponse(
-                customer.getUsername(),
-                customer.getEmail(),
-                jwtTokenProvider.createToken(customer.getUsername())
-        );
+        return LogInResponse.from(customer, jwtTokenProvider.createToken(customer.getUsername()));
     }
 }

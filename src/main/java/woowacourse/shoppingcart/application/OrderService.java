@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrdersResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 import java.util.ArrayList;
@@ -32,16 +33,16 @@ public class OrderService {
     }
 
     @Transactional
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findByUsername(customerName).getId();
-        final Long ordersId = orderDao.addOrders(customerId);
+    public Long addOrder(List<OrderRequest> orderDetailRequests, String customerName) {
+        Long customerId = customerDao.findByUsername(customerName).getId();
+        Long ordersId = orderDao.addOrders(customerId);
 
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findCartIdById(orderDetail.getCartId())
+        for (OrderRequest orderDetail : orderDetailRequests) {
+            Long cartId = orderDetail.getCartId();
+            Long productId = cartItemDao.findCartIdById(orderDetail.getCartId())
                     .getProduct()
                     .getId();
-            final int quantity = orderDetail.getQuantity();
+            int quantity = orderDetail.getQuantity();
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
             cartItemDao.deleteCartItemById(cartId);
@@ -50,12 +51,12 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Orders findOrderById(final String customerName, final Long orderId) {
+    public OrdersResponse findOrderById(String customerName, Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+        return OrdersResponse.from(findOrderResponseDtoByOrderId(orderId));
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
+    private void validateOrderIdByCustomerName(String customerName, Long orderId) {
         final Long customerId = customerDao.findByUsername(customerName).getId();
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
@@ -64,20 +65,20 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findByUsername(customerName).getId();
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
+    public List<OrdersResponse> findOrdersByCustomerName(String customerName) {
+        Long customerId = customerDao.findByUsername(customerName).getId();
+        List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
-                .map(this::findOrderResponseDtoByOrderId)
+                .map(id -> OrdersResponse.from(findOrderResponseDtoByOrderId(id)))
                 .collect(Collectors.toList());
     }
 
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
-            final int quantity = productQuantity.getQuantity();
+    private Orders findOrderResponseDtoByOrderId(Long orderId) {
+        List<OrderDetail> ordersDetails = new ArrayList<>();
+        for (OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
+            Product product = productDao.findProductById(productQuantity.getProductId());
+            int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }
         return new Orders(orderId, ordersDetails);
