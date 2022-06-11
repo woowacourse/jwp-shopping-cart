@@ -58,7 +58,6 @@ public class CartItemDao {
     }
 
     public Long addCartItem(final Long customerId, final Long productId) {
-
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
