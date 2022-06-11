@@ -5,7 +5,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
 import woowacourse.auth.application.dto.TokenResponse;
-import woowacourse.auth.ui.dto.TokenRequest;
+import woowacourse.auth.ui.dto.LoginRequest;
 import woowacourse.shoppingcart.ui.dto.*;
 
 public class ResponseCreator {
@@ -23,7 +23,7 @@ public class ResponseCreator {
     }
 
     public static ExtractableResponse<Response> postLogin(String email, String password) {
-        TokenRequest request = new TokenRequest(email, password);
+        LoginRequest request = new LoginRequest(email, password);
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)

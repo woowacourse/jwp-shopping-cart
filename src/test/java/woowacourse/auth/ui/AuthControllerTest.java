@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.config.AuthenticationPrincipalConfig;
-import woowacourse.auth.ui.dto.TokenRequest;
+import woowacourse.auth.ui.dto.LoginRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -63,11 +63,11 @@ public class AuthControllerTest {
     }
 
     private ResultActions postLogin(String email, String password) throws Exception {
-        TokenRequest tokenRequest = new TokenRequest(email, password);
+        LoginRequest loginRequest = new LoginRequest(email, password);
         return mockMvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
-                        objectMapper.writeValueAsString(tokenRequest)
+                        objectMapper.writeValueAsString(loginRequest)
                 ));
     }
 }

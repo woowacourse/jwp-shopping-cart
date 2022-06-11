@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.application.dto.TokenResponse;
-import woowacourse.auth.ui.dto.TokenRequest;
+import woowacourse.auth.ui.dto.LoginRequest;
 
 import javax.validation.Valid;
 
@@ -22,8 +22,8 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseEntity<TokenResponse> login(@RequestBody @Valid final TokenRequest tokenRequest) {
-        TokenResponse accessToken = authService.createToken(tokenRequest.toServiceRequest());
+    public ResponseEntity<TokenResponse> login(@RequestBody @Valid final LoginRequest loginRequest) {
+        TokenResponse accessToken = authService.createToken(loginRequest.toServiceRequest());
         return ResponseEntity.ok(accessToken);
     }
 }
