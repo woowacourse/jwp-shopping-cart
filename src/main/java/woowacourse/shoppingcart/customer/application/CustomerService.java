@@ -27,7 +27,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public Long registerCustomer(final CustomerRegisterRequest request) {
+    public long registerCustomer(final CustomerRegisterRequest request) {
         if (customerDao.existsByEmail(request.getEmail())) {
             throw new CustomerException(CustomerExceptionCode.ALREADY_EMAIL_EXIST);
         }
@@ -36,18 +36,18 @@ public class CustomerService {
         return customerDao.save(customer);
     }
 
-    public CustomerResponse findById(final Long customerId) {
+    public CustomerResponse findById(final long customerId) {
         final Customer customer = getById(customerId);
         return new CustomerResponse(customer.getEmail(), customer.getNickname());
     }
 
-    private Customer getById(final Long customerId) {
+    private Customer getById(final long customerId) {
         return customerDao.findById(customerId)
                 .orElseThrow(() -> new AuthException(AuthExceptionCode.REQUIRED_AUTHORIZATION));
     }
 
     @Transactional
-    public CustomerUpdateResponse updateCustomerProfile(final Long customerId,
+    public CustomerUpdateResponse updateCustomerProfile(final long customerId,
                                                         final CustomerProfileUpdateRequest request) {
         final Customer customer = getById(customerId);
         customer.updateProfile(request.getNickname());
@@ -56,14 +56,14 @@ public class CustomerService {
     }
 
     @Transactional
-    public void updateCustomerPassword(final Long customerId, final CustomerPasswordUpdateRequest request) {
+    public void updateCustomerPassword(final long customerId, final CustomerPasswordUpdateRequest request) {
         final Customer customer = getById(customerId);
         customer.updatePassword(request.getPassword(), request.getNewPassword());
         customerDao.update(customer);
     }
 
     @Transactional
-    public void removeCustomer(final Long customerId, final CustomerRemoveRequest request) {
+    public void removeCustomer(final long customerId, final CustomerRemoveRequest request) {
         final Customer customer = getById(customerId);
         validatePassword(customer, request.getPassword());
         customerDao.deleteById(customerId);

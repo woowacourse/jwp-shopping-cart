@@ -30,7 +30,7 @@ public class ProductDao {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public Optional<Product> findById(final Long productId) {
+    public Optional<Product> findById(final long productId) {
         try {
             final String query = "SELECT id, name, price, image_url FROM product WHERE id = (:id)";
             final SqlParameterSource parameters = new MapSqlParameterSource("id", productId);

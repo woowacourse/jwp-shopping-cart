@@ -34,13 +34,13 @@ public class CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long addCartItem(final Cart cart) {
+    public long addCartItem(final Cart cart) {
         final SqlParameterSource parameters = new BeanPropertySqlParameterSource(cart);
         return jdbcInsert.executeAndReturnKey(parameters)
                 .longValue();
     }
 
-    public boolean existsProductByCustomer(final Long customerId, final Long productId) {
+    public boolean existsProductByCustomer(final long customerId, final long productId) {
         final String query = "SELECT EXISTS(SELECT id FROM cart_item WHERE customer_id=(:customerId) and product_id=(:productId)) as existable";
         final SqlParameterSource parameters = new MapSqlParameterSource("customerId", customerId)
                 .addValue("productId", productId);
@@ -48,13 +48,13 @@ public class CartItemDao {
                 (resultSet, rowNum) -> resultSet.getBoolean("existable")));
     }
 
-    public List<Cart> findAllByCustomerId(final Long customerId) {
+    public List<Cart> findAllByCustomerId(final long customerId) {
         final String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE customer_id = (:customerId)";
         final SqlParameterSource parameters = new MapSqlParameterSource("customerId", customerId);
         return jdbcTemplate.query(sql, parameters, ROW_MAPPER);
     }
 
-    public void deleteCartItem(final Long id) {
+    public void deleteCartItem(final long id) {
         final String sql = "DELETE FROM cart_item WHERE id = (:id)";
         final SqlParameterSource parameters = new MapSqlParameterSource("id", id);
         jdbcTemplate.update(sql, parameters);

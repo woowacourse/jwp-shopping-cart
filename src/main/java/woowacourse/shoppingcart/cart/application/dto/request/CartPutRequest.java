@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.cart.application.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 public class CartPutRequest {
 
+    @NotNull
     private Long quantity;
 
     public CartPutRequest() {

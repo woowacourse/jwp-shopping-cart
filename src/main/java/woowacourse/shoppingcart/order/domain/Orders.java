@@ -5,12 +5,14 @@ import java.util.List;
 
 public class Orders {
 
-    private final Long id;
-    private final Long customerId;
+    private static final long TEMPORARY_ID = 0;
+
+    private final long id;
+    private final long customerId;
     private final List<OrderDetail> orderDetails;
     private final LocalDateTime orderDateTime;
 
-    public Orders(final Long id, final Long customerId, final List<OrderDetail> orderDetails,
+    public Orders(final long id, final long customerId, final List<OrderDetail> orderDetails,
                   final LocalDateTime orderDateTime) {
         this.id = id;
         this.customerId = customerId;
@@ -18,15 +20,15 @@ public class Orders {
         this.orderDateTime = orderDateTime;
     }
 
-    public Orders(final Long customerId, final List<OrderDetail> orderDetails) {
-        this(null, customerId, orderDetails, LocalDateTime.now());
+    public Orders(final long customerId, final List<OrderDetail> orderDetails) {
+        this(TEMPORARY_ID, customerId, orderDetails, LocalDateTime.now());
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public Long getCustomerId() {
+    public long getCustomerId() {
         return customerId;
     }
 

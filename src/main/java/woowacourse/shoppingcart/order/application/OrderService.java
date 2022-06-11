@@ -48,19 +48,19 @@ public class OrderService {
     }
 
     @Transactional
-    public Long addOrder(final Long customerId, final OrderRequest orderRequest) {
+    public long addOrder(final long customerId, final OrderRequest orderRequest) {
         final Customer customer = customerDao.findById(customerId)
                 .orElseThrow(() -> new AuthException(AuthExceptionCode.REQUIRED_AUTHORIZATION));
-        final Long orderId = orderDao.addOrders(customer.getId(), LocalDateTime.now());
+        final long orderId = orderDao.addOrders(customer.getId(), LocalDateTime.now());
 
         final List<Cart> cartItems = cartItemDao.findAllByCustomerId(customer.getId());
 
-        for (final Long productId : orderRequest.getProductIds()) {
+        for (final long productId : orderRequest.getProductIds()) {
             final Product product = productDao.findById(productId)
                     .orElseThrow(() -> new ProductException(ProductExceptionCode.NO_SUCH_PRODUCT_EXIST));
 
             final Cart cart = cartItems.stream()
-                    .filter(it -> it.getProductId().equals(productId))
+                    .filter(it -> it.getProductId() == productId)
                     .findAny()
                     .orElseThrow(() -> new CartException(CartExceptionCode.NO_SUCH_PRODUCT_EXIST));
 
@@ -71,7 +71,7 @@ public class OrderService {
         return orderId;
     }
 
-    public OrderResponse findOrderById(final Long customerId, final Long orderId) {
+    public OrderResponse findOrderById(final long customerId, final long orderId) {
         validateOrderAccessable(customerId, orderId);
 
         final Customer customer = customerDao.findById(customerId)
@@ -88,7 +88,7 @@ public class OrderService {
                 orderDao.getOrderDateById(orderId));
     }
 
-    private void validateOrderAccessable(final Long customerId, final Long orderId) {
+    private void validateOrderAccessable(final long customerId, final long orderId) {
         if (!orderDao.existsById(orderId)) {
             throw new OrderException(OrderExceptionCode.NO_SUCH_ORDER_EXIST);
         }

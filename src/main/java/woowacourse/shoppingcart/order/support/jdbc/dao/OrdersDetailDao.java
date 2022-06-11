@@ -29,7 +29,7 @@ public class OrdersDetailDao {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public Long addOrdersDetail(final OrderDetail orderDetail) {
+    public long addOrdersDetail(final OrderDetail orderDetail) {
         final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (:orderId, :productId, :quantity)";
         final SqlParameterSource parameters = new MapSqlParameterSource("orderId", orderDetail.getOrderId())
                 .addValue("productId", orderDetail.getProductId())
@@ -40,7 +40,7 @@ public class OrdersDetailDao {
         return keyHolder.getKey().longValue();
     }
 
-    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
+    public List<OrderDetail> findOrdersDetailsByOrderId(final long orderId) {
         final String sql = "SELECT orders_Id, product_id, quantity FROM orders_detail WHERE orders_id = (:orderId)";
         final SqlParameterSource parameters = new MapSqlParameterSource("orderId", orderId);
         return jdbcTemplate.query(sql, parameters, ROW_MAPPER);

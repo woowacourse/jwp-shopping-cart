@@ -35,7 +35,7 @@ public class CustomerDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(final Customer customer) {
+    public long save(final Customer customer) {
         final SqlParameterSource parameters = new BeanPropertySqlParameterSource(customer);
         return jdbcInsert.executeAndReturnKey(parameters)
                 .longValue();

@@ -41,7 +41,7 @@ class CustomerServiceTest {
         this.customerService = new CustomerService(customerDao);
     }
 
-    private Long registerCustomer(final String email, final String nickname, final String password) {
+    private long registerCustomer(final String email, final String nickname, final String password) {
         final CustomerRegisterRequest request = new CustomerRegisterRequest(email, nickname, password);
         return customerService.registerCustomer(request);
     }
@@ -49,7 +49,7 @@ class CustomerServiceTest {
     @DisplayName("회원을 등록한다.")
     @Test
     void registerCustomer() {
-        final Long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
+        final long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
         assertThat(customerId).isPositive();
     }
 
@@ -67,7 +67,7 @@ class CustomerServiceTest {
     @DisplayName("아이디로 회원을 조회한다.")
     @Test
     void findById() {
-        final Long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
+        final long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
 
         assertThat(customerService.findById(customerId))
                 .extracting("email", "nickname")
@@ -87,7 +87,7 @@ class CustomerServiceTest {
     @ParameterizedTest
     @ValueSource(strings = {"newNick"})
     void updateCustomerProfile(final String newNickname) {
-        final Long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
+        final long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
         customerService.updateCustomerProfile(customerId, new CustomerProfileUpdateRequest(newNickname));
 
         assertThat(customerService.findById(customerId))
@@ -107,17 +107,17 @@ class CustomerServiceTest {
 
     @DisplayName("회원의 비밀번호를 수정한다.")
     @ParameterizedTest
-    @ValueSource(strings = {"new"})
+    @ValueSource(strings = {"newqwer1234!@#$"})
     void updateCustomerPassword(final String newPassword) {
-        final Long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
-        final CustomerPasswordUpdateRequest request = new CustomerPasswordUpdateRequest(PASSWORD_VALUE, PASSWORD_VALUE);
+        final long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
+        final CustomerPasswordUpdateRequest request = new CustomerPasswordUpdateRequest(PASSWORD_VALUE, newPassword);
         assertDoesNotThrow(() -> customerService.updateCustomerPassword(customerId, request));
     }
 
     @DisplayName("기존과 일치하지 않는 비밀번호로 회원의 비밀번호를 수정한다.")
     @Test
     void updateCustomerPasswordWithMisMatchedPassword() {
-        final Long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
+        final long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
         final CustomerPasswordUpdateRequest request =
                 new CustomerPasswordUpdateRequest("Wrong" + PASSWORD_VALUE, PASSWORD_VALUE);
         assertThatThrownBy(() -> customerService.updateCustomerPassword(customerId, request))
@@ -139,7 +139,7 @@ class CustomerServiceTest {
     @DisplayName("회원을 삭제한다.")
     @Test
     void removeCustomer() {
-        final Long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
+        final long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
         final CustomerRemoveRequest request = new CustomerRemoveRequest(PASSWORD_VALUE);
         assertDoesNotThrow(() -> customerService.removeCustomer(customerId, request));
     }
@@ -157,7 +157,7 @@ class CustomerServiceTest {
     @DisplayName("기존과 일치하지 않는 비밀번호로 회원을 삭제한다.")
     @Test
     void removeCustomerWithMisMatchedPassword() {
-        final Long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
+        final long customerId = registerCustomer(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
         final CustomerRemoveRequest request = new CustomerRemoveRequest("Wrong" + PASSWORD_VALUE);
         assertThatThrownBy(() -> customerService.removeCustomer(customerId, request))
                 .isInstanceOf(CustomerException.class)

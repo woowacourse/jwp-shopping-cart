@@ -29,7 +29,7 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal final Long customerId) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(customerId));
+        return ResponseEntity.ok().body(cartService.findCartByCustomerId(customerId));
     }
 
     @PutMapping("/products/{productId}")

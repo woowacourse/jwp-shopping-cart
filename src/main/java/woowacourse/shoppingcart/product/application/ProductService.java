@@ -28,7 +28,7 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public ProductResponse findProductById(final Long productId) {
+    public ProductResponse findProductById(final long productId) {
         final Product product = productDao.findById(productId)
                 .orElseThrow(() -> new ProductException(ProductExceptionCode.NO_SUCH_PRODUCT_EXIST));
         return ProductResponse.of(product);

@@ -5,12 +5,14 @@ import woowacourse.shoppingcart.customer.support.exception.CustomerExceptionCode
 
 public class Customer {
 
-    private final Long id;
+    private static final long TEMPORARY_ID = 0;
+
+    private final long id;
     private final Email email;
     private Nickname nickname;
     private Password password;
 
-    public Customer(final Long id, final Email email, final Nickname nickname, final Password password) {
+    public Customer(final long id, final Email email, final Nickname nickname, final Password password) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -18,15 +20,15 @@ public class Customer {
     }
 
     public Customer(final Email email, final Nickname nickname, final Password password) {
-        this(null, email, nickname, password);
+        this(TEMPORARY_ID, email, nickname, password);
     }
 
-    public Customer(final Long id, final String email, final String nickname, final String password) {
+    public Customer(final long id, final String email, final String nickname, final String password) {
         this(id, new Email(email), new Nickname(nickname), new Password(password));
     }
 
     public Customer(final String email, final String nickname, final String password) {
-        this(null, email, nickname, password);
+        this(TEMPORARY_ID, email, nickname, password);
     }
 
     public void updateProfile(final String nickname) {
@@ -52,7 +54,7 @@ public class Customer {
         return !password.equalsValue(otherPassword);
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

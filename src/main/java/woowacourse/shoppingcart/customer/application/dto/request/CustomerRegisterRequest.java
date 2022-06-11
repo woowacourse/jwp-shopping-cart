@@ -1,9 +1,14 @@
 package woowacourse.shoppingcart.customer.application.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 public class CustomerRegisterRequest {
 
+    @NotNull
     private String email;
+    @NotNull
     private String nickname;
+    @NotNull
     private String password;
 
     public CustomerRegisterRequest() {

@@ -35,7 +35,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<CartItemResponse> findCartsByCustomerId(final Long customerId) {
+    public List<CartItemResponse> findCartByCustomerId(final long customerId) {
         final List<Cart> cartItems = cartItemDao.findAllByCustomerId(customerId);
 
         final List<CartItemResponse> cartItemResponses = new ArrayList<>();
@@ -48,7 +48,7 @@ public class CartService {
         return cartItemResponses;
     }
 
-    public CartItemResponse addCart(final Long customerId, final Long productId, final CartPutRequest cartPutRequest) {
+    public CartItemResponse addCart(final long customerId, final long productId, final CartPutRequest cartPutRequest) {
         final Customer customer = customerDao.findById(customerId)
                 .orElseThrow(() -> new AuthException(AuthExceptionCode.REQUIRED_AUTHORIZATION));
         final Product product = productDao.findById(productId)
@@ -58,22 +58,22 @@ public class CartService {
         return CartItemResponse.of(product, cart);
     }
 
-    public boolean existsCartItem(final Long customerId, final Long productId) {
+    public boolean existsCartItem(final long customerId, final long productId) {
         return cartItemDao.existsProductByCustomer(customerId, productId);
     }
 
-    public CartItemResponse updateCart(final Long customerId, final Long productId,
+    public CartItemResponse updateCart(final long customerId, final long productId,
                                        final CartPutRequest cartPutRequest) {
         deleteCart(customerId, productId);
         return addCart(customerId, productId, cartPutRequest);
     }
 
-    public void deleteCart(final Long customerId, final CartDeleteRequest cartDeleteRequest) {
+    public void deleteCart(final long customerId, final CartDeleteRequest cartDeleteRequest) {
         cartDeleteRequest.getProductIds()
                 .forEach(productId -> deleteCart(customerId, productId));
     }
 
-    public void deleteCart(final Long customerId, final Long productId) {
+    private void deleteCart(final long customerId, final long productId) {
         cartItemDao.findAllByCustomerId(customerId)
                 .stream()
                 .filter(it -> Objects.equals(it.getProductId(), productId))

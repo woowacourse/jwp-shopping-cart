@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.customer.application.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 public class CustomerRemoveRequest {
 
+    @NotNull
     private String password;
 
     public CustomerRemoveRequest() {
