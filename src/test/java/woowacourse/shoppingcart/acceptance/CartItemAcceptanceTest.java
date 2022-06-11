@@ -95,6 +95,19 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    @DisplayName("장바구니에 물건을 담을때 수량이 1이상이 아니라면 예외를 발생시킨다.")
+    void addCartItem_CountException() {
+        //given
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, -1);
+
+        //when
+        final ExtractableResponse<Response> cartItemsResponse = post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
+
+        //then
+        assertThat(cartItemsResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     @DisplayName("장바구니에 물건을 담을때 이미 담겨있는 품목이면 예외가 발생한다.")
     void addCartItem_DuplicateProductException() {
         //given
@@ -139,6 +152,21 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
         assertThat(cartItemResponseDtos.size()).isEqualTo(1);
         assertThat(cartItemResponseDtos.get(0).getCount()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("장바구니에 담긴 물건의 수량을 변경할떄 수량이 1이상이 아니라면 예외를 발생시킨다.")
+    void updateCartItems_CountException() {
+        //given
+        final AddCartItemRequestDto addCartItemRequestDto1 = new AddCartItemRequestDto(productId1, 1);
+        post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto1);
+
+        //when
+        final UpdateCartItemCountItemRequest updateCartItemCountItemRequest = new UpdateCartItemCountItemRequest(-1);
+        final ExtractableResponse<Response> cartItemsResponse = patch("/api/customers/" + customerId + "/carts?productId=" + productId1, authorizationHeader, updateCartItemCountItemRequest);
+
+        //then
+        assertThat(cartItemsResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test

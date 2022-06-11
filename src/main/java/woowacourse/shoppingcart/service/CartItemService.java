@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.service;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
@@ -43,7 +44,7 @@ public class CartItemService {
                 ).collect(Collectors.toList());
     }
 
-    public Long addCartItem(final AddCartItemRequestDto addCartItemRequestDto, final Long customerId) {
+    public Long addCartItem(@Validated final AddCartItemRequestDto addCartItemRequestDto, final Long customerId) {
         checkDuplicateProduct(customerId, addCartItemRequestDto.getProductId());
         compareCountAndQuantity(addCartItemRequestDto.getCount(), addCartItemRequestDto.getProductId());
         try {
@@ -75,7 +76,9 @@ public class CartItemService {
         cartItemDao.deleteCartItem(customerId, productId);
     }
 
-    public void updateCartItem(final Long customerId, final Long productId, final UpdateCartItemCountItemRequest updateCartItemCountItemRequest) {
+    public void updateCartItem(final Long customerId,
+                               final Long productId,
+                               @Validated final UpdateCartItemCountItemRequest updateCartItemCountItemRequest) {
         compareCountAndQuantity(updateCartItemCountItemRequest.getCount(), productId);
         cartItemDao.updateCartItem(customerId, productId, updateCartItemCountItemRequest.getCount());
     }

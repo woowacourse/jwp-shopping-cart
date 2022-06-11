@@ -34,7 +34,7 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final AddCartItemRequestDto addCartItemRequestDto,
+    public ResponseEntity<Void> addCartItem(@Validated @RequestBody final AddCartItemRequestDto addCartItemRequestDto,
                                             @PathVariable final Long customerId,
                                             @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
@@ -56,7 +56,7 @@ public class CartItemController {
     @PatchMapping
     public ResponseEntity<Void> updateCartItem(@PathVariable final Long customerId,
                                                @RequestParam final Long productId,
-                                               @RequestBody final UpdateCartItemCountItemRequest updateCartItemCountItemRequest,
+                                               @RequestBody @Validated final UpdateCartItemCountItemRequest updateCartItemCountItemRequest,
                                                @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
