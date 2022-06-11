@@ -56,6 +56,24 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_추가됨_OK(response);
     }
 
+    @DisplayName("장바구니 아이템 추가시 id가 null일 경우 예외를 반환해야 한다.")
+    @Test
+    void addNullCartItem() {
+        CartItemRequest cartItemRequest = new CartItemRequest(null, 5);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청_토큰(cartItemRequest, accessToken);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("장바구니 아이템 추가시 quantity가 음수일 경우 예외를 반환해야 한다.")
+    @Test
+    void addMinusQuantity() {
+        CartItemRequest cartItemRequest = new CartItemRequest(productId1, -1);
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청_토큰(cartItemRequest, accessToken);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {

@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.ui;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,7 +18,6 @@ import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartItemRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
-import woowacourse.shoppingcart.dto.Request;
 
 @RestController
 @RequestMapping("/api/cartItems")
@@ -37,7 +36,7 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<CartItemResponse> addCartItem(@Validated(Request.id.class) @RequestBody final CartItemRequest cartItemRequest,
+    public ResponseEntity<CartItemResponse> addCartItem(@Valid @RequestBody final CartItemRequest cartItemRequest,
         HttpServletRequest request) {
 
         CartItemResponse cartItemResponse = cartService.addCart(cartItemRequest.getProductId(),
