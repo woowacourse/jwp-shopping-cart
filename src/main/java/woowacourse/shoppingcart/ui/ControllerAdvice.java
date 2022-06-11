@@ -29,7 +29,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException() {
-        return ResponseEntity.internalServerError().body(new ErrorResponse("Unhandled Exception"));
+        return ResponseEntity.internalServerError().body(new ErrorResponse("서버에서 에러가 발생했습니다."));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
