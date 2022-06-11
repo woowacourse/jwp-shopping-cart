@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -26,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.fixture.Fixture.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Sql(scripts = {"classpath:schema-reset.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class CartServiceTest {
 
     @Autowired
@@ -110,7 +111,7 @@ class CartServiceTest {
     void updateCart_NotFoundProductException() {
         cartItemDao.addCartItem(customerId, productId, 1);
 
-        assertThatThrownBy(() -> cartService.updateCart(customerId, 2L, new UpdateCartItemCountItemRequest(2)))
+        assertThatThrownBy(() -> cartService.updateCart(customerId, 0L, new UpdateCartItemCountItemRequest(2)))
                 .isInstanceOf(NotFoundProductException.class)
                 .hasMessage("존재하지 않는 상품 ID입니다.");
     }
