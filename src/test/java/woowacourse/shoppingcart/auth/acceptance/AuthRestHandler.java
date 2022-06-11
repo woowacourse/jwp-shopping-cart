@@ -34,7 +34,7 @@ public class AuthRestHandler extends RestHandler {
         return postRequest(BASE_URL + "/logout", accessToken);
     }
 
-    public static void assertThatException(final ExtractableResponse<Response> response,
+    public static void assertThatAuthException(final ExtractableResponse<Response> response,
                                            final AuthExceptionCode exceptionCode) {
         RestHandler.assertThatException(response, exceptionCode);
     }

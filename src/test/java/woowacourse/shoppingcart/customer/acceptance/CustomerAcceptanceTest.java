@@ -1,8 +1,13 @@
 package woowacourse.shoppingcart.customer.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.customer.acceptance.CustomerRestHandler.assertThatException;
+import static woowacourse.shoppingcart.auth.acceptance.AuthRestHandler.회원가입_로그인;
+import static woowacourse.shoppingcart.customer.acceptance.CustomerRestHandler.assertThatCustomerException;
+import static woowacourse.shoppingcart.customer.acceptance.CustomerRestHandler.개인정보변경;
+import static woowacourse.shoppingcart.customer.acceptance.CustomerRestHandler.개인정보조회;
+import static woowacourse.shoppingcart.customer.acceptance.CustomerRestHandler.비밀번호변경;
 import static woowacourse.shoppingcart.customer.acceptance.CustomerRestHandler.회원가입;
+import static woowacourse.shoppingcart.customer.acceptance.CustomerRestHandler.회원탈퇴;
 import static woowacourse.support.TextFixture.EMAIL_VALUE;
 import static woowacourse.support.TextFixture.NICKNAME_VALUE;
 import static woowacourse.support.TextFixture.PASSWORD_VALUE;
@@ -18,7 +23,6 @@ import org.springframework.http.HttpStatus;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.shoppingcart.auth.acceptance.AuthRestHandler;
 import woowacourse.shoppingcart.auth.application.dto.response.TokenResponse;
 import woowacourse.shoppingcart.customer.application.dto.request.CustomerPasswordUpdateRequest;
 import woowacourse.shoppingcart.customer.application.dto.request.CustomerProfileUpdateRequest;
@@ -52,7 +56,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
             final ExtractableResponse<Response> registerResponse = 회원가입(email, NICKNAME_VALUE, PASSWORD_VALUE);
 
             assertThat(registerResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-            assertThatException(registerResponse, CustomerExceptionCode.INVALID_FORMAT_EMAIL);
+            assertThatCustomerException(registerResponse, CustomerExceptionCode.INVALID_FORMAT_EMAIL);
         }
 
         @DisplayName("잘못된 닉네임 형식으로 회원을 등록한다")
@@ -65,7 +69,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
             final ExtractableResponse<Response> registerResponse = 회원가입(EMAIL_VALUE, nickname, PASSWORD_VALUE);
 
             assertThat(registerResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-            assertThatException(registerResponse, CustomerExceptionCode.INVALID_FORMAT_NICKNAME);
+            assertThatCustomerException(registerResponse, CustomerExceptionCode.INVALID_FORMAT_NICKNAME);
         }
 
         @DisplayName("잘못된 비밀번호 형식으로 회원을 등록한다")
@@ -78,7 +82,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
             final ExtractableResponse<Response> registerResponse = 회원가입(EMAIL_VALUE, NICKNAME_VALUE, password);
 
             assertThat(registerResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-            assertThatException(registerResponse, CustomerExceptionCode.INVALID_FORMAT_PASSWORD);
+            assertThatCustomerException(registerResponse, CustomerExceptionCode.INVALID_FORMAT_PASSWORD);
         }
 
         @DisplayName("동일한 이메일로 회원을 등록한다")
@@ -89,7 +93,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
             final ExtractableResponse<Response> registerResponse = 회원가입();
 
             assertThat(registerResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-            assertThatException(registerResponse, CustomerExceptionCode.ALREADY_EMAIL_EXIST);
+            assertThatCustomerException(registerResponse, CustomerExceptionCode.ALREADY_EMAIL_EXIST);
         }
     }
 
@@ -101,14 +105,14 @@ class CustomerAcceptanceTest extends AcceptanceTest {
 
         @BeforeEach
         void setUp() {
-            final TokenResponse tokenResponse = extractResponse(AuthRestHandler.회원가입_로그인(), TokenResponse.class);
+            final TokenResponse tokenResponse = extractResponse(회원가입_로그인(), TokenResponse.class);
             this.accessToken = tokenResponse.getAccessToken();
         }
 
         @DisplayName("회원의 개인정보를 조회한다.")
         @Test
         void findCustomer() {
-            final ExtractableResponse<Response> profileResponse = CustomerRestHandler.개인정보조회(accessToken);
+            final ExtractableResponse<Response> profileResponse = 개인정보조회(accessToken);
 
             assertThat(profileResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
             assertThat(extractResponse(profileResponse, CustomerResponse.class))
@@ -120,7 +124,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         @ParameterizedTest
         @ValueSource(strings = {"newNick"})
         void updateProfile(final String newNickname) {
-            final ExtractableResponse<Response> profileUpdateResponse = CustomerRestHandler.개인정보변경(
+            final ExtractableResponse<Response> profileUpdateResponse = 개인정보변경(
                     new CustomerProfileUpdateRequest(newNickname), accessToken);
 
             assertThat(profileUpdateResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -132,7 +136,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         @ParameterizedTest
         @ValueSource(strings = {"newNick"})
         void updateProfileWithInvalidFormat(final String newNickname) {
-            final ExtractableResponse<Response> profileUpdateResponse = CustomerRestHandler.개인정보변경(
+            final ExtractableResponse<Response> profileUpdateResponse = 개인정보변경(
                     new CustomerProfileUpdateRequest(newNickname), accessToken);
 
             assertThat(profileUpdateResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -144,7 +148,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         @ParameterizedTest
         @ValueSource(strings = {"newqwer1234!@#$"})
         void updatePassword(final String newPassword) {
-            final ExtractableResponse<Response> patchResponse = CustomerRestHandler.비밀번호변경(
+            final ExtractableResponse<Response> patchResponse = 비밀번호변경(
                     new CustomerPasswordUpdateRequest(PASSWORD_VALUE, newPassword), accessToken);
 
             assertThat(patchResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
@@ -153,17 +157,17 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         @DisplayName("기존과 일치하지 않는 비밀번호로는 회원의 비밀번호를 변경할 수 없다.")
         @Test
         void updatePasswordWithInvalidFormat() {
-            final ExtractableResponse<Response> patchResponse = CustomerRestHandler.비밀번호변경(
+            final ExtractableResponse<Response> patchResponse = 비밀번호변경(
                     new CustomerPasswordUpdateRequest("wrong" + PASSWORD_VALUE, PASSWORD_VALUE), accessToken);
 
             assertThat(patchResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-            assertThatException(patchResponse, CustomerExceptionCode.MISMATCH_PASSWORD);
-         }
+            assertThatCustomerException(patchResponse, CustomerExceptionCode.MISMATCH_PASSWORD);
+        }
 
         @DisplayName("회원을 탈퇴한다.")
         @Test
         void removeCustomer() {
-            final ExtractableResponse<Response> deleteResponse = CustomerRestHandler.회원탈퇴(
+            final ExtractableResponse<Response> deleteResponse = 회원탈퇴(
                     new CustomerRemoveRequest(PASSWORD_VALUE), accessToken);
 
             assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
@@ -172,11 +176,11 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         @DisplayName("기존과 일치하지 않는 비밀번호로 회원을 탈퇴한다.")
         @Test
         void removeCustomerWithWrongPassword() {
-            final ExtractableResponse<Response> deleteResponse = CustomerRestHandler.회원탈퇴(
+            final ExtractableResponse<Response> deleteResponse = 회원탈퇴(
                     new CustomerRemoveRequest("another" + PASSWORD_VALUE), accessToken);
 
             assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-            assertThatException(deleteResponse, CustomerExceptionCode.MISMATCH_PASSWORD);
+            assertThatCustomerException(deleteResponse, CustomerExceptionCode.MISMATCH_PASSWORD);
         }
     }
 }

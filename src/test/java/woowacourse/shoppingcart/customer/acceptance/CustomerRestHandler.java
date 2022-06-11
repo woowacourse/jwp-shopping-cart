@@ -44,8 +44,8 @@ public class CustomerRestHandler extends RestHandler {
         return deleteRequest(BASE_URL, request, accessToken);
     }
 
-    public static <T> void assertThatException(final ExtractableResponse<Response> response,
-                                               final CustomerExceptionCode exceptionCode) {
+    public static <T> void assertThatCustomerException(final ExtractableResponse<Response> response,
+                                                       final CustomerExceptionCode exceptionCode) {
         RestHandler.assertThatException(response, exceptionCode);
     }
 }
