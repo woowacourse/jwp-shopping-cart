@@ -7,6 +7,7 @@ public class Password {
     private static final String KOREAN_REGEX = ".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*";
     private static final String BLANK = " ";
     private static final int LOWER_BOUND_LENGTH = 6;
+
     private final String password;
 
     public Password(String password) {
