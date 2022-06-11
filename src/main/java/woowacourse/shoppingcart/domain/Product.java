@@ -30,8 +30,9 @@ public class Product {
     }
 
     public void addStock(int stock) {
-        if (this.stock + stock < 0) {
-            throw new IllegalArgumentException("현재 수량보다 더 많이 꺼낼 수 없습니다.");
+        if (stock < 0) {
+            removeStock(-stock);
+            return;
         }
         this.stock += stock;
     }
