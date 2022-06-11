@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.cart.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.shoppingcart.auth.acceptance.AuthRestHandler.회원가입_로그인;
+import static woowacourse.shoppingcart.cart.acceptance.CartRestHandler.assertThatCartException;
 import static woowacourse.shoppingcart.cart.acceptance.CartRestHandler.장바구니담기;
 import static woowacourse.shoppingcart.cart.acceptance.CartRestHandler.장바구니삭제;
 import static woowacourse.shoppingcart.cart.acceptance.CartRestHandler.장바구니조회;
@@ -24,6 +25,7 @@ import woowacourse.shoppingcart.auth.application.dto.response.TokenResponse;
 import woowacourse.shoppingcart.cart.application.dto.request.CartDeleteRequest;
 import woowacourse.shoppingcart.cart.application.dto.request.CartPutRequest;
 import woowacourse.shoppingcart.cart.application.dto.response.CartItemResponse;
+import woowacourse.shoppingcart.cart.support.exception.CartExceptionCode;
 import woowacourse.shoppingcart.product.support.exception.ProductExceptionCode;
 import woowacourse.support.acceptance.AcceptanceTest;
 
@@ -52,6 +54,16 @@ class CartAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("잘못된 형식의 수량으로 상품을 추가한다")
+    @ParameterizedTest
+    @CsvSource(value = {"1,-1", "2,0"})
+    void addCartItemWithInvalidQuantity(final long productId, final long quantity) {
+        final ExtractableResponse<Response> response = 장바구니담기(productId, new CartPutRequest(quantity), accessToken);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThatCartException(response, CartExceptionCode.INVALID_FORMAT_QUANTITY);
+    }
+
     @DisplayName("장바구니에 담긴 상품의 수량을 변경한다")
     @ParameterizedTest
     @CsvSource(value = {"1,1", "2,2"})
@@ -65,6 +77,17 @@ class CartAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(cartItemResponse.getProductId()).isEqualTo(productId),
                 () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(quantity)
         );
+    }
+
+    @DisplayName("잘못된 형식의 수량으로 상품을 추가한다")
+    @ParameterizedTest
+    @CsvSource(value = {"1,-1", "2,0"})
+    void updateQuantityOfCartItemWithInvalidQuantity(final long productId, final long quantity) {
+        장바구니담기(productId, new CartPutRequest(quantity), accessToken);
+        final ExtractableResponse<Response> response = 장바구니담기(productId, new CartPutRequest(quantity), accessToken);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThatCartException(response, CartExceptionCode.INVALID_FORMAT_QUANTITY);
     }
 
     @DisplayName("존재하지 않는 상품을 장바구니에 추가한다")
