@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.dto.cart.CartAdditionRequest;
@@ -17,13 +17,13 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class CartServiceTest {
 
     public static final Email EMAIL = new Email("email@email.com");
 
     private final CartService cartService;
 
-    @Autowired
     public CartServiceTest(CartService cartService) {
         this.cartService = cartService;
     }

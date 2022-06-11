@@ -5,20 +5,20 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.product.PageRequest;
 
 @SpringBootTest
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class ProductServiceTest {
 
     private final ProductService productService;
 
-    @Autowired
     public ProductServiceTest(ProductService productService) {
         this.productService = productService;
     }
