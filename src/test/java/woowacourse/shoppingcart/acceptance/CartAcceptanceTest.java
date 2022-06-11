@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.SignInResponseDto;
 import woowacourse.shoppingcart.dto.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.CartItemResponseDto;
@@ -123,5 +124,32 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 = cartItemsResponse.body().jsonPath().getList(".", CartItemResponseDto.class);
 
         assertThat(cartItemResponseDtos.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("본인이 아닌 id로 장바구니 물건 삭제를 요청한다.")
+    void deleteCartItem_forbidden() {
+        // given
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
+
+        post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
+
+        final String test2Email = "test@test.co.kr";
+        final String test2Password = TEST_PASSWORD + "2";
+        final String test2Username = TEST_USERNAME + "2";
+        final SignUpDto signUpDto = new SignUpDto(test2Email, test2Password, test2Username);
+        createCustomer(signUpDto);
+        final ExtractableResponse<Response> loginResponse = loginCustomer(test2Email, test2Password);
+        final SignInResponseDto signInResponseDto = loginResponse.body().as(SignInResponseDto.class);
+        final String accessToken2 = signInResponseDto.getAccessToken();
+
+        // when
+        final ExtractableResponse<Response> response = delete(
+                "/api/customers/" + customerId + "/carts?productId=" + productId1,
+                new Header(HttpHeaders.AUTHORIZATION, BEARER + accessToken2)
+        );
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 }
