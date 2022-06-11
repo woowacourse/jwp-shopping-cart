@@ -70,7 +70,7 @@ public class ProductDao {
 
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
-       findProductById(productId).orElseThrow(NotFoundProductException::new);
+        findProductById(productId).orElseThrow(NotFoundProductException::new);
         jdbcTemplate.update(query, productId);
     }
 

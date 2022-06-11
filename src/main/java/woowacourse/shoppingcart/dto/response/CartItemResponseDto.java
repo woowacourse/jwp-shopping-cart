@@ -24,7 +24,7 @@ public class CartItemResponseDto {
         this.count = count;
     }
 
-    public CartItemResponseDto(CartItem cartItem){
+    public CartItemResponseDto(CartItem cartItem) {
         this.productId = cartItem.getProductId();
         this.thumbnailUrl = cartItem.getImageUrl();
         this.name = cartItem.getName();

@@ -13,8 +13,8 @@ import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static woowacourse.fixture.Fixture.PRODUCT_NAME;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

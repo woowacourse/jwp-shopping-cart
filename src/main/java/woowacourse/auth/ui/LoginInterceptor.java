@@ -14,11 +14,10 @@ import java.util.Objects;
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
 
-    private final JwtTokenProvider jwtTokenProvider;
-
     public static final List<RequestEndPoint> excludedEndPoint = List.of(
             new RequestEndPoint("POST", "/api/customers")
     );
+    private final JwtTokenProvider jwtTokenProvider;
 
     public LoginInterceptor(final JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
@@ -37,7 +36,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         final String token = AuthorizationExtractor.extract(request);
 
-        if(!jwtTokenProvider.validateToken(token)){
+        if (!jwtTokenProvider.validateToken(token)) {
             throw new JwtException("유효하지 않은 토큰입니다.");
         }
 

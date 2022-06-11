@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.LoginCustomer;
-import woowacourse.shoppingcart.dto.Request;
 import woowacourse.shoppingcart.dto.request.AddCartItemRequestDto;
 import woowacourse.shoppingcart.dto.request.UpdateCartItemCountItemRequest;
 import woowacourse.shoppingcart.dto.response.CartItemResponseDto;
