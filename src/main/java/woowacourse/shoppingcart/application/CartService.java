@@ -24,6 +24,7 @@ public class CartService {
         this.customerDao = customerDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartResponse> findCartsByCustomerName(final String customerName) {
         Carts carts = findCartIdsByCustomerName(customerName);
 

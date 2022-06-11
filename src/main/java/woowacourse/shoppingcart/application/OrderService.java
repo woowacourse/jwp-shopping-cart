@@ -50,6 +50,7 @@ public class OrderService {
         return ordersId;
     }
 
+    @Transactional(readOnly = true)
     public OrdersResponse findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
         Orders orders = findOrderResponseDtoByOrderId(orderId);
@@ -64,6 +65,7 @@ public class OrderService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<OrdersResponse> findOrdersByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);

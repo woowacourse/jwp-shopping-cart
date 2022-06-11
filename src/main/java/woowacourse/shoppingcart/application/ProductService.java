@@ -70,6 +70,7 @@ public class ProductService {
         return productDao.save(productRequest.toEntity());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         return new ProductResponse(productDao.findProductById(productId));
     }
