@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import woowacourse.shoppingcart.auth.acceptance.AuthRestHandler;
 import woowacourse.shoppingcart.auth.application.dto.response.TokenResponse;
 import woowacourse.shoppingcart.customer.application.dto.request.CustomerPasswordUpdateRequest;
 import woowacourse.shoppingcart.customer.application.dto.request.CustomerProfileUpdateRequest;
@@ -100,7 +101,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
 
         @BeforeEach
         void setUp() {
-            final TokenResponse tokenResponse = extractResponse(CustomerRestHandler.회원가입_로그인(), TokenResponse.class);
+            final TokenResponse tokenResponse = extractResponse(AuthRestHandler.회원가입_로그인(), TokenResponse.class);
             this.accessToken = tokenResponse.getAccessToken();
         }
 

@@ -29,7 +29,6 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@AuthenticationPrincipal final Long id) {
-        // 로그아웃 기능 - 협의 중
         return ResponseEntity.noContent().build();
     }
 }

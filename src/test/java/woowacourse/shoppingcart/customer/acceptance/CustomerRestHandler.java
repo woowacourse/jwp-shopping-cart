@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.customer.acceptance;
 
-import static woowacourse.shoppingcart.auth.acceptance.AuthRestHandler.로그인;
 import static woowacourse.support.TextFixture.EMAIL_VALUE;
 import static woowacourse.support.TextFixture.NICKNAME_VALUE;
 import static woowacourse.support.TextFixture.PASSWORD_VALUE;
@@ -25,16 +24,6 @@ public class CustomerRestHandler extends RestHandler {
 
     public static ExtractableResponse<Response> 회원가입(final String email, final String nickname, final String password) {
         return postRequest(BASE_URL, new CustomerRegisterRequest(email, nickname, password));
-    }
-
-    public static ExtractableResponse<Response> 회원가입_로그인() {
-        return 회원가입_로그인(EMAIL_VALUE, NICKNAME_VALUE, PASSWORD_VALUE);
-    }
-
-    public static ExtractableResponse<Response> 회원가입_로그인(final String email, final String nickname,
-                                                         final String password) {
-        회원가입(email, nickname, password);
-        return 로그인(email, password);
     }
 
     public static ExtractableResponse<Response> 개인정보조회(final String accessToken) {
