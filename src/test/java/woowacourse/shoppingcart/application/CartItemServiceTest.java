@@ -68,21 +68,25 @@ class CartItemServiceTest {
     void deleteAllCarts() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("greenlawn", "green@woowa.com", "123456q!");
+        SignUpRequest signUpRequest2 = new SignUpRequest("blue", "blue@woowa.com", "123456q!");
         customerService.addCustomer(signUpRequest);
+        customerService.addCustomer(signUpRequest2);
 
         ProductRequest productRequest = new ProductRequest("피자", 20000, "http://example.com/chicken.jpg");
         ProductRequest productRequest2 = new ProductRequest("치킨", 20000, "http://example.com/chicken.jpg");
-
         ProductResponse product1 = productService.addProduct(productRequest);
         ProductResponse product2 = productService.addProduct(productRequest2);
 
         cartService.addCart(new CartProductRequest(product1.getId(), 1L, true), "greenlawn");
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
+        cartService.addCart(new CartProductRequest(product1.getId(), 1L, true), "blue");
+
         //when
-        cartService.deleteAll();
+        cartService.deleteAll("greenlawn");
 
         //then
         assertThat(cartService.getCart("greenlawn").getCartItems().size()).isEqualTo(0);
+        assertThat(cartService.getCart("blue").getCartItems().size()).isEqualTo(1);
     }
 
     @Test

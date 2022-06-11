@@ -69,7 +69,7 @@ public class CartItemItemDaoTest {
         final Long cartItemId2 = cartItemDao.addCartItem(1L, product2.getId(), 1L, true);
 
         //when
-        cartItemDao.deleteAll();
+        cartItemDao.deleteAll(1L);
 
         //then
         assertThatThrownBy(() -> cartItemDao.findCartIdById(cartItemId2))

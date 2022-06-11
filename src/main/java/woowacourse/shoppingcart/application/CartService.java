@@ -49,7 +49,7 @@ public class CartService {
     }
 
     private List<Long> findCartIdsByCustomerName(String customerName) {
-        final Long customerId = customerDao.findByUsername(customerName).getId();
+        Long customerId = customerDao.findByUsername(customerName).getId();
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
@@ -79,7 +79,8 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteAll() {
-        cartItemDao.deleteAll();
+    public void deleteAll(String customerName) {
+        final Long customerId = customerDao.findByUsername(customerName).getId();
+        cartItemDao.deleteAll(customerId);
     }
 }

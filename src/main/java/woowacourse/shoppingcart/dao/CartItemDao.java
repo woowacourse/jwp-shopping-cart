@@ -38,7 +38,7 @@ public class CartItemDao {
             rs.getBoolean("checked")
     );
 
-    public Long addCartItem(final Long customerId, final Long productId, final Long quantity, final boolean checked) {
+    public Long addCartItem(Long customerId, Long productId, Long quantity, boolean checked) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("customer_id", customerId)
                 .addValue("product_id", productId)
@@ -57,7 +57,7 @@ public class CartItemDao {
         }
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
+    public List<Long> findIdsByCustomerId(Long customerId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
@@ -76,7 +76,7 @@ public class CartItemDao {
         }
     }
 
-    public CartItem findCartIdById(final Long cartId) {
+    public CartItem findCartIdById(Long cartId) {
         try {
             final String query = "SELECT cart_item.id, product.id, product.name, product.price, product.image_url, cart_item.quantity, cart_item.checked " +
                     "FROM cart_item INNER JOIN product ON product.id = cart_item.product_id " +
@@ -92,13 +92,13 @@ public class CartItemDao {
         jdbcTemplate.update(sql, quantity, checked, id);
     }
 
-    public void deleteCartItemById(final Long id) {
+    public void deleteCartItemById(Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    public void deleteAll() {
-        final String sql = "DELETE FROM cart_item";
-        jdbcTemplate.update(sql);
+    public void deleteAll(Long id) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

@@ -33,7 +33,7 @@ public class CartItemController {
 
     @DeleteMapping("/all")
     public ResponseEntity<Void> deleteAll(@AuthenticationPrincipal String userNameByToken) {
-        cartService.deleteAll();
+        cartService.deleteAll(userNameByToken);
         return ResponseEntity.noContent().build();
     }
 
