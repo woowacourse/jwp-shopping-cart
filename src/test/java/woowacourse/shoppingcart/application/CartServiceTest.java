@@ -1,12 +1,14 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static woowacourse.utils.Fixture.email;
 import static woowacourse.utils.Fixture.치킨;
 
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,7 @@ import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.dto.cart.CartProduct;
 import woowacourse.shoppingcart.dto.cart.CartSetRequest;
 import woowacourse.shoppingcart.dto.cart.CartSetResponse;
 
@@ -61,8 +64,8 @@ class CartServiceTest {
     }
 
     @Test
-    @DisplayName("장바구니에 물건이 있으면 수정한다.")
-    void set_cart_exist() {
+    @DisplayName("장바구니에 물건이 있으면 수량을 수정한다.")
+    void update_cart_exist() {
         // given
         Cart cart = new Cart(1L, 1L, 1000);
         given(customerDao.findIdByEmail(email))
@@ -84,5 +87,28 @@ class CartServiceTest {
                 () -> assertThat(updated.getImage()).isEqualTo(치킨.getImage()),
                 () -> assertThat(updated.getQuantity()).isEqualTo(2000)
         );
+    }
+
+    @Test
+    @DisplayName("이메일로 장바구니를 조회한다.")
+    void delete_cart() {
+        // given
+        Cart cart = new Cart(1L, 1L, 1000);
+        given(customerDao.findIdByEmail(email))
+                .willReturn(1L);
+        given(cartDao.findByCustomerId(any(Long.class)))
+                .willReturn(List.of(cart));
+        given(productDao.findProductById(any(Long.class)))
+                .willReturn(Optional.of(치킨));
+
+        // when
+        List<CartProduct> findResult = cartService.findCartsByCustomerEmail(email);
+
+        // then
+        assertThat(findResult).hasSize(1)
+                .extracting("productId", "image", "name", "price", "quantity")
+                .containsExactly(
+                        tuple(치킨.getId(), 치킨.getImage(), 치킨.getName(), 치킨.getPrice(), cart.getQuantity())
+                );
     }
 }
