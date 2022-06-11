@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.order.application.dto.request;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderRequest {
@@ -9,8 +10,12 @@ public class OrderRequest {
     public OrderRequest() {
     }
 
-    public OrderRequest(List<Long> productIds) {
+    public OrderRequest(final List<Long> productIds) {
         this.productIds = productIds;
+    }
+
+    public OrderRequest(final Long... productIds) {
+        this(new ArrayList<>(List.of(productIds)));
     }
 
     public List<Long> getProductIds() {

@@ -8,8 +8,6 @@ public class OrderResponse {
     private Long id;
     private List<OrderDetailResponse> orderDetails;
     private Long totalPrice;
-
-//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime orderDate;
 
     public OrderResponse() {
