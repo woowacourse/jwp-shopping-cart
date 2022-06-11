@@ -12,7 +12,7 @@ public class Member implements woowacourse.shoppingcart.domain.User.User {
 
     @Override
     public boolean isLogin() {
-        return false;
+        return true;
     }
 
     @Override

@@ -40,7 +40,7 @@ public class ProductService {
     }
 
     private Long getCartIdByUserAndProduct(User user, Product product) {
-        if (user.isLogin()) {
+        if (!user.isLogin()) {
             return null;
         }
 
@@ -51,7 +51,7 @@ public class ProductService {
     }
 
     private int getQuantityByUserAndProduct(User user, Product product) {
-        if (user.isLogin()) {
+        if (!user.isLogin()) {
             return 0;
         }
 
