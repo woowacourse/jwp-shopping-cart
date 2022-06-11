@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.dto.cartitem;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

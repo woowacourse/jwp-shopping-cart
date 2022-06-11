@@ -60,7 +60,8 @@ public class CustomerServiceTest {
         Customer customer = customerService.findById(1L);
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism",
+                "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
 
         assertThat(customer).usingRecursiveComparison()
                 .isEqualTo(expected);
@@ -73,7 +74,8 @@ public class CustomerServiceTest {
         Customer customer = customerService.findByEmail("puterism@naver.com");
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism",
+                "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
 
         assertThat(customer).usingRecursiveComparison()
                 .isEqualTo(expected);
@@ -83,10 +85,12 @@ public class CustomerServiceTest {
     @Test
     void findByEmailAndPassword() {
         // when
-        Customer customer = customerService.findByEmailAndPassword("puterism@naver.com", "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
+        Customer customer = customerService.findByEmailAndPassword("puterism@naver.com",
+                "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism",
+                "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
 
         assertThat(customer).usingRecursiveComparison()
                 .isEqualTo(expected);
