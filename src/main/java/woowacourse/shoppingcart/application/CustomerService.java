@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.domain.Customer;
@@ -36,6 +37,7 @@ public class CustomerService {
         return CustomerLoginResponse.of(customer, token);
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse findById(final TokenRequest request) {
         Customer customer = customerRepository.findById(request.getCustomerId());
         return CustomerResponse.of(customer);

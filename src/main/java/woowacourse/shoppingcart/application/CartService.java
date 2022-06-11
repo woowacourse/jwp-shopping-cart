@@ -24,6 +24,7 @@ public class CartService {
         this.cartItemRepository = cartItemRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<CartResponse> findCartsByCustomerId(final Long customerId) {
         cartItemRepository.validateCustomerId(customerId);
         return cartItemRepository.findCartsByCustomerId(customerId)

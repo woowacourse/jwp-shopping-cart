@@ -17,6 +17,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findProductsOfPage(final int pageNumber, final int limit) {
         validateLimit(limit);
         return productDao.findByPage(pageNumber, limit).stream()
@@ -24,6 +25,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         return ProductResponse.of(productDao.findById(productId));
     }
