@@ -87,7 +87,7 @@ class CartItemControllerTest extends ControllerTest {
 
         //given
         doNothing().when(authService).checkAuthorization(any(), any());
-        when(cartItemService.addCart(any(), any())).thenReturn(1L);
+        when(cartItemService.addCartItem(any(), any())).thenReturn(1L);
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
 
         //when
@@ -110,8 +110,8 @@ class CartItemControllerTest extends ControllerTest {
 
         //given
         doNothing().when(authService).checkAuthorization(any(), any());
-        doNothing().when(cartItemService).deleteCart(any(), any());
-        when(cartItemService.addCart(any(), any())).thenReturn(1L);
+        doNothing().when(cartItemService).deleteCartItem(any(), any());
+        when(cartItemService.addCartItem(any(), any())).thenReturn(1L);
 
         //when
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
@@ -141,7 +141,7 @@ class CartItemControllerTest extends ControllerTest {
     void updateCartItem() throws Exception {
         //given
         doNothing().when(authService).checkAuthorization(any(), any());
-        when(cartItemService.addCart(any(), any())).thenReturn(1L);
+        when(cartItemService.addCartItem(any(), any())).thenReturn(1L);
 
         //when
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);

@@ -39,7 +39,7 @@ public class CartItemController {
                                             @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
-        cartItemService.addCart(addCartItemRequestDto, customerId);
+        cartItemService.addCartItem(addCartItemRequestDto, customerId);
         return ResponseEntity.noContent().build();
     }
 
@@ -49,7 +49,7 @@ public class CartItemController {
                                                @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
-        cartItemService.deleteCart(customerId, productId);
+        cartItemService.deleteCartItem(customerId, productId);
         return ResponseEntity.noContent().build();
     }
 
@@ -60,7 +60,7 @@ public class CartItemController {
                                                @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
-        cartItemService.updateCart(customerId, productId, updateCartItemCountItemRequest);
+        cartItemService.updateCartItem(customerId, productId, updateCartItemCountItemRequest);
         return ResponseEntity.ok().build();
     }
 }

@@ -53,7 +53,7 @@ class CartItemServiceTest {
 
         //given
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
-        cartItemService.addCart(addCartItemRequestDto, customerId);
+        cartItemService.addCartItem(addCartItemRequestDto, customerId);
 
         //when
         final List<CartItemResponseDto> cartItems = cartItemService.findCartItemsByCustomerId(customerId);
@@ -68,10 +68,10 @@ class CartItemServiceTest {
     void addCart_DuplicateProductException() {
         //given
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 1);
-        cartItemService.addCart(addCartItemRequestDto, customerId);
+        cartItemService.addCartItem(addCartItemRequestDto, customerId);
 
         //then
-        assertThatThrownBy(() -> cartItemService.addCart(addCartItemRequestDto, customerId))
+        assertThatThrownBy(() -> cartItemService.addCartItem(addCartItemRequestDto, customerId))
                 .isInstanceOf(DuplicateCartItemException.class)
                 .hasMessage("이미 담겨있는 상품입니다.");
     }
@@ -84,7 +84,7 @@ class CartItemServiceTest {
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId, 11);
 
         //then
-        assertThatThrownBy(() -> cartItemService.addCart(addCartItemRequestDto, customerId))
+        assertThatThrownBy(() -> cartItemService.addCartItem(addCartItemRequestDto, customerId))
                 .isInstanceOf(OverQuantityException.class)
                 .hasMessage("재고가 부족합니다.");
     }
@@ -98,7 +98,7 @@ class CartItemServiceTest {
         cartItemDao.addCartItem(customerId, productId, 1);
 
         //when
-        cartItemService.updateCart(customerId, productId, new UpdateCartItemCountItemRequest(2));
+        cartItemService.updateCartItem(customerId, productId, new UpdateCartItemCountItemRequest(2));
 
         //then
         final CartItem cartItem = cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId).get();
@@ -110,7 +110,7 @@ class CartItemServiceTest {
     void updateCart_NotFoundProductException() {
         cartItemDao.addCartItem(customerId, productId, 1);
 
-        assertThatThrownBy(() -> cartItemService.updateCart(customerId, 0L, new UpdateCartItemCountItemRequest(2)))
+        assertThatThrownBy(() -> cartItemService.updateCartItem(customerId, 0L, new UpdateCartItemCountItemRequest(2)))
                 .isInstanceOf(NotFoundProductException.class)
                 .hasMessage("존재하지 않는 상품 ID입니다.");
     }
@@ -120,7 +120,7 @@ class CartItemServiceTest {
     void updateCart_() {
         cartItemDao.addCartItem(customerId, productId, 1);
 
-        assertThatThrownBy(() -> cartItemService.updateCart(customerId, productId, new UpdateCartItemCountItemRequest(11)))
+        assertThatThrownBy(() -> cartItemService.updateCartItem(customerId, productId, new UpdateCartItemCountItemRequest(11)))
                 .isInstanceOf(OverQuantityException.class)
                 .hasMessage("재고가 부족합니다.");
     }
@@ -133,7 +133,7 @@ class CartItemServiceTest {
         cartItemDao.addCartItem(customerId, productId, 1);
 
         //when
-        cartItemService.deleteCart(customerId, productId);
+        cartItemService.deleteCartItem(customerId, productId);
 
         //then
         final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);

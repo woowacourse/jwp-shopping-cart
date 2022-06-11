@@ -43,7 +43,7 @@ public class CartItemService {
                 ).collect(Collectors.toList());
     }
 
-    public Long addCart(final AddCartItemRequestDto addCartItemRequestDto, final Long customerId) {
+    public Long addCartItem(final AddCartItemRequestDto addCartItemRequestDto, final Long customerId) {
         checkDuplicateProduct(customerId, addCartItemRequestDto.getProductId());
         compareCountAndQuantity(addCartItemRequestDto.getCount(), addCartItemRequestDto.getProductId());
         try {
@@ -56,6 +56,13 @@ public class CartItemService {
         }
     }
 
+    private void checkDuplicateProduct(final Long customerId, final Long productId) {
+        cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId)
+                .ifPresent(cartItem -> {
+                    throw new DuplicateCartItemException();
+                });
+    }
+
     private void compareCountAndQuantity(final Integer count, final Long productId) {
         Product product = productDao.findProductById(productId)
                 .orElseThrow(NotFoundProductException::new);
@@ -64,18 +71,11 @@ public class CartItemService {
         }
     }
 
-    private void checkDuplicateProduct(final Long customerId, final Long productId) {
-        cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId)
-                .ifPresent(cartItem -> {
-                    throw new DuplicateCartItemException();
-                });
-    }
-
-    public void deleteCart(final Long customerId, final Long productId) {
+    public void deleteCartItem(final Long customerId, final Long productId) {
         cartItemDao.deleteCartItem(customerId, productId);
     }
 
-    public void updateCart(final Long customerId, final Long productId, final UpdateCartItemCountItemRequest updateCartItemCountItemRequest) {
+    public void updateCartItem(final Long customerId, final Long productId, final UpdateCartItemCountItemRequest updateCartItemCountItemRequest) {
         compareCountAndQuantity(updateCartItemCountItemRequest.getCount(), productId);
         cartItemDao.updateCartItem(customerId, productId, updateCartItemCountItemRequest.getCount());
     }
