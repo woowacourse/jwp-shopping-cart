@@ -28,12 +28,16 @@ public class CustomerService {
 
     @Transactional
     public long registerCustomer(final CustomerRegisterRequest request) {
-        if (customerDao.existsByEmail(request.getEmail())) {
-            throw new CustomerException(CustomerExceptionCode.ALREADY_EMAIL_EXIST);
-        }
+        validateEmailNotDuplicated(request.getEmail());
 
         final Customer customer = new Customer(request.getEmail(), request.getNickname(), request.getPassword());
         return customerDao.save(customer);
+    }
+
+    private void validateEmailNotDuplicated(final String email) {
+        if (customerDao.existsByEmail(email)) {
+            throw new CustomerException(CustomerExceptionCode.ALREADY_EMAIL_EXIST);
+        }
     }
 
     public CustomerResponse findById(final long customerId) {
