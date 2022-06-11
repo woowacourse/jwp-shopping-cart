@@ -23,7 +23,11 @@ public class SignInRequest {
         this.password = password;
     }
 
-    public Password getPassword() {
+    public String getPassword() {
+        return password;
+    }
+
+    public Password toPassword() {
         return new Password(password);
     }
 

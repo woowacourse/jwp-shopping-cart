@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.domain;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 public class CartItems {
 
@@ -19,5 +20,15 @@ public class CartItems {
 
     public List<CartItem> getCartItems() {
         return cartItems;
+    }
+
+    public void checkValidIds(List<Long> cartItemIds) {
+        var originCartItemIds = cartItems.stream()
+                .map(CartItem::getCartItemId)
+                .collect(Collectors.toList());
+
+        if (!originCartItemIds.containsAll(cartItemIds)) {
+            throw new NotInCustomerCartItemException();
+        }
     }
 }

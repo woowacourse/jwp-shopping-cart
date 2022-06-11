@@ -35,7 +35,7 @@ public class AuthService {
     }
 
     private void validateSamePassword(SignInRequest signInRequest, Customer customer) {
-        var password = signInRequest.getPassword();
+        var password = signInRequest.toPassword();
 
         if (!customer.isSamePassword(password)) {
             throw new InvalidCustomerException(DIFFERENT_PASSWORD);

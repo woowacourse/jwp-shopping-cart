@@ -11,9 +11,7 @@ import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequests;
 import woowacourse.shoppingcart.dto.FindAllCartItemResponse;
-import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequests;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -31,33 +29,23 @@ public class CartService {
         cartItemDao.addCartItem(customerId, addCartItemRequest);
     }
 
-    public void deleteCart(final Long customerId, final DeleteCartItemRequests deleteCartItemIdsRequests) {
-        var cartItemIds = deleteCartItemIdsRequests.getCartItems().stream()
-                .map(it -> it.getId())
-                .collect(Collectors.toList());
+    public void deleteCart(final Long customerId, final DeleteCartItemRequests deleteCartItemRequests) {
+        var cartItems = deleteCartItemRequests.toCartItems();
+        var cartItemIds = cartItemDao.findIdsByCustomerId(customerId);
+        cartItems.checkValidIds(cartItemIds);
 
-        validateCustomerCart(customerId, cartItemIds);
-
-        for (Long cartItemId : cartItemIds) {
+        for (Long cartItemId : deleteCartItemRequests.getIds()) {
             cartItemDao.deleteCartItem(cartItemId);
-        }
-    }
-
-    private void validateCustomerCart(final Long customerId, final List<Long> cartItemIds) {
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-
-        if (!cartIds.containsAll(cartItemIds)) {
-            throw new NotInCustomerCartItemException();
         }
     }
 
     public FindAllCartItemResponse getAllCartItem(final Long customerId) {
         var cartItems = new CartItems(cartItemDao.findByCustomerId(customerId));
-        var products = findProducts(cartItems.getProductIds());
+        var products = getProducts(cartItems.getProductIds());
         return new FindAllCartItemResponse(cartItems, products);
     }
 
-    private Products findProducts(List<Long> productIds) {
+    private Products getProducts(List<Long> productIds) {
         var products = productIds.stream()
                 .map(productDao::findProductById)
                 .collect(Collectors.toList());
@@ -70,13 +58,11 @@ public class CartService {
     }
 
     public void update(Long customerId, UpdateCartItemRequests updateCartItemRequests) {
-        var cartIds = updateCartItemRequests.getCartItems().stream()
-                .map(UpdateCartItemRequest::getId)
-                .collect(Collectors.toList());
+        var cartItems = updateCartItemRequests.toCartItems();
+        var cartItemIds = cartItemDao.findIdsByCustomerId(customerId);
+        cartItems.checkValidIds(cartItemIds);
 
-        validateCustomerCart(customerId, cartIds);
-
-        for (UpdateCartItemRequest updateCartItemRequest : updateCartItemRequests.getCartItems()) {
+        for (var updateCartItemRequest : updateCartItemRequests.getCartItems()) {
             cartItemDao.update(customerId, updateCartItemRequest);
         }
     }

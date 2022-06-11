@@ -4,10 +4,10 @@ import java.util.Objects;
 
 public class CartItem {
     private final Long cartItemId;
-    private final Long customerId;
-    private final Long productId;
-    private final int quantity;
-    private final boolean checked;
+    private Long customerId;
+    private Long productId;
+    private int quantity;
+    private boolean checked;
 
     public CartItem(Long cartItemId, Long customerId, Long productId, int quantity, boolean checked) {
         this.cartItemId = cartItemId;
@@ -15,6 +15,10 @@ public class CartItem {
         this.productId = productId;
         this.quantity = quantity;
         this.checked = checked;
+    }
+
+    public CartItem(Long cartItemId) {
+        this.cartItemId = cartItemId;
     }
 
     public Long getCartItemId() {
