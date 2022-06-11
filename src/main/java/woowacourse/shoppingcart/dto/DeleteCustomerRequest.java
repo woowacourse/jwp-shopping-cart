@@ -1,9 +1,11 @@
 package woowacourse.shoppingcart.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import javax.validation.constraints.NotBlank;
 
 public class DeleteCustomerRequest {
 
+    @NotBlank
     private final String password;
 
     @JsonCreator
