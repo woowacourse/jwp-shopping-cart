@@ -32,13 +32,13 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<OrdersResponse> findOrder(@AuthenticationPrincipal final Customer customer,
                                                     @PathVariable final Long orderId) {
-        final OrdersResponse order = orderService.findOrderById(customer.getUserName(), orderId);
+        final OrdersResponse order = orderService.findById(customer.getUserName(), orderId);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping
     public ResponseEntity<List<OrdersResponse>> findOrders(@AuthenticationPrincipal final Customer customer) {
-        final List<OrdersResponse> orders = orderService.findOrdersByCustomerName(customer.getUserName());
+        final List<OrdersResponse> orders = orderService.findByCustomerName(customer.getUserName());
         return ResponseEntity.ok(orders);
     }
 }

@@ -75,7 +75,7 @@ class ProductControllerTest {
 
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
         given(jwtTokenProvider.getPayload(any())).willReturn("1");
-        given(productService.findProducts(any())).willReturn(responses);
+        given(productService.findAll(any())).willReturn(responses);
 
         ResultActions results = mvc.perform(get("/api/products")
                 .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
@@ -130,7 +130,7 @@ class ProductControllerTest {
     @Test
     void product() throws Exception {
         ProductResponse response = new ProductResponse(1L, "상품 이름", 50000, "www.imageUrl.com", 2L, 5000);
-        given(productService.findProductById(any())).willReturn(response);
+        given(productService.findById(any())).willReturn(response);
 
         ResultActions results = mvc.perform(get("/api/products/{productId}", 1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -153,7 +153,7 @@ class ProductControllerTest {
     @DisplayName("상품 삭제 문서화")
     @Test
     void deleteTest() throws Exception {
-        doNothing().when(productService).deleteProductById(1L);
+        doNothing().when(productService).deleteById(1L);
 
         ResultActions results = mvc.perform(delete("/api/products/{productId}", 1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

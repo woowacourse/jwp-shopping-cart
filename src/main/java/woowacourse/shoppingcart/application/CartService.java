@@ -25,15 +25,15 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartResponse> findCartsByCustomerName(final String customerName) {
-        Carts carts = findCartIdsByCustomerName(customerName);
+    public List<CartResponse> findAllByCustomerName(final String customerName) {
+        Carts carts = findByCustomerName(customerName);
 
         return carts.getElements().stream()
                 .map(CartResponse::new)
                 .collect(Collectors.toList());
     }
 
-    private Carts findCartIdsByCustomerName(final String customerName) {
+    private Carts findByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         return new Carts(cartItemDao.findAllByCustomerId(customerId));
     }
@@ -47,13 +47,13 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
+    public void delete(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
-        Carts carts = findCartIdsByCustomerName(customerName);
+        Carts carts = findByCustomerName(customerName);
 
         if (carts.haveCartId(cartId)) {
             return;

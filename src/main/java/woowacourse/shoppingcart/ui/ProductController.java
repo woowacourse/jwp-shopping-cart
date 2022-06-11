@@ -25,7 +25,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> products(@LookUpCustomer LookUpUser user) {
-        return ResponseEntity.ok(productService.findProducts(user));
+        return ResponseEntity.ok(productService.findAll(user));
     }
 
     @PostMapping
@@ -40,12 +40,12 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> product(@PathVariable final Long productId) {
-        return ResponseEntity.ok(productService.findProductById(productId));
+        return ResponseEntity.ok(productService.findById(productId));
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> delete(@PathVariable final Long productId) {
-        productService.deleteProductById(productId);
+        productService.deleteById(productId);
         return ResponseEntity.noContent().build();
     }
 }

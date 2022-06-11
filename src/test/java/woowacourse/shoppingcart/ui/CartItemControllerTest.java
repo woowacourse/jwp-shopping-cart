@@ -66,7 +66,7 @@ class CartItemControllerTest {
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
-        given(cartService.findCartsByCustomerName(any())).willReturn(cartResponses);
+        given(cartService.findAllByCustomerName(any())).willReturn(cartResponses);
 
         ResultActions results = mvc.perform(get("/api/customers/me/carts")
                 .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
@@ -127,7 +127,7 @@ class CartItemControllerTest {
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
-        doNothing().when(cartService).deleteCart(customer.getUserName(), 1L);
+        doNothing().when(cartService).delete(customer.getUserName(), 1L);
 
         ResultActions results = mvc.perform(delete("/api/customers/me/carts/{cartId}", 1)
                 .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)

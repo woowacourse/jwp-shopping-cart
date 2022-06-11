@@ -122,7 +122,7 @@ public class OrderControllerTest {
 
         given(authService.getAuthenticatedCustomer(ACCESS_TOKEN)).willReturn(customer);
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
-        when(orderService.findOrderById(customer.getUserName(), orderId)).thenReturn(new OrdersResponse(expected));
+        when(orderService.findById(customer.getUserName(), orderId)).thenReturn(new OrdersResponse(expected));
 
         // when // then
         mockMvc.perform(get("/api/customers/me/orders/" + orderId)
@@ -153,7 +153,7 @@ public class OrderControllerTest {
 
         given(authService.getAuthenticatedCustomer(ACCESS_TOKEN)).willReturn(customer);
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
-        when(orderService.findOrdersByCustomerName(customer.getUserName())).thenReturn(expected);
+        when(orderService.findByCustomerName(customer.getUserName())).thenReturn(expected);
 
         // when // then
         mockMvc.perform(get("/api/customers/me/orders")
@@ -214,7 +214,7 @@ public class OrderControllerTest {
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
-        given(orderService.findOrderById(any(), any())).willReturn(new OrdersResponse(orders));
+        given(orderService.findById(any(), any())).willReturn(new OrdersResponse(orders));
 
         ResultActions results = mockMvc.perform(get("/api/customers/me/orders/{orderId}", 1)
                 .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
@@ -253,7 +253,7 @@ public class OrderControllerTest {
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
-        given(orderService.findOrdersByCustomerName(any())).willReturn(ordersResponses);
+        given(orderService.findByCustomerName(any())).willReturn(ordersResponses);
 
         ResultActions results = mockMvc.perform(get("/api/customers/me/orders")
                 .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)

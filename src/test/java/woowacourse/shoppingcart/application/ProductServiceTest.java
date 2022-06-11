@@ -44,7 +44,7 @@ class ProductServiceTest {
                 new Product(2L, "제품2", 1000, "www.image2.com"));
 
         given(productDao.findProducts()).willReturn(products);
-        List<ProductResponse> productResponses = productService.findProducts(user);
+        List<ProductResponse> productResponses = productService.findAll(user);
         assertAll(
                 () -> assertThat(productResponses.get(0).getCartId()).isEqualTo(null),
                 () -> assertThat(productResponses.get(0).getQuantity()).isEqualTo(0),
@@ -70,7 +70,7 @@ class ProductServiceTest {
         given(cartItemDao.findProductIdsByCustomerId(user.getId())).willReturn(List.of(1L));
         given(cartItemDao.findIdAndQuantityByProductId(any(), any())).willReturn(Optional.of(cart));
 
-        List<ProductResponse> productResponses = productService.findProducts(user);
+        List<ProductResponse> productResponses = productService.findAll(user);
         assertAll(
                 () -> assertThat(productResponses.get(0).getCartId()).isEqualTo(1L),
                 () -> assertThat(productResponses.get(0).getQuantity()).isEqualTo(50),

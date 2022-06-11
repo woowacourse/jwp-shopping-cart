@@ -51,7 +51,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrdersResponse findOrderById(final String customerName, final Long orderId) {
+    public OrdersResponse findById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
         Orders orders = findOrderResponseDtoByOrderId(orderId);
         return new OrdersResponse(orders);
@@ -66,7 +66,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrdersResponse> findOrdersByCustomerName(final String customerName) {
+    public List<OrdersResponse> findByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 

@@ -32,7 +32,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findProducts(final LookUpUser user) {
+    public List<ProductResponse> findAll(final LookUpUser user) {
         List<Product> products = productDao.findProducts();
         if (user.isNotLogin()) {
             return products.stream()
@@ -71,11 +71,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse findProductById(final Long productId) {
+    public ProductResponse findById(final Long productId) {
         return new ProductResponse(productDao.findProductById(productId));
     }
 
-    public void deleteProductById(final Long productId) {
+    public void deleteById(final Long productId) {
         productDao.delete(productId);
     }
 }
