@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.DuplicateNameException;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -44,7 +44,7 @@ public class CustomerDao {
 
             return keyHolder.getKey().longValue();
         } catch (final DataIntegrityViolationException e) {
-            throw new DuplicateNameException("이미 가입된 닉네임입니다.");
+            throw new DuplicateCustomerException("이미 가입된 닉네임입니다.");
         }
     }
 

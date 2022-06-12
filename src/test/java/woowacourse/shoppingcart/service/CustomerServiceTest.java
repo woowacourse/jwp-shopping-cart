@@ -19,7 +19,7 @@ import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
-import woowacourse.shoppingcart.exception.DuplicateNameException;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -71,7 +71,7 @@ class CustomerServiceTest {
         final UpdateCustomerDto changeForm = new UpdateCustomerDto(duplicateName);
 
         assertThatThrownBy(() -> customerService.updateCustomer(createdCustomerId, changeForm))
-                .isInstanceOf(DuplicateNameException.class)
+                .isInstanceOf(DuplicateCustomerException.class)
                 .hasMessageContaining("수정하려는 이름이 이미 존재합니다.");
     }
 
