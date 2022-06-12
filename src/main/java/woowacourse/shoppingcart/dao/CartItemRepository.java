@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
@@ -23,11 +25,27 @@ public class CartItemRepository {
 
     public List<CartItem> findCartItemsByCustomerId(Long customerId) {
         List<CartItemDto> cartItemDtos = cartItemDao.findCartItemsByCustomerId(customerId);
+        Map<Long, Product> products = getProducts(cartItemDtos).stream()
+                .collect(Collectors.toMap(Product::getId, product -> product));
+        return getCartItems(cartItemDtos, products);
+    }
+
+    private List<Product> getProducts(List<CartItemDto> cartItemDtos) {
+        List<Long> productIds = cartItemDtos.stream()
+                .map(CartItemDto::getProductId)
+                .collect(Collectors.toList());
+        List<Product> products = productDao.findProductsByIds(productIds);
+        if (productIds.size() != products.size()) {
+            throw new NoSuchProductException();
+        }
+        return products;
+    }
+
+    private List<CartItem> getCartItems(List<CartItemDto> cartItemDtos, Map<Long, Product> products) {
         List<CartItem> cartItems = new ArrayList<>();
         for (CartItemDto cartItemDto : cartItemDtos) {
-            Product product = productDao.findProductById(cartItemDto.getProductId())
-                    .orElseThrow(NoSuchProductException::new);
-            cartItems.add(new CartItem(cartItemDto.getId(), product, cartItemDto.getQuantity()));
+            cartItems.add(new CartItem(cartItemDto.getId(), products.get(cartItemDto.getProductId()),
+                    cartItemDto.getQuantity()));
         }
         return cartItems;
     }

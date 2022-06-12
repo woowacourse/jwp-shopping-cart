@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.shoppingcart.dao.dto.IdDto;
 import woowacourse.shoppingcart.domain.product.Product;
 
 @Repository
@@ -47,11 +48,17 @@ public class ProductDao {
     public Optional<Product> findProductById(Long productId) {
         try {
             String sql = "SELECT id, name, price, image_url, selling, description FROM product WHERE id = :id";
-            SqlParameterSource parameterSource = new MapSqlParameterSource("id", productId);
+            SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(new IdDto(productId));
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource, mapToProduct()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<Product> findProductsByIds(List<Long> productIds) {
+        String sql = "SELECT id, name, price, image_url, selling, description FROM product WHERE id IN (:ids)";
+        SqlParameterSource parameterSource = new MapSqlParameterSource("ids", productIds);
+        return jdbcTemplate.query(sql, parameterSource, mapToProduct());
     }
 
     public List<Product> findSellingProducts() {

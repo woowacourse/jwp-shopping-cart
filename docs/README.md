@@ -176,7 +176,7 @@
 <summary>소니의 2단계 두번째 리뷰</summary>
 
 - repository
-  - [ ] for문을 이용해 단건 조회하는 대신 한번에 List로 받아오기
-  - [ ] Key를 productId로 하고 Value는 Product로 하는 Map을 만들어 cartItem 만들기
+  - [x] for문을 이용해 단건 조회하는 대신 한번에 List로 받아오기
+  - [x] Key를 productId로 하고 Value는 Product로 하는 Map을 만들어 cartItem 만들기
 
 </details>
