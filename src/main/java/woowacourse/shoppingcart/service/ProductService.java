@@ -12,7 +12,7 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 import java.util.List;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class ProductService {
     public static final String NOT_EXIST_PRODUCT = "[ERROR] 없는 상품입니다.";
     private final ProductDao productDao;

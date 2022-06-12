@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.*;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
@@ -11,6 +12,7 @@ import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@Transactional
 public class CustomerService {
 
     private static final String DUPLICATED_NAME = "[ERROR] 이미 존재하는 사용자 이름입니다.";

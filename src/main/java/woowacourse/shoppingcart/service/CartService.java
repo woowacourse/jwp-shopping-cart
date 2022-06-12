@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class CartService {
     private static final String NOT_EXIST_CART = "[ERROR] 존재하지 않는 장바구니입니다.";
     public static final String NOT_EXIST_CART_ITEM = "[ERROR] 장바구니에 없는 상품이 있습니다.";
