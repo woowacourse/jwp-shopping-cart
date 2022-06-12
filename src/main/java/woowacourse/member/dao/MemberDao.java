@@ -42,14 +42,14 @@ public class MemberDao {
     }
 
     public boolean existMemberByEmail(String email) {
-        String SQL = "SELECT EXISTS (SELECT * FROM member WHERE email = ?)";
-        return jdbcTemplate.queryForObject(SQL, Boolean.class, email);
+        String sql = "SELECT EXISTS (SELECT * FROM member WHERE email = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, email);
     }
 
     public Optional<Member> findMemberByEmail(String email) {
         try {
-            String SQL = "SELECT id, email, name, password FROM member WHERE email = ?";
-            Member member = jdbcTemplate.queryForObject(SQL, rowMapper(), email);
+            String sql = "SELECT id, email, name, password FROM member WHERE email = ?";
+            Member member = jdbcTemplate.queryForObject(sql, rowMapper(), email);
             return Optional.ofNullable(member);
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -58,8 +58,8 @@ public class MemberDao {
 
     public Optional<Member> findMemberById(long id) {
         try {
-            String SQL = "SELECT id, email, name, password FROM member WHERE id = ?";
-            Member member = jdbcTemplate.queryForObject(SQL, rowMapper(), id);
+            String sql = "SELECT id, email, name, password FROM member WHERE id = ?";
+            Member member = jdbcTemplate.queryForObject(sql, rowMapper(), id);
             return Optional.ofNullable(member);
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -67,17 +67,17 @@ public class MemberDao {
     }
 
     public void updateName(long id, String name) {
-        String SQL = "UPDATE member SET name = ? WHERE id = ?";
-        jdbcTemplate.update(SQL, name, id);
+        String sql = "UPDATE member SET name = ? WHERE id = ?";
+        jdbcTemplate.update(sql, name, id);
     }
 
     public void updatePassword(long id, String password) {
-        String SQL = "UPDATE member SET password = ? WHERE id = ?";
-        jdbcTemplate.update(SQL, password, id);
+        String sql = "UPDATE member SET password = ? WHERE id = ?";
+        jdbcTemplate.update(sql, password, id);
     }
 
     public int deleteById(long id) {
-        String SQL = "DELETE FROM member WHERE id = ?";
-        return jdbcTemplate.update(SQL, id);
+        String sql = "DELETE FROM member WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 }

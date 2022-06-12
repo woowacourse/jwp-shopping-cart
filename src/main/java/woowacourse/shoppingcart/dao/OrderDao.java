@@ -36,7 +36,7 @@ public class OrderDao {
     }
 
     public boolean isExistOrderId(long memberId, long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE member_id = ? AND id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, memberId, orderId);
+        final String sql = "SELECT EXISTS(SELECT * FROM orders WHERE member_id = ? AND id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, memberId, orderId);
     }
 }

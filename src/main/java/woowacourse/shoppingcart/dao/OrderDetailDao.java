@@ -41,9 +41,9 @@ public class OrderDetailDao {
     }
 
     public List<OrderDetailResponse> findOrdersDetailsByOrderId(long orderId) {
-        final String SQL = "SELECT p.id, od.quantity, p.price, p.name, p.image_url " +
+        final String sql = "SELECT p.id, od.quantity, p.price, p.name, p.image_url " +
                 "FROM orders_detail AS od JOIN product AS p ON od.product_id = p.id " +
                 "WHERE od.orders_id = ?";
-        return jdbcTemplate.query(SQL, rowMapper(), orderId);
+        return jdbcTemplate.query(sql, rowMapper(), orderId);
     }
 }

@@ -43,18 +43,18 @@ public class CartDao {
     }
 
     public List<Cart> findCartByMemberId(long memberId) {
-        String SQL = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
+        String sql = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
                 "FROM cart_item as c JOIN product as p ON c.product_id = p.id WHERE c.member_id = ?";
 
-        return jdbcTemplate.query(SQL, rowMapper(), memberId);
+        return jdbcTemplate.query(sql, rowMapper(), memberId);
     }
 
     public Optional<Cart> findCartByMemberIdAndProductId(long memberId, long productId) {
-        String SQL = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
+        String sql = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
                 "FROM cart_item as c JOIN product as p ON c.product_id = p.id WHERE c.member_id = ? AND p.id = ?";
 
         try{
-            return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, rowMapper(), memberId, productId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper(), memberId, productId));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -62,9 +62,9 @@ public class CartDao {
 
     public Optional<Cart> findCartById(long cartId) {
         try {
-            String SQL = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
+            String sql = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
                     "FROM cart_item as c JOIN product as p ON c.product_id = p.id WHERE c.id = ?";
-            Cart cart = jdbcTemplate.queryForObject(SQL, rowMapper(), cartId);
+            Cart cart = jdbcTemplate.queryForObject(sql, rowMapper(), cartId);
             return Optional.ofNullable(cart);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -72,12 +72,12 @@ public class CartDao {
     }
 
     public void updateQuantity(long cartId, int quantity) {
-        String SQL = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(SQL, quantity, cartId);
+        String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        jdbcTemplate.update(sql, quantity, cartId);
     }
 
     public void deleteById(long id) {
-        String SQL = "DELETE FROM cart_item WHERE id = ?";
-        jdbcTemplate.update(SQL, id);
+        String sql = "DELETE FROM cart_item WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

@@ -42,8 +42,8 @@ public class ProductDao {
 
     public Optional<Product> findProductById(long productId) {
         try {
-            String SQL = "SELECT id, name, price, image_url FROM product WHERE id = ?";
-            Product product = jdbcTemplate.queryForObject(SQL, rowMapper(), productId);
+            String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
+            Product product = jdbcTemplate.queryForObject(sql, rowMapper(), productId);
             return Optional.ofNullable(product);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -51,12 +51,12 @@ public class ProductDao {
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(query, rowMapper());
+        final String sql = "SELECT id, name, price, image_url FROM product";
+        return jdbcTemplate.query(sql, rowMapper());
     }
 
     public void delete(long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+        final String sql = "DELETE FROM product WHERE id = ?";
+        jdbcTemplate.update(sql, productId);
     }
 }
