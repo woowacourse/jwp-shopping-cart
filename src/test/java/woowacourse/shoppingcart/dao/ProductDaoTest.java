@@ -133,6 +133,6 @@ public class ProductDaoTest {
 
         assertThatThrownBy(() -> productDao.delete(productId))
                 .isInstanceOf(InvalidProductException.class)
-                .hasMessage("이미 존재하지 않는 상품입니다");
+                .hasMessage("이미 존재하지 않는 상품입니다.");
     }
 }
