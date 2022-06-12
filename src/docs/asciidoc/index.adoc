@@ -55,3 +55,25 @@ include::{snippets}/customer/delete/http-request.adoc[]
 ==== HTTP response
 
 include::{snippets}/customer/delete/http-response.adoc[]
+
+== Product
+
+=== 회원 상품 목록 조회
+
+==== HTTP request
+
+include::{snippets}/product/find/member/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product/find/member/http-response.adoc[]
+
+=== 비회원 상품 목록 조회
+
+==== HTTP request
+
+include::{snippets}/product/find/anonymous/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product/find/anonymous/http-response.adoc[]
