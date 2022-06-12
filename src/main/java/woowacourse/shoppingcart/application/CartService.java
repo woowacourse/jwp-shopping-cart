@@ -29,7 +29,8 @@ public class CartService {
     private final CustomerRepository customerDao;
     private final ProductRepository productDao;
 
-    public CartService(final CartItemRepository cartItemDao, final CustomerRepository customerDao, final ProductRepository productDao) {
+    public CartService(final CartItemRepository cartItemDao, final CustomerRepository customerDao,
+                       final ProductRepository productDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;

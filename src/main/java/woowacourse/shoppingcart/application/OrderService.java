@@ -10,8 +10,8 @@ import woowacourse.shoppingcart.dao.CustomerRepository;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductRepository;
-import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Order;
+import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -27,7 +27,8 @@ public class OrderService {
     private final ProductRepository productDao;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemRepository cartItemDao, final CustomerRepository customerDao, final ProductRepository productDao) {
+                        final CartItemRepository cartItemDao, final CustomerRepository customerDao,
+                        final ProductRepository productDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;

@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.domain;
 import woowacourse.auth.domain.UserEmail;
 import woowacourse.auth.domain.UserPassword;
 import woowacourse.auth.domain.Username;
-import woowacourse.shoppingcart.exception.ValidationException;
 
 public class Customer {
 
