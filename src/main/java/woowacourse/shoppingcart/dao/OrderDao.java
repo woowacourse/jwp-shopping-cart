@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class OrderDao {
@@ -26,7 +27,7 @@ public class OrderDao {
             preparedStatement.setLong(1, memberId);
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public List<Long> findOrderIdsByMemberId(long memberId) {

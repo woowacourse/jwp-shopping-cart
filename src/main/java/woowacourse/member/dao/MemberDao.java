@@ -26,6 +26,16 @@ public class MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
+    private static RowMapper<Member> rowMapper() {
+        return (resultSet, rowNum) ->
+                new Member(
+                        resultSet.getLong("id"),
+                        resultSet.getString("email"),
+                        resultSet.getString("name"),
+                        new Password(resultSet.getString("password"))
+                );
+    }
+
     public void save(Member member) {
         SqlParameterSource namedParameterSource = new BeanPropertySqlParameterSource(member);
         simpleJdbcInsert.execute(namedParameterSource);
@@ -39,7 +49,7 @@ public class MemberDao {
     public Optional<Member> findMemberByEmail(String email) {
         try {
             String SQL = "SELECT id, email, name, password FROM member WHERE email = ?";
-            Member member = jdbcTemplate.queryForObject(SQL, rowMapper, email);
+            Member member = jdbcTemplate.queryForObject(SQL, rowMapper(), email);
             return Optional.ofNullable(member);
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -49,20 +59,12 @@ public class MemberDao {
     public Optional<Member> findMemberById(long id) {
         try {
             String SQL = "SELECT id, email, name, password FROM member WHERE id = ?";
-            Member member = jdbcTemplate.queryForObject(SQL, rowMapper, id);
+            Member member = jdbcTemplate.queryForObject(SQL, rowMapper(), id);
             return Optional.ofNullable(member);
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
-
-    private final RowMapper<Member> rowMapper = (resultSet, rowNum) ->
-            new Member(
-                    resultSet.getLong("id"),
-                    resultSet.getString("email"),
-                    resultSet.getString("name"),
-                    new Password(resultSet.getString("password"))
-            );
 
     public void updateName(long id, String name) {
         String SQL = "UPDATE member SET name = ? WHERE id = ?";

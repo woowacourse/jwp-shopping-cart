@@ -25,6 +25,16 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
+    private static RowMapper<Product> rowMapper(){
+        return (resultSet, rowNum) ->
+                new Product(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("price"),
+                        resultSet.getString("image_url")
+                );
+    }
+
     public long save(Product product) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(product);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
@@ -33,7 +43,7 @@ public class ProductDao {
     public Optional<Product> findProductById(long productId) {
         try {
             String SQL = "SELECT id, name, price, image_url FROM product WHERE id = ?";
-            Product product = jdbcTemplate.queryForObject(SQL, rowMapper, productId);
+            Product product = jdbcTemplate.queryForObject(SQL, rowMapper(), productId);
             return Optional.ofNullable(product);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -42,16 +52,8 @@ public class ProductDao {
 
     public List<Product> findProducts() {
         final String query = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(query, rowMapper);
+        return jdbcTemplate.query(query, rowMapper());
     }
-
-    private final RowMapper<Product> rowMapper = (resultSet, rowNum) ->
-            new Product(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getInt("price"),
-                    resultSet.getString("image_url")
-            );
 
     public void delete(long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
