@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
@@ -35,27 +36,27 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerResponse> myInfo(@AuthenticationPrincipal String username) {
-        return ResponseEntity.ok(customerService.findByUsername(username));
+    public ResponseEntity<CustomerResponse> myInfo(@AuthenticationPrincipal Customer customer) {
+        return ResponseEntity.ok(customerService.findByUsername(customer.getUsername()));
     }
 
     @PutMapping
     public ResponseEntity<Void> update(@Valid @RequestBody CustomerUpdateRequest request,
-                                       @AuthenticationPrincipal String username) {
-        customerService.update(request, username);
+                                       @AuthenticationPrincipal Customer customer) {
+        customerService.update(request, customer.getUsername());
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@AuthenticationPrincipal String username) {
-        customerService.deleteByUsername(username);
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal Customer customer) {
+        customerService.deleteByUsername(customer.getUsername());
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody CustomerUpdatePasswordRequest request,
-                                               @AuthenticationPrincipal String username) {
-        customerService.updatePassword(username, request);
+                                               @AuthenticationPrincipal Customer customer) {
+        customerService.updatePassword(customer.getUsername(), request);
         return ResponseEntity.noContent().build();
     }
 }

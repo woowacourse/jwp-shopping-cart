@@ -6,13 +6,18 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipal;
 
 @Component
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private final AuthService authService;
     private final AuthenticationContext authenticationContext;
 
-    public AuthenticationPrincipalArgumentResolver(final AuthenticationContext authenticationContext) {
+    public AuthenticationPrincipalArgumentResolver(AuthService authService,
+                                                   final AuthenticationContext authenticationContext) {
+        this.authService = authService;
         this.authenticationContext = authenticationContext;
     }
 
@@ -25,6 +30,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
                                   final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory)
             throws Exception {
-        return authenticationContext.getPrincipal();
+        String username = authenticationContext.getPrincipal();
+        return authService.findCustomerByUsername(username);
     }
 }

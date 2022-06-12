@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
 import woowacourse.shoppingcart.dto.order.OrdersResponse;
@@ -29,20 +30,20 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@Valid @RequestBody final List<OrderRequest> orderDetails,
-                                         @AuthenticationPrincipal String username) {
-        final Long orderId = orderService.save(orderDetails, username);
+                                         @AuthenticationPrincipal Customer customer) {
+        final Long orderId = orderService.save(orderDetails, customer.getUsername());
         return ResponseEntity.created(
                 URI.create("/api/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> findOrder(@PathVariable final Long orderId,
-                                                   @AuthenticationPrincipal String username) {
-        return ResponseEntity.ok(orderService.findOrderById(username, orderId));
+                                                   @AuthenticationPrincipal Customer customer) {
+        return ResponseEntity.ok(orderService.findOrderById(customer.getUsername(), orderId));
     }
 
     @GetMapping
-    public ResponseEntity<OrdersResponse> findOrders(@AuthenticationPrincipal String username) {
-        return ResponseEntity.ok(orderService.findOrdersByUsername(username));
+    public ResponseEntity<OrdersResponse> findOrders(@AuthenticationPrincipal Customer customer) {
+        return ResponseEntity.ok(orderService.findOrdersByUsername(customer.getUsername()));
     }
 }

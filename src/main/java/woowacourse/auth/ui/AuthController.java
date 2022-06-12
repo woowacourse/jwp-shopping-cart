@@ -11,6 +11,7 @@ import woowacourse.auth.dto.PasswordRequest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -28,9 +29,9 @@ public class AuthController {
     }
 
     @PostMapping("/password")
-    public ResponseEntity<Void> checkPassword(@AuthenticationPrincipal String username,
+    public ResponseEntity<Void> checkPassword(@AuthenticationPrincipal Customer customer,
                                               @Valid @RequestBody PasswordRequest request) {
-        authService.checkPassword(username, request);
+        authService.checkPassword(customer.getUsername(), request);
         return ResponseEntity.ok().build();
     }
 
