@@ -31,12 +31,16 @@ public class CartService {
     public Long addCartItem(final AddCartItemRequestDto addCartItemRequestDto, final Long customerId) {
         checkDuplicateProduct(customerId, addCartItemRequestDto.getProductId());
         compareCountAndQuantity(addCartItemRequestDto.getCount(), addCartItemRequestDto.getProductId());
-        try {
-            return cartItemDao.addCartItem(
-                    customerId,
-                    addCartItemRequestDto.getProductId(),
-                    addCartItemRequestDto.getCount());
-        } catch (final DataIntegrityViolationException e) {
+        checkExistProductId(addCartItemRequestDto.getProductId());
+
+        return cartItemDao.addCartItem(
+                customerId,
+                addCartItemRequestDto.getProductId(),
+                addCartItemRequestDto.getCount());
+    }
+
+    private void checkExistProductId(final Long productId) {
+        if (productDao.findProductById(productId).isEmpty()) {
             throw new NotFoundProductException();
         }
     }
