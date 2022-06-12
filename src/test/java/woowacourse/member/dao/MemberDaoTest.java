@@ -7,8 +7,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.domain.Member;
-import woowacourse.member.domain.password.NewPassword;
 import woowacourse.member.domain.password.Password;
+import woowacourse.member.domain.password.PlainPassword;
 
 import javax.sql.DataSource;
 import java.util.Optional;
@@ -31,7 +31,8 @@ class MemberDaoTest {
     @Test
     void save() {
         String email = "wooteco@naver.com";
-        Password password = new NewPassword("Wooteco1!");
+        PlainPassword plainPassword = new PlainPassword("Wooteco1!");
+        Password password = plainPassword.encrypt();
         Member member = new Member(email, "wooteco", password);
         memberDao.save(member);
         assertThat(memberDao.existMemberByEmail(email)).isTrue();
@@ -42,6 +43,22 @@ class MemberDaoTest {
     void findMemberByEmail() {
         Optional<Member> result = memberDao.findMemberByEmail("ari@wooteco.com");
         assertThat(result.get().getName()).isEqualTo("아리");
+    }
+
+    @DisplayName("이메일이 사용중일시 true를 반환한다.")
+    @Test
+    void existMemberByEmail() {
+        String email = "rex@wooteco.com";
+        boolean result = memberDao.existMemberByEmail(email);
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("이메일이 사용중이지 않으면 false를 반환한다.")
+    @Test
+    void notExistMemberByEmail() {
+        String email = "rex1@wooteco.com";
+        boolean result = memberDao.existMemberByEmail(email);
+        assertThat(result).isFalse();
     }
 
     @DisplayName("존재하지 않는 이메일인 경우 빈 Optional을 반환한다.")

@@ -2,33 +2,49 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.ProductServiceRequest;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.ProductNotFoundException;
+import woowacourse.shoppingcart.ui.dto.ProductResponse;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class ProductService {
+
     private final ProductDao productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
-    }
-
-    public Long addProduct(final Product product) {
+    @Transactional
+    public long add(ProductServiceRequest request) {
+        Product product = new Product(request.getName(), request.getPrice(), request.getImageUrl());
         return productDao.save(product);
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductResponse findProduct(long productId) {
+        Product product = validateExistProduct(productDao.findProductById(productId));
+        return new ProductResponse(product);
     }
 
-    public void deleteProductById(final Long productId) {
+    public List<ProductResponse> findProducts() {
+        return productDao.findProducts()
+                .stream().map(ProductResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    private Product validateExistProduct(Optional<Product> product) {
+        return product.orElseThrow(ProductNotFoundException::new);
+    }
+
+    @Transactional
+    public void deleteProduct(long productId) {
         productDao.delete(productId);
     }
 }

@@ -20,6 +20,7 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.validityInMilliseconds = validityInMilliseconds;
     }
+
     public String createToken(String payload) {
         Claims claims = Jwts.claims().setSubject(payload);
         Date now = new Date();

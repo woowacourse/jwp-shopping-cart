@@ -7,7 +7,7 @@ import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredConvenienceMethod;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
-import woowacourse.member.dto.SignUpRequest;
+import woowacourse.member.ui.dto.SignUpRequest;
 
 import static org.hamcrest.Matchers.equalTo;
 

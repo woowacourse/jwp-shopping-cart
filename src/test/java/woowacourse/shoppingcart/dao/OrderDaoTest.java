@@ -19,40 +19,48 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrderDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private final OrderDao orderDao;
 
     public OrderDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
         this.orderDao = new OrderDao(jdbcTemplate);
     }
 
-    @DisplayName("Order를 추가하는 기능")
+    @DisplayName("Order를 추가하면 ID를 반환한다.")
     @Test
     void addOrders() {
-        //given
-        final Long memberId = 1L;
+        Long memberId = 1L;
+        Long orderId = orderDao.addOrders(memberId);
 
-        //when
-        final Long orderId = orderDao.addOrders(memberId);
-
-        //then
-        assertThat(orderId).isNotNull();
+        assertThat(orderId).isEqualTo(4);
     }
 
-    @DisplayName("MemberId 집합을 이용하여 OrderId 집합을 얻는 기능")
+    @DisplayName("MemberId를 이용해 회원이 주문한 주문 ID를 조회한다.")
     @Test
     void findOrderIdsByMemberId() {
-        //given
-        final Long memberId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (member_id) VALUES (?)", memberId);
-        jdbcTemplate.update("INSERT INTO ORDERS (member_id) VALUES (?)", memberId);
+        Long memberId = 4L;
 
-        //when
-        final List<Long> orderIdsByMemberId = orderDao.findOrderIdsByMemberId(memberId);
+        List<Long> orderIds = orderDao.findOrderIdsByMemberId(memberId);
 
-        //then
-        assertThat(orderIdsByMemberId).hasSize(2);
+        assertThat(orderIds).contains(2L, 3L);
     }
 
+    @DisplayName("주문 ID가 해당 회원의 주문건수면 true를 반환한다.")
+    @Test
+    void isExistOrderId() {
+        Long memberId = 4L;
+        Long orderId = 2L;
+        boolean result = orderDao.isExistOrderId(memberId, orderId);
+
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("주문 ID가 해당 회원의 주문건수가 아니면 false를 반환한다.")
+    @Test
+    void isNotExistOrderId() {
+        Long memberId = 4L;
+        Long orderId = 1L;
+        boolean result = orderDao.isExistOrderId(memberId, orderId);
+
+        assertThat(result).isFalse();
+    }
 }

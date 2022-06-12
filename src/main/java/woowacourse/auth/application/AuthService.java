@@ -9,8 +9,8 @@ import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
-import woowacourse.member.domain.password.NewPassword;
 import woowacourse.member.domain.password.Password;
+import woowacourse.member.domain.password.PlainPassword;
 import woowacourse.member.exception.MemberNotFoundException;
 import woowacourse.member.exception.WrongPasswordException;
 
@@ -29,24 +29,25 @@ public class AuthService {
         this.memberDao = memberDao;
     }
 
-    public LoginResponse createToken(Long id) {
+    public LoginResponse createToken(long id) {
         return new LoginResponse(jwtTokenProvider.createToken(String.valueOf(id)));
     }
 
-    public Long authenticate(LoginRequest request) {
+    public long authenticate(LoginRequest request) {
         Member member = validateExistMember(memberDao.findMemberByEmail(request.getEmail()));
-        Password requestPassword = new NewPassword(request.getPassword());
+        PlainPassword plainPassword = new PlainPassword(request.getPassword());
+        Password requestPassword = plainPassword.encrypt();
         if (!member.isSamePassword(requestPassword)) {
-            throw new WrongPasswordException("잘못된 비밀번호입니다.");
+            throw new WrongPasswordException();
         }
         return member.getId();
     }
 
     private Member validateExistMember(Optional<Member> member) {
-        return member.orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+        return member.orElseThrow(MemberNotFoundException::new);
     }
 
-    public Long extractIdFromRequest(HttpServletRequest request) {
+    public long extractIdFromRequest(HttpServletRequest request) {
         String token = AuthorizationExtractor.extract(request);
         return Long.parseLong(jwtTokenProvider.getPayload(token));
     }

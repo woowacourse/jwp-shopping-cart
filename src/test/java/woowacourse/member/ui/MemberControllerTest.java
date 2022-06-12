@@ -9,8 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.member.dto.EmailDuplicateCheckRequest;
-import woowacourse.member.dto.SignUpRequest;
+import woowacourse.member.ui.dto.SignUpRequest;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -106,33 +105,6 @@ class MemberControllerTest {
                             .content(objectMapper.writeValueAsString(request))
                     ).andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message", containsString("비밀번호는 빈 값일 수 없습니다.")));
-        }
-    }
-
-    @DisplayName("이메일 중복 검증 테스트")
-    @Nested
-    class CheckDuplicateEmailTest {
-
-        @DisplayName("이메일은 빈 값을 허용하지 않는다.")
-        @Test
-        void blankEmailException() throws Exception {
-            EmailDuplicateCheckRequest request = new EmailDuplicateCheckRequest("");
-            mockMvc.perform(post("/api/members/duplicate-email")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request))
-                    ).andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.message", containsString("이메일은 빈 값일 수 없습니다.")));
-        }
-
-        @DisplayName("올바르지 못한 형식의 이메일은 허용하지 않는다.")
-        @Test
-        void invalidEmailFormException() throws Exception {
-            EmailDuplicateCheckRequest request = new EmailDuplicateCheckRequest("wooteco.com");
-            mockMvc.perform(post("/api/members/duplicate-email")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request))
-                    ).andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.message", containsString("올바르지 않은 형식의 이메일입니다.")));
         }
     }
 }

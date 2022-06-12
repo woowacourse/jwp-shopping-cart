@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class OrderDao {
@@ -17,7 +18,7 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrders(final Long memberId) {
+    public long addOrders(final long memberId) {
         final String sql = "INSERT INTO orders (member_id) VALUES (?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -26,16 +27,16 @@ public class OrderDao {
             preparedStatement.setLong(1, memberId);
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public List<Long> findOrderIdsByMemberId(final Long memberId) {
+    public List<Long> findOrderIdsByMemberId(long memberId) {
         final String sql = "SELECT id FROM orders WHERE member_id = ? ";
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), memberId);
     }
 
-    public boolean isValidOrderId(final Long memberId, final Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE member_id = ? AND id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, memberId, orderId);
+    public boolean isExistOrderId(long memberId, long orderId) {
+        final String sql = "SELECT EXISTS(SELECT * FROM orders WHERE member_id = ? AND id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, memberId, orderId);
     }
 }
