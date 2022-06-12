@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.notfound.NotFoundCartItemException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -62,6 +63,7 @@ public class CartItemDaoTest {
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
+    @DisplayName("없는 사용자의 카트에 담으려고 하면, 예외를 발생시킨다.")
     @Test
     void addCartItemWithNotExistCustomer() {
         // when & then
@@ -93,6 +95,24 @@ public class CartItemDaoTest {
 
         // then
         assertThat(cartIds).containsExactly(1L, 2L);
+    }
+
+    @DisplayName("장바구니 ID로 담겨있는 상품 ID를 가져온다.")
+    @Test
+    void getProductIdById() {
+        // when
+        final Long productId = cartItemDao.getProductIdById(1L);
+
+        // then
+        assertThat(productId).isEqualTo(bananaId);
+    }
+
+    @DisplayName("없는 장바구니 ID로 찾을 경우, 예외를 발생시킨다.")
+    @Test
+    void getProductIdByNotExistId() {
+        // when & then
+        assertThatThrownBy(() -> cartItemDao.getProductIdById(10L))
+                .isInstanceOf(NotFoundCartItemException.class);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
