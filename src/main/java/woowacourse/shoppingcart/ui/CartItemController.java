@@ -8,7 +8,6 @@ import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
