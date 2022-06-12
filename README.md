@@ -83,7 +83,16 @@
     - 비회원 장바구니 기능을 구현하느라 회원의 장바구니 기능 구현이 뒤로 우선순위가 밀리는게 맞는가?
   - 위 이유에서 저희 팀은 우선 회원의 장바구니라는 요구사항을 완성한 뒤 비회원 장바구니에 대한 기능을 추가하는 것으로 정해졌습니다.
   - 방학식에 코치님의 애자일 강의가 있었습니다. 작은 가치를 바라보고 완성해 나가면서 구현하는 방식이라고 이해했는데 어쩌면 이런 방식도 애자일이라고 할 수 있지 않을까요?
-- [ ] interceptor 설정이 auth package에 있는데 해당 url의 controller 들은 shoppingcart에 있는데 auth에서 설정하는 것이 맞을까요?
+- [x] interceptor 설정이 auth package에 있는데 해당 url의 controller 들은 shoppingcart에 있는데 auth에서 설정하는 것이 맞을까요?
+  - 해당 리뷰는 인터셉터 파일의 위치에 대한 리뷰가 아닌 설정을 하는 곳에 대한 이야기셨던 것 같습니다. 
+  - `/token/refresh`를 제외한 나머지 경로 설정을 shoppingcart 패키지에서 하도록 수정했습니다!
+  - 해당 리뷰에 대해 처음에 잘못 이해했던 부분 정리
+    - 제가 인터셉터를 auth package에 두고있던 이유는 인터셉터에서 `jwtTokenProvider.validateToken()`를 사용하고 있기 때문이었습니다.
+    - 토큰 생성, 검증, 페이로드 추출 등 토큰에 대한 작업은 auth package에서 하고 다른 로직에서 필요하다면 auth package에 있는 서비스, 인터셉터, 리졸버를 사용하자 라는 기준을 잡았었습니다.
+    - 인터셉터와 리졸버의 위치도 팀원들과 다른 크루들과 이야기해봤던 주제였는데 거의 대부분이 저와 같은 생각으로 auth package에 두었던 것 같습니다.
+    - shoppingcart 외에 추가로 다른 서비스를 하는 패키지가 생기고 그곳에서도 로그인과 관련된 인터셉터가 사용된다면 그곳에서도 LoginInterceptor를 만드는것보다 auth 패키지에 두고 다른 패키지에서 사용하는 게 좋은 것 같다고 생각했습니다.
+    - LoginInterceptor에는 토큰을 갱신하는 `/token/refresh`에서도 사용하고 있어 shoppingcart에서만 사용되는 것은 아닙니다.
+    - 물론 `/token/refresh`는 LoginInterceptor가 아닌 다른 인터셉터를 만들어 관리하고 여러 서비스에서는 그 서비스에 맞는 로그인 방식에 맞춘 LoginInterceptor를 만들어야 한다면 해당 패키지에 두는 것이 맞는 것 같기도 합니다.
 - [x] (AuthorizationExtractor) extract 메서드를 분리하면 좋을 것 같아요ㅎㅎ
 - [x] resolver에서 값을 넣어주기만 하고 있는데요. 검증을 하지 않아도 될까요? 
   - interceptor가 적용된 url에서 모두 @AuthenticationPrincipal가 활용되고 있는데 interceptor에서 검증을 할 필요가 있을까요? 
