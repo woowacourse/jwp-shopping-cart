@@ -70,6 +70,9 @@ public class ProductDao {
 
     public void delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+        int rowCount = jdbcTemplate.update(query, productId);
+        if (rowCount == 0) {
+            throw new InvalidProductException("이미 존재하지 않는 상품입니다.");
+        }
     }
 }

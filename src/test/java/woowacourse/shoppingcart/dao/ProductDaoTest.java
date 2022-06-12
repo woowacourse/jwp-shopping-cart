@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -115,5 +117,22 @@ public class ProductDaoTest {
 
         final int afterSize = productDao.findProducts().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
+    }
+
+    @DisplayName("존재하지 않는 상품을 삭제할 시 예외가 발생")
+    @Test
+    void deleteProduct_productNotExist_throwException() {
+        Product product = Product.builder()
+                .productName("초콜렛")
+                .price(1_000)
+                .stock(100)
+                .imageUrl("www.test.com")
+                .build();
+        final Long productId = productDao.save(product);
+        productDao.delete(productId);
+
+        assertThatThrownBy(() -> productDao.delete(productId))
+                .isInstanceOf(InvalidProductException.class)
+                .hasMessage("이미 존재하지 않는 상품입니다");
     }
 }
