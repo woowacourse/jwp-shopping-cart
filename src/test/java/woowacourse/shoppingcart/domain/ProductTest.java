@@ -23,6 +23,19 @@ public class ProductTest {
                 .isInstanceOf(InvalidProductException.class)
                 .hasMessage("상품 이름은 비워둘 수 없습니다.");
     }
+    
+    @DisplayName("이름이 64자 이상이라면 예외 발생")
+    @Test
+    void productName_overLengthLimit_throwException() {
+        assertThatThrownBy(() -> Product.builder()
+                .productName("01234567890123456789012345678901234567890123456789012345678901234")
+                .price(1_000)
+                .stock(100)
+                .imageUrl("coffee.png")
+                .build())
+                .isInstanceOf(InvalidProductException.class)
+                .hasMessage("상품 이름은 64자까지 가능합니다.");
+    }
 
     @DisplayName("금액이 0원 또는 이하라면 예외 발생")
     @ParameterizedTest
