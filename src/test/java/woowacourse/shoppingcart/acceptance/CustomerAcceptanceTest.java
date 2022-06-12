@@ -21,7 +21,6 @@ import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
-import woowacourse.shoppingcart.dto.ValidationExceptionDto;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {

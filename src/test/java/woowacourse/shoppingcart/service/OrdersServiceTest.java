@@ -1,7 +1,8 @@
 package woowacourse.shoppingcart.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.Fixture.PRICE;
 import static woowacourse.fixture.Fixture.PRODUCT_NAME;
 import static woowacourse.fixture.Fixture.QUANTITY;

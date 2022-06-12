@@ -27,7 +27,9 @@ public class CustomerService {
 
     public Long signUp(final SignUpDto signUpDto) {
         customerDao.findByEmail(signUpDto.getEmail())
-                .ifPresent(customer -> {throw new DuplicateCustomerException("이미 가입된 이메일입니다.");});
+                .ifPresent(customer -> {
+                    throw new DuplicateCustomerException("이미 가입된 이메일입니다.");
+                });
         final Customer newCustomer = Customer.createWithoutId(
                 signUpDto.getEmail(),
                 passwordEncoder.encrypt(signUpDto.getPassword()),

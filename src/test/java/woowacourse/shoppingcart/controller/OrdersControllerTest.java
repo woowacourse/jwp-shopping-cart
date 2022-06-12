@@ -1,8 +1,9 @@
 package woowacourse.shoppingcart.controller;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -16,11 +17,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
@@ -34,7 +33,6 @@ import woowacourse.shoppingcart.dto.OrdersDetailDto;
 import woowacourse.shoppingcart.dto.OrdersDetailProductResponseDto;
 import woowacourse.shoppingcart.dto.OrdersRequestDto;
 import woowacourse.shoppingcart.dto.OrdersResponseDto;
-import woowacourse.shoppingcart.service.CartService;
 import woowacourse.shoppingcart.service.OrdersService;
 
 class OrdersControllerTest extends ControllerTest {

@@ -41,8 +41,7 @@ public class OrdersController {
     @GetMapping
     public ResponseEntity<List<OrdersResponseDto>> getCustomerOrders(
             @PathVariable final Long customerId,
-            @AuthenticationPrincipal LoginCustomer loginCustomer)
-    {
+            @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
         final List<OrdersResponseDto> ordersResponseDtos = ordersService.findCustomerOrders(customerId);

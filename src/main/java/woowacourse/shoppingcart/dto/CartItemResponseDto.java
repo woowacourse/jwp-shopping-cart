@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 public class CartItemResponseDto {
-    
+
     private Long productId;
     private String thumbnailUrl;
     private String name;

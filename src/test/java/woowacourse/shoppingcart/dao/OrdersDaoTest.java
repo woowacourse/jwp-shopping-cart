@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.Fixture.PRICE;
 import static woowacourse.fixture.Fixture.PRODUCT_NAME;
 import static woowacourse.fixture.Fixture.QUANTITY;
@@ -11,11 +11,9 @@ import static woowacourse.fixture.Fixture.TEST_USERNAME;
 import static woowacourse.fixture.Fixture.THUMBNAIL_URL;
 
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
