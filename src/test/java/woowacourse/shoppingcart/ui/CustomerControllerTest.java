@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.config.AuthenticationPrincipalConfig;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.global.exception.ErrorResponse;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.ui.dto.CustomerChangePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.CustomerChangeRequest;

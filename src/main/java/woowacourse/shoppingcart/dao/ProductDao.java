@@ -15,15 +15,15 @@ import woowacourse.shoppingcart.domain.Product;
 @Repository
 public class ProductDao {
 
-    private final NamedParameterJdbcTemplate template;
-    private final SimpleJdbcInsert simpleJdbcInsert;
-
     private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (rs, rowNum) -> new Product(
             rs.getLong("id"),
             rs.getString("name"),
             rs.getInt("price"),
             rs.getString("image_url")
     );
+
+    private final NamedParameterJdbcTemplate template;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ProductDao(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);

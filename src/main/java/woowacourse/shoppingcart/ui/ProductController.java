@@ -5,8 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
-import woowacourse.shoppingcart.application.dto.ProductSaveRequest;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.application.ProductService;
 
 import java.net.URI;

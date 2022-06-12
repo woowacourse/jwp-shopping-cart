@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.CartItemQuantityUpdateRequest;
 import woowacourse.shoppingcart.application.dto.CartItemResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 
@@ -16,12 +15,10 @@ import woowacourse.shoppingcart.domain.CartItem;
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
         this.productDao = productDao;
     }
 

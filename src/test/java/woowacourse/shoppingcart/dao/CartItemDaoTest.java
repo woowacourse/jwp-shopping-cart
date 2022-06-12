@@ -29,13 +29,11 @@ public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
-    private final DataSource dataSource;
 
     public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.dataSource = dataSource;
         customerDao = new CustomerDao(dataSource);
-        cartItemDao = new CartItemDao(jdbcTemplate, dataSource);
+        cartItemDao = new CartItemDao(dataSource);
         productDao = new ProductDao(dataSource);
     }
 

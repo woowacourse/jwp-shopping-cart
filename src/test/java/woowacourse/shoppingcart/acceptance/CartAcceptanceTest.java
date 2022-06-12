@@ -67,7 +67,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         // then
         장바구니_아이템_수량_변경_응답됨(response);
-//        장바구니_아이템_수량_변경_확인됨(accessToken);
     }
 
 

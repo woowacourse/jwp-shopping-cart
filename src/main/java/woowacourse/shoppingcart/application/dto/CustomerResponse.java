@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application.dto;
 
-import java.util.Objects;
 import woowacourse.shoppingcart.domain.Customer;
 
 public class CustomerResponse {

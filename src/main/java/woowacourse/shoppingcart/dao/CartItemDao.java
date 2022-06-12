@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.List;
 import javax.sql.DataSource;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,6 +12,7 @@ import woowacourse.shoppingcart.domain.CartItem;
 
 @Repository
 public class CartItemDao {
+
     private static final RowMapper<CartItem> CART_ROW_MAPPER = (rs, rowNum) -> new CartItem(
             rs.getLong("product_id"),
             rs.getString("product_name"),
@@ -20,12 +20,11 @@ public class CartItemDao {
             rs.getInt("quantity"),
             rs.getString("product_image_url")
     );
-    private final JdbcTemplate jdbcTemplate;
+
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final NamedParameterJdbcTemplate template;
 
-    public CartItemDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.jdbcTemplate = jdbcTemplate;
+    public CartItemDao(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("cart_item")
