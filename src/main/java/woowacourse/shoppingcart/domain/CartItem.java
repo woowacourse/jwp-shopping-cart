@@ -3,27 +3,26 @@ package woowacourse.shoppingcart.domain;
 import java.util.Objects;
 
 public class CartItem {
-
-    private Long id;
-    private Long customerId;
-    private Long productId;
-    private int quantity;
+    private Id id;
+    private Id customerId;
+    private Id productId;
+    private Quantity quantity;
     private boolean checked;
 
     public CartItem(Long id, Long customerId, Long productId, int quantity, boolean checked) {
-        this.id = id;
-        this.customerId = customerId;
-        this.productId = productId;
-        this.quantity = quantity;
+        this.id = Id.from(id, "상품 항목");
+        this.customerId = Id.from(customerId, "사용자");
+        this.productId = Id.from(productId, "상품");
+        this.quantity = new Quantity(quantity);
         this.checked = checked;
     }
 
     public Long getId() {
-        return id;
+        return id.getId();
     }
 
     public Long getProductId() {
-        return productId;
+        return productId.getId();
     }
 
     public boolean getChecked() {
@@ -31,7 +30,7 @@ public class CartItem {
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getQuantity();
     }
 
     @Override
@@ -39,7 +38,7 @@ public class CartItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CartItem cartItem = (CartItem) o;
-        return quantity == cartItem.quantity && checked == cartItem.checked && Objects.equals(id, cartItem.id) && Objects.equals(customerId, cartItem.customerId) && Objects.equals(productId, cartItem.productId);
+        return checked == cartItem.checked && Objects.equals(id, cartItem.id) && Objects.equals(customerId, cartItem.customerId) && Objects.equals(productId, cartItem.productId) && Objects.equals(quantity, cartItem.quantity);
     }
 
     @Override

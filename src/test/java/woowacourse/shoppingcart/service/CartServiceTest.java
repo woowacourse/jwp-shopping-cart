@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.*;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidInformationException;
 
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class CartServiceTest {
     void 자연수가_아닌_상품_id로_장바구니에_추가하는_경우() {
         AddCartItemRequest addCartItemRequest = new AddCartItemRequest(0L, 1, true);
         assertThatThrownBy(() -> cartService.addItem("puterism", addCartItemRequest))
-                .isInstanceOf(InvalidCartItemException.class)
+                .isInstanceOf(InvalidInformationException.class)
                 .hasMessage("[ERROR] 상품 ID는 자연수여야 합니다.");
     }
 
@@ -108,7 +109,7 @@ public class CartServiceTest {
                         new UpdateCartItemElement(2L, 1, true)));
         assertThatThrownBy(
                 () -> cartService.updateItem("puterism", updateCartItemRequest))
-                .isInstanceOf(InvalidCartItemException.class)
+                .isInstanceOf(InvalidInformationException.class)
                 .hasMessage("[ERROR] 항목 ID는 자연수여야 합니다.");
     }
 
@@ -142,7 +143,7 @@ public class CartServiceTest {
                         new DeleteCartItemElement(2L)));
         assertThatThrownBy(
                 () -> cartService.deleteItem("puterism", deleteCartItemRequest))
-                .isInstanceOf(InvalidCartItemException.class)
+                .isInstanceOf(InvalidInformationException.class)
                 .hasMessage("[ERROR] 항목 ID는 자연수여야 합니다.");
     }
 

@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.domain.Quantity;
+
 import java.util.List;
 import java.util.stream.Collectors;
 

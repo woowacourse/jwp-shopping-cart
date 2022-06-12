@@ -9,9 +9,9 @@ public class Cart {
     private final Map<Long, Product> cart;
     private final List<Long> productId;
     private final List<Boolean> checks;
-    private final List<Integer> quantities;
+    private final Quantities quantities;
 
-    public Cart(Map<Long, Product> cart, List<Boolean> checks, List<Integer> quantities) {
+    public Cart(Map<Long, Product> cart, List<Boolean> checks, Quantities quantities) {
         validateSizeEqual(cart, checks, quantities);
         this.cart = cart;
         this.productId = cart.values()
@@ -22,10 +22,10 @@ public class Cart {
         this.quantities = quantities;
     }
 
-    private void validateSizeEqual(Map<Long, Product> cart, List<Boolean> checked, List<Integer> quantities) {
+    private void validateSizeEqual(Map<Long, Product> cart, List<Boolean> checked, Quantities quantities) {
         Set<Integer> totalSize = new HashSet<>();
         totalSize.add(cart.size());
-        totalSize.add(quantities.size());
+        totalSize.add(quantities.getSize());
         totalSize.add(checked.size());
         if (totalSize.size() != 1) {
             throw new InvalidCartItemException("[ERROR] 제품의 수와 체크박스의 수는 같아야 합니다.");
@@ -51,7 +51,7 @@ public class Cart {
         return checks;
     }
 
-    public List<Integer> getQuantities() {
+    public Quantities getQuantities() {
         return quantities;
     }
 

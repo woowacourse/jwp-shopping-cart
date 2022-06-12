@@ -22,7 +22,7 @@ public class CustomerTest {
     @Test
     void 이름이_null인_경우() {
         assertThatThrownBy(() -> new Customer(null, "crew01@naver.com", "a12345")).isInstanceOf(InvalidInformationException.class)
-                .hasMessage("[ERROR] 사용자 이름은 null이 될 수 없습니다.");
+                .hasMessage("[ERROR] 사용자 이름은 빈 값일 수 없습니다.");
     }
 
     @Test

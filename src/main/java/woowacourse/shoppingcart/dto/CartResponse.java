@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.dto;
 
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Quantities;
+import woowacourse.shoppingcart.domain.Quantity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +19,10 @@ public class CartResponse {
         List<Product> products = cart.getProducts();
         List<Long> ids = cart.getIds();
         List<Boolean> checks = cart.getChecks();
-        List<Integer> quantities = cart.getQuantities();
+        Quantities quantities = cart.getQuantities();
         this.cartItems = new ArrayList<>();
         for (int i = 0; i < products.size(); i++) {
-            this.cartItems.add(new CartResponseElement(ids.get(i), products.get(i), checks.get(i), quantities.get(i)));
+            this.cartItems.add(new CartResponseElement(ids.get(i), products.get(i), checks.get(i), quantities.getQuantityAt(i)));
         }
     }
 

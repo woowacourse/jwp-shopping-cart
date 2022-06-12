@@ -8,7 +8,7 @@ public class Customer {
     private static final String DIFFERENT_PASSWORD = "[ERROR] 비밀번호가 일치하지 않습니다.";
     private static final NameValidation usernameValidation = new UserNameValidationImpl();
 
-    private Long id;
+    private Id id;
 
     private Name username;
     private Email email;
@@ -31,7 +31,7 @@ public class Customer {
 
     public Customer(Long id, String username, String email, String password) {
         this(username, email, password);
-        this.id = id;
+        this.id = Id.from(id, "사용자");
     }
 
     public String generateEncodedPassword() {
@@ -50,20 +50,15 @@ public class Customer {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(username, customer.username) && Objects.equals(email, customer.email)
-                && Objects.equals(password, customer.password);
+        return Objects.equals(id, customer.id) && Objects.equals(username, customer.username) && Objects.equals(email, customer.email) && Objects.equals(password, customer.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, email, password);
+        return Objects.hash(id, username, email, password);
     }
 
     public String getUsername() {

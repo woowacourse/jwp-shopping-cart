@@ -20,16 +20,16 @@ public class CartTest {
 
     @Test
     void 체크박스의_수가_다른_경우() {
-        assertThatThrownBy(() -> new Cart(validCart, List.of(true, false, true, false), List.of(1, 2, 3)));
+        assertThatThrownBy(() -> new Cart(validCart, List.of(true, false, true, false), new Quantities(List.of(1, 2, 3))));
     }
 
     @Test
     void 수량의_수가_다른_경우() {
-        assertThatThrownBy(() -> new Cart(validCart, List.of(true, false, true), List.of(1, 2, 3, 4)));
+        assertThatThrownBy(() -> new Cart(validCart, List.of(true, false, true), new Quantities(List.of(1, 2, 3, 4))));
     }
 
     @Test
     void 제품의_수가_다른_경우() {
-        assertThatThrownBy(() -> new Cart(invalidCart, List.of(true, false, true), List.of(1, 2, 3)));
+        assertThatThrownBy(() -> new Cart(invalidCart, List.of(true, false, true), new Quantities(List.of(1, 2, 3))));
     }
 }

@@ -5,9 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.*;
 import woowacourse.shoppingcart.dto.*;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
@@ -45,7 +43,7 @@ public class CartService {
 
     private Cart generateCart(Long customerId) {
         List<CartItem> cartItems = cartItemDao.findCartItemByUserId(customerId);
-        List<Integer> quantities = generateQuantities(cartItems);
+        Quantities quantities = generateQuantities(cartItems);
         List<Boolean> checks = generateChecks(cartItems);
         List<Product> products = generateProductsInCart(cartItems);
         Map<Long, Product> cart = new HashMap<>();
@@ -55,10 +53,10 @@ public class CartService {
         return new Cart(cart, checks, quantities);
     }
 
-    private List<Integer> generateQuantities(List<CartItem> cartItems) {
-        return cartItems.stream()
+    private Quantities generateQuantities(List<CartItem> cartItems) {
+        return new Quantities(cartItems.stream()
                 .map(CartItem::getQuantity)
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toUnmodifiableList()));
     }
 
     private List<Boolean> generateChecks(List<CartItem> cartItems) {
@@ -86,22 +84,14 @@ public class CartService {
     public void addItem(String username, AddCartItemRequest addCartItemRequest) {
         validateExistName(username);
         Long id = customerDao.findIdByUserName(username);
-        Long productId = addCartItemRequest.getProductId();
-        validatePositiveProductId(productId);
-        validateExistProductId(productId);
-        int quantity = addCartItemRequest.getQuantity();
-        validatePositiveQuantity(quantity);
-        if (cartItemDao.isCartContains(id, productId)) {
-            cartItemDao.increaseQuantity(id, productId, quantity);
+        Id productId = Id.from(addCartItemRequest.getProductId(), "상품");
+        validateExistProductId(productId.getId());
+        Quantity quantity = new Quantity(addCartItemRequest.getQuantity());
+        if (cartItemDao.isCartContains(id, productId.getId())) {
+            cartItemDao.increaseQuantity(id, productId.getId(), quantity.getQuantity());
             return;
         }
-        cartItemDao.saveItemInCart(id, productId, quantity);
-    }
-
-    private void validatePositiveQuantity(int quantity) {
-        if (quantity <= 0) {
-            throw new InvalidCartItemException("[ERROR] 상품 수는 자연수여야 합니다.");
-        }
+        cartItemDao.saveItemInCart(id, productId.getId(), quantity.getQuantity());
     }
 
     private void validateExistProductId(Long productId) {
@@ -110,53 +100,33 @@ public class CartService {
         }
     }
 
-    private void validatePositiveProductId(Long productId) {
-        if (productId <= 0) {
-            throw new InvalidCartItemException("[ERROR] 상품 ID는 자연수여야 합니다.");
-        }
-    }
-
     public CartResponse updateItem(String username, UpdateCartItemRequest updateCartItemRequest) {
         validateExistName(username);
         Long id = customerDao.findIdByUserName(username);
-        List<Long> cartIds = updateCartItemRequest.generateCartIds();
-        validatePositiveCartIds(cartIds);
+        Ids cartIds = new Ids(updateCartItemRequest.generateCartIds(), "항목");
         validateExistCartIds(cartIds, id);
-        List<Integer> quantities = updateCartItemRequest.generateQuantities();
-        validatePositiveQuantities(quantities);
+        Quantities quantities = new Quantities(updateCartItemRequest.generateQuantities());
         List<Boolean> checked = updateCartItemRequest.generateChecked();
-        for (int i = 0; i < quantities.size(); i++) {
-            cartItemDao.updateQuantityAndCheck(id, cartIds.get(i), quantities.get(i), checked.get(i));
+        for (int i = 0; i < quantities.getSize(); i++) {
+            cartItemDao.updateQuantityAndCheck(id, cartIds.getIdAt(i), quantities.getQuantityAt(i), checked.get(i));
         }
         Cart cart = generateCart(id);
         return new CartResponse(generateUpdatedCart(cart, cartIds, quantities, checked));
     }
 
-    private void validatePositiveQuantities(List<Integer> quantities) {
-        if (quantities.stream().anyMatch(quantity -> quantity <= 0)) {
-            throw new InvalidCartItemException("[ERROR] 상품 수는 자연수여야 합니다.");
-        }
-    }
-
-    private void validateExistCartIds(List<Long> cartIds, Long customerId) {
+    private void validateExistCartIds(Ids cartIds, Long customerId) {
         List<Long> totalIds = cartItemDao.findCartItemByUserId(customerId).stream()
                 .map(CartItem::getId)
                 .collect(Collectors.toList());
-        if (cartIds.stream().anyMatch(cartId -> !totalIds.contains(cartId))) {
+        if (cartIds.isNotContained(totalIds)) {
             throw new InvalidCartItemException(NOT_EXIST_CART_ITEM);
         }
     }
 
-    private void validatePositiveCartIds(List<Long> cartIds) {
-        if (cartIds.stream().anyMatch(cartId -> cartId <= 0)) {
-            throw new InvalidCartItemException("[ERROR] 항목 ID는 자연수여야 합니다.");
-        }
-    }
-
-    private Cart generateUpdatedCart(Cart cart, List<Long> cartIds, List<Integer> quantities, List<Boolean> checked) {
+    private Cart generateUpdatedCart(Cart cart, Ids cartIds, Quantities quantities, List<Boolean> checked) {
         Map<Long, Product> updatedCart = new HashMap<>();
-        Collections.sort(cartIds);
-        for (Long cartId : cartIds) {
+        for (int i = 0; i < cartIds.getSize(); i++) {
+            Long cartId = cartIds.getIdAt(i);
             updatedCart.put(cartId, cart.pickOneProduct(cartId));
         }
         return new Cart(updatedCart, checked, quantities);
@@ -165,11 +135,10 @@ public class CartService {
     public void deleteItem(String username, DeleteCartItemRequest deleteCartItemRequest) {
         validateExistName(username);
         Long id = customerDao.findIdByUserName(username);
-        List<Long> cartIds = deleteCartItemRequest.generateIds();
-        validatePositiveCartIds(cartIds);
+        Ids cartIds = new Ids(deleteCartItemRequest.generateIds(), "항목");
         validateExistCartIds(cartIds, id);
-        for (Long cartId : cartIds) {
-            cartItemDao.deleteOneItem(id, cartId);
+        for (int i = 0; i < cartIds.getSize(); i++) {
+            cartItemDao.deleteOneItem(id, cartIds.getIdAt(i));
         }
     }
 

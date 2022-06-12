@@ -13,7 +13,7 @@ public class PasswordTest {
     @Test
     void 비밀번호가_null인_경우() {
         assertThatThrownBy(() -> new Password(null)).isInstanceOf(InvalidInformationException.class)
-                .hasMessage("[ERROR] 비밀번호는 null일 수 없습니다.");
+                .hasMessage("[ERROR] 비밀번호는 빈 값일 수 없습니다.");
     }
 
     @Test

@@ -12,7 +12,7 @@ public class EmailTest {
     @Test
     void 이메일이_null인_경우() {
         assertThatThrownBy(() -> new Email(null)).isInstanceOf(InvalidInformationException.class)
-                .hasMessage("[ERROR] 이메일은 null일 수 없습니다.");
+                .hasMessage("[ERROR] 이메일은 빈 값일 수 없습니다.");
     }
 
     @Test

@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Product {
 
     private static final NameValidation productNameValidation = new ProductNameValidationImpl();
-    private Long id;
+    private Id id;
     private Name name;
     private Price price;
     private ImageURL imageUrl;
@@ -15,7 +15,7 @@ public class Product {
     }
 
     public Product(final Long id, final String name, final int price, final String imageUrl) {
-        this.id = id;
+        this.id = Id.from(id, "상품");
         productNameValidation.validateName(name);
         this.name = new Name(name);
         this.price = new Price(price);
@@ -27,7 +27,7 @@ public class Product {
     }
 
     public boolean isSameId(Long productId) {
-        return this.id == productId.longValue();
+        return this.id.getId() == productId.longValue();
     }
 
     @Override
@@ -56,6 +56,6 @@ public class Product {
     }
 
     public Long getId() {
-        return id;
+        return id.getId();
     }
 }
