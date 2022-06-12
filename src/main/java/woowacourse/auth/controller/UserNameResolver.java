@@ -6,6 +6,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import woowacourse.auth.exception.AuthorizationException;
 import woowacourse.shoppingcart.domain.customer.UserName;
 
 public class UserNameResolver implements HandlerMethodArgumentResolver {
@@ -19,6 +20,14 @@ public class UserNameResolver implements HandlerMethodArgumentResolver {
     public UserName resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
                                     final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        return (UserName) request.getAttribute("userName");
+        final UserName userName = (UserName) request.getAttribute("userName");
+        validateUserName(userName);
+        return userName;
+    }
+
+    private void validateUserName(final UserName userName) {
+        if (userName == null) {
+            throw new AuthorizationException("알 수 없는 사용자입니다😅");
+        }
     }
 }
