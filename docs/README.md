@@ -164,7 +164,7 @@
 <summary>소니의 2단계 첫번째 리뷰</summary>
 
 - service
-    - [ ] CartItemService에서 findCartsByCustomerName의 중복 로직 없애기
+    - [x] CartItemService에서 findCartsByCustomerName의 중복 로직 없애기
         - (hint: findCartIdsByCustomerName 에서 join 사용)
     - [ ] Transactional 에서 적절한 옵션 사용하기 (hint: 조회 로직에는 readOnly 옵션)
     - [ ] CartItemService에서 updateQuantity가 LoginCustomer에 맞는 사용자의 cartItem인지 확인하기

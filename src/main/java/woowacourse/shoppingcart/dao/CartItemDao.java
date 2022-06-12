@@ -2,12 +2,12 @@ package woowacourse.shoppingcart.dao;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.dto.IdDto;
 import woowacourse.shoppingcart.dao.dto.cartitem.AddQuantityDto;
 import woowacourse.shoppingcart.dao.dto.cartitem.CartItemDto;
+import woowacourse.shoppingcart.dao.dto.cartitem.CartItemInsertDto;
 import woowacourse.shoppingcart.dao.dto.cartitem.UpdateQuantityDto;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
@@ -44,6 +45,21 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> rs.getLong("id"));
     }
 
+    public List<CartItemDto> findCartItemsByCustomerId(Long customerId) {
+        String sql = "SELECT id, customer_id, product_id, quantity FROM cart_item WHERE customer_id = :id";
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(new IdDto(customerId));
+        return jdbcTemplate.query(sql, parameterSource, mapToCartItem());
+    }
+
+    private RowMapper<CartItemDto> mapToCartItem() {
+        return (resultSet, rowNum) -> new CartItemDto(
+                resultSet.getLong("id"),
+                resultSet.getLong("customer_id"),
+                resultSet.getLong("product_id"),
+                resultSet.getInt("quantity")
+        );
+    }
+
     public OptionalLong findProductIdById(Long cartItemId) {
         try {
             String sql = "SELECT product_id FROM cart_item WHERE id = :id";
@@ -67,8 +83,8 @@ public class CartItemDao {
     }
 
     public Long addCartItem(Long customerId, Long productId, int quantity) {
-        CartItemDto cartItemDto = new CartItemDto(customerId, productId, quantity);
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cartItemDto);
+        CartItemInsertDto cartItemInsertDto = new CartItemInsertDto(customerId, productId, quantity);
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cartItemInsertDto);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
