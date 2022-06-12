@@ -12,15 +12,14 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.request.TokenRequest;
-import woowacourse.auth.dto.response.TokenResponse;
-import woowacourse.setup.AcceptanceTest;
 import woowacourse.auth.dto.request.SignUpRequest;
-import woowacourse.auth.dto.request.UniqueUsernameRequest;
+import woowacourse.auth.dto.request.TokenRequest;
 import woowacourse.auth.dto.request.UpdateMeRequest;
 import woowacourse.auth.dto.request.UpdatePasswordRequest;
 import woowacourse.auth.dto.response.GetMeResponse;
+import woowacourse.auth.dto.response.TokenResponse;
 import woowacourse.auth.dto.response.UniqueUsernameResponse;
+import woowacourse.setup.AcceptanceTest;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayName("회원 관련 기능")
@@ -202,13 +201,13 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         }
     }
 
-    @DisplayName("GET /customers/username/duplication - 아이디 중복 조회")
+    @DisplayName("GET /customers/username/uniqueness - 아이디 중복 조회")
     @Nested
     class CheckUniqueUsernameTest {
 
         @Test
-        void 존재하지_않는_아이디인_경우_참_200() {
-            UniqueUsernameRequest 존재하지_않는_아이디 = new UniqueUsernameRequest("존재하지_않는_아이디");
+        void 아직_존재하지_않는_아이디인_경우_참_200() {
+            String 존재하지_않는_아이디 = "존재하지_않는_아이디";
 
             ExtractableResponse<Response> response = 아이디_중복_조회_요청(존재하지_않는_아이디);
             UniqueUsernameResponse actualBody = response.as(UniqueUsernameResponse.class);
@@ -221,7 +220,7 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         @Test
         void 이미_존재하는_아이디인_경우_거짓_200() {
             회원가입_요청(유효한_사용자);
-            UniqueUsernameRequest 이미_저장된_아이디 = new UniqueUsernameRequest(유효한_아이디);
+            String 이미_저장된_아이디 = 유효한_아이디;
 
             ExtractableResponse<Response> response = 아이디_중복_조회_요청(이미_저장된_아이디);
             UniqueUsernameResponse actualBody = response.as(UniqueUsernameResponse.class);
@@ -232,19 +231,17 @@ class CustomerAcceptanceTest extends AcceptanceTest {
         }
 
         @Test
-        void 필요한_정보가_누락된_경우_400() {
-            Map<String, Object> 비어있는_요청 = new HashMap<>();
-
-            ExtractableResponse<Response> response = 아이디_중복_조회_요청(비어있는_요청);
+        void 조회하려는_사용자명이_누락된_경우_400() {
+            ExtractableResponse<Response> response = 아이디_중복_조회_요청("");
 
             assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         }
 
-        private ExtractableResponse<Response> 아이디_중복_조회_요청(Object json) {
+        private ExtractableResponse<Response> 아이디_중복_조회_요청(String username) {
             return RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(json)
-                    .when().get("/customers/username/duplication")
+                    .params("username", username)
+                    .when().get("/customers/username/uniqueness")
                     .then().log().all()
                     .extract();
         }

@@ -1,10 +1,4 @@
-DROP TABLE IF EXISTS orders_detail;
-DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS cart_item;
-DROP TABLE IF EXISTS product;
-DROP TABLE IF EXISTS customer;
-
-CREATE TABLE customer
+CREATE TABLE IF NOT EXISTS customer
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT,
     username VARCHAR(255) NOT NULL UNIQUE,
@@ -14,7 +8,7 @@ CREATE TABLE customer
     PRIMARY KEY (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-CREATE TABLE product
+CREATE TABLE IF NOT EXISTS product
 (
     id        BIGINT       NOT NULL AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
@@ -23,26 +17,29 @@ CREATE TABLE product
     PRIMARY KEY (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-CREATE TABLE cart_item
+CREATE TABLE IF NOT EXISTS cart_item
+(
+    id          BIGINT  NOT NULL AUTO_INCREMENT,
+    customer_id BIGINT  NOT NULL,
+    product_id  BIGINT  NOT NULL,
+    quantity    INTEGER NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY unique_product_per_customer (customer_id, product_id)
+) engine=InnoDB default charset=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS orders
 (
     id          BIGINT NOT NULL AUTO_INCREMENT,
     customer_id BIGINT NOT NULL,
-    product_id  BIGINT NOT NULL,
     PRIMARY KEY (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-CREATE TABLE orders
-(
-    id          BIGINT NOT NULL AUTO_INCREMENT,
-    customer_id BIGINT NOT NULL,
-    PRIMARY KEY (id)
-) engine=InnoDB default charset=utf8mb4;
-
-CREATE TABLE orders_detail
+CREATE TABLE IF NOT EXISTS orders_detail
 (
     id         BIGINT  NOT NULL AUTO_INCREMENT,
-    orders_id  BIGINT  NOT NULL,
+    order_id   BIGINT  NOT NULL,
     product_id BIGINT  NOT NULL,
     quantity   INTEGER NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE KEY unique_product_per_order (order_id, product_id)
 ) engine=InnoDB default charset=utf8mb4;

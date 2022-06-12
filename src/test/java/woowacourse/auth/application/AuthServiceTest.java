@@ -22,7 +22,7 @@ import woowacourse.common.exception.AuthenticationException;
 import woowacourse.util.DatabaseFixture;
 
 @SuppressWarnings("NonAsciiCharacters")
-@Sql("classpath:schema.sql")
+@Sql("classpath:test_schema.sql")
 @SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
 class AuthServiceTest {
