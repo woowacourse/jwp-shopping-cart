@@ -8,6 +8,8 @@ public class Pagination {
     private final int page;
 
     public Pagination(int size, int page) {
+        validatePositiveSize(size);
+        validatePositivePage(page);
         this.size = size;
         this.page = page;
     }
