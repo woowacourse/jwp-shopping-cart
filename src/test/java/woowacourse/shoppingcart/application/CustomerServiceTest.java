@@ -83,7 +83,8 @@ class CustomerServiceTest {
         CustomerResponse customerResponse = customerService.findById(customerId);
 
         // then
-        assertThat(customerResponse).isEqualTo(new CustomerResponse(1L, "email@email.com", "rookie"));
+        assertThat(customerResponse).usingRecursiveComparison()
+                .isEqualTo(new CustomerResponse(1L, "email@email.com", "rookie"));
     }
 
     @Test
@@ -106,7 +107,8 @@ class CustomerServiceTest {
 
         // then
         CustomerResponse customerResponse = customerService.findById(1L);
-        assertThat(customerResponse).isEqualTo(new CustomerResponse(1L, "email@email.com", "zero"));
+        assertThat(customerResponse).usingRecursiveComparison()
+                .isEqualTo(new CustomerResponse(1L, "email@email.com", "zero"));
     }
 
     @Test
