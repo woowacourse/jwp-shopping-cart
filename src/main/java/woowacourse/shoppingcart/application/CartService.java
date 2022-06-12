@@ -25,6 +25,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public Long saveCartItem(final Long productId, final Long customerId) {
         productDao.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
@@ -48,6 +49,7 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void updateQuantity(CartItemQuantityUpdateRequest request) {
         productDao.findById(request.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
@@ -62,6 +64,7 @@ public class CartService {
         }
     }
 
+    @Transactional
     public void deleteCartItem(Long customerId, Long productId) {
         cartItemDao.deleteCartItem(customerId, productId);
     }
