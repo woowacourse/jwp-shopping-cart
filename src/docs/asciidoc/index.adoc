@@ -1,0 +1,57 @@
+= 장바구니 API Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[Customer]]
+== Customer
+
+=== 회원가입
+
+==== HTTP request
+
+include::{snippets}/customer/create/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/customer/create/http-response.adoc[]
+
+=== 회원 이름 조회
+
+==== HTTP request
+
+include::{snippets}/customer/name/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/customer/name/http-response.adoc[]
+
+=== 이메일 중복 검증
+
+==== HTTP request
+
+include::{snippets}/customer/email/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/customer/email/http-response.adoc[]
+
+=== 회원 정보 수정
+
+==== HTTP request
+
+include::{snippets}/customer/email/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/customer/email/http-response.adoc[]
+
+=== 회원 탈퇴
+
+==== HTTP request
+
+include::{snippets}/customer/delete/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/customer/delete/http-response.adoc[]
