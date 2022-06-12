@@ -44,7 +44,7 @@ public class CartService {
     private void compareCountAndQuantity(final Integer count, final Long productId) {
         final Product product = productDao.findProductById(productId)
                 .orElseThrow(NotFoundProductException::new);
-        if (product.getQuantity() < count) {
+        if (product.isOverCount(count)) {
             throw new OverQuantityException();
         }
     }

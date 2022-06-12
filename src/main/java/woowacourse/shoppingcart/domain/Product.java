@@ -35,6 +35,10 @@ public class Product {
         quantity = quantity - count;
     }
 
+    public boolean isOverCount(final Integer count) {
+        return quantity < count;
+    }
+
     public String getName() {
         return name;
     }
