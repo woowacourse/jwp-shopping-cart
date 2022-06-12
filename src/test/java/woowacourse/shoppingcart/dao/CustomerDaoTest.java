@@ -28,9 +28,9 @@ public class CustomerDaoTest {
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
-        final String userName = "puterism";
+        final String username = "puterism";
 
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByUserName(username);
 
         assertThat(customerId).isEqualTo(1L);
     }
@@ -38,9 +38,9 @@ public class CustomerDaoTest {
     @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTestIgnoreUpperLowerCase() {
-        final String userName = "gwangyeol-iM";
+        final String username = "gwangyeol-iM";
 
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final Long customerId = customerDao.findIdByUserName(username);
 
         assertThat(customerId).isEqualTo(16L);
     }

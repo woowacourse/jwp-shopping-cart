@@ -43,6 +43,6 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<OrdersResponse> findOrders(@AuthenticationPrincipal String username) {
-        return ResponseEntity.ok(orderService.findOrdersByCustomerName(username));
+        return ResponseEntity.ok(orderService.findOrdersByUsername(username));
     }
 }

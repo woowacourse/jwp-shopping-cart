@@ -36,8 +36,8 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long save(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public Long save(final List<OrderRequest> orderDetailRequests, final String username) {
+        final Long customerId = customerDao.findIdByUserName(username);
         final Long orderId = orderDao.save(customerId);
 
         for (final OrderRequest request : orderDetailRequests) {
@@ -61,26 +61,26 @@ public class OrderService {
         productDao.updateStock(product);
     }
 
-    public OrderResponse findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
+    public OrderResponse findOrderById(final String username, final Long orderId) {
+        validateOrderIdByUsername(username, orderId);
         List<OrderDetail> orderDetails = ordersDetailDao.findOrderDetailsByOrderId(orderId);
         return new OrderResponse(orderId, orderDetails);
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    private void validateOrderIdByUsername(final String username, final Long orderId) {
+        final Long customerId = customerDao.findIdByUserName(username);
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    public OrdersResponse findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public OrdersResponse findOrdersByUsername(final String username) {
+        final Long customerId = customerDao.findIdByUserName(username);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return new OrdersResponse(orderIds.stream()
-                .map(orderId -> findOrderById(customerName, orderId))
+                .map(orderId -> findOrderById(username, orderId))
                 .collect(Collectors.toList()));
     }
 

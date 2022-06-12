@@ -28,8 +28,8 @@ public class CartService {
     }
 
     @Transactional
-    public Long add(final String customerName, final CartItemAddRequest request) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public Long add(final String username, final CartItemAddRequest request) {
+        final Long customerId = customerDao.findIdByUserName(username);
         Product product = productDao.findProductById(request.getProductId());
         CartItem cartItem = new CartItem(product, request.getQuantity());
         try {
@@ -43,7 +43,7 @@ public class CartService {
         return cartItemDao.findById(cartItemId);
     }
 
-    public CartItemsResponse findAllByCustomerName(final String username) {
+    public CartItemsResponse findAllByUsername(final String username) {
         Long customerId = customerDao.findIdByUserName(username);
         return new CartItemsResponse(cartItemDao.findAllByCustomerId(customerId));
     }
@@ -55,8 +55,8 @@ public class CartService {
         cartItemDao.updateQuantity(cartItem);
     }
 
-    public void deleteOneById(final String customerName, final Long cartItemId) {
-        validateCustomerCart(cartItemId, customerName);
+    public void deleteOneById(final String username, final Long cartItemId) {
+        validateCustomerCart(cartItemId, username);
         cartItemDao.deleteById(cartItemId);
     }
 

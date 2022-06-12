@@ -31,7 +31,7 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<CartItemsResponse> getCartItems(@AuthenticationPrincipal String username) {
-        return ResponseEntity.ok().body(cartService.findAllByCustomerName(username));
+        return ResponseEntity.ok().body(cartService.findAllByUsername(username));
     }
 
     @PostMapping
