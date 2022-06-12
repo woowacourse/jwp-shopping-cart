@@ -1,6 +1,6 @@
 package woowacourse.auth.domain;
 
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.ValidationException;
 
 public class UserPassword {
 
@@ -16,10 +16,10 @@ public class UserPassword {
 
     private void validate(String password) {
         if (password == null || password.isBlank() || !isValidLength(password)) {
-            throw new InvalidPasswordException();
+            throw new ValidationException("비밀번호가 틀렸습니다.");
         }
         if (password.matches("[ㄱ-ㅎ]+|[ㅏ-ㅣ]+|[가-힣]+") || !password.matches("\\S+")) {
-            throw new InvalidPasswordException();
+            throw new ValidationException("비밀번호가 틀렸습니다.");
         }
     }
 

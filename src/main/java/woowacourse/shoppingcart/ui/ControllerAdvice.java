@@ -17,12 +17,12 @@ import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidEmailException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.ValidationException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -62,7 +62,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidEmailException.class,
+            ValidationException.class,
             InvalidPasswordException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,

@@ -1,6 +1,6 @@
 package woowacourse.auth.domain;
 
-import woowacourse.shoppingcart.exception.InvalidEmailException;
+import woowacourse.shoppingcart.exception.ValidationException;
 
 public class UserEmail {
 
@@ -15,7 +15,7 @@ public class UserEmail {
 
     private void validate(String email) {
         if (email == null || email.isBlank() || !email.matches(EMAIL_REGEX)) {
-            throw new InvalidEmailException();
+            throw new ValidationException("Email에 한글과 공백은 입력할 수 없습니다.");
         }
     }
 
