@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import woowacourse.exception.AuthException;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.LoginException;
 import woowacourse.exception.dto.ErrorResponse;
@@ -86,5 +87,10 @@ public class ControllerAdvice {
     @ExceptionHandler(OutOfStockException.class)
     public ResponseEntity<ErrorResponse> handleOutOfStockException(OutOfStockException e){
         return ResponseEntity.badRequest().body(e.getErrorResponse());
+    }
+
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTokenException(final AuthException e){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getErrorResponse());
     }
 }
