@@ -8,12 +8,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 @SpringBootTest
-@Transactional
+@Sql(scripts = "classpath:truncate.sql")
 public class ProductServiceTest {
 
     @Autowired

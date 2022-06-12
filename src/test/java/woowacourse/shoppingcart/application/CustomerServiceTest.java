@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.exception.AuthException;
 import woowacourse.exception.JoinException;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -15,7 +15,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @SpringBootTest
-@Transactional
+@Sql(scripts = "classpath:truncate.sql")
 class CustomerServiceTest {
 
     @Autowired

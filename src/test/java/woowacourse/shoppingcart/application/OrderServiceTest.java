@@ -10,10 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Customer;
@@ -24,7 +23,7 @@ import woowacourse.shoppingcart.dto.ThumbnailImage;
 import woowacourse.shoppingcart.exception.OutOfStockException;
 
 @SpringBootTest
-@Transactional
+@Sql(scripts = "classpath:truncate.sql")
 public class OrderServiceTest {
 
     @Autowired
@@ -38,9 +37,6 @@ public class OrderServiceTest {
 
     @Autowired
     private CartItemDao cartItemDao;
-
-    @Autowired
-    private OrderDao orderDao;
 
     @Autowired
     private OrdersDetailDao ordersDetailDao;

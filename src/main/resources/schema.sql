@@ -10,7 +10,8 @@ drop table if exists product;
 
 drop table if exists customer;
 
-create table customer(
+create table customer
+(
     id bigint not null auto_increment,
     email varchar(255) not null,
     password varchar(255) not null,
@@ -19,7 +20,7 @@ create table customer(
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table customer
-    add unique key (username);
+    add unique key (email);
 
 create table product
 (
