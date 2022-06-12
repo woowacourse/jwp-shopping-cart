@@ -27,14 +27,14 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<CartResponses> getCartItems(@AuthenticationPrincipal final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<CartResponses> getCartItems(@AuthenticationPrincipal final String username) {
+        return ResponseEntity.ok().body(cartService.findCartsByUsername(username));
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(@RequestBody final AddCartItemRequest addCartItemRequest,
-                                            @AuthenticationPrincipal final String customerName) {
-        final Long cartId = cartService.addCart(addCartItemRequest, customerName);
+                                            @AuthenticationPrincipal final String username) {
+        final Long cartId = cartService.addCart(addCartItemRequest, username);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")
@@ -46,20 +46,20 @@ public class CartItemController {
     @PatchMapping
     public ResponseEntity<CartResponses> updateCartItems(
             @RequestBody UpdateCartItemRequests updateCartItemRequests,
-            @AuthenticationPrincipal String customerName) {
-        return ResponseEntity.ok().body(cartService.updateCartItems(updateCartItemRequests, customerName));
+            @AuthenticationPrincipal String username) {
+        return ResponseEntity.ok().body(cartService.updateCartItems(updateCartItemRequests, username));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal final String customerName,
+    public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal final String username,
                                                 @RequestBody DeleteCartItemRequests deleteCartItemRequests) {
-        cartService.deleteAllCartByProducts(customerName, deleteCartItemRequests);
+        cartService.deleteAllCartByProducts(username, deleteCartItemRequests);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/all")
-    public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal final String customerName) {
-        cartService.deleteAllCart(customerName);
+    public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal final String username) {
+        cartService.deleteAllCart(username);
         return ResponseEntity.noContent().build();
     }
 }

@@ -64,7 +64,7 @@ public class CustomerService {
     }
 
     private List<Long> getCartIds(String username) {
-        return cartService.findCartsByCustomerName(username).getCartItems().stream()
+        return cartService.findCartsByUsername(username).getCartItems().stream()
                 .map(CartResponse::getId)
                 .collect(Collectors.toList());
     }

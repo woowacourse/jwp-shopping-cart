@@ -36,8 +36,8 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public CartResponses findCartsByCustomerName(final String customerName) {
-        final List<Cart> carts = findAllByCustomerName(customerName);
+    public CartResponses findCartsByUsername(final String username) {
+        final List<Cart> carts = findAllByUsername(username);
 
         final List<CartResponse> responses = new ArrayList<>();
         for (final Cart cart : carts) {
@@ -47,14 +47,14 @@ public class CartService {
         return new CartResponses(responses);
     }
 
-    private List<Cart> findAllByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findByUsername(customerName).getId();
+    private List<Cart> findAllByUsername(final String username) {
+        final Long customerId = customerDao.findByUsername(username).getId();
         return cartItemDao.findAllByCustomerId(customerId);
     }
 
     @Transactional
-    public Long addCart(final AddCartItemRequest updateCartItemRequest, final String customerName) {
-        final Long customerId = customerDao.findByUsername(customerName).getId();
+    public Long addCart(final AddCartItemRequest updateCartItemRequest, final String username) {
+        final Long customerId = customerDao.findByUsername(username).getId();
         try {
             Cart cart = cartItemDao.findByCustomerIdAndProductId(customerId, updateCartItemRequest.getProductId());
             cartItemDao.increaseQuantityById(cart.getId(), updateCartItemRequest.getQuantity());
@@ -71,11 +71,11 @@ public class CartService {
     }
 
     @Transactional
-    public CartResponses updateCartItems(UpdateCartItemRequests updateCartItemRequests, String customerName) {
+    public CartResponses updateCartItems(UpdateCartItemRequests updateCartItemRequests, String username) {
         List<CartResponse> responses = new ArrayList<>();
 
         for (UpdateCartItemRequest cartItemRequest : updateCartItemRequests.getCartItems()) {
-            validateCustomerCart(cartItemRequest.getId(), customerName);
+            validateCustomerCart(cartItemRequest.getId(), username);
 
             Cart cart = cartItemDao.findById(cartItemRequest.getId());
             cart.update(cartItemRequest.getQuantity(), cartItemRequest.getChecked());
@@ -89,13 +89,13 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
+    public void deleteCart(final String username, final Long cartId) {
+        validateCustomerCart(cartId, username);
         cartItemDao.deleteCartItem(cartId);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findAllByCustomerName(customerName).stream()
+    private void validateCustomerCart(final Long cartId, final String username) {
+        final List<Long> cartIds = findAllByUsername(username).stream()
                 .map(Cart::getId)
                 .collect(Collectors.toList());
         if (cartIds.contains(cartId)) {
@@ -105,18 +105,18 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteAllCart(String customerName) {
-        Long customerId = customerDao.findByUsername(customerName).getId();
+    public void deleteAllCart(String username) {
+        Long customerId = customerDao.findByUsername(username).getId();
         cartItemDao.deleteAllByCustomerId(customerId);
     }
 
     @Transactional
-    public void deleteAllCartByProducts(String customerName, DeleteCartItemRequests deleteCartItemRequests) {
+    public void deleteAllCartByProducts(String username, DeleteCartItemRequests deleteCartItemRequests) {
         List<DeleteCartItemRequest> cartItems = deleteCartItemRequests.getCartItems();
         for (DeleteCartItemRequest cartItem : cartItems) {
             long id = cartItem.getId();
-            validateCustomerCart(id, customerName);
-            deleteCart(customerName, id);
+            validateCustomerCart(id, username);
+            deleteCart(username, id);
         }
     }
 }
