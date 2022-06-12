@@ -68,7 +68,7 @@ class CartServiceTest {
     @Test
     void addDuplicateCartItem() {
         assertThatExceptionOfType(ExistCartItemException.class)
-                .isThrownBy(()->cartService.addCart(productResponse2.getId(), "kth990303"))
+                .isThrownBy(() -> cartService.addCart(productResponse2.getId(), "kth990303"))
                 .withMessageContaining("이미");
     }
 

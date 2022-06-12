@@ -20,7 +20,7 @@ class ProductTest {
     @Test
     void constructor_name_blank() {
         assertThatExceptionOfType(InvalidArgumentRequestException.class)
-                .isThrownBy(()->new Product("", 200, "https://example.com/apple.jpg"))
+                .isThrownBy(() -> new Product("", 200, "https://example.com/apple.jpg"))
                 .withMessageContaining("상품명");
     }
 
@@ -31,7 +31,7 @@ class ProductTest {
                 "wxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk" +
                 "lmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz";
         assertThatExceptionOfType(InvalidArgumentRequestException.class)
-                .isThrownBy(()->new Product(productName, 200, "https://example.com/apple.jpg"))
+                .isThrownBy(() -> new Product(productName, 200, "https://example.com/apple.jpg"))
                 .withMessageContaining("상품명");
     }
 }

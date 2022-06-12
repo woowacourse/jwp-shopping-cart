@@ -55,7 +55,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     void getProduct_invalidProductId() {
         Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
 
-        ExtractableResponse<Response> response = 상품_조회_요청(productId+1);
+        ExtractableResponse<Response> response = 상품_조회_요청(productId + 1);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
