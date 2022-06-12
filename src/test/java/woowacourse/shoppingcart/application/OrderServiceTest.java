@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.OrderRequest;
 
 @SpringBootTest
 @Transactional
@@ -50,8 +54,8 @@ class OrderServiceTest {
         CartItem cartItem = new CartItem(product, 1);
         Long cartItemId = cartItemDao.save(customerId, cartItem);
 
-//        Long orderId = orderService.save(List.of(new OrderRequest(cartItemId)), "customer");
-//        assertThat(orderId).isNotNull();
+        Long orderId = orderService.save(List.of(new OrderRequest(cartItemId)), customerId);
+        assertThat(orderId).isNotNull();
     }
 
 }

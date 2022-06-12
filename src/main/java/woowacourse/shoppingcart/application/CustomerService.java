@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.support.Encryption;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.values.password.EncryptedPassword;
 import woowacourse.shoppingcart.domain.customer.values.password.PlainPassword;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
@@ -36,18 +36,22 @@ public class CustomerService {
         return encryption.encrypt(new PlainPassword(plainPassword));
     }
 
-    @Transactional
-    public void update(final CustomerUpdateRequest request, final Customer customer) {
-        customerDao.update(request.toCustomerWithUsername(customer.getUsername()));
+    public CustomerResponse findById(final Long customerId) {
+        return CustomerResponse.from(customerDao.findById(customerId));
     }
 
     @Transactional
-    public void updatePassword(final Customer customer, final CustomerUpdatePasswordRequest request) {
-        customerDao.updatePasswordById(customer.getId(), encodePassword(request.getPassword()));
+    public void update(final CustomerUpdateRequest request, final Long customerId) {
+        customerDao.update(request.toCustomerWithId(customerId));
     }
 
     @Transactional
-    public void delete(final Customer customer) {
-        customerDao.deleteById(customer.getId());
+    public void updatePassword(final Long customerId, final CustomerUpdatePasswordRequest request) {
+        customerDao.updatePasswordById(customerId, encodePassword(request.getPassword()));
+    }
+
+    @Transactional
+    public void delete(final Long customerId) {
+        customerDao.deleteById(customerId);
     }
 }

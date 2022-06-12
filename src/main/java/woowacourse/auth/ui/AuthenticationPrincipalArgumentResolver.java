@@ -30,7 +30,6 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
                                   final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory)
             throws Exception {
-        String username = authenticationContext.getPrincipal();
-        return authService.findCustomerByUsername(username);
+        return authenticationContext.getPrincipal();
     }
 }

@@ -9,9 +9,9 @@ import woowacourse.auth.exception.InvalidAuthException;
 @RequestScope
 public class AuthenticationContext {
 
-    private String principal;
+    private Long principal;
 
-    public String getPrincipal() {
+    public long getPrincipal() {
         if (Objects.isNull(principal)) {
             throw new InvalidAuthException("principal은 null값이 반환될 수 없습니다.");
         }
@@ -19,6 +19,6 @@ public class AuthenticationContext {
     }
 
     public void setPrincipal(final String principal) {
-        this.principal = principal;
+        this.principal = Long.parseLong(principal);
     }
 }

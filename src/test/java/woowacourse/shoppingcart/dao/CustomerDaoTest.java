@@ -103,8 +103,9 @@ public class CustomerDaoTest {
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
-        customerDao.save(customer);
+        Long customerId = customerDao.save(customer);
         Customer changedCustomer = Customer.builder()
+                .id(customerId)
                 .username("username")
                 .phoneNumber("01087654321")
                 .address("루터회관")
@@ -112,7 +113,7 @@ public class CustomerDaoTest {
 
         customerDao.update(changedCustomer);
 
-        assertThat(customerDao.findByUsername("username"))
+        assertThat(customerDao.findById(changedCustomer.getId()))
                 .usingRecursiveComparison()
                 .ignoringFields("id", "password")
                 .isEqualTo(changedCustomer);

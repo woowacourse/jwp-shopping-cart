@@ -19,9 +19,9 @@ public class CustomerUpdateRequest {
         this.address = address;
     }
 
-    public Customer toCustomerWithUsername(final String username) {
+    public Customer toCustomerWithId(final Long id) {
         return Customer.builder()
-                .username(username)
+                .id(id)
                 .phoneNumber(phoneNumber)
                 .address(address)
                 .build();

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
@@ -36,27 +35,27 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerResponse> myInfo(@AuthenticationPrincipal Customer customer) {
-        return ResponseEntity.ok(CustomerResponse.from(customer));
+    public ResponseEntity<CustomerResponse> myInfo(@AuthenticationPrincipal Long customerId) {
+        return ResponseEntity.ok(customerService.findById(customerId));
     }
 
     @PutMapping
     public ResponseEntity<Void> update(@Valid @RequestBody CustomerUpdateRequest request,
-                                       @AuthenticationPrincipal Customer customer) {
-        customerService.update(request, customer);
+                                       @AuthenticationPrincipal Long customerId) {
+        customerService.update(request, customerId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@AuthenticationPrincipal Customer customer) {
-        customerService.delete(customer);
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal Long customerId) {
+        customerService.delete(customerId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody CustomerUpdatePasswordRequest request,
-                                               @AuthenticationPrincipal Customer customer) {
-        customerService.updatePassword(customer, request);
+                                               @AuthenticationPrincipal Long customerId) {
+        customerService.updatePassword(customerId, request);
         return ResponseEntity.noContent().build();
     }
 }

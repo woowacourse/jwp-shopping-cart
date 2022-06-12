@@ -29,21 +29,19 @@ public class AuthService {
     public TokenResponse login(final TokenRequest request) {
         Customer customer = customerDao.findByUsername(request.getUsername());
         validatePasswordIsCorrect(customer, request.getPassword());
-        String accessToken = jwtTokenProvider.createToken(customer.getUsername());
+        String accessToken = jwtTokenProvider.createToken(Long.toString(customer.getId()));
         return new TokenResponse(accessToken);
     }
 
-    public void checkPassword(final Customer customer, final PasswordRequest request) {
+    public void checkPassword(final Long customerId, final PasswordRequest request) {
+        Customer customer = customerDao.findById(customerId);
         validatePasswordIsCorrect(customer, request.getPassword());
     }
 
-    private void validatePasswordIsCorrect(Customer customer, String password) {
+    private void validatePasswordIsCorrect(final Customer customer, final String password) {
         if (!encryption.isSame(customer.getPassword(), password)) {
             throw new InvalidAuthException("비밀번호가 일치하지 않습니다.");
         }
     }
 
-    public Customer findCustomerByUsername(String username) {
-        return customerDao.findByUsername(username);
-    }
 }

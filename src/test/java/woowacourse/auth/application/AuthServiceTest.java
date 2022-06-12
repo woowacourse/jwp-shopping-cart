@@ -62,9 +62,9 @@ class AuthServiceTest {
     @Test
     @DisplayName("패스워드 확인 시 다른 경우 예외 발생")
     void mismatchPassword_throwException() {
-        customerDao.save(customer);
+        Long customerId = customerDao.save(customer);
 
-        assertThatThrownBy(() -> authService.checkPassword(customer, new PasswordRequest("wrongpassword")))
+        assertThatThrownBy(() -> authService.checkPassword(customerId, new PasswordRequest("wrongpassword")))
                 .isInstanceOf(InvalidAuthException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
     }
@@ -72,9 +72,9 @@ class AuthServiceTest {
     @Test
     @DisplayName("패스워드 확인 시 일치한다면 예외 발생하지 않음")
     void matchPassword_notThrowException() {
-        customerDao.save(customer);
+        Long customerId = customerDao.save(customer);
 
-        assertDoesNotThrow(() -> authService.checkPassword(customer, new PasswordRequest("password123")));
+        assertDoesNotThrow(() -> authService.checkPassword(customerId, new PasswordRequest("password123")));
     }
 
 }
