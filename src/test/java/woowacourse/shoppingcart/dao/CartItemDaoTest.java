@@ -135,17 +135,17 @@ public class CartItemDaoTest {
         CartItem cartItem = cartItemDao.findById(cartItemId);
 
         cartItem.changeQuantity(10);
-        assertDoesNotThrow(() -> cartItemDao.updateQuantity(cartItem));
+        assertDoesNotThrow(() -> cartItemDao.updateQuantity(cartItem, customerId));
     }
 
     @DisplayName("해당 id의 카트 아이템을 삭제한다.")
     @Test
     void deleteCartItem() {
         final Long cartId = 1L;
-
-        cartItemDao.deleteById(cartId);
-
         final Long customerId = 1L;
+
+        cartItemDao.deleteById(cartId, customerId);
+
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);

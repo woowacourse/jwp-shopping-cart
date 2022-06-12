@@ -84,17 +84,19 @@ public class CartItemDao {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, cartItemId, customerId));
     }
 
-    public void updateQuantity(final CartItem cartItem) {
-        final String query = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        int rowCount = jdbcTemplate.update(query, cartItem.getQuantity(), cartItem.getId());
+    public void updateQuantity(final CartItem cartItem, final Long customerId) {
+        final String query = "UPDATE cart_item SET quantity = ? "
+                + "WHERE id = ? AND customer_id = ?";
+        int rowCount = jdbcTemplate.update(query, cartItem.getQuantity(), cartItem.getId(), customerId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
     }
 
-    public void deleteById(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
-        final int rowCount = jdbcTemplate.update(sql, id);
+    public void deleteById(final Long id, final Long customerId) {
+        final String sql = "DELETE FROM cart_item "
+                + "WHERE id = ? AND customer_id = ?";
+        final int rowCount = jdbcTemplate.update(sql, id, customerId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }

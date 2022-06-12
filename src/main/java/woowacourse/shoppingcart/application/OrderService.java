@@ -36,18 +36,18 @@ public class OrderService {
         final Long orderId = orderDao.save(customerId);
 
         for (final OrderRequest request : orderDetailRequests) {
-            saveOrderThenRemoveCartItem(orderId, request);
+            saveOrderThenRemoveCartItem(orderId, request, customerId);
         }
 
         return orderId;
     }
 
-    private void saveOrderThenRemoveCartItem(Long orderId, OrderRequest request) {
+    private void saveOrderThenRemoveCartItem(Long orderId, OrderRequest request, Long customerId) {
         CartItem cartItem = cartItemDao.findById(request.getCartItemId());
         OrderDetail orderDetail = OrderDetail.from(cartItem);
         reduceProductStock(orderDetail);
         ordersDetailDao.save(orderId, orderDetail);
-        cartItemDao.deleteById(cartItem.getId());
+        cartItemDao.deleteById(cartItem.getId(), customerId);
     }
 
     private void reduceProductStock(OrderDetail orderDetail) {
