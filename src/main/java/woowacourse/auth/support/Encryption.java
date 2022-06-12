@@ -35,4 +35,8 @@ public class Encryption {
         }
         return builder.toString();
     }
+
+    public boolean isNotSame(String encodedPassword, String basicPassword) {
+        return !encrypt(basicPassword).equals(encodedPassword);
+    }
 }

@@ -33,7 +33,7 @@ public class AuthService {
     }
 
     private void validateSamePassword(String password, String requestPassword) {
-        if (encryption.bytesToHex(password.getBytes()).equals(requestPassword)) {
+        if (encryption.isNotSame(password, requestPassword)) {
             throw new IllegalArgumentException("[ERROR] 비밀번호가 일치하지 않습니다.");
         }
     }
