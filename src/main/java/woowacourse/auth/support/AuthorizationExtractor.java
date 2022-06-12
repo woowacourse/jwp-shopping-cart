@@ -14,7 +14,7 @@ public class AuthorizationExtractor {
         Input : Authorization: Bearer <토큰값>
         Output : <토큰값>
      */
-    public static String extract(final HttpServletRequest request) {
+    public static String extractOrThrow(final HttpServletRequest request) {
         final Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         while (headers.hasMoreElements()) {
             final String value = headers.nextElement();

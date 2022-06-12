@@ -31,7 +31,7 @@ public class OptionalUserNameResolver implements HandlerMethodArgumentResolver {
                                               final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         try {
-            final String token = AuthorizationExtractor.extract(request);
+            final String token = AuthorizationExtractor.extractOrThrow(request);
             authService.validateToken(token);
             return Optional.of(authService.getUserNameFormToken(token));
         } catch (AuthorizationException e) {

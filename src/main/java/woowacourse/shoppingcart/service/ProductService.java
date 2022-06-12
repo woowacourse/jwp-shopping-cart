@@ -43,7 +43,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.getProductById(productId);
         return new ProductResponse(product);
     }
 
@@ -66,7 +66,7 @@ public class ProductService {
     public ProductResponse findProductByIdAndCustomerName(final Long productId, final UserName customerName) {
         final Customer customer = customerDao.getByName(customerName);
         final Cart cart = new Cart(cartItemDao.findAllByCustomerId(customer.getId()));
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.getProductById(productId);
         return ProductResponse.of(cart, product);
     }
 }
