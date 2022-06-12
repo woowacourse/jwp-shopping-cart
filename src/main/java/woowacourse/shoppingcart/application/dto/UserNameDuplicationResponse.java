@@ -1,17 +1,21 @@
 package woowacourse.shoppingcart.application.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UserNameDuplicationResponse {
 
     private final String username;
-    private final Boolean duplicated;
+
+    @JsonProperty("duplicated")
+    private final Boolean isDuplicated;
 
     private UserNameDuplicationResponse() {
         this(null, null);
     }
 
-    public UserNameDuplicationResponse(String username, Boolean duplicated) {
+    public UserNameDuplicationResponse(String username, Boolean isDuplicated) {
         this.username = username;
-        this.duplicated = duplicated;
+        this.isDuplicated = isDuplicated;
     }
 
     public String getUsername() {
@@ -19,6 +23,6 @@ public class UserNameDuplicationResponse {
     }
 
     public Boolean getDuplicated() {
-        return duplicated;
+        return isDuplicated;
     }
 }
