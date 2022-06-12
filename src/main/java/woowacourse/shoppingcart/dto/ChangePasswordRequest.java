@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dto;
 import javax.validation.constraints.NotBlank;
 
 public class ChangePasswordRequest {
+
     private static final String INVALID_PASSWORD = "[ERROR] 비밀번호는 공백 또는 빈 값일 수 없습니다.";
 
     @NotBlank(message = INVALID_PASSWORD)
@@ -14,7 +15,7 @@ public class ChangePasswordRequest {
     public ChangePasswordRequest() {
     }
 
-    public ChangePasswordRequest(String password, String newPassword) {
+    public ChangePasswordRequest(final String password, final String newPassword) {
         this.password = password;
         this.newPassword = newPassword;
     }

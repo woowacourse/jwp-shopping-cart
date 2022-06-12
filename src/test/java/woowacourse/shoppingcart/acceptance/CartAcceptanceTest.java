@@ -7,10 +7,11 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequests;
 import woowacourse.shoppingcart.dto.FindCartItemResponse;
@@ -22,7 +23,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 장바구니_상품_추가한뒤_장바구니_상품_조회_장바구니_삭제한뒤_다시_조회() {
-        String accessToken = getAccessToken();
+        final String accessToken = getAccessToken();
 
         createCart(accessToken, 1L);
 
@@ -37,8 +38,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(findAllCartItemResponse.size()).isEqualTo(0);
     }
 
-    private void checkFindResult(List<FindCartItemResponse> findAllCartItemResponse) {
-        var cartItemResponse = findAllCartItemResponse.get(0);
+    private void checkFindResult(final List<FindCartItemResponse> findAllCartItemResponse) {
+        final var cartItemResponse = findAllCartItemResponse.get(0);
 
         assertAll(
                 () -> assertThat(cartItemResponse.getId()).isEqualTo(1L),
@@ -50,8 +51,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private ExtractableResponse<Response> deleteCart(String accessToken, Long cartItemId, HttpStatus httpStatus) {
-        var deleteCartItemRequest = new DeleteCartItemRequest(cartItemId);
+    private ExtractableResponse<Response> deleteCart(final String accessToken, final Long cartItemId,
+                                                     final HttpStatus httpStatus) {
+        final var deleteCartItemRequest = new DeleteCartItemRequest(cartItemId);
 
         return RestAssured
                 .given().log().all()
@@ -64,16 +66,27 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private List<FindCartItemResponse> getFindCartItemResponses(ExtractableResponse<Response> findAllCartItemResponse) {
+    private List<FindCartItemResponse> getFindCartItemResponses(
+            final ExtractableResponse<Response> findAllCartItemResponse) {
         return findAllCartItemResponse.body().jsonPath()
                 .getList("cartItems", FindCartItemResponse.class);
     }
 
-    private void createCart(String accessToken, Long productId) {
+    private void createCart(final String accessToken, final Long productId) {
+        final var jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("productId", productId);
+            jsonObject.put("quantity", 2);
+            jsonObject.put("checked", true);
+        } catch (final JSONException e) {
+            throw new RuntimeException(e);
+        }
+
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .when()
-                .body(new AddCartItemRequest(productId, 2, true))
+                .body(jsonObject)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .post("/cart")
                 .then().log().all()
@@ -81,8 +94,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private List<FindCartItemResponse> findCart(String accessToken) {
-        var findAllCartItemResponse = RestAssured.given().log().all()
+    private List<FindCartItemResponse> findCart(final String accessToken) {
+        final var findAllCartItemResponse = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .when()
                 .get("/cart")
@@ -95,20 +108,20 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 장바구니_상품_추가한뒤_유효하지_않은_장바구니_아이템_아이디로_삭제할_경우() {
-        String accessToken = getAccessToken();
+        final String accessToken = getAccessToken();
 
         createCart(accessToken, 1L);
 
-        var invalidCartItemId = 2L;
-        var response = deleteCart(accessToken, invalidCartItemId, HttpStatus.BAD_REQUEST);
+        final var invalidCartItemId = 2L;
+        final var response = deleteCart(accessToken, invalidCartItemId, HttpStatus.BAD_REQUEST);
 
-        var message = response.body().jsonPath().getString("message");
+        final var message = response.body().jsonPath().getString("message");
         assertThat(message).contains("[ERROR]", "장바구니", "아이템", "없");
     }
 
     @Test
     void 장바구니_상품_추가한뒤_장바구니_상품_조회_장바구니_전체_삭제한뒤_다시_조회() {
-        String accessToken = getAccessToken();
+        final String accessToken = getAccessToken();
 
         createCart(accessToken, 1L);
 
@@ -125,9 +138,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
         assertThat(findAllCartItemResponse.size()).isEqualTo(0);
     }
 
-    private void checkFindResults(List<FindCartItemResponse> findAllCartItemResponse) {
-        var cartItemResponse1 = findAllCartItemResponse.get(0);
-        var cartItemResponse2 = findAllCartItemResponse.get(1);
+    private void checkFindResults(final List<FindCartItemResponse> findAllCartItemResponse) {
+        final var cartItemResponse1 = findAllCartItemResponse.get(0);
+        final var cartItemResponse2 = findAllCartItemResponse.get(1);
 
         assertAll(
                 () -> assertThat(cartItemResponse1.getId()).isEqualTo(1L),
@@ -145,7 +158,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private void deleteAllCart(String accessToken, HttpStatus httpStatus) {
+    private void deleteAllCart(final String accessToken, final HttpStatus httpStatus) {
         RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
@@ -156,28 +169,28 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     private String getAccessToken() {
-        var signInResponse = createSignInResult(new SignInRequest("crew01@naver.com", "a12345"), HttpStatus.OK);
+        final var signInResponse = createSignInResult(new SignInRequest("crew01@naver.com", "a12345"), HttpStatus.OK);
 
         return signInResponse.body().jsonPath().getString("token");
     }
 
     @Test
     void 장바구니_상품_추가한뒤_장바구니_상품_수정() {
-        String accessToken = getAccessToken();
+        final String accessToken = getAccessToken();
 
         createCart(accessToken, 1L);
 
         createCart(accessToken, 2L);
 
-        var response = updateCartItem(1L, 2L, accessToken, HttpStatus.OK);
+        final var response = updateCartItem(1L, 2L, accessToken, HttpStatus.OK);
 
         checkUpdateResult(response);
     }
 
-    private void checkUpdateResult(ExtractableResponse<Response> response) {
-        var findCartItemResponses = getFindCartItemResponses(response);
-        var cartItemResponse1 = findCartItemResponses.get(0);
-        var cartItemResponse2 = findCartItemResponses.get(1);
+    private void checkUpdateResult(final ExtractableResponse<Response> response) {
+        final var findCartItemResponses = getFindCartItemResponses(response);
+        final var cartItemResponse1 = findCartItemResponses.get(0);
+        final var cartItemResponse2 = findCartItemResponses.get(1);
 
         assertAll(
                 () -> assertThat(cartItemResponse1.getId()).isEqualTo(1L),
@@ -195,14 +208,15 @@ public class CartAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private ExtractableResponse<Response> updateCartItem(Long cartId1, Long cartId2, String accessToken,
-                                                         HttpStatus httpStatus) {
-        var updateCartItemRequests = List.of(
+    private ExtractableResponse<Response> updateCartItem(final Long cartId1, final Long cartId2,
+                                                         final String accessToken,
+                                                         final HttpStatus httpStatus) {
+        final var updateCartItemRequests = List.of(
                 new UpdateCartItemRequest(cartId1, 10, false),
                 new UpdateCartItemRequest(cartId2, 5, true)
         );
 
-        var updateCartItemsRequest = new UpdateCartItemRequests(updateCartItemRequests);
+        final var updateCartItemsRequest = new UpdateCartItemRequests(updateCartItemRequests);
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
@@ -216,16 +230,16 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 장바구니_상품_추가한뒤_존재하지_않는_장바구니_아이디로_상품_수정_요청하는_경우() {
-        String accessToken = getAccessToken();
+        final String accessToken = getAccessToken();
 
         createCart(accessToken, 1L);
 
         createCart(accessToken, 2L);
 
-        var invalidCartId = 100L;
-        var response = updateCartItem(1L, invalidCartId, accessToken, HttpStatus.BAD_REQUEST);
+        final var invalidCartId = 100L;
+        final var response = updateCartItem(1L, invalidCartId, accessToken, HttpStatus.BAD_REQUEST);
 
-        var message = response.body().jsonPath().getString("message");
+        final var message = response.body().jsonPath().getString("message");
         assertThat(message).contains("[ERROR]", "장바구니", "아이템", "없");
     }
 }

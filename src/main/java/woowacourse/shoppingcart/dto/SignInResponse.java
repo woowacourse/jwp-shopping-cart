@@ -1,11 +1,12 @@
 package woowacourse.shoppingcart.dto;
 
 public class SignInResponse {
+
     private final String username;
     private final String email;
     private final String token;
 
-    public SignInResponse(String username, String email, String token) {
+    public SignInResponse(final String username, final String email, final String token) {
         this.username = username;
         this.email = email;
         this.token = token;

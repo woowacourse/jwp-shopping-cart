@@ -10,14 +10,15 @@ import woowacourse.shoppingcart.domain.Products;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ProductService {
+
     private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts(int size, int page) {
-        var products = new Products(productDao.findProducts());
+    public List<Product> findProducts(final int size, final int page) {
+        final var products = new Products(productDao.findProducts());
 
         return products.slice(size, page);
     }

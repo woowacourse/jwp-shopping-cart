@@ -3,13 +3,14 @@ package woowacourse.shoppingcart.domain;
 import java.util.Objects;
 
 public class CartItem {
+
     private final Long cartItemId;
     private Long customerId;
     private Long productId;
     private int quantity;
     private boolean checked;
 
-    public CartItem(Long cartItemId, Long customerId, Long productId, int quantity, boolean checked) {
+    public CartItem(final Long cartItemId, final Long customerId, final Long productId, final int quantity, final boolean checked) {
         this.cartItemId = cartItemId;
         this.customerId = customerId;
         this.productId = productId;
@@ -17,7 +18,7 @@ public class CartItem {
         this.checked = checked;
     }
 
-    public CartItem(Long cartItemId) {
+    public CartItem(final Long cartItemId) {
         this.cartItemId = cartItemId;
     }
 
@@ -42,14 +43,14 @@ public class CartItem {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CartItem cartItem = (CartItem) o;
+        final CartItem cartItem = (CartItem) o;
         return quantity == cartItem.quantity && checked == cartItem.checked && Objects.equals(cartItemId,
                 cartItem.cartItemId) && Objects.equals(customerId, cartItem.customerId)
                 && Objects.equals(productId, cartItem.productId);

@@ -18,6 +18,7 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 @Sql(scripts = {"/init.sql"})
 @ActiveProfiles("test")
 public class AcceptanceTest {
+
     @LocalServerPort
     int port;
 
@@ -26,7 +27,7 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    protected ExtractableResponse createSignInResult(SignInRequest signInRequest, HttpStatus httpStatus) {
+    protected ExtractableResponse createSignInResult(final SignInRequest signInRequest, final HttpStatus httpStatus) {
         return RestAssured
                 .given().log().all()
                 .body(signInRequest)
@@ -38,7 +39,7 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    protected ExtractableResponse createSignUpResult(SignUpRequest signUpRequest) {
+    protected ExtractableResponse createSignUpResult(final SignUpRequest signUpRequest) {
         return RestAssured
                 .given().log().all()
                 .body(signUpRequest)
@@ -49,7 +50,7 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    protected ExtractableResponse createCustomerInformation(String accessToken, HttpStatus httpStatus) {
+    protected ExtractableResponse createCustomerInformation(final String accessToken, final HttpStatus httpStatus) {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
@@ -59,9 +60,9 @@ public class AcceptanceTest {
                 .statusCode(httpStatus.value()).extract();
     }
 
-    protected ExtractableResponse createChangePasswordResult(String accessToken,
-                                                             ChangePasswordRequest changePasswordRequest,
-                                                             HttpStatus httpStatus) {
+    protected ExtractableResponse createChangePasswordResult(final String accessToken,
+                                                             final ChangePasswordRequest changePasswordRequest,
+                                                             final HttpStatus httpStatus) {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
@@ -75,9 +76,9 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    protected ExtractableResponse createDeleteCustomerResult(String accessToken,
-                                                             DeleteCustomerRequest deleteCustomerRequest,
-                                                             HttpStatus httpStatus) {
+    protected ExtractableResponse createDeleteCustomerResult(final String accessToken,
+                                                             final DeleteCustomerRequest deleteCustomerRequest,
+                                                             final HttpStatus httpStatus) {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)

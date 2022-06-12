@@ -9,25 +9,26 @@ import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.AuthorizationExtractor;
 
 public class AuthInterceptor implements HandlerInterceptor {
-    private AuthService authService;
 
-    public AuthInterceptor(AuthService authService) {
+    private final AuthService authService;
+
+    public AuthInterceptor(final AuthService authService) {
         this.authService = authService;
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler)
             throws Exception {
         if (HttpMethod.OPTIONS.matches(request.getMethod())) {
             return true;
         }
 
-        String token = AuthorizationExtractor.extract(request);
+        final String token = AuthorizationExtractor.extract(request);
         validateExpiredToken(token);
         return true;
     }
 
-    private void validateExpiredToken(String token) {
+    private void validateExpiredToken(final String token) {
         if (!authService.isValidToken(token)) {
             throw new InvalidTokenException();
         }

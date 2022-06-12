@@ -4,9 +4,10 @@ import java.util.List;
 import woowacourse.shoppingcart.domain.Product;
 
 public class FindAllProductsResponse {
+
     private final List<Product> products;
 
-    public FindAllProductsResponse(List<Product> products) {
+    public FindAllProductsResponse(final List<Product> products) {
         this.products = products;
     }
 

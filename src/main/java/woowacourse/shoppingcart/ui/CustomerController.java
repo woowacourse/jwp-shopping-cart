@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.dto.AuthorizedCustomer;
@@ -19,35 +20,36 @@ import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.service.CustomerService;
 
 @RestController
+@RequestMapping("/users")
 public class CustomerController {
 
     private final CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(final CustomerService customerService) {
         this.customerService = customerService;
     }
 
-    @PostMapping("/users")
-    public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+    @PostMapping
+    public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody final SignUpRequest signUpRequest) {
         return ResponseEntity.created(URI.create("/users/me")).body(customerService.signUp(signUpRequest));
     }
 
-    @GetMapping("/users/me")
+    @GetMapping("/me")
     public ResponseEntity<CustomerResponse> searchCustomerInformation(
-            @AuthenticationPrincipal AuthorizedCustomer authorizedCustomer) {
+            @AuthenticationPrincipal final AuthorizedCustomer authorizedCustomer) {
         return ResponseEntity.ok().body(CustomerResponse.from(authorizedCustomer));
     }
 
-    @PatchMapping("/users/me")
-    public ResponseEntity changePassword(@AuthenticationPrincipal AuthorizedCustomer authorizedCustomer,
-                                         @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+    @PatchMapping("/me")
+    public ResponseEntity changePassword(@AuthenticationPrincipal final AuthorizedCustomer authorizedCustomer,
+                                         @Valid @RequestBody final ChangePasswordRequest changePasswordRequest) {
         customerService.changePassword(authorizedCustomer, changePasswordRequest);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/users/me")
-    public ResponseEntity changePassword(@AuthenticationPrincipal AuthorizedCustomer authorizedCustomer,
-                                         @Valid @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
+    @DeleteMapping("/me")
+    public ResponseEntity changePassword(@AuthenticationPrincipal final AuthorizedCustomer authorizedCustomer,
+                                         @Valid @RequestBody final DeleteCustomerRequest deleteCustomerRequest) {
         customerService.deleteUser(authorizedCustomer, deleteCustomerRequest);
         return ResponseEntity.noContent().build();
     }

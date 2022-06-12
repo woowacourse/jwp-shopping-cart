@@ -12,10 +12,12 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
 public class ProductDao {
+
     private static final String NAME = "name";
     private static final String PRICE = "price";
     private static final String IMAGE_URL = "image_url";
     private static final String ID = "id";
+
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
@@ -48,7 +50,7 @@ public class ProductDao {
                             resultSet.getString(IMAGE_URL)
                     ), productId
             );
-        } catch (EmptyResultDataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             throw new InvalidProductException();
         }
     }

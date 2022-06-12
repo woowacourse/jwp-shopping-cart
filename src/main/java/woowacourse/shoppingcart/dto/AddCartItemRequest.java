@@ -2,11 +2,14 @@ package woowacourse.shoppingcart.dto;
 
 public class AddCartItemRequest {
 
-    private final Long productId;
-    private final int quantity;
-    private final boolean checked;
+    private Long productId;
+    private int quantity;
+    private boolean checked;
 
-    public AddCartItemRequest(Long productId, int quantity, boolean checked) {
+    public AddCartItemRequest() {
+    }
+
+    public AddCartItemRequest(final Long productId, final int quantity, final boolean checked) {
         this.productId = productId;
         this.quantity = quantity;
         this.checked = checked;

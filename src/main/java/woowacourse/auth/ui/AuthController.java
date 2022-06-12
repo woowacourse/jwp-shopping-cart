@@ -13,20 +13,21 @@ import woowacourse.shoppingcart.dto.SignInResponse;
 
 @RestController
 public class AuthController {
+
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(final AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody SignInRequest signInRequest) {
+    public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody final SignInRequest signInRequest) {
         return ResponseEntity.ok().body(authService.signIn(signInRequest));
     }
 
     @PostMapping("/token/refresh")
-    public ResponseEntity<SignInResponse> refreshToken(@AuthenticationPrincipal AuthorizedCustomer authorizedCustomer) {
-        var signInRequest = new SignInRequest(authorizedCustomer.getEmail(), authorizedCustomer.getPassword());
+    public ResponseEntity<SignInResponse> refreshToken(@AuthenticationPrincipal final AuthorizedCustomer authorizedCustomer) {
+        final var signInRequest = new SignInRequest(authorizedCustomer.getEmail(), authorizedCustomer.getPassword());
 
         return ResponseEntity.ok().body(authService.signIn(signInRequest));
     }

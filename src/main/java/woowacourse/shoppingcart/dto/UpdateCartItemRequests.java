@@ -6,12 +6,13 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.CartItems;
 
 public class UpdateCartItemRequests {
+
     private List<UpdateCartItemRequest> cartItems;
 
     public UpdateCartItemRequests() {
     }
 
-    public UpdateCartItemRequests(List<UpdateCartItemRequest> updateCartItemRequest) {
+    public UpdateCartItemRequests(final List<UpdateCartItemRequest> updateCartItemRequest) {
         this.cartItems = updateCartItemRequest;
     }
 
@@ -20,7 +21,7 @@ public class UpdateCartItemRequests {
     }
 
     public CartItems toCartItems() {
-        var cartItemIds = cartItems.stream()
+        final var cartItemIds = cartItems.stream()
                 .map(it -> new CartItem(it.getId()))
                 .collect(Collectors.toList());
 

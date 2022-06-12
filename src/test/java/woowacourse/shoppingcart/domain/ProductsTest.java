@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.ProductFixture.PAPER;
 import static woowacourse.shoppingcart.ProductFixture.CHEESE;
+import static woowacourse.shoppingcart.ProductFixture.PAPER;
 import static woowacourse.shoppingcart.ProductFixture.PEN;
 import static woowacourse.shoppingcart.ProductFixture.WATER;
 
@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public class ProductsTest {
+
     public static Stream<Arguments> provide() {
         return Stream.of(
                 Arguments.of(1, 1, List.of(WATER)),
@@ -24,11 +25,11 @@ public class ProductsTest {
 
     @ParameterizedTest
     @MethodSource("provide")
-    void 상품_갯수_페이지로_상품_목록_자르기(int size, int page, List<Product> expected) {
-        var productList = List.of(WATER, CHEESE, PAPER, PEN);
-        var products = new Products(productList);
+    void 상품_갯수_페이지로_상품_목록_자르기(final int size, final int page, final List<Product> expected) {
+        final var productList = List.of(WATER, CHEESE, PAPER, PEN);
+        final var products = new Products(productList);
 
-        var slicedProducts = products.slice(size, page);
+        final var slicedProducts = products.slice(size, page);
 
         assertThat(slicedProducts).isEqualTo(expected);
     }

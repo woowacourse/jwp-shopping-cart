@@ -22,6 +22,7 @@ import woowacourse.shoppingcart.service.CartService;
 @RestController
 @RequestMapping("/cart")
 public class CartItemController {
+
     private final CartService cartService;
 
     public CartItemController(final CartService cartService) {
@@ -67,10 +68,10 @@ public class CartItemController {
             @AuthenticationPrincipal final AuthorizedCustomer authorizedCustomer,
             @RequestBody final UpdateCartItemRequests updateCartItemRequests
     ) {
-        var customerId = authorizedCustomer.getId();
+        final var customerId = authorizedCustomer.getId();
 
         cartService.update(customerId, updateCartItemRequests);
-        var findAllCartItemResponse = cartService.getAllCartItem(customerId);
+        final var findAllCartItemResponse = cartService.getAllCartItem(customerId);
 
         return ResponseEntity.ok().body(findAllCartItemResponse);
     }

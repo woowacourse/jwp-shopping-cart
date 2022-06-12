@@ -5,16 +5,17 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Products {
+
     private final List<Product> products;
 
-    public Products(List<Product> products) {
+    public Products(final List<Product> products) {
         this.products = products;
     }
 
-    public List<Product> slice(int size, int page) {
-        var fromIndex = size * (page - 1);
-        var toIndex = size * page;
-        var totalSize = products.size();
+    public List<Product> slice(final int size, final int page) {
+        final var fromIndex = size * (page - 1);
+        final var toIndex = size * page;
+        final var totalSize = products.size();
 
         if (toIndex > totalSize) {
             return new ArrayList<>(products.subList(fromIndex, totalSize));
@@ -22,7 +23,7 @@ public class Products {
         return new ArrayList<>(products.subList(fromIndex, toIndex));
     }
 
-    public Product findById(Long productId) {
+    public Product findById(final Long productId) {
         return products.stream()
                 .filter(it -> it.getId().equals(productId))
                 .findFirst()

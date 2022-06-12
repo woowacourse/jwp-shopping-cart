@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.domain;
 import java.util.Objects;
 
 public class Product {
+
     private Long id;
     private String name;
     private Integer price;
@@ -39,14 +40,14 @@ public class Product {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Product product = (Product) o;
+        final Product product = (Product) o;
         return Objects.equals(id, product.id) && Objects.equals(name, product.name)
                 && Objects.equals(price, product.price) && Objects.equals(imageUrl, product.imageUrl);
     }

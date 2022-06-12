@@ -4,18 +4,19 @@ import java.util.Objects;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 public class Password {
+
     private static final String KOREAN_REGEX = ".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*";
     private static final String BLANK = " ";
     private static final int LOWER_BOUND_LENGTH = 6;
 
     private final String password;
 
-    public Password(String password) {
+    public Password(final String password) {
         checkValid(password);
         this.password = password;
     }
 
-    private void checkValid(String password) {
+    private void checkValid(final String password) {
         if (password.matches(KOREAN_REGEX)) {
             throw new InvalidCustomerException("[ERROR] 비밀번호에 한글이 포함될수 없습니다.");
         }
@@ -28,14 +29,14 @@ public class Password {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Password password1 = (Password) o;
+        final Password password1 = (Password) o;
         return Objects.equals(password, password1.password);
     }
 
