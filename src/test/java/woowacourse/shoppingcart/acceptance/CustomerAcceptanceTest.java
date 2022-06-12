@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.fixture.RestAssuredFixture.postLogin;
 import static woowacourse.fixture.shoppingcart.TCustomer.ROOKIE;
 
 import io.restassured.response.ExtractableResponse;
@@ -10,7 +9,6 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.application.dto.TokenResponse;
 import woowacourse.global.exception.ErrorResponse;
 import woowacourse.shoppingcart.application.dto.CustomerResponse;
 

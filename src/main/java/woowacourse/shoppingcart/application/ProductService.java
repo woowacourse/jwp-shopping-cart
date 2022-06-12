@@ -35,8 +35,4 @@ public class ProductService {
                 .map(it -> new ProductResponse(it.getId(), it.getName(), it.getPrice(), it.getImageUrl()))
                 .collect(Collectors.toList());
     }
-
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
-    }
 }
