@@ -10,6 +10,16 @@ import woowacourse.shoppingcart.exception.invalid.InvalidUserNameException;
 class UserNameTest {
 
     @ParameterizedTest
+    @ValueSource(strings = {"ellie", "haeri", "jennie"})
+    void 이름_생성(String value) {
+        // when
+        UserName userName = new UserName(value);
+
+        // then
+        assertThat(userName.getValue()).isEqualTo(value);
+    }
+
+    @ParameterizedTest
     @ValueSource(strings = {"", "aaaa", "aaaaaaaaaaaaaaaaaaaaa"})
     void 이름이_5자_미만_20자_초과일_경우_예외_발생(String name) {
         assertThatThrownBy(() -> new UserName(name))
