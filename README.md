@@ -131,7 +131,9 @@
 - [x] 순회를 하면서 조회를 하는데 한번에 조회하는 방법도 있지 않을까요?
   - 레거시 코드의 `List<Long> findIdsByCustomerId`를 `List<Cart> findAllByCustomerId`로 수정하여 해결해봤습니다. 
 - [x] 서버에서 에러가 발생했습니다 와 같이 표현해주는게 더 파악하기 쉽지 않을까 하는 개인적인 의견입니다~
-- [ ] 주문상세를 여러개 가진 주문 한건을 의미하는 것 같은데 Orders가 맞을까요?
+- [x] 주문상세를 여러개 가진 주문 한건을 의미하는 것 같은데 Orders가 맞을까요?
+  - Order로 수정했습니다. 
+  - 구현하지는 못했지만 (A, B, C 물품을 구매한 주문 ㄱ), (B, C, D를 구매한 주문 ㄴ)이 있다면 ㄱ과 ㄴ은 Order이 되어야 하기 때문에 Order가 맞다고 이해했습니다.
 - [ ] 도메인과 service에 대한 테스트가 없는 것들이 있는것 같아요!
 - [ ] Impl을 붙이는 방식은 이제 사용을 권장하지 않는 것 같아서요. 
   - CartItemRepository를 interface로 하고 CartItemDao가 implments하는 방식으로 해도되지 않을까 싶습니다

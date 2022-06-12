@@ -11,7 +11,7 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Order;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -51,7 +51,7 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
+    public Order findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
@@ -64,7 +64,7 @@ public class OrderService {
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
+    public List<Order> findOrdersByCustomerName(final String customerName) {
         final Long customerId = customerDao.findByUsername(customerName).getId();
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
@@ -73,7 +73,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
+    private Order findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
             final Product product = productDao.findProductById(productQuantity.getProductId());
@@ -81,6 +81,6 @@ public class OrderService {
             ordersDetails.add(new OrderDetail(product, quantity));
         }
 
-        return new Orders(orderId, ordersDetails);
+        return new Order(orderId, ordersDetails);
     }
 }

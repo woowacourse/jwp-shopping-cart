@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class OrdersDetailDaoTest {
+class OrderDetailDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
     private final OrdersDetailDao ordersDetailDao;
@@ -26,7 +26,7 @@ class OrdersDetailDaoTest {
     private long productId;
     private long customerId;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
+    public OrderDetailDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
     }
