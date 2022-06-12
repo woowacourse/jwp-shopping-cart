@@ -1,23 +1,30 @@
 package woowacourse.auth.ui;
 
+import io.jsonwebtoken.JwtException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.support.AuthorizationExtractor;
+import woowacourse.auth.support.JwtTokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
 
+@Component
 public class LoginInterceptor implements HandlerInterceptor {
 
     public static final List<RequestEndPoint> excludedEndPoint = List.of(
-            new RequestEndPoint("POST", "/api/customers"),
-            new RequestEndPoint("POST", "/api/auth/login")
+            new RequestEndPoint("POST", "/api/customers")
     );
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public LoginInterceptor(final JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler)
-            throws Exception {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
 
         final String requestMethod = request.getMethod();
         final String requestURI = request.getRequestURI();
@@ -28,8 +35,13 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         final String token = AuthorizationExtractor.extract(request);
+
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new JwtException("유효하지 않은 토큰입니다.");
+        }
+
         request.setAttribute("token", token);
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 
     public static class RequestEndPoint {

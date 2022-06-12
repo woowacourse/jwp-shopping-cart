@@ -11,7 +11,7 @@ public class AuthorizationExtractor {
     private static final String BEARER_TYPE = "Bearer";
 
     public static String extract(final HttpServletRequest request) {
-        Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
+        final Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
             if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {

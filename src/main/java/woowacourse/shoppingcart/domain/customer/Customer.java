@@ -1,9 +1,9 @@
-package woowacourse.shoppingcart.domain.Customer;
+package woowacourse.shoppingcart.domain.customer;
 
 import woowacourse.shoppingcart.exception.EmailValidationException;
 import woowacourse.utils.StringValidator;
 
-import static woowacourse.shoppingcart.domain.Customer.Email.empty;
+import static woowacourse.shoppingcart.domain.customer.Email.empty;
 
 public class Customer {
 
@@ -18,7 +18,6 @@ public class Customer {
         this.password = password;
         this.username = username;
     }
-
 
     public static Customer createWithoutId(final String email, final String password, final String username) {
         StringValidator.validateNullOrBlank(email, new EmailValidationException("이메일에는 공백이 들어가면 안됩니다."));

@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import woowacourse.auth.dto.SignInDto;
-import woowacourse.shoppingcart.dto.SignUpDto;
+import woowacourse.shoppingcart.dto.request.SignUpDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -62,6 +62,25 @@ public class AcceptanceTest {
                 .header(header)
                 .body(body)
                 .when().put(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> patch(final String uri, final Header header, final Object body) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(header)
+                .body(body)
+                .when().patch(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> delete(final String uri, final Header header) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(header)
+                .when().delete(uri)
                 .then().log().all()
                 .extract();
     }

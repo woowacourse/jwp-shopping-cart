@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain.Customer;
+package woowacourse.shoppingcart.domain.customer;
 
 import woowacourse.shoppingcart.exception.EmailValidationException;
 import woowacourse.utils.StringValidator;

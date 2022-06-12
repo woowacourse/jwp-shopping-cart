@@ -9,10 +9,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -21,6 +23,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ProductDaoTest {
 
     private final ProductDao productDao;
+    private Product product1 = new Product("product1", 10000, null, 10);
+    private Product product2 = new Product("product2", 11000, null, 10);
 
     public ProductDaoTest(JdbcTemplate jdbcTemplate) {
         this.productDao = new ProductDao(jdbcTemplate);
@@ -35,7 +39,7 @@ public class ProductDaoTest {
         final String imageUrl = "www.test.com";
 
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, imageUrl, 10));
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -48,11 +52,11 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        final Long productId = productDao.save(new Product(name, price, imageUrl, 10));
+        final Product expectedProduct = new Product(productId, name, price, imageUrl, 10);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(productId).get();
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -72,7 +76,7 @@ public class ProductDaoTest {
         assertThat(products).size().isEqualTo(size);
     }
 
-    @DisplayName("싱품 삭제")
+    @DisplayName("싱품을 삭제한다.")
     @Test
     void deleteProduct() {
         // given
@@ -80,7 +84,7 @@ public class ProductDaoTest {
         final int price = 1_000;
         final String imageUrl = "www.test.com";
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, imageUrl, 10));
         final int beforeSize = productDao.findProducts().size();
 
         // when
@@ -89,5 +93,29 @@ public class ProductDaoTest {
         // then
         final int afterSize = productDao.findProducts().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
+    }
+
+
+    @Test
+    @DisplayName("상품을 삭제할떄 존재하지 않는 상품이면 예외가 발생한다.")
+    void deleteProductById_NotFoundException() {
+        //then
+        assertThatThrownBy(() -> productDao.delete(0L))
+                .isInstanceOf(NotFoundProductException.class)
+                .hasMessage("존재하지 않는 상품 ID입니다.");
+    }
+
+    @Test
+    @DisplayName("상품을 여러 개 등록한다.")
+    void saveAll() {
+        List<Product> products = List.of(
+                product1,
+                product2
+        );
+
+        productDao.saveAll(products);
+
+        assertThat(productDao.findProducts()).extracting("name")
+                .contains("product1", "product2");
     }
 }

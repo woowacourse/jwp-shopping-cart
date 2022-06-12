@@ -20,7 +20,7 @@ class StringValidatorTest {
     @DisplayName("길이값을 검증한 뒤 조건에 부합하지 않으면 예외를 발생시킨다.")
     void validateLength() {
         assertThatThrownBy(() -> {
-            String longerThanMaxLength = "longerThanMaxLength";
+            final String longerThanMaxLength = "longerThanMaxLength";
             StringValidator.validateLength(1, 10, longerThanMaxLength, new UsernameValidationException("정해진 길이보다 깁니다."));
         })
                 .isInstanceOf(UsernameValidationException.class)

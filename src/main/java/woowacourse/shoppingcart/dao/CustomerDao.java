@@ -1,14 +1,16 @@
 package woowacourse.shoppingcart.dao;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer.Customer;
-import woowacourse.shoppingcart.domain.Customer.Email;
-import woowacourse.shoppingcart.domain.Customer.Username;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.domain.customer.Username;
+import woowacourse.shoppingcart.exception.DuplicateNameException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 import java.sql.PreparedStatement;
@@ -31,24 +33,25 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     public Long save(final Customer customer) {
-        final String query = "INSERT INTO CUSTOMER(email, password, username) values(?, ?, ?)";
+        final String query = "INSERT INTO customer(email, password, username) values(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, customer.getEmail());
-            preparedStatement.setString(2, customer.getPassword());
-            preparedStatement.setString(3, customer.getUsername());
-            return preparedStatement;
-        }, keyHolder);
-
+        try {
+            jdbcTemplate.update(connection -> {
+                final PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
+                preparedStatement.setString(1, customer.getEmail());
+                preparedStatement.setString(2, customer.getPassword());
+                preparedStatement.setString(3, customer.getUsername());
+                return preparedStatement;
+            }, keyHolder);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateNameException("이미 가입된 닉네임입니다.");
+        }
         return keyHolder.getKey().longValue();
     }
 
     public Optional<Customer> findById(final Long createdMemberId) {
-        final String query = "SELECT id, email, password, username FROM CUSTOMER WHERE id = ?";
+        final String query = "SELECT id, email, password, username FROM customer WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, memberRowMapper, createdMemberId));
         } catch (EmptyResultDataAccessException e) {
@@ -75,20 +78,22 @@ public class CustomerDao {
     }
 
     public void update(final Customer customer) {
-        final String query = "UPDATE CUSTOMER SET username = ? WHERE id = ?";
-
-        final int changedRowCount = jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, customer.getUsername());
-            preparedStatement.setLong(2, customer.getId());
-            return preparedStatement;
-        });
-
-        checkAffectedRowCount(changedRowCount);
+        final String query = "UPDATE customer SET username = ? WHERE id = ?";
+        try {
+            final int changedRowCount = jdbcTemplate.update(connection -> {
+                final PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, customer.getUsername());
+                preparedStatement.setLong(2, customer.getId());
+                return preparedStatement;
+            });
+            checkAffectedRowCount(changedRowCount);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateNameException("이미 존재하는 닉네임입니다.");
+        }
     }
 
     public void deleteById(final Long id) {
-        final String query = "DELETE FROM CUSTOMER WHERE id = ?";
+        final String query = "DELETE FROM customer WHERE id = ?";
 
         final int deletedRowCount = jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement = connection.prepareStatement(query);

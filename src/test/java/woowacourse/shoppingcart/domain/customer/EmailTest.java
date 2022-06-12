@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain.Customer;
+package woowacourse.shoppingcart.domain.customer;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

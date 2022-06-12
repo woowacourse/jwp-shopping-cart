@@ -1,6 +1,6 @@
 package woowacourse.auth.dto;
 
-import woowacourse.shoppingcart.dto.CustomerDto;
+import woowacourse.shoppingcart.dto.response.CustomerDto;
 
 public class TokenResponseDto {
 
