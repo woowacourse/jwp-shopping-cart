@@ -1,19 +1,14 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.fixture.RequestFixture.*;
+
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.LoginResponse;
-import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
-import woowacourse.shoppingcart.dto.request.SignUpRequest;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -26,7 +21,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 회원_가입() {
         // when
-        ExtractableResponse<Response> createResponse = 회원_가입("ellie", "Ellie1234!");
+        ExtractableResponse<Response> createResponse = 회원_가입_요청("ellie", "Ellie1234!");
 
         // then
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -42,10 +37,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 중복된_이름으로_회원_가입() {
         // given
-        회원_가입("ellie", "Ellie1234!");
+        회원_가입_요청("ellie", "Ellie1234!");
 
         // when
-        ExtractableResponse<Response> createResponse = 회원_가입("ellie", "Ellie1234!");
+        ExtractableResponse<Response> createResponse = 회원_가입_요청("ellie", "Ellie1234!");
 
         // then
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -59,7 +54,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 회원가입_시_누락된_필드값_존재() {
         // when
-        ExtractableResponse<Response> createResponse = 회원_가입("ellie", null);
+        ExtractableResponse<Response> createResponse = 회원_가입_요청("ellie", null);
 
         // given
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -75,11 +70,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 내_정보_조회() {
         // given
-        회원_가입("ellie", "Ellie1234!");
+        회원_가입_요청("ellie", "Ellie1234!");
         String accessToken = 로그인_및_토큰_발급("ellie", "Ellie1234!");
 
         // when
-        ExtractableResponse<Response> getResponse = 내_정보_조회(accessToken);
+        ExtractableResponse<Response> getResponse = 내_정보_조회_요청(accessToken);
 
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -94,7 +89,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 유효하지_않은_토큰으로_내_정보_조회() {
         // when
-        ExtractableResponse<Response> getResponse = 내_정보_조회("invalid_token");
+        ExtractableResponse<Response> getResponse = 내_정보_조회_요청("invalid_token");
 
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -110,11 +105,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 내_정보_수정() {
         // given
-        회원_가입("ellie", "Ellie1234!");
+        회원_가입_요청("ellie", "Ellie1234!");
         String accessToken = 로그인_및_토큰_발급("ellie", "Ellie1234!");
 
         // when
-        ExtractableResponse<Response> editResponse = 내_정보_수정(accessToken, "ellie", "Ellie1234@");
+        ExtractableResponse<Response> editResponse = 내_정보_수정_요청(accessToken, "ellie", "Ellie1234@");
 
         // then
         ExtractableResponse<Response> loginResponse = 로그인("ellie", "Ellie1234@");
@@ -131,7 +126,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 유효하지_않은_토큰으로_내_정보_수정() {
         // when
-        ExtractableResponse<Response> editResponse = 내_정보_수정("invalid_token", "ellie", "123456789");
+        ExtractableResponse<Response> editResponse = 내_정보_수정_요청("invalid_token", "ellie", "123456789");
 
         // then
         assertThat(editResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -147,14 +142,42 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 회원_탈퇴() {
         // given
-        회원_가입("ellie", "Ellie1234!");
+        회원_가입_요청("ellie", "Ellie1234!");
         String accessToken = 로그인_및_토큰_발급("ellie", "Ellie1234!");
 
         // when
-        ExtractableResponse<Response> deleteResponse = 회원_탈퇴(accessToken);
+        ExtractableResponse<Response> deleteResponse = 회원_탈퇴_요청(accessToken);
 
         // then
-        ExtractableResponse<Response> getResponse = 내_정보_조회(accessToken);
+        ExtractableResponse<Response> getResponse = 내_정보_조회_요청(accessToken);
+
+        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    /*
+        Scenario: 장바구니에 아이템이 담겨 있는 상태에서 회원 탈퇴
+            Given: 상품이 등록되어 있다.
+            And: 회원 가입을 한다.
+            And: 로그인을 한다.
+            And: 장바구니에 상품을 담는다.
+            When: 회원 탈퇴를 요청한다.
+            Then: 204 상태를 응답한다.
+    */
+    @Test
+    void 장바구니에_아이템이_담겨_있는_상태로_회원_탈퇴() {
+        // given
+        Long productId = 상품_등록되어_있음("MacBook Air", 1_400_000,
+                "https://www.apple.com/v/macbook-air-m2/a/images/overview/compare/compare_mba__bjfeags91jyu_large_2x.png");
+        회원_가입_요청("ellie", "Ellie1234!");
+        String accessToken = 로그인_및_토큰_발급("ellie", "Ellie1234!");
+        장바구니_아이템_추가_요청(accessToken, productId);
+
+        // when
+        ExtractableResponse<Response> deleteResponse = 회원_탈퇴_요청(accessToken);
+
+        // then
+        ExtractableResponse<Response> getResponse = 내_정보_조회_요청(accessToken);
 
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
@@ -168,7 +191,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 유효하지_않은_토큰으로_회원_탈퇴() {
         // when
-        ExtractableResponse<Response> deleteResponse = 회원_탈퇴("invalid_token");
+        ExtractableResponse<Response> deleteResponse = 회원_탈퇴_요청("invalid_token");
 
         // then
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -183,10 +206,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 존재하는_이름으로_회원_이름_중복_검사() {
         // given
-        회원_가입("ellie", "Ellie1234!");
+        회원_가입_요청("ellie", "Ellie1234!");
 
         // when
-        ExtractableResponse<Response> checkDuplicationResponse = 회원_이름_중복_검사("ellie");
+        ExtractableResponse<Response> checkDuplicationResponse = 회원_이름_중복_검사_요청("ellie");
 
         // then
         assertAll(
@@ -203,75 +226,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void 존재하지_않는_이름으로_회원_이름_중복_검사() {
         // when
-        ExtractableResponse<Response> checkDuplicationResponse = 회원_이름_중복_검사("ellie");
+        ExtractableResponse<Response> checkDuplicationResponse = 회원_이름_중복_검사_요청("ellie");
 
         // then
         assertAll(
                 () -> assertThat(checkDuplicationResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(checkDuplicationResponse.body().jsonPath().getBoolean("isDuplicate")).isFalse()
         );
-    }
-
-    private ExtractableResponse<Response> 회원_가입(String name, String password) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new SignUpRequest(name, password))
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 로그인(String name, String password) {
-        return RestAssured
-                .given().log().all()
-                .body(new LoginRequest(name, password))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/login")
-                .then().log().all().extract();
-    }
-
-    private String 로그인_및_토큰_발급(String name, String password) {
-        return 로그인(name, password).as(LoginResponse.class).getAccessToken();
-    }
-
-    private ExtractableResponse<Response> 내_정보_조회(String accessToken) {
-        return RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/me")
-                .then().log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 내_정보_수정(String accessToken, String name, String password) {
-        return RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new EditCustomerRequest(name, password))
-                .when().put("/api/customers/me")
-                .then().log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 회원_탈퇴(String accessToken) {
-        return RestAssured
-                .given().log().all()
-                .auth().oauth2(accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/me")
-                .then().log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 회원_이름_중복_검사(String userName) {
-        return RestAssured
-                .given().log().all()
-                .when().get("/api/customers/exists?userName=" + userName)
-                .then().log().all()
-                .extract();
     }
 }
