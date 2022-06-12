@@ -48,10 +48,6 @@ class CartServiceTest {
         final Product product = new Product(1L, "치킨", 3000, "www.chicken.com");
 
         // when
-        when(customerDao.findById(1L))
-                .thenReturn(Optional.of(customer));
-        when(productDao.findProductById(1L))
-                .thenReturn(Optional.of(product));
         when(cartItemDao.addCartItem(customer.getId(), product.getId(), request.getQuantity()))
                 .thenReturn(1L);
 
@@ -64,15 +60,8 @@ class CartServiceTest {
     void add_duplicateCartItemExists_throwsException() {
         // given
         final CartSaveServiceRequest request = new CartSaveServiceRequest(1L, 5);
-        final String password = PasswordEncryptor.encrypt("12345678");
-        final Customer customer = new Customer(1L, "썬", new Email("sun@gmail.com"), new EncodedPassword(password));
-        final Product product = new Product(1L, "치킨", 3000, "www.chicken.com");
 
         // when
-        when(customerDao.findById(1L))
-                .thenReturn(Optional.of(customer));
-        when(productDao.findProductById(1L))
-                .thenReturn(Optional.of(product));
         when(cartItemDao.existsInCart(any(Long.class), any(Long.class)))
                 .thenReturn(true);
 
@@ -109,8 +98,6 @@ class CartServiceTest {
         final Cart cart = new Cart(1L, 1L, "치킨", 3000, "www.chicken.com", 5);
 
         // when
-        when(customerDao.findById(any(Long.class)))
-                .thenReturn(Optional.of(customer));
         when(cartItemDao.findCartByCustomerIdAndProductId(any(Long.class), any(Long.class)))
                 .thenReturn(Optional.of(cart));
         cartService.updateQuantity(customer.getId(), new CartUpdateServiceRequest(product.getId(), 1000));
@@ -127,8 +114,6 @@ class CartServiceTest {
         final Customer customer = new Customer(1L, "썬", new Email("sun@gmail.com"), new EncodedPassword(password));
 
         // when
-        when(customerDao.findById(any(Long.class)))
-                .thenReturn(Optional.of(customer));
         when(cartItemDao.findIdsByCustomerId(any(Long.class)))
                 .thenReturn(List.of(1L, 2L));
 

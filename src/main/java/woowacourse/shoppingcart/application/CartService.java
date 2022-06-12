@@ -4,18 +4,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.CartDeleteServiceRequest;
 import woowacourse.shoppingcart.application.dto.CartSaveServiceRequest;
+import woowacourse.shoppingcart.application.dto.CartServiceResponse;
 import woowacourse.shoppingcart.application.dto.CartUpdateServiceRequest;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.AlreadyInCartException;
-import woowacourse.shoppingcart.application.dto.CartServiceResponse;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-import woowacourse.shoppingcart.exception.ProductNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,11 +31,9 @@ public class CartService {
 
     @Transactional
     public Long add(final Long customerId, final CartSaveServiceRequest request) {
-        final Customer customer = getCustomer(customerId);
-        final Product product = getProduct(request.getProductId());
         validateExistsInCart(customerId, request.getProductId());
 
-        return cartItemDao.addCartItem(customer.getId(), product.getId(), request.getQuantity());
+        return cartItemDao.addCartItem(customerId, request.getProductId(), request.getQuantity());
     }
 
     public List<CartServiceResponse> findAllByCustomerId(final Long id) {
@@ -50,7 +44,6 @@ public class CartService {
 
     @Transactional
     public void updateQuantity(final Long customerId, final CartUpdateServiceRequest request) {
-        getCustomer(customerId);
         final Cart cart = cartItemDao.findCartByCustomerIdAndProductId(customerId, request.getProductId())
                 .orElseThrow(NotInCustomerCartItemException::new);
 
@@ -61,19 +54,8 @@ public class CartService {
 
     @Transactional
     public void delete(final Long customerId, final CartDeleteServiceRequest request) {
-        getCustomer(customerId);
         validateExistInCart(customerId, request.getCartIds());
         cartItemDao.deleteAllById(request.getCartIds());
-    }
-
-    private Customer getCustomer(final Long id) {
-        return customerDao.findById(id)
-                .orElseThrow(CustomerNotFoundException::new);
-    }
-
-    private Product getProduct(final Long productId) {
-        return productDao.findProductById(productId)
-                .orElseThrow(ProductNotFoundException::new);
     }
 
     private void validateExistsInCart(final Long customerId, final Long productId) {

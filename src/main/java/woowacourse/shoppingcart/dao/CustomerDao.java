@@ -45,6 +45,14 @@ public class CustomerDao {
         return new Customer(id, customer.getName(), customer.getEmail(), customer.getPassword());
     }
 
+    public boolean existsById(final Long id) {
+        final String sql = "SELECT EXISTS (SELECT * FROM customer WHERE id = :id)";
+        final MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id);
+
+        return Boolean.TRUE.equals(namedJdbcTemplate.queryForObject(sql, params, Boolean.class));
+    }
+
     public boolean existsByEmail(final Customer customer) {
         final String sql = "SELECT EXISTS (SELECT * FROM customer WHERE email = :email)";
         final Map<String, Object> params = new HashMap<>();
