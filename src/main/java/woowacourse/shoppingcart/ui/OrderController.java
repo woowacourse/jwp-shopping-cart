@@ -39,7 +39,7 @@ public class OrderController {
 
     private List<OrderServiceRequest> convertOrderServiceRequest(List<OrderRequest> orders) {
         return orders.stream()
-                .map(v -> new OrderServiceRequest(v.getCartId()))
+                .map(OrderRequest::toServiceRequest)
                 .collect(Collectors.toList());
     }
 

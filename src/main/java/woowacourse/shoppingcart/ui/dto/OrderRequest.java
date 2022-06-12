@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.ui.dto;
 
+import woowacourse.shoppingcart.application.dto.OrderServiceRequest;
+
 import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
@@ -8,6 +10,10 @@ public class OrderRequest {
     private Long cartId;
 
     public OrderRequest() {
+    }
+
+    public OrderServiceRequest toServiceRequest() {
+        return new OrderServiceRequest(cartId);
     }
 
     public OrderRequest(Long cartId) {

@@ -4,9 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.member.application.MemberService;
-import woowacourse.member.application.dto.SignUpServiceRequest;
-import woowacourse.member.application.dto.UpdateNameServiceRequest;
-import woowacourse.member.application.dto.UpdatePasswordServiceRequest;
 import woowacourse.member.ui.dto.FindMemberInfoResponse;
 import woowacourse.member.ui.dto.SignUpRequest;
 import woowacourse.member.ui.dto.UpdateNameRequest;
@@ -27,8 +24,7 @@ public class MemberController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void signUp(@Valid @RequestBody SignUpRequest request) {
-        SignUpServiceRequest serviceRequest = new SignUpServiceRequest(request.getEmail(), request.getName(), request.getPassword());
-        memberService.signUp(serviceRequest);
+        memberService.signUp(request.toServiceRequest());
     }
 
     @GetMapping("/me")
@@ -46,16 +42,13 @@ public class MemberController {
     @PutMapping("/me/name")
     @ResponseStatus(HttpStatus.OK)
     public void updateName(@AuthenticationPrincipal long id, @Valid @RequestBody UpdateNameRequest request) {
-        UpdateNameServiceRequest serviceRequest = new UpdateNameServiceRequest(id, request.getName());
-        memberService.updateName(serviceRequest);
+        memberService.updateName(request.toServiceRequest(id));
     }
 
     @PutMapping("/me/password")
     @ResponseStatus(HttpStatus.OK)
     public void updatePassword(@AuthenticationPrincipal long id, @Valid @RequestBody UpdatePasswordRequest request) {
-        UpdatePasswordServiceRequest serviceRequest =
-                new UpdatePasswordServiceRequest(id, request.getOldPassword(), request.getNewPassword());
-        memberService.updatePassword(serviceRequest);
+        memberService.updatePassword(request.toServiceRequest(id));
     }
 
     @DeleteMapping("/me")

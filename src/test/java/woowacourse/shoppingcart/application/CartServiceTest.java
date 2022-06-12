@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.exception.MemberNotFoundException;
+import woowacourse.shoppingcart.application.dto.AddCartServiceRequest;
 import woowacourse.shoppingcart.application.dto.UpdateQuantityServiceRequest;
 import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.domain.Cart;
@@ -36,7 +37,8 @@ class CartServiceTest {
     @DisplayName("올바른 데이터로 장바구니를 동록하면 장바구니 등록 ID를 반환한다.")
     @Test
     void add() {
-        long cartId = cartService.add(3L, 1L);
+        AddCartServiceRequest request = new AddCartServiceRequest(3L, 1L);
+        long cartId = cartService.add(request);
         assertThat(cartId).isEqualTo(6L);
     }
 
@@ -45,8 +47,9 @@ class CartServiceTest {
     void addDuplicateProduct() {
         long memberId = 3L;
         long productId = 1L;
-        long cartId = cartService.add(memberId, productId);
-        cartService.add(memberId, productId);
+        AddCartServiceRequest request = new AddCartServiceRequest(memberId, productId);
+        long cartId = cartService.add(request);
+        cartService.add(request);
 
         List<CartResponse> carts = cartService.findCarts(memberId);
         CartResponse cart = carts.stream()
@@ -58,7 +61,10 @@ class CartServiceTest {
     @DisplayName("등록되지 않은 회원으로 장바구니를 동록하면 예외가 발생한다.")
     @Test
     void addWithNotExistMember() {
-        assertThatThrownBy(() -> cartService.add(100L, 1L))
+        long memberId = 100L;
+        long productId = 1L;
+        AddCartServiceRequest request = new AddCartServiceRequest(memberId, productId);
+        assertThatThrownBy(() -> cartService.add(request))
                 .isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
     }
@@ -67,7 +73,10 @@ class CartServiceTest {
     @DisplayName("등록되지 않은 상품으로 장바구니를 동록하면 예외가 발생한다.")
     @Test
     void addWithNotExistProduct() {
-        assertThatThrownBy(() -> cartService.add(1L, 100L))
+        long memberId = 1L;
+        long productId = 100L;
+        AddCartServiceRequest request = new AddCartServiceRequest(memberId, productId);
+        assertThatThrownBy(() -> cartService.add(request))
                 .isInstanceOf(ProductNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 상품입니다.");
     }

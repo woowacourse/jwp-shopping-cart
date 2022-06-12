@@ -1,5 +1,7 @@
 package woowacourse.member.ui.dto;
 
+import woowacourse.member.application.dto.UpdatePasswordServiceRequest;
+
 import javax.validation.constraints.NotBlank;
 
 public class UpdatePasswordRequest {
@@ -16,6 +18,10 @@ public class UpdatePasswordRequest {
     public UpdatePasswordRequest(String oldPassword, String newPassword) {
         this.oldPassword = oldPassword;
         this.newPassword = newPassword;
+    }
+
+    public UpdatePasswordServiceRequest toServiceRequest(long memberId) {
+        return new UpdatePasswordServiceRequest(memberId, oldPassword, newPassword);
     }
 
     public String getOldPassword() {

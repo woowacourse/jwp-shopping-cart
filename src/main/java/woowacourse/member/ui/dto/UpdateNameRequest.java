@@ -1,5 +1,7 @@
 package woowacourse.member.ui.dto;
 
+import woowacourse.member.application.dto.UpdateNameServiceRequest;
+
 import javax.validation.constraints.NotBlank;
 
 public class UpdateNameRequest {
@@ -8,6 +10,10 @@ public class UpdateNameRequest {
     private String name;
 
     public UpdateNameRequest() {
+    }
+
+    public UpdateNameServiceRequest toServiceRequest(long memberId) {
+        return new UpdateNameServiceRequest(memberId, name);
     }
 
     public UpdateNameRequest(String name) {

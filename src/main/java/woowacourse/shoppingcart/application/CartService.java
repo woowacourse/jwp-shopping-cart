@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.exception.MemberNotFoundException;
+import woowacourse.shoppingcart.application.dto.AddCartServiceRequest;
 import woowacourse.shoppingcart.application.dto.UpdateQuantityServiceRequest;
 import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -35,17 +36,17 @@ public class CartService {
     }
 
     @Transactional
-    public long add(long memberId, long productId) {
-        validateExistMember(memberId);
-        validateExistProduct(productId);
-        Optional<Cart> cart = cartDao.findCartByMemberIdAndProductId(memberId, productId);
+    public long add(AddCartServiceRequest request) {
+        validateExistMember(request.getMemberId());
+        validateExistProduct(request.getProductId());
+        Optional<Cart> cart = cartDao.findCartByMemberIdAndProductId(request.getMemberId(), request.getProductId());
         if (cart.isEmpty()) {
-            SaveCartDto saveCartDto = new SaveCartDto(memberId, productId);
+            SaveCartDto saveCartDto = new SaveCartDto(request.getMemberId(), request.getProductId());
             return cartDao.save(saveCartDto);
         }
 
         long cartId = cart.get().getId();
-        updateQuantity(new UpdateQuantityServiceRequest(memberId, cartId, cart.get().getQuantity() + 1));
+        updateQuantity(new UpdateQuantityServiceRequest(request.getMemberId(), cartId, cart.get().getQuantity() + 1));
         return cartId;
     }
 

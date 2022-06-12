@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.ui.dto;
 
+import woowacourse.shoppingcart.application.dto.ProductServiceRequest;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -21,6 +23,10 @@ public class ProductRequest {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public ProductServiceRequest toServiceRequest() {
+        return new ProductServiceRequest(name, price, imageUrl);
     }
 
     public String getName() {

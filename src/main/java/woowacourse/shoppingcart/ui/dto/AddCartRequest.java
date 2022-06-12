@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.ui.dto;
 
+import woowacourse.shoppingcart.application.dto.AddCartServiceRequest;
+
 import javax.validation.constraints.NotNull;
 
 public class AddCartRequest {
@@ -12,6 +14,10 @@ public class AddCartRequest {
 
     public AddCartRequest(Long productId) {
         this.productId = productId;
+    }
+
+    public AddCartServiceRequest toServiceRequest(long memberId) {
+        return new AddCartServiceRequest(memberId, productId);
     }
 
     public Long getProductId() {

@@ -1,5 +1,7 @@
 package woowacourse.member.ui.dto;
 
+import woowacourse.member.application.dto.SignUpServiceRequest;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -20,6 +22,10 @@ public class SignUpRequest {
         this.email = email;
         this.name = name;
         this.password = password;
+    }
+
+    public SignUpServiceRequest toServiceRequest() {
+        return new SignUpServiceRequest(email, name, password);
     }
 
     public String getEmail() {

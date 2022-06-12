@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.application.dto.UpdateQuantityServiceRequest;
 import woowacourse.shoppingcart.ui.dto.AddCartRequest;
 import woowacourse.shoppingcart.ui.dto.CartResponse;
 import woowacourse.shoppingcart.ui.dto.UpdateQuantityRequest;
@@ -25,7 +24,7 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal Long memberId, @RequestBody AddCartRequest request) {
-        final Long cartId = cartService.add(memberId, request.getProductId());
+        final Long cartId = cartService.add(request.toServiceRequest(memberId));
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")
@@ -44,7 +43,7 @@ public class CartController {
                                                @PathVariable Long cartId,
                                                @RequestBody UpdateQuantityRequest request) {
 
-        cartService.updateQuantity(new UpdateQuantityServiceRequest(memberId, cartId, request.getQuantity()));
+        cartService.updateQuantity(request.toServiceRequest(memberId, cartId));
         return ResponseEntity.ok().build();
     }
 

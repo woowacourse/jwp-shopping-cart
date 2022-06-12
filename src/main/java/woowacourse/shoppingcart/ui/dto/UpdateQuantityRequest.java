@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.ui.dto;
 
+import woowacourse.shoppingcart.application.dto.UpdateQuantityServiceRequest;
+
 import javax.validation.constraints.NotNull;
 
 public class UpdateQuantityRequest {
@@ -12,6 +14,10 @@ public class UpdateQuantityRequest {
 
     public UpdateQuantityRequest(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public UpdateQuantityServiceRequest toServiceRequest(long memberId, long cartId) {
+        return new UpdateQuantityServiceRequest(memberId, cartId, quantity);
     }
 
     public Integer getQuantity() {
