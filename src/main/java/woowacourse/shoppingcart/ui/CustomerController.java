@@ -37,26 +37,26 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<CustomerResponse> myInfo(@AuthenticationPrincipal Customer customer) {
-        return ResponseEntity.ok(customerService.findByUsername(customer.getUsername()));
+        return ResponseEntity.ok(CustomerResponse.from(customer));
     }
 
     @PutMapping
     public ResponseEntity<Void> update(@Valid @RequestBody CustomerUpdateRequest request,
                                        @AuthenticationPrincipal Customer customer) {
-        customerService.update(request, customer.getUsername());
+        customerService.update(request, customer);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@AuthenticationPrincipal Customer customer) {
-        customerService.deleteByUsername(customer.getUsername());
+        customerService.delete(customer);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody CustomerUpdatePasswordRequest request,
                                                @AuthenticationPrincipal Customer customer) {
-        customerService.updatePassword(customer.getUsername(), request);
+        customerService.updatePassword(customer, request);
         return ResponseEntity.noContent().build();
     }
 }

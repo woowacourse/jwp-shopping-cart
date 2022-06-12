@@ -31,7 +31,7 @@ public class AuthController {
     @PostMapping("/password")
     public ResponseEntity<Void> checkPassword(@AuthenticationPrincipal Customer customer,
                                               @Valid @RequestBody PasswordRequest request) {
-        authService.checkPassword(customer.getUsername(), request);
+        authService.checkPassword(customer, request);
         return ResponseEntity.ok().build();
     }
 

@@ -80,17 +80,17 @@ public class CustomerDao {
         return rowCount;
     }
 
-    public int updatePassword(final String username, final EncryptedPassword password) {
-        final String query = "UPDATE customer SET password = ? WHERE username = ?";
-        int rowCount = jdbcTemplate.update(query, password.getPassword(), username);
+    public int updatePasswordById(final Long customerId, final EncryptedPassword password) {
+        final String query = "UPDATE customer SET password = ? WHERE id = ?";
+        int rowCount = jdbcTemplate.update(query, password.getPassword(), customerId);
         if (rowCount == 0) {
             throw new InvalidCustomerException();
         }
         return rowCount;
     }
 
-    public int deleteByUsername(final String username) {
-        final String query = "DELETE FROM customer WHERE username = ?";
-        return jdbcTemplate.update(query, username);
+    public int deleteById(final Long customerId) {
+        final String query = "DELETE FROM customer WHERE id = ?";
+        return jdbcTemplate.update(query, customerId);
     }
 }

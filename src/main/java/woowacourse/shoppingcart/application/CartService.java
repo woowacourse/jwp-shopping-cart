@@ -28,12 +28,11 @@ public class CartService {
     }
 
     @Transactional
-    public Long add(final String username, final CartItemAddRequest request) {
-        final Long customerId = customerDao.findIdByUserName(username);
+    public Long add(final Customer customer, final CartItemAddRequest request) {
         Product product = productDao.findProductById(request.getProductId());
         CartItem cartItem = new CartItem(product, request.getQuantity());
         try {
-            return cartItemDao.save(customerId, cartItem);
+            return cartItemDao.save(customer.getId(), cartItem);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
@@ -43,9 +42,8 @@ public class CartService {
         return cartItemDao.findById(cartItemId);
     }
 
-    public CartItemsResponse findAllByUsername(final String username) {
-        Long customerId = customerDao.findIdByUserName(username);
-        return new CartItemsResponse(cartItemDao.findAllByCustomerId(customerId));
+    public CartItemsResponse findAllByCustomer(final Customer customer) {
+        return new CartItemsResponse(cartItemDao.findAllByCustomerId(customer.getId()));
     }
 
     @Transactional
@@ -55,13 +53,12 @@ public class CartService {
         cartItemDao.updateQuantity(cartItem);
     }
 
-    public void deleteOneById(final String username, final Long cartItemId) {
-        validateCustomerCart(cartItemId, username);
+    public void deleteOneById(final Customer customer, final Long cartItemId) {
+        validateCustomerCart(customer, cartItemId);
         cartItemDao.deleteById(cartItemId);
     }
 
-    private void validateCustomerCart(final Long cartItemId, final String username) {
-        Customer customer = customerDao.findByUsername(username);
+    private void validateCustomerCart(final Customer customer, final Long cartItemId) {
         if (!cartItemDao.isCartItemExistByCustomer(cartItemId, customer.getId())) {
             throw new NotInCustomerCartItemException();
         }

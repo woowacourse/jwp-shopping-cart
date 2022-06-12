@@ -32,13 +32,13 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<CartItemsResponse> getCartItems(@AuthenticationPrincipal Customer customer) {
-        return ResponseEntity.ok().body(cartService.findAllByUsername(customer.getUsername()));
+        return ResponseEntity.ok().body(cartService.findAllByCustomer(customer));
     }
 
     @PostMapping
     public ResponseEntity<CartItemResponse> addCartItem(@Valid @RequestBody final CartItemAddRequest request,
                                                         @AuthenticationPrincipal Customer customer) {
-        final Long cartItemId = cartService.add(customer.getUsername(), request);
+        final Long cartItemId = cartService.add(customer, request);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartItemId}")
@@ -57,7 +57,7 @@ public class CartItemController {
     @DeleteMapping("/{cartItemId}")
     public ResponseEntity<Void> deleteCartItem(@PathVariable final Long cartItemId,
                                                @AuthenticationPrincipal Customer customer) {
-        cartService.deleteOneById(customer.getUsername(), cartItemId);
+        cartService.deleteOneById(customer, cartItemId);
         return ResponseEntity.noContent().build();
     }
 }

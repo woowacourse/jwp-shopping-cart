@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.support.Encryption;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.values.password.EncryptedPassword;
 import woowacourse.shoppingcart.domain.customer.values.password.PlainPassword;
-import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
@@ -36,22 +36,18 @@ public class CustomerService {
         return encryption.encrypt(new PlainPassword(plainPassword));
     }
 
-    public CustomerResponse findByUsername(final String username) {
-        return CustomerResponse.from(customerDao.findByUsername(username));
+    @Transactional
+    public void update(final CustomerUpdateRequest request, final Customer customer) {
+        customerDao.update(request.toCustomerWithUsername(customer.getUsername()));
     }
 
     @Transactional
-    public void update(final CustomerUpdateRequest request, final String username) {
-        customerDao.update(request.toCustomerWithUsername(username));
+    public void updatePassword(final Customer customer, final CustomerUpdatePasswordRequest request) {
+        customerDao.updatePasswordById(customer.getId(), encodePassword(request.getPassword()));
     }
 
     @Transactional
-    public void updatePassword(final String username, final CustomerUpdatePasswordRequest request) {
-        customerDao.updatePassword(username, encodePassword(request.getPassword()));
-    }
-
-    @Transactional
-    public void deleteByUsername(final String username) {
-        customerDao.deleteByUsername(username);
+    public void delete(final Customer customer) {
+        customerDao.deleteById(customer.getId());
     }
 }

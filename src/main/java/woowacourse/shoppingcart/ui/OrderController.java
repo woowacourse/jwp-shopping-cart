@@ -31,7 +31,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Void> addOrder(@Valid @RequestBody final List<OrderRequest> orderDetails,
                                          @AuthenticationPrincipal Customer customer) {
-        final Long orderId = orderService.save(orderDetails, customer.getUsername());
+        final Long orderId = orderService.save(orderDetails, customer);
         return ResponseEntity.created(
                 URI.create("/api/orders/" + orderId)).build();
     }
@@ -39,11 +39,11 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> findOrder(@PathVariable final Long orderId,
                                                    @AuthenticationPrincipal Customer customer) {
-        return ResponseEntity.ok(orderService.findOrderById(customer.getUsername(), orderId));
+        return ResponseEntity.ok(orderService.findOrderByCustomer(customer, orderId));
     }
 
     @GetMapping
     public ResponseEntity<OrdersResponse> findOrders(@AuthenticationPrincipal Customer customer) {
-        return ResponseEntity.ok(orderService.findOrdersByUsername(customer.getUsername()));
+        return ResponseEntity.ok(orderService.findOrdersByCustomer(customer));
     }
 }

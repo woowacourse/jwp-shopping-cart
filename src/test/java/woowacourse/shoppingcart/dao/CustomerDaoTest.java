@@ -127,9 +127,9 @@ public class CustomerDaoTest {
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
-        customerDao.save(customer);
+        Long customerId = customerDao.save(customer);
 
-        customerDao.updatePassword("username",
+        customerDao.updatePasswordById(customerId,
                 new EncryptedPassword("47625ed74cab8fbc0a8348f3df1feb07f87601e34d62bd12eb0d51616566fab5"));
 
         assertThat(customerDao.findByUsername("username").getPassword())
@@ -145,8 +145,8 @@ public class CustomerDaoTest {
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
-        customerDao.save(customer);
+        Long customerId = customerDao.save(customer);
 
-        assertThat(customerDao.deleteByUsername("username")).isEqualTo(1);
+        assertThat(customerDao.deleteById(customerId)).isEqualTo(1);
     }
 }

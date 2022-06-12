@@ -49,10 +49,13 @@ class CartServiceTest {
     @DisplayName("카트 아이템 추가")
     @Test
     void add() {
-        customerDao.save(customer);
+        Long customerId = customerDao.save(customer);
         Long productId = productDao.save(product);
+        Customer savedCustomer = Customer.builder()
+                .id(customerId)
+                .build();
 
-        assertDoesNotThrow(() -> cartService.add(customer.getUsername(), new CartItemAddRequest(productId, 1)));
+        assertDoesNotThrow(() -> cartService.add(savedCustomer, new CartItemAddRequest(productId, 1)));
     }
 
     @DisplayName("카트에 재고보다 많은 수량 추가시 예외 발생")
@@ -61,7 +64,7 @@ class CartServiceTest {
         customerDao.save(customer);
         Long productId = productDao.save(product);
 
-        assertThatThrownBy(() -> cartService.add(customer.getUsername(), new CartItemAddRequest(productId, 11)));
+        assertThatThrownBy(() -> cartService.add(customer, new CartItemAddRequest(productId, 11)));
     }
 
     @DisplayName("카트 아이템 수량 수정")

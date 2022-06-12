@@ -33,8 +33,7 @@ public class AuthService {
         return new TokenResponse(accessToken);
     }
 
-    public void checkPassword(final String username, final PasswordRequest request) {
-        Customer customer = customerDao.findByUsername(username);
+    public void checkPassword(final Customer customer, final PasswordRequest request) {
         validatePasswordIsCorrect(customer, request.getPassword());
     }
 

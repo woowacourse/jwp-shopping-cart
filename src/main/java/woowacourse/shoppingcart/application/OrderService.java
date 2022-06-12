@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
@@ -36,9 +37,8 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long save(final List<OrderRequest> orderDetailRequests, final String username) {
-        final Long customerId = customerDao.findIdByUserName(username);
-        final Long orderId = orderDao.save(customerId);
+    public Long save(final List<OrderRequest> orderDetailRequests, final Customer customer) {
+        final Long orderId = orderDao.save(customer.getId());
 
         for (final OrderRequest request : orderDetailRequests) {
             saveOrderThenRemoveCartItem(orderId, request);
@@ -61,26 +61,23 @@ public class OrderService {
         productDao.updateStock(product);
     }
 
-    public OrderResponse findOrderById(final String username, final Long orderId) {
-        validateOrderIdByUsername(username, orderId);
+    public OrderResponse findOrderByCustomer(final Customer customer, final Long orderId) {
+        validateOrderIdByCustomer(customer, orderId);
         List<OrderDetail> orderDetails = ordersDetailDao.findOrderDetailsByOrderId(orderId);
         return new OrderResponse(orderId, orderDetails);
     }
 
-    private void validateOrderIdByUsername(final String username, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(username);
-
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
+    private void validateOrderIdByCustomer(final Customer customer, final Long orderId) {
+        if (!orderDao.isValidOrderId(customer.getId(), orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    public OrdersResponse findOrdersByUsername(final String username) {
-        final Long customerId = customerDao.findIdByUserName(username);
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
+    public OrdersResponse findOrdersByCustomer(final Customer customer) {
+        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customer.getId());
 
         return new OrdersResponse(orderIds.stream()
-                .map(orderId -> findOrderById(username, orderId))
+                .map(orderId -> findOrderByCustomer(customer, orderId))
                 .collect(Collectors.toList()));
     }
 
