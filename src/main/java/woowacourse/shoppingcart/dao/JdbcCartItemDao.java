@@ -48,7 +48,7 @@ public class JdbcCartItemDao implements CartItemDao {
 
     @Override
     public boolean hasCartItem(Long cartId, int customerId) {
-        final String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE id = ? and customer_id = ?)";
+        final String sql = "SELECT EXISTS(SELECT id FROM cart_item WHERE id = ? and customer_id = ?)";
         return jdbcTemplate.queryForObject(sql, boolean.class, cartId, customerId);
     }
 
@@ -60,13 +60,13 @@ public class JdbcCartItemDao implements CartItemDao {
 
     @Override
     public boolean hasProduct(int customerId, Long productId) {
-        final String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE customer_id = ? and product_id = ?)";
+        final String sql = "SELECT EXISTS(SELECT customer_id FROM cart_item WHERE customer_id = ? and product_id = ?)";
         return jdbcTemplate.queryForObject(sql, boolean.class, customerId, productId);
     }
 
     @Override
     public boolean hasCart(Long cartItem, int customerId, Long productId) {
-        final String sql = "SELECT EXISTS(SELECT * FROM cart_item WHERE id = ? and customer_id = ? and product_id = ?)";
+        final String sql = "SELECT EXISTS(SELECT id FROM cart_item WHERE id = ? and customer_id = ? and product_id = ?)";
         return jdbcTemplate.queryForObject(sql, boolean.class, cartItem, customerId, productId);
 
     }
