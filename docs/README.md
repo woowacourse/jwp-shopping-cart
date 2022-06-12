@@ -166,7 +166,7 @@
 - service
     - [x] CartItemService에서 findCartsByCustomerName의 중복 로직 없애기
         - (hint: findCartIdsByCustomerName 에서 join 사용)
-    - [ ] Transactional 에서 적절한 옵션 사용하기 (hint: 조회 로직에는 readOnly 옵션)
+    - [x] Transactional 에서 적절한 옵션 사용하기 (hint: 조회 로직에는 readOnly 옵션)
     - [ ] CartItemService에서 updateQuantity가 LoginCustomer에 맞는 사용자의 cartItem인지 확인하기
     - [ ] OrderService에서 for문을 순회하며 db를 조회하는 로직의 비용 문제 해결하기
 
