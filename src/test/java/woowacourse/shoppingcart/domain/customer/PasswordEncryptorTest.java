@@ -22,7 +22,7 @@ class PasswordEncryptorTest {
 
         // then
         assertAll(
-            () -> assertThat(encrypted.length()).isEqualTo(ENCRYPTED_SIZE),
+            () -> assertThat(encrypted).hasSize(ENCRYPTED_SIZE),
             () -> assertThat(encrypted).isNotEqualTo(input)
         );
 
