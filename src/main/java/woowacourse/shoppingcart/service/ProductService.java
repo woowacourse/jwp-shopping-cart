@@ -62,6 +62,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductByIdAndCustomerName(final Long productId, final UserName customerName) {
         final Customer customer = customerDao.getByName(customerName);
         final Cart cart = new Cart(cartItemDao.findAllByCustomerId(customer.getId()));
