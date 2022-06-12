@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import woowacourse.shoppingcart.ui.dto.ProductAddRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,12 +51,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
-
+        ProductAddRequest request = new ProductAddRequest(name, price, imageUrl);
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
+                .body(request)
                 .when().post("/api/products")
                 .then().log().all()
                 .extract();

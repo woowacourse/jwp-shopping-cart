@@ -5,10 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.dto.ProductResponse;
+import woowacourse.shoppingcart.application.dto.ProductSaveRequest;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.application.ProductService;
 
 import java.net.URI;
+import woowacourse.shoppingcart.ui.dto.ProductAddRequest;
 
 @RestController
 @RequestMapping("/api/products")
@@ -21,8 +23,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@RequestBody final Product product) {
-        final Long productId = productService.addProduct(product);
+    public ResponseEntity<Void> add(@RequestBody ProductAddRequest request) {
+        final Long productId = productService.save(request.toServiceRequest());
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/" + productId)
