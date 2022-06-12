@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import io.jsonwebtoken.Jwts;
@@ -10,8 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.http.HttpStatus;
 import woowacourse.shoppingcart.dto.*;
+
+import javax.validation.constraints.Null;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -37,19 +41,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @Test
-    void 회원가입시_이름이_null인_경우() {
-        SignUpRequest signUpRequest = new SignUpRequest(null, NEW_EMAIL, VALID_PASSWORD);
-
-        var extract = createSignUpResult(signUpRequest);
-
-        assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 사용자 이름은 null이 될 수 없습니다.");
-    }
-
-    @Test
-    void 회원가입시_이름이_빈_입력인_경우() {
-        SignUpRequest signUpRequest = new SignUpRequest("", NEW_EMAIL, VALID_PASSWORD);
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {""})
+    void 회원가입시_이름이_빈_입력이거나_null인_경우(String invalidName) {
+        SignUpRequest signUpRequest = new SignUpRequest(invalidName, NEW_EMAIL, VALID_PASSWORD);
 
         var extract = createSignUpResult(signUpRequest);
 
@@ -79,19 +75,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .isEqualTo("[ERROR] 사용자 이름은 최대 32자 이하여야 합니다.");
     }
 
-    @Test
-    void 회원가입시_이메일이_null인_경우() {
-        SignUpRequest signUpRequest = new SignUpRequest(NEW_USERNAME, null, VALID_PASSWORD);
-
-        var extract = createSignUpResult(signUpRequest);
-
-        assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 이메일은 null일 수 없습니다.");
-    }
-
-    @Test
-    void 회원가입시_이메일이_빈_입력인_경우() {
-        SignUpRequest signUpRequest = new SignUpRequest(NEW_USERNAME, "", VALID_PASSWORD);
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {""})
+    void 회원가입시_이메일이_빈_입력인_경우(String invalidEmail) {
+        SignUpRequest signUpRequest = new SignUpRequest(NEW_USERNAME, invalidEmail, VALID_PASSWORD);
 
         var extract = createSignUpResult(signUpRequest);
 
@@ -122,19 +110,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .isEqualTo("[ERROR] 이메일 형식이 아닙니다.");
     }
 
-    @Test
-    void 회원가입시_비밀번호가_null인_경우() {
-        SignUpRequest signUpRequest = new SignUpRequest(NEW_USERNAME, NEW_EMAIL, null);
-
-        var extract = createSignUpResult(signUpRequest);
-        
-        assertThat(extract.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 null일 수 없습니다.");
-    }
-
-    @Test
-    void 회원가입시_비밀번호가_빈_입력인_경우() {
-        SignUpRequest signUpRequest = new SignUpRequest(NEW_USERNAME, NEW_EMAIL, "");
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {""})
+    void 회원가입시_비밀번호가_빈_입력이거나_null인_경우(String invalidPassword) {
+        SignUpRequest signUpRequest = new SignUpRequest(NEW_USERNAME, NEW_EMAIL, invalidPassword);
 
         var extract = createSignUpResult(signUpRequest);
 
@@ -218,17 +198,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .compact();
     }
 
-    @Test
-    void 비밀번호_변경_시_기존_비밀번호가_null_입력인_경우() {
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {""})
+    void 비밀번호_변경_시_기존_비밀번호가_빈값이거나_null_입력인_경우(String invalidOldPassword) {
         String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK)
                 .as(SignInResponse.class).getToken();
 
-        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(null, INVALID_PASSWORD);
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(invalidOldPassword, VALID_PASSWORD);
 
         var response = createChangePasswordResult(accessToken, changePasswordRequest, HttpStatus.BAD_REQUEST);
 
         assertThat(response.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 null일 수 없습니다.");
+                .isEqualTo("[ERROR] 비밀번호는 빈 값일 수 없습니다.");
     }
 
     @ParameterizedTest
@@ -258,16 +240,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .isEqualTo("[ERROR] 비밀번호는 최소 6자 이상이어야 합니다.");
     }
 
-    @Test
-    void 비밀번호_변경_시_새로운_비밀번호가_null_입력인_경우() {
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {""})
+    void 비밀번호_변경_시_새로운_비밀번호가_빈_입력이거나_null_입력인_경우(String invalidNewPassword) {
         String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
 
-        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(VALID_PASSWORD, null);
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(VALID_PASSWORD, invalidNewPassword);
 
         var response = createChangePasswordResult(accessToken, changePasswordRequest, HttpStatus.BAD_REQUEST);
 
         assertThat(response.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 null일 수 없습니다.");
+                .isEqualTo("[ERROR] 비밀번호는 빈 값일 수 없습니다.");
     }
 
     @ParameterizedTest
@@ -332,16 +316,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .isEqualTo("[ERROR] 비밀번호가 일치하지 않습니다.");
     }
 
-    @Test
-    void 회원탈퇴시_비밀번호가_null인_경우() {
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {""})
+    void 회원탈퇴시_비밀번호가_빈_입력이거나_null인_경우(String invalidPassword) {
         String accessToken = createSignInResult(SIGN_IN_REQUEST, HttpStatus.OK).as(SignInResponse.class).getToken();
 
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest(null);
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest(invalidPassword);
 
         var response = createDeleteCustomerResult(accessToken, deleteCustomerRequest, HttpStatus.BAD_REQUEST);
         
         assertThat(response.body().jsonPath().getString("message"))
-                .isEqualTo("[ERROR] 비밀번호는 null일 수 없습니다.");
+                .isEqualTo("[ERROR] 비밀번호는 빈 값일 수 없습니다.");
     }
 
     @ParameterizedTest

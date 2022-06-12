@@ -7,6 +7,8 @@ import java.util.Objects;
 public class Email {
 
     private static final int MAX_EMAIL_SIZE = 64;
+    private static final String NOT_NULL_OR_BLANK = "[ERROR] 이메일은 빈 값일 수 없습니다.";
+    private static final String NOT_EMAIL_PATTERN = "[ERROR] 이메일 형식이 아닙니다.";
     private final String email;
 
     public Email(String email) {
@@ -19,19 +21,19 @@ public class Email {
 
     private void validateNotNull(String email) {
         if (email == null) {
-            throw new InvalidInformationException("[ERROR] 이메일은 null일 수 없습니다.");
+            throw new InvalidInformationException(NOT_NULL_OR_BLANK);
         }
     }
 
     private void validateNotEmpty(String email) {
         if (email.isEmpty()) {
-            throw new InvalidInformationException("[ERROR] 이메일은 빈 값일 수 없습니다.");
+            throw new InvalidInformationException(NOT_NULL_OR_BLANK);
         }
     }
 
     private void validateNotEmailForm(String email) {
         if (!email.matches("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")) {
-            throw new InvalidInformationException("[ERROR] 이메일 형식이 아닙니다.");
+            throw new InvalidInformationException(NOT_EMAIL_PATTERN);
         }
     }
 

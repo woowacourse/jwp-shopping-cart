@@ -9,6 +9,7 @@ public class Password {
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private static final int MIN_PASSWORD_SIZE = 6;
+    public static final String NOT_NULL_OR_BLANK = "[ERROR] 비밀번호는 빈 값일 수 없습니다.";
 
     private final String password;
 
@@ -22,13 +23,13 @@ public class Password {
 
     private void validateNotNull(String password) {
         if (password == null) {
-            throw new InvalidInformationException("[ERROR] 비밀번호는 null일 수 없습니다.");
+            throw new InvalidInformationException(NOT_NULL_OR_BLANK);
         }
     }
 
     private void validateNotEmpty(String password) {
         if (password.isEmpty()) {
-            throw new InvalidInformationException("[ERROR] 비밀번호는 빈 값일 수 없습니다.");
+            throw new InvalidInformationException(NOT_NULL_OR_BLANK);
         }
     }
 
