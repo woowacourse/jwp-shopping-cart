@@ -5,14 +5,12 @@ import java.util.Objects;
 public class CartItem {
 
     private final Long cartItemId;
-    private Long customerId;
     private Long productId;
     private int quantity;
     private boolean checked;
 
-    public CartItem(final Long cartItemId, final Long customerId, final Long productId, final int quantity, final boolean checked) {
+    public CartItem(final Long cartItemId, final Long productId, final int quantity, final boolean checked) {
         this.cartItemId = cartItemId;
-        this.customerId = customerId;
         this.productId = productId;
         this.quantity = quantity;
         this.checked = checked;
@@ -24,10 +22,6 @@ public class CartItem {
 
     public Long getCartItemId() {
         return cartItemId;
-    }
-
-    public Long getCustomerId() {
-        return customerId;
     }
 
     public Long getProductId() {
@@ -52,12 +46,11 @@ public class CartItem {
         }
         final CartItem cartItem = (CartItem) o;
         return quantity == cartItem.quantity && checked == cartItem.checked && Objects.equals(cartItemId,
-                cartItem.cartItemId) && Objects.equals(customerId, cartItem.customerId)
-                && Objects.equals(productId, cartItem.productId);
+                cartItem.cartItemId) && Objects.equals(productId, cartItem.productId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cartItemId, customerId, productId, quantity, checked);
+        return Objects.hash(cartItemId, productId, quantity, checked);
     }
 }

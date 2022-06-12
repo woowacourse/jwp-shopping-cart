@@ -7,11 +7,10 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.shoppingcart.dto.AddCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequests;
 import woowacourse.shoppingcart.dto.FindCartItemResponse;
@@ -73,20 +72,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     private void createCart(final String accessToken, final Long productId) {
-        final var jsonObject = new JSONObject();
-
-        try {
-            jsonObject.put("productId", productId);
-            jsonObject.put("quantity", 2);
-            jsonObject.put("checked", true);
-        } catch (final JSONException e) {
-            throw new RuntimeException(e);
-        }
-
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .when()
-                .body(jsonObject)
+                .body(new AddCartItemRequest(productId, 2, true))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .post("/cart")
                 .then().log().all()

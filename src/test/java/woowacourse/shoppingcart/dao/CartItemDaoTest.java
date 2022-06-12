@@ -24,28 +24,28 @@ public class CartItemDaoTest {
 
     private final CartItemDao cartDao;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public CartItemDaoTest(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.cartDao = new CartItemDao(dataSource, jdbcTemplate);
     }
 
     @BeforeEach
     void setUp() {
-        var addProductRequest = new AddCartItemRequest(1L, 1, true);
+        final var addProductRequest = new AddCartItemRequest(1L, 1, true);
         cartDao.addCartItem(1L, addProductRequest);
     }
 
     @Test
     void 장바구니_상품_추가_() {
-        var cart = cartDao.findByCustomerId(1L);
+        final var cart = cartDao.findByCustomerId(1L);
         assertThat(cart.get(0))
-                .isEqualTo(new CartItem(1L, 1L, 1L, 1, true));
+                .isEqualTo(new CartItem(1L, 1L, 1, true));
     }
 
     @Test
     void 장바구니_선택_상품_제거() {
         cartDao.deleteCartItem(1L);
 
-        var cart = cartDao.findByCustomerId(1L);
+        final var cart = cartDao.findByCustomerId(1L);
         assertThat(cart.size()).isEqualTo(0);
     }
 
@@ -53,16 +53,16 @@ public class CartItemDaoTest {
     void 장바구니_전체_상품_제거() {
         cartDao.deleteAllByCustomerId(1L);
 
-        var cart = cartDao.findByCustomerId(1L);
+        final var cart = cartDao.findByCustomerId(1L);
         assertThat(cart.size()).isEqualTo(0);
     }
 
     @Test
     void 장바구니_상품_정보_수정() {
-        var updateCartItemRequest = new UpdateCartItemRequest(1L, 3, false);
+        final var updateCartItemRequest = new UpdateCartItemRequest(1L, 3, false);
         cartDao.update(1L, updateCartItemRequest);
 
-        var cartItem = cartDao.findByCustomerId(1L).get(0);
+        final var cartItem = cartDao.findByCustomerId(1L).get(0);
 
         assertAll(
                 () -> assertThat(cartItem.getCartItemId()).isEqualTo(1L),

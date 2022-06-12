@@ -40,7 +40,7 @@ public class CartItemDao {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong(PRODUCT_ID), cartId);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
     }
@@ -49,7 +49,7 @@ public class CartItemDao {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity, checked)"
                 + "VALUES(:customer_id, :product_id, :quantity, :checked)";
 
-        var paramSource = Map.of(
+        final var paramSource = Map.of(
                 CUSTOMER_ID, customerId,
                 PRODUCT_ID, addCartItemRequest.getProductId(),
                 QUANTITY, addCartItemRequest.getQuantity(),
@@ -68,31 +68,30 @@ public class CartItemDao {
         }
     }
 
-    public List<CartItem> findByCustomerId(long customerId) {
+    public List<CartItem> findByCustomerId(final long customerId) {
         final var sql = "SELECT * FROM cart_item WHERE customer_id = :customer_id";
 
-        RowMapper<CartItem> rowMapper = (rs, rowNum) -> {
-            var id = rs.getLong(CART_ITEM_ID);
-            var customer_id = rs.getLong(CUSTOMER_ID);
-            var product_id = rs.getLong(PRODUCT_ID);
-            var quantity = rs.getInt(QUANTITY);
-            var checked = rs.getBoolean(CHECKED);
-            return new CartItem(id, customer_id, product_id, quantity, checked);
+        final RowMapper<CartItem> rowMapper = (rs, rowNum) -> {
+            final var id = rs.getLong(CART_ITEM_ID);
+            final var product_id = rs.getLong(PRODUCT_ID);
+            final var quantity = rs.getInt(QUANTITY);
+            final var checked = rs.getBoolean(CHECKED);
+            return new CartItem(id, product_id, quantity, checked);
         };
 
         return namedParameterJdbcTemplate.query(sql, Map.of(CUSTOMER_ID, customerId), rowMapper);
     }
 
-    public void deleteAllByCustomerId(Long customerId) {
+    public void deleteAllByCustomerId(final Long customerId) {
         final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
 
         jdbcTemplate.update(sql, customerId);
     }
 
-    public void update(long customerId, UpdateCartItemRequest updateCartItemRequest) {
+    public void update(final long customerId, final UpdateCartItemRequest updateCartItemRequest) {
         final String sql = "UPDATE cart_item SET quantity = (:quantity), checked = (:checked) WHERE customer_id = (:customer_id) AND id = (:id)";
 
-        var paramSource = Map.of(
+        final var paramSource = Map.of(
                 CART_ITEM_ID, updateCartItemRequest.getId(),
                 CUSTOMER_ID, customerId,
                 QUANTITY, updateCartItemRequest.getQuantity(),
