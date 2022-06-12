@@ -1,10 +1,13 @@
 package woowacourse.shoppingcart.ui.dto;
 
+import javax.validation.constraints.Min;
+
 public class CartItemQuantityRequest {
 
+    @Min(0)
     private final Integer quantity;
 
-    public CartItemQuantityRequest() {
+    private CartItemQuantityRequest() {
         this(null);
     }
 
