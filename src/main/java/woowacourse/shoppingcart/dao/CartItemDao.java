@@ -8,7 +8,7 @@ public interface CartItemDao {
 
     List<Long> findProductIdsByCustomerId(final Long customerId);
 
-    List<Long> findIdsByCustomerId(final Long customerId);
+    List<Cart> findAllByCustomerId(final Long customerId);
 
     Long findProductIdById(final Long cartId);
 

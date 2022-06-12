@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -86,9 +87,12 @@ public class CartItemDaoImplTest {
         final Long customerId = 1L;
 
         // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        final List<Cart> carts = cartItemDao.findAllByCustomerId(customerId);
 
         // then
+        final List<Long> cartIds = carts.stream()
+                .map(Cart::getId)
+                .collect(Collectors.toList());
         assertThat(cartIds).containsExactly(1L, 2L);
     }
 
@@ -167,8 +171,8 @@ public class CartItemDaoImplTest {
 
         cartItemDao.deleteAllByCustomerId(1L);
 
-        List<Long> ids = cartItemDao.findIdsByCustomerId(1L);
-        assertThat(ids).isEmpty();
+        List<Cart> carts = cartItemDao.findAllByCustomerId(1L);
+        assertThat(carts).isEmpty();
     }
 
     @DisplayName("id와 수량을 넣으면 해당 장바구니 아이템의 수량에서 더한다")

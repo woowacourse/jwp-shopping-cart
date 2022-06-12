@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
@@ -36,20 +37,19 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public CartResponses findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+        final List<Cart> carts = findAllByCustomerName(customerName);
 
         final List<CartResponse> responses = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            Cart cart = cartItemDao.findById(cartId);
+        for (final Cart cart : carts) {
             Product product = productDao.findProductById(cart.getProductId());
             responses.add(CartResponse.fromCartAndProduct(cart, product));
         }
         return new CartResponses(responses);
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
+    private List<Cart> findAllByCustomerName(final String customerName) {
         final Long customerId = customerDao.findByUsername(customerName).getId();
-        return cartItemDao.findIdsByCustomerId(customerId);
+        return cartItemDao.findAllByCustomerId(customerId);
     }
 
     @Transactional
@@ -95,7 +95,9 @@ public class CartService {
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+        final List<Long> cartIds = findAllByCustomerName(customerName).stream()
+                .map(Cart::getId)
+                .collect(Collectors.toList());
         if (cartIds.contains(cartId)) {
             return;
         }
