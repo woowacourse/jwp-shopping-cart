@@ -29,7 +29,7 @@ public class MemberController {
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public FindMemberInfoResponse findMemberInfo(@AuthenticationPrincipal Long id) {
+    public FindMemberInfoResponse findMemberInfo(@AuthenticationPrincipal long id) {
         return memberService.findMemberInfo(id);
     }
 
@@ -41,19 +41,19 @@ public class MemberController {
 
     @PutMapping("/me/name")
     @ResponseStatus(HttpStatus.OK)
-    public void updateName(@AuthenticationPrincipal Long id, @Valid @RequestBody UpdateNameRequest request) {
+    public void updateName(@AuthenticationPrincipal long id, @Valid @RequestBody UpdateNameRequest request) {
         memberService.updateName(id, request);
     }
 
     @PutMapping("/me/password")
     @ResponseStatus(HttpStatus.OK)
-    public void updatePassword(@AuthenticationPrincipal Long id, @Valid @RequestBody UpdatePasswordRequest request) {
+    public void updatePassword(@AuthenticationPrincipal long id, @Valid @RequestBody UpdatePasswordRequest request) {
         memberService.updatePassword(id, request);
     }
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMember(@AuthenticationPrincipal Long id) {
+    public void deleteMember(@AuthenticationPrincipal long id) {
         memberService.withdraw(id);
     }
 }

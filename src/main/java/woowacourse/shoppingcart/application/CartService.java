@@ -35,7 +35,7 @@ public class CartService {
     }
 
     @Transactional
-    public Long add(Long memberId, Long productId) {
+    public long add(long memberId, long productId) {
         validateExistMember(memberId);
         validateExistProduct(productId);
         Optional<Cart> cart = cartDao.findCartByMemberIdAndProductId(memberId, productId);
@@ -44,12 +44,12 @@ public class CartService {
             return cartDao.save(saveCartDto);
         }
 
-        Long cartId = cart.get().getId();
+        long cartId = cart.get().getId();
         updateQuantity(memberId, cartId, new UpdateQuantityRequest(cart.get().getQuantity() + 1));
         return cartId;
     }
 
-    public List<CartResponse> findCarts(Long memberId) {
+    public List<CartResponse> findCarts(long memberId) {
         validateExistMember(memberId);
         List<Cart> carts = cartDao.findCartByMemberId(memberId);
         return carts.stream()
@@ -58,7 +58,7 @@ public class CartService {
     }
 
     @Transactional
-    public void updateQuantity(Long memberId, Long cartId, UpdateQuantityRequest request) {
+    public void updateQuantity(long memberId, long cartId, UpdateQuantityRequest request) {
         validateExistMember(memberId);
         validateExistMemberCart(memberId, cartId);
 
@@ -69,13 +69,13 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCart(Long memberId, Long cartId) {
+    public void deleteCart(long memberId, long cartId) {
         validateExistMember(memberId);
         validateExistMemberCart(memberId, cartId);
         cartDao.deleteById(cartId);
     }
 
-    private void validateExistMemberCart(Long memberId, Long cartId) {
+    private void validateExistMemberCart(long memberId, long cartId) {
         List<Cart> cartItems = cartDao.findCartByMemberId(memberId);
         List<Long> cartIds = cartItems.stream()
                 .map(Cart::getId)
@@ -85,14 +85,14 @@ public class CartService {
         }
     }
 
-    private void validateExistMember(Long memberId) {
+    private void validateExistMember(long memberId) {
         Optional<Member> member = memberDao.findMemberById(memberId);
         if (member.isEmpty()) {
             throw new MemberNotFoundException();
         }
     }
 
-    private void validateExistProduct(Long productId) {
+    private void validateExistProduct(long productId) {
         Optional<Product> product = productDao.findProductById(productId);
         if (product.isEmpty()) {
             throw new ProductNotFoundException();

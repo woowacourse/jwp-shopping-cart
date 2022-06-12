@@ -29,11 +29,11 @@ public class OrderService {
         this.cartDao = cartDao;
     }
 
-    public Long addOrder(List<OrderRequest> orderDetailRequests, Long memberId) {
-        Long ordersId = orderDao.addOrders(memberId);
+    public long addOrder(List<OrderRequest> orderDetailRequests, long memberId) {
+        long ordersId = orderDao.addOrders(memberId);
 
         for (OrderRequest orderDetail : orderDetailRequests) {
-            Long cartId = orderDetail.getCartId();
+            long cartId = orderDetail.getCartId();
             Cart cart = cartDao.findCartById(cartId)
                     .orElseThrow(CartNotFoundException::new);
             orderDetailDao.save(ordersId, cart.getProductId(), cart.getQuantity());
@@ -42,18 +42,18 @@ public class OrderService {
         return ordersId;
     }
 
-    public OrdersResponse findOrder(Long memberId, Long orderId) {
+    public OrdersResponse findOrder(long memberId, long orderId) {
         validateOrderIdByMemberId(memberId, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByMemberId(Long memberId, Long orderId) {
+    private void validateOrderIdByMemberId(long memberId, long orderId) {
         if (!orderDao.isExistOrderId(memberId, orderId)) {
             throw new InvalidOrderException();
         }
     }
 
-    public List<OrdersResponse> findOrders(Long memberId) {
+    public List<OrdersResponse> findOrders(long memberId) {
         List<Long> orderIds = orderDao.findOrderIdsByMemberId(memberId);
 
         return orderIds.stream()
@@ -61,7 +61,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private OrdersResponse findOrderResponseDtoByOrderId(Long orderId) {
+    private OrdersResponse findOrderResponseDtoByOrderId(long orderId) {
         List<OrderDetailResponse> orderDetails = orderDetailDao.findOrdersDetailsByOrderId(orderId);
         return new OrdersResponse(orderId, orderDetails);
     }

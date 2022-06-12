@@ -24,9 +24,9 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@AuthenticationPrincipal Long memberId,
+    public ResponseEntity<Void> addOrder(@AuthenticationPrincipal long memberId,
                                          @RequestBody List<OrderRequest> orderDetails) {
-        Long orderId = orderService.addOrder(orderDetails, memberId);
+        long orderId = orderService.addOrder(orderDetails, memberId);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/" + orderId)
@@ -35,14 +35,14 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrdersResponse> findOrder(@AuthenticationPrincipal Long memberId,
-                                                    @PathVariable Long orderId) {
+    public ResponseEntity<OrdersResponse> findOrder(@AuthenticationPrincipal long memberId,
+                                                    @PathVariable long orderId) {
         OrdersResponse order = orderService.findOrder(memberId, orderId);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping
-    public ResponseEntity<List<OrdersResponse>> findOrders(@AuthenticationPrincipal Long memberId) {
+    public ResponseEntity<List<OrdersResponse>> findOrders(@AuthenticationPrincipal long memberId) {
         List<OrdersResponse> orders = orderService.findOrders(memberId);
         return ResponseEntity.ok(orders);
     }

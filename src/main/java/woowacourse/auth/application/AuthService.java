@@ -29,11 +29,11 @@ public class AuthService {
         this.memberDao = memberDao;
     }
 
-    public LoginResponse createToken(Long id) {
+    public LoginResponse createToken(long id) {
         return new LoginResponse(jwtTokenProvider.createToken(String.valueOf(id)));
     }
 
-    public Long authenticate(LoginRequest request) {
+    public long authenticate(LoginRequest request) {
         Member member = validateExistMember(memberDao.findMemberByEmail(request.getEmail()));
         PlainPassword plainPassword = new PlainPassword(request.getPassword());
         Password requestPassword = plainPassword.encrypt();
@@ -47,7 +47,7 @@ public class AuthService {
         return member.orElseThrow(MemberNotFoundException::new);
     }
 
-    public Long extractIdFromRequest(HttpServletRequest request) {
+    public long extractIdFromRequest(HttpServletRequest request) {
         String token = AuthorizationExtractor.extract(request);
         return Long.parseLong(jwtTokenProvider.getPayload(token));
     }

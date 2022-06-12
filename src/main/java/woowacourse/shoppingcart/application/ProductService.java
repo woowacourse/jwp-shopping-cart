@@ -23,12 +23,12 @@ public class ProductService {
     }
 
     @Transactional
-    public Long add(ProductRequest request) {
+    public long add(ProductRequest request) {
         Product product = new Product(request.getName(), request.getPrice(), request.getImageUrl());
         return productDao.save(product);
     }
 
-    public ProductResponse findProduct(Long productId) {
+    public ProductResponse findProduct(long productId) {
         Product product = validateExistProduct(productDao.findProductById(productId));
         return new ProductResponse(product);
     }
@@ -44,7 +44,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(Long productId) {
+    public void deleteProduct(long productId) {
         productDao.delete(productId);
     }
 }

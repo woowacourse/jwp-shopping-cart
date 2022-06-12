@@ -21,7 +21,7 @@ public class AuthController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
-        Long id = authService.authenticate(request);
+        long id = authService.authenticate(request);
         return authService.createToken(id);
     }
 }
