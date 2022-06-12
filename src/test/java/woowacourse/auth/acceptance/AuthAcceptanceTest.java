@@ -10,12 +10,12 @@ import org.springframework.http.MediaType;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import woowacourse.auth.dto.CustomerResponse;
+import woowacourse.customer.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.ExceptionResponse;
-import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.exception.dto.ExceptionResponse;
+import woowacourse.customer.dto.SignupRequest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -67,7 +67,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertAll(
             () -> response.statusCode(HttpStatus.UNAUTHORIZED.value()),
             () -> assertThat(exceptionResponse.getMessages())
-                .containsExactly("해당하는 username이 없습니다.")
+                .containsExactly("해당하는 사용자 이름이 없습니다.")
         );
     }
 
@@ -87,7 +87,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertAll(
             () -> response.statusCode(HttpStatus.UNAUTHORIZED.value()),
             () -> assertThat(exceptionResponse.getMessages())
-                .containsExactly("비밀번호가 일치하지 않습니다.")
+                .containsExactly("로그인 정보가 시스템에 있는 계정과 일치하지 않습니다.")
         );
     }
 

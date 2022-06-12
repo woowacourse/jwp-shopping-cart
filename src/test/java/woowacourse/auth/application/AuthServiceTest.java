@@ -1,7 +1,8 @@
 package woowacourse.auth.application;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,15 +12,14 @@ import org.springframework.test.context.jdbc.Sql;
 
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.SignupRequest;
-import woowacourse.shoppingcart.exception.PasswordMisMatchException;
-import woowacourse.shoppingcart.exception.UserNotFoundException;
+import woowacourse.customer.application.CustomerService;
+import woowacourse.customer.dto.CustomerResponse;
+import woowacourse.customer.dto.SignupRequest;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql"})
 class AuthServiceTest {
 
     @Autowired
@@ -47,16 +47,15 @@ class AuthServiceTest {
     @Test
     void findCustomerByToken() {
         SignupRequest signupRequest = new SignupRequest("dongho108", "password1234", "01012341234", "인천시 서구");
-        Customer savedCustomer = customerService.save(signupRequest);
+        customerService.save(signupRequest);
 
         LoginRequest loginRequest = new LoginRequest("dongho108", "password1234");
-        Customer customer = customerService.findByUsername(loginRequest.getUsername());
+        CustomerResponse customer = customerService.findCustomerByUsername(loginRequest.getUsername());
 
         assertAll(
-            () -> assertThat(customer.getUsername()).isEqualTo(savedCustomer.getUsername()),
-            () -> assertThat(customer.getPassword()).isEqualTo(savedCustomer.getPassword()),
-            () -> assertThat(customer.getPhoneNumber()).isEqualTo(savedCustomer.getPhoneNumber()),
-            () -> assertThat(customer.getAddress()).isEqualTo(savedCustomer.getAddress())
+            () -> assertThat(customer.getUsername()).isEqualTo(signupRequest.getUsername()),
+            () -> assertThat(customer.getPhoneNumber()).isEqualTo(signupRequest.getPhoneNumber()),
+            () -> assertThat(customer.getAddress()).isEqualTo(signupRequest.getAddress())
         );
     }
 
@@ -72,7 +71,7 @@ class AuthServiceTest {
 
         // then
         assertThatThrownBy(() -> authService.createToken(loginRequest))
-            .isInstanceOf(UserNotFoundException.class);
+            .isInstanceOf(InvalidLoginException.class);
     }
 
     @DisplayName("password가 일치하지 않으면 PasswordMisMatchException을 반환해야 한다.")
@@ -87,6 +86,6 @@ class AuthServiceTest {
 
         // then
         assertThatThrownBy(() -> authService.createToken(loginRequest))
-            .isInstanceOf(PasswordMisMatchException.class);
+            .isInstanceOf(InvalidLoginException.class);
     }
 }
