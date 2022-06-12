@@ -17,7 +17,7 @@ public class Stock {
         }
     }
 
-    public boolean isRemain(int quantity) {
+    public boolean isRemaining(int quantity) {
         return stock - quantity >= 0;
     }
 

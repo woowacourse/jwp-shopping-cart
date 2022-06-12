@@ -30,7 +30,7 @@ public class Product {
     }
 
     public boolean isStockAvailable(int quantity) {
-        return stock.isRemain(quantity);
+        return stock.isRemaining(quantity);
     }
 
     public void reduceStock(int quantity) {
