@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
@@ -14,7 +15,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -44,6 +45,32 @@ public class CartItemDaoTest {
 
         // then
         assertThat(cartId).isNotNull();
+    }
+
+    @DisplayName("하나의 상품은 여러 카트에 담길 수 있다.")
+    @Test
+    void addProductToMultipleCart() {
+        // given
+        Long customerId1 = customerDao.save(new Customer("awesomeo1@gmail.com", "awesome1", "Password123!"));
+        Long customerId2 = customerDao.save(new Customer("awesomeo2@gmail.com", "awesome2", "Password123!"));
+        Long productId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
+
+        cartItemDao.addCartItem(CartItem.from(customerId1, new Product(productId, "banana", 1_000, "woowa1.com")));
+
+        assertThatCode(() -> cartItemDao.addCartItem(CartItem.from(customerId2, new Product(productId, "banana", 1_000, "woowa1.com"))))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("하나의 카트에 동일한 상품이 두 번 담길 수 없다.")
+    @Test
+    void productShouldBeAddedOnceInOneCart() {
+        Long customerId = customerDao.save(new Customer("awesomeo1@gmail.com", "awesome1", "Password123!"));
+        Long productId = productDao.save(new Product("banana", 1_000, "woowa1.com"));
+
+        cartItemDao.addCartItem(CartItem.from(customerId, new Product(productId, "banana", 1_000, "woowa1.com")));
+
+        assertThatThrownBy(() -> cartItemDao.addCartItem(CartItem.from(customerId, new Product(productId, "banana", 1_000, "woowa1.com"))))
+                .isInstanceOf(DuplicateKeyException.class);
     }
 
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 장바구니에 담은 상품의 목록을 가져온다.")

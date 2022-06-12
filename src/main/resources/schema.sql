@@ -52,7 +52,7 @@ alter table cart_item
             on delete cascade on delete cascade;
 
 alter table cart_item
-    add unique key (product_id);
+    add unique cart_item_unique_index(customer_id, product_id);
 
 create table orders
 (
