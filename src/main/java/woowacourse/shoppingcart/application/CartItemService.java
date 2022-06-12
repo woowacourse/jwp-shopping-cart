@@ -46,18 +46,13 @@ public class CartItemService {
             throw new ExistSameProductIdException();
         }
 
-        validateCount(request.getProductId(), request.getCount());
+        Product foundProduct = productDao.getProductById(request.getProductId());
+        validateCount(foundProduct, request.getCount());
 
-        try {
-            return cartItemDao.addCartItem(customerId, request);
-        } catch (Exception e) {
-            throw new NoSuchProductException();
-        }
+        return cartItemDao.addCartItem(customerId, request);
     }
 
-    private void validateCount(Long productId, int count) {
-        Product product = productDao.getProductById(productId);
-
+    private void validateCount(Product product, int count) {
         if (product.isAvailable(new Amount(count))) {
             return;
         }
@@ -66,7 +61,9 @@ public class CartItemService {
     }
 
     public void updateCount(final Long customerId, final Long productId, final int newCount) {
-        validateCount(productId, newCount);
+        Product foundProduct = productDao.getProductById(productId);
+        validateCount(foundProduct, newCount);
+
         cartItemDao.updateCount(customerId, productId, newCount);
     }
 
