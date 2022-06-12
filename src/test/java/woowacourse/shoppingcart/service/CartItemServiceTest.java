@@ -49,6 +49,25 @@ class CartItemServiceTest {
     }
 
     @Test
+    void 기존에_있는_장바구니_아이템_추가_시_합쳐짐() {
+        // given
+        Long productId = productService.addProduct(new CreateProductRequest("MacBook Air", 1_400_000, "https://www.apple.com/v/macbook-air-m2/a/images/overview/compare/compare_mba__bjfeags91jyu_large_2x.png"));
+        Long originCartItemId = cartItemService.addCart(USER_NAME, new CreateCartItemRequest(productId));
+
+        // when
+        cartItemService.addCart(USER_NAME, new CreateCartItemRequest(productId));
+
+        // then
+        CartItemResponse cartItemResponse = cartItemService.findCartsByCustomerName(USER_NAME).get(0);
+
+        assertAll(
+                () -> assertThat(cartItemResponse.getId()).isEqualTo(originCartItemId),
+                () -> assertThat(cartItemResponse.getName()).isEqualTo("MacBook Air"),
+                () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(2)
+        );
+    }
+
+    @Test
     void 없는_사용자_장바구니_아이템_추가() {
         // given
         Long productId = productService.addProduct(new CreateProductRequest("MacBook Air", 1_400_000, "https://www.apple.com/v/macbook-air-m2/a/images/overview/compare/compare_mba__bjfeags91jyu_large_2x.png"));

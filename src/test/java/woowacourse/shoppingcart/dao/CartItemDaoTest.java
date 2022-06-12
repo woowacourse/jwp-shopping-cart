@@ -14,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.notfound.NotFoundCartItemException;
 
@@ -112,6 +113,24 @@ public class CartItemDaoTest {
     void getProductIdByNotExistId() {
         // when & then
         assertThatThrownBy(() -> cartItemDao.getProductIdById(10L))
+                .isInstanceOf(NotFoundCartItemException.class);
+    }
+
+    @DisplayName("사용자 ID와 상품 ID로 장바구니 아이템을 가져온다.")
+    @Test
+    void getByCustomerIdAndProductId() {
+        // when
+        final CartItem cartItem = cartItemDao.getByCustomerIdAndProductId(1L, bananaId);
+
+        // then
+        assertThat(cartItem.getId()).isEqualTo(1L);
+    }
+
+    @DisplayName("사용자 ID와 상품 ID로 장바구니 아이템이 조회되지 않으면, 예외를 발생시킨다.")
+    @Test
+    void getByCustomerIdAndProductIdWhenNotExists() {
+        // when & then
+        assertThatThrownBy(() -> cartItemDao.getByCustomerIdAndProductId(1L, 5L))
                 .isInstanceOf(NotFoundCartItemException.class);
     }
 

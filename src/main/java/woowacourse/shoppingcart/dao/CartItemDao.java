@@ -39,15 +39,6 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public Long getProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundCartItemException();
-        }
-    }
-
     public Long addCartItem(final Long customerId, final Long productId) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -59,6 +50,29 @@ public class CartItemDao {
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    public Long getProductIdById(final Long cartId) {
+        try {
+            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundCartItemException();
+        }
+    }
+
+    public CartItem getByCustomerIdAndProductId(final Long customerId, final Long productId) {
+        try {
+            final String sql = "SELECT id, product_id, quantity FROM cart_item WHERE customer_id = ? AND product_id = ?";
+            return jdbcTemplate.queryForObject(sql,
+                    (rs, rowNum) -> new CartItem(
+                            rs.getLong("id"),
+                            rs.getLong("product_id"),
+                            rs.getInt("quantity")),
+                    customerId, productId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundCartItemException();
+        }
     }
 
     public void deleteCartItem(final Long id) {
