@@ -71,7 +71,8 @@ public class CartItemService {
 
     public void updateQuantity(LoginCustomer loginCustomer, Long cartItemId,
             CartItemQuantityUpdateRequest cartItemQuantityUpdateRequest) {
-        customerDao.findIdByUsername(loginCustomer.getUsername());
-        cartItemDao.updateQuantity(cartItemId, cartItemQuantityUpdateRequest.getQuantity());
+        Long customerId = customerDao.findIdByUsername(loginCustomer.getUsername())
+                .orElseThrow(InvalidCustomerException::new);
+        cartItemDao.updateQuantity(cartItemId, cartItemQuantityUpdateRequest.getQuantity(), customerId);
     }
 }

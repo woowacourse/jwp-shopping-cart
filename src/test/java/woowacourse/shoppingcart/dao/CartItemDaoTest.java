@@ -93,7 +93,7 @@ public class CartItemDaoTest {
         Long chickenId = productDao.save(CHICKEN);
         Long bananaCartId = cartItemDao.addCartItem(mat.getId(), chickenId, 10);
 
-        cartItemDao.updateQuantity(bananaCartId, 5);
+        cartItemDao.updateQuantity(bananaCartId, 5, mat.getId());
 
         Integer quantity = cartItemDao.findQuantityById(bananaCartId).getAsInt();
         assertThat(quantity).isEqualTo(5);

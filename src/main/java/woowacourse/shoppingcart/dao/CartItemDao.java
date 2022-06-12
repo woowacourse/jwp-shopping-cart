@@ -104,9 +104,9 @@ public class CartItemDao {
         jdbcTemplate.update(sql, parameterSource);
     }
 
-    public void updateQuantity(Long cartItemId, int quantity) {
-        String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id";
-        UpdateQuantityDto updateQuantityDto = new UpdateQuantityDto(cartItemId, quantity);
+    public void updateQuantity(Long cartItemId, int quantity, Long customerId) {
+        String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id AND customer_id = :customerId";
+        UpdateQuantityDto updateQuantityDto = new UpdateQuantityDto(cartItemId, quantity, customerId);
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(updateQuantityDto);
         jdbcTemplate.update(sql, parameterSource);
     }
