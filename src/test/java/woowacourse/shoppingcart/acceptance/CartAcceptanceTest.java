@@ -89,7 +89,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .header("Authorization", "Bearer" + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/cart/{productId}", productId)
+                .when().get("/api/customers/cart/existence/{productId}", productId)
                 .then().log().all()
                 .extract();
     }
@@ -102,18 +102,6 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequest)
                 .when().put("/api/customers/cart/{cartItemId}", cartItemId)
-                .then().log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 장바구니_아이템_잘못된_수정_요청(Long cartId, String token,
-                                                             CartRequest cartRequest) {
-        return RestAssured
-                .given().log().all()
-                .header("Authorization", "Bearer" + token)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(cartRequest)
-                .when().put("/api/customers/cart/")
                 .then().log().all()
                 .extract();
     }
@@ -294,7 +282,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @Test
     public void hasExistProduct() {
         // given
-        Long cartId = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
+        장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
 
         // when
         final ExtractableResponse<Response> response = 장바구니_아이템_확인_요청(productId1, token);
@@ -307,7 +295,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @Test
     public void hasNotExistProduct() {
         // given
-        Long cartId = 장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
+        장바구니_아이템_추가되어_있음(productId1, PRODUCT_QUANTITY_1, token);
 
         // when
         final ExtractableResponse<Response> response = 장바구니_아이템_확인_요청(productId2, token);

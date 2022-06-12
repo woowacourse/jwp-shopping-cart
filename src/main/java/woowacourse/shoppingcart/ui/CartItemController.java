@@ -39,7 +39,7 @@ public class CartItemController {
         return ResponseEntity.ok().body(cartService.findCartsByCustomerId(customerId));
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/existence/{productId}")
     public ResponseEntity<ProductExistenceResponse> hasProduct(@AuthenticationPrincipal final int customerId,
                                                                @PathVariable Long productId) {
         final boolean result = cartService.hasProduct(customerId, productId);
