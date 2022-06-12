@@ -5,6 +5,7 @@ import woowacourse.shoppingcart.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.request.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.dto.request.ProductRequest;
 
 public class ShoppingCartFixture {
     public static final CustomerRequest 잉_회원생성요청 = new CustomerRequest("잉", "ing@woowahan.com", "*#A123456");
@@ -16,4 +17,7 @@ public class ShoppingCartFixture {
     public static final String CUSTOMER_URI = "/api/customer";
     public static final String LOGIN_URI = "/api/login";
     public static final String PRODUCT_URI = "api/products";
+
+    public static final ProductRequest 제품_추가_요청1 = new ProductRequest("치킨", 20000, "url");
+    public static final ProductRequest 제품_추가_요청2 = new ProductRequest("피자", 30000, "url");
 }

@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.dto.request.CartAddRequest;
 import woowacourse.shoppingcart.dto.request.CartDeleteRequest;
 import woowacourse.shoppingcart.dto.request.CartUpdateRequest;
 import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -25,7 +25,8 @@ public class CartService {
     public List<CartResponse> findCartsByCustomerId(final Long customerId) {
         return cartItemDao.findCartsByCustomerId(customerId)
                 .stream()
-                .map(cart -> new CartResponse(cart.getId(), cart.getProductId(), cart.getQuantity(), cart.getName(), cart.getPrice(),
+                .map(cart -> new CartResponse(cart.getId(), cart.getProductId(), cart.getQuantity(), cart.getName(),
+                        cart.getPrice(),
                         cart.getImageUrl()))
                 .collect(Collectors.toList());
     }
@@ -38,8 +39,11 @@ public class CartService {
         }
     }
 
+    @Transactional
     public void updateCart(final Long customerId, final CartUpdateRequest cartUpdateRequest) {
-        cartItemDao.updateCartItem(cartUpdateRequest.getQuantity(), customerId, cartUpdateRequest.getProductId());
+        final Long productId = cartUpdateRequest.getProductId();
+        validateProductInCustomerCart(productId, customerId);
+        cartItemDao.updateCartItem(cartUpdateRequest.getQuantity(), customerId, productId);
     }
 
     @Transactional
@@ -54,6 +58,14 @@ public class CartService {
     private void validateCustomerCart(final Long cartId, final Long customerId) {
         final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
         if (cartIds.contains(cartId)) {
+            return;
+        }
+        throw new NotInCustomerCartItemException();
+    }
+
+    private void validateProductInCustomerCart(final Long productId, final Long customerId) {
+        final List<Long> productIdsInCarts = cartItemDao.findProductIdsByCustomerId(customerId);
+        if (productIdsInCarts.contains(productId)) {
             return;
         }
         throw new NotInCustomerCartItemException();

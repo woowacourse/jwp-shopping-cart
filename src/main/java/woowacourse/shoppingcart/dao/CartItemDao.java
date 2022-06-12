@@ -50,6 +50,7 @@ public class CartItemDao {
         return (List<Cart>) jdbcTemplate.query(sql, (rs, rowNum) -> {
             return new Cart(
                     rs.getLong("id"),
+                    rs.getLong("product_Id"),
                     rs.getInt("quantity"),
                     rs.getString("name"),
                     rs.getInt("price"),

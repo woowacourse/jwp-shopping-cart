@@ -37,4 +37,8 @@ public class CartResponse {
     public String getImageUrl() {
         return imageUrl;
     }
+
+    public Long getProductId() {
+        return productId;
+    }
 }

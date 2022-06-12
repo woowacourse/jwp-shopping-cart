@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.ShoppingCartFixture.제품_추가_요청1;
+import static woowacourse.ShoppingCartFixture.제품_추가_요청2;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.request.ProductRequest;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.dto.response.ProductsResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -20,10 +21,6 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Sql("/truncate.sql")
 class ProductServiceTest {
-
-    public static final ProductRequest 제품_추가_요청1 = new ProductRequest("치킨", 20000, "url");
-    public static final ProductRequest 제품_추가_요청2 = new ProductRequest("피자", 30000, "url");
-
     @Autowired
     private ProductService productService;
 
