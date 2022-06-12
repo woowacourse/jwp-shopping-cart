@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrdersResponse {
@@ -12,7 +13,7 @@ public class OrdersResponse {
 
     public OrdersResponse(final Long orderId, final List<OrderDetailResponse> orderDetails) {
         this.orderId = orderId;
-        this.orderDetails = orderDetails;
+        this.orderDetails = new ArrayList<>(orderDetails);
     }
 
     public Long getOrderId() {

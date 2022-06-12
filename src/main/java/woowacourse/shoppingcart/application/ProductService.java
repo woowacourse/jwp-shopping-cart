@@ -21,7 +21,7 @@ public class ProductService {
     public List<ProductResponse> findProducts() {
         return productDao.findProducts().stream()
                 .map(ProductResponse::from)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public Long addProduct(final ProductRequest productRequest) {

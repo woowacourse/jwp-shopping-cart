@@ -17,9 +17,9 @@ import woowacourse.auth.exception.UnAuthorizedException;
 import woowacourse.exception.dto.ErrorResponse;
 
 @RestControllerAdvice
-public class GlobalControllerAdvice {
+public class ControllerAdvice {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalControllerAdvice.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerAdvice.class);
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> badRequestExceptionHandler(BadRequestException e) {

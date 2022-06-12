@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class CartService {
         }
         return carts.stream()
                 .map(CartItemResponse::from)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     private List<Long> findCartIdsByMemberId(final Long memberId) {
