@@ -69,6 +69,7 @@ public class CustomerService {
         return id;
     }
 
+    @Transactional
     public Long delete(long id, CustomerDeleteRequest customerDeleteRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
         validatePasswordIsCorrect(customer, customerDeleteRequest.getPassword());
