@@ -42,15 +42,7 @@ public class CartService {
         for (final Long cartId : cartIds) {
             Cart cart = cartItemDao.findById(cartId);
             Product product = productDao.findProductById(cart.getProductId());
-            responses.add(new CartResponse(
-                    cartId,
-                    product.getId(),
-                    product.getName(),
-                    product.getPrice(),
-                    product.getImageUrl(),
-                    cart.getQuantity(),
-                    cart.isChecked()
-            ));
+            responses.add(CartResponse.fromCartAndProduct(cart, product));
         }
         return new CartResponses(responses);
     }
