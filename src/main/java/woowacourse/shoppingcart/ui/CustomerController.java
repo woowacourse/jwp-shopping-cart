@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerProfileRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.EmailUniqueCheckResponse;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.dto.customer.CustomerProfileRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.EmailUniqueCheckResponse;
+import woowacourse.shoppingcart.dto.customer.PasswordCheckResponse;
+import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 
 @Controller
 @RequestMapping("/api/members")
@@ -30,11 +32,11 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/check-email")
-    public ResponseEntity<EmailUniqueCheckResponse> checkDuplicateEmail(@RequestParam final String email) {
-        final EmailUniqueCheckResponse emailDuplicateCheckResponse =
-                new EmailUniqueCheckResponse(customerService.isDistinctEmail(email));
-        return ResponseEntity.ok().body(emailDuplicateCheckResponse);
+    @GetMapping("/email-check")
+    public ResponseEntity<EmailUniqueCheckResponse> checkDuplicateEmail(@RequestParam final Email email) {
+        final EmailUniqueCheckResponse emailUniqueCheckResponse =
+                new EmailUniqueCheckResponse(customerService.isUniqueEmail(email));
+        return ResponseEntity.ok().body(emailUniqueCheckResponse);
     }
 
     @PostMapping
@@ -44,36 +46,36 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(customerResponse);
     }
 
-    @PostMapping("/auth/password-check")
-    public ResponseEntity<Void> checkPassword(@AuthenticationPrincipal final String email,
-                                              @RequestBody @Valid final PasswordRequest passwordRequest) {
+    @PostMapping("/password-check")
+    public ResponseEntity<PasswordCheckResponse> checkPassword(@AuthenticationPrincipal final Email email,
+                                                               @RequestBody @Valid final PasswordRequest passwordRequest) {
         customerService.checkPassword(email, passwordRequest);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new PasswordCheckResponse(true));
     }
 
-    @GetMapping("/auth/me")
-    public ResponseEntity<CustomerResponse> findProfile(@AuthenticationPrincipal final String email) {
+    @GetMapping("/me")
+    public ResponseEntity<CustomerResponse> findProfile(@AuthenticationPrincipal final Email email) {
         final Customer customer = customerService.findByEmail(email);
         final CustomerResponse customerResponse = new CustomerResponse(customer.getEmail(), customer.getNickname());
         return ResponseEntity.ok().body(customerResponse);
     }
 
-    @PatchMapping("/auth/me")
-    public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal final String email,
+    @PatchMapping("/me")
+    public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal final Email email,
                                               @RequestBody @Valid final CustomerProfileRequest customerProfileRequest) {
         customerService.updateProfile(email, customerProfileRequest);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/auth/password")
-    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal final String email,
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal final Email email,
                                                @RequestBody @Valid final PasswordRequest passwordRequest) {
         customerService.updatePassword(email, passwordRequest);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/auth/me")
-    public ResponseEntity<Void> signOut(@AuthenticationPrincipal final String email) {
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> signOut(@AuthenticationPrincipal final Email email) {
         customerService.delete(email);
         return ResponseEntity.noContent().build();
     }

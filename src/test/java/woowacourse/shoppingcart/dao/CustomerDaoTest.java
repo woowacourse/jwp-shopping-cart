@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -36,7 +35,6 @@ public class CustomerDaoTest {
 
     private final CustomerDao customerDao;
 
-    @Autowired
     public CustomerDaoTest(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.customerDao = new CustomerDao(jdbcTemplate, dataSource);
     }

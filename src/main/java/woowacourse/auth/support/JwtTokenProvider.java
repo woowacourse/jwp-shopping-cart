@@ -38,13 +38,13 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getPayload(String token) {
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public void validateToken(String token) {
+    public String getSubject(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey).build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
         } catch (ExpiredJwtException e) {
             throw new AuthException("만료된 토큰입니다.");
         } catch (JwtException | IllegalArgumentException e) {

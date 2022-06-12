@@ -23,6 +23,6 @@ public class AuthController {
         final String accessToken = authService.createToken(tokenRequest);
         final TokenResponse tokenResponse = new TokenResponse(nickname, accessToken);
 
-        return ResponseEntity.ok().body(tokenResponse);
+        return ResponseEntity.ok(tokenResponse);
     }
 }

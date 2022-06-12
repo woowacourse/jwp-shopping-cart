@@ -1,11 +1,11 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.customer;
 
 import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.domain.customer.Nickname;
 
 public class CustomerProfileRequest {
 
-    @NotBlank
+    @NotBlank(message = "공백이 들어올 수 없습니다.")
     private String nickname;
 
     private CustomerProfileRequest() {

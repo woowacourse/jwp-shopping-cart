@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,7 +16,6 @@ import woowacourse.auth.exception.AuthException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -26,7 +26,7 @@ public class ControllerAdvice {
             RuntimeException.class,
             Exception.class,
     })
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+    public ResponseEntity<ErrorResponse> handleUnhandledException(Exception e) {
         final ErrorResponse errorResponse = new ErrorResponse("Unhandled Exception");
         return ResponseEntity.internalServerError().body(errorResponse);
     }
@@ -34,7 +34,7 @@ public class ControllerAdvice {
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<ErrorResponse> handleEmptyResultDataAccess() {
         final ErrorResponse errorResponse = new ErrorResponse("존재하지 않는 데이터 요청입니다.");
-        return ResponseEntity.badRequest().body(errorResponse);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -43,6 +43,12 @@ public class ControllerAdvice {
         final FieldError mainError = fieldErrors.get(0);
         final ErrorResponse errorResponse = new ErrorResponse(mainError.getDefaultMessage());
 
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ErrorResponse> handleBindException(final BindException e) {
+        final ErrorResponse errorResponse = new ErrorResponse(e.getFieldErrors().get(0).getDefaultMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
@@ -59,7 +65,6 @@ public class ControllerAdvice {
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
-            InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {

@@ -2,7 +2,7 @@ package woowacourse.auth.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
@@ -38,8 +38,8 @@ class AuthControllerTest {
         ResponseEntity<TokenResponse> response = authController.login(tokenRequest);
 
         HttpStatus statusCode = response.getStatusCode();
-        String accessToken = Objects.requireNonNull(response.getBody()).getAccessToken();
-        String payload = jwtTokenProvider.getPayload(accessToken);
+        String accessToken = Objects.requireNonNull(response.getBody()).getToken();
+        String payload = jwtTokenProvider.getSubject(accessToken);
 
         assertAll(
                 () -> assertThat(statusCode).isEqualTo(HttpStatus.OK),

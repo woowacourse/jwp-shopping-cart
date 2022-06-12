@@ -10,8 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
@@ -56,7 +56,7 @@ public class AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
                 .then().log().all()
-                .extract().as(TokenResponse.class).getAccessToken();
+                .extract().as(TokenResponse.class).getToken();
     }
 
     private ExtractableResponse<Response> 비밀번호_확인(final String accessToken, final PasswordRequest passwordRequest) {
@@ -65,7 +65,7 @@ public class AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .body(passwordRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/members/auth/password-check")
+                .when().post("/api/members/password-check")
                 .then().log().all()
                 .extract();
     }
@@ -75,7 +75,7 @@ public class AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(accessToken)
-                .when().get("/api/members/auth/me")
+                .when().get("/api/members/me")
                 .then().log().all()
                 .extract();
     }

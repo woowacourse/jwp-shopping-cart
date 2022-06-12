@@ -2,7 +2,6 @@ package woowacourse.auth.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -26,23 +25,15 @@ class JwtTokenProviderTest {
     }
 
     @Test
-    void getPayload() {
+    void getSubject() {
         String payload = "email@email.com";
         String token = jwtTokenProvider.createToken(payload);
 
-        assertThat(jwtTokenProvider.getPayload(token)).isEqualTo(payload);
+        assertThat(jwtTokenProvider.getSubject(token)).isEqualTo(payload);
     }
 
     @Test
-    void validateToken() {
-        String payload = "email@email.com";
-        String token = jwtTokenProvider.createToken(payload);
-
-        assertDoesNotThrow(() -> jwtTokenProvider.validateToken(token));
-    }
-
-    @Test
-    void validateTokenExpiredToken() {
+    void getSubjectExpiredToken() {
         String payload = "email@email.com";
         Date validity = new Date(new Date().getTime() - 1);
         String token = Jwts.builder()
@@ -51,16 +42,16 @@ class JwtTokenProviderTest {
                 .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
                 .compact();
 
-        assertThatThrownBy(() -> jwtTokenProvider.validateToken(token))
+        assertThatThrownBy(() -> jwtTokenProvider.getSubject(token))
                 .isInstanceOf(AuthException.class)
                 .hasMessage("만료된 토큰입니다.");
     }
 
     @Test
-    void validateTokenErrorToken() {
+    void getSubjectErrorToken() {
         String token = "error.token.anything";
 
-        assertThatThrownBy(() -> jwtTokenProvider.validateToken(token))
+        assertThatThrownBy(() -> jwtTokenProvider.getSubject(token))
                 .isInstanceOf(AuthException.class)
                 .hasMessage("유효하지 않은 인증입니다.");
     }
