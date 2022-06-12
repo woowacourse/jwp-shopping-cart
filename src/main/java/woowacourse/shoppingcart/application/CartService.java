@@ -49,7 +49,7 @@ public class CartService {
         cartItemDao.updateQuantity(cartItem);
     }
 
-    public void deleteOneById(final Long customerId, final Long cartItemId) {
+    public void deleteById(final Long customerId, final Long cartItemId) {
         validateCartItemExist(customerId, cartItemId);
         cartItemDao.deleteById(cartItemId);
     }
