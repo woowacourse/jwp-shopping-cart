@@ -2,18 +2,18 @@ package woowacourse.member.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.member.application.dto.SignUpServiceRequest;
+import woowacourse.member.application.dto.UpdateNameServiceRequest;
+import woowacourse.member.application.dto.UpdatePasswordServiceRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.domain.password.Password;
 import woowacourse.member.domain.password.PlainPassword;
-import woowacourse.member.dto.FindMemberInfoResponse;
-import woowacourse.member.dto.SignUpRequest;
-import woowacourse.member.dto.UpdateNameRequest;
-import woowacourse.member.dto.UpdatePasswordRequest;
 import woowacourse.member.exception.DuplicateEmailException;
 import woowacourse.member.exception.InvalidMemberNameException;
 import woowacourse.member.exception.InvalidPasswordException;
 import woowacourse.member.exception.MemberNotFoundException;
+import woowacourse.member.ui.dto.FindMemberInfoResponse;
 
 import java.util.Optional;
 
@@ -28,7 +28,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void signUp(SignUpRequest request) {
+    public void signUp(SignUpServiceRequest request) {
         checkDuplicateEmail(request.getEmail());
         PlainPassword plainPassword = new PlainPassword(request.getPassword());
         Password password = plainPassword.encrypt();
@@ -48,30 +48,30 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateName(long id, UpdateNameRequest request) {
-        Member member = validateExistMember(memberDao.findMemberById(id));
+    public void updateName(UpdateNameServiceRequest request) {
+        Member member = validateExistMember(memberDao.findMemberById(request.getMemberId()));
 
         if (member.isSameName(request.getName())) {
             throw new InvalidMemberNameException("현재 이름과 같은 이름으로 변경할 수 없습니다.");
         }
-        memberDao.updateName(id, request.getName());
+        memberDao.updateName(request.getMemberId(), request.getName());
     }
 
     @Transactional
-    public void updatePassword(long id, UpdatePasswordRequest request) {
-        Member member = validateExistMember(memberDao.findMemberById(id));
+    public void updatePassword(UpdatePasswordServiceRequest request) {
+        Member member = validateExistMember(memberDao.findMemberById(request.getMemberId()));
         validateUpdatePassword(request, member);
 
         PlainPassword plainPassword = new PlainPassword(request.getNewPassword());
         Password newPassword = plainPassword.encrypt();
-        memberDao.updatePassword(id, newPassword.getValue());
+        memberDao.updatePassword(request.getMemberId(), newPassword.getValue());
     }
 
     private Member validateExistMember(Optional<Member> member) {
         return member.orElseThrow(MemberNotFoundException::new);
     }
 
-    private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {
+    private void validateUpdatePassword(UpdatePasswordServiceRequest request, Member member) {
         PlainPassword plainPassword = new PlainPassword(request.getOldPassword());
         Password requestPassword = plainPassword.encrypt();
         if (!member.isSamePassword(requestPassword)) {

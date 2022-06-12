@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.OrderDetailResponse;
+import woowacourse.shoppingcart.ui.dto.OrderDetailResponse;
 
 import java.util.List;
 
@@ -29,11 +29,11 @@ class OrdersResponseDetailDaoTest {
     @DisplayName("OrderDatail를 저장하면, ID를 반환한다.")
     @Test
     void save() {
-        Long orderId = 1L;
-        Long productId = 2L;
+        long orderId = 1L;
+        long productId = 2L;
         int quantity = 5;
 
-        Long orderDetailId = orderDetailDao.save(orderId, productId, quantity);
+        long orderDetailId = orderDetailDao.save(orderId, productId, quantity);
 
         assertThat(orderDetailId).isEqualTo(5L);
     }
@@ -41,7 +41,7 @@ class OrdersResponseDetailDaoTest {
     @DisplayName("OrderId를 통해 매칭되는 주문 목록들을 조회한다.")
     @Test
     void findOrdersDetailsByOrderId() {
-        Long orderId = 1L;
+        long orderId = 1L;
         List<OrderDetailResponse> orderDetails = orderDetailDao.findOrdersDetailsByOrderId(orderId);
 
         assertThat(orderDetails.size()).isEqualTo(2);

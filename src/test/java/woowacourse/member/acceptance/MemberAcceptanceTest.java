@@ -7,9 +7,9 @@ import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredConvenienceMethod;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginResponse;
-import woowacourse.member.dto.SignUpRequest;
-import woowacourse.member.dto.UpdateNameRequest;
-import woowacourse.member.dto.UpdatePasswordRequest;
+import woowacourse.member.ui.dto.SignUpRequest;
+import woowacourse.member.ui.dto.UpdateNameRequest;
+import woowacourse.member.ui.dto.UpdatePasswordRequest;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberAcceptanceTest extends AcceptanceTest {

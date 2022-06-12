@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.dto.OrdersResponse;
+import woowacourse.shoppingcart.application.dto.OrderServiceRequest;
+import woowacourse.shoppingcart.ui.dto.OrderRequest;
+import woowacourse.shoppingcart.ui.dto.OrdersResponse;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -25,13 +27,20 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal long memberId,
-                                         @RequestBody List<OrderRequest> orderDetails) {
-        long orderId = orderService.addOrder(orderDetails, memberId);
+                                         @RequestBody List<OrderRequest> orders) {
+        List<OrderServiceRequest> orderServiceRequests = convertOrderServiceRequest(orders);
+        long orderId = orderService.addOrder(orderServiceRequests, memberId);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/" + orderId)
                 .build().toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    private List<OrderServiceRequest> convertOrderServiceRequest(List<OrderRequest> orders) {
+        return orders.stream()
+                .map(v -> new OrderServiceRequest(v.getCartId()))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{orderId}")

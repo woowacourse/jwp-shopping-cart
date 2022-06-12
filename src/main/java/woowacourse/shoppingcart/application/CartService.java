@@ -5,16 +5,16 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
 import woowacourse.member.exception.MemberNotFoundException;
+import woowacourse.shoppingcart.application.dto.UpdateQuantityServiceRequest;
 import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dao.dto.SaveCartDto;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.InvalidCartQuantityException;
 import woowacourse.shoppingcart.exception.NotInMemberCartItemException;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
+import woowacourse.shoppingcart.ui.dto.CartResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +45,7 @@ public class CartService {
         }
 
         long cartId = cart.get().getId();
-        updateQuantity(memberId, cartId, new UpdateQuantityRequest(cart.get().getQuantity() + 1));
+        updateQuantity(new UpdateQuantityServiceRequest(memberId, cartId, cart.get().getQuantity() + 1));
         return cartId;
     }
 
@@ -58,14 +58,14 @@ public class CartService {
     }
 
     @Transactional
-    public void updateQuantity(long memberId, long cartId, UpdateQuantityRequest request) {
-        validateExistMember(memberId);
-        validateExistMemberCart(memberId, cartId);
+    public void updateQuantity(UpdateQuantityServiceRequest request) {
+        validateExistMember(request.getMemberId());
+        validateExistMemberCart(request.getMemberId(), request.getCartId());
 
         if (request.getQuantity() < 1) {
             throw new InvalidCartQuantityException();
         }
-        cartDao.updateQuantity(cartId, request.getQuantity());
+        cartDao.updateQuantity(request.getCartId(), request.getQuantity());
     }
 
     @Transactional

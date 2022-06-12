@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.dto.SaveOrderDetailDto;
-import woowacourse.shoppingcart.dto.OrderDetailResponse;
+import woowacourse.shoppingcart.ui.dto.OrderDetailResponse;
 
 import java.util.List;
 

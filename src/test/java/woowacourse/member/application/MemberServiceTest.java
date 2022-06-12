@@ -7,14 +7,14 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.member.dto.FindMemberInfoResponse;
-import woowacourse.member.dto.SignUpRequest;
-import woowacourse.member.dto.UpdateNameRequest;
-import woowacourse.member.dto.UpdatePasswordRequest;
+import woowacourse.member.application.dto.SignUpServiceRequest;
+import woowacourse.member.application.dto.UpdateNameServiceRequest;
+import woowacourse.member.application.dto.UpdatePasswordServiceRequest;
 import woowacourse.member.exception.DuplicateEmailException;
 import woowacourse.member.exception.InvalidMemberNameException;
 import woowacourse.member.exception.InvalidPasswordException;
 import woowacourse.member.exception.MemberNotFoundException;
+import woowacourse.member.ui.dto.FindMemberInfoResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -38,7 +38,7 @@ class MemberServiceTest {
     @Test
     void signUp() {
         assertDoesNotThrow(
-                () -> memberService.signUp(new SignUpRequest("pobi@wooteco.com", "포비", "Javajigi!"))
+                () -> memberService.signUp(new SignUpServiceRequest("pobi@wooteco.com", "포비", "Javajigi!"))
         );
     }
 
@@ -46,7 +46,7 @@ class MemberServiceTest {
     @Test
     void signUpWithDuplicateEmail() {
         assertThatThrownBy(
-                () -> memberService.signUp(new SignUpRequest("ari@wooteco.com", "가짜아리", "Wooteco!"))
+                () -> memberService.signUp(new SignUpServiceRequest("ari@wooteco.com", "가짜아리", "Wooteco!"))
         ).isInstanceOf(DuplicateEmailException.class)
                 .hasMessageContaining("중복되는 이메일이 존재합니다.");
     }
@@ -74,15 +74,17 @@ class MemberServiceTest {
     @DisplayName("올바른 id로 회원 이름을 변경한다.")
     @Test
     void updateName() {
-        memberService.updateName(1L, new UpdateNameRequest("메아리"));
+        UpdateNameServiceRequest request = new UpdateNameServiceRequest(1L, "메아리");
+        memberService.updateName(request);
         assertThat(memberService.findMemberInfo(1L).getName()).isEqualTo("메아리");
     }
 
     @DisplayName("현재이름과 같은 이름으로 변경시 예외가 발생한다.")
     @Test
     void updateNameWithSameName() {
+        UpdateNameServiceRequest request = new UpdateNameServiceRequest(1L, "아리");
         assertThatThrownBy(
-                () -> memberService.updateName(1L, new UpdateNameRequest("아리"))
+                () -> memberService.updateName(request)
         ).isInstanceOf(InvalidMemberNameException.class)
                 .hasMessageContaining("현재 이름과 같은 이름으로 변경할 수 없습니다.");
     }
@@ -90,15 +92,17 @@ class MemberServiceTest {
     @DisplayName("올바른 id로 회원 비밀번호를 변경한다.")
     @Test
     void updatePassword() {
-        memberService.updatePassword(1L, new UpdatePasswordRequest("Wooteco1!", "NewPassword1!"));
+        UpdatePasswordServiceRequest request = new UpdatePasswordServiceRequest(1L, "Wooteco1!", "NewPassword1!");
+        memberService.updatePassword(request);
         assertThat(authService.authenticate(new LoginRequest("ari@wooteco.com", "NewPassword1!"))).isEqualTo(1L);
     }
 
     @DisplayName("현재 비밀번호와 일치하지 않을시 예외가 발생한다.")
     @Test
     void updatePasswordWithIncorrectPassword() {
+        UpdatePasswordServiceRequest request = new UpdatePasswordServiceRequest(1L, "wrongPassword!", "NewPassword1!");
         assertThatThrownBy(
-                () -> memberService.updatePassword(1L, new UpdatePasswordRequest("wrongPassword!", "NewPassword1"))
+                () -> memberService.updatePassword(request)
         ).isInstanceOf(InvalidPasswordException.class)
                 .hasMessageContaining("현재 비밀번호와 일치하지 않습니다.");
     }
@@ -106,8 +110,9 @@ class MemberServiceTest {
     @DisplayName("현재 비밀번호와 같은 비밀번호로 변경시 예외가 발생한다.")
     @Test
     void updatePasswordWithSamePassword() {
+        UpdatePasswordServiceRequest request = new UpdatePasswordServiceRequest(1L, "Wooteco1!", "Wooteco1!");
         assertThatThrownBy(
-                () -> memberService.updatePassword(1L, new UpdatePasswordRequest("Wooteco1!", "Wooteco1!"))
+                () -> memberService.updatePassword(request)
         ).isInstanceOf(InvalidPasswordException.class)
                 .hasMessageContaining("현재 비밀번호와 같은 비밀번호로 변경할 수 없습니다.");
     }

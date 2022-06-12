@@ -2,15 +2,15 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.OrderServiceRequest;
 import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrderDetailDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.dto.OrderDetailResponse;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.dto.OrdersResponse;
 import woowacourse.shoppingcart.exception.CartNotFoundException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.ui.dto.OrderDetailResponse;
+import woowacourse.shoppingcart.ui.dto.OrdersResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,11 +29,11 @@ public class OrderService {
         this.cartDao = cartDao;
     }
 
-    public long addOrder(List<OrderRequest> orderDetailRequests, long memberId) {
+    public long addOrder(List<OrderServiceRequest> orderRequests, long memberId) {
         long ordersId = orderDao.addOrders(memberId);
 
-        for (OrderRequest orderDetail : orderDetailRequests) {
-            long cartId = orderDetail.getCartId();
+        for (OrderServiceRequest order : orderRequests) {
+            long cartId = order.getCartId();
             Cart cart = cartDao.findCartById(cartId)
                     .orElseThrow(CartNotFoundException::new);
             orderDetailDao.save(ordersId, cart.getProductId(), cart.getQuantity());

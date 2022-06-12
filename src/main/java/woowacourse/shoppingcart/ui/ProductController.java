@@ -4,8 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.application.dto.ProductServiceRequest;
+import woowacourse.shoppingcart.ui.dto.ProductRequest;
+import woowacourse.shoppingcart.ui.dto.ProductResponse;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -23,7 +24,9 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> add(@Valid @RequestBody ProductRequest request) {
-        long productId = productService.add(request);
+        ProductServiceRequest serviceRequest =
+                new ProductServiceRequest(request.getName(), request.getPrice(), request.getImageUrl());
+        long productId = productService.add(serviceRequest);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/" + productId)

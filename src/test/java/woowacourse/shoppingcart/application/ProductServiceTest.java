@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.application.dto.ProductServiceRequest;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
+import woowacourse.shoppingcart.ui.dto.ProductResponse;
 
 import java.util.List;
 
@@ -32,8 +32,8 @@ class ProductServiceTest {
     @DisplayName("올바른 데이터로 상품을 저장하면 ID를 반환한다.")
     @Test
     void add() {
-        ProductRequest request = new ProductRequest(name, price, imageUrl);
-        Long productId = productService.add(request);
+        ProductServiceRequest request = new ProductServiceRequest(name, price, imageUrl);
+        long productId = productService.add(request);
 
         assertThat(productId).isEqualTo(18L);
     }
@@ -41,8 +41,8 @@ class ProductServiceTest {
     @DisplayName("올바른 상품 ID로 상품을 조회한다.")
     @Test
     void findProduct() {
-        ProductRequest request = new ProductRequest(name, price, imageUrl);
-        Long productId = productService.add(request);
+        ProductServiceRequest request = new ProductServiceRequest(name, price, imageUrl);
+        long productId = productService.add(request);
 
         ProductResponse response = productService.findProduct(productId);
 
@@ -73,8 +73,8 @@ class ProductServiceTest {
     @DisplayName("올바른 상품 ID로 상품을 삭제한다.")
     @Test
     void deleteProductById() {
-        ProductRequest request = new ProductRequest(name, price, imageUrl);
-        Long productId = productService.add(request);
+        ProductServiceRequest request = new ProductServiceRequest(name, price, imageUrl);
+        long productId = productService.add(request);
 
         productService.deleteProduct(productId);
 

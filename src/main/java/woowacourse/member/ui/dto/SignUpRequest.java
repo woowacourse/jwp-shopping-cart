@@ -1,4 +1,4 @@
-package woowacourse.member.dto;
+package woowacourse.member.ui.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

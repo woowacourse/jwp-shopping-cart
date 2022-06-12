@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.ui.dto;
 
 public class OrderDetailResponse {
 

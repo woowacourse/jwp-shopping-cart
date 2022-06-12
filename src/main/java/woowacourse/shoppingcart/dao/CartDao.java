@@ -53,7 +53,7 @@ public class CartDao {
         String sql = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
                 "FROM cart_item as c JOIN product as p ON c.product_id = p.id WHERE c.member_id = ? AND p.id = ?";
 
-        try{
+        try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper(), memberId, productId));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

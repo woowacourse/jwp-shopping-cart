@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.acceptance.AcceptanceTest;
 import woowacourse.acceptance.RestAssuredConvenienceMethod;
-import woowacourse.shoppingcart.dto.AddCartRequest;
-import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.ui.dto.AddCartRequest;
+import woowacourse.shoppingcart.ui.dto.CartResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -4,10 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.member.application.MemberService;
-import woowacourse.member.dto.FindMemberInfoResponse;
-import woowacourse.member.dto.SignUpRequest;
-import woowacourse.member.dto.UpdateNameRequest;
-import woowacourse.member.dto.UpdatePasswordRequest;
+import woowacourse.member.application.dto.SignUpServiceRequest;
+import woowacourse.member.application.dto.UpdateNameServiceRequest;
+import woowacourse.member.application.dto.UpdatePasswordServiceRequest;
+import woowacourse.member.ui.dto.FindMemberInfoResponse;
+import woowacourse.member.ui.dto.SignUpRequest;
+import woowacourse.member.ui.dto.UpdateNameRequest;
+import woowacourse.member.ui.dto.UpdatePasswordRequest;
 
 import javax.validation.Valid;
 
@@ -24,7 +27,8 @@ public class MemberController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void signUp(@Valid @RequestBody SignUpRequest request) {
-        memberService.signUp(request);
+        SignUpServiceRequest serviceRequest = new SignUpServiceRequest(request.getEmail(), request.getName(), request.getPassword());
+        memberService.signUp(serviceRequest);
     }
 
     @GetMapping("/me")
@@ -42,13 +46,16 @@ public class MemberController {
     @PutMapping("/me/name")
     @ResponseStatus(HttpStatus.OK)
     public void updateName(@AuthenticationPrincipal long id, @Valid @RequestBody UpdateNameRequest request) {
-        memberService.updateName(id, request);
+        UpdateNameServiceRequest serviceRequest = new UpdateNameServiceRequest(id, request.getName());
+        memberService.updateName(serviceRequest);
     }
 
     @PutMapping("/me/password")
     @ResponseStatus(HttpStatus.OK)
     public void updatePassword(@AuthenticationPrincipal long id, @Valid @RequestBody UpdatePasswordRequest request) {
-        memberService.updatePassword(id, request);
+        UpdatePasswordServiceRequest serviceRequest =
+                new UpdatePasswordServiceRequest(id, request.getOldPassword(), request.getNewPassword());
+        memberService.updatePassword(serviceRequest);
     }
 
     @DeleteMapping("/me")

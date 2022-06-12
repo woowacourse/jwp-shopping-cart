@@ -1,4 +1,4 @@
-package woowacourse.member.dto;
+package woowacourse.member.ui.dto;
 
 import woowacourse.member.domain.Member;
 

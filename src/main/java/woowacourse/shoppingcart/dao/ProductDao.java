@@ -25,7 +25,7 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private static RowMapper<Product> rowMapper(){
+    private static RowMapper<Product> rowMapper() {
         return (resultSet, rowNum) ->
                 new Product(
                         resultSet.getLong("id"),
