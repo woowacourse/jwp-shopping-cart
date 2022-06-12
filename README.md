@@ -70,7 +70,7 @@
 
 - [ ] 로그인을 하지 않은 상태에서도 장바구니에 물품을 넣을 수 있어야 하지 않을까요?
 - [ ] interceptor 설정이 auth package에 있는데 해당 url의 controller 들은 shoppingcart에 있는데 auth에서 설정하는 것이 맞을까요?
-- [ ] (AuthorizationExtractor) extract 메서드를 분리하면 좋을 것 같아요ㅎㅎ
+- [x] (AuthorizationExtractor) extract 메서드를 분리하면 좋을 것 같아요ㅎㅎ
 - [x] resolver에서 값을 넣어주기만 하고 있는데요. 검증을 하지 않아도 될까요? 
   - interceptor가 적용된 url에서 모두 @AuthenticationPrincipal가 활용되고 있는데 interceptor에서 검증을 할 필요가 있을까요? 
   - interceptor와 resolver의 역할을 분리했다면 맞을 것 같은데 interceptor와 resolver의 역할을 어떻게 정의했을까요?
