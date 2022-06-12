@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.dto.ProductResponses;
 public class ProductService {
     private static final int MINIMUM_PAGE = 1;
     private static final int MINIMUM_SIZE = 0;
+
     private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {

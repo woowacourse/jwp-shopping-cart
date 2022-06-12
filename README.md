@@ -74,7 +74,7 @@
 - [ ] resolver에서 값을 넣어주기만 하고 있는데요. 검증을 하지 않아도 될까요? 
   - interceptor가 적용된 url에서 모두 @AuthenticationPrincipal가 활용되고 있는데 interceptor에서 검증을 할 필요가 있을까요? 
   - interceptor와 resolver의 역할을 분리했다면 맞을 것 같은데 interceptor와 resolver의 역할을 어떻게 정의했을까요?
-- [ ] 전역 변수와 멤버변수 사이에 빈줄을 추가해주는게 더 명확한 거 같아요!
+- [x] 전역 변수와 멤버변수 사이에 빈줄을 추가해주는게 더 명확한 거 같아요!
 - [ ] ValidtaionException을 만들고 메세지를 전달받아 생성할 수 있게 하는 방식으로 검증 exception 들을 줄일 수도 있을 거 같습니다~
 - [x] productService가 있는데 productDao를 사용한 이유가 있을까요?
   - 레거시 코드에 dao를 사용하고 있어서 그대로 사용했습니다.

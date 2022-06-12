@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.exception.AuthorizationException;
 public class LoginInterceptor implements HandlerInterceptor {
 
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+
     private final JwtTokenProvider jwtTokenProvider;
 
     public LoginInterceptor(JwtTokenProvider jwtTokenProvider) {

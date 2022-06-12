@@ -23,6 +23,7 @@ public class ProductController {
 
     private static final String DEFAULT_SIZE = "1000";
     private static final String DEFAULT_PAGE = "1";
+
     private final ProductService productService;
 
     public ProductController(final ProductService productService) {

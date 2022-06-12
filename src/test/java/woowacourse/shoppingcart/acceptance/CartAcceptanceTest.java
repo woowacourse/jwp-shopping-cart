@@ -26,6 +26,7 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
     private static final String USER = "alien";
+
     private Long productId1;
     private Long productId2;
 

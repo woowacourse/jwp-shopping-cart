@@ -12,6 +12,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+
     private final JwtTokenProvider jwtTokenProvider;
 
     public AuthenticationPrincipalArgumentResolver(JwtTokenProvider jwtTokenProvider) {
