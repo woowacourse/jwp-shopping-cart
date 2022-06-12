@@ -38,6 +38,17 @@ public class CartDao {
         return jdbcTemplate.query(SQL, cartMapper(), memberId);
     }
 
+    public Optional<Cart> findCartByMemberIdAndProductId(long memberId, long productId) {
+        String SQL = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +
+                "FROM cart_item as c JOIN product as p ON c.product_id = p.id WHERE c.member_id = ? AND p.id = ?";
+
+        try{
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, cartMapper(), memberId, productId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public Optional<Cart> findCartById(long cartId) {
         try {
             String SQL = "SELECT c.id, c.product_id, p.name, p.price, p.image_url, c.quantity " +

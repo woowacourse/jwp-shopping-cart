@@ -38,7 +38,7 @@ public class CartService {
     public Long add(Long memberId, Long productId) {
         validateExistMember(memberId);
         validateExistProduct(productId);
-        Optional<Cart> cart = findCartWithProduct(memberId, productId);
+        Optional<Cart> cart = cartDao.findCartByMemberIdAndProductId(memberId, productId);
         if (cart.isEmpty()) {
             SaveCartDto saveCartDto = new SaveCartDto(memberId, productId);
             return cartDao.save(saveCartDto);
@@ -47,13 +47,6 @@ public class CartService {
         Long cartId = cart.get().getId();
         updateQuantity(memberId, cartId, new UpdateQuantityRequest(cart.get().getQuantity() + 1));
         return cartId;
-    }
-
-    private Optional<Cart> findCartWithProduct(Long memberId, Long productId) {
-        List<Cart> cartItems = cartDao.findCartByMemberId(memberId);
-        return cartItems.stream()
-                .filter(v -> v.getProductId() == productId)
-                .findAny();
     }
 
     public List<CartResponse> findCarts(Long memberId) {

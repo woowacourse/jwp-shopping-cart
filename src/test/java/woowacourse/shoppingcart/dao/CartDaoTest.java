@@ -49,6 +49,44 @@ public class CartDaoTest {
         assertThat(productIds).containsExactly(1L, 2L);
     }
 
+    @DisplayName("회원 ID와 상품 ID에 매칭되는 장바구니 정보를 가져온다.")
+    @Test
+    void findCartByMemberIdAndProductId() {
+        long memberId = 1L;
+        long productId = 1L;
+        Optional<Cart> cart = cartDao.findCartByMemberIdAndProductId(memberId, productId);
+
+        assertThat(cart).isNotEmpty();
+    }
+
+    @DisplayName("회원 ID와 상품 ID에 매칭되는 장바구니 정보가 없으면 비어있는 Optional을 반환한다.")
+    @Test
+    void failToFindCartByMemberIdAndProductId() {
+        long memberId = 1L;
+        long productId = 100L;
+        Optional<Cart> cart = cartDao.findCartByMemberIdAndProductId(memberId, productId);
+
+        assertThat(cart).isEmpty();
+    }
+
+    @DisplayName("장바구니 ID에 매칭되는 장바구니 정보를 반환한다.")
+    @Test
+    void findCartById() {
+        long cartId = 1L;
+        Optional<Cart> cart = cartDao.findCartById(cartId);
+
+        assertThat(cart).isNotEmpty();
+    }
+
+    @DisplayName("장바구니 ID에 매칭되는 장바구니 정보가 없으면 비어있는 Optional을 반환한다.")
+    @Test
+    void failToFindCartById() {
+        long cartId = 100L;
+        Optional<Cart> cart = cartDao.findCartById(cartId);
+
+        assertThat(cart).isEmpty();
+    }
+
     @DisplayName("상품 수량을 업데이트 한다.")
     @Test
     void updateQuantity() {
