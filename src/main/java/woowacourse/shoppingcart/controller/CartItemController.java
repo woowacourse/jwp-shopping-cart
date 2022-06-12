@@ -45,7 +45,7 @@ public class CartItemController {
             @AuthenticationPrincipal LoginCustomer loginCustomer) {
         authService.checkAuthorization(customerId, loginCustomer.getEmail());
 
-        cartService.addCart(addCartItemRequestDto, customerId);
+        cartService.addCartItem(addCartItemRequestDto, customerId);
         return ResponseEntity.noContent().build();
     }
 

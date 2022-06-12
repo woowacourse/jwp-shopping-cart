@@ -91,6 +91,40 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    @DisplayName("없는 productId로 장바구니에 물건을 담는다.")
+    void addCartItem_notFoundProductId() {
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1000L, 1);
+
+        final ExtractableResponse<Response> response
+                = post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    @DisplayName("없는 productId로 장바구니에 물건을 담는다.")
+    void addCartItem_duplicateProductId() {
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 1);
+
+        post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
+        final ExtractableResponse<Response> response
+                = post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("재고보다 많은 수량의 물건을 장바구니에 담는다.")
+    void addCartItem_overCount() {
+        final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(productId1, 11);
+
+        final ExtractableResponse<Response> response
+                = post("/api/customers/" + customerId + "/carts", authorizationHeader, addCartItemRequestDto);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     @DisplayName("장바구니에 담긴 물건의 수량을 변경한다.")
     void updateCartItems() {
         final AddCartItemRequestDto addCartItemRequestDto1 = new AddCartItemRequestDto(productId1, 1);

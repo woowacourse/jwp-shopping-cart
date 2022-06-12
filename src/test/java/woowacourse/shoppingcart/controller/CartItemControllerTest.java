@@ -86,7 +86,7 @@ class CartItemControllerTest extends ControllerTest {
     @DisplayName("장바구니에 물건을 담는다.")
     void addCartItem() throws Exception {
         doNothing().when(authService).checkAuthorization(any(), any());
-        when(cartService.addCart(any(), any())).thenReturn(1L);
+        when(cartService.addCartItem(any(), any())).thenReturn(1L);
 
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
 
@@ -107,7 +107,7 @@ class CartItemControllerTest extends ControllerTest {
     void deleteCartItem() throws Exception {
         doNothing().when(authService).checkAuthorization(any(), any());
         doNothing().when(cartService).deleteCart(any(), any());
-        when(cartService.addCart(any(), any())).thenReturn(1L);
+        when(cartService.addCartItem(any(), any())).thenReturn(1L);
 
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
         mockMvc.perform(post("/api/customers/1/carts")
@@ -134,7 +134,7 @@ class CartItemControllerTest extends ControllerTest {
     @DisplayName("장바구니에 담긴 물건의 수량을 수정한다.")
     void updateCartItem() throws Exception {
         doNothing().when(authService).checkAuthorization(any(), any());
-        when(cartService.addCart(any(), any())).thenReturn(1L);
+        when(cartService.addCartItem(any(), any())).thenReturn(1L);
 
         final AddCartItemRequestDto addCartItemRequestDto = new AddCartItemRequestDto(1L, 1);
         mockMvc.perform(post("/api/customers/1/carts")

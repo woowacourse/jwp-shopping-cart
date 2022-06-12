@@ -6,7 +6,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
@@ -29,7 +28,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public Long addCart(final AddCartItemRequestDto addCartItemRequestDto, final Long customerId) {
+    public Long addCartItem(final AddCartItemRequestDto addCartItemRequestDto, final Long customerId) {
         checkDuplicateProduct(customerId, addCartItemRequestDto.getProductId());
         compareCountAndQuantity(addCartItemRequestDto.getCount(), addCartItemRequestDto.getProductId());
         try {
