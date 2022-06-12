@@ -17,7 +17,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.entity.OrdersDetailEntity;
 
 @JdbcTest
@@ -72,22 +71,24 @@ class OrdersDetailDaoTest {
                 .isInstanceOf(RuntimeException.class);
     }
 
-    @DisplayName("OrderId로 OrderDetails 조회하는 기능")
+    @DisplayName("orderId로 orderDetails 조회하는 기능")
     @Test
-    void findOrdersDetailsByOrderId() {
-        //given
-        Long orderDetailId1 = ordersDetailDao.addOrdersDetail(ordersId, productId1, 3);
-        Long orderDetailId2 = ordersDetailDao.addOrdersDetail(ordersId, productId2, 4);
+    public void findOrdersDetailsByOrderId() {
+        // given
+        ordersDetailDao.addOrdersDetail(ordersId, productId1, 3);
+        ordersDetailDao.addOrdersDetail(ordersId, productId2, 4);
 
-        //when
+        // when
         final List<OrdersDetailEntity> ordersDetailsByOrderId = ordersDetailDao.findOrdersDetailsByOrderId(ordersId);
 
-        //then
+        // then
         assertThat(ordersDetailsByOrderId)
-                .extracting("id", "ordersId", "productId", "quantity")
+                .extracting("productId", "name", "price", "imageUrl", "description", "stock", "quantity")
                 .containsExactly(
-                        tuple(orderDetailId1, ordersId, productId1, 3),
-                        tuple(orderDetailId2, ordersId, productId2, 4)
+                        tuple(productId1, PRODUCT_1.getName(), PRODUCT_1.getPrice().getValue(), PRODUCT_1.getImageUrl(),
+                                PRODUCT_1.getDescription(), PRODUCT_1.getStock().getValue(), 3),
+                        tuple(productId2, PRODUCT_2.getName(), PRODUCT_2.getPrice().getValue(), PRODUCT_2.getImageUrl(),
+                                PRODUCT_2.getDescription(), PRODUCT_2.getStock().getValue(), 4)
                 );
     }
 }

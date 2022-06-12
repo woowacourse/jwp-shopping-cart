@@ -1,13 +1,11 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.OrderDetail;
-
-import java.sql.PreparedStatement;
-import java.util.List;
 import woowacourse.shoppingcart.entity.OrdersDetailEntity;
 
 @Repository
@@ -35,13 +33,22 @@ public class JdbcOrdersDetailDao implements OrdersDetailDao {
 
     @Override
     public List<OrdersDetailEntity> findOrdersDetailsByOrderId(Long orderId) {
-        final String sql = "SELECT id, orders_id, product_id, quantity FROM orders_detail WHERE orders_id = ?";
+        final String sql = "SELECT p.id product_id, p.name name, p.price price, p.image_url image_url, p.description descrption, "
+                + "p.stock stock, od.quantity quantity "
+                + "FROM product as p "
+                + "INNER JOIN orders_detail od ON p.id = od.product_id "
+                + "INNER JOIN orders o ON od.orders_id = o.id "
+                + "WHERE o.id = ?";
+
         return jdbcTemplate.query(sql,
                 (rs, rowNum) ->
                         new OrdersDetailEntity(
-                                rs.getLong("id"),
-                                rs.getLong("orders_id"),
                                 rs.getLong("product_id"),
+                                rs.getString("name"),
+                                rs.getInt("price"),
+                                rs.getString("image_url"),
+                                rs.getString("description"),
+                                rs.getInt("stock"),
                                 rs.getInt("quantity")
                         )
                 , orderId);

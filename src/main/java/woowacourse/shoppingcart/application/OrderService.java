@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import static woowacourse.shoppingcart.application.ProductService.convertProductEntityToResponse;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -13,6 +11,7 @@ import woowacourse.shoppingcart.domain.cartItem.CartItem;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.OrderResponse;
+import woowacourse.shoppingcart.dto.ProductResponse;
 import woowacourse.shoppingcart.entity.OrdersDetailEntity;
 import woowacourse.shoppingcart.entity.ProductEntity;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -43,14 +42,14 @@ public class OrderService {
     private List<CartItem> getCartItems(List<CartRequest> orderRequest) {
         return orderRequest
                 .stream()
-                .map(cartRequest -> {
-                    final ProductEntity productEntity = productDao.findProductById(cartRequest.getProductId());
-                    return CartItem.of(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),
-                            productEntity.getImageUrl(), productEntity.getDescription(),
-                            productEntity.getStock(),
-                            cartRequest.getQuantity());
-                })
+                .map(cartRequest -> getCartItem(cartRequest.getProductId(), cartRequest.getQuantity()))
                 .collect(Collectors.toList());
+    }
+
+    private CartItem getCartItem(Long productId, int quantity) {
+        final ProductEntity productEntity = productDao.findProductById(productId);
+        return CartItem.of(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),
+                productEntity.getImageUrl(), productEntity.getDescription(), productEntity.getStock(), quantity);
     }
 
     private void addOrdersDetail(Long orderId, List<CartItem> cartItems) {
@@ -61,26 +60,27 @@ public class OrderService {
 
     public List<OrderResponse> findOrdersByCustomerId(final int customerId) {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
-        return getOrderResponses(orderIds);
-    }
-
-    private List<OrderResponse> getOrderResponses(List<Long> orderIds) {
         return orderIds.stream()
                 .map(ordersDetailDao::findOrdersDetailsByOrderId)
-                .map(ordersDetailEntity -> {
-                    final List<OrderDetailResponse> orderDetailResponses = getCartItemResponse(ordersDetailEntity);
-
-                    final int totalPrice = getTotalPrice(orderDetailResponses);
-
-                    return new OrderResponse(orderDetailResponses, totalPrice);
-                })
+                .map(this::convertOrderResponse)
                 .collect(Collectors.toList());
     }
 
-    private List<OrderDetailResponse> getCartItemResponse(List<OrdersDetailEntity> ordersDetailEntity) {
-        return ordersDetailEntity.stream()
-                .map(this::getCartResponse)
-                .collect(Collectors.toList());
+    private OrderResponse convertOrderResponse(List<OrdersDetailEntity> ordersDetailEntities){
+        final List<OrderDetailResponse> orderDetailResponses = getOrderDetailResponses(ordersDetailEntities);
+
+        int totalPrice = getTotalPrice(orderDetailResponses);
+
+        return new OrderResponse(orderDetailResponses, totalPrice);
+    }
+
+    private List<OrderDetailResponse> getOrderDetailResponses(List<OrdersDetailEntity> ordersDetailEntities) {
+        return ordersDetailEntities.stream()
+                .map(entity -> new OrderDetailResponse(
+                        new ProductResponse(entity.getProductId(), entity.getName(), entity.getPrice(),
+                                entity.getImageUrl(), entity.getDescription(), entity.getStock()),
+                        entity.getQuantity())
+                ).collect(Collectors.toList());
     }
 
     private int getTotalPrice(List<OrderDetailResponse> orderDetailResponses) {
@@ -89,19 +89,10 @@ public class OrderService {
                 .sum();
     }
 
-    private OrderDetailResponse getCartResponse(OrdersDetailEntity ordersDetailEntity) {
-        final ProductEntity productEntity = productDao.findProductById(ordersDetailEntity.getProductId());
-        final int quantity = ordersDetailEntity.getQuantity();
-        return new OrderDetailResponse(convertProductEntityToResponse(productEntity), quantity);
-    }
-
     public OrderResponse findOrder(Long orderId, int customerId) {
         validateOrderId(orderId, customerId);
         final List<OrdersDetailEntity> ordersDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId);
-        final List<OrderDetailResponse> orderDetailResponses = getCartItemResponse(ordersDetails);
-        final int totalPrice = getTotalPrice(orderDetailResponses);
-
-        return new OrderResponse(orderDetailResponses, totalPrice);
+        return convertOrderResponse(ordersDetails);
     }
 
     private void validateOrderId(Long orderId, int customerId) {
