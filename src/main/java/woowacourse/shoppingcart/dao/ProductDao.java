@@ -75,8 +75,8 @@ public class ProductDao {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 
-    public void updateQuantity(Long id, int quantity) {
+    public void updateQuantity(Product product) {
         final String sql = "UPDATE product SET stock_quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, quantity, id);
+        jdbcTemplate.update(sql, product.getStockQuantity(), product.getId());
     }
 }
