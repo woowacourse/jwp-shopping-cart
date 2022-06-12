@@ -43,7 +43,7 @@ class OrderedProductDaoTest {
         jdbcTemplate.update("INSERT INTO product (name, price, stock_quantity) VALUES (?, ?, ?)"
                 , "name", 1000, 10);
         jdbcTemplate.update("INSERT INTO thumbnail_image (product_id, url, alt) VALUES (?, ?, ?)"
-                ,1L, "url", "alt");
+                , 1L, "url", "alt");
         productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
     }
 

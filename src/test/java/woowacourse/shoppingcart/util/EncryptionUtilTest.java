@@ -9,7 +9,7 @@ class EncryptionUtilTest {
 
     @Test
     @DisplayName("암호문과 평문이 기존에 같은 문장이라면 true를 반환한다.")
-    void isSameEncryptedPasswordTrue(){
+    void isSameEncryptedPasswordTrue() {
         //given
         String input = "password1!";
         //when
@@ -21,7 +21,7 @@ class EncryptionUtilTest {
 
     @Test
     @DisplayName("암호문과 평문이 기존에 다른 문장이라면 false를 반환한다.")
-    void isSameEncryptedPasswordFalse(){
+    void isSameEncryptedPasswordFalse() {
         //given
         String input = "password1!";
         //when

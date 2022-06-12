@@ -16,7 +16,6 @@ import woowacourse.shoppingcart.domain.ThumbnailImage;
 @Repository
 public class ProductDao {
 
-    private final JdbcTemplate jdbcTemplate;
     private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (resultSet, rowNumber) ->
             new Product(
                     resultSet.getLong("id"),
@@ -28,6 +27,7 @@ public class ProductDao {
                             resultSet.getString("alt")
                     )
             );
+    private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

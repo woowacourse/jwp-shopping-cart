@@ -12,7 +12,6 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.common.exception.CartItemException;
 import woowacourse.common.exception.NotFoundException;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;

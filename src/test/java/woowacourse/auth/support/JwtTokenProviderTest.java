@@ -13,13 +13,13 @@ class JwtTokenProviderTest {
 
     @Test
     @DisplayName("토큰을 생성할 수 있다.")
-    void createToken(){
+    void createToken() {
         assertThat(jwtTokenProvider.createToken("test@email.com")).isNotNull();
     }
 
     @Test
     @DisplayName("토큰을 복호화할 수 있다.")
-    void getPayload(){
+    void getPayload() {
         //given
         String payload = "test@email.com";
         String token = jwtTokenProvider.createToken(payload);
@@ -30,7 +30,7 @@ class JwtTokenProviderTest {
 
     @Test
     @DisplayName("올바른 토큰일 경우 validate시 truen를 return한다.")
-    void validateTokenTrue(){
+    void validateTokenTrue() {
         //given
         String payload = "test@email.com";
         String token = jwtTokenProvider.createToken(payload);
@@ -41,13 +41,13 @@ class JwtTokenProviderTest {
 
     @Test
     @DisplayName("올바르지 않은 토큰일 경우 validate시 false를 return한다.")
-    void validateTokenFalseByWrongToken(){
+    void validateTokenFalseByWrongToken() {
         assertThat(jwtTokenProvider.validateToken("is.wrong.token")).isFalse();
     }
 
     @Test
     @DisplayName("만료된 토큰일 경우 validate시 false를 return한다.")
-    void validateTokenFalseByExpiredToken(){
+    void validateTokenFalseByExpiredToken() {
         //given
         JwtTokenProvider shortJwtTokenProvider = new JwtTokenProvider(SECRET_KEY, 1);
         String token = shortJwtTokenProvider.createToken("test@email.com");

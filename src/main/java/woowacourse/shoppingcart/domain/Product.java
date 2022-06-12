@@ -19,7 +19,7 @@ public class Product {
         this(null, name, price, stockQuantity, thumbnailImage);
     }
 
-    public void order(int value){
+    public void order(int value) {
         stockQuantity.reduce(value);
     }
 

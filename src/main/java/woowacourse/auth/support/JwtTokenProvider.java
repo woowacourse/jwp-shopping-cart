@@ -22,7 +22,7 @@ public class JwtTokenProvider {
     public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
                             @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
         byte[] secretKeyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
-        this.secretKey =  Keys.hmacShaKeyFor(secretKeyBytes);
+        this.secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
         this.validityInMilliseconds = validityInMilliseconds;
     }
 

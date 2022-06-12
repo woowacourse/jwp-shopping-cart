@@ -25,6 +25,22 @@ import woowacourse.shoppingcart.dto.order.OrderResponse;
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
 
+    public static void 주문하기_성공함(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isNotBlank();
+    }
+
+    public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
+        List<Long> resultOrderIds = response.jsonPath().getList(".", OrderResponse.class).stream()
+                .map(OrderResponse::getId)
+                .collect(Collectors.toList());
+        assertThat(resultOrderIds).contains(orderIds);
+    }
+
     @Override
     @BeforeEach
     public void setUp() {
@@ -85,22 +101,6 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         주문_조회_응답됨(response);
         주문_조회됨(response, 1L);
-    }
-
-    public static void 주문하기_성공함(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList(".", OrderResponse.class).stream()
-                .map(OrderResponse::getId)
-                .collect(Collectors.toList());
-        assertThat(resultOrderIds).contains(orderIds);
     }
 
     private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {

@@ -30,58 +30,6 @@ import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 @DisplayName("장바구니 관련 기능")
 public class CartItemAcceptanceTest extends AcceptanceTest {
 
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-        ThumbnailImage chickenThumbnailImage = new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
-        ThumbnailImage beerThumbnailImage = new ThumbnailImage("http://example.com/beer.jpg", "chicken");
-
-        ProductRequest chickenRequest = new ProductRequest("치킨", 1000, 10, chickenThumbnailImage);
-        ProductRequest beerRequest = new ProductRequest("치킨", 1000, 10, beerThumbnailImage);
-
-        postMethodRequest(chickenRequest, "/api/products");
-        postMethodRequest(beerRequest, "/api/products");
-    }
-
-
-    @DisplayName("장바구니 아이템 추가")
-    @Test
-    void addCartItem() {
-        String token = loginAndGetToken("test@gmail.com", "password0!", "name");
-
-        ExtractableResponse<Response> response = addCartItem(token, 1L, 10);
-
-        장바구니_아이템_추가됨(response);
-    }
-
-    @DisplayName("장바구니 아이템 목록 조회")
-    @Test
-    void getCartItems() {
-        String token = loginAndGetToken("test@gmail.com", "password0!", "name");
-
-        addCartItem(token, 1L, 10);
-        addCartItem(token, 2L, 10);
-
-        ExtractableResponse<Response> response = getMethodRequestWithBearerAuth(token, "/api/mycarts");
-
-        장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_포함됨(response, 1L, 2L);
-    }
-
-    @DisplayName("장바구니 삭제")
-    @Test
-    void deleteCartItem() {
-        String token = loginAndGetToken("test@gmail.com", "password0!", "name");
-
-        addCartItem(token, 1L, 10);
-
-        CartItemDeleteRequest cartItemDeleteRequest = new CartItemDeleteRequest(List.of(1L));
-        ExtractableResponse<Response> response = deleteMethodRequestWithBearerAuthAndBody(cartItemDeleteRequest, token, "/api/mycarts");
-
-        장바구니_삭제됨(response);
-    }
-
     public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("id", productId);
@@ -118,6 +66,58 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Override
+    @BeforeEach
+    public void setUp() {
+        super.setUp();
+        ThumbnailImage chickenThumbnailImage = new ThumbnailImage("http://example.com/chicken.jpg", "chicken");
+        ThumbnailImage beerThumbnailImage = new ThumbnailImage("http://example.com/beer.jpg", "chicken");
+
+        ProductRequest chickenRequest = new ProductRequest("치킨", 1000, 10, chickenThumbnailImage);
+        ProductRequest beerRequest = new ProductRequest("치킨", 1000, 10, beerThumbnailImage);
+
+        postMethodRequest(chickenRequest, "/api/products");
+        postMethodRequest(beerRequest, "/api/products");
+    }
+
+    @DisplayName("장바구니 아이템 추가")
+    @Test
+    void addCartItem() {
+        String token = loginAndGetToken("test@gmail.com", "password0!", "name");
+
+        ExtractableResponse<Response> response = addCartItem(token, 1L, 10);
+
+        장바구니_아이템_추가됨(response);
+    }
+
+    @DisplayName("장바구니 아이템 목록 조회")
+    @Test
+    void getCartItems() {
+        String token = loginAndGetToken("test@gmail.com", "password0!", "name");
+
+        addCartItem(token, 1L, 10);
+        addCartItem(token, 2L, 10);
+
+        ExtractableResponse<Response> response = getMethodRequestWithBearerAuth(token, "/api/mycarts");
+
+        장바구니_아이템_목록_응답됨(response);
+        장바구니_아이템_목록_포함됨(response, 1L, 2L);
+    }
+
+    @DisplayName("장바구니 삭제")
+    @Test
+    void deleteCartItem() {
+        String token = loginAndGetToken("test@gmail.com", "password0!", "name");
+
+        addCartItem(token, 1L, 10);
+
+        CartItemDeleteRequest cartItemDeleteRequest = new CartItemDeleteRequest(List.of(1L));
+        ExtractableResponse<Response> response = deleteMethodRequestWithBearerAuthAndBody(cartItemDeleteRequest, token,
+                "/api/mycarts");
+
+        장바구니_삭제됨(response);
     }
 
     private String loginAndGetToken(String email, String password, String username) {

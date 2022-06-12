@@ -62,8 +62,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(
-                ()-> assertThat(errorCode).isEqualTo(2001),
-                ()-> assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+                () -> assertThat(errorCode).isEqualTo(2001),
+                () -> assertThat(tokenResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         );
     }
 
@@ -71,13 +71,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithWrongBearerAuth() {
         // when
-        final ExtractableResponse<Response> response = getMethodRequestWithBearerAuth("Bearer 123", "/api/customers/me");
+        final ExtractableResponse<Response> response = getMethodRequestWithBearerAuth("Bearer 123",
+                "/api/customers/me");
         final int errorCode = response.jsonPath().getInt("errorCode");
 
         // then
         assertAll(
-                ()-> assertThat(errorCode).isEqualTo(3002),
-                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+                () -> assertThat(errorCode).isEqualTo(3002),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         );
     }
 }

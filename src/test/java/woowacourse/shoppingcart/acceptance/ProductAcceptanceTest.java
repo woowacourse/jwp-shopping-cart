@@ -19,6 +19,31 @@ import woowacourse.shoppingcart.dto.ProductResponse;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
+    public static void 상품_추가됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isNotBlank();
+    }
+
+    public static void 조회_응답됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
+        List<Long> resultProductIds = response.jsonPath().getList(".", ProductResponse.class).stream()
+                .map(ProductResponse::getId)
+                .collect(Collectors.toList());
+        assertThat(resultProductIds).contains(productId1, productId2);
+    }
+
+    public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
+        ProductResponse resultProduct = response.as(ProductResponse.class);
+        assertThat(resultProduct.getId()).isEqualTo(productId);
+    }
+
+    public static void 상품_삭제됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
@@ -73,30 +98,5 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = deleteMethodRequest("/api/products/1");
 
         상품_삭제됨(response);
-    }
-
-    public static void 상품_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static void 조회_응답됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", ProductResponse.class).stream()
-                .map(ProductResponse::getId)
-                .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productId1, productId2);
-    }
-
-    public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
-        ProductResponse resultProduct = response.as(ProductResponse.class);
-        assertThat(resultProduct.getId()).isEqualTo(productId);
-    }
-
-    public static void 상품_삭제됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

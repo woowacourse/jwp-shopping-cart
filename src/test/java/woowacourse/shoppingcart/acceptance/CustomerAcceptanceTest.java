@@ -30,8 +30,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = postMethodRequest(customerRequest, "/api/customers");
 
         assertAll(
-                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                ()-> assertThat(response.header("location")).isEqualTo("/login")
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                () -> assertThat(response.header("location")).isEqualTo("/login")
         );
     }
 
@@ -55,9 +55,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
 
         assertAll(
-                ()-> assertThat(customerResponse.getEmail()).isEqualTo(email),
-                ()-> assertThat(customerResponse.getUsername()).isEqualTo(username),
-                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+                () -> assertThat(customerResponse.getEmail()).isEqualTo(email),
+                () -> assertThat(customerResponse.getUsername()).isEqualTo(username),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
 
@@ -80,8 +80,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 "/api/customers/me?target=password");
 
         assertAll(
-                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                ()-> assertThat(response.header("Location")).isEqualTo("/login")
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.header("Location")).isEqualTo("/login")
         );
     }
 
@@ -109,10 +109,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final String modifiedUsername = responseAfterChanged.jsonPath().getString("username");
 
         assertAll(
-                ()-> assertThat(customerResponse.getEmail()).isEqualTo(email),
-                ()-> assertThat(customerResponse.getUsername()).isEqualTo("루나2"),
-                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                ()-> assertThat(modifiedUsername).isEqualTo("루나2")
+                () -> assertThat(customerResponse.getEmail()).isEqualTo(email),
+                () -> assertThat(customerResponse.getUsername()).isEqualTo("루나2"),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(modifiedUsername).isEqualTo("루나2")
         );
     }
 
@@ -131,16 +131,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         final String token = tokenResponse.jsonPath().getString("accessToken");
         final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest(password);
-        final ExtractableResponse<Response> response = deleteMethodRequestWithBearerAuthAndBody(deleteCustomerRequest, token,
+        final ExtractableResponse<Response> response = deleteMethodRequestWithBearerAuthAndBody(deleteCustomerRequest,
+                token,
                 "/api/customers/me");
 
         final ExtractableResponse<Response> responseAfterDeleted = postMethodRequest(loginRequest,
                 "/api/auth/login");
 
         assertAll(
-                ()-> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                ()-> assertThat(response.header("Location")).isEqualTo("/"),
-                ()-> assertThat(responseAfterDeleted.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(response.header("Location")).isEqualTo("/"),
+                () -> assertThat(responseAfterDeleted.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         );
     }
 }

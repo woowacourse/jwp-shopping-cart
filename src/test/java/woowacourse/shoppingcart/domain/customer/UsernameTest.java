@@ -11,6 +11,6 @@ class UsernameTest {
     @ParameterizedTest(name = "{0}은 1~10자가 아니므로 에러를 발생시킨다.")
     @ValueSource(strings = {"", "12345123451"})
     void username(String input) {
-        assertThatThrownBy(()-> new Username(input)).isInstanceOf(InputFormatException.class);
+        assertThatThrownBy(() -> new Username(input)).isInstanceOf(InputFormatException.class);
     }
 }

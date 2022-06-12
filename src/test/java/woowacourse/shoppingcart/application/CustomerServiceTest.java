@@ -106,6 +106,6 @@ class CustomerServiceTest {
         customerService.register(email, password, username);
 
         //then
-        assertThatThrownBy(() -> customerService.delete(email,"wrongPwd0!")).isInstanceOf(AuthException.class);
+        assertThatThrownBy(() -> customerService.delete(email, "wrongPwd0!")).isInstanceOf(AuthException.class);
     }
 }

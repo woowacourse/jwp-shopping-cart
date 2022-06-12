@@ -43,7 +43,7 @@ public class CartItemController {
 
     @PostMapping
     public ResponseEntity<CartItemResponse> addCartItem(@RequestBody final CartItemAddRequest cartItemAddRequest,
-                                            @AuthenticationPrincipal final String email) {
+                                                        @AuthenticationPrincipal final String email) {
         final CartItemResponse cartItemResponse = cartService.addCart(cartItemAddRequest.getProductId(),
                 cartItemAddRequest.getQuantity(), email);
 

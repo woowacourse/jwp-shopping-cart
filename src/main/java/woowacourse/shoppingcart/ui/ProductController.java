@@ -35,7 +35,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> add(@Validated(Request.allProperties.class) @RequestBody final ProductRequest productRequest) {
+    public ResponseEntity<Product> add(
+            @Validated(Request.allProperties.class) @RequestBody final ProductRequest productRequest) {
         final Product product = productService.addProduct(productRequest);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()

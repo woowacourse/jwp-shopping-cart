@@ -43,7 +43,7 @@ class OrderServiceTest {
     @Test
     @DisplayName("존재하지 않는 장바구니 내용일 경우 에러를 발생시킨다.")
     void addOrderFailByNotExistProduct() {
-        assertThatThrownBy(()-> orderService.addOrder(List.of(1L), "test@email.com"))
+        assertThatThrownBy(() -> orderService.addOrder(List.of(1L), "test@email.com"))
                 .isInstanceOf(NotFoundException.class);
     }
 
@@ -58,14 +58,14 @@ class OrderServiceTest {
         cartService.addCart(1L, 11, "test@email.com");
 
         //then
-        assertThatThrownBy(()-> orderService.addOrder(List.of(1L), "test@email.com"))
+        assertThatThrownBy(() -> orderService.addOrder(List.of(1L), "test@email.com"))
                 .isInstanceOf(OrderException.class);
     }
 
     @Test
     @DisplayName("존재하지 않는 주문을 조회할 경우 에러를 발생시킨다.")
     void findOrderByIdFail() {
-        assertThatThrownBy(()-> orderService.findOrderById("test@email.com", 1L))
+        assertThatThrownBy(() -> orderService.findOrderById("test@email.com", 1L))
                 .isInstanceOf(NotFoundException.class);
     }
 }

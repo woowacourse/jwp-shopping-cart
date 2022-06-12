@@ -14,7 +14,7 @@ ALTER TABLE customer AUTO_INCREMENT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 
 insert into customer (email, password, username)
-values ('puterism@email.com', 'password1!','puterism'),
+values ('puterism@email.com', 'password1!', 'puterism'),
        ('tanney-102@email.com', 'password1!', 'tanney-102'),
        ('jho2301@email.com', 'password1!', 'jho2301'),
        ('365kim@email.com', 'password1!', '365kim'),
