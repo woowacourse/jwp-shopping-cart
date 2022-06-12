@@ -1,5 +1,7 @@
 package woowacourse.auth.domain;
 
+import woowacourse.shoppingcart.exception.ValidationException;
+
 public class Username {
 
     private final String username;
@@ -11,11 +13,11 @@ public class Username {
 
     private void validate(String username) {
         if (username == null || username.isBlank() || username.length() > 32) {
-            throw new IllegalArgumentException("유저 이름이 잘못되었습니다.");
+            throw new ValidationException("유저 이름이 잘못되었습니다.");
         }
     }
 
-    public String getUsername() {
+    public String get() {
         return username;
     }
 }

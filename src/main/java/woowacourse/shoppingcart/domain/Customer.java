@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.domain;
 
 import woowacourse.auth.domain.UserEmail;
 import woowacourse.auth.domain.UserPassword;
+import woowacourse.auth.domain.Username;
 import woowacourse.shoppingcart.exception.ValidationException;
 
 public class Customer {
@@ -45,12 +46,7 @@ public class Customer {
     }
 
     private void validateUsername(String username) {
-        if (username == null || username.isBlank()) {
-            throw new ValidationException("username에 공백은 입력할 수 없습니다.");
-        }
-        if (username.length() > MAX_USERNAME_LENGTH) {
-            throw new ValidationException("username의 길이가 너무 깁니다.");
-        }
+        new Username(username);
     }
 
     private void validateEmail(String email) {

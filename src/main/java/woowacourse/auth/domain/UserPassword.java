@@ -27,7 +27,7 @@ public class UserPassword {
         return MIN_LENGTH <= value.length() && value.length() <= MAX_LENGTH;
     }
 
-    public String getPassword() {
+    public String get() {
         return password;
     }
 }

@@ -19,7 +19,7 @@ public class UserEmail {
         }
     }
 
-    public String getEmail() {
+    public String get() {
         return email;
     }
 }
