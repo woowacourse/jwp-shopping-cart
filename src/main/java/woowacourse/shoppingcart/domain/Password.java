@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Password {
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private static final int MIN_PASSWORD_SIZE = 6;
 
     private final String password;
 
@@ -38,8 +39,8 @@ public class Password {
     }
 
     private void validateMinSize(String password) {
-        if (password.length() < 6) {
-            throw new InvalidInformationException("[ERROR] 비밀번호는 최소 6자 이상이어야 합니다.");
+        if (password.length() < MIN_PASSWORD_SIZE) {
+            throw new InvalidInformationException("[ERROR] 비밀번호는 최소 " + MIN_PASSWORD_SIZE + "자 이상이어야 합니다.");
         }
     }
 

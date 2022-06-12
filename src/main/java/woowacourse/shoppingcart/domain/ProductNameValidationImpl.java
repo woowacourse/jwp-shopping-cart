@@ -4,6 +4,8 @@ import woowacourse.shoppingcart.exception.InvalidInformationException;
 
 public class ProductNameValidationImpl implements NameValidation {
 
+    private static final int MAX_PRODUCT_NAME_SIZE = 32;
+
     @Override
     public void validateName(String name) {
         validateNotNull(name);
@@ -38,8 +40,8 @@ public class ProductNameValidationImpl implements NameValidation {
     }
 
     private void validateMaxSize(String username) {
-        if (username.length() > 32) {
-            throw new InvalidInformationException("[ERROR] 상품 이름은 최대 32자 이하여야 합니다.");
+        if (username.length() > MAX_PRODUCT_NAME_SIZE) {
+            throw new InvalidInformationException("[ERROR] 상품 이름은 최대 " + MAX_PRODUCT_NAME_SIZE + "자 이하여야 합니다.");
         }
     }
 }

@@ -6,6 +6,7 @@ import java.util.Objects;
 
 public class Email {
 
+    private static final int MAX_EMAIL_SIZE = 64;
     private final String email;
 
     public Email(String email) {
@@ -35,8 +36,8 @@ public class Email {
     }
 
     private void validateMaxSize(String email) {
-        if (email.length() > 64) {
-            throw new InvalidInformationException("[ERROR] 이메일은 최대 64자 이하여야 합니다.");
+        if (email.length() > MAX_EMAIL_SIZE) {
+            throw new InvalidInformationException("[ERROR] 이메일은 최대 " + MAX_EMAIL_SIZE + "자 이하여야 합니다.");
         }
     }
 
