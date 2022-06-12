@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Pagination;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.Products;
 import woowacourse.shoppingcart.dto.ProductResponse;
@@ -23,14 +24,8 @@ public class ProductService {
 
     public ProductsResponse findProducts(int page, int perPage) {
         Long totalItem = productDao.countTotal();
-        if (perPage <= 0) {
-            throw new InvalidProductException("[ERROR] 페이지당 갯수는 자연수여야 합니다.");
-        }
-        if (page <= 0) {
-            throw new InvalidProductException("[ERROR] 페이지는 자연수여야 합니다.");
-        }
-        Long totalPage = (long) Math.ceil(totalItem / (double) perPage);
-        if (page > totalPage) {
+        Pagination pagination = new Pagination(perPage, page);
+        if (pagination.isOverMaxPage(totalItem, page)) {
             return new ProductsResponse(new Products(List.of()).getProducts());
         }
         Products products = new Products(productDao.findProductsByPage(page, perPage));
