@@ -9,8 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.product.application.ProductService;
+import woowacourse.shoppingcart.product.dao.ProductDao;
+import woowacourse.shoppingcart.product.dto.ProductResponse;
 
 @SpringBootTest
 @Sql(scripts = "classpath:truncate.sql")

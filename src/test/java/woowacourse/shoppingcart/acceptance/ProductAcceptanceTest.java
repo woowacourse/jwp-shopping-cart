@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.dto.ThumbnailImageDto;
+import woowacourse.shoppingcart.product.dto.ProductRequest;
+import woowacourse.shoppingcart.product.dto.ProductResponse;
+import woowacourse.shoppingcart.product.dto.ThumbnailImageDto;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {

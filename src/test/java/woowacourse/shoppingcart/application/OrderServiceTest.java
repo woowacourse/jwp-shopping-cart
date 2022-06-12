@@ -11,15 +11,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.OrdersDetailDao;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.OrderResponse;
-import woowacourse.shoppingcart.dto.ThumbnailImage;
+import woowacourse.shoppingcart.cartitem.dao.CartItemDao;
+import woowacourse.shoppingcart.customer.dao.CustomerDao;
+import woowacourse.shoppingcart.order.application.OrderService;
+import woowacourse.shoppingcart.order.dao.OrdersDetailDao;
+import woowacourse.shoppingcart.product.dao.ProductDao;
+import woowacourse.shoppingcart.customer.domain.Customer;
+import woowacourse.shoppingcart.order.domain.OrderDetail;
+import woowacourse.shoppingcart.product.domain.Product;
+import woowacourse.shoppingcart.order.dto.OrderResponse;
+import woowacourse.shoppingcart.product.dto.ThumbnailImage;
 import woowacourse.shoppingcart.exception.OutOfStockException;
 
 @SpringBootTest

@@ -13,11 +13,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.shoppingcart.dto.ChangeGeneralInfoRequest;
-import woowacourse.shoppingcart.dto.ChangePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
+import woowacourse.shoppingcart.customer.dto.ChangeGeneralInfoRequest;
+import woowacourse.shoppingcart.customer.dto.ChangePasswordRequest;
+import woowacourse.shoppingcart.customer.dto.CustomerRequest;
+import woowacourse.shoppingcart.customer.dto.CustomerResponse;
+import woowacourse.shoppingcart.cartitem.dto.DeleteCustomerRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {

@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.exception.LoginException;
-import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.customer.application.CustomerService;
 
 @SpringBootTest
 @Transactional

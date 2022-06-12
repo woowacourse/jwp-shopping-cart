@@ -16,11 +16,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.dto.CartItemRequest;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.dto.OrderResponse;
-import woowacourse.shoppingcart.dto.ProductRequest;
-import woowacourse.shoppingcart.dto.ThumbnailImageDto;
+import woowacourse.shoppingcart.cartitem.dto.CartItemRequest;
+import woowacourse.shoppingcart.order.dto.OrderRequest;
+import woowacourse.shoppingcart.order.dto.OrderResponse;
+import woowacourse.shoppingcart.product.dto.ProductRequest;
+import woowacourse.shoppingcart.product.dto.ThumbnailImageDto;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {

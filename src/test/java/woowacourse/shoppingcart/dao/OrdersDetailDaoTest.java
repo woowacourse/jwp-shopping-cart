@@ -12,7 +12,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.order.domain.OrderDetail;
+import woowacourse.shoppingcart.order.dao.OrdersDetailDao;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

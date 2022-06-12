@@ -10,9 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.exception.AuthException;
 import woowacourse.exception.JoinException;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.customer.application.CustomerService;
+import woowacourse.shoppingcart.customer.dao.CustomerDao;
+import woowacourse.shoppingcart.customer.domain.Customer;
+import woowacourse.shoppingcart.customer.dto.CustomerResponse;
 
 @SpringBootTest
 @Sql(scripts = "classpath:truncate.sql")
