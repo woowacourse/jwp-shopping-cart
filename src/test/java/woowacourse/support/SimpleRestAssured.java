@@ -55,4 +55,9 @@ public class SimpleRestAssured {
     public static <T> T toObject(ExtractableResponse<Response> response, Class<T> clazz) {
         return response.body().jsonPath().getObject(".", clazz);
     }
+
+    public static Long getId(ExtractableResponse<Response> response) {
+        final String[] locations = response.header("Location").split("/");
+        return Long.parseLong(locations[locations.length - 1]);
+    }
 }

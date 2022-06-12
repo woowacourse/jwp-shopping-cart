@@ -6,17 +6,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+import woowacourse.support.test.ExtendedJdbcTest;
+
+@ExtendedJdbcTest
 class OrderDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
@@ -34,7 +28,7 @@ class OrderDaoTest {
         final Long customerId = 1L;
 
         //when
-        final Long orderId = orderDao.addOrders(customerId);
+        final Long orderId = orderDao.addOrder(customerId);
 
         //then
         assertThat(orderId).isNotNull();
@@ -53,6 +47,20 @@ class OrderDaoTest {
 
         //then
         assertThat(orderIdsByCustomerId).hasSize(2);
+    }
+
+    @DisplayName("특정 회원에게 주어진 주문번호인지 확인한다.")
+    @Test
+    void isValidOrderId() {
+        // given
+        final Long customerId = 1L;
+        final Long orderId = orderDao.addOrder(customerId);
+
+        // when
+        final boolean isValid = orderDao.isValidOrderId(customerId, orderId);
+
+        // then
+        assertThat(isValid).isTrue();
     }
 
 }

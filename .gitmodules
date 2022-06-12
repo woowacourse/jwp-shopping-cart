@@ -1,0 +1,3 @@
+[submodule "react-shopping-cart-prod"]
+	path = react-shopping-cart-prod
+	url = https://github.com/cjlee38/react-shopping-cart-prod.git

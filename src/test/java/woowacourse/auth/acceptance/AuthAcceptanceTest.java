@@ -11,9 +11,10 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.acceptance.fixture.CustomerAcceptanceFixture;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.application.dto.CustomerResponse;
 import woowacourse.support.SimpleRestAssured;
 
 @DisplayName("인증 관련 기능")
@@ -23,8 +24,9 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        CustomerAcceptanceFixture.saveCustomer();
-        TokenRequest request = new TokenRequest("username", "password12!@");
+        final String username = "my-username";
+        CustomerAcceptanceFixture.saveCustomerWithName(username);
+        TokenRequest request = new TokenRequest(username, "password12!@");
 
         TokenResponse tokenResponse = SimpleRestAssured.toObject(
             SimpleRestAssured.post("/api/auth/token", request),
@@ -32,14 +34,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         );
 
         // when
-        String accessToken = "Bearer " + tokenResponse.getAccessToken();
+        String accessToken = AuthorizationExtractor.BEARER_TYPE + tokenResponse.getAccessToken();
         CustomerResponse customerResponse = SimpleRestAssured.toObject(
             SimpleRestAssured.get("/api/customers/me", new Header("Authorization", accessToken)),
             CustomerResponse.class
         );
 
         // then
-        assertThat(customerResponse.getName()).isEqualTo("username");
+        assertThat(customerResponse.getUsername()).isEqualTo("my-username");
     }
 
     @DisplayName("Bearer Auth 로그인 실패")

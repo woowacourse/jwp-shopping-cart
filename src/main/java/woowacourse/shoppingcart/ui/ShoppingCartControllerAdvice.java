@@ -54,6 +54,7 @@ public class ShoppingCartControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionResponse> handleUnhandledException(RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity.internalServerError().body(new ExceptionResponse("알 수 없는 에러입니다."));
     }
 }

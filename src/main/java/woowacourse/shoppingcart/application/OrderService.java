@@ -1,90 +1,89 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import woowacourse.shoppingcart.application.dto.OrderResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
-import woowacourse.shoppingcart.dao.OrdersDetailDao;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dao.OrderDetailDao;
+import woowacourse.shoppingcart.domain.cart.CartItem;
+import woowacourse.shoppingcart.domain.order.Order;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.domain.product.Product;
-import woowacourse.shoppingcart.ui.dto.OrderRequest;
+import woowacourse.shoppingcart.exception.domain.CartItemNotFoundException;
 import woowacourse.shoppingcart.exception.domain.InvalidOrderException;
+import woowacourse.shoppingcart.ui.dto.OrderDetailRequest;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, readOnly = true)
 public class OrderService {
 
     private final OrderDao orderDao;
-    private final OrdersDetailDao ordersDetailDao;
+    private final OrderDetailDao orderDetailDao;
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
-    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public OrderService(OrderDao orderDao, OrderDetailDao orderDetailDao, CartItemDao cartItemDao) {
         this.orderDao = orderDao;
-        this.ordersDetailDao = ordersDetailDao;
+        this.orderDetailDao = orderDetailDao;
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByName(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
+    @Transactional
+    public Long addOrder(final List<OrderDetailRequest> orderDetailRequests, final Long customerId) {
+        Order order = new Order(mapToOrderDetails(orderDetailRequests, customerId));
+        return addOrderAndDetails(order, customerId);
+    }
 
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
+    private List<OrderDetail> mapToOrderDetails(List<OrderDetailRequest> orderDetailRequests, Long customerId) {
+        final List<CartItem> cartItems = cartItemDao.findCartByCustomerId(customerId).getItems();
+        return orderDetailRequests.stream()
+            .map(request -> new OrderDetail(request.getQuantity(), findProduct(request.getCartId(), cartItems)))
+            .collect(Collectors.toUnmodifiableList());
+    }
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+    private Product findProduct(Long cartId, List<CartItem> cartItems) {
+        return cartItems.stream()
+            .filter(item -> item.getId().equals(cartId))
+            .map(CartItem::getProduct)
+            .findAny()
+            .orElseThrow(CartItemNotFoundException::new);
+    }
+
+    private Long addOrderAndDetails(Order order, Long customerId) {
+        final Long orderId = orderDao.addOrder(customerId);
+        for (OrderDetail orderDetail : order.getOrderDetails()) {
+            orderDetailDao.addOrderDetail(orderId, orderDetail);
         }
-
-        return ordersId;
+        return orderId;
     }
 
-    @Transactional(readOnly = true)
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+    public OrderResponse findOrderById(final Long customerId, final Long orderId) {
+        validateOrderIdByCustomerName(customerId, orderId);
+        return OrderResponse.from(findOrderById(orderId));
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByName(customerName);
-
+    private void validateOrderIdByCustomerName(final Long customerId, final Long orderId) {
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    @Transactional(readOnly = true)
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByName(customerName);
+    public List<OrderResponse> findOrdersByCustomerId(final Long customerId) {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
-            .map(this::findOrderResponseDtoByOrderId)
+            .map(orderId -> OrderResponse.from(findOrderById(orderId)))
             .collect(Collectors.toList());
     }
 
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
-            final int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
-        }
-
-        return new Orders(orderId, ordersDetails);
+    private Order findOrderById(final Long orderId) {
+        return new Order(
+            orderId,
+            orderDetailDao.findOrderDetailsByOrderId(orderId)
+        );
     }
 }

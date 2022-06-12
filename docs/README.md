@@ -10,8 +10,8 @@
 
 - 회원
     - [x] 회원가입을 진행한다. `POST /customers -> 201(Created)`
-    - [ ] 회원 정보를 조회한다. `GET /customers/me -> 200(OK)`
-    - [ ] 회원 정보를 수정한다. `PUT /customers/me -> 204(No Content)`
-    - [ ] 회원을 탈퇴한다. `DELETE /customers/me -> 204(No Content)`
+    - [x] 회원 정보를 조회한다. `GET /customers/me -> 200(OK)`
+    - [x] 회원 정보를 수정한다. `PUT /customers/me -> 204(No Content)`
+    - [x] 회원을 탈퇴한다. `DELETE /customers/me -> 204(No Content)`
 - 로그인
     - [x] 로그인을 진행한다.(JWT 발급) `POST /auth/token -> 200(OK)`

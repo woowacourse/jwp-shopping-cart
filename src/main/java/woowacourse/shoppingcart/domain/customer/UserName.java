@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import woowacourse.shoppingcart.exception.attribute.InvalidFormException;
 import woowacourse.shoppingcart.exception.attribute.InvalidLengthException;
 
-public class UserName {
+public class UserName implements DistinctAttribute {
 
     private static final int MIN_NAME_LENGTH = 5;
     private static final int MAX_NAME_LENGTH = 20;
@@ -37,5 +37,10 @@ public class UserName {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public String getDistinctive() {
+        return getValue();
     }
 }

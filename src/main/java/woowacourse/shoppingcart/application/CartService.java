@@ -1,68 +1,63 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import woowacourse.shoppingcart.application.dto.CartResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.exception.domain.InvalidProductException;
+import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.domain.cart.CartItem;
+import woowacourse.shoppingcart.domain.cart.Quantity;
+import woowacourse.shoppingcart.exception.domain.CartItemNotFoundException;
 import woowacourse.shoppingcart.exception.domain.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.domain.ProductNotFoundException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, readOnly = true)
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(CartItemDao cartItemDao) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
-    @Transactional(readOnly = true)
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        return cartIds.stream()
-            .map(cartId -> new Cart(
-                cartId,
-                productDao.findProductById(cartItemDao.findProductIdById(cartId))
-            ))
-            .collect(Collectors.toList());
+    public CartResponse findCartsByCustomerId(final Long customerId) {
+        final Cart cart = cartItemDao.findCartByCustomerId(customerId);
+        return CartResponse.from(cart);
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByName(customerName);
+    @Transactional
+    public Long addCart(final Long productId, Integer quantity, final Long customerId) {
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.addCartItem(customerId, productId, quantity);
         } catch (Exception e) {
-            throw new InvalidProductException();
+            throw new ProductNotFoundException();
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    @Transactional
+    public void deleteCart(final Long customerId, final Long cartId) {
+        validateCustomerHasCartItem(cartId, customerId);
+        if (!cartItemDao.deleteById(cartId)) {
+            throw new CartItemNotFoundException();
+        }
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
+    private void validateCustomerHasCartItem(final Long cartId, final Long customerId) {
+        final Cart cart = cartItemDao.findCartByCustomerId(customerId);
+        final CartItem cartItem = cartItemDao.findCartItemById(cartId).orElseThrow(CartItemNotFoundException::new);
+        if (!cart.contains(cartItem)) {
+            throw new NotInCustomerCartItemException();
         }
-        throw new NotInCustomerCartItemException();
+    }
+
+    @Transactional
+    public void updateCartItemQuantity(Long customerId, Long cartId, Integer quantityValue) {
+        if (!cartItemDao.updateQuantity(customerId, cartId, new Quantity(quantityValue))) {
+            throw new CartItemNotFoundException();
+        }
     }
 }
