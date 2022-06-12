@@ -6,20 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.common.exception.AuthException;
-import woowacourse.common.exception.CartItemException;
 import woowacourse.common.exception.CustomException;
-import woowacourse.common.exception.InputFormatException;
-import woowacourse.common.exception.JoinException;
-import woowacourse.common.exception.LoginException;
 import woowacourse.common.exception.NotFoundException;
-import woowacourse.common.exception.OrderException;
 import woowacourse.common.exception.dto.ErrorResponse;
 
 @RestControllerAdvice
 public class CommonControllerAdvice {
-    @ExceptionHandler({LoginException.class, JoinException.class, InputFormatException.class, OrderException.class,
-            CartItemException.class})
-    public ResponseEntity<ErrorResponse> handleLoginException(CustomException e) {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
         return ResponseEntity.badRequest().body(e.getErrorResponse());
     }
 
@@ -33,7 +27,7 @@ public class CommonControllerAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorResponse());
     }
 
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleUnhandledException() {
         return ResponseEntity.badRequest().body("Unhandled Exception");
     }
