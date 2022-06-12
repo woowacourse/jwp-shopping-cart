@@ -9,6 +9,7 @@ public class Email {
     private static final int MAX_EMAIL_SIZE = 64;
     private static final String NOT_NULL_OR_BLANK = "[ERROR] 이메일은 빈 값일 수 없습니다.";
     private static final String NOT_EMAIL_PATTERN = "[ERROR] 이메일 형식이 아닙니다.";
+    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
     private final String email;
 
     public Email(String email) {
@@ -32,7 +33,7 @@ public class Email {
     }
 
     private void validateNotEmailForm(String email) {
-        if (!email.matches("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")) {
+        if (!email.matches(EMAIL_PATTERN)) {
             throw new InvalidInformationException(NOT_EMAIL_PATTERN);
         }
     }

@@ -8,6 +8,7 @@ public class ProductNameValidationImpl implements NameValidation {
     private static final String NOT_NULL_OR_BLANK = "[ERROR] 상품 이름은 빈 값일 수 없습니다.";
     private static final String NOT_START_WITH_BLANK_OR_END_WITH_BLANK = "[ERROR] 상품 이름은 공백으로 시작하거나 끝날 수 없습니다.";
     private static final String NOT_SPECIAL_CHARACTER = "[ERROR] 상품 이름에는 특수문자가 들어갈 수 없습니다.";
+    private static final String SPECIAL_CHARACTER_PATTERN = "[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣\\s]+";
 
     @Override
     public void validateName(String name) {
@@ -37,7 +38,7 @@ public class ProductNameValidationImpl implements NameValidation {
     }
 
     private void validateNotSpecialCharExist(String username) {
-        if (!username.matches("[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣\\s]+")) {
+        if (!username.matches(SPECIAL_CHARACTER_PATTERN)) {
             throw new InvalidInformationException(NOT_SPECIAL_CHARACTER);
         }
     }

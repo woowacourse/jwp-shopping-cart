@@ -9,7 +9,9 @@ public class Password {
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private static final int MIN_PASSWORD_SIZE = 6;
-    public static final String NOT_NULL_OR_BLANK = "[ERROR] 비밀번호는 빈 값일 수 없습니다.";
+    private static final String NOT_NULL_OR_BLANK = "[ERROR] 비밀번호는 빈 값일 수 없습니다.";
+    private static final String KOREAN_CHARACTER_PATTERN = ".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*";
+    private static final String NO_BLANK_PATTERN = "\\S+";
 
     private final String password;
 
@@ -34,7 +36,7 @@ public class Password {
     }
 
     private void validateNotPasswordForm(String password) {
-        if (password.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*") || !password.matches("\\S+")) {
+        if (password.matches(KOREAN_CHARACTER_PATTERN) || !password.matches(NO_BLANK_PATTERN)) {
             throw new InvalidInformationException("[ERROR] 비밀번호는 한글이나 공백이 들어갈 수 없습니다.");
         }
     }

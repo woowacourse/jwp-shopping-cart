@@ -7,6 +7,7 @@ public class UserNameValidationImpl implements NameValidation {
     private static final int MAX_NAME_SIZE = 32;
     private static final String NOT_NULL_OR_BLANK = "[ERROR] 사용자 이름은 빈 값일 수 없습니다.";
     private static final String NOT_BLANK_CHARACTER = "[ERROR] 사용자 이름에는 공백이 들어갈 수 없습니다.";
+    private static final String NOT_BLANK_PATTERN = "\\S+";
 
     @Override
     public void validateName(String username) {
@@ -29,7 +30,7 @@ public class UserNameValidationImpl implements NameValidation {
     }
 
     private void validateNotBlankExist(String username) {
-        if (!username.matches("\\S+")) {
+        if (!username.matches(NOT_BLANK_PATTERN)) {
             throw new InvalidInformationException(NOT_BLANK_CHARACTER);
         }
     }
