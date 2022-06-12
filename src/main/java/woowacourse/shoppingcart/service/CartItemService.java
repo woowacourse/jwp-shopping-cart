@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
@@ -37,7 +38,7 @@ public class CartItemService {
         final List<CartItem> cartItems = cartItemDao.findAllByCustomerId(customerId);
 
         return cartItems.stream()
-                .map(item -> new CartItemResponse(item, productDao.findProductById(item.getProductId())))
+                .map(item -> new CartItemResponse(item, productDao.getProductById(item.getProductId())))
                 .collect(Collectors.toList());
     }
 
@@ -60,7 +61,7 @@ public class CartItemService {
     private Long addNewCart(final CreateCartItemRequest request, final Long customerId) {
         try {
             return cartItemDao.addCartItem(customerId, request.getId());
-        } catch (Exception e) {
+        } catch (DataIntegrityViolationException e) {
             throw new NotFoundProductException();
         }
     }
