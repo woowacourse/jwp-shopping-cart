@@ -14,7 +14,6 @@ import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.order.OrderResponse;
 import woowacourse.shoppingcart.dto.order.OrdersResponse;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -58,15 +57,8 @@ public class OrderService {
     }
 
     public OrderResponse findOrderByCustomerId(final Long customerId, final Long orderId) {
-        validateOrderIdByCustomerId(customerId, orderId);
-        List<OrderDetail> orderDetails = ordersDetailDao.findOrderDetailsByOrderId(orderId);
+        List<OrderDetail> orderDetails = ordersDetailDao.findOrderDetailsByOrderIdAndCustomerId(orderId, customerId);
         return new OrderResponse(orderId, orderDetails);
-    }
-
-    private void validateOrderIdByCustomerId(final Long customerId, final Long orderId) {
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
-        }
     }
 
     public OrdersResponse findOrdersByCustomerId(final Long customerId) {

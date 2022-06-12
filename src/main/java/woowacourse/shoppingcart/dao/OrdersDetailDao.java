@@ -43,11 +43,12 @@ public class OrdersDetailDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public List<OrderDetail> findOrderDetailsByOrderId(final Long orderId) {
+    public List<OrderDetail> findOrderDetailsByOrderIdAndCustomerId(final Long orderId, final Long customerId) {
         final String sql = "SELECT d.id, d.quantity, d.product_id, p.price, p.name, p.image_url "
                 + "FROM orders_detail d "
                 + "INNER JOIN product p ON d.product_id = p.id "
-                + "WHERE d.orders_id = ?";
-        return jdbcTemplate.query(sql, orderDetailRowMapper, orderId);
+                + "INNER JOIN orders o ON o.id = d.orders_id "
+                + "WHERE d.orders_id = ? AND o.customer_id = ?";
+        return jdbcTemplate.query(sql, orderDetailRowMapper, orderId, customerId);
     }
 }
