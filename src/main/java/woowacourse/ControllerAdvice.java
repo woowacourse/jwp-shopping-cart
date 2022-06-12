@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.exception.EmailDuplicateException;
 import woowacourse.exception.EmailFormattingException;
 import woowacourse.exception.LoginFailureException;
-import woowacourse.exception.PasswordInValidException;
+import woowacourse.exception.PasswordInvalidException;
 import woowacourse.exception.PasswordIncorrectException;
 import woowacourse.exception.TokenInvalidException;
 import woowacourse.exception.UnauthorizedException;
@@ -34,7 +34,7 @@ public class ControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(ControllerAdvice.class);
 
     @ExceptionHandler({EmailDuplicateException.class, EmailFormattingException.class,
-            PasswordInValidException.class, InvalidPageException.class})
+            PasswordInvalidException.class, InvalidPageException.class})
     public ResponseEntity<ExceptionResponse> handleBadRequestException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }

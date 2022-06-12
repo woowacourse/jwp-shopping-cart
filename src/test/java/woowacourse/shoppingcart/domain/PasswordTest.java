@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.exception.PasswordInValidException;
+import woowacourse.exception.PasswordInvalidException;
 
 public class PasswordTest {
 
@@ -15,7 +15,7 @@ public class PasswordTest {
     @ValueSource(strings = {"1", "123", "23456", "1234567"})
     void passwordWithException(String password) {
         assertThatThrownBy(() -> Password.planePassword(password))
-                .isInstanceOf(PasswordInValidException.class);
+                .isInstanceOf(PasswordInvalidException.class);
     }
 
     @DisplayName("비밀번호가 8자리 이상이면 비밀번호 객체가 생성되고 암호화된다.")

@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
 import woowacourse.exception.EncodedPasswordNotCorrectException;
-import woowacourse.exception.PasswordInValidException;
+import woowacourse.exception.PasswordInvalidException;
 import woowacourse.shoppingcart.application.PasswordEncoderAdapter;
 
 public class Password {
@@ -19,7 +19,7 @@ public class Password {
 
     public static Password planePassword(String password) {
         if (!Pattern.matches(PLANE_PATTERN, password)) {
-            throw new PasswordInValidException();
+            throw new PasswordInvalidException();
         }
         return new Password(encoder.encode(password));
     }
