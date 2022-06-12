@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.CustomerRepository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CustomerResponse;
@@ -20,10 +20,10 @@ import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 @Service
 public class CustomerService {
 
-    private final CustomerDao customerDao;
+    private final CustomerRepository customerDao;
     private final CartService cartService;
 
-    public CustomerService(CustomerDao customerDao, CartService cartService) {
+    public CustomerService(CustomerRepository customerDao, CartService cartService) {
         this.customerDao = customerDao;
         this.cartService = cartService;
     }

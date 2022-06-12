@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dao.ProductRepository;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductResponses;
 
@@ -12,9 +12,9 @@ public class ProductService {
     private static final int MINIMUM_PAGE = 1;
     private static final int MINIMUM_SIZE = 0;
 
-    private final ProductDao productDao;
+    private final ProductRepository productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(final ProductRepository productDao) {
         this.productDao = productDao;
     }
 

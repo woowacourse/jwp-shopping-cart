@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.CustomerRepository;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -17,7 +17,6 @@ import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 
@@ -28,7 +27,7 @@ public class CustomerServiceTest {
     private CustomerService customerService;
 
     @Autowired
-    private CustomerDao customerDao;
+    private CustomerRepository customerDao;
 
     @Test
     @DisplayName("회원을 저장하고 회원 정보를 반환한다.")

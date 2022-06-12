@@ -6,7 +6,7 @@ import woowacourse.auth.domain.SignIn;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.CustomerRepository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
@@ -16,9 +16,9 @@ import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final CustomerDao customerDao;
+    private final CustomerRepository customerDao;
 
-    public AuthService(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
+    public AuthService(JwtTokenProvider jwtTokenProvider, CustomerRepository customerDao) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.customerDao = customerDao;
     }

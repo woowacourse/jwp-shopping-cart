@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.dao.CustomerRepository;
+import woowacourse.shoppingcart.dao.ProductRepository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.AddCartItemRequest;
@@ -29,10 +29,10 @@ class CartServiceTest {
     private CartService cartService;
 
     @Autowired
-    private CustomerDao customerDao;
+    private CustomerRepository customerDao;
 
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productDao;
 
     @DisplayName("username의 모든 장바구니 정보 조회")
     @Test
