@@ -8,6 +8,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import woowacourse.shoppingcart.exception.UnexpectedException;
+
 @Repository
 public class OrderDao {
 
@@ -26,7 +28,7 @@ public class OrderDao {
             preparedStatement.setLong(1, customerId);
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return DaoSupporter.getGeneratedId(keyHolder, () -> new UnexpectedException("주문 추가 중 알수 없는 오류가 발생했습니다."));
     }
 
     public List<Long> findOrderIdsByCustomerId(final Long customerId) {
@@ -36,6 +38,6 @@ public class OrderDao {
 
     public boolean isValidOrderId(final Long customerId, final Long orderId) {
         final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId));
     }
 }

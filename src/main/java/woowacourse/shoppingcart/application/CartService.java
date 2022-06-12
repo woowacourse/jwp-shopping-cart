@@ -41,7 +41,9 @@ public class CartService {
     @Transactional
     public void deleteCart(final Long customerId, final Long cartId) {
         validateCustomerHasCartItem(cartId, customerId);
-        cartItemDao.deleteById(cartId);
+        if (!cartItemDao.deleteById(cartId)) {
+            throw new CartItemNotFoundException();
+        }
     }
 
     private void validateCustomerHasCartItem(final Long cartId, final Long customerId) {
@@ -54,6 +56,8 @@ public class CartService {
 
     @Transactional
     public void updateCartItemQuantity(Long customerId, Long cartId, Integer quantityValue) {
-        cartItemDao.updateQuantity(customerId, cartId, new Quantity(quantityValue));
+        if (!cartItemDao.updateQuantity(customerId, cartId, new Quantity(quantityValue))) {
+            throw new CartItemNotFoundException();
+        }
     }
 }

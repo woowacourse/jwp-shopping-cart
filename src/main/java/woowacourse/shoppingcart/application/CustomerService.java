@@ -55,12 +55,16 @@ public class CustomerService {
             .orElseThrow(CustomerNotFoundException::new);
         Customer updatedCustomer = customer.update(updateCustomerRequest.getAddress(),
             updateCustomerRequest.getPhoneNumber());
-        customerDao.update(updatedCustomer);
+        if (!customerDao.update(updatedCustomer)) {
+            throw new CustomerNotFoundException();
+        }
     }
 
     @Transactional
     public void deleteCustomer(FindCustomerRequest findCustomerRequest) {
-        customerDao.deleteById(findCustomerRequest.getId());
+        if (!customerDao.deleteById(findCustomerRequest.getId())) {
+            throw new CustomerNotFoundException();
+        }
     }
 
     public UserNameDuplicationResponse isUserNameDuplicated(String username) {

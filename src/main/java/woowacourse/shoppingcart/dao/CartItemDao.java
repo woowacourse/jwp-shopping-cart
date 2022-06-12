@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.cart.Quantity;
+import woowacourse.shoppingcart.exception.UnexpectedException;
 import woowacourse.shoppingcart.exception.domain.CartItemNotFoundException;
 import woowacourse.shoppingcart.exception.domain.ProductNotFoundException;
 
@@ -30,7 +31,6 @@ public class CartItemDao {
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
-
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
@@ -64,21 +64,18 @@ public class CartItemDao {
         if (keyNumber != null) {
             return keyNumber.longValue();
         }
+        return getUpdatedKey(customerId, productId)
+            .orElseThrow(() -> new UnexpectedException("장바구니 품목 추가 중 알수 없는 오류가 발생했습니다."));
+    }
+
+    private Optional<Long> getUpdatedKey(Long customerId, Long productId) {
         final String query = "SELECT id FROM cart_item WHERE customer_id = ? and product_id = ?";
-        return jdbcTemplate.queryForObject(query, Long.class, customerId, productId);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, Long.class, customerId, productId));
     }
 
-    public void deleteById(final Long id) {
+    public boolean deleteById(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
-
-        final int rowCount = jdbcTemplate.update(sql, id);
-        validateUpdated(rowCount);
-    }
-
-    private void validateUpdated(int updatedCount) {
-        if (updatedCount == 0) {
-            throw new CartItemNotFoundException();
-        }
+        return DaoSupporter.isUpdated(jdbcTemplate.update(sql, id));
     }
 
     public Cart findCartByCustomerId(Long customerId) {
@@ -95,10 +92,9 @@ public class CartItemDao {
         );
     }
 
-    public void updateQuantity(Long customerId, Long cartId, Quantity quantity) {
+    public boolean updateQuantity(Long customerId, Long cartId, Quantity quantity) {
         final String query = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? AND id = ?";
-        final int updatedCount = jdbcTemplate.update(query, quantity.getAmount(), customerId, cartId);
-        validateUpdated(updatedCount);
+        return DaoSupporter.isUpdated(jdbcTemplate.update(query, quantity.getAmount(), customerId, cartId));
     }
 
     public Optional<CartItem> findCartItemById(Long id) {

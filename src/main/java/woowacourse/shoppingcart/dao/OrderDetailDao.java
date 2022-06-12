@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.exception.UnexpectedException;
 import woowacourse.shoppingcart.exception.domain.ProductNotFoundException;
 
 @Repository
@@ -34,7 +35,8 @@ public class OrderDetailDao {
             preparedStatement.setLong(3, orderDetail.getQuantity());
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return DaoSupporter.getGeneratedId(keyHolder,
+            () -> new UnexpectedException("상세주문 추가 중 알수없는 오류가 발생했습니다."));
     }
 
     public List<OrderDetail> findOrderDetailsByOrderId(final Long orderId) {

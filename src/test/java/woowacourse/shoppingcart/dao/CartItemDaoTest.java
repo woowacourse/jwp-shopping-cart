@@ -139,14 +139,15 @@ public class CartItemDaoTest {
         assertThat(productIds).containsExactly(2L);
     }
 
-    @DisplayName("잘못된 id의 장바구니 품목을 삭제하면 예외가 발생한다.")
+    @DisplayName("잘못된 id의 장바구니 품목을 삭제하면 변경이 일어나지 않는다..")
     @Test
     void throwsExceptionWithInvalidCartItemIdOnDelete() {
-        // given & when
+        // given
         final Long cartId = 99L;
+        // when
+        final boolean isDeleted = cartItemDao.deleteById(cartId);
         // then
-        assertThatExceptionOfType(CartItemNotFoundException.class)
-            .isThrownBy(() -> cartItemDao.deleteById(cartId));
+        assertThat(isDeleted).isFalse();
     }
 
     @DisplayName("수량을 업데이트한다.")

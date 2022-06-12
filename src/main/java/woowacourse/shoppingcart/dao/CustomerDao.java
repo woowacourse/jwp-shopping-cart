@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.dao.DuplicateKeyException;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.DistinctAttribute;
 import woowacourse.shoppingcart.domain.customer.UserName;
+import woowacourse.shoppingcart.exception.UnexpectedException;
 
 @Repository
 public class CustomerDao {
@@ -53,7 +53,8 @@ public class CustomerDao {
                 statement.setString(5, customer.getPhoneNumber());
                 return statement;
             }, holder);
-            return Optional.of(Objects.requireNonNull(holder.getKey()).longValue());
+            return Optional.of(DaoSupporter.getGeneratedId(holder,
+                () -> new UnexpectedException("회원 추가 중 알수없는 예외가 발생했습니다.")));
         } catch (DuplicateKeyException e) {
             return Optional.empty();
         }
@@ -79,21 +80,19 @@ public class CustomerDao {
 
     public boolean update(Customer customer) {
         final String query = "UPDATE customer SET address = ?, phone_number = ? WHERE id = ? and is_deleted = 0";
-        return isUpdated(
-            jdbcTemplate.update(query, customer.getAddress(), customer.getPhoneNumber(), customer.getId()));
-    }
-
-    private boolean isUpdated(int updatedCount) {
-        return updatedCount > 0;
+        return DaoSupporter.isUpdated(
+            jdbcTemplate.update(query, customer.getAddress(), customer.getPhoneNumber(), customer.getId())
+        );
     }
 
     public boolean deleteById(Long id) {
         final String query = "UPDATE customer SET is_deleted = 1 WHERE id = ?";
-        return isUpdated(jdbcTemplate.update(query, id));
+        return DaoSupporter.isUpdated(jdbcTemplate.update(query, id));
     }
 
     public boolean isDuplicated(String column, DistinctAttribute attribute) {
-        final String query = String.format("SELECT EXISTS(SELECT 1 FROM customer WHERE %s = ? and is_deleted = 0)", column);
+        final String query = String.format("SELECT EXISTS(SELECT 1 FROM customer WHERE %s = ? and is_deleted = 0)",
+            column);
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, attribute.getDistinctive()));
     }
 }
