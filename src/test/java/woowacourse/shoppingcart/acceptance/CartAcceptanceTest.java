@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 import woowacourse.shoppingcart.ui.dto.CartItemQuantityRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.fixture.RestAssuredFixture.postCustomers;
-import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.로그인_되어_있음;
+import static woowacourse.fixture.shoppingcart.TCustomer.ROOKIE;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 @DisplayName("장바구니 관련 기능")
@@ -30,8 +29,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        postCustomers("basic@email.com", "password123@Q", "rookie");
-        accessToken = 로그인_되어_있음("basic@email.com", "password123@Q").getAccessToken();
+        ROOKIE.signUp();
+        accessToken = ROOKIE.signIn().getAccessToken();
         productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
     }

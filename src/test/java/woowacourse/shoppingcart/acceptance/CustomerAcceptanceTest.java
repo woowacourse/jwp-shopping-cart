@@ -149,11 +149,4 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertThat(response.getMessage()).isEqualTo("[ERROR] 토큰이 존재하지 않습니다.");
     }
-
-    public static TokenResponse 로그인_되어_있음(String email, String password) {
-        ExtractableResponse<Response> response = postLogin(email, password);
-        TokenResponse tokenResponse = response.as(TokenResponse.class);
-
-        return tokenResponse;
-    }
 }
