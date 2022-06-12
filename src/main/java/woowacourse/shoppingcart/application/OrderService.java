@@ -10,7 +10,6 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.request.CartItemsRequest;
 
 @Service
@@ -30,12 +29,11 @@ public class OrderService {
     }
 
     public Long addOrder(CartItemsRequest cartItemsRequest, String username) {
-        Orders orders = checkOutFromCart(cartItemsRequest, username);
+        List<OrderDetail> orderDetails = checkOutFromCart(cartItemsRequest, username);
 
         final Long customerId = customerDao.getIdByUsername(username);
         Long orderId = orderDao.addOrders(customerId);
 
-        List<OrderDetail> orderDetails = orders.getOrderDetails();
         for (OrderDetail orderDetail : orderDetails) {
             ordersDetailDao.addOrdersDetail(orderDetail, orderId);
         }
@@ -43,7 +41,7 @@ public class OrderService {
         return orderId;
     }
 
-    private Orders checkOutFromCart(CartItemsRequest cartItemsRequest, String username) {
+    private List<OrderDetail> checkOutFromCart(CartItemsRequest cartItemsRequest, String username) {
         Cart cart = cartService.findCartByUsername(username);
         List<Long> productIds = cartItemsRequest.getProductIds();
         return cart.checkOut(productIds);

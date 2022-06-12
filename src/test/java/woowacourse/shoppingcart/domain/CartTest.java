@@ -64,10 +64,9 @@ class CartTest {
         CartItem potatoInCart = new CartItem(potato, 1);
 
         Cart cart = new Cart(List.of(carrotInCart, appleInCart, potatoInCart));
-        Orders orders = cart.checkOut(List.of(1L, 2L));
+        List<OrderDetail> orderDetails = cart.checkOut(List.of(1L, 2L));
 
-        List<Long> orderedIds = orders.getOrderDetails()
-                .stream()
+        List<Long> orderedIds = orderDetails.stream()
                 .map(OrderDetail::getProductId)
                 .collect(Collectors.toList());
 

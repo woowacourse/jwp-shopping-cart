@@ -32,7 +32,7 @@ public class Cart {
         addingItem.changeQuantity(quantity);
     }
 
-    public Orders checkOut(List<Long> productIds) {
+    public List<OrderDetail> checkOut(List<Long> productIds) {
         List<CartItem> orderedItems = filterOrderedItems(productIds);
 
         List<OrderDetail> orderDetails = orderedItems.stream()
@@ -40,7 +40,7 @@ public class Cart {
                 .collect(Collectors.toList());
 
         remove(orderedItems);
-        return new Orders(orderDetails);
+        return List.copyOf(orderDetails);
     }
 
     private List<CartItem> filterOrderedItems(List<Long> productIds) {
