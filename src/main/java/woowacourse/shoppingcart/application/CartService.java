@@ -43,7 +43,8 @@ public class CartService {
     }
 
     @Transactional
-    public void updateQuantity(final Long cartItemId, final int quantity) {
+    public void updateQuantity(final Long cartItemId, final Long customerId, final int quantity) {
+        validateCartItemExist(customerId, cartItemId);
         CartItem cartItem = cartItemDao.findById(cartItemId);
         cartItem.changeQuantity(quantity);
         cartItemDao.updateQuantity(cartItem);

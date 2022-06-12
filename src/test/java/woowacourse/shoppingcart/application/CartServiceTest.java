@@ -72,7 +72,7 @@ class CartServiceTest {
         Product savedProduct = productDao.findProductById(productId);
         Long cartItemId = cartItemDao.save(customerId, new CartItem(savedProduct, 1));
 
-        cartService.updateQuantity(cartItemId, 2);
+        cartService.updateQuantity(cartItemId, customerId, 2);
         CartItem result = cartItemDao.findById(cartItemId);
 
         assertThat(result.getQuantity()).isEqualTo(2);
