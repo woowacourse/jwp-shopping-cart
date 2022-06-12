@@ -28,31 +28,23 @@ public class ProductDaoTest {
 
     @Test
     void 상품의_id으로_조회할_경우_객체를_리턴하는지_확인() {
-
-        // given
         Long id = 1L;
-
-        // when
-        final Product actual = productDao.findProductById(id);
-
         Product expected = new Product(1L, "맛있는 치킨", 100, "https://www.naver.com");
 
-        assertThat(actual).isEqualTo(expected);
+        final Product actual = productDao.findProductById(id);
 
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     void 상품의_id가_존재하지않는_경우() {
-        // given
         Long id = 200L;
 
-        // then
         assertThat(productDao.isValidId(id)).isFalse();
     }
 
     @Test
     void 전체_상품을_가져오는_경우() {
-        //given
         List<Product> products = productDao.findProducts();
 
         assertThat(products.size()).isEqualTo(13);

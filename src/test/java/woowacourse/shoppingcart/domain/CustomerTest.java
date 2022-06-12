@@ -15,6 +15,7 @@ public class CustomerTest {
         String encodedPW = new Password("aaaaaa").generateEncodedPassword();
         Customer customer = new Customer("puterism", "crew01@naver.com", encodedPW);
         Customer other = new Customer("puterism", "crew01@naver.com", "a123456");
+
         assertThatThrownBy(() -> customer.validateSamePassword(other)).isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("[ERROR] 비밀번호가 일치하지 않습니다.");
     }
@@ -41,6 +42,7 @@ public class CustomerTest {
     @Test
     void 이름이_32자_초과인_경우() {
         String invalidName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
         assertThatThrownBy(() -> new Customer(invalidName, "crew01@naver.com", "a12345")).isInstanceOf(InvalidInformationException.class)
                 .hasMessage("[ERROR] 사용자 이름은 최대 32자 이하여야 합니다.");
     }

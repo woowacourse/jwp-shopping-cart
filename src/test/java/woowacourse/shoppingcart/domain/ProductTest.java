@@ -43,6 +43,7 @@ public class ProductTest {
     @Test
     void 상품_이름이_32자를_초과하는_경우() {
         String invalidName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
         assertThatThrownBy(() -> new Product(1L, invalidName, 1, "https://www.naver.com"))
                 .isInstanceOf(InvalidInformationException.class)
                 .hasMessage("[ERROR] 상품 이름은 최대 32자 이하여야 합니다.");

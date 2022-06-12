@@ -73,7 +73,6 @@ public class CustomerServiceTest {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("a12345", "a123456");
 
         customerService.changePassword(username, changePasswordRequest);
-
         Customer customer = customerDao.findCustomerByUserName(username);
 
         assertThat(new Password(customer.getPassword()).isSamePassword(new Password("a123456"))).isTrue();
@@ -102,7 +101,6 @@ public class CustomerServiceTest {
         String username = "puterism";
 
         DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("a12345");
-
         customerService.deleteUser(username, deleteCustomerRequest);
 
         assertThat(customerDao.isValidName(username)).isFalse();

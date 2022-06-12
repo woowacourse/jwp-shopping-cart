@@ -22,6 +22,7 @@ public class ProductServiceTest {
     @Test
     void 특정_상품을_가져오는_경우() {
         ProductResponse productResponse = productService.findProductById(7L);
+
         assertAll(() -> assertThat(productResponse.getId()).isEqualTo(7L),
                 () -> assertThat(productResponse.getName()).isEqualTo("맛있는 초밥"),
                 () -> assertThat(productResponse.getPrice()).isEqualTo(700),
@@ -38,24 +39,28 @@ public class ProductServiceTest {
     @Test
     void 전체_상품을_12개로_끊어서_첫_페이지만_가져오는_경우() {
         ProductsResponse productsResponse = productService.findProducts(1, 12);
+
         assertThat(productsResponse.getProducts().size()).isEqualTo(12);
     }
 
     @Test
     void 전체_상품을_12개로_끊어서_마지막_페이지만_가져오는_경우() {
         ProductsResponse productsResponse = productService.findProducts(2, 12);
+
         assertThat(productsResponse.getProducts().size()).isEqualTo(1);
     }
 
     @Test 
     void 페이지와_페이지당_사이즈_모두_없이_가져오는_경우() {
         ProductsResponse productsResponse = productService.findProducts(1, 1000);
+
         assertThat(productsResponse.getProducts().size()).isEqualTo(13);
     }
 
     @Test
     void 전체_상품의_페이지보다_더_많은_페이지를_요구하는_경우() {
         ProductsResponse productsResponse = productService.findProducts(3, 12);
+
         assertThat(productsResponse.getProducts().size()).isEqualTo(0);
     }
 
@@ -76,6 +81,7 @@ public class ProductServiceTest {
     @Test
     void 전체_상품을_가져오는_경우() {
         ProductsResponse productsResponse = productService.findProducts();
+
         assertThat(productsResponse.getProducts().size()).isEqualTo(13);
     }
 }

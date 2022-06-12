@@ -29,27 +29,21 @@ public class CustomerDaoTest {
 
     @Test
     void 사용자의_이름으로_조회할_경우_객체를_리턴하는지_확인() {
-
-        // given
         String userName = "puterism";
         String email = "crew01@naver.com";
         String pw = "a12345";
 
-        // when
         final Customer actual = customerDao.findCustomerByUserName(userName);
 
         assertAll(() -> assertThat(actual.getUsername()).isEqualTo(userName),
                 () -> assertThat(actual.getEmail()).isEqualTo(email),
                 () -> assertThat(new Password(actual.getPassword()).isSamePassword(new Password(pw))).isTrue());
-
     }
 
     @Test
     void 사용자의_이름이_존재하지않는_경우() {
-        // given
         String userName = "gwangyeol-iM";
 
-        // then
         assertThat(customerDao.isValidName(userName)).isFalse();
     }
 
@@ -62,14 +56,10 @@ public class CustomerDaoTest {
 
     @Test
     void 비밀번호_수정() {
-        //given
         String name = "puterism";
         String newPassword = "a123456";
 
-        //when
         customerDao.updatePassword(name, newPassword);
-
-        //then
         Customer actual = customerDao.findCustomerByUserName(name);
 
         assertThat(actual.getPassword()).isEqualTo(newPassword);

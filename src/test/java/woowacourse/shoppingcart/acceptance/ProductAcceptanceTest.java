@@ -27,6 +27,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 없는_상품을_조회() {
+
         var extract = createOneProductResult(200L, HttpStatus.BAD_REQUEST);
 
         assertThat(extract.body().jsonPath().getString("message"))
@@ -65,8 +66,6 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         var extract = createPagedProductResult(3, 12, HttpStatus.OK).as(ProductsResponse.class);
         assertThat(extract.getProducts().size()).isEqualTo(0);
-
-
     }
 
     @Test

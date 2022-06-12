@@ -29,6 +29,7 @@ public class CartServiceTest {
     @Test
     void 장바구니_조회() {
         CartResponse cartResponse = cartService.findByUserName("puterism");
+
         assertThat(cartResponse.getCartItems().size()).isEqualTo(3);
     }
 
@@ -42,24 +43,29 @@ public class CartServiceTest {
     @Test
     void 장바구니_내의_존재하는_상품을_추가로_담는_경우() {
         AddCartItemRequest addCartItemRequest = new AddCartItemRequest(1L, 3, true);
+        CartItem expected = new CartItem(1L, 1L, 1L, 4, true);
+
         cartService.addItem("puterism", addCartItemRequest);
         CartItem actual = cartItemDao.findCartItemByIds(1L, 1L);
-        CartItem expected = new CartItem(1L, 1L, 1L, 4, true);
+
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     void 장바구니_내의_존재하지_않는_상품을_추가로_담는_경우() {
         AddCartItemRequest addCartItemRequest = new AddCartItemRequest(2L, 3, true);
+        CartItem expected = new CartItem(4L, 1L, 2L, 3, true);
+
         cartService.addItem("puterism", addCartItemRequest);
         CartItem actual = cartItemDao.findCartItemByIds(1L, 4L);
-        CartItem expected = new CartItem(4L, 1L, 2L, 3, true);
+
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     void 존재하지_않는_사용자의_장바구니의_상품을_추가하는_경우() {
         AddCartItemRequest addCartItemRequest = new AddCartItemRequest(1L, 1, true);
+
         assertThatThrownBy(() -> cartService.addItem("alpha", addCartItemRequest))
                 .isInstanceOf(InvalidCartItemException.class)
                 .hasMessage("[ERROR] 존재하지 않는 장바구니입니다.");
@@ -68,6 +74,7 @@ public class CartServiceTest {
     @Test
     void 존재하지_않는_상품을_장바구니에_추가하는_경우() {
         AddCartItemRequest addCartItemRequest = new AddCartItemRequest(100L, 1, true);
+
         assertThatThrownBy(() -> cartService.addItem("puterism", addCartItemRequest))
                 .isInstanceOf(InvalidCartItemException.class)
                 .hasMessage("[ERROR] 존재하는 상품이 아닙니다.");
@@ -76,6 +83,7 @@ public class CartServiceTest {
     @Test
     void 자연수가_아닌_상품_id로_장바구니에_추가하는_경우() {
         AddCartItemRequest addCartItemRequest = new AddCartItemRequest(0L, 1, true);
+
         assertThatThrownBy(() -> cartService.addItem("puterism", addCartItemRequest))
                 .isInstanceOf(InvalidInformationException.class)
                 .hasMessage("[ERROR] 상품 ID는 자연수여야 합니다.");
@@ -86,8 +94,10 @@ public class CartServiceTest {
         UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(
                 List.of(new UpdateCartItemElement(1L, 10, false),
                         new UpdateCartItemElement(2L, 1, true)));
+
         CartResponse updateCartItemResponse =
                 cartService.updateItem("puterism", updateCartItemRequest);
+
         assertThat(updateCartItemResponse.getCartItems().size()).isEqualTo(2);
     }
 
@@ -96,6 +106,7 @@ public class CartServiceTest {
         UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(
                 List.of(new UpdateCartItemElement(7L, 10, false),
                         new UpdateCartItemElement(2L, 1, true)));
+
         assertThatThrownBy(
                 () -> cartService.updateItem("puterism", updateCartItemRequest))
                 .isInstanceOf(InvalidCartItemException.class)
@@ -107,6 +118,7 @@ public class CartServiceTest {
         UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(
                 List.of(new UpdateCartItemElement(0L, 10, false),
                         new UpdateCartItemElement(2L, 1, true)));
+
         assertThatThrownBy(
                 () -> cartService.updateItem("puterism", updateCartItemRequest))
                 .isInstanceOf(InvalidInformationException.class)
@@ -118,6 +130,7 @@ public class CartServiceTest {
         UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(
                 List.of(new UpdateCartItemElement(1L, 0, false),
                         new UpdateCartItemElement(2L, 1, true)));
+
         assertThatThrownBy(
                 () -> cartService.updateItem("puterism", updateCartItemRequest))
                 .isInstanceOf(InvalidCartItemException.class)
@@ -130,8 +143,10 @@ public class CartServiceTest {
                 List.of(
                         new DeleteCartItemElement(1L),
                         new DeleteCartItemElement(2L)));
+
         cartService.deleteItem("puterism", deleteCartItemRequest);
         CartResponse cartResponse = cartService.findByUserName("puterism");
+
         assertThat(cartResponse.getCartItems().size()).isEqualTo(1);
     }
 
@@ -141,6 +156,7 @@ public class CartServiceTest {
                 List.of(
                         new DeleteCartItemElement(0L),
                         new DeleteCartItemElement(2L)));
+
         assertThatThrownBy(
                 () -> cartService.deleteItem("puterism", deleteCartItemRequest))
                 .isInstanceOf(InvalidInformationException.class)
@@ -153,6 +169,7 @@ public class CartServiceTest {
                 List.of(
                         new DeleteCartItemElement(10L),
                         new DeleteCartItemElement(2L)));
+
         assertThatThrownBy(
                 () -> cartService.deleteItem("puterism", deleteCartItemRequest))
                 .isInstanceOf(InvalidCartItemException.class)
@@ -163,6 +180,7 @@ public class CartServiceTest {
     void 장바구니를_삭제하는_경우() {
         cartService.deleteCart("puterism");
         CartResponse cartResponse = cartService.findByUserName("puterism");
+
         assertThat(cartResponse.getCartItems().size()).isEqualTo(0);
     }
 }

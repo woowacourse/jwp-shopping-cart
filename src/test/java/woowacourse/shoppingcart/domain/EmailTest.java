@@ -32,6 +32,7 @@ public class EmailTest {
     @Test
     void 이메일이_64자_초과인_경우() {
         String invalidEmail = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@naver.com";
+
         assertThatThrownBy(() -> new Email(invalidEmail)).isInstanceOf(InvalidInformationException.class)
                 .hasMessage("[ERROR] 이메일은 최대 64자 이하여야 합니다.");
     }
