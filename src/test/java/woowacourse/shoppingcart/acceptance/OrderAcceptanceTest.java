@@ -73,16 +73,6 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         assertThat(response.jsonPath().getString("totalPrice")).isNotNull();
     }
 
-    public static ExtractableResponse<Response> 주문하기_요청(String userName, List<OrderRequest> orderRequests) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(orderRequests)
-                .when().post("/api/customers/{customerName}/orders", userName)
-                .then().log().all()
-                .extract();
-    }
-
     public static void 주문하기_성공함(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();

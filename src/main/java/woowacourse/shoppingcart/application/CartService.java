@@ -49,7 +49,7 @@ public class CartService {
         return new CartSetResponse(fountProduct, savedCart, true);
     }
 
-    public List<CartProduct> findCartsByCustomerEmail(final String email) {
+    public List<CartProduct> findCartsByCustomerEmail(String email) {
         Long customerId = customerDao.findIdByEmail(email);
         List<Cart> carts = cartDao.findByCustomerId(customerId);
 

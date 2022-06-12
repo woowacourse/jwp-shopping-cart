@@ -2,7 +2,9 @@ package woowacourse.shoppingcart.application;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartDao;
@@ -41,39 +43,51 @@ public class OrderService {
     public MakeOrderResponse addOrder(OrderSaveRequest orderSaveRequest, String email) {
         List<Long> productIds = orderSaveRequest.getProductIds();
         Long customerId = customerDao.findIdByEmail(email);
-        List<OrderDetailDto> orderDetails = new ArrayList<>();
         Long ordersId = orderDao.addOrders(customerId);
+        List<OrderDetailDto> orderDetails = new ArrayList<>();
+        Map<Long, Product> productCache = new HashMap<>();
 
-        int totalPrice = 0;
         for (Long productId : productIds) {
-            Cart cart = extractCart(customerId, ordersId, productId);
-            Product findProduct = productDao.findProductById(cart.getProductId())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다"));
-            totalPrice += cart.getQuantity() * findProduct.getPrice();
-            orderDetails.add(new OrderDetailDto(cart.getProductId(), findProduct.getName(), cart.getQuantity(),
-                    findProduct.getPrice(), findProduct.getImage()));
+            Cart extractedCart = extractCart(customerId, ordersId, productId);
+            cacheProduct(productCache, productId);
+            Product foundProduct = productCache.get(productId);
+            orderDetails.add(new OrderDetailDto(extractedCart, foundProduct));
         }
 
+        int totalPrice = calculateTotalPriceFromDtos(orderDetails);
         return new MakeOrderResponse(ordersId, orderDetails, totalPrice, LocalDateTime.now());
     }
 
     @Transactional
-    public FindOrderResponse findOrderById(String email, Long orderId) {
+    public FindOrderResponse findOrderById(Long orderId) {
         List<OrderDetail> orderDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId);
         List<OrderDetailDto> orderDetailDtos = new ArrayList<>();
+        Map<Long, Product> productCache = new HashMap<>();
 
-        int totalPrice = 0;
         for (OrderDetail orderDetail : orderDetails) {
             Long productId = orderDetail.getProductId();
-            Product product = productDao.findProductById(productId)
-                    .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다"));
+            cacheProduct(productCache, productId);
 
-            totalPrice += orderDetail.getQuantity() * product.getPrice();
-            orderDetailDtos.add(new OrderDetailDto(product.getId(), product.getName(), orderDetail.getQuantity(),
-                    product.getPrice(), product.getImage()));
+            Product foundProduct = productCache.get(productId);
+            orderDetailDtos.add(new OrderDetailDto(foundProduct, orderDetail));
         }
 
+        int totalPrice = calculateTotalPriceFromDtos(orderDetailDtos);
         return new FindOrderResponse(orderId, orderDetailDtos, totalPrice, LocalDateTime.now());
+    }
+
+    private int calculateTotalPriceFromDtos(List<OrderDetailDto> orderDetailDtos) {
+        return orderDetailDtos.stream()
+                .map(dto -> dto.getPrice() * dto.getQuantity())
+                .reduce(0, Integer::sum);
+    }
+
+    private void cacheProduct(Map<Long, Product> productCache, Long productId) {
+        if (!productCache.containsKey(productId)) {
+            Product product = productDao.findProductById(productId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다"));
+            productCache.put(productId, product);
+        }
     }
 
     private Cart extractCart(Long customerId, Long ordersId, Long productId) {

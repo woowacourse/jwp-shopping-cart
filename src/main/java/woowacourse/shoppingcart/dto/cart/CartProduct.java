@@ -10,6 +10,9 @@ public class CartProduct {
     private int price;
     private int quantity;
 
+    public CartProduct() {
+    }
+
     public CartProduct(Long productId, String image, String name, int price, int quantity) {
         this.productId = productId;
         this.image = image;

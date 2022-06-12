@@ -33,9 +33,8 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<FindOrderResponse> findOrder(@Login String email,
-                                                       @PathVariable Long orderId) {
-        FindOrderResponse findOrderResponse = orderService.findOrderById(email, orderId);
+    public ResponseEntity<FindOrderResponse> findOrder(@PathVariable Long orderId) {
+        FindOrderResponse findOrderResponse = orderService.findOrderById(orderId);
         return ResponseEntity.ok(findOrderResponse);
     }
 
