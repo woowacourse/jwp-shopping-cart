@@ -1,24 +1,33 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+
 public class CartItem {
 
-    private Long id;
-    private Product product;
-    private int quantity;
-    private boolean checked;
+    private final Long id;
+    private final Product product;
+    private final Integer quantity;
+    private final Boolean checked;
 
-    public CartItem(Long id, Product product, int quantity, boolean checked) {
+    public CartItem(Long id, Product product, Integer quantity, Boolean checked) {
+        validateNull(product, quantity, checked);
         this.id = id;
         this.product = product;
         this.quantity = quantity;
         this.checked = checked;
     }
 
-    public CartItem(Product product, int quantity, boolean checked) {
+    private void validateNull(Product product, Integer quantity, Boolean checked) {
+        if (quantity == null || checked == null) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public CartItem(Product product, Integer quantity, Boolean checked) {
         this(null, product, quantity, checked);
     }
 
-    public CartItem(Long id, int quantity, boolean checked) {
+    public CartItem(Long id, Integer quantity, Boolean checked) {
         this(id, null, quantity, checked);
     }
 
@@ -30,7 +39,7 @@ public class CartItem {
         return product;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 

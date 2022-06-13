@@ -12,9 +12,16 @@ public class Password {
     private final String value;
 
     public Password(String value) {
+        validateNull(value);
         validateForm(value);
         validateLength(value);
         this.value = value;
+    }
+
+    private void validateNull(String value) {
+        if (value == null) {
+            throw new InvalidPasswordException();
+        }
     }
 
     public void validateForm(String value) {

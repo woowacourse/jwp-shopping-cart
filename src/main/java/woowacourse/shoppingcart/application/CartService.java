@@ -33,8 +33,6 @@ public class CartService {
 
     @Transactional
     public void addCart(String username, CartRequest cartRequest) {
-        validateQuantity(cartRequest.getQuantity());
-        validateChecked(cartRequest.getChecked());
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
         Product product = productDao.findProductById(cartRequest.getProductId());
 
@@ -47,18 +45,6 @@ public class CartService {
         cartDao.addCartItem(customerId, cartItem);
     }
 
-    private void validateQuantity(Integer quantity) {
-        if (quantity < 0) {
-            throw new InvalidCartItemException("수량은 0 이상이어야 합니다.");
-        }
-    }
-
-    private void validateChecked(Boolean checked) {
-        if (checked == null) {
-            throw new InvalidCartItemException("구매 여부는 비어서는 안됩니다.");
-        }
-    }
-
     public CartResponse findCartByUsername(String username) {
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
         Cart cart = cartDao.findByCustomerId(customerId);
@@ -67,11 +53,23 @@ public class CartService {
 
     @Transactional
     public CartResponse updateCartItems(String username, UpdateCartRequests updateCartRequests) {
+        List<Long> updateCartIds = updateCartRequests.toCartIds();
+        validateCart(username, updateCartIds);
+
         List<CartItem> cartItems = updateCartRequests.toCart();
         cartDao.updateCartItems(cartItems);
-
-        List<CartItem> updatedCartItems = getUpdatedCart(username, updateCartRequests.toCartIds());
+        List<CartItem> updatedCartItems = getUpdatedCart(username, updateCartIds);
         return CartResponse.from(updatedCartItems);
+    }
+
+    private void validateCart(String username, List<Long> cartIdsWithRequest) {
+        Customer customer = customerDao.findByUsername(new Username(username));
+        Cart cart = cartDao.findByCustomerId(customer.getId());
+        List<Long> cartIds = cart.getCartItemIds();
+
+        if (!cartIds.containsAll(cartIdsWithRequest)) {
+            throw new InvalidCartItemException();
+        }
     }
 
     private List<CartItem> getUpdatedCart(String username, List<Long> cartIds) {
@@ -86,14 +84,8 @@ public class CartService {
 
     @Transactional
     public void deleteCartItem(String username, DeleteProductRequest deleteProductRequest) {
-        Customer customer = customerDao.findByUsername(new Username(username));
         List<Long> deleteCartIds = deleteProductRequest.toCartIds();
-        Cart cart = cartDao.findByCustomerId(customer.getId());
-        List<Long> cartIds = cart.getCartItemIds();
-
-        if (!cartIds.containsAll(deleteCartIds)) {
-            throw new InvalidCartItemException();
-        }
+        validateCart(username, deleteCartIds);
         cartDao.deleteCartItems(deleteCartIds);
     }
 

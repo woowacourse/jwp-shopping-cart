@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.request.CartRequest;
@@ -30,7 +31,11 @@ public class CartItemController {
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal String usernameByToken,
                                             @RequestBody @Valid CartRequest cartRequest) {
         cartService.addCart(usernameByToken, cartRequest);
-        return ResponseEntity.created(URI.create("/cart")).build();
+        URI responseLocation = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .build()
+                .toUri();
+        return ResponseEntity.created(responseLocation).build();
     }
 
     @GetMapping
