@@ -25,18 +25,21 @@ public class CartTotalRepository {
         this.customerDao = customerDao;
     }
 
+    public void createAll(final Long customerId, final List<Long> productIds) {
+        cartItemDao.createAll(customerId, productIds);
+    }
+
+    public Cart findById(final Long id) {
+        return toCart(cartItemDao.findById(id));
+    }
+
     public Long findIdByCustomerIdAndProductId(Long customerId, Long productId) {
         return cartItemDao.findIdByCustomerIdAndProductIds(customerId, productId)
                 .orElseThrow(ResourceNotFoundException::new);
     }
 
-    public void createAll(final Long customerId, final List<Long> productIds) {
-        cartItemDao.createAll(customerId, productIds);
-    }
-
     public void plusQuantityByIds(List<Long> ids) {
-        List<CartEntity> cartEntities = ids.stream()
-                .map(cartItemDao::findById)
+        List<CartEntity> cartEntities = cartItemDao.findByIds(ids).stream()
                 .map(CartEntity::plusQuantity)
                 .collect(Collectors.toList());
         cartItemDao.updateAll(cartEntities);
@@ -48,10 +51,6 @@ public class CartTotalRepository {
 
     public void validateProductId(Long productId) {
         productDao.findById(productId);
-    }
-
-    public Cart findById(final Long id) {
-        return toCart(cartItemDao.findById(id));
     }
 
     private Cart toCart(CartEntity cartEntity) {

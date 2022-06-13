@@ -73,6 +73,19 @@ public class CartItemDao {
         return jdbcTemplate.queryForObject(query, Map.of("id", id), ROW_MAPPER);
     }
 
+    public List<CartEntity> findByIds(List<Long> ids) {
+        if (ids.isEmpty()) {
+            return List.of();
+        }
+        final String query = "SELECT * FROM cart_item WHERE id IN ( :ids )";
+        return jdbcTemplate.query(query, Map.of("ids", ids), ROW_MAPPER);
+    }
+
+    public List<CartEntity> findByCustomerIdAndProductIds(Long customerId, List<Long> productIds) {
+        final String query = "SELECT * FROM cart_item WHERE customer_id = :customerId AND product_id IN ( :productIds )";
+        return jdbcTemplate.query(query, Map.of("customerId", customerId, "productIds", productIds), ROW_MAPPER);
+    }
+
     public List<CartEntity> findCartsByCustomerId(final Long customerId) {
         final String sql = "SELECT * FROM cart_item WHERE customer_id = :customerId";
 
@@ -80,11 +93,6 @@ public class CartItemDao {
         params.put("customerId", customerId);
 
         return jdbcTemplate.query(sql, params, ROW_MAPPER);
-    }
-
-    public int deleteById(final Long id) {
-        final String query = "DELETE FROM cart_item WHERE id = :id";
-        return jdbcTemplate.update(query, Map.of("id", id));
     }
 
     public Optional<Long> findIdByCustomerIdAndProductIds(Long customerId, Long productId) {
@@ -97,10 +105,9 @@ public class CartItemDao {
         }
     }
 
-    public List<CartEntity> findByCustomerIdAndProductIds(Long customerId, List<Long> productIds) {
-        final String query = "SELECT * FROM cart_item WHERE customer_id = :customerId AND product_id IN ( :productIds )";
-        Map<String, Object> map = Map.of("customerId", customerId, "productIds", productIds);
-        return jdbcTemplate.query(query, map, ROW_MAPPER);
+    public int deleteById(final Long id) {
+        final String query = "DELETE FROM cart_item WHERE id = :id";
+        return jdbcTemplate.update(query, Map.of("id", id));
     }
 
     public int[] deleteByIds(final List<Long> ids) {
