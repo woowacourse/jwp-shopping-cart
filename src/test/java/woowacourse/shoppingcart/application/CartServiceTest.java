@@ -21,7 +21,6 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.DuplicatedCartProductException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @SuppressWarnings("NonAsciiChracters")
@@ -94,14 +93,6 @@ class CartServiceTest {
 
             assertThat(cartResponse).extracting("productId", "name", "price", "imageUrl")
                     .containsExactly(productId1, "치킨", 10_000, "http://example.com/chicken.jpg");
-        }
-
-        @Test
-        void 장바구니_상품이_존재하지_않으면_예외_반환() {
-            Long invalidProductId = -1L;
-
-            assertThatThrownBy(() -> cartService.addCart(invalidProductId, customerName))
-                    .isInstanceOf(InvalidProductException.class);
         }
 
         @Test
