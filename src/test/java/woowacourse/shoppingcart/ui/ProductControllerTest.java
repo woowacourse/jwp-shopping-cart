@@ -17,9 +17,6 @@ import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.config.RestDocsConfig;
-import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.Product;
@@ -37,7 +34,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static woowacourse.fixture.TokenFixture.ACCESS_TOKEN;
 import static woowacourse.fixture.TokenFixture.BEARER;
 
@@ -88,12 +86,10 @@ class ProductControllerTest {
     @Test
     void productsWithLogin() throws Exception {
         Customer customer = new Customer(1L, "giron", new Password("!@3123ASD"));
-        List<Product> products = List.of(
-                new Product(1L, "제품1", 5000, "www.imageUrl1.com"),
-                new Product(2L, "제품2", 1000, "www.image2.com"));
-
-        List<ProductResponse> responses = products.stream()
-                .map(ProductResponse::new).collect(Collectors.toList());
+        List<ProductResponse> responses = List.of(
+                new ProductResponse(1L, "제품1", 5000, "www.imageUrl1.com", null, 0),
+                new ProductResponse(2L, "제품2", 1000, "www.image2.com", 2L, 500),
+                new ProductResponse(3L, "제품3", 50000, "www.image4Url.com", 1L, 100));
 
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
         given(authService.getAuthenticatedCustomer(ACCESS_TOKEN)).willReturn(customer);
