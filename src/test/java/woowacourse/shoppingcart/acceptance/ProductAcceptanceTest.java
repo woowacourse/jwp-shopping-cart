@@ -24,7 +24,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 상품_등록_요청(
                 new ProductAddRequest("치킨", 10_000, 100, "chicken.png"));
 
-        상품_추가됨(response);
+        응답_CREATED_헤더_Location_존재(response);
     }
 
     @DisplayName("상품 목록을 조회한다")
@@ -37,8 +37,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = 상품_목록_조회_요청();
 
-        조회_응답됨(response);
-        상품_목록_포함됨(productId1, productId2, response);
+        응답_OK(response);
+        바디_상품_ID_목록_포함(productId1, productId2, response);
     }
 
     @DisplayName("상품을 조회한다")
@@ -49,8 +49,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = 상품_조회_요청(productId);
 
-        조회_응답됨(response);
-        상품_조회됨(response, productId);
+        응답_OK(response);
+        바디_상품_ID_일치(response, productId);
     }
 
     @DisplayName("상품을 삭제한다")
@@ -61,7 +61,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = 상품_삭제_요청(productId);
 
-        상품_삭제됨(response);
+        응답_NO_CONTENT(response);
     }
 
     public static ExtractableResponse<Response> 상품_등록_요청(ProductAddRequest request) {
@@ -101,7 +101,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static void 상품_추가됨(ExtractableResponse<Response> response) {
+    private void 응답_CREATED_헤더_Location_존재(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
@@ -111,23 +111,23 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 
-    public static void 조회_응답됨(ExtractableResponse<Response> response) {
+    private void 응답_OK(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
+    private void 바디_상품_ID_목록_포함(Long productId1, Long productId2, ExtractableResponse<Response> response) {
         List<Long> resultProductIds = response.jsonPath().getList("products.", ProductsInnerResponse.class).stream()
                 .map(ProductsInnerResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);
     }
 
-    public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
+    private void 바디_상품_ID_일치(ExtractableResponse<Response> response, Long productId) {
         ProductResponse resultProduct = response.as(ProductResponse.class);
         assertThat(resultProduct.getId()).isEqualTo(productId);
     }
 
-    public static void 상품_삭제됨(ExtractableResponse<Response> response) {
+    private void 응답_NO_CONTENT(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

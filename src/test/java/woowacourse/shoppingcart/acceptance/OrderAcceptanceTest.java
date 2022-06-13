@@ -54,9 +54,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = 주문하기_요청(orderRequests, token);
 
-        주문하기_성공함(response);
+        응답_CREATED_헤더_Location_존재(response);
     }
-
 
     @DisplayName("주문 내역 조회")
     @Test
@@ -66,8 +65,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(token);
 
-        주문_조회_응답됨(response);
-        주문_내역_포함됨(response, orderId1, orderId2);
+        응답_OK(response);
+        바디_주문_ID_목록_포함(response, orderId1, orderId2);
     }
 
     @DisplayName("주문 단일 조회")
@@ -77,8 +76,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(orderId, token);
 
-        주문_조회_응답됨(response);
-        주문_조회됨(response, orderId);
+        응답_OK(response);
+        바디_주문_id_일치(response, orderId);
     }
 
     public static ExtractableResponse<Response> 주문하기_요청(List<OrderRequest> request, String token) {
@@ -112,28 +111,28 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static void 주문하기_성공함(ExtractableResponse<Response> response) {
+    private void 응답_CREATED_헤더_Location_존재(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 주문하기_요청_성공되어_있음(List<OrderRequest> orderRequests, String token) {
+    private Long 주문하기_요청_성공되어_있음(List<OrderRequest> orderRequests, String token) {
         ExtractableResponse<Response> response = 주문하기_요청(orderRequests, token);
         return Long.parseLong(response.header("Location").split("/orders/")[1]);
     }
 
-    public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
+    private void 응답_OK(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
+    private void 바디_주문_ID_목록_포함(ExtractableResponse<Response> response, Long... orderIds) {
         List<Long> resultOrderIds = response.jsonPath().getList("orders.", OrderInnerResponse.class).stream()
                 .map(OrderInnerResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
     }
 
-    private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
+    private void 바디_주문_id_일치(ExtractableResponse<Response> response, Long orderId) {
         OrderResponse result = response.as(OrderResponse.class);
         assertThat(result.getId()).isEqualTo(orderId);
     }
