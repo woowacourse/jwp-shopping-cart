@@ -6,11 +6,7 @@ public class ThumbnailImageDto {
 
     public ThumbnailImageDto() {
     }
-
-    public ThumbnailImageDto(String url) {
-        this(url, "");
-    }
-
+    
     public ThumbnailImageDto(String url, String alt) {
         this.url = url;
         this.alt = alt;
