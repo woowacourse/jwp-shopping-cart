@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS orders_detail;
+
+DROP TABLE IF EXISTS orders;
+
 DROP TABLE IF EXISTS cart_item;
 
 DROP TABLE IF EXISTS product;
@@ -40,4 +44,32 @@ ALTER TABLE cart_item
 
 ALTER TABLE cart_item
     ADD CONSTRAINT fk_cart_item_to_product
+        FOREIGN KEY (product_id) REFERENCES product (id);
+
+CREATE TABLE orders
+(
+    id          BIGINT NOT NULL AUTO_INCREMENT,
+    customer_id BIGINT NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE orders
+    ADD CONSTRAINT fk_orders_to_customer
+        FOREIGN KEY (customer_id) REFERENCES customer (id);
+
+CREATE TABLE orders_detail
+(
+    id         BIGINT  NOT NULL AUTO_INCREMENT,
+    orders_id  BIGINT  NOT NULL,
+    product_id BIGINT  NOT NULL,
+    quantity   INTEGER NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE orders_detail
+    ADD CONSTRAINT fk_orders_detail_to_orders
+        FOREIGN KEY (orders_id) REFERENCES orders (id);
+
+ALTER TABLE orders_detail
+    ADD CONSTRAINT fk_orders_detail_to_product
         FOREIGN KEY (product_id) REFERENCES product (id);
