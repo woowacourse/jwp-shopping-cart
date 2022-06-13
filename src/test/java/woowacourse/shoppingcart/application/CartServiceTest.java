@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.ImageUrl;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ProductName;
@@ -26,6 +27,9 @@ import static org.mockito.BDDMockito.given;
 
 class CartServiceTest {
 
+    private final Product 상품1 = new Product(1L, new ProductName("상품명1"), 1000, new ImageUrl("imageUrl1"));
+    private final Product 상품2 = new Product(2L, new ProductName("상품명2"), 1000, new ImageUrl("imageUrl2"));
+
     private final CartService cartService;
 
     @Mock
@@ -41,13 +45,10 @@ class CartServiceTest {
     @DisplayName("특정 회원의 카트 목록을 불러온다.")
     @Test
     void findCartByCustomerId() {
+
         // given
-        given(cartItemDao.findProductIdsByCustomerId(1L))
-                .willReturn(List.of(1L, 2L));
-        given(productDao.findById(1L))
-                .willReturn(Optional.of(new Product(1L, new ProductName("상품명1"), 1000, new ImageUrl("imageUrl1"))));
-        given(productDao.findById(2L))
-                .willReturn(Optional.of(new Product(2L, new ProductName("상품명2"), 1000, new ImageUrl("imageUrl2"))));
+        given(cartItemDao.findByCustomerId(1L))
+                .willReturn(new Cart(List.of(상품1, 상품2)));
 
         // when
         final CartResponse cartResponse = cartService.findCartByCustomerId(1L);
@@ -68,7 +69,7 @@ class CartServiceTest {
     void addCart() {
         // given
         given(productDao.findById(1L))
-                .willReturn(Optional.of(new Product(1L, new ProductName("상품명"), 1000, new ImageUrl("imageUrl"))));
+                .willReturn(Optional.of(상품1));
         given(cartItemDao.save(any(), any()))
                 .willReturn(1L);
 

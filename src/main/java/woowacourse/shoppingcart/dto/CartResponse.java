@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Cart;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,14 +13,15 @@ public class CartResponse {
         this.cart = cart;
     }
 
-    public List<ProductResponse> getCart() {
-        return cart;
-    }
-
-    public static CartResponse of(List<Product> products) {
-        final List<ProductResponse> convertedProducts = products.stream()
+    public static CartResponse of(Cart cart) {
+        final List<ProductResponse> convertedProducts = cart.getProducts()
+                .stream()
                 .map(ProductResponse::of)
                 .collect(Collectors.toList());
         return new CartResponse(convertedProducts);
+    }
+
+    public List<ProductResponse> getCart() {
+        return cart;
     }
 }

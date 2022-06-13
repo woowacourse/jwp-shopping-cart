@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
@@ -35,9 +36,10 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public CartResponse findCartByCustomerId(final long customerId) {
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-        final List<Product> products = findProducts(productIds);
-        return CartResponse.of(products);
+        final Cart cart = cartItemDao.findByCustomerId(customerId);
+//        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+//        final List<Product> products = findProducts(productIds);
+        return CartResponse.of(cart);
     }
 
     private List<Product> findProducts(List<Long> productIds) {

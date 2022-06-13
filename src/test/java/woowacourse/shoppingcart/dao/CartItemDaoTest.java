@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Cart;
 
 import java.util.List;
 
@@ -48,6 +49,19 @@ public class CartItemDaoTest {
         final List<Long> cartIds = cartItemDao.findIdsByCustomerIdAndProductIds(customerId, productIds);
 
         assertThat(cartIds).containsExactly(1L, 2L);
+    }
+
+    @DisplayName("회원 아이디를 넣으면, 해당 회원이 구매한 상품의 카트를 가져온다.")
+    @Test
+    void findByCustomerId() {
+        // given
+        final long customerId = 1L;
+
+        // when
+        final Cart cart = cartItemDao.findByCustomerId(customerId);
+
+        // then
+        assertThat(cart.getProducts().size()).isEqualTo(2);
     }
 
     @DisplayName("회원 아이디를 넣으면, 해당 회원이 구매한 상품의 아이디 목록을 가져온다.")

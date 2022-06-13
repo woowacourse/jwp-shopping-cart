@@ -6,6 +6,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.ImageUrl;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ProductName;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.util.*;
@@ -15,11 +19,29 @@ public class CartItemDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private final RowMapper<Long> productIdMapper = (rs, rowNum) -> rs.getLong("product_id");
+    private final RowMapper<Product> productRowMapper = (resultSet, rowNumber) ->
+            new Product(
+                    resultSet.getLong("id"),
+                    new ProductName(resultSet.getString("name")),
+                    resultSet.getInt("price"),
+                    new ImageUrl(resultSet.getString("image_url"))
+            );
+
     private final RowMapper<Long> cartItemIdMapper = (rs, rowNum) -> rs.getLong("id");
 
     public CartItemDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
+    public Cart findByCustomerId(final long customerId) {
+        final String sql = "SELECT p.id, p.name, p.price, p.image_url " +
+                "FROM cart_item c JOIN product p ON c.product_id=p.id " +
+                "WHERE c.customer_id = :customerId";
+
+        final MapSqlParameterSource parameters = new MapSqlParameterSource("customerId", customerId);
+
+        final List<Product> products = namedParameterJdbcTemplate.query(sql, parameters, productRowMapper);
+        return new Cart(products);
     }
 
     public List<Long> findProductIdsByCustomerId(final long customerId) {
@@ -28,7 +50,7 @@ public class CartItemDao {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("customerId", customerId);
 
-        return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), productIdMapper);
+        return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), (rs, rowNum) -> rs.getLong("product_id"));
     }
 
     public List<Long> findIdsByCustomerId(final long customerId) {
