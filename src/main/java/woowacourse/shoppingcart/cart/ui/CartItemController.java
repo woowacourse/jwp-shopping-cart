@@ -15,7 +15,7 @@ import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
 import woowacourse.shoppingcart.cart.dto.CartItemResponse;
-import woowacourse.shoppingcart.cart.dto.CartItemsResponse;
+import woowacourse.shoppingcart.cart.dto.CartResponse;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.support.Login;
@@ -31,9 +31,9 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<CartItemsResponse> getCartItems(@Login final Customer customer) {
-        final Cart cartItems = cartService.findCartBy(customer);
-        final CartItemsResponse response = CartItemsResponse.from(cartItems);
+    public ResponseEntity<CartResponse> getCart(@Login final Customer customer) {
+        final Cart cart = cartService.findCartBy(customer);
+        final CartResponse response = CartResponse.from(cart);
         return ResponseEntity
                 .ok()
                 .body(response);

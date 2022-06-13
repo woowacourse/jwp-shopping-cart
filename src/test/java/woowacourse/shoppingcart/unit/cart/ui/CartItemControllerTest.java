@@ -162,7 +162,7 @@ class CartItemControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("장바구니에 담긴 상품 목록을 조회한다.")
-    void getCartItems() throws Exception {
+    void getCart() throws Exception {
         // given
         final String accessToken = "fake-token";
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
@@ -171,8 +171,7 @@ class CartItemControllerTest extends ControllerTest {
         final Product apple = new Product(1L, "사과", 1700, "apple.org");
         final Product carrot = new Product(2L, "당근", 800, "carrot.io");
 
-        final List<CartItem> cartItems = List.of(
-                new CartItem(1L, apple),
+        final Cart cart = new Cart(List.of(new CartItem(1L, apple),
                 new CartItem(2L, apple),
                 new CartItem(3L, apple),
                 new CartItem(4L, carrot),
@@ -180,8 +179,7 @@ class CartItemControllerTest extends ControllerTest {
                 new CartItem(6L, carrot),
                 new CartItem(7L, carrot),
                 new CartItem(8L, carrot)
-        );
-        final Cart cart = new Cart(cartItems);
+        ));
         given(cartService.findCartBy(customer))
                 .willReturn(cart);
 

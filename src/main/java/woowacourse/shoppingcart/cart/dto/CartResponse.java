@@ -4,22 +4,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 import woowacourse.shoppingcart.cart.domain.Cart;
 
-public class CartItemsResponse {
+public class CartResponse {
 
     private final List<CartItemResponse> cartList;
 
-    private CartItemsResponse(final List<CartItemResponse> cartList) {
+    private CartResponse(final List<CartItemResponse> cartList) {
         this.cartList = cartList;
     }
 
-    public static CartItemsResponse from(final Cart cart) {
+    public static CartResponse from(final Cart cart) {
         final List<CartItemResponse> responses = cart
                 .getValues()
                 .stream()
                 .map(CartItemResponse::new)
                 .distinct()
                 .collect(Collectors.toList());
-        return new CartItemsResponse(responses);
+        return new CartResponse(responses);
     }
 
     public List<CartItemResponse> getCartList() {

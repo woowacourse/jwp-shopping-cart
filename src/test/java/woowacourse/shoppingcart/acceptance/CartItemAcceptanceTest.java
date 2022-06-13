@@ -34,13 +34,13 @@ class CartItemAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
-    void getCartItems() {
+    void getCart_2Items_200() {
         // given
         postCartItem(new CartItemAdditionRequest(2L));
         postCartItem(new CartItemAdditionRequest(1L));
 
         // when
-        final ValidatableResponse response = getCarts();
+        final ValidatableResponse response = getCart();
 
         // then
         response.statusCode(HttpStatus.OK.value())
@@ -95,11 +95,11 @@ class CartItemAcceptanceTest extends AcceptanceTest {
                 .delete(REQUEST_URL + "/{productId}", productId)
                 .then().log().all();
 
-        final ValidatableResponse cartItemsResponse = getCarts();
+        final ValidatableResponse cartResponse = getCart();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        cartItemsResponse.statusCode(HttpStatus.OK.value())
+        cartResponse.statusCode(HttpStatus.OK.value())
                 .body("cartList", hasSize(0));
     }
 
@@ -115,7 +115,7 @@ class CartItemAcceptanceTest extends AcceptanceTest {
                 .then().log().all();
     }
 
-    private ValidatableResponse getCarts() {
+    private ValidatableResponse getCart() {
         return RestAssured
                 .given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
