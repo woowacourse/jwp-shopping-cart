@@ -35,8 +35,8 @@ public class OrderService {
         this.customerService = customerService;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
+    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String email) {
+        final Long customerId = customerService.getCustomerByEmail(email).getId();
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {

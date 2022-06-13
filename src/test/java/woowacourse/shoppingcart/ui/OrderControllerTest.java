@@ -51,16 +51,17 @@ public class OrderControllerTest {
         final int quantity = 5;
         final Long cartId2 = 1L;
         final int quantity2 = 5;
-        final String customerName = "pobi";
+        final String email = "pobi@gmail.com";
         final List<OrderRequest> requestDtos =
                 Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
-        when(orderService.addOrder(any(), eq(customerName)))
+        when(jwtTokenProvider.getPayload(any())).thenReturn(email);
+        when(orderService.addOrder(any(), eq(email)))
                 .thenReturn(expectedOrderId);
 
         // when // then
-        mockMvc.perform(post("/api/customers/" + customerName + "/orders")
+        mockMvc.perform(post("/api/customers/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(requestDtos))
@@ -68,7 +69,7 @@ public class OrderControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
-                        "/api/" + customerName + "/orders/" + expectedOrderId));
+                        "/api/orders/" + expectedOrderId));
     }
 
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")

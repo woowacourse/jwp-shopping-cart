@@ -21,12 +21,12 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/api/customers/{customerName}/orders")
-    public ResponseEntity<Void> addOrder(@PathVariable final String customerName,
+    @PostMapping("/api/customers/orders")
+    public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final String email,
                                    @RequestBody @Valid final List<OrderRequest> orderDetails) {
-        final Long orderId = orderService.addOrder(orderDetails, customerName);
+        final Long orderId = orderService.addOrder(orderDetails, email);
         return ResponseEntity.created(
-                URI.create("/api/" + customerName + "/orders/" + orderId)).build();
+                URI.create("/api/orders/" + orderId)).build();
     }
 
     @GetMapping("/api/customers/orders/{orderId}")
