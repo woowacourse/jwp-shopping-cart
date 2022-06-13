@@ -25,4 +25,9 @@ public class ProductService {
     public Product findProductById(final Long productId) {
         return productDao.findProductById(productId);
     }
+
+    @Transactional(readOnly = true)
+    public boolean existProduct(final Long productId) {
+        return productDao.existProduct(productId);
+    }
 }
