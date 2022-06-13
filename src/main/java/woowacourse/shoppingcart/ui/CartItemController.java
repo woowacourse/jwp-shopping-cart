@@ -52,7 +52,7 @@ public class CartItemController {
     }
 
 
-    @DeleteMapping("products/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal LoginCustomer loginCustomer,
                                                @PathVariable Long id) {
         cartService.deleteCartItem(loginCustomer.getId(), id);
