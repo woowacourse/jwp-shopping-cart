@@ -6,6 +6,16 @@
 [[Customer]]
 == Customer
 
+=== 로그인
+
+==== HTTP Request
+
+include::{snippets}/auth/login/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/auth/login/http-response.adoc[]
+
 === 회원가입
 
 ==== HTTP Request

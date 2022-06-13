@@ -1,19 +1,17 @@
-package woowacourse.document;
+package woowacourse.documentation;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,15 +20,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.auth.support.User;
+import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.dto.OrderResponse;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @SpringBootTest
-class OrderDocumentTest {
+class ProductDocumentTest {
 
     private final Product product1 = new Product(
             1L, "콜드 브루 몰트",
@@ -43,61 +42,41 @@ class OrderDocumentTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
     private JwtTokenProvider jwtTokenProvider;
     @MockBean
-    private OrderService orderService;
+    private ProductService productService;
 
     @Test
-    void orderItem() throws Exception {
-        when(orderService.addOrder(anyLong(), ArgumentMatchers.any(OrderRequest.class))).thenReturn(1L);
-
-        OrderRequest orderRequest = new OrderRequest(1L, 2);
-        String token = jwtTokenProvider.createToken(String.valueOf(1L));
-
-        this.mockMvc.perform(post("/customers/orders")
-                        .header("Authorization", "Bearer " + token)
-                        .content(objectMapper.writeValueAsString(orderRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andDo(document("order/create",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())
-                ));
-    }
-
-    @Test
-    void findAll() throws Exception {
-        List<OrderResponse> orderResponses = List.of(
-                OrderResponse.from(1L, product1, 3),
-                OrderResponse.from(2L, product2, 15)
+    void findWithMember() throws Exception {
+        List<ProductResponse> productResponses = List.of(
+                ProductResponse.from(product1, 5),
+                ProductResponse.from(product2, 10)
         );
-        when(orderService.findOrdersByCustomerId(anyLong())).thenReturn(orderResponses);
+        when(productService.findProducts(any(User.class))).thenReturn(new ProductsResponse(productResponses));
 
         String token = jwtTokenProvider.createToken(String.valueOf(anyLong()));
-        this.mockMvc.perform(get("/customers/orders")
+        this.mockMvc.perform(get("/products")
                         .header("Authorization", "Bearer " + token)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("order/find/all",
+                .andDo(document("product/find/member",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));
     }
 
     @Test
-    void findOrder() throws Exception {
-        OrderResponse orderResponse = OrderResponse.from(1L, product1, 20);
-        when(orderService.findOrderById(anyLong(), anyLong())).thenReturn(orderResponse);
+    void findWithNonMember() throws Exception {
+        List<ProductResponse> productResponses = List.of(
+                ProductResponse.from(product1, 0),
+                ProductResponse.from(product2, 0)
+        );
+        when(productService.findProducts(any(User.class))).thenReturn(new ProductsResponse(productResponses));
 
-        String token = jwtTokenProvider.createToken(String.valueOf(1L));
-        this.mockMvc.perform(get("/customers/orders/{orderId}", 1L)
-                        .header("Authorization", "Bearer " + token)
+        this.mockMvc.perform(get("/products")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(document("order/find",
+                .andDo(document("product/find/anonymous",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())
                 ));

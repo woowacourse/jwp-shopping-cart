@@ -1,4 +1,4 @@
-package woowacourse.document;
+package woowacourse.documentation;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
