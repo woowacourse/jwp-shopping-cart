@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.notfound.InvalidProductException;
 import woowacourse.shoppingcart.exception.notfound.NotInCustomerCartItemException;
@@ -24,7 +24,7 @@ public class CartService {
         this.productService = productService;
     }
 
-    public Long addCart(final Long customerId, final Long productId) {
+    public Long addToCart(final Long customerId, final Long productId) {
         try {
             return cartItemDao.addCartItem(customerId, productId, INITIAL_QUANTITY);
         } catch (Exception e) {
@@ -32,24 +32,24 @@ public class CartService {
         }
     }
 
-    public List<Cart> findCartsByCustomerName(final Long customerId) {
+    public List<CartItem> findCartItemsByCustomerId(final Long customerId) {
         final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
 
-        final List<Cart> carts = new ArrayList<>();
+        final List<CartItem> cartItems = new ArrayList<>();
         for (final Long cartId : cartIds) {
             final Long productId = cartItemDao.findProductIdById(cartId);
             final Product product = productService.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+            cartItems.add(new CartItem(cartId, product));
         }
-        return carts;
+        return cartItems;
     }
 
-    public void deleteCart(final Long customerId, final List<Long> cartIds) {
-        validateCustomerCart(customerId, cartIds);
-        cartItemDao.deleteCartItems(cartIds);
+    public void deleteItems(final Long customerId, final List<Long> cartItemIds) {
+        validateCartItems(customerId, cartItemIds);
+        cartItemDao.deleteCartItems(cartItemIds);
     }
 
-    private void validateCustomerCart(final Long customerId, final List<Long> cartIds) {
+    private void validateCartItems(final Long customerId, final List<Long> cartIds) {
         final List<Long> findByCustomerId = cartItemDao.findIdsByCustomerId(customerId);
         if (containSameElements(cartIds, findByCustomerId)) {
             return;
@@ -62,8 +62,8 @@ public class CartService {
     }
 
     public void update(final Long customerId, final Long productId, final Integer quantity) {
-        final Cart cart = cartItemDao.findByCustomerIdAndProductId(customerId, productId);
-        final Cart updatedCart = cart.applyQuantity(quantity);
-        cartItemDao.update(updatedCart);
+        final CartItem cartItem = cartItemDao.findByCustomerIdAndProductId(customerId, productId);
+        final CartItem updatedCartItem = cartItem.applyQuantity(quantity);
+        cartItemDao.update(updatedCartItem);
     }
 }

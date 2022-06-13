@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
-public class Cart {
+public class CartItem {
 
     private Long id;
     private Long productId;
@@ -9,15 +9,15 @@ public class Cart {
     private String imageUrl;
     private int quantity;
 
-    public Cart() {
+    public CartItem() {
     }
 
-    public Cart(final Long id, final Product product) {
+    public CartItem(final Long id, final Product product) {
         this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), 0);
     }
 
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl,
-                final int quantity) {
+    public CartItem(final Long id, final Long productId, final String name, final int price, final String imageUrl,
+                    final int quantity) {
         this.id = id;
         this.productId = productId;
         this.name = name;
@@ -26,8 +26,8 @@ public class Cart {
         this.quantity = quantity;
     }
 
-    public Cart applyQuantity(final int quantityValue) {
-        return new Cart(this.id, this.productId, this.name, this.price, this.imageUrl, quantityValue);
+    public CartItem applyQuantity(final int quantityValue) {
+        return new CartItem(this.id, this.productId, this.name, this.price, this.imageUrl, quantityValue);
     }
 
     public Long getId() {

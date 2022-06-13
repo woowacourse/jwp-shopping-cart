@@ -12,14 +12,14 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:addCustomers.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemDaoTest {
+public class CartItemItemDaoTest {
 
     private static Product BANANA;
     private static Product APPLE;
@@ -28,7 +28,7 @@ public class CartItemDaoTest {
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public CartItemItemDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
@@ -118,19 +118,19 @@ public class CartItemDaoTest {
     @Test
     @DisplayName("고객 ID와 제품 ID를 받아 장바구니를 찾는다.")
     void findByCustomerIdAndProductId() {
-        Cart cart = cartItemDao.findByCustomerIdAndProductId(1L, 1L);
+        CartItem cartItem = cartItemDao.findByCustomerIdAndProductId(1L, 1L);
 
-        assertThat(cart).isNotNull();
+        assertThat(cartItem).isNotNull();
     }
 
     @Test
     @DisplayName("Cart 객체를 받아 데이터를 수정한다.")
     void update() {
         // given
-        final Cart bananaCart = new Cart(1L, 1L, "banana", 1000, "woowa1.com", 2);
+        final CartItem bananaCartItem = new CartItem(1L, 1L, "banana", 1000, "woowa1.com", 2);
 
         // when
-        final int updatedRows = cartItemDao.update(bananaCart);
+        final int updatedRows = cartItemDao.update(bananaCartItem);
 
         // then
         assertThat(updatedRows).isEqualTo(2);

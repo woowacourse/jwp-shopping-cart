@@ -21,7 +21,7 @@ import woowacourse.shoppingcart.exception.notfound.NotFoundException;
 
 @SpringBootTest
 @Sql("classpath:resetTables.sql")
-class CartItemControllerTest {
+class CartItemItemControllerTest {
 
     @Autowired
     CartItemController cartItemController;

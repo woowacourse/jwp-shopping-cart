@@ -13,11 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 
 @ExtendWith(MockitoExtension.class)
-class CartServiceTest {
+class CartItemServiceTest {
 
     @InjectMocks
     CartService cartService;
@@ -36,7 +36,7 @@ class CartServiceTest {
                 .thenReturn(1L);
 
         // when
-        Long addedItemId = cartService.addCart(1L, 1L);
+        Long addedItemId = cartService.addToCart(1L, 1L);
 
         // then
         assertThat(addedItemId).isOne();
@@ -58,20 +58,20 @@ class CartServiceTest {
                 .thenReturn(new Product(2L, "빵", 1000, "www.naver.com"));
 
         // when
-        final List<Cart> carts = cartService.findCartsByCustomerName(1L);
+        final List<CartItem> cartItems = cartService.findCartItemsByCustomerId(1L);
 
         // then
-        assertThat(carts).hasSize(2);
+        assertThat(cartItems).hasSize(2);
     }
 
     @Test
     @DisplayName("장바구니 수량을 수정하는 기능")
     void updateCartItem() {
         // given
-        final Cart rice = new Cart(1L, 1L, "밥", 1000, "www.naver.com", 1);
+        final CartItem rice = new CartItem(1L, 1L, "밥", 1000, "www.naver.com", 1);
         when(cartItemDao.findByCustomerIdAndProductId(1L, 1L))
                 .thenReturn(rice);
-        when(cartItemDao.update(any(Cart.class)))
+        when(cartItemDao.update(any(CartItem.class)))
                 .thenReturn(2);
 
         // when, then

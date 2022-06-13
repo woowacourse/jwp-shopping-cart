@@ -16,12 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.acceptance.AuthAcceptanceFixture;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
 
 @DisplayName("장바구니 관련 기능")
-public class CartAcceptanceTest extends AcceptanceTest {
+public class CartItemAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
 
     private String token;
@@ -38,7 +38,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestBody)
-                .when().post("/api/customer/carts")
+                .when().post("/api/customer/cartItems")
                 .then().log().all()
                 .extract();
     }
@@ -48,7 +48,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customer/carts")
+                .when().get("/api/customer/cartItems")
                 .then().log().all()
                 .extract();
     }
@@ -59,7 +59,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(data)
-                .when().delete("/api/customer/carts")
+                .when().delete("/api/customer/cartItems")
                 .then().log().all()
                 .extract();
     }
@@ -70,7 +70,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(data)
-                .when().put("/api/customer/carts")
+                .when().put("/api/customer/cartItems")
                 .then().log().all()
                 .extract();
     }
@@ -82,7 +82,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static Long 토큰으로_장바구니_아이템_추가되어_있음(String accessToken, Long productId) {
         ExtractableResponse<Response> response = 토큰으로_장바구니_아이템_추가_요청(accessToken, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
+        return Long.parseLong(response.header("Location").split("/cartItems/")[1]);
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
@@ -90,8 +90,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
+        List<Long> resultProductIds = response.jsonPath().getList(".", CartItem.class).stream()
+                .map(CartItem::getProductId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productIds);
     }

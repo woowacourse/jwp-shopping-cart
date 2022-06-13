@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -73,16 +73,16 @@ public class CartItemDao {
         return namedParameterJdbcTemplate.update(sql, parameters);
     }
 
-    public Cart findByCustomerIdAndProductId(final Long customerId, final Long productId) {
+    public CartItem findByCustomerIdAndProductId(final Long customerId, final Long productId) {
         final String sql =
                 "SELECT c.id as id, c.quantity as quantity, p.id as product_id, p.name as name, p.price as price, p.image_url as image_url"
                         + " FROM cart_item c INNER JOIN product p ON c.product_id = p.id WHERE c.customer_id = ? and c.product_id = ?";
         return jdbcTemplate.queryForObject(sql, getRowMapper(), customerId, productId);
     }
 
-    private RowMapper<Cart> getRowMapper() {
+    private RowMapper<CartItem> getRowMapper() {
         return (res, row) ->
-                new Cart(
+                new CartItem(
                         res.getLong("id"),
                         res.getLong("product_id"),
                         res.getString("name"),
@@ -92,12 +92,12 @@ public class CartItemDao {
                 );
     }
 
-    public int update(final Cart cart) {
+    public int update(final CartItem cartItem) {
         final String cartItemSql = "UPDATE cart_item SET quantity = ? where id = ?";
         final String productSql = "UPDATE product SET name = ?, price = ?, image_url = ? where id = ?";
-        final int cartItemAffectedRows = jdbcTemplate.update(cartItemSql, cart.getQuantity(), cart.getId());
+        final int cartItemAffectedRows = jdbcTemplate.update(cartItemSql, cartItem.getQuantity(), cartItem.getId());
         final int productAffectedRows = jdbcTemplate.update(productSql,
-                cart.getName(), cart.getPrice(), cart.getImageUrl(), cart.getProductId());
+                cartItem.getName(), cartItem.getPrice(), cartItem.getImageUrl(), cartItem.getProductId());
         return cartItemAffectedRows + productAffectedRows;
     }
 }
