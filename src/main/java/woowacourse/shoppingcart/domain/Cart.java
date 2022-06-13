@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
+import woowacourse.shoppingcart.exception.QuantityNotMatchException;
 
 public class Cart {
 
@@ -12,6 +13,12 @@ public class Cart {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
+    }
+
+    public void checkQuantity(final int quantity) {
+        if (!this.quantity.equals(new Quantity(quantity))) {
+            throw new QuantityNotMatchException();
+        }
     }
 
     public Long getId() {

@@ -19,6 +19,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Quantity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -45,7 +46,7 @@ public class CartItemDaoTest {
         jdbcTemplate.update("INSERT INTO cart_item(quantity, customer_id, product_id) VALUES(?, ?, ?)", 10, 1L, 2L);
     }
 
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다.")
     @Test
     void addCartItem() {
         // given
@@ -102,6 +103,19 @@ public class CartItemDaoTest {
         );
     }
 
+    @DisplayName("id를 통해서 카트를 가져온다.")
+    @Test
+    void findById() {
+        // given
+        final Long cartId = 1L;
+        final Cart expectedCart = new Cart(1L, new Quantity(5), PRODUCT_BANANA);
+        // when
+        final Cart cart = cartItemDao.findJoinProductById(cartId).get();
+
+        // then
+        assertThat(cart).isEqualTo(expectedCart);
+    }
+
     @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
@@ -147,7 +161,7 @@ public class CartItemDaoTest {
         assertThat(cart.getQuantity()).isEqualTo(1);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("장바구니 id를 통해서 해당 장바구니를 삭제한다.")
     @Test
     void deleteCartItem() {
         // given
@@ -161,5 +175,21 @@ public class CartItemDaoTest {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);
+    }
+
+    @DisplayName("여러개의 장바구니 id를 통해서 해당 장바구니들을 삭제한다.")
+    @Test
+    void batchDeleteCartItem() {
+        // given
+        final List<Long> cartIds = List.of(1L, 2L);
+
+        // when
+        cartItemDao.batchDeleteCartItem(cartIds);
+
+        // then
+        final Long customerId = 1L;
+        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+
+        assertThat(productIds).isEmpty();
     }
 }

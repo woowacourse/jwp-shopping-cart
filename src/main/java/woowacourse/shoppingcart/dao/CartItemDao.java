@@ -1,8 +1,12 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.Optional;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -56,13 +60,13 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public Long findProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
+    public Optional<Cart> findJoinProductById(final Long cartId) {
+        final String sql =
+                "SELECT ci.id, ci.quantity, ci.product_id, p.name, p.price, p.image_url FROM cart_item AS ci "
+                        + "INNER JOIN product AS p ON p.id = ci.product_id "
+                        + "WHERE ci.id = ?";
+        final List<Cart> carts = jdbcTemplate.query(sql, rowMapper(), cartId);
+        return Optional.ofNullable(DataAccessUtils.singleResult(carts));
     }
 
     public Long addCartItem(final Long customerId, final Long productId) {
@@ -92,6 +96,25 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public void batchDeleteCartItem(final List<Long> cartIds) {
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
+        final int[] batchUpdateResult = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                final Long cartId = cartIds.get(i);
+                ps.setLong(1, cartId);
+            }
+
+            @Override
+            public int getBatchSize() {
+                return cartIds.size();
+            }
+        });
+        if (Arrays.stream(batchUpdateResult).sum() != cartIds.size()) {
             throw new InvalidCartItemException();
         }
     }

@@ -30,10 +30,9 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final LoginCustomer loginCustomer,
-                                         @RequestBody @Valid final List<OrderRequest> orderDetails) {
-        final Long orderId = orderService.addOrder(orderDetails, loginCustomer.getId());
-        return ResponseEntity.created(
-                URI.create("/api/customers/me/orders/" + orderId)).build();
+                                         @RequestBody @Valid final List<OrderRequest> orderRequests) {
+        final Long orderId = orderService.addOrder(orderRequests, loginCustomer.getId());
+        return ResponseEntity.created(URI.create("/api/customers/me/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")

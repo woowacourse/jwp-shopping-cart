@@ -8,11 +8,13 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
 import woowacourse.shoppingcart.dto.response.OrdersResponse;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
@@ -33,20 +35,27 @@ public class OrderService {
         this.customerDao = customerDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final Long customerId) {
+    public Long addOrder(final List<OrderRequest> orderRequests, final Long customerId) {
         final Customer customer = getCustomer(customerId);
         final Long ordersId = orderDao.addOrders(customer.getId());
 
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
+        final List<Cart> carts = orderRequests.stream()
+                .map(this::toCartByOrderRequest)
+                .collect(Collectors.toList());
+        ordersDetailDao.batchAddOrdersDetail(ordersId, carts);
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
-        }
-
+        final List<Long> cartIds = carts.stream()
+                .map(Cart::getId)
+                .collect(Collectors.toList());
+        cartItemDao.batchDeleteCartItem(cartIds);
         return ordersId;
+    }
+
+    private Cart toCartByOrderRequest(final OrderRequest orderRequest) {
+        final Cart cart = cartItemDao.findJoinProductById(orderRequest.getCartId())
+                .orElseThrow(InvalidCartItemException::new);
+        cart.checkQuantity(orderRequest.getQuantity());
+        return cart;
     }
 
     @Transactional(readOnly = true)
