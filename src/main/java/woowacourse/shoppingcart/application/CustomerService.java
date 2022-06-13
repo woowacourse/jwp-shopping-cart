@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 
 @Service
+@Transactional
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -24,7 +25,6 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    @Transactional
     public Long create(CustomerRequest customerRequest) {
         if (customerDao.findByEmail(customerRequest.getEmail()).isPresent()) {
             throw new EmailDuplicateException();
@@ -47,7 +47,6 @@ public class CustomerService {
         return new CustomerResponse(customer.getName(), customer.getEmail());
     }
 
-    @Transactional
     public Long updateProfile(Long id, CustomerUpdateProfileRequest customerUpdateProfileRequest) {
         final Customer customer = customerDao.findById(id)
                 .orElseThrow(CustomerNotFoundException::new);
@@ -57,7 +56,6 @@ public class CustomerService {
         return id;
     }
 
-    @Transactional
     public Long updatePassword(Long id, CustomerUpdatePasswordRequest customerUpdatePasswordRequest) {
         final Customer customer = customerDao.findById(id)
                 .orElseThrow(CustomerNotFoundException::new);
@@ -69,7 +67,6 @@ public class CustomerService {
         return id;
     }
 
-    @Transactional
     public Long delete(long id, CustomerDeleteRequest customerDeleteRequest) {
         final Customer customer = customerDao.findById(id).orElseThrow(CustomerNotFoundException::new);
         validatePasswordIsCorrect(customer, customerDeleteRequest.getPassword());

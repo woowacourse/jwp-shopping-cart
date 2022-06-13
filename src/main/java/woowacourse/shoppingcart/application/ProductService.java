@@ -13,7 +13,7 @@ import woowacourse.shoppingcart.dto.response.ProductsResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class ProductService {
     private final ProductDao productDao;
 
@@ -21,6 +21,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public ProductsResponse findProducts(final Integer begin, final Integer size) {
         final Page page = Page.of(begin, size);
         final List<ProductResponse> products = productDao.findProductsByPage(page)
@@ -43,6 +44,7 @@ public class ProductService {
         return productDao.save(product);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         final Product product = productDao.findProductById(productId)
                 .orElseThrow(InvalidProductException::new);

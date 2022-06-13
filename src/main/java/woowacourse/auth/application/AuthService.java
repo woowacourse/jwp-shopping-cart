@@ -10,6 +10,7 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 
 @Service
+@Transactional
 public class AuthService {
     private final CustomerDao customerDao;
     private final JwtTokenProvider jwtTokenProvider;

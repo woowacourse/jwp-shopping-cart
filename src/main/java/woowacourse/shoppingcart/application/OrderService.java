@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -34,7 +34,6 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    @Transactional
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final Long customerId) {
         final Long ordersId = orderDao.addOrders(customerId);
 
@@ -50,7 +49,7 @@ public class OrderService {
         return ordersId;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<OrdersResponse> findOrdersByCustomerId(final Long customerId) {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
@@ -59,7 +58,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public OrdersResponse findOrderById(final Long customerId, final Long orderId) {
         validateOrderIdByCustomerName(customerId, orderId);
         return findOrderResponseDtoByOrderId(orderId);
