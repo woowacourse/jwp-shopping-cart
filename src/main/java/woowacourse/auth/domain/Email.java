@@ -1,5 +1,6 @@
 package woowacourse.auth.domain;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.EqualsAndHashCode;
@@ -11,7 +12,9 @@ import woowacourse.exception.InvalidCustomerException;
 @Getter
 public class Email {
 
-	private static final String REGEX = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+	private static final Pattern EMAIL_PATTERN = Pattern.compile(
+		"^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"
+	);
 
 	private final String value;
 
@@ -21,7 +24,8 @@ public class Email {
 	}
 
 	private void validate(String value) {
-		if (!Pattern.matches(REGEX, value)) {
+		Matcher matcher = EMAIL_PATTERN.matcher(value);
+		if (!matcher.matches()) {
 			throw new InvalidCustomerException(ErrorCode.EMAIL_FORMAT, "이메일 형식에 맞지 않습니다.");
 		}
 	}
