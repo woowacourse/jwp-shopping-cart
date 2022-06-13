@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -29,6 +30,7 @@ import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
 import woowacourse.shoppingcart.dto.response.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.response.OrdersResponse;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -113,6 +115,28 @@ class OrderServiceTest {
                 () -> verify(customerDao).findById(customerId),
                 () -> verify(orderDao).isValidOrderId(customerId, ordersId),
                 () -> verify(ordersDetailDao).findOrdersDetailsJoinProductByOrderId(ordersId)
+        );
+    }
+
+    @DisplayName("해당 유저가 주문하지 않은 주문 id로 주문한 항목을 조회하면 예외가 발생한다.")
+    @Test
+    void findOrderByIdWithWrongId() {
+        // given
+        Long customerId = 1L;
+        Long ordersId = 1L;
+        Customer customer = new Customer(customerId, new UserName("giron"), encryptedBasicPassword);
+        given(customerDao.findById(customerId))
+                .willReturn(Optional.of(customer));
+        given(orderDao.isValidOrderId(customerId, ordersId))
+                .willReturn(false);
+
+        // when // then
+        assertAll(
+                () -> assertThatThrownBy(() -> orderService.findOrderById(customerId, ordersId))
+                        .isExactlyInstanceOf(InvalidOrderException.class)
+                        .hasMessageContaining("해당 유저가 주문하지 않은 항목입니다."),
+                () -> verify(customerDao).findById(customerId),
+                () -> verify(orderDao).isValidOrderId(customerId, ordersId)
         );
     }
 

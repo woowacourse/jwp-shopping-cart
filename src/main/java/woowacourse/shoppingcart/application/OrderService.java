@@ -68,7 +68,7 @@ public class OrderService {
     private void validateOrderIdByCustomerName(final Long customerId, final Long orderId) {
         final Customer customer = getCustomer(customerId);
         if (!orderDao.isValidOrderId(customer.getId(), orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+            throw new InvalidOrderException("해당 유저가 주문하지 않은 항목입니다.");
         }
     }
 
