@@ -58,7 +58,7 @@ public class CartService {
     private void validateCustomerCart(String nickname, Long productId) {
         final List<CartItem> cartItems = findCartIdsByCustomerName(nickname);
         boolean haveNotProductId = cartItems.stream()
-          .noneMatch(i -> i.matchId(productId));
+          .noneMatch(i -> i.matchProductId(productId));
         if (haveNotProductId) {
             throw new NotInCustomerCartItemException();
         }

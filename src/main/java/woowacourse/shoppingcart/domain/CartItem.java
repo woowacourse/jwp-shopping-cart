@@ -2,14 +2,14 @@ package woowacourse.shoppingcart.domain;
 
 public class CartItem {
     private Long id;
-    private Long customerId;
-    private Long productId;
+    private Customer customer;
+    private Product product;
     private int quantity;
 
-    public CartItem(Long id, Long customerId, Long productId, int quantity) {
+    public CartItem(Long id, Customer customer, Product product, int quantity) {
         this.id = id;
-        this.customerId = customerId;
-        this.productId = productId;
+        this.customer = customer;
+        this.product = product;
         this.quantity = quantity;
     }
 
@@ -17,19 +17,23 @@ public class CartItem {
         return id;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public Product getProduct() {
+        return product;
     }
 
     public Long getProductId() {
-        return productId;
+        return product.getId();
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public boolean matchId(Long id) {
-        return this.productId.equals(id);
+    public boolean matchProductId(Long id) {
+        return this.product.matchId(id);
     }
 }

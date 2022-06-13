@@ -9,6 +9,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
@@ -17,8 +19,26 @@ import java.util.List;
 @Repository
 public class CartItemDao {
 
+    private static final RowMapper<CartItem> CART_ITEM_ROW_MAPPER = (rs, rowNum) -> new CartItem(
+      rs.getLong("id"),
+      new Customer(
+        rs.getLong("customer_id"),
+        rs.getString("email"),
+        rs.getString("nickname"),
+        rs.getString("password")
+      ),
+      new Product(
+        rs.getLong("product_id"),
+        rs.getString("name"),
+        rs.getInt("price"),
+        rs.getString("image_url")
+      ),
+      rs.getInt("quantity")
+    );
+
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
 
     public CartItemDao(JdbcTemplate jdbcTemplate,
       NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -33,23 +53,17 @@ public class CartItemDao {
     }
 
     public List<CartItem> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT * FROM cart_item WHERE customer_id = ?";
-
+        final String sql = "SELECT * FROM cart_item ci "
+          + "JOIN product p ON ci.id = p.id "
+          + "JOIN customer c ON ci.id = c.id "
+          + "WHERE ci.customer_id = ?";
         return jdbcTemplate.query(sql, CART_ITEM_ROW_MAPPER, customerId);
     }
-
-    private static final RowMapper<CartItem> CART_ITEM_ROW_MAPPER = (rs, rowNum) -> new CartItem(
-      rs.getLong("id"),
-      rs.getLong("customer_id"),
-      rs.getLong("product_id"),
-      rs.getInt("quantity")
-    );
 
     public Long findProductIdById(final Long cartId) {
         try {
             final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"),
-              cartId);
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
