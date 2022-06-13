@@ -32,8 +32,8 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Long productId = productInsertUtil.insert("초콜렛", 1_000, "www.test.com");
+        final String imageUrl = "https://test.jpg";
+        final Long productId = productInsertUtil.insert(name, price, imageUrl);
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
@@ -48,8 +48,8 @@ public class ProductDaoTest {
     void getProducts() {
         // given
         int originSize = productDao.findAll().size();
-        productInsertUtil.insert("초콜렛", 1_000, "www.test1.com");
-        productInsertUtil.insert("치킨", 20_000, "www.test2.com");
+        productInsertUtil.insert("초콜렛", 1_000, "https://example.com/choco.jpg");
+        productInsertUtil.insert("치킨", 20_000, "https://example.com/chicken.jpg");
 
         // when
         final List<Product> products = productDao.findAll();

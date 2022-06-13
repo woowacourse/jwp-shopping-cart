@@ -39,8 +39,8 @@ public class OrderAcceptanceTest {
         token = RestUtils.login(email, password)
             .jsonPath().getString("accessToken");
 
-        productId1 = productInsertUtil.insert("치킨", 20000, "test.jpg");
-        productId2 = productInsertUtil.insert("콜라", 1500, "test.jpg");
+        productId1 = productInsertUtil.insert("치킨", 20000, "https://test.jpg");
+        productId2 = productInsertUtil.insert("콜라", 1500, "https://test.jpg");
 
         RestUtils.addCartItem(token, productId1, 2);
         RestUtils.addCartItem(token, productId2, 3);

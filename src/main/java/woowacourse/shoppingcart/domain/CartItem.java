@@ -2,48 +2,55 @@ package woowacourse.shoppingcart.domain;
 
 import static lombok.EqualsAndHashCode.*;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import woowacourse.exception.ErrorCode;
-import woowacourse.exception.InvalidCartItemException;
 
-@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
-@Builder
 public class CartItem {
 
     @Include
-    private Long id;
-    private final Long productId;
-    private final String name;
-    private final int price;
-    private final String imageUrl;
-    private final int quantity;
+    private final Long id;
+    private final Product product;
+    private final Quantity quantity;
 
     public CartItem(Product product, int quantity) {
-        this(null, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
-        validateQuantity(quantity);
+        this(null, product, quantity);
     }
 
+    @Builder
     public CartItem(Long id, Product product, int quantity) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
-        validateQuantity(quantity);
-    }
-
-    private void validateQuantity(int quantity) {
-        if (quantity <= 0) {
-            throw new InvalidCartItemException(ErrorCode.QUANTITY_FORMAT, "수량 형식이 맞지 않습니다.");
-        }
+        this.id = id;
+        this.product = product;
+        this.quantity = new Quantity(quantity);
     }
 
     public CartItem createWithId(Long id) {
-        return new CartItem(id, productId, name, price, imageUrl, quantity);
+        return new CartItem(id, product, quantity.getValue());
     }
 
     public boolean isSameProductId(Long productId) {
-        return this.productId.equals(productId);
+        return this.product.isSameId(productId);
+    }
+
+    public Long getProductId() {
+        return this.product.getId();
+    }
+
+    public String getName() {
+        return product.getName();
+    }
+
+    public String getImageUrl() {
+        return product.getImageUrl();
+    }
+
+    public int getPrice() {
+        return product.getPrice();
+    }
+
+    public int getQuantity() {
+        return quantity.getValue();
     }
 }

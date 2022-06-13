@@ -7,25 +7,40 @@ import lombok.Getter;
 @Getter
 public class OrderDetail {
 
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
-    private int quantity;
+    private Product product;
+    private Quantity quantity;
 
     public OrderDetail(CartItem cartItem) {
-        this(cartItem.getProductId(),
-            cartItem.getName(),
-            cartItem.getPrice(),
-            cartItem.getImageUrl(),
-            cartItem.getQuantity());
+        this(cartItem.getProduct(), cartItem.getQuantity());
     }
 
     public OrderDetail(Product product, int quantity) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
+        this.product = product;
+        this.quantity = new Quantity(quantity);
     }
 
+
     public int calculatePrice() {
-        return price * quantity;
+        return product.multiplyPrice(quantity.getValue());
+    }
+
+    public Long getProductId() {
+        return product.getId();
+    }
+
+    public String getName() {
+        return product.getName();
+    }
+
+    public String getImageUrl() {
+        return product.getImageUrl();
+    }
+
+    public int getPrice() {
+        return product.getPrice();
+    }
+
+    public int getQuantity() {
+        return quantity.getValue();
     }
 }

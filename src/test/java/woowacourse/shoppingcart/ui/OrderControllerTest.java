@@ -43,9 +43,9 @@ public class OrderControllerTest extends ControllerTest {
 
     @BeforeEach
     void init() {
-        productId1 = productInsertUtil.insert("치킨", 20000, "test.jpg");
-        productId2 = productInsertUtil.insert("콜라", 1500, "test.jpg");
-        productId3 = productInsertUtil.insert("피자", 15000, "test.jpg");
+        productId1 = productInsertUtil.insert("치킨", 20000, "https://test.jpg");
+        productId2 = productInsertUtil.insert("콜라", 1500, "https://test.jpg");
+        productId3 = productInsertUtil.insert("피자", 15000, "https://test.jpg");
 
         customerId = customerService.signUp(new CustomerRequest(email, password, nickname))
             .getId();

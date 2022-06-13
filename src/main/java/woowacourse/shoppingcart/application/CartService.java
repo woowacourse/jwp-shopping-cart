@@ -47,10 +47,7 @@ public class CartService {
     private CartItem updateItem(CartItem cartItem, int quantity) {
         CartItem updatedItem = CartItem.builder()
             .id(cartItem.getId())
-            .productId(cartItem.getProductId())
-            .name(cartItem.getName())
-            .price(cartItem.getPrice())
-            .imageUrl(cartItem.getImageUrl())
+            .product(cartItem.getProduct())
             .quantity(quantity)
             .build();
         cartItemDao.update(updatedItem);

@@ -43,9 +43,9 @@ class OrderDaoTest {
 
     @BeforeEach
     void setUp() {
-        Product product1 = productInsertUtil.insertAndReturn("치킨", 20000, "test.jgp");
-        Product product2 = productInsertUtil.insertAndReturn("콜라", 1500, "test.jgp");
-        Product product3 = productInsertUtil.insertAndReturn("피자", 1500, "test.jgp");
+        Product product1 = productInsertUtil.insertAndReturn("치킨", 20000, "https://test.jpg");
+        Product product2 = productInsertUtil.insertAndReturn("콜라", 1500, "https://test.jpg");
+        Product product3 = productInsertUtil.insertAndReturn("피자", 1500, "https://test.jpg");
         customerId = customerDao.save(Customer.builder()
             .email("abc@gmail.com")
             .password("a1234!")

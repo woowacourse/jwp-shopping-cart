@@ -6,7 +6,6 @@ import static org.mockito.BDDMockito.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DisplayName;
@@ -43,7 +42,7 @@ class CartServiceTest {
 		long cartItemId = 1L;
 		int quantity = 2;
 
-		Product product = new Product(productId, "치킨", 20000, "test.jpg");
+		Product product = new Product(productId, "치킨", 20000, "https://test.jpg");
 		given(productDao.findById(productId))
 			.willReturn(product);
 		given(cartItemDao.save(eq(customerId), any(CartItem.class)))
@@ -72,7 +71,7 @@ class CartServiceTest {
 		long cartItemId = 1L;
 		int quantity = 2;
 
-		Product product = new Product(productId, "치킨", 20000, "test.jpg");
+		Product product = new Product(productId, "치킨", 20000, "https://test.jpg");
 		CartItem existItem = new CartItem(cartItemId, product, 3);
 		given((cartItemDao.findByCustomerId(customerId)))
 			.willReturn(List.of(existItem));
@@ -112,9 +111,9 @@ class CartServiceTest {
 		List<Long> ids = convertToLong(input);
 		long customerId = 1L;
 
-		Product product1 = new Product(1L, "치킨", 20000, "test");
-		Product product2 = new Product(2L, "콜라", 1500, "test");
-		Product product3 = new Product(3L, "피자", 15000, "test");
+		Product product1 = new Product(1L, "치킨", 20000, "https://test.com");
+		Product product2 = new Product(2L, "콜라", 1500, "https://test.com");
+		Product product3 = new Product(3L, "피자", 15000, "https://test.com");
 		// given
 		given(cartItemDao.findByCustomerId(customerId))
 			.willReturn(List.of(
@@ -141,8 +140,8 @@ class CartServiceTest {
 
 		long customerId = 1L;
 
-		Product product1 = new Product(1L, "치킨", 20000, "test");
-		Product product2 = new Product(2L, "콜라", 1500, "test");
+		Product product1 = new Product(1L, "치킨", 20000, "https://test.com");
+		Product product2 = new Product(2L, "콜라", 1500, "https://test.com");
 		// given
 		given(cartItemDao.findByCustomerId(customerId))
 			.willReturn(List.of(
@@ -168,8 +167,8 @@ class CartServiceTest {
 
 		long customerId = 1L;
 
-		Product product1 = new Product(1L, "치킨", 20000, "test");
-		Product product2 = new Product(2L, "콜라", 1500, "test");
+		Product product1 = new Product(1L, "치킨", 20000, "https://test.com");
+		Product product2 = new Product(2L, "콜라", 1500, "https://test.com");
 		// given
 		given(cartItemDao.findByCustomerId(customerId))
 			.willReturn(List.of(

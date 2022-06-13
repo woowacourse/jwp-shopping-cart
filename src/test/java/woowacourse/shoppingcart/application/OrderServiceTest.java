@@ -19,6 +19,7 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.Product;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -38,9 +39,9 @@ class OrderServiceTest {
 	void order() {
 		// given
 		List<CartItem> cartItems = List.of(
-			new CartItem(1L, 1L, "치킨", 20000, "test.jpg", 2),
-			new CartItem(2L, 2L, "콜라", 1500, "test.jpg", 2),
-			new CartItem(3L, 3L, "피자", 15000, "test.jpg", 2)
+			new CartItem(1L, new Product(1L, "치킨", 20000, "https://test.jpg"), 2),
+			new CartItem(2L, new Product(2L, "콜라", 1500, "https://test.jpg"), 2),
+			new CartItem(3L, new Product(3L, "피자", 15000, "https://test.jpg"), 2)
 		);
 		given(cartService.findItemsByProductIdsInCart(customerId, productIds))
 			.willReturn(cartItems);
@@ -64,9 +65,9 @@ class OrderServiceTest {
 	void findOrder() {
 		// given
 		List<OrderDetail> orderDetails = List.of(
-			new OrderDetail(1L, "치킨", 20000, "test.jpg", 2),
-			new OrderDetail(2L, "콜라", 1500, "test.jpg", 2),
-			new OrderDetail(3L, "피자", 15000, "test.jpg", 2)
+			new OrderDetail(new Product(1L, "치킨", 20000, "https://test.jpg"), 2),
+			new OrderDetail(new Product(2L, "콜라", 1500, "https://test.jpg"), 2),
+			new OrderDetail(new Product(3L, "피자", 15000, "https://test.jpg"), 2)
 		);
 		long customerId = 1L;
 		long orderId = 1L;
@@ -85,9 +86,9 @@ class OrderServiceTest {
 	void findOrderException() {
 		// given
 		List<OrderDetail> orderDetails = List.of(
-			new OrderDetail(1L, "치킨", 20000, "test.jpg", 2),
-			new OrderDetail(2L, "콜라", 1500, "test.jpg", 2),
-			new OrderDetail(3L, "피자", 15000, "test.jpg", 2)
+			new OrderDetail(new Product(1L, "치킨", 20000, "https://test.jpg"), 2),
+			new OrderDetail(new Product(2L, "콜라", 1500, "https://test.jpg"), 2),
+			new OrderDetail(new Product(3L, "피자", 15000, "https://test.jpg"), 2)
 		);
 		long customerId = 1L;
 		long orderId = 1L;

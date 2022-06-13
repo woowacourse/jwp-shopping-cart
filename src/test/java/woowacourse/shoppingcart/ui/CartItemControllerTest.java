@@ -44,7 +44,7 @@ class CartItemControllerTest extends ControllerTest {
 		customerId = customerService.signUp(new CustomerRequest(email, password, "does"))
 			.getId();
 
-		productId = productInsertUtil.insert("치킨", 20000, "test.jpg");
+		productId = productInsertUtil.insert("치킨", 20000, "https://test.jpg");
 		token = authService.login(new TokenRequest(email, password))
 			.getAccessToken();
 	}
@@ -63,7 +63,7 @@ class CartItemControllerTest extends ControllerTest {
 
 		// then
 		CartItemResponse response = new CartItemResponse(
-			productId, "치킨", "test.jpg", 20000, 13);
+			productId, "치킨", "https://test.jpg", 20000, 13);
 		result.andExpect(status().isCreated())
 			.andExpect(content().json(objectMapper.writeValueAsString(response)));
 	}
@@ -84,7 +84,7 @@ class CartItemControllerTest extends ControllerTest {
 
 		// then
 		CartItemResponse response = new CartItemResponse(
-			productId, "치킨", "test.jpg", 20000, updatedQuantity);
+			productId, "치킨", "https://test.jpg", 20000, updatedQuantity);
 		result.andExpect(status().isOk())
 			.andExpect(content().json(objectMapper.writeValueAsString(response)));
 	}
@@ -94,7 +94,7 @@ class CartItemControllerTest extends ControllerTest {
 	void getItems() throws Exception {
 		// given
 		cartService.setItem(customerId, productId, 2);
-		Long productId2 = productInsertUtil.insert("콜라", 1500, "test.jpg");
+		Long productId2 = productInsertUtil.insert("콜라", 1500, "https://test.jpg");
 		cartService.setItem(customerId, productId2, 3);
 
 		// when
@@ -103,9 +103,9 @@ class CartItemControllerTest extends ControllerTest {
 
 		// then
 		CartItemResponse response1 = new CartItemResponse(
-			productId, "치킨", "test.jpg", 20000, 2);
+			productId, "치킨", "https://test.jpg", 20000, 2);
 		CartItemResponse response2 = new CartItemResponse(
-			productId2, "콜라", "test.jpg", 1500, 3);
+			productId2, "콜라", "https://test.jpg", 1500, 3);
 		result.andExpect(status().isOk())
 			.andExpect(content().json(
 				objectMapper.writeValueAsString(List.of(response1, response2))));
@@ -116,7 +116,7 @@ class CartItemControllerTest extends ControllerTest {
 	void deleteItems() throws Exception {
 		// given
 		cartService.setItem(customerId, productId, 2);
-		Long productId2 = productInsertUtil.insert("콜라", 1500, "test.jpg");
+		Long productId2 = productInsertUtil.insert("콜라", 1500, "https://test.jpg");
 		cartService.setItem(customerId, productId2, 3);
 
 		// when
@@ -138,7 +138,7 @@ class CartItemControllerTest extends ControllerTest {
 	void deleteItemsFail() throws Exception {
 		// given
 		cartService.setItem(customerId, productId, 2);
-		Long productId2 = productInsertUtil.insert("콜라", 1500, "test.jpg");
+		Long productId2 = productInsertUtil.insert("콜라", 1500, "https://test.jpg");
 		cartService.setItem(customerId, productId2, 3);
 
 		// when

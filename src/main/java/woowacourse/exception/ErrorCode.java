@@ -22,7 +22,9 @@ public enum ErrorCode {
 	NOT_EXIST_URI(1001),
 	TOKEN_EXPIRED(1002),
 	TOKEN_INVALID(1003),
-	AUTH(1004);
+	AUTH(1004),
+
+	ARGUMENT(6000);
 
 	private final int code;
 

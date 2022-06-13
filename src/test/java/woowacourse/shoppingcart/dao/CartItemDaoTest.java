@@ -43,8 +43,8 @@ public class CartItemDaoTest {
             .password("1asd!")
             .build())
             .getId();
-        Long productId = productInsertUtil.insert("banana", 1_000, "woowa1.com");
-        product = new Product(productId, "banana", 1_000, "woowa1.com");
+        Long productId = productInsertUtil.insert("banana", 1_000, "https://www.woowa1.com");
+        product = new Product(productId, "banana", 1_000, "https://woowa1.com");
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다.")
@@ -66,8 +66,8 @@ public class CartItemDaoTest {
         // given
         cartItemDao.save(customerId, new CartItem(product, 3));
 
-        Long productId2 = productInsertUtil.insert("apple", 1_000, "woowa1.com");
-        Product product2 = new Product(productId2, "apple", 1000, "woowa1.com");
+        Long productId2 = productInsertUtil.insert("apple", 1000, "https://woowa1.com");
+        Product product2 = new Product(productId2, "apple", 1000, "https://woowa1.com");
         cartItemDao.save(customerId, new CartItem(product2, 2));
 
         // when
@@ -102,8 +102,8 @@ public class CartItemDaoTest {
         Long cartItemId1 = cartItemDao.save(customerId, new CartItem(product, 3))
             .getId();
 
-        Long productId2 = productInsertUtil.insert("apple", 1_000, "woowa1.com");
-        Product product2 = new Product(productId2, "apple", 1000, "woowa1.com");
+        Long productId2 = productInsertUtil.insert("apple", 1000, "https://woowa1.com");
+        Product product2 = new Product(productId2, "apple", 1000, "https://woowa1.com");
         Long cartItemId2 = cartItemDao.save(customerId, new CartItem(product2, 2))
             .getId();
 
