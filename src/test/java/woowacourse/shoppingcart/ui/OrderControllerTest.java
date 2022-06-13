@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
@@ -38,6 +39,9 @@ public class OrderControllerTest {
 
     @MockBean
     private OrderService orderService;
+
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
 
     @DisplayName("CREATED와 Location을 반환한다.")
     @Test
@@ -96,7 +100,7 @@ public class OrderControllerTest {
     @Test
     void findOrders() throws Exception {
         // given
-        final String customerName = "pobi";
+        final String email = "pobi";
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
                         new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
@@ -104,11 +108,12 @@ public class OrderControllerTest {
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
-        when(orderService.findOrdersByCustomerName(customerName))
+        when(jwtTokenProvider.getPayload(any())).thenReturn(any());
+        when(orderService.findOrdersByCustomerEmail(email))
                 .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
+        mockMvc.perform(get("/api/customers/orders/")
         ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))

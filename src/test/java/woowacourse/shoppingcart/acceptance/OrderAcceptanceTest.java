@@ -67,7 +67,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long orderId1 = 주문하기_요청_성공되어_있음(NICKNAME, Collections.singletonList(new OrderRequest(cartId1, 2)));
         Long orderId2 = 주문하기_요청_성공되어_있음(NICKNAME, Collections.singletonList(new OrderRequest(cartId2, 5)));
 
-        ExtractableResponse<Response> response = 주문_내역_조회_요청(NICKNAME);
+        String accessToken = 로그인_요청(new TokenRequest(EMAIL, PASSWORD));
+        ExtractableResponse<Response> response = 주문_내역_조회_요청(accessToken);
 
         주문_조회_응답됨(response);
         주문_내역_포함됨(response, orderId1, orderId2);
@@ -97,11 +98,12 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 주문_내역_조회_요청(String userName) {
+    public static ExtractableResponse<Response> 주문_내역_조회_요청(String accessToken) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders", userName)
+                .when().get("/api/customers/orders")
                 .then().log().all()
                 .extract();
     }
