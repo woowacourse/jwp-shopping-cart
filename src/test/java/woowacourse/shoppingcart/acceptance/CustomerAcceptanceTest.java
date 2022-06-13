@@ -14,10 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -42,7 +42,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @DisplayName("성공한다.")
         void success() {
             ExtractableResponse<Response> response = 회원_가입_요청(request);
-            회원_가입됨(response);
+            응답_CREATED(response);
         }
 
         @Test
@@ -51,7 +51,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             회원_가입_요청(request);
 
             ExtractableResponse<Response> response = 회원_가입_요청(request);
-            회원_가입_실패(response);
+            응답_BAD_REQUEST(response);
         }
     }
 
@@ -61,7 +61,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String accessToken = 회원_가입_후_로그인();
 
         ExtractableResponse<Response> response = 내_정보_조회(accessToken);
-        정보_조회_성공(response, new CustomerResponse(USERNAME, PHONE_NUMBER, ADDRESS));
+        응답_OK_바디_일치(response, new CustomerResponse(USERNAME, PHONE_NUMBER, ADDRESS));
     }
 
     @DisplayName("내 정보 수정")
@@ -71,7 +71,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         CustomerUpdateRequest request = new CustomerUpdateRequest("01087654321", "루터회관");
 
         ExtractableResponse<Response> response = 회원_정보_수정_요청(accessToken, request);
-        회원_정보_수정_성공(response);
+        응답_NO_CONTENT(response);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         CustomerUpdatePasswordRequest request = new CustomerUpdatePasswordRequest("changedPassword123");
 
         ExtractableResponse<Response> response = 회원_비밀번호_수정_요청(accessToken, request);
-        회원_비밀번호_수정_성공(response);
+        응답_NO_CONTENT(response);
     }
 
     @Test
@@ -90,14 +90,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String accessToken = 회원_가입_후_로그인();
 
         ExtractableResponse<Response> response = 회원_탈퇴_요청(accessToken);
-        회원_탈퇴_성공(response);
+        응답_NO_CONTENT(response);
     }
 
     public static ExtractableResponse<Response> 회원_가입_요청(final CustomerSignUpRequest request) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("/api/customers/signup")
+                .when().post("/api/customer/signup")
                 .then().log().all()
                 .extract();
     }
@@ -106,7 +106,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + accessToken)
-                .when().get("/api/customers")
+                .when().get("/api/customer")
                 .then().log().all()
                 .extract();
     }
@@ -117,7 +117,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put("/api/customers")
+                .when().put("/api/customer")
                 .then().log().all()
                 .extract();
     }
@@ -128,7 +128,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().patch("/api/customers/password")
+                .when().patch("/api/customer/password")
                 .then().log().all()
                 .extract();
     }
@@ -136,7 +136,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     public static ExtractableResponse<Response> 회원_탈퇴_요청(final String accessToken) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
-                .when().delete("/api/customers")
+                .when().delete("/api/customer")
                 .then().log().all()
                 .extract();
     }
@@ -150,30 +150,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .getAccessToken();
     }
 
-    private void 회원_가입됨(final ExtractableResponse<Response> response) {
+    private void 응답_CREATED(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
-    private void 회원_가입_실패(final ExtractableResponse<Response> response) {
+    private void 응답_BAD_REQUEST(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    private void 정보_조회_성공(final ExtractableResponse<Response> response, final CustomerResponse expected) {
+    private void 응답_OK_바디_일치(final ExtractableResponse<Response> response, final CustomerResponse expected) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.body().as(CustomerResponse.class))
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
     }
 
-    private void 회원_정보_수정_성공(final ExtractableResponse<Response> response) {
+    private void 응답_NO_CONTENT(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    private void 회원_비밀번호_수정_성공(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    private void 회원_탈퇴_성공(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
 }

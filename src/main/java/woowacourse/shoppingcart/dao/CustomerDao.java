@@ -32,10 +32,19 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Customer findById(final Long id) {
+        try {
+            final String query = "SELECT id, username, password, phone_number, address FROM customer WHERE id = ?";
+            return jdbcTemplate.queryForObject(query, customerRowMapper, id);
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public Long findIdByUserName(final String username) {
         try {
             final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            return jdbcTemplate.queryForObject(query, Long.class, username.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
@@ -70,27 +79,25 @@ public class CustomerDao {
         return jdbcTemplate.queryForObject(query, Boolean.class, username);
     }
 
-    public int update(final Customer customer) {
-        final String query = "UPDATE customer SET phone_number = ?, address = ? WHERE username = ?";
+    public void update(final Customer customer) {
+        final String query = "UPDATE customer SET phone_number = ?, address = ? WHERE id = ?";
         int rowCount = jdbcTemplate.update(query, customer.getPhoneNumber(), customer.getAddress(),
-                customer.getUsername());
+                customer.getId());
         if (rowCount == 0) {
             throw new InvalidCustomerException();
         }
-        return rowCount;
     }
 
-    public int updatePassword(final String username, final EncryptedPassword password) {
-        final String query = "UPDATE customer SET password = ? WHERE username = ?";
-        int rowCount = jdbcTemplate.update(query, password.getPassword(), username);
+    public void updatePasswordById(final Long customerId, final EncryptedPassword password) {
+        final String query = "UPDATE customer SET password = ? WHERE id = ?";
+        int rowCount = jdbcTemplate.update(query, password.getPassword(), customerId);
         if (rowCount == 0) {
             throw new InvalidCustomerException();
         }
-        return rowCount;
     }
 
-    public int deleteByUsername(final String username) {
-        final String query = "DELETE FROM customer WHERE username = ?";
-        return jdbcTemplate.update(query, username);
+    public int deleteById(final Long customerId) {
+        final String query = "DELETE FROM customer WHERE id = ?";
+        return jdbcTemplate.update(query, customerId);
     }
 }

@@ -1,10 +1,10 @@
 package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
-import woowacourse.shoppingcart.domain.customer.values.password.EncryptedPassword;
 import woowacourse.shoppingcart.domain.customer.values.Address;
 import woowacourse.shoppingcart.domain.customer.values.PhoneNumber;
 import woowacourse.shoppingcart.domain.customer.values.Username;
+import woowacourse.shoppingcart.domain.customer.values.password.EncryptedPassword;
 
 public class Customer {
 

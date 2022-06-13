@@ -23,7 +23,8 @@ class OrdersDetailDaoTest {
     private final JdbcTemplate jdbcTemplate;
     private final OrdersDetailDao ordersDetailDao;
     private long ordersId;
-    private long productId;
+    private long productId1;
+    private long productId2;
     private long customerId;
 
     public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
@@ -37,41 +38,48 @@ class OrdersDetailDaoTest {
         jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
         ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 
-        jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
-                , "name", 1000, "imageUrl");
-        productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        jdbcTemplate.update("INSERT INTO product (name, price, stock, image_url) VALUES (?, ?, ?, ?)"
+                , "name", 1000, 10, "imageUrl");
+        productId1 = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        jdbcTemplate.update("INSERT INTO product (name, price, stock, image_url) VALUES (?, ?, ?, ?)"
+                , "name", 1000, 10, "imageUrl");
+        productId2 = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
     }
 
     @DisplayName("OrderDatail을 추가하는 기능")
     @Test
-    void addOrdersDetail() {
-        //given
-        int quantity = 5;
+    void save() {
+        OrderDetail orderDetail = new OrderDetail(5, ordersId, productId1, 1_000, "coffee", "coffee.png");
 
-        //when
-        Long orderDetailId = ordersDetailDao
-                .addOrdersDetail(ordersId, productId, quantity);
+        Long orderDetailId = ordersDetailDao.save(ordersId, orderDetail);
 
-        //then
         assertThat(orderDetailId).isEqualTo(1L);
+    }
+
+    @DisplayName("OrderDetail의 리스트를 저장")
+    @Test
+    void saveAll() {
+        OrderDetail orderDetail1 = new OrderDetail(5, ordersId, productId1, 1_000, "coffee", "coffee.png");
+        OrderDetail orderDetail2 = new OrderDetail(5, ordersId, productId2, 1_000, "tea", "tea.png");
+        ordersDetailDao.saveAll(ordersId, List.of(orderDetail1, orderDetail2));
+
+        assertThat(ordersDetailDao.findAllByCustomerId(customerId).size()).isEqualTo(2);
     }
 
     @DisplayName("OrderId로 OrderDetails 조회하는 기능")
     @Test
-    void findOrdersDetailsByOrderId() {
-        //given
+    void findOrderDetailsByOrderId() {
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
             jdbcTemplate
                     .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-                            ordersId, productId, 3);
+                            ordersId, productId1, 3);
         }
 
-        //when
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-                .findOrdersDetailsByOrderId(ordersId);
+                .findOrderDetailsByOrderIdAndCustomerId(ordersId, customerId);
 
-        //then
         assertThat(ordersDetailsByOrderId).hasSize(insertCount);
     }
+
 }

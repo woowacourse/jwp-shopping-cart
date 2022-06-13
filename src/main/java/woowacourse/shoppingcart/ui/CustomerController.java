@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerSignUpRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api/customer")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -35,27 +35,27 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomerResponse> myInfo(@AuthenticationPrincipal String username) {
-        return ResponseEntity.ok(customerService.findByUsername(username));
+    public ResponseEntity<CustomerResponse> myInfo(@AuthenticationPrincipal Long customerId) {
+        return ResponseEntity.ok(customerService.findById(customerId));
     }
 
     @PutMapping
     public ResponseEntity<Void> update(@Valid @RequestBody CustomerUpdateRequest request,
-                                       @AuthenticationPrincipal String username) {
-        customerService.update(request, username);
+                                       @AuthenticationPrincipal Long customerId) {
+        customerService.update(request, customerId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal Long customerId) {
+        customerService.delete(customerId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody CustomerUpdatePasswordRequest request,
-                                               @AuthenticationPrincipal String username) {
-        customerService.updatePassword(username, request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@AuthenticationPrincipal String username) {
-        customerService.deleteByUsername(username);
+                                               @AuthenticationPrincipal Long customerId) {
+        customerService.updatePassword(customerId, request);
         return ResponseEntity.noContent().build();
     }
 }

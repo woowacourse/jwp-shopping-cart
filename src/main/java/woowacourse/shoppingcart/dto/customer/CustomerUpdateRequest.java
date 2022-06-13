@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.customer;
 
 import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -19,9 +19,9 @@ public class CustomerUpdateRequest {
         this.address = address;
     }
 
-    public Customer toCustomerWithUsername(final String username) {
+    public Customer toCustomerWithId(final Long id) {
         return Customer.builder()
-                .username(username)
+                .id(id)
                 .phoneNumber(phoneNumber)
                 .address(address)
                 .build();

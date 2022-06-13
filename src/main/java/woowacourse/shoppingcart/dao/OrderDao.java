@@ -17,7 +17,7 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrders(final Long customerId) {
+    public Long save(final Long customerId) {
         final String sql = "INSERT INTO orders (customer_id) VALUES (?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -35,7 +35,7 @@ public class OrderDao {
     }
 
     public boolean isValidOrderId(final Long customerId, final Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
+        final String query = "SELECT EXISTS(SELECT id FROM orders WHERE customer_id = ? AND id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
     }
 }

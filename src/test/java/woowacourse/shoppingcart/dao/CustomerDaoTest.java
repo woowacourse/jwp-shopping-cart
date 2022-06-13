@@ -28,35 +28,26 @@ public class CustomerDaoTest {
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
+        final String username = "puterism";
 
-        // given
-        final String userName = "puterism";
+        final Long customerId = customerDao.findIdByUserName(username);
 
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
-        // then
         assertThat(customerId).isEqualTo(1L);
     }
 
     @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTestIgnoreUpperLowerCase() {
+        final String username = "gwangyeol-iM";
 
-        // given
-        final String userName = "gwangyeol-iM";
+        final Long customerId = customerDao.findIdByUserName(username);
 
-        // when
-        final Long customerId = customerDao.findIdByUserName(userName);
-
-        // then
         assertThat(customerId).isEqualTo(16L);
     }
 
     @Test
     @DisplayName("customer를 이름으로 검색할 수 있다.")
     void findByUsername() {
-        // given
         Customer customer = Customer.builder()
                 .username("username")
                 .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
@@ -65,10 +56,8 @@ public class CustomerDaoTest {
                 .build();
         customerDao.save(customer);
 
-        // when
         Customer findCustomer = customerDao.findByUsername("username");
 
-        // then
         assertThat(findCustomer)
                 .usingRecursiveComparison()
                 .ignoringFields("id")
@@ -78,7 +67,6 @@ public class CustomerDaoTest {
     @Test
     @DisplayName("customner를 저장하면 아이디를 반환한다.")
     void save() {
-        // given
         Customer customer = Customer.builder()
                 .username("username")
                 .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
@@ -86,17 +74,14 @@ public class CustomerDaoTest {
                 .address("성담빌딩")
                 .build();
 
-        // when
         Long customerId = customerDao.save(customer);
 
-        // then
         assertThat(customerId).isNotNull();
     }
 
     @Test
     @DisplayName("username이 이미 존재하는지 확인한다.")
     void existUsername() {
-        // given
         Customer customer = Customer.builder()
                 .username("username")
                 .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
@@ -104,35 +89,31 @@ public class CustomerDaoTest {
                 .address("성담빌딩")
                 .build();
 
-        // when
         customerDao.save(customer);
 
-        // then
         assertThat(customerDao.existCustomerByUsername("username")).isTrue();
     }
 
     @Test
     @DisplayName("유저 정보를 수정한다.")
     void update() {
-        // given
         Customer customer = Customer.builder()
                 .username("username")
                 .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
-        customerDao.save(customer);
+        Long customerId = customerDao.save(customer);
         Customer changedCustomer = Customer.builder()
+                .id(customerId)
                 .username("username")
                 .phoneNumber("01087654321")
                 .address("루터회관")
                 .build();
 
-        // when
         customerDao.update(changedCustomer);
 
-        // then
-        assertThat(customerDao.findByUsername("username"))
+        assertThat(customerDao.findById(changedCustomer.getId()))
                 .usingRecursiveComparison()
                 .ignoringFields("id", "password")
                 .isEqualTo(changedCustomer);
@@ -141,20 +122,17 @@ public class CustomerDaoTest {
     @Test
     @DisplayName("유저 비밀번호를 수정한다.")
     void updatePassword() {
-        // given
         Customer customer = Customer.builder()
                 .username("username")
                 .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
-        customerDao.save(customer);
+        Long customerId = customerDao.save(customer);
 
-        // when
-        customerDao.updatePassword("username",
+        customerDao.updatePasswordById(customerId,
                 new EncryptedPassword("47625ed74cab8fbc0a8348f3df1feb07f87601e34d62bd12eb0d51616566fab5"));
 
-        // then
         assertThat(customerDao.findByUsername("username").getPassword())
                 .isEqualTo("47625ed74cab8fbc0a8348f3df1feb07f87601e34d62bd12eb0d51616566fab5");
     }
@@ -162,16 +140,14 @@ public class CustomerDaoTest {
     @Test
     @DisplayName("유저를 유저 이름으로 찾아 삭제한다.")
     void deleteByUsername() {
-        // given
         Customer customer = Customer.builder()
                 .username("username")
                 .password("ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f")
                 .phoneNumber("01012345678")
                 .address("성담빌딩")
                 .build();
-        customerDao.save(customer);
+        Long customerId = customerDao.save(customer);
 
-        // when & then
-        assertThat(customerDao.deleteByUsername("username")).isEqualTo(1);
+        assertThat(customerDao.deleteById(customerId)).isEqualTo(1);
     }
 }

@@ -2,6 +2,7 @@ package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.dto.PasswordRequest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.InvalidAuthException;
@@ -40,10 +42,8 @@ class AuthServiceTest {
     @Test
     @DisplayName("로그인 시 패스워드 다른 경우 예외 발생")
     void loginMismatchPassword_throwException() {
-        // given
         customerDao.save(customer);
 
-        // when & then
         assertThatThrownBy(() -> authService.login(new TokenRequest("username", "wrongpassword")))
                 .isInstanceOf(InvalidAuthException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
@@ -52,13 +52,29 @@ class AuthServiceTest {
     @Test
     @DisplayName("로그인 성공")
     void login() {
-        // given
         customerDao.save(customer);
 
-        // when
         TokenResponse tokenResponse = authService.login(new TokenRequest("username", "password123"));
 
-        // then
         assertThat(tokenResponse).isNotNull();
     }
+
+    @Test
+    @DisplayName("패스워드 확인 시 다른 경우 예외 발생")
+    void mismatchPassword_throwException() {
+        Long customerId = customerDao.save(customer);
+
+        assertThatThrownBy(() -> authService.checkPassword(customerId, new PasswordRequest("wrongpassword")))
+                .isInstanceOf(InvalidAuthException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("패스워드 확인 시 일치한다면 예외 발생하지 않음")
+    void matchPassword_notThrowException() {
+        Long customerId = customerDao.save(customer);
+
+        assertDoesNotThrow(() -> authService.checkPassword(customerId, new PasswordRequest("password123")));
+    }
+
 }
