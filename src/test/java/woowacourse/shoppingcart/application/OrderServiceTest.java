@@ -72,7 +72,7 @@ public class OrderServiceTest {
         //then
         int quantityOfProduct1 = productService.findProductById(1L).getQuantity();
         int quantityOfProduct2 = productService.findProductById(2L).getQuantity();
-        List<OrderItem> orderItems = orderDao.findOrderDetailsByOrderId(orderId);
+        List<OrderItem> orderItems = orderDao.findOrderItemsByOrderId(orderId);
         List<OrderItem> expectedOrderDetail = List.of(new OrderItem(1L, 3), new OrderItem(2L, 4));
 
         assertAll(
@@ -95,7 +95,25 @@ public class OrderServiceTest {
         //then
         List<Order> expected = List.of(new Order(CUSTOMER_ID, List.of(new OrderItem(1L, 3),
             new OrderItem(2L, 4))));
+
         assertThat(orders).usingRecursiveComparison()
+            .isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("단일 주문 내역을 조회한다.")
+    void findOne() {
+        //given
+        Long orderId = orderService.save(CUSTOMER_ID);
+
+        //when
+        Order order = orderService.findOne(CUSTOMER_ID, orderId);
+
+        //then
+        Order expected = new Order(CUSTOMER_ID, List.of(new OrderItem(1L, 3),
+            new OrderItem(2L, 4)));
+
+        assertThat(order).usingRecursiveComparison()
             .isEqualTo(expected);
     }
 }

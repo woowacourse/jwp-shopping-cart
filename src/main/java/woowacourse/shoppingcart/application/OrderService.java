@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.domain.cart.Cart;
 import woowacourse.shoppingcart.domain.cart.CartItem;
 import woowacourse.shoppingcart.domain.order.Order;
+import woowacourse.shoppingcart.domain.order.OrderItem;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
@@ -51,5 +52,10 @@ public class OrderService {
 
     public List<Order> findAll(long customerId) {
         return orderDao.findAllByCustomerId(customerId);
+    }
+
+    public Order findOne(long customerId, long orderId) {
+        List<OrderItem> orderItems = orderDao.findOrderItemsByOrderId(orderId);
+        return new Order(customerId, orderItems);
     }
 }

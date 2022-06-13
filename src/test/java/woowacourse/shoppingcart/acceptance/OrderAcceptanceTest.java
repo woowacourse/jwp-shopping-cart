@@ -56,7 +56,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("주문 내역 조회")
+    @DisplayName("주문 전체 내역 조회")
     void findOrders() {
         //given
         주문하기_요청(token, CUSTOMER_ID);
@@ -67,6 +67,20 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         //then
         주문_조회_응답됨(response);
         주문_내역_포함됨(response, List.of(productId1, productId2));
+    }
+
+    @Test
+    @DisplayName("주문 단일 내역 조회")
+    void findOrder() {
+        //given
+        long orderId = ID_추출(주문하기_요청(token, CUSTOMER_ID));
+
+        //when
+        ExtractableResponse<Response> response = 주문_내역_단일_조회_요청(token, CUSTOMER_ID, orderId);
+
+        //then
+        주문_조회_응답됨(response);
+        주문_내역_단일_포함됨(response, List.of(productId1, productId2));
     }
 
     private String 로그인_요청_및_토큰발급(LoginRequest request) {
@@ -137,6 +151,15 @@ public class OrderAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
+    public ExtractableResponse<Response> 주문_내역_단일_조회_요청(String token, long customerId, long orderId) {
+        return RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + token)
+            .when().get("/api/customers/{customerId}/orders/{orderId}", customerId, orderId)
+            .then().log().all()
+            .extract();
+    }
+
     public void 주문_조회_응답됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
@@ -149,9 +172,22 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         assertThat(result).contains(productIds);
     }
 
+    public void 주문_내역_단일_포함됨(ExtractableResponse<Response> response, List<Long> productIds) {
+        List<Long> result = response.jsonPath().getObject(".", OrderResponse.class).getOrderItems()
+            .stream().map(OrderItem::getProductId)
+            .collect(Collectors.toList());
+
+        assertThat(result).isEqualTo(productIds);
+    }
+
     private Function<OrderResponse, List<Long>> convertOrderResponseToProductIds() {
         return orderResponse ->
             orderResponse.getOrderItems().stream().map(OrderItem::getProductId)
                 .collect(Collectors.toList());
+    }
+
+    private long ID_추출(ExtractableResponse<Response> response) {
+        String[] locations = response.header("Location").split("/");
+        return Long.parseLong(locations[locations.length - 1]);
     }
 }

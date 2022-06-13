@@ -50,7 +50,7 @@ public class OrderDao {
         jdbcTemplate.batchUpdate(sql, result);
     }
 
-    public List<OrderItem> findOrderDetailsByOrderId(Long orderId) {
+    public List<OrderItem> findOrderItemsByOrderId(Long orderId) {
         String sql = "select product_id, count from orders_detail where orders_id = ?";
         return jdbcTemplate.query(sql,
             (rs, rowNum) ->
@@ -65,7 +65,7 @@ public class OrderDao {
     public List<Order> findAllByCustomerId(long customerId) {
         List<Long> ids = findIdsByCustomerId(customerId);
         return ids.stream()
-            .map(id -> new Order(customerId, findOrderDetailsByOrderId(id)))
+            .map(id -> new Order(customerId, findOrderItemsByOrderId(id)))
             .collect(Collectors.toList());
     }
 

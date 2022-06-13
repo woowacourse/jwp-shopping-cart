@@ -39,4 +39,11 @@ public class OrderController {
             .collect(Collectors.toList());
         return ResponseEntity.ok().body(orderResponses);
     }
+
+    @GetMapping("/{customerId}/orders/{orderId}")
+    public ResponseEntity<OrderResponse> findOne(@PathVariable long customerId, @PathVariable long orderId) {
+        Order order = orderService.findOne(customerId, orderId);
+        OrderResponse orderResponse = OrderResponse.from(order);
+        return ResponseEntity.ok().body(orderResponse);
+    }
 }
