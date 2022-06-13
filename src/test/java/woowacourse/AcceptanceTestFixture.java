@@ -5,7 +5,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.shoppingcart.customer.dto.CustomerRequest;
+import woowacourse.shoppingcart.customer.ui.dto.CustomerRequest;
 
 public class AcceptanceTestFixture {
 

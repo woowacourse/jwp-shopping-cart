@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.exception.LoginException;
 import woowacourse.shoppingcart.customer.application.CustomerService;
+import woowacourse.shoppingcart.customer.application.dto.RegisterDto;
+import woowacourse.shoppingcart.customer.ui.dto.CustomerRequest;
 
 @SpringBootTest
 @Transactional
@@ -25,12 +27,13 @@ class AuthServiceTest {
     private static final String EMAIL = "east@gmail.com";
     private static final String PASSWORD = "password1!";
     private static final String USER_NAME = "이스트";
+    private static final CustomerRequest CUSTOMER_REQUEST = new CustomerRequest(EMAIL, PASSWORD, USER_NAME);
 
     @DisplayName("로그인 기능 정상 동작 확인")
     @Test
     void login() {
         //given
-        customerService.register(EMAIL, PASSWORD, USER_NAME);
+        customerService.register(RegisterDto.from(CUSTOMER_REQUEST));
         //when
         final TokenResponse tokenResponse = authService.login(EMAIL, PASSWORD);
         //then
@@ -41,7 +44,7 @@ class AuthServiceTest {
     @Test
     void loginWithIncorrectPassword() {
         //given
-        customerService.register(EMAIL, PASSWORD, USER_NAME);
+        customerService.register(RegisterDto.from(CUSTOMER_REQUEST));
         //then
         assertThatThrownBy(() -> authService.login(EMAIL, "password2!"))
                 .isInstanceOf(LoginException.class);

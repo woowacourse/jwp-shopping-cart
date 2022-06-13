@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.cartitem.dto;
+package woowacourse.shoppingcart.customer.ui.dto;
 
 public class DeleteCustomerRequest {
     private String password;

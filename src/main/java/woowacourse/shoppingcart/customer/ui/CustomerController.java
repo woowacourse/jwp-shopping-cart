@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.customer.application.CustomerService;
-import woowacourse.shoppingcart.customer.dto.ChangeGeneralInfoRequest;
-import woowacourse.shoppingcart.customer.dto.ChangePasswordRequest;
-import woowacourse.shoppingcart.customer.dto.CustomerRequest;
-import woowacourse.shoppingcart.customer.dto.CustomerResponse;
-import woowacourse.shoppingcart.cartitem.dto.DeleteCustomerRequest;
+import woowacourse.shoppingcart.customer.application.dto.ChangePasswordDto;
+import woowacourse.shoppingcart.customer.application.dto.RegisterDto;
+import woowacourse.shoppingcart.customer.ui.dto.ChangeGeneralInfoRequest;
+import woowacourse.shoppingcart.customer.ui.dto.ChangePasswordRequest;
+import woowacourse.shoppingcart.customer.ui.dto.CustomerRequest;
+import woowacourse.shoppingcart.customer.ui.dto.CustomerResponse;
+import woowacourse.shoppingcart.customer.ui.dto.DeleteCustomerRequest;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -30,9 +32,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Void> register(@Valid @RequestBody CustomerRequest customerRequest) {
-        customerService.register(customerRequest.getEmail(),
-                customerRequest.getPassword(),
-                customerRequest.getUsername());
+        customerService.register(RegisterDto.from(customerRequest));
         return ResponseEntity.created(URI.create("/login")).build();
     }
 
@@ -46,7 +46,7 @@ public class CustomerController {
     public ResponseEntity<Void> changePassword(@AuthenticationPrincipal String email, @RequestBody
             ChangePasswordRequest changePasswordRequest) {
         customerService
-                .changePassword(email, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+                .changePassword(ChangePasswordDto.from(changePasswordRequest, email));
         return ResponseEntity.ok().location(URI.create("/login")).build();
     }
 

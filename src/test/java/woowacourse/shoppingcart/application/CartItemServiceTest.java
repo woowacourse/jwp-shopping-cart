@@ -12,14 +12,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.cartitem.application.CartItemService;
+import woowacourse.shoppingcart.cartitem.application.dto.AddCartItemDto;
+import woowacourse.shoppingcart.cartitem.application.dto.DeleteCartItemDto;
+import woowacourse.shoppingcart.cartitem.application.dto.UpdateQuantityDto;
 import woowacourse.shoppingcart.cartitem.dao.CartItemDao;
+import woowacourse.shoppingcart.cartitem.ui.dto.CartItemQuantityRequest;
+import woowacourse.shoppingcart.cartitem.ui.dto.CartItemRequest;
+import woowacourse.shoppingcart.cartitem.ui.dto.DeleteCartItemRequest;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.cartitem.domain.CartItem;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.product.domain.Product;
-import woowacourse.shoppingcart.cartitem.dto.CartItemResponse;
-import woowacourse.shoppingcart.product.dto.ThumbnailImage;
+import woowacourse.shoppingcart.cartitem.ui.dto.CartItemResponse;
+import woowacourse.shoppingcart.product.domain.ThumbnailImage;
 import woowacourse.shoppingcart.exception.AlreadyExistException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotExistException;
@@ -61,7 +67,8 @@ public class CartItemServiceTest {
     @Test
     void addCartItem() {
         //when
-        cartItemService.addCartItem(맥북Id, 5, EMAIL);
+        final CartItemRequest cartItemRequest = new CartItemRequest(맥북Id, 5);
+        cartItemService.addCartItem(AddCartItemDto.from(cartItemRequest, EMAIL));
         //then
         final CartItem cartItem = cartItemDao.findByCustomerId(customerId, 맥북Id);
         assertThat(cartItem.getProduct().getId()).isEqualTo(맥북Id);
@@ -71,10 +78,11 @@ public class CartItemServiceTest {
     @Test
     void addExistentItem() {
         //given
-        cartItemService.addCartItem(맥북Id, 5, EMAIL);
+        final CartItemRequest cartItemRequest = new CartItemRequest(맥북Id, 5);
+        cartItemService.addCartItem(AddCartItemDto.from(cartItemRequest, EMAIL));
 
         //then
-        assertThatThrownBy(() -> cartItemService.addCartItem(맥북Id, 5, EMAIL))
+        assertThatThrownBy(() -> cartItemService.addCartItem(AddCartItemDto.from(cartItemRequest, EMAIL)))
                 .isInstanceOf(AlreadyExistException.class);
     }
 
@@ -82,8 +90,10 @@ public class CartItemServiceTest {
     @Test
     void findCartItems() {
         //given
-        cartItemService.addCartItem(맥북Id, 5, EMAIL);
-        cartItemService.addCartItem(애플워치Id, 5, EMAIL);
+        final CartItemRequest cartItemRequest1 = new CartItemRequest(맥북Id, 5);
+        final CartItemRequest cartItemRequest2 = new CartItemRequest(애플워치Id, 5);
+        cartItemService.addCartItem(AddCartItemDto.from(cartItemRequest1, EMAIL));
+        cartItemService.addCartItem(AddCartItemDto.from(cartItemRequest2, EMAIL));
         //when
         final List<CartItemResponse> cartItemResponses = cartItemService.findCartItems(EMAIL);
         final List<String> cartItemsName = cartItemResponses.stream()
@@ -97,7 +107,8 @@ public class CartItemServiceTest {
     @Test
     void findCartItem() {
         //given
-        final Long cartItemId = cartItemService.addCartItem(애플워치Id, 5, EMAIL).getId();
+        final CartItemRequest cartItemRequest = new CartItemRequest(애플워치Id, 5);
+        final Long cartItemId = cartItemService.addCartItem(AddCartItemDto.from(cartItemRequest, EMAIL)).getId();
         //when
         final CartItemResponse cartItemResponse = cartItemService.findCartItem(EMAIL, cartItemId);
         //then
@@ -109,9 +120,11 @@ public class CartItemServiceTest {
     void updateQuantity() {
         //given
         final Integer quantity = 7;
-        final Long cartItemId = cartItemService.addCartItem(애플워치Id, 5, EMAIL).getId();
+        final CartItemRequest cartItemRequest = new CartItemRequest(애플워치Id, 5);
+        final Long cartItemId = cartItemService.addCartItem(AddCartItemDto.from(cartItemRequest, EMAIL)).getId();
         //when
-        cartItemService.updateQuantity(EMAIL, cartItemId, quantity);
+        final CartItemQuantityRequest cartItemQuantityRequest = new CartItemQuantityRequest(cartItemId, quantity);
+        cartItemService.updateQuantity(UpdateQuantityDto.from(cartItemQuantityRequest, EMAIL));
         //then
         final CartItem cartItem = cartItemDao.findByCustomerId(customerId, cartItemId);
         assertThat(cartItem.getQuantity()).isEqualTo(quantity);
@@ -120,8 +133,10 @@ public class CartItemServiceTest {
     @DisplayName("존재하지 않는 장바구니 아이템 Id값으로 수량 업데이트를 하면 예외 발생")
     @Test
     void updateNonExistentQuantity() {
+        //given
+        final CartItemQuantityRequest cartItemQuantityRequest = new CartItemQuantityRequest(1L, 7);
         //then
-        assertThatThrownBy(() -> cartItemService.updateQuantity(EMAIL, 1L, 7))
+        assertThatThrownBy(() -> cartItemService.updateQuantity(UpdateQuantityDto.from(cartItemQuantityRequest, EMAIL)))
                 .isInstanceOf(NotExistException.class);
     }
 
@@ -129,10 +144,14 @@ public class CartItemServiceTest {
     @Test
     void deleteCartItem() {
         //given
-        final Long cartItemId1 = cartItemService.addCartItem(맥북Id, 5, EMAIL).getId();
-        final Long cartItemId2 = cartItemService.addCartItem(애플워치Id, 5, EMAIL).getId();
+        final CartItemRequest cartItemRequest1 = new CartItemRequest(맥북Id, 5);
+        final CartItemRequest cartItemRequest2 = new CartItemRequest(애플워치Id, 5);
+        final Long cartItemId1 = cartItemService.addCartItem(AddCartItemDto.from(cartItemRequest1, EMAIL)).getId();
+        final Long cartItemId2 = cartItemService.addCartItem(AddCartItemDto.from(cartItemRequest2, EMAIL)).getId();
         //when
-        cartItemService.deleteCartItem(EMAIL, List.of(cartItemId1, cartItemId2));
+        final DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(
+                List.of(cartItemId1, cartItemId2));
+        cartItemService.deleteCartItem(DeleteCartItemDto.from(deleteCartItemRequest, EMAIL));
         //then
         final List<CartItem> cartItems = cartItemDao.findAllByCustomerId(customerId);
         assertThat(cartItems).isEmpty();
@@ -142,10 +161,14 @@ public class CartItemServiceTest {
     @Test
     void deleteInvalidCartItem() {
         //given
-        final Long cartItemId1 = cartItemService.addCartItem(맥북Id, 5, EMAIL).getId();
-        final Long cartItemId2 = cartItemService.addCartItem(애플워치Id, 5, EMAIL).getId();
+        final CartItemRequest cartItemRequest1 = new CartItemRequest(맥북Id, 5);
+        final CartItemRequest cartItemRequest2 = new CartItemRequest(애플워치Id, 5);
+        final Long cartItemId1 = cartItemService.addCartItem(AddCartItemDto.from(cartItemRequest1, EMAIL)).getId();
+        final Long cartItemId2 = cartItemService.addCartItem(AddCartItemDto.from(cartItemRequest2, EMAIL)).getId();
         //then
-        assertThatThrownBy(() -> cartItemService.deleteCartItem(EMAIL, List.of(cartItemId1, cartItemId2 + 1L)))
+        final DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(
+                List.of(cartItemId1, cartItemId2 + 1L));
+        assertThatThrownBy(() -> cartItemService.deleteCartItem(DeleteCartItemDto.from(deleteCartItemRequest, EMAIL)))
                 .isInstanceOf(InvalidCartItemException.class);
     }
 }

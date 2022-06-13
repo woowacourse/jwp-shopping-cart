@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.product.application.ProductService;
-import woowacourse.shoppingcart.product.dto.ProductRequest;
-import woowacourse.shoppingcart.product.dto.ProductResponse;
-import woowacourse.shoppingcart.product.dto.ThumbnailImageDto;
+import woowacourse.shoppingcart.product.application.dto.ProductDto;
+import woowacourse.shoppingcart.product.ui.dto.ProductRequest;
+import woowacourse.shoppingcart.product.ui.dto.ProductResponse;
+import woowacourse.shoppingcart.product.ui.dto.ThumbnailImageDto;
 
 @RestController
 @RequestMapping("/api/products")
@@ -33,8 +34,7 @@ public class ProductController {
     public ResponseEntity<ProductResponse> add(@RequestBody ProductRequest productRequest) {
         final ThumbnailImageDto thumbnailImageRequest = productRequest.getThumbnailImage();
         final ProductResponse productResponse = productService
-                .addProduct(productRequest.getName(), productRequest.getPrice(), productRequest.getStockQuantity(),
-                        thumbnailImageRequest.getUrl(), thumbnailImageRequest.getAlt());
+                .addProduct(ProductDto.from(productRequest));
         return ResponseEntity.created(URI.create("/api/products/" + productResponse.getId())).body(productResponse);
     }
 

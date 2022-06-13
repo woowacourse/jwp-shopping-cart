@@ -9,7 +9,7 @@ import woowacourse.shoppingcart.order.domain.OrderDetail;
 import java.sql.PreparedStatement;
 import java.util.List;
 import woowacourse.shoppingcart.product.domain.Product;
-import woowacourse.shoppingcart.product.dto.ThumbnailImage;
+import woowacourse.shoppingcart.product.domain.ThumbnailImage;
 
 @Repository
 public class OrdersDetailDao {

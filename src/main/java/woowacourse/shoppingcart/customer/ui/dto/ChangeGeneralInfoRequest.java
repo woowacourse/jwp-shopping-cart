@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.customer.dto;
+package woowacourse.shoppingcart.customer.ui.dto;
 
 public class ChangeGeneralInfoRequest {
 

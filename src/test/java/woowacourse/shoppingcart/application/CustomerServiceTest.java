@@ -11,9 +11,13 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.exception.AuthException;
 import woowacourse.exception.JoinException;
 import woowacourse.shoppingcart.customer.application.CustomerService;
+import woowacourse.shoppingcart.customer.application.dto.ChangePasswordDto;
+import woowacourse.shoppingcart.customer.application.dto.RegisterDto;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
-import woowacourse.shoppingcart.customer.dto.CustomerResponse;
+import woowacourse.shoppingcart.customer.ui.dto.ChangePasswordRequest;
+import woowacourse.shoppingcart.customer.ui.dto.CustomerRequest;
+import woowacourse.shoppingcart.customer.ui.dto.CustomerResponse;
 
 @SpringBootTest
 @Sql(scripts = "classpath:truncate.sql")
@@ -28,12 +32,13 @@ class CustomerServiceTest {
     private static final String EMAIL = "east@gmail.com";
     private static final String PASSWORD = "password1!";
     private static final String USER_NAME = "이스트";
+    private static final CustomerRequest CUSTOMER_REQUEST = new CustomerRequest(EMAIL, PASSWORD, USER_NAME);
 
     @DisplayName("유저 저장 기능의 정상 동작 확인")
     @Test
     void register() {
         //when
-        customerService.register(EMAIL, PASSWORD, USER_NAME);
+        customerService.register(RegisterDto.from(CUSTOMER_REQUEST));
         //then
         final Customer savedCustomer = customerDao.findByEmail(EMAIL);
         assertThat(savedCustomer.getUsername()).isEqualTo(USER_NAME);
@@ -43,9 +48,10 @@ class CustomerServiceTest {
     @Test
     void registerWithExistentEmail() {
         //given
-        customerService.register(EMAIL, PASSWORD, USER_NAME);
+        customerService.register(RegisterDto.from(CUSTOMER_REQUEST));
+        final CustomerRequest customerRequest = new CustomerRequest(EMAIL, "password0!", "웨스트");
         //then
-        assertThatThrownBy(() -> customerService.register(EMAIL, "password0!", "웨스트"))
+        assertThatThrownBy(() -> customerService.register(RegisterDto.from(customerRequest)))
                 .isInstanceOf(JoinException.class);
     }
 
@@ -54,9 +60,10 @@ class CustomerServiceTest {
     void changePassword() {
         //given
         final String newPassword = "password2!";
-        customerService.register(EMAIL, PASSWORD, USER_NAME);
+        customerService.register(RegisterDto.from(CUSTOMER_REQUEST));
         //when
-        customerService.changePassword(EMAIL, PASSWORD, newPassword);
+        final ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(PASSWORD, newPassword);
+        customerService.changePassword(ChangePasswordDto.from(changePasswordRequest, EMAIL));
         //then
         final Customer savedCustomer = customerDao.findByEmail(EMAIL);
         assertThat(savedCustomer.isDifferentPassword(newPassword)).isFalse();
@@ -67,9 +74,10 @@ class CustomerServiceTest {
     void changePasswordWithIncorrectOriginPassword() {
         //given
         final String newPassword = "password2!";
-        customerService.register(EMAIL, PASSWORD, USER_NAME);
+        customerService.register(RegisterDto.from(CUSTOMER_REQUEST));
+        final ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("password4!", newPassword);
         //then
-        assertThatThrownBy(() -> customerService.changePassword(EMAIL, "password4!", newPassword))
+        assertThatThrownBy(() -> customerService.changePassword(ChangePasswordDto.from(changePasswordRequest, EMAIL)))
                 .isInstanceOf(AuthException.class);
     }
 
@@ -78,7 +86,7 @@ class CustomerServiceTest {
     void changeGeneralInfo() {
         //given
         final String newUserName = "싸우쓰";
-        customerService.register(EMAIL, PASSWORD, USER_NAME);
+        customerService.register(RegisterDto.from(CUSTOMER_REQUEST));
         //when
         final CustomerResponse customerResponse = customerService.changeGeneralInfo(EMAIL, newUserName);
         //then

@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.product.domain;
 
-import woowacourse.shoppingcart.product.dto.ThumbnailImage;
-
 public class Product {
     private Long id;
     private String name;

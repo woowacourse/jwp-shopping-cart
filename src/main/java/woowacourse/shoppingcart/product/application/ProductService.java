@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.product.application.dto.ProductDto;
 import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.product.domain.Product;
-import woowacourse.shoppingcart.product.dto.ProductResponse;
-import woowacourse.shoppingcart.product.dto.ThumbnailImage;
+import woowacourse.shoppingcart.product.domain.ThumbnailImage;
+import woowacourse.shoppingcart.product.ui.dto.ProductResponse;
+import woowacourse.shoppingcart.product.ui.dto.ThumbnailImageDto;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,9 +28,11 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse addProduct(String name, Integer price, Long stockQuantity, String imageUrl, String imageAlt) {
+    public ProductResponse addProduct(ProductDto productDto) {
+        final ThumbnailImageDto thumbnailImageDto = productDto.getThumbnailImageDto();
         final Product product = productDao
-                .save(new Product(name, price, stockQuantity, new ThumbnailImage(imageUrl, imageAlt)));
+                .save(new Product(productDto.getName(), productDto.getPrice(), productDto.getStockQuantity(),
+                        new ThumbnailImage(thumbnailImageDto.getUrl(), thumbnailImageDto.getAlt())));
         return ProductResponse.from(product);
     }
 

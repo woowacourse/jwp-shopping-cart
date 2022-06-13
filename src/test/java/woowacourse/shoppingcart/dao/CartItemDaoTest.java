@@ -17,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.cartitem.dao.CartItemDao;
 import woowacourse.shoppingcart.cartitem.domain.CartItem;
 import woowacourse.shoppingcart.product.domain.Product;
-import woowacourse.shoppingcart.product.dto.ThumbnailImage;
+import woowacourse.shoppingcart.product.domain.ThumbnailImage;
 import woowacourse.shoppingcart.product.dao.ProductDao;
 
 @JdbcTest

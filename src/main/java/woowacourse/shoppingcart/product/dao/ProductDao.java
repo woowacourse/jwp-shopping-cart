@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.product.domain.Product;
-import woowacourse.shoppingcart.product.dto.ThumbnailImage;
+import woowacourse.shoppingcart.product.domain.ThumbnailImage;
 import woowacourse.shoppingcart.exception.NotExistException;
 
 @Repository

@@ -5,10 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.exception.AuthException;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.dto.ErrorResponse;
+import woowacourse.shoppingcart.customer.application.dto.ChangePasswordDto;
+import woowacourse.shoppingcart.customer.application.dto.RegisterDto;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.customer.domain.Password;
-import woowacourse.shoppingcart.customer.dto.CustomerResponse;
+import woowacourse.shoppingcart.customer.ui.dto.CustomerResponse;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,12 +23,12 @@ public class CustomerService {
     }
 
     @Transactional
-    public void register(String email, String password, String username) {
-        final Password encryptedPassword = Password.from(password);
-        if(customerDao.existsByEmail(email)){
+    public void register(RegisterDto registerDto) {
+        final Password encryptedPassword = Password.from(registerDto.getPassword());
+        if(customerDao.existsByEmail(registerDto.getEmail())){
             throw new JoinException("이미 존재하는 이메일입니다.", ErrorResponse.DUPLICATED_EMAIL);
         }
-        customerDao.save(new Customer(email, encryptedPassword.getPassword(), username));
+        customerDao.save(new Customer(registerDto.getEmail(), encryptedPassword.getPassword(), registerDto.getUsername()));
     }
 
     public CustomerResponse showCustomer(String email) {
@@ -36,12 +38,12 @@ public class CustomerService {
     }
 
     @Transactional
-    public void changePassword(String email, String oldPassword, String newPassword) {
-        final Customer customer = customerDao.findByEmail(email);
-        if(customer.isDifferentPassword(oldPassword)){
+    public void changePassword(ChangePasswordDto changePasswordDto) {
+        final Customer customer = customerDao.findByEmail(changePasswordDto.getEmail());
+        if(customer.isDifferentPassword(changePasswordDto.getOldPassword())){
             throw new AuthException("기존 비밀번호와 맞지 않습니다.", ErrorResponse.INCORRECT_PASSWORD);
         }
-        final Password encryptedPassword = Password.from(newPassword);
+        final Password encryptedPassword = Password.from(changePasswordDto.getNewPassword());
         customerDao.updatePassword(customer.getId(), encryptedPassword.getPassword());
     }
 

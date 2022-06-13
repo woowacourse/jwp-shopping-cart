@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.order.dto;
 
 import woowacourse.shoppingcart.order.domain.OrderDetail;
 import woowacourse.shoppingcart.product.domain.Product;
-import woowacourse.shoppingcart.product.dto.ThumbnailImageDto;
+import woowacourse.shoppingcart.product.ui.dto.ThumbnailImageDto;
 
 public class OrderDetailResponse {
     private Long productId;

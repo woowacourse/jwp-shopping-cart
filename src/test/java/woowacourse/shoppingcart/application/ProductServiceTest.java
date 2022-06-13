@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.product.application.ProductService;
-import woowacourse.shoppingcart.product.dao.ProductDao;
-import woowacourse.shoppingcart.product.dto.ProductResponse;
+import woowacourse.shoppingcart.product.application.dto.ProductDto;
+import woowacourse.shoppingcart.product.ui.dto.ProductRequest;
+import woowacourse.shoppingcart.product.ui.dto.ProductResponse;
+import woowacourse.shoppingcart.product.ui.dto.ThumbnailImageDto;
 
 @SpringBootTest
 @Sql(scripts = "classpath:truncate.sql")
@@ -19,9 +21,6 @@ public class ProductServiceTest {
 
     @Autowired
     private ProductService productService;
-
-    @Autowired
-    private ProductDao productDao;
 
     @DisplayName("상품을 추가하는 기능의 정상 동작 확인")
     @Test
@@ -32,9 +31,11 @@ public class ProductServiceTest {
         final Long stockQuantity = 10L;
         final String imageUrl = "test.com";
         final String imageAlt = "이미지입니다.";
+        final ProductRequest productRequest = new ProductRequest(name, price, stockQuantity,
+                new ThumbnailImageDto(imageUrl, imageAlt));
         //when
         final ProductResponse productResponse = productService
-                .addProduct(name, price, stockQuantity, imageUrl, imageAlt);
+                .addProduct(ProductDto.from(productRequest));
 
         //then
         assertThat(productResponse.getName()).isEqualTo(name);
@@ -50,11 +51,14 @@ public class ProductServiceTest {
         final Long stockQuantity = 10L;
         final String imageUrl = "test.com";
         final String imageAlt = "이미지입니다.";
+        final ProductRequest productRequest1 = new ProductRequest(name1, price, stockQuantity,
+                new ThumbnailImageDto(imageUrl, imageAlt));
+        final ProductRequest productRequest2 = new ProductRequest(name2, price, stockQuantity,
+                new ThumbnailImageDto(imageUrl, imageAlt));
 
-        productService.addProduct(name1, price, stockQuantity, imageUrl, imageAlt);
-        productService.addProduct(name2, price, stockQuantity, imageUrl, imageAlt);
-
-        //when
+        productService.addProduct(ProductDto.from(productRequest1));
+        productService.addProduct(ProductDto.from(productRequest2));
+        //whe
         final List<ProductResponse> productResponses = productService.findProducts();
 
         //then
@@ -74,9 +78,11 @@ public class ProductServiceTest {
         final Long stockQuantity = 10L;
         final String imageUrl = "test.com";
         final String imageAlt = "이미지입니다.";
+        final ProductRequest productRequest = new ProductRequest(name, price, stockQuantity,
+                new ThumbnailImageDto(imageUrl, imageAlt));
 
         final ProductResponse productResponse = productService
-                .addProduct(name, price, stockQuantity, imageUrl, imageAlt);
+                .addProduct(ProductDto.from(productRequest));
         //when
         final ProductResponse productResponseById = productService.findProductById(productResponse.getId());
         //then

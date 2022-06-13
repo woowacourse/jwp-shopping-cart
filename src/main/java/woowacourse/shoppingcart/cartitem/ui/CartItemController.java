@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.cartitem.application.CartItemService;
-import woowacourse.shoppingcart.cartitem.dto.CartItemQuantityRequest;
-import woowacourse.shoppingcart.cartitem.dto.CartItemRequest;
-import woowacourse.shoppingcart.cartitem.dto.CartItemResponse;
-import woowacourse.shoppingcart.cartitem.dto.DeleteCartItemRequest;
+import woowacourse.shoppingcart.cartitem.application.dto.AddCartItemDto;
+import woowacourse.shoppingcart.cartitem.application.dto.DeleteCartItemDto;
+import woowacourse.shoppingcart.cartitem.application.dto.UpdateQuantityDto;
+import woowacourse.shoppingcart.cartitem.ui.dto.CartItemQuantityRequest;
+import woowacourse.shoppingcart.cartitem.ui.dto.CartItemRequest;
+import woowacourse.shoppingcart.cartitem.ui.dto.CartItemResponse;
+import woowacourse.shoppingcart.cartitem.ui.dto.DeleteCartItemRequest;
 
 @RestController
 @RequestMapping("/api/mycarts")
@@ -43,22 +46,21 @@ public class CartItemController {
     @PostMapping
     public ResponseEntity<CartItemResponse> addCartItem(@Valid @RequestBody CartItemRequest cartItemRequest, @AuthenticationPrincipal String email) {
         final CartItemResponse cartItemResponse = cartItemService
-                .addCartItem(cartItemRequest.getProductId(), cartItemRequest.getQuantity(), email);
+                .addCartItem(AddCartItemDto.from(cartItemRequest, email));
         return ResponseEntity.created(URI.create("/api/mycarts/" + cartItemResponse.getId())).body(cartItemResponse);
     }
 
     @PatchMapping
     public ResponseEntity<Void> updateCartItemQuantity(@Valid @RequestBody CartItemQuantityRequest cartItemQuantityRequest,
                                                        @AuthenticationPrincipal String email) {
-        cartItemService.updateQuantity(email, cartItemQuantityRequest.getCartItemId(), cartItemQuantityRequest.getQuantity());
+        cartItemService.updateQuantity(UpdateQuantityDto.from(cartItemQuantityRequest, email));
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteCartItem(@RequestBody DeleteCartItemRequest deleteCartItemRequest,
                                                @AuthenticationPrincipal String email) {
-        final List<Long> cartItemIds = deleteCartItemRequest.getCartItemIds();
-        cartItemService.deleteCartItem(email, cartItemIds);
+        cartItemService.deleteCartItem(DeleteCartItemDto.from(deleteCartItemRequest, email));
         return ResponseEntity.noContent().build();
     }
 }

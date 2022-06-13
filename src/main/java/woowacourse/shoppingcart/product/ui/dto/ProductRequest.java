@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.product.dto;
+package woowacourse.shoppingcart.product.ui.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

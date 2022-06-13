@@ -1,7 +1,7 @@
-package woowacourse.shoppingcart.cartitem.dto;
+package woowacourse.shoppingcart.cartitem.ui.dto;
 
-import woowacourse.shoppingcart.product.dto.ThumbnailImageDto;
 import woowacourse.shoppingcart.product.domain.Product;
+import woowacourse.shoppingcart.product.ui.dto.ThumbnailImageDto;
 
 public class CartItemResponse {
 

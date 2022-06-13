@@ -17,12 +17,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.cartitem.dto.CartItemQuantityRequest;
-import woowacourse.shoppingcart.cartitem.dto.CartItemRequest;
-import woowacourse.shoppingcart.cartitem.dto.CartItemResponse;
-import woowacourse.shoppingcart.cartitem.dto.DeleteCartItemRequest;
-import woowacourse.shoppingcart.product.dto.ProductRequest;
-import woowacourse.shoppingcart.product.dto.ThumbnailImageDto;
+import woowacourse.shoppingcart.cartitem.ui.dto.CartItemQuantityRequest;
+import woowacourse.shoppingcart.cartitem.ui.dto.CartItemRequest;
+import woowacourse.shoppingcart.cartitem.ui.dto.CartItemResponse;
+import woowacourse.shoppingcart.cartitem.ui.dto.DeleteCartItemRequest;
+import woowacourse.shoppingcart.product.ui.dto.ProductRequest;
+import woowacourse.shoppingcart.product.ui.dto.ThumbnailImageDto;
 
 @DisplayName("장바구니 관련 기능")
 public class CartItemAcceptanceTest extends AcceptanceTest {

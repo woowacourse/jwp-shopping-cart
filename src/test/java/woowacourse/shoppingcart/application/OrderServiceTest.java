@@ -20,7 +20,7 @@ import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.order.domain.OrderDetail;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.order.dto.OrderResponse;
-import woowacourse.shoppingcart.product.dto.ThumbnailImage;
+import woowacourse.shoppingcart.product.domain.ThumbnailImage;
 import woowacourse.shoppingcart.exception.OutOfStockException;
 
 @SpringBootTest
