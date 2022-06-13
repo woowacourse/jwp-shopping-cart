@@ -32,10 +32,22 @@ public class CustomerService {
         return new CustomerResponse(customer);
     }
 
+    public Customer findByUsername(String username) {
+        return getCustomer(username);
+    }
+
     public void validateUsernameAndPassword(String username, String password) {
         if (!customerDao.existsByUsernameAndPassword(username, password)) {
             throw new InvalidCustomerException();
         }
+    }
+
+    public boolean isDuplicatedUsername(String username) {
+        return customerDao.existsByUsername(username);
+    }
+
+    public boolean isDuplicatedEmail(String email) {
+        return customerDao.existsByEmail(email);
     }
 
     @Transactional

@@ -37,7 +37,7 @@ public class CustomerDaoTest {
 
     @DisplayName("customer를 생성한다.")
     @Test
-    void saveCustomer() {
+    void save() {
         Customer customer = MAT;
 
         Customer savedCustomer = customerDao.save(customer);
@@ -52,6 +52,34 @@ public class CustomerDaoTest {
         });
     }
 
+    @DisplayName("id를 활용하여 customer를 조회한다.")
+    @Test
+    void findById() {
+        Customer savedCustomer = customerDao.save(MAT);
+
+        Customer foundCustomer = customerDao.findById(savedCustomer.getId()).get();
+
+        assertAll(() -> {
+            assertThat(foundCustomer.getId()).isEqualTo(savedCustomer.getId());
+            assertThat(foundCustomer.getUsername()).isEqualTo(savedCustomer.getUsername());
+            assertThat(foundCustomer.getEmail()).isEqualTo(savedCustomer.getEmail());
+            assertThat(foundCustomer.getPassword()).isEqualTo(savedCustomer.getPassword());
+            assertThat(foundCustomer.getAddress()).isEqualTo(savedCustomer.getAddress());
+            assertThat(foundCustomer.getPhoneNumber()).isEqualTo(savedCustomer.getPhoneNumber());
+        });
+    }
+
+    @DisplayName("username을 이용해 customer를 조회한다.")
+    @Test
+    void findByUsername() {
+        Customer customer = YAHO;
+        customerDao.save(customer);
+
+        Optional<Customer> foundCustomer = customerDao.findByUsername(YAHO_USERNAME);
+
+        assertThat(foundCustomer).isNotEmpty();
+    }
+
     @DisplayName("username과 password를 기반으로 customer의 존재 여부를 반환한다.")
     @Test
     void existsCustomer() {
@@ -62,23 +90,48 @@ public class CustomerDaoTest {
         assertThat(result).isTrue();
     }
 
-    @DisplayName("존재하지 않는 username이거나 password인 경우 예외를 던진다.")
+    @DisplayName("존재하지 않는 username이거나 password인 경우 false를 반환한다.")
     @Test
-    void existsCustomer_error_notExists() {
+    void existsCustomer_notExists() {
         boolean result = customerDao.existsByUsernameAndPassword(MAT_USERNAME, MAT_PASSWORD);
 
         assertThat(result).isFalse();
     }
 
-    @DisplayName("username을 이용해 customer 를 조회한다.")
+    @DisplayName("존재하는 username인 경우 true를 반환한다.")
     @Test
-    void findCustomerByUsername() {
-        Customer customer = YAHO;
-        customerDao.save(customer);
+    void existsByUsername() {
+        customerDao.save(MAT);
 
-        Optional<Customer> foundCustomer = customerDao.findByUsername(YAHO_USERNAME);
+        boolean result = customerDao.existsByUsername(MAT_USERNAME);
 
-        assertThat(foundCustomer).isNotEmpty();
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("존재하지 않는 username인 경우 false를 반환한다.")
+    @Test
+    void existsByUsername_notExists() {
+        boolean result = customerDao.existsByUsername(MAT_USERNAME);
+
+        assertThat(result).isFalse();
+    }
+
+    @DisplayName("존재하는 email인 경우 true를 반환한다.")
+    @Test
+    void existsByEmail() {
+        customerDao.save(MAT);
+
+        boolean result = customerDao.existsByEmail(MAT_EMAIL);
+
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("존재하지 않는 email인 경우 false를 반환한다.")
+    @Test
+    void existsByEmail_notExists() {
+        boolean result = customerDao.existsByEmail(MAT_EMAIL);
+
+        assertThat(result).isFalse();
     }
 
     @DisplayName("customer 정보를 수정한다.")
@@ -97,15 +150,5 @@ public class CustomerDaoTest {
         Customer savedCustomer = customerDao.save(YAHO);
 
         assertDoesNotThrow(() -> customerDao.delete(savedCustomer));
-    }
-
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTest() {
-        Customer savedCustomer = customerDao.save(MAT);
-
-        Long foundCustomerId = customerDao.findIdByUsername(MAT_USERNAME);
-
-        assertThat(foundCustomerId).isEqualTo(savedCustomer.getId());
     }
 }

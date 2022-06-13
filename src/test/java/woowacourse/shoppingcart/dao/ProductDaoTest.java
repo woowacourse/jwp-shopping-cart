@@ -1,5 +1,13 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.ProductFixtures.ONE_PRODUCT;
+import static woowacourse.shoppingcart.ProductFixtures.ONE_PRODUCT_IMAGE_URL;
+import static woowacourse.shoppingcart.ProductFixtures.ONE_PRODUCT_NAME;
+import static woowacourse.shoppingcart.ProductFixtures.ONE_PRODUCT_PRICE;
+
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -10,14 +18,10 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:schema.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@Sql("/truncate.sql")
 public class ProductDaoTest {
 
     private final ProductDao productDao;
@@ -26,68 +30,51 @@ public class ProductDaoTest {
         this.productDao = new ProductDao(jdbcTemplate);
     }
 
-    @DisplayName("Product를 저장하면, id를 반환한다.")
+    @DisplayName("Product를 저장하면 product를 반환한다.")
     @Test
     void save() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        Product product = productDao.save(ONE_PRODUCT);
 
-        // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-
-        // then
-        assertThat(productId).isEqualTo(1L);
+        assertAll(() -> {
+                    assertThat(product.getName()).isEqualTo(ONE_PRODUCT_NAME);
+                    assertThat(product.getPrice()).isEqualTo(ONE_PRODUCT_PRICE);
+                    assertThat(product.getImageUrl()).isEqualTo(ONE_PRODUCT_IMAGE_URL);
+                    assertThat(product.isDeleted()).isFalse();
+                }
+        );
     }
 
-    @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
+    @DisplayName("productId의 상품을 찾으면 product를 반환한다.")
     @Test
     void findProductById() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        Product product = productDao.save(ONE_PRODUCT);
 
-        // when
-        final Product product = productDao.findProductById(productId);
-
-        // then
-        assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
+        assertAll(() -> {
+                    assertThat(product.getName()).isEqualTo(ONE_PRODUCT_NAME);
+                    assertThat(product.getPrice()).isEqualTo(ONE_PRODUCT_PRICE);
+                    assertThat(product.getImageUrl()).isEqualTo(ONE_PRODUCT_IMAGE_URL);
+                    assertThat(product.isDeleted()).isFalse();
+                }
+        );
     }
 
-    @DisplayName("상품 목록 조회")
+    @DisplayName("상품 목록을 조회한다.")
     @Test
     void getProducts() {
+        List<Product> products = productDao.findAll();
 
-        // given
-        final int size = 0;
-
-        // when
-        final List<Product> products = productDao.findProducts();
-
-        // then
-        assertThat(products).size().isEqualTo(size);
+        assertThat(products.size()).isEqualTo(0);
     }
 
-    @DisplayName("싱품 삭제")
+    @DisplayName("싱품을 삭제한다.")
     @Test
     void deleteProduct() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        Product product = productDao.save(ONE_PRODUCT);
+        int beforeSize = productDao.findAll().size();
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final int beforeSize = productDao.findProducts().size();
+        productDao.delete(product);
 
-        // when
-        productDao.delete(productId);
-
-        // then
-        final int afterSize = productDao.findProducts().size();
+        int afterSize = productDao.findAll().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
     }
 }
