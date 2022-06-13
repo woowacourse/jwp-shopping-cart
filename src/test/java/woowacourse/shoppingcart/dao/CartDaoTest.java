@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
@@ -42,6 +43,14 @@ public class CartDaoTest {
 
         cartDao.addCartItem(CART_TEST_USERNAME, 1L);
         cartDao.addCartItem(CART_TEST_USERNAME, 2L);
+    }
+
+    @DisplayName("장바구니가 올바르게 생성된다.")
+    @Test
+    void addCart() {
+        Cart cart = new Cart(cartDao.findCartItemsByCustomerUsername(CART_TEST_USERNAME));
+
+        assertThat(cart.getCartItems()).hasSize(2);
     }
 
     @DisplayName("구매자 username로 해당 구매자가 담은 장바구니 아이템 목록을 가져온다.")

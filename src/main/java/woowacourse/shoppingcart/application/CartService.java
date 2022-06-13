@@ -3,11 +3,12 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartResponse;
-import woowacourse.shoppingcart.exception.ExistCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -17,14 +18,11 @@ import java.util.stream.Collectors;
 @Transactional(rollbackFor = Exception.class)
 @Service
 public class CartService {
-
     private final CartDao cartDao;
-    private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(CartDao cartDao, CustomerDao customerDao, ProductDao productDao) {
+    public CartService(CartDao cartDao, ProductDao productDao) {
         this.cartDao = cartDao;
-        this.customerDao = customerDao;
         this.productDao = productDao;
     }
 
@@ -38,16 +36,15 @@ public class CartService {
     }
 
     public void addCart(final Long productId, final String customerUsername) {
-        if (hasProductInCart(productId, customerUsername)) {
-            throw new ExistCartItemException();
-        }
         validateProductId(productId);
-        cartDao.addCartItem(customerUsername, productId);
-    }
 
-    private boolean hasProductInCart(final Long productId, final String customerUsername) {
-        return cartDao.findProductIdsByCustomerUsername(customerUsername)
-                .contains(productId);
+        final List<CartItem> cartItems = cartDao.findCartItemsByCustomerUsername(customerUsername);
+        final Cart cart = new Cart(cartItems);
+        final Product product = productDao.findProductById(productId)
+                .orElseThrow(InvalidProductException::new);
+        cart.add(product);
+
+        cartDao.addCartItem(customerUsername, productId);
     }
 
     public void updateCartItemQuantity(final int quantity, final Long productId, final String customerUsername) {
