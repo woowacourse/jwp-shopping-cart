@@ -64,10 +64,10 @@ public class CartItemDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void deleteCartItem(final Long id) {
+    public void deleteCartItem(final Long cartItemId) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
-        final int rowCount = jdbcTemplate.update(sql, id);
+        final int rowCount = jdbcTemplate.update(sql, cartItemId);
         if (rowCount == 0) {
             throw new NoExistCartItemException();
         }

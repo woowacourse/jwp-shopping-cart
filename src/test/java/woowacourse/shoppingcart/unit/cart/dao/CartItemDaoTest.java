@@ -69,11 +69,11 @@ class CartItemDaoTest extends DaoTest {
     void deleteCartItem() {
         // given
         final Long customerId = 1L;
-        final Long cartId = cartItemDao.addCartItem(customerId, 1L);
+        final Long cartItemId = cartItemDao.addCartItem(customerId, 1L);
         cartItemDao.addCartItem(customerId, 2L);
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteCartItem(cartItemId);
 
         // then
         final List<Long> productIds = cartItemDao.findCartByCustomerId(customerId)
