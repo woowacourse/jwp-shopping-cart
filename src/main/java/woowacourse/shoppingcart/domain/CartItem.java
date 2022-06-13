@@ -28,6 +28,10 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public CartItem updateQuantity(int updatedQuantity) {
+        return new CartItem(id, productId, name, price, imageUrl, updatedQuantity);
+    }
+
     public Long getId() {
         return id;
     }

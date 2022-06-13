@@ -50,9 +50,8 @@ public class CartItemService {
                                            CartItemUpdateRequest cartItemUpdateRequest) {
         final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
         final CartItems cartItems = CartItems.of(cartItemDao.findCartItemsByCustomerId(customer.getId()));
-        final CartItem cartItem = cartItems.findById(cartItemId);
+        final CartItem updatedCartItem = cartItems.updateItemQuantity(cartItemId, cartItemUpdateRequest.getQuantity());
 
-        final CartItem updatedCartItem = cartItemUpdateRequest.toCartItem(cartItem);
         cartItemDao.update(updatedCartItem);
         return CartItemResponse.of(cartItemId, updatedCartItem);
     }
@@ -63,7 +62,10 @@ public class CartItemService {
     }
 
     public void delete(final LoginCustomer loginCustomer, final Long id) {
-        customerDao.findByLoginId(loginCustomer.getLoginId());
+        final Customer customer = customerDao.findByLoginId(loginCustomer.getLoginId());
+        final CartItems cartItems = CartItems.of(cartItemDao.findCartItemsByCustomerId(customer.getId()));
+
+        cartItems.deleteById(id);
         cartItemDao.delete(id);
     }
 }

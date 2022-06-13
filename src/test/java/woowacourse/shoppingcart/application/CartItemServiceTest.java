@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.Fixture.다른_비밀번호;
+import static woowacourse.Fixture.다른_아이디;
+import static woowacourse.Fixture.다른_이름;
 import static woowacourse.Fixture.맥주;
 import static woowacourse.Fixture.치킨;
 import static woowacourse.Fixture.페퍼_비밀번호;
@@ -25,6 +28,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @SpringBootTest
 @Transactional
@@ -152,7 +156,24 @@ class CartItemServiceTest {
 
             // when & then
             assertThatThrownBy(() -> cartItemService.updateQuantity(loginCustomer, 1L, request))
-                    .isInstanceOf(InvalidCartItemException.class);
+                    .isInstanceOf(NotInCustomerCartItemException.class);
+        }
+
+        @Test
+        @DisplayName("타 고객의 아이템을 수정하려는 경우, 예외를 던진다.")
+        void unauthorized_item() {
+            // given
+            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            customerService.save(new CustomerRequest(다른_아이디, 다른_이름, 다른_비밀번호));
+            Long productId = productService.addProduct(치킨);
+            Long itemId = cartItemService.add(new LoginCustomer(페퍼_아이디), new CartItemCreateRequest(productId)).getId();
+
+            LoginCustomer loginCustomer = new LoginCustomer(다른_아이디);
+            CartItemUpdateRequest request = new CartItemUpdateRequest(10);
+
+            // when & then
+            assertThatThrownBy(() -> cartItemService.updateQuantity(loginCustomer, itemId, request))
+                    .isInstanceOf(NotInCustomerCartItemException.class);
         }
     }
 
@@ -208,7 +229,22 @@ class CartItemServiceTest {
 
             // when & then
             assertThatThrownBy(() -> cartItemService.delete(loginCustomer, deletedItemId))
-                    .isInstanceOf(InvalidCartItemException.class);
+                    .isInstanceOf(NotInCustomerCartItemException.class);
+        }
+
+        @Test
+        @DisplayName("타 고객 장바구니에 담긴 상품을 삭제하는 경우, 예외를 던진다.")
+        void unauthorized_item() {
+            // given
+            customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
+            customerService.save(new CustomerRequest(다른_아이디, 다른_이름, 다른_비밀번호));
+            Long productId = productService.addProduct(치킨);
+            Long deletedItemId = cartItemService.add(new LoginCustomer(페퍼_아이디), new CartItemCreateRequest(productId)).getId();
+            LoginCustomer loginCustomer = new LoginCustomer(다른_아이디);
+
+            // when & then
+            assertThatThrownBy(() -> cartItemService.delete(loginCustomer, deletedItemId))
+                    .isInstanceOf(NotInCustomerCartItemException.class);
         }
     }
 }

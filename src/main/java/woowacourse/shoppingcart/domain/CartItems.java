@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain;
 
 import java.util.Collections;
 import java.util.List;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 public class CartItems {
     private final List<CartItem> cartItems;
@@ -29,7 +29,20 @@ public class CartItems {
         return cartItems.stream()
                 .filter(item -> item.getId().equals(id))
                 .findFirst()
-                .orElseThrow(InvalidCartItemException::new);
+                .orElseThrow(NotInCustomerCartItemException::new);
+    }
+
+    public CartItem updateItemQuantity(Long id, int quantity) {
+        return cartItems.stream()
+                .filter(item -> item.getId().equals(id))
+                .findFirst()
+                .map(it -> it.updateQuantity(quantity))
+                .orElseThrow(NotInCustomerCartItemException::new);
+    }
+
+    public void deleteById(Long id) {
+        CartItem cartItem = findById(id);
+        cartItems.remove(cartItem);
     }
 
     public List<CartItem> getCartItems() {
