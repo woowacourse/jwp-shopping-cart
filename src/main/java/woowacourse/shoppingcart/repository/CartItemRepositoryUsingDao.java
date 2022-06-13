@@ -25,7 +25,7 @@ public class CartItemRepositoryUsingDao implements CartItemRepository {
     }
 
     @Override
-    public CartItems findByCustomer(long customerId) {
+    public CartItems findCartItemsByCustomer(long customerId) {
         List<CartItemEntity> cartItemsByCustomerId = cartItemDao.findCartItemsByCustomerId(customerId);
         List<CartItem> cartItems = cartItemsByCustomerId.stream()
             .map(cartItemEntity -> new CartItem(cartItemEntity.getId(),

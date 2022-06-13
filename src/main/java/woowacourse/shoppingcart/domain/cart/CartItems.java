@@ -33,11 +33,7 @@ public class CartItems implements Iterable<CartItem> {
             throw new NotMyCartItemException();
         }
     }
-
-    public boolean contains(CartItem cartItem) {
-        return cartItems.contains(cartItem);
-    }
-
+    
     public long getCustomerId() {
         return customerId;
     }

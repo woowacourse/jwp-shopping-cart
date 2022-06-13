@@ -37,9 +37,9 @@ public class CartItemService {
 
     public CartItemResponse addCart(final String email, final CartItemRequest cartItemRequest) {
         long customerId = findCustomerIdByEmail(email);
-        Product productById = productDao.findProductById(cartItemRequest.getProductId());
-        CartItems cartItems = cartItemRepository.findByCustomer(customerId);
-        CartItem newCartItem = new CartItem(productById, new Quantity(cartItemRequest.getQuantity()));
+        Product product = productDao.findProductById(cartItemRequest.getProductId());
+        CartItems cartItems = cartItemRepository.findCartItemsByCustomer(customerId);
+        CartItem newCartItem = new CartItem(product, new Quantity(cartItemRequest.getQuantity()));
         cartItems.add(newCartItem);
         long addedCartItemID = cartItemRepository.addCartItem(customerId, newCartItem);
         return CartItemResponse.from(cartItemRepository.findById(addedCartItemID));
@@ -48,7 +48,7 @@ public class CartItemService {
     @Transactional(readOnly = true)
     public List<CartItemResponse> getCartItems(String email) {
         long customerId = findCustomerIdByEmail(email);
-        CartItems cartItems = cartItemRepository.findByCustomer(customerId);
+        CartItems cartItems = cartItemRepository.findCartItemsByCustomer(customerId);
         List<CartItemResponse> cartItemResponses = new ArrayList<>();
         cartItems.forEach(cartItem -> cartItemResponses.add(CartItemResponse.from(cartItem)));
         return cartItemResponses;
@@ -57,7 +57,7 @@ public class CartItemService {
     @Transactional(readOnly = true)
     public CartItemResponse getCartItem(String email, long id) {
         long customerId = findCustomerIdByEmail(email);
-        CartItems cartItems = cartItemRepository.findByCustomer(customerId);
+        CartItems cartItems = cartItemRepository.findCartItemsByCustomer(customerId);
         CartItem cartItem = cartItemRepository.findById(id);
 
         cartItems.checkContain(cartItem);
@@ -67,7 +67,7 @@ public class CartItemService {
 
     public void update(String email, UpdateCartItemRequest cartItemRequest) {
         long customerId = findCustomerIdByEmail(email);
-        CartItems cartItems = cartItemRepository.findByCustomer(customerId);
+        CartItems cartItems = cartItemRepository.findCartItemsByCustomer(customerId);
         CartItem cartItem = cartItemRepository.findById(cartItemRequest.getCartItemId());
 
         cartItems.checkContain(cartItem);
@@ -79,7 +79,7 @@ public class CartItemService {
 
     public void delete(String email, CartItemDeletionRequest cartItemDeletionRequest) {
         long customerId = findCustomerIdByEmail(email);
-        CartItems cartItems = cartItemRepository.findByCustomer(customerId);
+        CartItems cartItems = cartItemRepository.findCartItemsByCustomer(customerId);
 
         List<CartItem> deleteCartItems = cartItemDeletionRequest.getCartItemIds().stream()
             .map(cartItemRepository::findById)

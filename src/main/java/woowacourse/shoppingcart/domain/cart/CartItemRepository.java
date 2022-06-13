@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.domain.cart;
 
 public interface CartItemRepository {
-    CartItems findByCustomer(long customerId);
+    CartItems findCartItemsByCustomer(long customerId);
 
     long addCartItem(long customerId, CartItem cartItem);
 

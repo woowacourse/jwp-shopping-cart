@@ -44,7 +44,7 @@ public class OrderService {
         List<Long> cartItemIds = orderRequest.getCartItemIds();
         List<OrderDetail> orderDetails = new ArrayList<>();
 
-        CartItems cartItems = cartItemRepository.findByCustomer(customerId);
+        CartItems cartItems = cartItemRepository.findCartItemsByCustomer(customerId);
         for (Long cartItemId : cartItemIds) {
             CartItem cartItem = cartItemRepository.findById(cartItemId);
             ProductStock productStock = productDao.findProductStockById(cartItem.getProductId());
