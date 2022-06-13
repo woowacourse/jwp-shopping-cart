@@ -6,9 +6,9 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-import static woowacourse.CustomerFixture.SAMPLE_EMAIL;
-import static woowacourse.CustomerFixture.SAMPLE_PASSWORD;
-import static woowacourse.CustomerFixture.SAMPLE_USERNAME;
+import static woowacourse.CustomerFixture.CUSTOMER_EMAIL;
+import static woowacourse.CustomerFixture.CUSTOMER_PASSWORD;
+import static woowacourse.CustomerFixture.CUSTOMER_USERNAME;
 
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
@@ -19,11 +19,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.ChangePasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerDeletionRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.request.ChangePasswordRequest;
+import woowacourse.shoppingcart.dto.customer.request.CustomerDeletionRequest;
+import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.request.CustomerUpdateRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -36,7 +36,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         // given
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
 
         // when
         final ExtractableResponse<Response> response = AcceptanceFixture.post(request, "/api/customers");
@@ -50,11 +50,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void login() {
         // given
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
         AcceptanceFixture.post(request, "/api/customers");
 
         // when
-        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD);
+        final TokenRequest tokenRequest = new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD);
         final ExtractableResponse<Response> loginResponse =
                 AcceptanceFixture.post(tokenRequest, "/api/auth/login");
 
@@ -66,17 +66,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 AcceptanceFixture.get("/api/customers/me", createHeader(accessToken));
         final CustomerResponse customerResponse = extractCustomer(response);
         assertThat(customerResponse).extracting("email", "username")
-                .contains(SAMPLE_EMAIL, SAMPLE_USERNAME);
+                .contains(CUSTOMER_EMAIL, CUSTOMER_USERNAME);
     }
 
     @DisplayName("로그인 한 이후에 내 정보(email, username)을 조회할 수 있다.")
     @Test
     void getMe() {
         // given
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
         AcceptanceFixture.post(request, "/api/customers");
 
-        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD);
+        final TokenRequest tokenRequest = new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD);
         final ExtractableResponse<Response> loginResponse =
                 AcceptanceFixture.post(tokenRequest, "/api/auth/login");
         final String accessToken = extractAccessToken(loginResponse);
@@ -98,10 +98,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
         AcceptanceFixture.post(request, "/api/customers");
 
-        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD);
+        final TokenRequest tokenRequest = new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD);
         final ExtractableResponse<Response> loginResponse =
                 AcceptanceFixture.post(tokenRequest, "/api/auth/login");
         final String accessToken = extractAccessToken(loginResponse);
@@ -125,10 +125,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void changePassword() {
         // given
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
         AcceptanceFixture.post(request, "/api/customers");
 
-        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD);
+        final TokenRequest tokenRequest = new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD);
         final ExtractableResponse<Response> loginResponse =
                 AcceptanceFixture.post(tokenRequest, "/api/auth/login");
         final String accessToken = extractAccessToken(loginResponse);
@@ -149,10 +149,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
         AcceptanceFixture.post(request, "/api/customers");
 
-        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD);
+        final TokenRequest tokenRequest = new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD);
         final ExtractableResponse<Response> loginResponse =
                 AcceptanceFixture.post(tokenRequest, "/api/auth/login");
         final String accessToken = extractAccessToken(loginResponse);
@@ -173,7 +173,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     public void duplicateEmail() {
         // given
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
         AcceptanceFixture.post(request, "/api/customers");
 
         // when
@@ -206,10 +206,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     public void invalidChangePassword() {
         // given
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
         AcceptanceFixture.post(request, "/api/customers");
 
-        final TokenRequest tokenRequest = new TokenRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD);
+        final TokenRequest tokenRequest = new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD);
         final ExtractableResponse<Response> loginResponse =
                 AcceptanceFixture.post(tokenRequest, "/api/auth/login");
         final String accessToken = extractAccessToken(loginResponse);

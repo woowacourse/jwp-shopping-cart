@@ -17,17 +17,10 @@ import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotExistException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-
-    @ExceptionHandler
-    public ResponseEntity<String> handle(RuntimeException e) {
-        return ResponseEntity.badRequest().body("Unhandled Exception");
-    }
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(DuplicateKeyException e) {
@@ -55,13 +48,23 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(InvalidCartItemException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.from(e.getMessage()));
+    }
+
+    @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(ErrorResponse.from(e.getMessage()));
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handle(NotExistException e) {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+    public ResponseEntity<ErrorResponse> handle(NotExistException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.from(e.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(InvalidOrderException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.from(e.getMessage()));
     }
 
     @ExceptionHandler({
@@ -69,16 +72,6 @@ public class ControllerAdvice {
             ConstraintViolationException.class,
     })
     public ResponseEntity<String> handleInvalidRequest(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler({
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
-    })
-    public ResponseEntity<String> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

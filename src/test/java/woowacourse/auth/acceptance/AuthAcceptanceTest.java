@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-import static woowacourse.CustomerFixture.SAMPLE_EMAIL;
-import static woowacourse.CustomerFixture.SAMPLE_PASSWORD;
-import static woowacourse.CustomerFixture.SAMPLE_USERNAME;
+import static woowacourse.CustomerFixture.CUSTOMER_EMAIL;
+import static woowacourse.CustomerFixture.CUSTOMER_PASSWORD;
+import static woowacourse.CustomerFixture.CUSTOMER_USERNAME;
 
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
@@ -19,8 +19,8 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceFixture;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -34,7 +34,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         // given
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
         AcceptanceFixture.post(request, "/api/customers");
 
         final TokenRequest tokenRequest = new TokenRequest(request.getEmail(), request.getPassword());
@@ -59,7 +59,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @CsvSource(value = {"email@email.com, invalidpwd1!", "invalidEmail@email.com, password1!"})
     void myInfoWithBadBearerAuth(String email, String password) {
         // given
-        final CustomerRequest request = new CustomerRequest(SAMPLE_EMAIL, SAMPLE_PASSWORD, SAMPLE_USERNAME);
+        final CustomerRequest request = new CustomerRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD, CUSTOMER_USERNAME);
         AcceptanceFixture.post(request, "/api/customers");
 
         // when
