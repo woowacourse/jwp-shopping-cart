@@ -98,8 +98,8 @@ class OrderServiceTest {
                 .willReturn(true);
         given(ordersDetailDao.findOrdersDetailsJoinProductByOrderId(ordersId))
                 .willReturn(List.of(
-                        new OrderDetail(1, ProductFixture.PRODUCT_BANANA),
-                        new OrderDetail(2, ProductFixture.PRODUCT_APPLE)
+                        new OrderDetail(1, ordersId, ProductFixture.PRODUCT_BANANA),
+                        new OrderDetail(2, ordersId, ProductFixture.PRODUCT_APPLE)
                 ));
 
         // when
@@ -151,10 +151,10 @@ class OrderServiceTest {
                 .willReturn(Optional.of(customer));
         given(orderDao.findOrderIdsByCustomerId(customerId))
                 .willReturn(List.of(ordersId));
-        given(ordersDetailDao.findOrdersDetailsJoinProductByOrderId(ordersId))
+        given(ordersDetailDao.findAllJoinProductByOrderIds(List.of(ordersId)))
                 .willReturn(List.of(
-                        new OrderDetail(1, ProductFixture.PRODUCT_BANANA),
-                        new OrderDetail(2, ProductFixture.PRODUCT_APPLE)
+                        new OrderDetail(1, ordersId, ProductFixture.PRODUCT_BANANA),
+                        new OrderDetail(2, ordersId, ProductFixture.PRODUCT_APPLE)
                 ));
 
         // when
@@ -174,7 +174,7 @@ class OrderServiceTest {
                 () -> assertThat(productNames).containsExactly("banana", "apple"),
                 () -> verify(customerDao).findById(customerId),
                 () -> verify(orderDao).findOrderIdsByCustomerId(customerId),
-                () -> verify(ordersDetailDao).findOrdersDetailsJoinProductByOrderId(ordersId)
+                () -> verify(ordersDetailDao).findAllJoinProductByOrderIds(List.of(ordersId))
         );
     }
 }

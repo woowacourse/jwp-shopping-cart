@@ -26,7 +26,8 @@ class OrdersDetailDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
     private final OrdersDetailDao ordersDetailDao;
-    private long ordersId;
+    private long ordersId1;
+    private long ordersId2;
     private long productId;
 
     public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
@@ -38,7 +39,9 @@ class OrdersDetailDaoTest {
     void setUp() {
         final long customerId = 1L;
         jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
-        ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        ordersId1 = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
+        ordersId2 = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 
         jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
                 , "banana", 1_000, "woowa1.com");
@@ -56,9 +59,9 @@ class OrdersDetailDaoTest {
                 new Cart(2L, new Quantity(10), PRODUCT_APPLE)
         );
         //when
-        ordersDetailDao.batchAddOrdersDetail(ordersId, carts);
+        ordersDetailDao.batchAddOrdersDetail(ordersId1, carts);
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-                .findOrdersDetailsJoinProductByOrderId(ordersId);
+                .findOrdersDetailsJoinProductByOrderId(ordersId1);
 
         //then
         assertThat(ordersDetailsByOrderId).hasSize(2);
@@ -72,14 +75,40 @@ class OrdersDetailDaoTest {
         for (int i = 0; i < insertCount; i++) {
             jdbcTemplate
                     .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-                            ordersId, productId, 3);
+                            ordersId1, productId, 3);
         }
 
         //when
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-                .findOrdersDetailsJoinProductByOrderId(ordersId);
+                .findOrdersDetailsJoinProductByOrderId(ordersId1);
 
         //then
         assertThat(ordersDetailsByOrderId).hasSize(insertCount);
+    }
+
+    @DisplayName("여러개의 OrderId로 해당 하는 모든 OrderDetails를 조회하는 기능")
+    @Test
+    void findAllJoinProductByOrderIds() {
+        //given
+        final int firstInsertCount = 3;
+        for (int i = 0; i < firstInsertCount; i++) {
+            jdbcTemplate
+                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
+                            ordersId1, productId, 3);
+        }
+
+        final int secondInsertCount = 2;
+        for (int i = 0; i < secondInsertCount; i++) {
+            jdbcTemplate
+                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
+                            ordersId2, productId, 3);
+        }
+
+        //when
+        final List<OrderDetail> ordersDetailsByOrderId =
+                ordersDetailDao.findAllJoinProductByOrderIds(List.of(ordersId1, ordersId2));
+
+        //then
+        assertThat(ordersDetailsByOrderId).hasSize(firstInsertCount + secondInsertCount);
     }
 }

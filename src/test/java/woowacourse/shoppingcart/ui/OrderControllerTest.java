@@ -107,7 +107,7 @@ class OrderControllerTest {
         // given
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2, PRODUCT_BANANA)));
+                Collections.singletonList(new OrderDetail(2, orderId, PRODUCT_BANANA)));
 
         when(orderService.findOrderById(customerId, orderId))
                 .thenReturn(new OrdersResponse(expected));
@@ -131,9 +131,9 @@ class OrderControllerTest {
         // given
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
-                        new OrderDetail(2, PRODUCT_BANANA))),
+                        new OrderDetail(2, 1L, PRODUCT_BANANA))),
                 new Orders(2L, Collections.singletonList(
-                        new OrderDetail(4, PRODUCT_APPLE))
+                        new OrderDetail(4, 1L, PRODUCT_APPLE))
                 ));
 
         when(orderService.findOrdersByCustomerId(customerId))

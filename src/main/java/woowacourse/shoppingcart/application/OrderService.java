@@ -1,6 +1,11 @@
 package woowacourse.shoppingcart.application;
 
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,10 +66,11 @@ public class OrderService {
     @Transactional(readOnly = true)
     public OrdersResponse findOrderById(final Long customerId, final Long orderId) {
         validateOrderIdByCustomerName(customerId, orderId);
-        final Orders orders = findOrderResponseDtoByOrderId(orderId);
+        final List<OrderDetail> orderDetails = ordersDetailDao.findOrdersDetailsJoinProductByOrderId(orderId);
+        final Orders orders = new Orders(orderId, orderDetails);
         return new OrdersResponse(orders);
     }
-
+    
     private void validateOrderIdByCustomerName(final Long customerId, final Long orderId) {
         final Customer customer = getCustomer(customerId);
         if (!orderDao.isValidOrderId(customer.getId(), orderId)) {
@@ -76,11 +82,12 @@ public class OrderService {
     public List<OrdersResponse> findOrdersByCustomerId(final Long customerId) {
         final Customer customer = getCustomer(customerId);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customer.getId());
+        final List<OrderDetail> orderDetails = ordersDetailDao.findAllJoinProductByOrderIds(orderIds);
+        final Map<Long, List<OrderDetail>> orderDetailsByOrderId = orderDetails.stream()
+                .collect(Collectors.groupingBy(OrderDetail::getOrderId, mapping(Function.identity(), toList())));
 
-        final List<Orders> ordersByCustomerId = orderIds.stream()
-                .map(this::findOrderResponseDtoByOrderId)
-                .collect(Collectors.toList());
-        return ordersByCustomerId.stream()
+        return orderDetailsByOrderId.entrySet().stream()
+                .map(entry -> new Orders(entry.getKey(), entry.getValue()))
                 .map(OrdersResponse::new)
                 .collect(Collectors.toList());
     }
@@ -88,10 +95,5 @@ public class OrderService {
     private Customer getCustomer(final Long customerId) {
         return customerDao.findById(customerId)
                 .orElseThrow(InvalidCustomerException::new);
-    }
-
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> orderDetails = ordersDetailDao.findOrdersDetailsJoinProductByOrderId(orderId);
-        return new Orders(orderId, orderDetails);
     }
 }

@@ -2,9 +2,11 @@ package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.OrderDetail;
@@ -39,16 +41,31 @@ public class OrdersDetailDao {
     }
 
     public List<OrderDetail> findOrdersDetailsJoinProductByOrderId(final Long orderId) {
-        final String sql = "SELECT od.product_id, od.quantity, p.name, p.price, p.image_url FROM orders_detail AS od "
-                + "INNER JOIN product AS p ON p.id = od.product_id "
-                + "WHERE od.orders_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+        final String sql =
+                "SELECT od.orders_id, od.product_id, od.quantity, p.name, p.price, p.image_url FROM orders_detail AS od "
+                        + "INNER JOIN product AS p ON p.id = od.product_id "
+                        + "WHERE od.orders_id = ?";
+        return jdbcTemplate.query(sql, rowMapper(), orderId);
+    }
+
+    public List<OrderDetail> findAllJoinProductByOrderIds(final List<Long> orderIds) {
+        final String inSql = String.join(", ", Collections.nCopies(orderIds.size(), "?"));
+        final String sql = String.format(
+                "SELECT od.orders_id, od.product_id, od.quantity, p.name, p.price, p.image_url FROM orders_detail AS od "
+                        + "INNER JOIN product AS p ON p.id = od.product_id "
+                        + "WHERE od.orders_id IN (%s)", inSql);
+
+        return jdbcTemplate.query(sql, rowMapper(), orderIds.toArray());
+    }
+
+    private RowMapper<OrderDetail> rowMapper() {
+        return (rs, rowNum) -> {
             final Product product = new Product(
                     rs.getLong("product_id"),
                     rs.getString("name"),
                     rs.getInt("price"),
                     rs.getString("image_url"));
-            return new OrderDetail(rs.getInt("quantity"), product);
-        }, orderId);
+            return new OrderDetail(rs.getInt("quantity"), rs.getLong("orders_id"), product);
+        };
     }
 }

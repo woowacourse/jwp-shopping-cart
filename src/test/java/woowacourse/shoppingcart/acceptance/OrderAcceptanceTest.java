@@ -10,7 +10,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,14 +23,19 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.response.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.response.OrdersResponse;
 
 @DisplayName("주문 관련 기능")
 @SuppressWarnings("NonAsciiCharacters")
 public class OrderAcceptanceTest extends AcceptanceShoppingCartTest {
 
+    private Long productId1;
+    private Long productId2;
+    private Long productId3;
     private Long cartId1;
     private Long cartId2;
+    private Long cartId3;
     private String accessToken;
 
     @Override
@@ -39,8 +43,9 @@ public class OrderAcceptanceTest extends AcceptanceShoppingCartTest {
     public void setUp() {
         super.setUp();
 
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        productId3 = 상품_등록되어_있음("피자", 25_000, "http://example.com/pizza.jpg");
 
         CustomerRequest signUpRequest = new CustomerRequest("giron", plainBasicPassword);
         회원가입_요청(signUpRequest);
@@ -51,6 +56,7 @@ public class OrderAcceptanceTest extends AcceptanceShoppingCartTest {
 
         cartId1 = 장바구니_아이템_추가되어_있음(accessToken, productId1);
         cartId2 = 장바구니_아이템_추가되어_있음(accessToken, productId2);
+        cartId3 = 장바구니_아이템_추가되어_있음(accessToken, productId3);
     }
 
     @DisplayName("주문하기")
@@ -68,13 +74,15 @@ public class OrderAcceptanceTest extends AcceptanceShoppingCartTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(cartId1, 1)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, Collections.singletonList(new OrderRequest(cartId2, 1)));
+        final List<OrderRequest> orderRequests = List.of(new OrderRequest(cartId1, 1), new OrderRequest(cartId2, 1));
+        Long orderId1 = 주문하기_요청_성공되어_있음(accessToken, orderRequests);
+        Long orderId2 = 주문하기_요청_성공되어_있음(accessToken, List.of(new OrderRequest(cartId3, 1)));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청(accessToken);
 
         주문_조회_응답됨(response);
         주문_내역_포함됨(response, orderId1, orderId2);
+        주문_내역에_상품이_맞게_포함됨(response, productId1, productId2, productId3);
     }
 
     @DisplayName("주문 단일 조회")
@@ -141,6 +149,18 @@ public class OrderAcceptanceTest extends AcceptanceShoppingCartTest {
                 .map(OrdersResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
+    }
+
+    public static void 주문_내역에_상품이_맞게_포함됨(ExtractableResponse<Response> response, Long... expectedProductIds) {
+        final List<OrderDetailResponse> orderDetailResponses = response.jsonPath().getList(".", OrdersResponse.class)
+                .stream()
+                .map(OrdersResponse::getOrderDetails)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        final List<Long> productIds = orderDetailResponses.stream()
+                .map(OrderDetailResponse::getProductId)
+                .collect(Collectors.toList());
+        assertThat(productIds).contains(expectedProductIds);
     }
 
     private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
