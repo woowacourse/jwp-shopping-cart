@@ -34,6 +34,7 @@ public class CartItemDao {
 
     private RowMapper<CartItem> cartRowMapper = (rs, rowNum) -> new CartItem(
             rs.getLong("cart_item.id"),
+            rs.getLong("cart_item.customer_id"),
             new Product(rs.getLong("product.id"),
                 rs.getString("product.name"),
                 rs.getInt("product.price"),
@@ -71,6 +72,7 @@ public class CartItemDao {
             String query = "SELECT * FROM cart_item WHERE customer_id= ? AND product_id = ?";
             return jdbcTemplate.queryForObject(query, (rs, rowNum) -> new CartItem(
                             rs.getLong("id"),
+                            rs.getLong("customer_id"),
                             new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()),
                             rs.getLong("quantity"),
                             rs.getBoolean("checked")),
@@ -82,7 +84,7 @@ public class CartItemDao {
 
     public CartItem findCartIdById(Long cartId) {
         try {
-            final String query = "SELECT cart_item.id, product.id, product.name, product.price, product.image_url, cart_item.quantity, cart_item.checked " +
+            final String query = "SELECT cart_item.id, cart_item.customer_id, product.id, product.name, product.price, product.image_url, cart_item.quantity, cart_item.checked " +
                     "FROM cart_item INNER JOIN product ON product.id = cart_item.product_id " +
                     "WHERE cart_item.id = ?";
             return jdbcTemplate.queryForObject(query, cartRowMapper, cartId);

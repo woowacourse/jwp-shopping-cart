@@ -122,8 +122,8 @@ public class CartItemItemDaoTest {
         Long cartItemId2 = cartItemDao.addCartItem(1L, product2.getId(), 1L, true);
 
         cartItemDao.updateByIds(1L,
-                List.of(new CartItem(1L, product, 2L, false),
-                        new CartItem(2L, product, 3L, false)));
+                List.of(new CartItem(1L, 1L, product, 2L, false),
+                        new CartItem(2L, 1L, product, 3L, false)));
 
         assertThat(cartItemDao.findCartIdById(cartItemId2).getQuantity()).isEqualTo(3L);
     }

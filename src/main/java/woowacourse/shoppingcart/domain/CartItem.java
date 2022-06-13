@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.domain;
 public class CartItem {
 
     private Long id;
+    private Long customerId;
     private Product product;
     private Long quantity;
     private boolean checked;
@@ -10,10 +11,11 @@ public class CartItem {
     private CartItem() {
     }
 
-    public CartItem(Long id, Product product, Long quantity, boolean checked) {
+    public CartItem(Long id, Long customerId, Product product, Long quantity, boolean checked) {
         validateNull(product, quantity);
         validatePositive(quantity);
         this.id = id;
+        this.customerId = customerId;
         this.product = product;
         this.quantity = quantity;
         this.checked = checked;
@@ -33,6 +35,10 @@ public class CartItem {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
     }
 
     public Product getProduct() {

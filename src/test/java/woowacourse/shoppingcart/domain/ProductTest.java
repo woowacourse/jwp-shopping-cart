@@ -47,7 +47,7 @@ class ProductTest {
     @Test
     @DisplayName("수량에 null이 들어온 경우")
     void validateQuantityNull() {
-        assertThatThrownBy(() -> new CartItem(1L, new Product("피자", 20000, "http://example.com/chicken.jpg"),
+        assertThatThrownBy(() -> new CartItem(1L, 1L, new Product("피자", 20000, "http://example.com/chicken.jpg"),
                 null, true))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("상품과 수량에는 null이 들어올 수 없습니다.");

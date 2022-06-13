@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.*;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Service
 public class CartService {
@@ -57,13 +58,24 @@ public class CartService {
         Long customerId = customerDao.findByUsername(customerName).getId();
         List<CartItem> cartItems = updateCartItemsRequest.getCartItems()
                 .stream()
-                .map(request -> new CartItem(request.getId(), cartItemDao.findCartIdById(request.getId()).getProduct(),
+                .map(request -> new CartItem(request.getId(), cartItemDao.findCartIdById(request.getId()).getCustomerId(),
+                        cartItemDao.findCartIdById(request.getId()).getProduct(),
                         request.getQuantity(), request.isChecked()))
                 .collect(Collectors.toList());
+
+        validateUpdateCartItem(customerId, cartItems);
 
         cartItemDao.updateByIds(customerId, cartItems);
 
         return findUpdateCartProducts(updateCartItemsRequest);
+    }
+
+    private void validateUpdateCartItem(Long customerId, List<CartItem> cartItems) {
+        for (CartItem cartItem : cartItems) {
+            if (!cartItem.getCustomerId().equals(customerId)) {
+                throw new InvalidCartItemException();
+            }
+        }
     }
 
     private CartItemsResponse findUpdateCartProducts(UpdateCartItemsRequest updateCartItemsRequest) {
