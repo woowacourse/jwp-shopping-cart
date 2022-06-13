@@ -10,6 +10,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
+import woowacourse.shoppingcart.order.dao.OrderDao;
 import woowacourse.shoppingcart.product.dao.ProductDao;
 
 @JdbcTest
@@ -24,11 +25,13 @@ public abstract class DaoTest {
     protected ProductDao productDao;
     protected CartItemDao cartItemDao;
     protected CustomerDao customerDao;
+    protected OrderDao orderDao;
 
     @BeforeEach
     void setUp() {
         productDao = new ProductDao(jdbcTemplate);
         cartItemDao = new CartItemDao(jdbcTemplate);
         customerDao = new CustomerDao(jdbcTemplate);
+        orderDao = new OrderDao(jdbcTemplate);
     }
 }
