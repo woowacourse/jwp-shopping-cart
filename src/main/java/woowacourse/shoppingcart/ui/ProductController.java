@@ -21,7 +21,7 @@ public class ProductController {
 	private final ProductService productService;
 
 	@GetMapping
-	public ResponseEntity<List<ProductResponse>> products() {
+	public ResponseEntity<List<ProductResponse>> getProducts() {
 		return ResponseEntity.ok(productService.findProducts()
 			.stream()
 			.map(ProductResponse::from)
@@ -29,7 +29,7 @@ public class ProductController {
 	}
 
 	@GetMapping("/{productId}")
-	public ResponseEntity<ProductResponse> product(@PathVariable final Long productId) {
+	public ResponseEntity<ProductResponse> getProduct(@PathVariable final Long productId) {
 		return ResponseEntity.ok(ProductResponse.from(productService.findProductById(productId)));
 	}
 }
