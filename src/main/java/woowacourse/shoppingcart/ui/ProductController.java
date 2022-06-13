@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.support.LookUpCustomer;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.dto.LookUpUser;
+import woowacourse.shoppingcart.dto.CustomerWithId;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
@@ -24,7 +24,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> products(@LookUpCustomer LookUpUser user) {
+    public ResponseEntity<List<ProductResponse>> products(@LookUpCustomer CustomerWithId user) {
         return ResponseEntity.ok(productService.findAll(user));
     }
 

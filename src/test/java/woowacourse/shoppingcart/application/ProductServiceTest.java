@@ -12,7 +12,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.LookUpUser;
+import woowacourse.shoppingcart.dto.CustomerWithId;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
 import java.util.List;
@@ -39,7 +39,7 @@ class ProductServiceTest {
     @DisplayName("User가 로그인 안되어있으면 ProductRespones에 Cart정보는 없다.")
     @Test
     void findProducts() {
-        LookUpUser user = new LookUpUser(null);
+        CustomerWithId user = new CustomerWithId(null);
         List<Product> products = List.of(new Product(1L, "제품1", 5000, "www.imageUrl1.com"),
                 new Product(2L, "제품2", 1000, "www.image2.com"));
 
@@ -56,7 +56,7 @@ class ProductServiceTest {
     @DisplayName("User가 로그인 되어있으면 ProductRespones에 Cart정보도 담겨있다.")
     @Test
     void findProductsWithLogin() {
-        LookUpUser user = new LookUpUser(1L);
+        CustomerWithId user = new CustomerWithId(1L);
         Customer customer = new Customer(1L, "giron", "passs3w12");
 
         List<Product> products = List.of(

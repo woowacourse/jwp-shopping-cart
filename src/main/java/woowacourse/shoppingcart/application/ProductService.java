@@ -10,7 +10,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.LookUpUser;
+import woowacourse.shoppingcart.dto.CustomerWithId;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
@@ -32,7 +32,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findAll(final LookUpUser user) {
+    public List<ProductResponse> findAll(final CustomerWithId user) {
         List<Product> products = productDao.findProducts();
         if (user.isNotLogin()) {
             return products.stream()

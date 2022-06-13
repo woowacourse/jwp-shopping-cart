@@ -8,7 +8,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.application.exception.InvalidTokenException;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.dto.LookUpUser;
+import woowacourse.shoppingcart.dto.CustomerWithId;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,12 +32,12 @@ public class CustomerArgumentResolver implements HandlerMethodArgumentResolver {
         String token = AuthorizationExtractor.extract(request);
 
         if (token == null) {
-            return new LookUpUser(null);
+            return new CustomerWithId(null);
         }
         if (!jwtTokenProvider.validateToken(token)) {
             throw new InvalidTokenException();
         }
         Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
-        return new LookUpUser(id);
+        return new CustomerWithId(id);
     }
 }

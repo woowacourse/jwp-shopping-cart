@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.dto;
 
-public class LookUpUser {
+public class CustomerWithId {
     private final Long id;
 
-    public LookUpUser(final Long id) {
+    public CustomerWithId(final Long id) {
         this.id = id;
     }
 
