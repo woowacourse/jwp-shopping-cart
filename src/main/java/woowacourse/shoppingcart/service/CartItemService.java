@@ -72,9 +72,9 @@ public class CartItemService {
 
         cartItems.checkContain(cartItem);
 
-        CartItem updateCartItem = new CartItem(cartItem.getId(), cartItem.getProduct(),
+        CartItem cartItemToUpdate = new CartItem(cartItem.getId(), cartItem.getProduct(),
             new Quantity(cartItemRequest.getQuantity()));
-        cartItemRepository.update(updateCartItem);
+        cartItemRepository.update(cartItemToUpdate);
     }
 
     public void delete(String email, CartItemDeletionRequest cartItemDeletionRequest) {
