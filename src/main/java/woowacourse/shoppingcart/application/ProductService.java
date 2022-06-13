@@ -55,6 +55,31 @@ public class ProductService {
         return productResponses;
     }
 
+    @Transactional(readOnly = true)
+    public List<ProductResponse> findPageableProducts(final int limit, final int offset) {
+        return productDao.findPageableProducts(limit, offset).stream()
+                .map(ProductResponse::withOutCart)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> findPageableProductsByCustomerId(final int size, final int page,
+                                                                  final Long customerId) {
+        final Customer customer = customerDao.findById(customerId)
+                .orElseThrow(InvalidCustomerException::new);
+        final List<Product> products = productDao.findPageableProducts(size, page);
+        final List<Cart> carts = cartItemDao.findAllJoinProductByCustomerId(customer.getId());
+        List<ProductResponse> productResponses = new ArrayList<>();
+        for (Product product : products) {
+            final Cart cart = carts.stream()
+                    .filter(each -> each.getProductId().equals(product.getId()))
+                    .findFirst()
+                    .orElseGet(() -> new Cart(null, new Quantity(0), product));
+            productResponses.add(ProductResponse.withCart(product, cart));
+        }
+        return productResponses;
+    }
+
     public Long addProduct(final ProductAddRequest productAddRequest) {
         final Product product = new Product(productAddRequest.getName(), productAddRequest.getPrice(),
                 productAddRequest.getImageUrl());

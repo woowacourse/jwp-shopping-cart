@@ -2,6 +2,8 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.fixture.ProductFixture.PRODUCT_APPLE;
+import static woowacourse.fixture.ProductFixture.PRODUCT_BANANA;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +18,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -36,8 +37,8 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
+        productDao.save(PRODUCT_BANANA);
+        productDao.save(PRODUCT_APPLE);
 
         jdbcTemplate.update("INSERT INTO cart_item(quantity, customer_id, product_id) VALUES(?, ?, ?)", 5, 1L, 1L);
         jdbcTemplate.update("INSERT INTO cart_item(quantity, customer_id, product_id) VALUES(?, ?, ?)", 10, 1L, 2L);
@@ -139,7 +140,7 @@ public class CartItemDaoTest {
                 .filter(each -> Objects.equals(each.getId(), cartItemId))
                 .collect(Collectors.toList())
                 .get(0);
-        
+
         // then
         assertThat(cart.getQuantity()).isEqualTo(1);
     }

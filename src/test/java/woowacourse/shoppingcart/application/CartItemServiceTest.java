@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
+import static woowacourse.fixture.ProductFixture.PRODUCT_BANANA;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.UserName;
@@ -44,7 +44,7 @@ class CartItemServiceTest {
         final UserName userName = new UserName("giron");
         final Long customerId = 1L;
         final Customer customer = new Customer(customerId, userName, encryptedBasicPassword);
-        final Cart banana = new Cart(1L, new Quantity(5), new Product("banana", 1_000, "woowa1.com"));
+        final Cart banana = new Cart(1L, new Quantity(5), PRODUCT_BANANA);
         final List<Cart> carts = List.of(banana);
 
         given(customerDao.findById(customerId))

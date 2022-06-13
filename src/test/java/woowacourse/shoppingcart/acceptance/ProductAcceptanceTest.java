@@ -42,9 +42,9 @@ public class ProductAcceptanceTest extends AcceptanceShoppingCartTest {
         ExtractableResponse<Response> response = 비로그인_상품_목록_조회_요청();
 
         조회_응답됨(response);
-        상품_목록_포함됨(productId1, productId2, response);
+        상품_목록_포함됨(List.of(productId1, productId2), response);
         상품_목록_카트_아이디_포함됨(null, null, response);
-        상품_목록_카트_수량_포함됨(0, 0, response);
+        상품_목록_카트_수량_포함됨(List.of(0, 0), response);
     }
 
     @DisplayName("로그인이 된 상태로 상품 목록을 조회하면, 카트 정보가 cartId, quantity 정보가 포함된다.")
@@ -65,9 +65,48 @@ public class ProductAcceptanceTest extends AcceptanceShoppingCartTest {
         ExtractableResponse<Response> response = 로그인된_상품_목록_조회_요청(accessToken);
 
         조회_응답됨(response);
-        상품_목록_포함됨(productId1, productId2, response);
+        상품_목록_포함됨(List.of(productId1, productId2), response);
         상품_목록_카트_아이디_포함됨(cartId, null, response);
-        상품_목록_카트_수량_포함됨(1, 0, response);
+        상품_목록_카트_수량_포함됨(List.of(1, 0), response);
+    }
+
+    @DisplayName("로그인이 안된 상태로 페이징 처리된 상품 목록을 조회하면, 카트 정보가 cartId: null, quantity: 0이 포함된다.")
+    @Test
+    void getPageableProductsWithOutLogin() {
+        상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        Long productId3 = 상품_등록되어_있음("피자", 15_000, "http://example.com/pizza.jpg");
+
+        ExtractableResponse<Response> response = 비로그인_페이징_상품_목록_조회_요청(2, 1);
+
+        조회_응답됨(response);
+        상품_목록_포함됨(List.of(productId2, productId3), response);
+        상품_목록_카트_아이디_포함됨(null, null, response);
+        상품_목록_카트_수량_포함됨(List.of(0, 0), response);
+    }
+
+    @DisplayName("로그인이 된 상태로 페이징 처리된 상품 목록을 조회하면, 카트 정보가 cartId, quantity 정보가 포함된다.")
+    @Test
+    void getPageableProducts() {
+        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        상품_등록되어_있음("피자", 15_000, "http://example.com/pizza.jpg");
+
+        CustomerRequest signUpRequest = new CustomerRequest("giron", plainBasicPassword);
+        회원가입_요청(signUpRequest);
+
+        TokenRequest tokenRequest = new TokenRequest("giron", plainBasicPassword);
+        TokenResponse tokenResponse = 로그인_요청_토큰_생성됨(tokenRequest);
+        final String accessToken = tokenResponse.getAccessToken();
+
+        final Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+
+        ExtractableResponse<Response> response = 로그인된_페이징_상품_목록_조회_요청(2, 0, accessToken);
+
+        조회_응답됨(response);
+        상품_목록_포함됨(List.of(productId1, productId2), response);
+        상품_목록_카트_아이디_포함됨(cartId, null, response);
+        상품_목록_카트_수량_포함됨(List.of(1, 0), response);
     }
 
     @DisplayName("상품을 조회한다")
@@ -112,12 +151,31 @@ public class ProductAcceptanceTest extends AcceptanceShoppingCartTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> 비로그인_페이징_상품_목록_조회_요청(int size, int page) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/products/pageable?size=" + size + "&page=" + page)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> 로그인된_상품_목록_조회_요청(String token) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, BEARER + token)
                 .when().get("/api/products")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 로그인된_페이징_상품_목록_조회_요청(int size, int page, String token) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
+                .when().get("/api/products/pageable?size=" + size + "&page=" + page)
                 .then().log().all()
                 .extract();
     }
@@ -154,25 +212,25 @@ public class ProductAcceptanceTest extends AcceptanceShoppingCartTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
+    public static void 상품_목록_포함됨(List<Long> productIds, ExtractableResponse<Response> response) {
         List<Long> resultProductIds = response.jsonPath().getList(".", ProductResponse.class).stream()
                 .map(ProductResponse::getId)
                 .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productId1, productId2);
+        assertThat(resultProductIds).containsExactlyElementsOf(productIds);
     }
 
     public static void 상품_목록_카트_아이디_포함됨(Long cartId1, Long cartId2, ExtractableResponse<Response> response) {
         List<Long> resultCartIds = response.jsonPath().getList(".", ProductResponse.class).stream()
                 .map(ProductResponse::getCartId)
                 .collect(Collectors.toList());
-        assertThat(resultCartIds).contains(cartId1, cartId2);
+        assertThat(resultCartIds).containsExactly(cartId1, cartId2);
     }
 
-    public static void 상품_목록_카트_수량_포함됨(int quantity1, int quantity2, ExtractableResponse<Response> response) {
+    public static void 상품_목록_카트_수량_포함됨(List<Integer> quantities, ExtractableResponse<Response> response) {
         List<Integer> resultCartQuantities = response.jsonPath().getList(".", ProductResponse.class).stream()
                 .map(ProductResponse::getQuantity)
                 .collect(Collectors.toList());
-        assertThat(resultCartQuantities).contains(quantity1, quantity2);
+        assertThat(resultCartQuantities).containsExactlyElementsOf(quantities);
     }
 
     public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {

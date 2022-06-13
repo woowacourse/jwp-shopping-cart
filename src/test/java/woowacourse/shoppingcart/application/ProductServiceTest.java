@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static woowacourse.fixture.PasswordFixture.encryptedBasicPassword;
+import static woowacourse.fixture.ProductFixture.PRODUCT_APPLE;
+import static woowacourse.fixture.ProductFixture.PRODUCT_BANANA;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,9 +47,7 @@ class ProductServiceTest {
     @Test
     void findProducts() {
         // given
-        final Product product1 = new Product(1L, "banana", 1_000, "woowa1.com");
-        final Product product2 = new Product(2L, "apple", 2_000, "woowa2.com");
-        List<Product> products = List.of(product1, product2);
+        List<Product> products = List.of(PRODUCT_BANANA, PRODUCT_APPLE);
         given(productDao.findProducts())
                 .willReturn(products);
 
@@ -67,13 +67,11 @@ class ProductServiceTest {
     @Test
     void findProductsByCustomerId() {
         // given
-        final Product product1 = new Product(1L, "banana", 1_000, "woowa1.com");
-        final Product product2 = new Product(2L, "apple", 2_000, "woowa2.com");
-        List<Product> products = List.of(product1, product2);
+        List<Product> products = List.of(PRODUCT_BANANA, PRODUCT_APPLE);
         final Long customerId = 1L;
         final UserName userName = new UserName("giron");
         final Customer customer = new Customer(1L, userName, encryptedBasicPassword);
-        final Cart cart = new Cart(1L, new Quantity(5), product1);
+        final Cart cart = new Cart(1L, new Quantity(5), PRODUCT_BANANA);
         given(customerDao.findById(customerId))
                 .willReturn(Optional.of(customer));
         given(productDao.findProducts())
@@ -100,6 +98,65 @@ class ProductServiceTest {
                 () -> assertThat(cartQuantities).containsExactly(5, 0),
                 () -> verify(customerDao).findById(customerId),
                 () -> verify(productDao).findProducts(),
+                () -> verify(cartItemDao).findAllJoinProductByCustomerId(customerId)
+        );
+    }
+
+    @DisplayName("등록된 상품을 페이징 처리하여 가져온다.")
+    @Test
+    void findPageableProducts() {
+        // given
+        given(productDao.findPageableProducts(1, 0))
+                .willReturn(List.of(PRODUCT_BANANA));
+
+        // when
+        final List<ProductResponse> firstProductResponses = productService.findPageableProducts(1, 0);
+        final List<Long> productIds = firstProductResponses.stream()
+                .map(ProductResponse::getId)
+                .collect(Collectors.toList());
+
+        // then
+        assertAll(
+                () -> assertThat(productIds).containsExactly(1L),
+                () -> verify(productDao).findPageableProducts(1, 0)
+        );
+    }
+
+    @DisplayName("유저 id를 통해서 등록된 상품을 페이징 처리하여 가져온다.")
+    @Test
+    void findPageableProductsByCustomerId() {
+        // given
+        final Long customerId = 1L;
+        final UserName userName = new UserName("giron");
+        final Customer customer = new Customer(1L, userName, encryptedBasicPassword);
+        final Cart cart = new Cart(1L, new Quantity(5), PRODUCT_BANANA);
+        given(customerDao.findById(customerId))
+                .willReturn(Optional.of(customer));
+        given(productDao.findPageableProducts(1, 0))
+                .willReturn(List.of(PRODUCT_BANANA));
+        given(cartItemDao.findAllJoinProductByCustomerId(customerId))
+                .willReturn(List.of(cart));
+
+        // when
+        final List<ProductResponse> productResponses =
+                productService.findPageableProductsByCustomerId(1, 0, customerId);
+        final List<Long> productIds = productResponses.stream()
+                .map(ProductResponse::getId)
+                .collect(Collectors.toList());
+        final List<Long> cartIds = productResponses.stream()
+                .map(ProductResponse::getCartId)
+                .collect(Collectors.toList());
+        final List<Integer> cartQuantities = productResponses.stream()
+                .map(ProductResponse::getQuantity)
+                .collect(Collectors.toList());
+
+        // then
+        assertAll(
+                () -> assertThat(productIds).containsExactly(1L),
+                () -> assertThat(cartIds).containsExactly(1L),
+                () -> assertThat(cartQuantities).containsExactly(5),
+                () -> verify(customerDao).findById(customerId),
+                () -> verify(productDao).findPageableProducts(1, 0),
                 () -> verify(cartItemDao).findAllJoinProductByCustomerId(customerId)
         );
     }

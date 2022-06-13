@@ -26,7 +26,7 @@ public class AuthenticationProductInterceptor implements HandlerInterceptor {
         }
         if (request.getHeader("Authorization") != null) {
             validateToken(request);
-            response.sendRedirect(request.getRequestURI() + "/me");
+            response.sendRedirect(getRedirectURI(request));
             return false;
         }
         return true;
@@ -37,5 +37,13 @@ public class AuthenticationProductInterceptor implements HandlerInterceptor {
         if (!jwtTokenProvider.validateToken(token)) {
             throw new InvalidTokenException();
         }
+    }
+
+    private String getRedirectURI(final HttpServletRequest request) {
+        if (request.getRequestURI().contains("pageable")) {
+            return request.getRequestURI() + "/me" + "?size=" + request.getParameter("size") + "&page="
+                    + request.getParameter("page");
+        }
+        return request.getRequestURI() + "/me";
     }
 }

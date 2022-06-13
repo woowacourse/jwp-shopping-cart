@@ -74,13 +74,15 @@
 
 ## 상품 기능 API
 
-| Method | Url                         | Description    |
-|--------|-----------------------------|----------------|
-| GET    | /api/products               | 상품 목록 조회       |
-| GET    | /api/products/me            | 로그인 된 상품 목록 조회 |
-| POST   | /api/products               | 상품 추가          |
-| GET    | /api/products/{productId}   | 특정 상품 조회       |
-| DELETE | /api/products/{productId}   | 상품 삭제          |
+| Method | Url                       | Description        |
+|--------|---------------------------|--------------------|
+| GET    | /api/products             | 상품 목록 조회           |
+| GET    | /api/products/me          | 로그인 된 상품 목록 조회     |
+| GET    | /api/products/pageable    | 상품 목록 페이징 조회       |
+| GET    | /api/products/pageable/me | 로그인 된 상품 목록 페이징 조회 |
+| POST   | /api/products             | 상품 추가              |
+| GET    | /api/products/{productId} | 특정 상품 조회           |
+| DELETE | /api/products/{productId} | 상품 삭제              |
 
 ## ✏️ Code Review Process
 

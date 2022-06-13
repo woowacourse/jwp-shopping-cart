@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.dto.LoginCustomer;
@@ -38,6 +39,19 @@ public class ProductController {
     public ResponseEntity<List<ProductResponse>> productsByCustomer(
             @AuthenticationPrincipal final LoginCustomer loginCustomer) {
         return ResponseEntity.ok(productService.findProductsByCustomerId(loginCustomer.getId()));
+    }
+
+    @GetMapping("/pageable")
+    public ResponseEntity<List<ProductResponse>> pageableProducts(
+            @RequestParam final int size, @RequestParam final int page) {
+        return ResponseEntity.ok(productService.findPageableProducts(size, page));
+    }
+
+    @GetMapping("/pageable/me")
+    public ResponseEntity<List<ProductResponse>> pageableProductsByCustomer(
+            @AuthenticationPrincipal final LoginCustomer loginCustomer, @RequestParam final int size,
+            @RequestParam final int page) {
+        return ResponseEntity.ok(productService.findPageableProductsByCustomerId(size, page, loginCustomer.getId()));
     }
 
     @PostMapping
