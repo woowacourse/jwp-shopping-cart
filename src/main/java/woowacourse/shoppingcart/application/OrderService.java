@@ -56,6 +56,6 @@ public class OrderService {
 
     public Order findOne(long customerId, long orderId) {
         List<OrderItem> orderItems = orderDao.findOrderItemsByOrderId(orderId);
-        return new Order(customerId, orderItems);
+        return new Order(orderId, customerId, orderItems);
     }
 }

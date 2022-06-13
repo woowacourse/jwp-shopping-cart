@@ -78,6 +78,7 @@ public class OrderDaoTest {
         List<Order> expected = List.of(new Order(1L, List.of(new OrderItem(1L, 3),
             new OrderItem(2L, 4))));
         assertThat(orders).usingRecursiveComparison()
+            .ignoringExpectedNullFields()
             .isEqualTo(expected);
     }
 

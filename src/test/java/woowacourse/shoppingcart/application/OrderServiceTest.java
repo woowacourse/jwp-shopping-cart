@@ -97,6 +97,7 @@ public class OrderServiceTest {
             new OrderItem(2L, 4))));
 
         assertThat(orders).usingRecursiveComparison()
+            .ignoringExpectedNullFields()
             .isEqualTo(expected);
     }
 
@@ -114,6 +115,7 @@ public class OrderServiceTest {
             new OrderItem(2L, 4)));
 
         assertThat(order).usingRecursiveComparison()
+            .ignoringExpectedNullFields()
             .isEqualTo(expected);
     }
 }
