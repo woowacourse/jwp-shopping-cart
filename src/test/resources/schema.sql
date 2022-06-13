@@ -8,7 +8,6 @@ drop table if exists product;
 
 drop table if exists customer;
 
-
 create table customer
 (
     id       bigint       not null auto_increment,
