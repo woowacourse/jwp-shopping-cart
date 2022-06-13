@@ -90,12 +90,16 @@ public class CartService {
     @Transactional
     public void deleteCart(String customerName, DeleteCartItemRequest deleteCartItemRequest) {
         Long customerId = customerDao.findByUsername(customerName).getId();
-        List<Long> ids = deleteCartItemRequest.getCartItems()
+        List<CartItem> cartItems = deleteCartItemRequest.getCartItems()
                 .stream()
-                .map(request -> cartItemDao.findCartIdById(request.getId()).getId())
+                .map(request -> cartItemDao.findCartIdById(request.getId()))
                 .collect(Collectors.toList());
+        validateUpdateCartItem(customerId, cartItems);
 
-        cartItemDao.deleteCartItemById(ids, customerId);
+        List<Long> cartItemIds = cartItems.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
+        cartItemDao.deleteCartItemById(cartItemIds, customerId);
     }
 
     @Transactional
