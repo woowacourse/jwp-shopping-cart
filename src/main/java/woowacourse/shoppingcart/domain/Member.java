@@ -24,7 +24,7 @@ public class Member {
     }
 
     public boolean matchPassword(String password) {
-        return this.password.isSameValue(password);
+        return this.password.matches(password);
     }
 
     public Long getId() {

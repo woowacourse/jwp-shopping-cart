@@ -55,7 +55,7 @@ class PasswordTest {
     void isSameValue(String value, boolean expected) {
         Password password = new Password("1q2w3e4r!");
 
-        boolean actual = password.isSameValue(value);
+        boolean actual = password.matches(value);
 
         assertThat(actual).isEqualTo(expected);
     }

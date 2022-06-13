@@ -21,7 +21,7 @@ public class Password {
         }
     }
 
-    public boolean isSameValue(String value) {
+    public boolean matches(String value) {
         return this.value.equals(value);
     }
 
