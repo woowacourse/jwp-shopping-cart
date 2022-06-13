@@ -27,9 +27,4 @@ public class AuthService {
         Customer customer = customerDao.getCustomerByUserName(principal);
         customer.validatePassword(credentials);
     }
-
-    public Customer getCustomer(String token) {
-        String userName = jwtTokenProvider.getPayload(token);
-        return customerDao.getCustomerByUserName(userName);
-    }
 }

@@ -11,10 +11,9 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.fixture.SimpleResponse;
 import woowacourse.fixture.SimpleRestAssured;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.PasswordRequest;
-import woowacourse.shoppingcart.dto.UserNameDuplicationRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @DisplayName("회원 관련 기능")
@@ -38,16 +37,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("아이디가 중복되지 않을 때, 아이디 중복 여부를 검사한다.")
     @Test
     void checkDuplicationUserName_unique() {
-        //given
-        signUpCustomer();
-        UserNameDuplicationRequest request = new UserNameDuplicationRequest("kth990303");
-
-        //when
-        SimpleResponse response = SimpleRestAssured.get("/customers/username/duplication", request);
-
+        //given & when
+        SimpleResponse response = SimpleRestAssured.getWithParam("/customers/username/uniqueness",
+                "username", "pocky");
         //then
         response.assertStatus(HttpStatus.OK);
-        response.assertBody("unique", true);
+        response.assertBody("isUnique", true);
     }
 
     @DisplayName("아이디가 중복될 때, 아이디 중복 여부를 검사한다.")
@@ -55,14 +50,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void checkDuplicationUserName_duplicated() {
         //given
         signUpCustomer();
-        UserNameDuplicationRequest request = new UserNameDuplicationRequest("forky");
 
         //when
-        SimpleResponse response = SimpleRestAssured.get("/customers/username/duplication", request);
+        SimpleResponse response = SimpleRestAssured.getWithParam("/customers/username/uniqueness",
+                "username", "forky");
 
         //then
         response.assertStatus(HttpStatus.OK);
-        response.assertBody("unique", false);
+        response.assertBody("isUnique", false);
     }
 
     @DisplayName("로그인한 회원이 자신의 정보를 조회한다.")
@@ -79,8 +74,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         CustomerResponse customerResponse = response.toObject(CustomerResponse.class);
         assertAll(
                 () -> response.assertStatus(HttpStatus.OK),
-                () -> assertThat(customerResponse.getUserName()).isEqualTo("forky"),
-                () -> assertThat(customerResponse.getNickName()).isEqualTo("복희"),
+                () -> assertThat(customerResponse.getUsername()).isEqualTo("forky"),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo("복희"),
                 () -> assertThat(customerResponse.getAge()).isEqualTo(26)
         );
     }
@@ -166,9 +161,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         CustomerResponse customerResponse = response.toObject(CustomerResponse.class);
         assertAll(
                 () -> response.assertStatus(HttpStatus.OK),
-                () -> assertThat(customerResponse.getUserName()).isEqualTo(userName),
+                () -> assertThat(customerResponse.getUsername()).isEqualTo(userName),
                 () -> assertThat(customerResponse.getPassword()).isEqualTo(password),
-                () -> assertThat(customerResponse.getNickName()).isEqualTo(nickName),
+                () -> assertThat(customerResponse.getNickname()).isEqualTo(nickName),
                 () -> assertThat(customerResponse.getAge()).isEqualTo(age)
         );
     }

@@ -1,21 +1,23 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -50,7 +52,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.getIdByUserName(userName);
+        final Long customerId = customerDao.getIdByUsername(userName);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -64,7 +66,7 @@ public class CustomerDaoTest {
         final String userName = "gwangyeol-iM";
 
         // when
-        final Long customerId = customerDao.getIdByUserName(userName);
+        final Long customerId = customerDao.getIdByUsername(userName);
 
         // then
         assertThat(customerId).isEqualTo(16L);
@@ -107,7 +109,7 @@ public class CustomerDaoTest {
         Customer given = Customer.of("forky", "forky@1234", "복희", 26);
 
         customerDao.save(given);
-        customerDao.delete(given);
+        customerDao.delete(given.getUserName());
 
         assertThatExceptionOfType(InvalidCustomerException.class)
                 .isThrownBy(() -> customerDao.getCustomerByUserName(given.getUserName()))

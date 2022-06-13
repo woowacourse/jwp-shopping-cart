@@ -52,9 +52,12 @@
 
 # 기능 목록
 
+
+## 1단계
+
 - 회원 가입 `POST /customers` → `201 CREATED`
-- 아이디 중복 확인 `GET /customers/username/duplication` -> `200 OK`
-  - `{unique}`
+- 아이디 중복 확인 `GET /customers/username/uniqueness` -> `200 OK`
+  - `{isUnique}`
 - 로그인 `POST /login` → `200 OK`
     - 아이디와 비밀번호 확인
         - [예외] 아이디나 비밀번호가 잘못 입력되면 `400 Bad Request`
@@ -95,3 +98,30 @@
     - [예외] 공백 포함
 - age
     - [예외] 음수
+
+
+## 2단계
+
+- 상품 목록 조회 `GET /products` -> `200 OK`
+  - 모든 상품 정보 json array로 응답
+    - {products: [{id, name, price, thumbnail}]}
+- 상품 세부 정보 조회 `GET /products/{productId}` -> `200 OK`
+  - 해당하는 상품 정보 응답
+    - {id, name, price, thumbnail}
+  - [예외] 존재하지 않는 상품에 대해 요청할 경우 `404 Not Found`
+- 장바구니에 상품 추가 `POST /cart/{productId}` -> `200 OK`
+  - [예외] 이미 담은 상품일 때 `400 Bad Request`
+    - {message, redirect(boolean)}
+- 장바구니 상품 목록 조회 `GET /cart` -> `200 OK`
+  - 장바구니에 담긴 상품 정보와 수량 json array로 응답
+    - {cartItems: [{product: {id, name, price, thumbnail}, quantity}]}
+- 장바구니 상품 수량 변경 `PUT /cart/{productId}/quantity` -> `200 OK`
+  - request body {quantity}
+  - [예외] 입력값이 0 이하일 때 `400 Bad Request`
+- 장바구니 상품 제거 `DELETE /cart/products` -> `204 No Content`
+  - request body {productIds: []}
+- 장바구니 비우기 `DELETE /cart` -> `204 No Content`
+- 장바구니 상품 구매 `POST /orders` -> `201 Created`
+  - request body {productIds: []}
+  - 구매한 후에는 장바구니 비워짐
+  - Location `/orders/{orderId}`

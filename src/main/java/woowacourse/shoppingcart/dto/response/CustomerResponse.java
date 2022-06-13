@@ -1,20 +1,20 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.response;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
 
 public class CustomerResponse {
-    private String userName;
+    private String username;
     private String password;
-    private String nickName;
+    private String nickname;
     private int age;
 
     private CustomerResponse() {
     }
 
-    private CustomerResponse(String userName, String password, String nickName, int age) {
-        this.userName = userName;
+    private CustomerResponse(String username, String password, String nickname, int age) {
+        this.username = username;
         this.password = password;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.age = age;
     }
 
@@ -24,16 +24,16 @@ public class CustomerResponse {
         );
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
     public int getAge() {

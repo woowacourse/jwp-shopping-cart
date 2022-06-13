@@ -7,13 +7,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-class UserNameTest {
+class UsernameTest {
 
     @DisplayName("아이디가 공백이면 예외가 발생한다")
     @Test
     void construct_blank() {
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> new UserName(" "))
+                .isThrownBy(() -> new Username(" "))
                 .withMessageContaining("공백");
     }
 
@@ -22,7 +22,7 @@ class UserNameTest {
     @ValueSource(strings = {"abc", "forkyforkyforky1234*!"})
     void construct_length(String userName) {
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> new UserName(userName))
+                .isThrownBy(() -> new Username(userName))
                 .withMessageContaining("4자 이상 20자 이하");
     }
 }

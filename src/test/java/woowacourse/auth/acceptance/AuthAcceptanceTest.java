@@ -13,8 +13,8 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.fixture.SimpleResponse;
 import woowacourse.fixture.SimpleRestAssured;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 
 @DisplayName("인증 관련 기능")
@@ -40,7 +40,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(
-                () -> assertThat(actual.getUserName()).isEqualTo("forky"),
+                () -> assertThat(actual.getUsername()).isEqualTo("forky"),
                 () -> assertThat(actual.getPassword()).isEqualTo("forky@1234")
         );
     }

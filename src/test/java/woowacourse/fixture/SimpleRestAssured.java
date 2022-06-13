@@ -11,9 +11,9 @@ public class SimpleRestAssured {
                 .when().get(path));
     }
 
-    public static SimpleResponse get(String path, Object params) {
+    public static SimpleResponse getWithParam(String path, String paramName, Object value) {
         return new SimpleResponse(given()
-                .body(params)
+                .params(paramName, value)
                 .when().get(path));
     }
 
@@ -28,6 +28,17 @@ public class SimpleRestAssured {
                 .when().post(path));
     }
 
+    public static SimpleResponse postWithToken(String path, String token) {
+        return new SimpleResponse(givenWithToken(token)
+                .when().post(path));
+    }
+
+    public static SimpleResponse postWithToken(String path, String token, Object params) {
+        return new SimpleResponse(givenWithToken(token)
+                .body(params)
+                .when().post(path));
+    }
+
     public static SimpleResponse putWithToken(String path, String token, Object params) {
         return new SimpleResponse(givenWithToken(token)
                 .body(params)
@@ -36,6 +47,12 @@ public class SimpleRestAssured {
 
     public static SimpleResponse deleteWithToken(String path, String token) {
         return new SimpleResponse(givenWithToken(token)
+                .when().delete(path));
+    }
+
+    public static SimpleResponse deleteWithToken(String path, String token, Object params) {
+        return new SimpleResponse(givenWithToken(token)
+                .body(params)
                 .when().delete(path));
     }
 
