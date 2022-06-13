@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
@@ -45,7 +46,9 @@ class ProductServiceTest {
 
         assertAll(
             () -> assertThat(products).hasSize(3),
-            () -> assertThat(products).containsExactlyInAnyOrder(칫솔, 비누, 치약)
+            () -> assertThat(products)
+                .usingRecursiveComparison()
+                .isEqualTo(List.of(칫솔, 치약, 비누))
         );
     }
 
@@ -54,7 +57,9 @@ class ProductServiceTest {
     void findProduct() {
         Product product = productService.findProductById(치약.getId());
 
-        assertThat(product).isEqualTo(치약);
+        assertThat(product)
+            .usingRecursiveComparison()
+            .isEqualTo(치약);
     }
 
     @DisplayName("존재하지 않는 상품 조회 시 예외 발생")

@@ -71,8 +71,13 @@ class CartServiceTest {
         List<CartItem> cartItems = cartService.findCartsByEmail(EMAIL);
 
         assertThat(cartItems)
-            .extracting(CartItem::getProduct, CartItem::getQuantity)
-            .containsExactly(tuple(칫솔, 1));
+            .extracting(
+                cartItem -> cartItem.getProduct().getId(),
+                cartItem -> cartItem.getProduct().getName(),
+                cartItem -> cartItem.getProduct().getPrice(),
+                cartItem -> cartItem.getProduct().getImageUrl(),
+                CartItem::getQuantity)
+            .containsExactly(tuple(칫솔.getId(), 칫솔.getName(), 칫솔.getPrice(), 칫솔.getImageUrl(), 1));
     }
 
     @DisplayName("중복된 상품 장바구니 추가 시 예외 발생")
