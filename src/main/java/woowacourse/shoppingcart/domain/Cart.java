@@ -25,6 +25,10 @@ public class Cart {
         this.quantity = quantity;
     }
 
+    public Cart ofPlusQuantity() {
+        return new Cart(id, productId, name, price, imageUrl, quantity + 1);
+    }
+
     private void validateQuantity(int quantity) {
         if (quantity <= 0) {
             throw new InvalidCartItemException();

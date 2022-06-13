@@ -16,6 +16,12 @@ public class Carts {
                 .collect(Collectors.toList());
     }
 
+    public List<Cart> getPlusQuantityCarts() {
+        return carts.stream()
+                .map(Cart::ofPlusQuantity)
+                .collect(Collectors.toList());
+    }
+
     public List<Long> findNotInProductIds(final List<Long> productIds) {
         List<Long> containedProductIds = getProductIds();
         return productIds.stream()

@@ -64,23 +64,7 @@ public class CartTotalRepositoryTest {
         cartTotalRepository.createAll(customerId, List.of(productId));
 
         // then
-        assertDoesNotThrow(() -> cartTotalRepository.findIdByCustomerIdAndProductId(customerId,productId));
-    }
-
-    @DisplayName("카트에 이미 해당 아이템이 있을 시 개수 +1을 한다 ")
-    @Test
-    void addCartItem_plus() {
-        // given
-        final Long customerId = 1L;
-        final Long productId = 3L;
-
-        // when
-        cartTotalRepository.createAll(customerId, List.of(productId));
-        Long id = cartTotalRepository.findIdByCustomerIdAndProductId(customerId, productId);
-        cartTotalRepository.plusQuantityByIds(List.of(id));
-
-        // then
-        assertThat(cartTotalRepository.findById(id).getQuantity()).isEqualTo(2);
+        assertDoesNotThrow(() -> cartTotalRepository.findIdByCustomerIdAndProductId(customerId, productId));
     }
 
     @DisplayName("카트에 담긴 물품의 개수를 수정한다. ")
@@ -102,22 +86,24 @@ public class CartTotalRepositoryTest {
         assertThat(cart.getId()).isEqualTo(1L);
     }
 
-    @DisplayName("카트에 담긴 물품의 개수를 1 증가한다. ")
+    @DisplayName("카트에 담긴 모든 물품의 개수를 수정한다.")
     @Test
-    void plusQuantityByIds() {
+    void updateAll() {
         // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
-        cartTotalRepository.createAll(customerId, List.of(productId));
-        Long cartId = cartTotalRepository.findIdByCustomerIdAndProductId(customerId, productId);
+        final Long 헌치아이디 = 헌치.getId();
 
         // when
-        cartTotalRepository.plusQuantityByIds(List.of(cartId));
-        Cart cart = cartTotalRepository.findById(cartId);
+        cartTotalRepository.updateAll(List.of(plusQuantity(헌치_치킨)));
 
         // then
-        assertThat(cart.getQuantity()).isEqualTo(2);
-        assertThat(cart.getId()).isEqualTo(1L);
+        List<Cart> carts = cartTotalRepository.findCartsByCustomerId(헌치아이디);
+        assertThat(carts.get(0).getQuantity()).isEqualTo(2);
+        assertThat(carts.get(1).getQuantity()).isEqualTo(2);
+    }
+
+    public CartEntity plusQuantity(CartEntity cartEntity) {
+        return new CartEntity(cartEntity.getId(), cartEntity.getCustomerId(), cartEntity.getProductId(),
+                cartEntity.getQuantity() + 1);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니들을 가져온다.")

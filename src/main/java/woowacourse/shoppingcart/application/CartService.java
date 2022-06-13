@@ -43,13 +43,21 @@ public class CartService {
                 .map(ProductIdRequest::getId)
                 .collect(Collectors.toList());
 
-        Carts containedCarts = new Carts(cartTotalRepository.findByCustomerIdAndProductIds(customerId, productIds));
-        cartTotalRepository.plusQuantityByIds(containedCarts.getCartIds());
+        Carts containedCarts = new Carts(cartTotalRepository.findCartsByCustomerIdAndProductIds(customerId, productIds));
+        List<CartEntity> plusCartEntities = containedCarts.getPlusQuantityCarts().stream()
+                .map(cart -> toCartEntity(cart, customerId))
+                .collect(Collectors.toList());
+
+        cartTotalRepository.updateAll(plusCartEntities);
         cartTotalRepository.createAll(customerId, containedCarts.findNotInProductIds(productIds));
 
         return productIdRequests.stream()
                 .map(productIdRequest -> toCartInfoRequest(productIdRequest, customerId))
                 .collect(Collectors.toList());
+    }
+
+    private CartEntity toCartEntity(Cart cart, Long customerId) {
+        return new CartEntity(cart.getId(),customerId, cart.getProductId(), cart.getQuantity());
     }
 
     private CartProductInfoResponse toCartInfoRequest(final ProductIdRequest productIdRequest, final Long customerId) {

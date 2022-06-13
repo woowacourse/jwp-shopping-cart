@@ -38,13 +38,6 @@ public class CartTotalRepository {
                 .orElseThrow(ResourceNotFoundException::new);
     }
 
-    public void plusQuantityByIds(List<Long> ids) {
-        List<CartEntity> cartEntities = cartItemDao.findByIds(ids).stream()
-                .map(CartEntity::plusQuantity)
-                .collect(Collectors.toList());
-        cartItemDao.updateAll(cartEntities);
-    }
-
     public void validateCustomerId(final Long customerId) {
         customerDao.findById(customerId).orElseThrow(ResourceNotFoundException::new);
     }
@@ -53,18 +46,7 @@ public class CartTotalRepository {
         productDao.findById(productId);
     }
 
-    private Cart toCart(CartEntity cartEntity) {
-        return new Cart(cartEntity.getId(), cartEntity.getQuantity(), productDao.findById(
-                cartEntity.getProductId()));
-    }
-
-    private List<Cart> toCarts(List<CartEntity> cartEntities) {
-        return cartEntities.stream()
-                .map(this::toCart)
-                .collect(Collectors.toList());
-    }
-
-    public List<Cart> findByCustomerIdAndProductIds(Long customerId, List<Long> productIds) {
+    public List<Cart> findCartsByCustomerIdAndProductIds(Long customerId, List<Long> productIds) {
         List<CartEntity> containedCarts = cartItemDao.findByCustomerIdAndProductIds(customerId, productIds);
         return toCarts(containedCarts);
     }
@@ -73,12 +55,27 @@ public class CartTotalRepository {
         return toCarts(cartItemDao.findCartsByCustomerId(customerId));
     }
 
+    private List<Cart> toCarts(List<CartEntity> cartEntities) {
+        return cartEntities.stream()
+                .map(this::toCart)
+                .collect(Collectors.toList());
+    }
+
+    private Cart toCart(CartEntity cartEntity) {
+        return new Cart(cartEntity.getId(), cartEntity.getQuantity(), productDao.findById(
+                cartEntity.getProductId()));
+    }
+
     public Cart update(CartEntity cartEntity) {
         int updatedRowNum = cartItemDao.update(cartEntity);
         if (updatedRowNum == 0) {
             throw new InvalidCartItemException();
         }
         return toCart(cartEntity);
+    }
+
+    public void updateAll(List<CartEntity> cartEntities) {
+        cartItemDao.updateAll(cartEntities);
     }
 
     public void deleteById(final Long id) {
