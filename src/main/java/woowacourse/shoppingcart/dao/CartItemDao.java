@@ -15,6 +15,15 @@ import woowacourse.shoppingcart.domain.Product;
 @Repository
 public class CartItemDao {
 
+    private static RowMapper<CartItem> cartRowMapper = (rs, rowNum) -> new CartItem(
+            rs.getLong("cart_item.id"),
+            new Product(rs.getLong("product.id"),
+                    rs.getString("product.name"),
+                    rs.getInt("product.price"),
+                    rs.getString("product.image_url")),
+            rs.getInt("cart_item.quantity")
+    );
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
@@ -49,24 +58,6 @@ public class CartItemDao {
             throw new InvalidCartItemException();
         }
     }
-
-    public int findQuantityById(final Long cartId) {
-        try {
-            final String sql = "SELECT quantity FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("quantity"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-    }
-
-    private static RowMapper<CartItem> cartRowMapper = (rs, rowNum) -> new CartItem(
-            rs.getLong("cart_item.id"),
-            new Product(rs.getLong("product.id"),
-                    rs.getString("product.name"),
-                    rs.getInt("product.price"),
-                    rs.getString("product.image_url")),
-            rs.getInt("cart_item.quantity")
-    );
 
     public CartItem findCartByCartId(Long cartId) {
         try {
