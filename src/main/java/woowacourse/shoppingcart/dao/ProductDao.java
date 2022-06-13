@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,7 +11,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Page;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Repository
 public class ProductDao {
@@ -44,12 +44,12 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Optional<Product> findProductById(final Long productId) {
+        final String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
         try {
-            final String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, productId);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, PRODUCT_ROW_MAPPER, productId));
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            return Optional.empty();
         }
     }
 

@@ -5,10 +5,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dto.request.CartAddRequest;
 import woowacourse.shoppingcart.dto.request.CartDeleteRequest;
 import woowacourse.shoppingcart.dto.request.CartUpdateRequest;
 import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -18,8 +21,14 @@ public class CartService {
 
     private final CartItemDao cartItemDao;
 
-    public CartService(CartItemDao cartItemDao) {
+    private final CustomerDao customerDao;
+
+    private final ProductDao productDao;
+
+    public CartService(CartItemDao cartItemDao, CustomerDao customerDao, ProductDao productDao) {
         this.cartItemDao = cartItemDao;
+        this.customerDao = customerDao;
+        this.productDao = productDao;
     }
 
     public List<CartResponse> findCartsByCustomerId(final Long customerId) {
@@ -32,11 +41,13 @@ public class CartService {
     }
 
     public Long addCart(final Long customerId, final CartAddRequest cartAddRequest) {
-        try {
-            return cartItemDao.addCartItem(customerId, cartAddRequest.getProductId());
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
+        final Long productId = cartAddRequest.getProductId();
+        customerDao.findById(customerId)
+                .orElseThrow(InvalidCustomerException::new);
+        productDao.findProductById(productId)
+                .orElseThrow(InvalidProductException::new);
+
+        return cartItemDao.addCartItem(customerId, productId);
     }
 
     @Transactional

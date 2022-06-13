@@ -44,7 +44,8 @@ public class ProductService {
     }
 
     public ProductResponse findProductById(final Long productId) {
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(productId)
+                .orElseThrow(InvalidProductException::new);
 
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
