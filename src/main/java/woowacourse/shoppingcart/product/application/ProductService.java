@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.product.dao.ProductDao;
 import woowacourse.shoppingcart.product.domain.Product;
+import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
 
 @Service
 @Transactional
@@ -27,7 +28,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public boolean existProduct(final Long productId) {
-        return productDao.existProduct(productId);
+    public void checkProductExist(final Long productId) {
+        final boolean existProduct = productDao.existProduct(productId);
+        if (!existProduct) {
+            throw new NotFoundProductException();
+        }
     }
 }

@@ -95,7 +95,7 @@ class CartItemDaoTest extends DaoTest {
         cartItemDao.addCartItem(customerId, productId);
 
         // when
-        final boolean actual = cartItemDao.existProduct(customerId, productId);
+        final boolean actual = cartItemDao.existCartItem(customerId, productId);
 
         // then
         assertThat(actual).isTrue();
@@ -110,7 +110,7 @@ class CartItemDaoTest extends DaoTest {
         cartItemDao.addCartItem(customerId, productId);
 
         // when
-        final boolean actual = cartItemDao.existProduct(customerId, 3L);
+        final boolean actual = cartItemDao.existCartItem(customerId, 3L);
 
         // then
         assertThat(actual).isFalse();

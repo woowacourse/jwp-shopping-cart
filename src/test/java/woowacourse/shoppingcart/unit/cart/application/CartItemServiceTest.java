@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,8 +31,9 @@ class CartItemServiceTest extends ServiceMockTest {
         final Long productId = 1L;
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
 
-        given(productService.findProductById(productId))
-                .willThrow(NotFoundProductException.class);
+        willThrow(NotFoundProductException.class)
+                .given(productService)
+                .checkProductExist(productId);
 
         // when, then
         assertThatThrownBy(() -> cartService.addCart(productId, customer))
@@ -43,12 +45,9 @@ class CartItemServiceTest extends ServiceMockTest {
     void addCart_alreadyAddedItem_ExceptionThrown() {
         // given
         final Long productId = 1L;
-        final Product product = new Product(productId, "치약", 1200, "fake.org");
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
 
-        given(productService.findProductById(productId))
-                .willReturn(product);
-        given(cartItemDao.existProduct(customer.getId(), productId))
+        given(cartItemDao.existCartItem(customer.getId(), productId))
                 .willReturn(true);
 
         // when, then
@@ -61,12 +60,9 @@ class CartItemServiceTest extends ServiceMockTest {
     void addCart_newItem_voidReturned() {
         // given
         final Long productId = 1L;
-        final Product product = new Product(productId, "치약", 1200, "fake.org");
         final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
 
-        given(productService.findProductById(productId))
-                .willReturn(product);
-        given(cartItemDao.existProduct(customer.getId(), productId))
+        given(cartItemDao.existCartItem(customer.getId(), productId))
                 .willReturn(false);
 
         // when, then
