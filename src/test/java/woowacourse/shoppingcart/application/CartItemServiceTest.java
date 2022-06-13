@@ -26,7 +26,6 @@ import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.CartItemUpdateRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
@@ -223,7 +222,8 @@ class CartItemServiceTest {
             // given
             customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
             Long productId = productService.addProduct(치킨);
-            Long deletedItemId = cartItemService.add(new LoginCustomer(페퍼_아이디), new CartItemCreateRequest(productId)).getId();
+            Long deletedItemId = cartItemService.add(new LoginCustomer(페퍼_아이디), new CartItemCreateRequest(productId))
+                    .getId();
             LoginCustomer loginCustomer = new LoginCustomer(페퍼_아이디);
             cartItemService.deleteAll(loginCustomer);
 
@@ -239,7 +239,8 @@ class CartItemServiceTest {
             customerService.save(new CustomerRequest(페퍼_아이디, 페퍼_이름, 페퍼_비밀번호));
             customerService.save(new CustomerRequest(다른_아이디, 다른_이름, 다른_비밀번호));
             Long productId = productService.addProduct(치킨);
-            Long deletedItemId = cartItemService.add(new LoginCustomer(페퍼_아이디), new CartItemCreateRequest(productId)).getId();
+            Long deletedItemId = cartItemService.add(new LoginCustomer(페퍼_아이디), new CartItemCreateRequest(productId))
+                    .getId();
             LoginCustomer loginCustomer = new LoginCustomer(다른_아이디);
 
             // when & then
