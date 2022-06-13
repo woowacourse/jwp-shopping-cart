@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.documentation;
+package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,10 +18,10 @@ import woowacourse.shoppingcart.dto.ProductsRequest;
 
 @RestController
 @RequestMapping("/customers/carts")
-public class CartItemController {
+public class CartController {
     private final CartService cartService;
 
-    public CartItemController(final CartService cartService) {
+    public CartController(final CartService cartService) {
         this.cartService = cartService;
     }
 

@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.documentation;
+package woowacourse.shoppingcart.ui;
 
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.documentation;
+package woowacourse.document;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -35,7 +35,7 @@ import woowacourse.shoppingcart.dto.ProductsRequest;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @SpringBootTest
-class CartItemDocumentation {
+class CartItemDocumentTest {
 
     @Autowired
     private MockMvc mockMvc;
