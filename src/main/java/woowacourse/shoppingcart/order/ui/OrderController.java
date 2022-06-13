@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.order.application.OrderService;
 import woowacourse.shoppingcart.order.domain.Orders;
-import woowacourse.shoppingcart.order.dto.OrderRequest;
+import woowacourse.shoppingcart.order.dto.OrderCreationRequest;
 
 @RestController
 @RequestMapping("/users/me/orders")
@@ -26,7 +26,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@PathVariable final String customerName,
-                                         @RequestBody @Valid final List<OrderRequest> orderDetails) {
+                                         @RequestBody @Valid final List<OrderCreationRequest> orderDetails) {
         final Long orderId = orderService.addOrder(orderDetails, customerName);
         return ResponseEntity.created(
                 URI.create("/api/" + customerName + "/orders/" + orderId)).build();

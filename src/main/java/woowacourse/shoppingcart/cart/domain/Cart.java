@@ -2,13 +2,22 @@ package woowacourse.shoppingcart.cart.domain;
 
 import java.util.List;
 import java.util.Objects;
+import woowacourse.shoppingcart.order.exception.notfound.NotFoundCartItemException;
 
 public class Cart {
 
     private final List<CartItem> values;
 
-    public Cart(List<CartItem> values) {
+    public Cart(final List<CartItem> values) {
         this.values = values;
+    }
+
+    public CartItem getItemById(final Long productId) {
+        return values
+                .stream()
+                .filter(it -> it.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElseThrow(NotFoundCartItemException::new);
     }
 
     public List<CartItem> getValues() {

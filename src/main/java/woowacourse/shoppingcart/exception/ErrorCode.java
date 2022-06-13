@@ -13,6 +13,8 @@ public enum ErrorCode {
     DUPLICATE_CART_ITEM(1101),
     NOT_EXIST_ITEM_IN_CART(1102),
 
+    NOT_FOUND_CART_ITEM(1200),
+
     GENERAL_NOT_FOUND(2000),
     ;
 
