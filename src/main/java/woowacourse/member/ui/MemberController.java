@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.member.application.MemberService;
-import woowacourse.member.dto.EmailCheckRequest;
-import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
@@ -56,15 +55,14 @@ public class MemberController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal Long memberId,
-                                             @Valid @RequestBody MemberDeleteRequest memberDeleteRequest) {
-        memberService.deleteById(memberId, memberDeleteRequest);
+    public ResponseEntity<Void> deleteMember(@AuthenticationPrincipal Long memberId) {
+        memberService.deleteById(memberId);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/duplicate-email")
-    public ResponseEntity<Void> validateDuplicateEmail(@Valid @RequestBody EmailCheckRequest emailCheckRequest) {
-        memberService.validateDuplicateEmail(emailCheckRequest);
+    @GetMapping("/duplicate-email")
+    public ResponseEntity<Void> validateDuplicateEmail(@RequestParam String email) {
+        memberService.validateDuplicateEmail(email);
         return ResponseEntity.ok().build();
     }
 }

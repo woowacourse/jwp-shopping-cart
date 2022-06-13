@@ -9,7 +9,6 @@ import static woowacourse.helper.fixture.TMember.MARU;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import javax.print.attribute.standard.MediaSize.NA;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -76,7 +75,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         assertThat(response.getMessage()).isEqualTo(UNAUTHORIZED_MESSAGE);
     }
 
-    @DisplayName("토큰을 헤더에 담고 비밀번호를 보내고 삭제를 요청하면 204 no content를 반환한다.")
+    @DisplayName("토큰을 헤더에 담고삭제를 요청하면 204 no content를 반환한다.")
     @Test
     void deleteMember() {
         MARU.register();

@@ -1,27 +1,22 @@
 package woowacourse.shoppingcart.dto;
 
-import javax.validation.constraints.Min;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
-    @NotNull
+
+    @NotNull(message = "카트 id를 입력하세요.")
     private Long cartId;
-    @Min(0)
-    private int quantity;
 
     private OrderRequest() {
     }
 
-    public OrderRequest(final Long cartId, final int quantity) {
+    public OrderRequest(final Long cartId) {
         this.cartId = cartId;
-        this.quantity = quantity;
     }
 
     public Long getCartId() {
         return cartId;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
 }

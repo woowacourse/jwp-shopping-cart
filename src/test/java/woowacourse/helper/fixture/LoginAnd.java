@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
-import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberResponse;
@@ -38,7 +37,6 @@ public class LoginAnd extends Request {
     }
 
     public ExtractableResponse<Response> deleteMember() {
-        MemberDeleteRequest memberDeleteRequest = new MemberDeleteRequest(tMember.getPassword());
-        return deleteWithToken(memberDeleteRequest, "/api/members/me", tMember.getToken());
+        return deleteWithToken("/api/members/me", tMember.getToken());
     }
 }

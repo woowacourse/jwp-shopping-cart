@@ -1,5 +1,6 @@
 package woowacourse.exception;
 
+import javax.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -34,10 +35,17 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
-
         logger.error(e.getMessage(), e);
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getBindingResult().
                 getFieldError().
                 getDefaultMessage()));
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> validationExceptionHandler(ValidationException e) {
+        logger.error(e.getMessage(), e);
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()
+                .split(":")[1]
+                .trim()));
     }
 }

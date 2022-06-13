@@ -10,46 +10,81 @@ endif::[]
 = Auth api
 
 == auth
-=== request
 include::{snippets}/auth-login/http-request.adoc[]
-=== response
 include::{snippets}/auth-login/http-response.adoc[]
 
 = Member api
 
 == member duplicate email
-=== request
 include::{snippets}/member-duplicate-email/http-request.adoc[]
-=== response
 include::{snippets}/member-duplicate-email/http-response.adoc[]
 
 == member register
-=== request
 include::{snippets}/member-register/http-request.adoc[]
-=== response
 include::{snippets}/member-register/http-response.adoc[]
 
 == member me
-=== request
 include::{snippets}/member-me/http-request.adoc[]
-=== response
 include::{snippets}/member-me/http-response.adoc[]
 
 == member name update
-=== request
 include::{snippets}/member-name-update/http-request.adoc[]
-=== response
 include::{snippets}/member-name-update/http-response.adoc[]
 
 == member password update
-=== request
 include::{snippets}/member-password-update/http-request.adoc[]
-=== response
 include::{snippets}/member-password-update/http-response.adoc[]
 
 == member delete
-=== request
 include::{snippets}/member-delete/http-request.adoc[]
-=== response
 include::{snippets}/member-delete/http-response.adoc[]
 
+= Product
+
+== product create
+include::{snippets}/products-create/http-request.adoc[]
+include::{snippets}/products-create/http-response.adoc[]
+
+== product find
+include::{snippets}/products-find/http-request.adoc[]
+include::{snippets}/products-find/http-response.adoc[]
+
+== product findAll
+include::{snippets}/products-findAll/http-request.adoc[]
+include::{snippets}/products-findAll/http-response.adoc[]
+
+== product delete
+include::{snippets}/products-delete/http-request.adoc[]
+include::{snippets}/products-delete/http-response.adoc[]
+
+= Carts
+
+== cart create
+include::{snippets}/carts-add/http-request.adoc[]
+include::{snippets}/carts-add/http-response.adoc[]
+
+== cart find
+include::{snippets}/carts-get/http-request.adoc[]
+include::{snippets}/carts-get/http-response.adoc[]
+
+== cart update
+include::{snippets}/carts-update/http-request.adoc[]
+include::{snippets}/carts-update/http-response.adoc[]
+
+== cart delete
+include::{snippets}/carts-delete/http-request.adoc[]
+include::{snippets}/carts-delete/http-response.adoc[]
+
+= Order
+
+== order create
+include::{snippets}/orders-add/http-request.adoc[]
+include::{snippets}/orders-add/http-response.adoc[]
+
+== order find
+include::{snippets}/orders-get-single/http-request.adoc[]
+include::{snippets}/orders-get-single/http-response.adoc[]
+
+== order findAll
+include::{snippets}/orders-get-all/http-request.adoc[]
+include::{snippets}/orders-get-all/http-response.adoc[]

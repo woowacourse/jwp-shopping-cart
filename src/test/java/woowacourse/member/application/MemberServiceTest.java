@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.member.dao.MemberDao;
 import woowacourse.member.domain.Member;
-import woowacourse.member.dto.EmailCheckRequest;
-import woowacourse.member.dto.MemberDeleteRequest;
 import woowacourse.member.dto.MemberNameUpdateRequest;
 import woowacourse.member.dto.MemberPasswordUpdateRequest;
 import woowacourse.member.dto.MemberRegisterRequest;
@@ -28,7 +26,6 @@ import woowacourse.member.dto.MemberResponse;
 import woowacourse.member.exception.DuplicateMemberEmailException;
 import woowacourse.member.exception.NoMemberException;
 import woowacourse.member.exception.WrongPasswordException;
-import woowacourse.member.infrastructure.SHA256PasswordEncoder;
 
 
 @SpringBootTest
@@ -125,26 +122,11 @@ public class MemberServiceTest {
                 .isThrownBy(() -> member.validateWrongPassword("Maru1234!", passwordEncoder()));
     }
 
-    @DisplayName("회원이 존재하지 않는 경우 삭제를 실패한다.")
-    @Test
-    void deleteNoMember() {
-        assertThatThrownBy(() -> memberService.deleteById(0L, new MemberDeleteRequest(PASSWORD)))
-                .isInstanceOf(NoMemberException.class);
-    }
-
-    @DisplayName("비밀번호가 맞지 않으면 삭제를 실패한다.")
-    @Test
-    void deleteNotCorrectPassword() {
-        Long id = memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
-        assertThatThrownBy(() -> memberService.deleteById(id, new MemberDeleteRequest("Wrong12!")))
-                .isInstanceOf(WrongPasswordException.class);
-    }
-
     @DisplayName("멤버를 삭제한다.")
     @Test
     void deleteById() {
         Long id = memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
-        memberService.deleteById(id, new MemberDeleteRequest(PASSWORD));
+        memberService.deleteById(id);
 
         assertThat(memberDao.findById(id).isEmpty()).isTrue();
     }
@@ -153,7 +135,7 @@ public class MemberServiceTest {
     @Test
     void validateDuplicateEmailExist() {
         memberService.save(createMemberRegisterRequest(EMAIL, PASSWORD, NAME));
-        assertThatThrownBy(() -> memberService.validateDuplicateEmail(new EmailCheckRequest(EMAIL)))
+        assertThatThrownBy(() -> memberService.validateDuplicateEmail(EMAIL))
                 .isInstanceOf(DuplicateMemberEmailException.class);
     }
 }
