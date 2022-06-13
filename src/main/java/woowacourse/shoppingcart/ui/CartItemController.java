@@ -42,7 +42,7 @@ public class CartItemController {
     @PostMapping
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final Long id,
                                             @Valid @RequestBody final AddCartItemRequest request) {
-        final Long cartId = cartService.addToCart(id, request.getProductId());
+        final Long cartId = cartService.enrollProduct(id, request.getProductId());
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{cartId}")
