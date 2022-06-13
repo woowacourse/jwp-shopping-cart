@@ -13,16 +13,17 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
-public class CartItemDao {
+public class CartDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final RowMapper<Cart> cartRowMapper = (rs, rowNum) ->
-            new Cart(
+    private final RowMapper<CartItem> cartRowMapper = (rs, rowNum) ->
+            new CartItem(
                     rs.getLong("id"),
                     new Product(
                             rs.getLong("product_id"),
@@ -34,22 +35,22 @@ public class CartItemDao {
                     rs.getBoolean("checked")
             );
 
-    public CartItemDao(DataSource dataSource) {
+    public CartDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("cart_item")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Cart addCartItem(Long customerId, Cart cart) {
+    public CartItem addCartItem(Long customerId, CartItem cartItem) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("customer_id", customerId)
-                .addValue("product_id", cart.getProduct().getId())
-                .addValue("quantity", cart.getQuantity())
-                .addValue("checked", cart.isChecked());
+                .addValue("product_id", cartItem.getProduct().getId())
+                .addValue("quantity", cartItem.getQuantity())
+                .addValue("checked", cartItem.isChecked());
 
         long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return new Cart(id, cart.getProduct(), cart.getQuantity(), cart.isChecked());
+        return new CartItem(id, cartItem.getProduct(), cartItem.getQuantity(), cartItem.isChecked());
     }
 
     public boolean existByProductId(Long customerId, Long productId) {
@@ -61,40 +62,41 @@ public class CartItemDao {
         }
     }
 
-    public List<Cart> findByCustomerId(Long customerId) {
+    public Cart findByCustomerId(Long customerId) {
         try {
             String sql =
                     "SELECT c.id AS id, c.product_id AS product_id, p.name AS name, p.price AS price, "
                             + "p.image_url AS image_url, c.quantity AS quantity, c.checked AS checked "
                             + "FROM cart_item AS c  JOIN product AS p ON c.product_id = p.id "
                             + "WHERE customer_id = ?";
-            return jdbcTemplate.query(sql, cartRowMapper, customerId);
+            List<CartItem> cartItems = jdbcTemplate.query(sql, cartRowMapper, customerId);
+            return new Cart(cartItems);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
     }
 
-    public void updateCartItemByProductId(Long customerId, Cart cart) {
+    public void updateCartItemByProductId(Long customerId, CartItem cartItem) {
         String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE customer_id = ? and product_id = ?";
-        jdbcTemplate.update(sql, cart.getQuantity(), cart.isChecked(), customerId, cart.getProduct().getId());
+        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.isChecked(), customerId, cartItem.getProduct().getId());
     }
 
-    public void updateCartItems(List<Cart> carts) {
+    public void updateCartItems(List<CartItem> cartItems) {
         String sql = "UPDATE cart_item SET quantity =?, checked = ? WHERE id = ?";
 
         jdbcTemplate.batchUpdate(sql,
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
-                        Cart cart = carts.get(i);
-                        ps.setInt(1, cart.getQuantity());
-                        ps.setBoolean(2, cart.isChecked());
-                        ps.setLong(3, cart.getId());
+                        CartItem cartItem = cartItems.get(i);
+                        ps.setInt(1, cartItem.getQuantity());
+                        ps.setBoolean(2, cartItem.isChecked());
+                        ps.setLong(3, cartItem.getId());
                     }
 
                     @Override
                     public int getBatchSize() {
-                        return carts.size();
+                        return cartItems.size();
                     }
                 });
     }

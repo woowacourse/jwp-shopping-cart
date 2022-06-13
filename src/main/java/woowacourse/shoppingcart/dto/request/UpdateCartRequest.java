@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.dto.request;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 
 public class UpdateCartRequest {
 
@@ -24,8 +24,8 @@ public class UpdateCartRequest {
         this.checked = checked;
     }
 
-    public Cart toCart() {
-        return new Cart(id, quantity, checked);
+    public CartItem toCart() {
+        return new CartItem(id, quantity, checked);
     }
 
     public Long getId() {

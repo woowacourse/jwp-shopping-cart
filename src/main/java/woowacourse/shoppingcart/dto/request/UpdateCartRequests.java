@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.dto.request;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 
 public class UpdateCartRequests {
 
@@ -19,7 +19,7 @@ public class UpdateCartRequests {
         return cartItems;
     }
 
-    public List<Cart> toCart() {
+    public List<CartItem> toCart() {
         return cartItems.stream()
                 .map(UpdateCartRequest::toCart)
                 .collect(Collectors.toList());

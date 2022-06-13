@@ -9,9 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.dto.request.CartIdRequest;
 import woowacourse.shoppingcart.dto.request.CartRequest;
@@ -40,7 +41,7 @@ class CartServiceTest {
     private CustomerDao customerDao;
 
     @Autowired
-    private CartItemDao cartItemDao;
+    private CartDao cartDao;
 
     @Test
     @DisplayName("장바구니에 상품을 추가할 수 있다.")
@@ -52,7 +53,7 @@ class CartServiceTest {
         // when
         cartService.addCart("rennon", new CartRequest(1L, 1, true));
         Long customerId = customerDao.findByUsername(new Username("rennon")).getId();
-        boolean result = cartItemDao.existByProductId(customerId, productId);
+        boolean result = cartDao.existByProductId(customerId, productId);
 
         // then
         assertThat(result).isTrue();
@@ -69,8 +70,8 @@ class CartServiceTest {
         // when
         cartService.addCart("rennon", new CartRequest(1L, 1, true));
         Long customerId = customerDao.findByUsername(new Username("rennon")).getId();
-        List<Cart> carts = cartItemDao.findByCustomerId(customerId);
-        int quantity = carts.get(0).getQuantity();
+        Cart cart = cartDao.findByCustomerId(customerId);
+        int quantity = cart.getValue().get(0).getQuantity();
 
         // then
         assertThat(quantity).isEqualTo(2);

@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dto.response;
 
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 
 public class CartResponse {
 
@@ -26,15 +26,15 @@ public class CartResponse {
         this.checked = checked;
     }
 
-    public static CartResponse from(Cart cart) {
+    public static CartResponse from(CartItem cartItem) {
         return new CartResponse(
-                cart.getId(),
-                cart.getProduct().getId(),
-                cart.getProduct().getName(),
-                cart.getProduct().getPrice(),
-                cart.getProduct().getImageUrl(),
-                cart.getQuantity(),
-                cart.isChecked()
+                cartItem.getId(),
+                cartItem.getProduct().getId(),
+                cartItem.getProduct().getName(),
+                cartItem.getProduct().getPrice(),
+                cartItem.getProduct().getImageUrl(),
+                cartItem.getQuantity(),
+                cartItem.isChecked()
         );
     }
 

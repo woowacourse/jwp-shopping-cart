@@ -1,40 +1,30 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Cart {
 
-    private Long id;
-    private Product product;
-    private int quantity;
-    private boolean checked;
+    private final List<CartItem> value;
 
-    public Cart(Long id, Product product, int quantity, boolean checked) {
-        this.id = id;
-        this.product = product;
-        this.quantity = quantity;
-        this.checked = checked;
+    public Cart(List<CartItem> value) {
+        this.value = value;
     }
 
-    public Cart(Product product, int quantity, boolean checked) {
-        this(null, product, quantity, checked);
+    public List<CartItem> getValue() {
+        return Collections.unmodifiableList(value);
     }
 
-    public Cart(Long id, int quantity, boolean checked) {
-        this(id, null, quantity, checked);
+    public List<CartItem> getExistingIds(List<Long> cartIds) {
+        return value.stream()
+                .filter(it -> cartIds.contains(it.getId()))
+                .collect(Collectors.toList());
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public boolean isChecked() {
-        return checked;
+    public List<Long> getCartItemIds() {
+        return value.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
     }
 }

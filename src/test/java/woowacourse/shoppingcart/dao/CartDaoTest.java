@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
@@ -26,15 +27,15 @@ import woowacourse.shoppingcart.domain.Username;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemDaoTest {
+public class CartDaoTest {
 
-    private final CartItemDao cartItemDao;
+    private final CartDao cartDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(DataSource dataSource) {
-        cartItemDao = new CartItemDao(dataSource);
+    public CartDaoTest(DataSource dataSource) {
+        cartDao = new CartDao(dataSource);
         customerDao = new CustomerDao(dataSource);
         productDao = new ProductDao(dataSource);
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -70,10 +71,10 @@ public class CartItemDaoTest {
         Product product = productDao.findProductById(productId);
 
         // when
-        Cart cart = cartItemDao.addCartItem(customerId, new Cart(product, quantity, checked));
+        CartItem cartItem = cartDao.addCartItem(customerId, new CartItem(product, quantity, checked));
 
         // then
-        assertThat(cart.getId()).isEqualTo(4L);
+        assertThat(cartItem.getId()).isEqualTo(4L);
     }
 
     @Test
@@ -83,7 +84,7 @@ public class CartItemDaoTest {
         Long customerId = 1L;
 
         // when
-        boolean result = cartItemDao.existByProductId(customerId, 1L);
+        boolean result = cartDao.existByProductId(customerId, 1L);
 
         // then
         assertThat(result).isTrue();
@@ -96,7 +97,7 @@ public class CartItemDaoTest {
         Long customerId = 1L;
 
         // when
-        boolean result = cartItemDao.existByProductId(customerId, 10L);
+        boolean result = cartDao.existByProductId(customerId, 10L);
 
         // then
         assertThat(result).isFalse();
@@ -109,9 +110,9 @@ public class CartItemDaoTest {
         Long customerId = 1L;
 
         // when
-        List<Cart> carts = cartItemDao.findByCustomerId(customerId);
-        List<Long> cartIds = carts.stream()
-                .map(Cart::getId)
+        Cart cart = cartDao.findByCustomerId(customerId);
+        List<Long> cartIds = cart.getValue().stream()
+                .map(CartItem::getId)
                 .collect(Collectors.toList());
 
         // then
@@ -124,10 +125,10 @@ public class CartItemDaoTest {
         //given
         Long customerId = 1L;
         Product product = new Product(1L, "banana", 1_000, "woowa1.com");
-        Cart cart = new Cart(product, 2, true);
+        CartItem cartItem = new CartItem(product, 2, true);
 
         // when
-        cartItemDao.updateCartItemByProductId(customerId, cart);
+        cartDao.updateCartItemByProductId(customerId, cartItem);
         Integer quantity = jdbcTemplate.queryForObject(
                 "SELECT quantity FROM cart_item WHERE customer_id = ? and product_id = ?",
                 Integer.class, customerId, 1L);
@@ -143,15 +144,15 @@ public class CartItemDaoTest {
         Long customerId = 1L;
 
         // when
-        cartItemDao.updateCartItems(List.of(new Cart(1L, 1, false), new Cart(3L, 3, true)));
-        List<Cart> carts = cartItemDao.findByCustomerId(customerId);
-        Cart firstCartItem = carts.get(0);
-        Cart thirdCartItem = carts.get(2);
+        cartDao.updateCartItems(List.of(new CartItem(1L, 1, false), new CartItem(3L, 3, true)));
+        Cart cart = cartDao.findByCustomerId(customerId);
+        CartItem firstCartItemItem = cart.getValue().get(0);
+        CartItem thirdCartItemItem = cart.getValue().get(2);
 
         // then
         Assertions.assertAll(
-                () -> assertThat(firstCartItem.isChecked()).isFalse(),
-                () -> assertThat(thirdCartItem.getQuantity()).isEqualTo(3)
+                () -> assertThat(firstCartItemItem.isChecked()).isFalse(),
+                () -> assertThat(thirdCartItemItem.getQuantity()).isEqualTo(3)
         );
     }
 
@@ -162,10 +163,10 @@ public class CartItemDaoTest {
         Long customerId = 1L;
 
         // when
-        cartItemDao.deleteCartItems(List.of(1L, 2L));
-        List<Cart> carts = cartItemDao.findByCustomerId(customerId);
-        List<Long> cartIds = carts.stream()
-                .map(cart -> cart.getId())
+        cartDao.deleteCartItems(List.of(1L, 2L));
+        Cart cart = cartDao.findByCustomerId(customerId);
+        List<Long> cartIds = cart.getValue().stream()
+                .map(CartItem::getId)
                 .collect(Collectors.toList());
 
         // then
@@ -179,9 +180,10 @@ public class CartItemDaoTest {
         Long customerId = 1L;
 
         // when
-        cartItemDao.deleteAllCartItem(customerId);
+        cartDao.deleteAllCartItem(customerId);
+        Cart cart = cartDao.findByCustomerId(customerId);
 
         // then
-        assertThat(cartItemDao.findByCustomerId(customerId)).size().isEqualTo(0);
+        assertThat(cart.getValue()).size().isEqualTo(0);
     }
 }
