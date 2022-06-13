@@ -19,20 +19,16 @@ public class Order {
         this(null, customerId, cart);
     }
 
-    public Order(Long id, Long customerId, List<OrderItem> orderItems) {
-        this.id = id;
-        this.customerId = customerId;
-        this.orderItems = new OrderItems(orderItems);
-    }
-
     public Order(Long id, Long customerId, Cart cart) {
         this(id, customerId, cart.getCartItems().stream()
             .map(OrderItem::from)
             .collect(Collectors.toList()));
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems.getOrderItems();
+    public Order(Long id, Long customerId, List<OrderItem> orderItems) {
+        this.id = id;
+        this.customerId = customerId;
+        this.orderItems = new OrderItems(orderItems);
     }
 
     public Long getId() {
@@ -41,5 +37,9 @@ public class Order {
 
     public Long getCustomerId() {
         return customerId;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems.getOrderItems();
     }
 }

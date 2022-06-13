@@ -65,7 +65,7 @@ public class OrderDao {
     public List<Order> findAllByCustomerId(long customerId) {
         List<Long> ids = findIdsByCustomerId(customerId);
         return ids.stream()
-            .map(id -> new Order(customerId, findOrderItemsByOrderId(id)))
+            .map(id -> new Order(id, customerId, findOrderItemsByOrderId(id)))
             .collect(Collectors.toList());
     }
 

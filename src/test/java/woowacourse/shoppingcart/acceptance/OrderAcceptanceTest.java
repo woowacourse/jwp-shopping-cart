@@ -41,8 +41,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
 
-        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId1, 5);
-        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId2, 5);
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId1, 1);
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId2, 1);
     }
 
     @DisplayName("주문하기")
@@ -59,6 +59,9 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 전체 내역 조회")
     void findOrders() {
         //given
+        주문하기_요청(token, CUSTOMER_ID);
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId1, 2);
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId2, 2);
         주문하기_요청(token, CUSTOMER_ID);
 
         //when
