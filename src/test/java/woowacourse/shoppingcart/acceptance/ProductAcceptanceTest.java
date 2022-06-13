@@ -26,8 +26,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() {
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        Long productId1 = 상품을_등록함("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId2 = 상품을_등록함("맥주", 20_000, "http://example.com/beer.jpg");
 
         ExtractableResponse<Response> response = 상품_목록_조회_요청();
 
@@ -38,7 +38,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 조회한다")
     @Test
     void getProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId = 상품을_등록함("치킨", 10_000, "http://example.com/chicken.jpg");
 
         ExtractableResponse<Response> response = 상품_조회_요청(productId);
 
@@ -49,7 +49,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 삭제한다")
     @Test
     void deleteProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId = 상품을_등록함("치킨", 10_000, "http://example.com/chicken.jpg");
 
         ExtractableResponse<Response> response = 상품_삭제_요청(productId);
 
@@ -79,7 +79,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {
+    public static Long 상품을_등록함(String name, int price, String imageUrl) {
         ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }

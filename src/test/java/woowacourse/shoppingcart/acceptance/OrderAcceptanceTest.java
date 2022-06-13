@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static woowacourse.auth.acceptance.AcceptanceTestFixture.코린;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_목록_조회_요청;
 import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품을_등록함;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
@@ -37,8 +37,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> signinResponse = post("/signin", new TokenRequest("hamcheeseburger", "Password123!"));
         accessToken = signinResponse.response().jsonPath().getString("accessToken");
 
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "imageUrl1");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "imageUrl2");
+        productId1 = 상품을_등록함("치킨", 10_000, "imageUrl1");
+        productId2 = 상품을_등록함("맥주", 20_000, "imageUrl2");
 
         장바구니_아이템_추가되어_있음(accessToken, productId1);
         장바구니_아이템_추가되어_있음(accessToken, productId2);
