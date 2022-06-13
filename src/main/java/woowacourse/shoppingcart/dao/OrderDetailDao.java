@@ -69,4 +69,16 @@ public class OrderDetailDao {
 
         return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), orderDetailRowMapper);
     }
+
+    public List<OrderDetail> findOrderDetailsByOrderIdAndCustomerId(final long orderId, final long customerId) {
+        final String sql = "SELECT p.id as product_id, p.name, p.price, p.image_url, od.quantity " +
+                "FROM orders_detail od JOIN orders o ON od.orders_id = o.id JOIN product p ON od.product_id = p.id " +
+                "WHERE o.id = :orderId and o.customer_id=:customerId";
+
+        final MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("orderId", orderId)
+                .addValue("customerId", customerId);
+
+        return namedParameterJdbcTemplate.query(sql, parameters, orderDetailRowMapper);
+    }
 }

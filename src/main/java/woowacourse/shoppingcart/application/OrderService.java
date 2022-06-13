@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrderDetailDao;
 import woowacourse.shoppingcart.domain.Order;
+import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.dto.OrderDetailRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
@@ -14,6 +15,7 @@ import woowacourse.shoppingcart.entity.OrderDetailEntity;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +35,6 @@ public class OrderService {
 
     public long addOrder(final OrderRequest ordersRequest, final long customerId) {
         final long ordersId = orderDao.addOrders(customerId);
-
         orderDetailDao.saveAll(convertOrderDetailEntities(ordersRequest, ordersId));
 
         final List<Long> productIds = extractProductIds(ordersRequest);
@@ -46,30 +47,29 @@ public class OrderService {
     private List<OrderDetailEntity> convertOrderDetailEntities(final OrderRequest ordersRequest, final long ordersId) {
         return ordersRequest.getOrder()
                 .stream()
-                .map(it -> new OrderDetailEntity(ordersId, it.getId(), it.getQuantity()))
+                .map(it -> new OrderDetailEntity(ordersId, it.getProductId(), it.getQuantity()))
                 .collect(Collectors.toList());
     }
 
     private List<Long> extractProductIds(final OrderRequest ordersRequest) {
         return ordersRequest.getOrder()
                 .stream()
-                .map(OrderDetailRequest::getId)
+                .map(OrderDetailRequest::getProductId)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public OrderResponse findOrderById(final long customerId, final Long orderId) {
+    public OrderResponse findOrderById(final long customerId, final long orderId) {
         validateOrderIdByCustomerId(customerId, orderId);
         final Order order = findOrderById(orderId);
         return OrderResponse.of(order);
     }
 
-    private void validateOrderIdByCustomerId(final long customerId, final Long orderId) {
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
-        orderIds.stream()
-                .filter(it -> it.equals(orderId))
-                .findFirst()
-                .orElseThrow(() -> new InvalidOrderException("유저에게는 해당 order_id가 없습니다."));
+    private void validateOrderIdByCustomerId(final long customerId, final long orderId) {
+        final Optional<Long> ordersId = orderDao.findOrderIdByOrderIdAndCustomerId(orderId, customerId);
+        if(ordersId.isEmpty()) {
+            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+        }
     }
 
     @Transactional(readOnly = true)

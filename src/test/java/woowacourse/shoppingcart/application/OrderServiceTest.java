@@ -9,10 +9,13 @@ import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrderDetailDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.dto.*;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static woowacourse.shoppingcart.application.ProductServiceTest.상품1;
 import static woowacourse.shoppingcart.application.ProductServiceTest.상품2;
@@ -57,10 +60,10 @@ class OrderServiceTest {
     @Test
     void findOrderById() {
         // given
-        given(orderDao.findOrderIdsByCustomerId(1L)).willReturn(List.of(1L, 2L));
-
         final List<OrderDetail> order = List.of(주문_상품1, 주문_상품2);
+        given(orderDao.findOrderIdByOrderIdAndCustomerId(1L, 1L)).willReturn(Optional.of(1L));
         given(orderDetailDao.findOrderDetailsByOrderId(1L)).willReturn(order);
+
         // when
         final OrderResponse orderResponse = orderService.findOrderById(1L, 1L);
         final OrderResponse expected = new OrderResponse(
@@ -73,6 +76,19 @@ class OrderServiceTest {
         assertThat(orderResponse).usingRecursiveComparison()
                 .isEqualTo(expected);
     }
+
+    @DisplayName("사용자가 주문하지 않은 orderId로 주문을 조회하면 예외를 발생한다.")
+    @Test
+    void throwWhenOrderNotExist() {
+        // given
+        given(orderDao.findOrderIdByOrderIdAndCustomerId(1L, 1L)).willReturn(Optional.empty());
+
+        // when
+        assertThatThrownBy(() -> orderService.findOrderById(1L, 1L))
+                .isInstanceOf(InvalidOrderException.class)
+                .hasMessage("유저에게는 해당 order_id가 없습니다.");
+    }
+
 
     @DisplayName("사용자 id로 주문 목록을 조회한다.")
     @Test

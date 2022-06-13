@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class OrderDao {
@@ -41,5 +43,17 @@ public class OrderDao {
                 new MapSqlParameterSource(parameters),
                 (rs, rowNum) -> rs.getLong("id")
         );
+    }
+
+    public Optional<Long> findOrderIdByOrderIdAndCustomerId(final long orderId, final long customerId) {
+        final String sql = "SELECT id FROM orders WHERE id = :orderId and customer_id = :customerId";
+
+        final MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("orderId", orderId)
+                .addValue("customerId", customerId);
+
+        final List<Long> query = namedParameterJdbcTemplate.query(sql, parameters, (rs, rowNum) -> rs.getLong("id"));
+
+        return Optional.ofNullable(DataAccessUtils.singleResult(query));
     }
 }
