@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.ui;
+package woowacourse.shoppingcart.documentation;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;

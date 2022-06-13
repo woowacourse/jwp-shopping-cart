@@ -1,4 +1,4 @@
-= 장바구니 API Docs
+= 장바구니 API Document
 :toc: left
 :toclevels: 2
 :sectlinks:
@@ -120,3 +120,34 @@ include::{snippets}/cart/delete/http-request.adoc[]
 
 include::{snippets}/cart/delete/http-response.adoc[]
 
+== Order
+
+=== 주문하기
+
+==== HTTP Request
+
+include::{snippets}/order/create/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/order/create/http-response.adoc[]
+
+=== 주문 목록 조회
+
+==== HTTP Request
+
+include::{snippets}/order/find/all/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/order/find/all/http-response.adoc[]
+
+=== 주문 단건 조회
+
+==== HTTP Request
+
+include::{snippets}/order/find/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/order/find/http-response.adoc[]
