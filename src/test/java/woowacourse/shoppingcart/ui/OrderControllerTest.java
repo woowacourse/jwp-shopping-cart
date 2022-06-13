@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static woowacourse.fixture.PasswordFixture.plainBasicPassword;
+import static woowacourse.fixture.ProductFixture.PRODUCT_APPLE;
+import static woowacourse.fixture.ProductFixture.PRODUCT_BANANA;
 import static woowacourse.fixture.TokenFixture.BEARER;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -105,7 +107,7 @@ class OrderControllerTest {
         // given
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
+                Collections.singletonList(new OrderDetail(2, PRODUCT_BANANA)));
 
         when(orderService.findOrderById(customerId, orderId))
                 .thenReturn(new OrdersResponse(expected));
@@ -116,10 +118,10 @@ class OrderControllerTest {
                 ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
-                .andExpect(jsonPath("orderDetails[0].productId").value(2L))
+                .andExpect(jsonPath("orderDetails[0].productId").value(1L))
                 .andExpect(jsonPath("orderDetails[0].price").value(1_000))
                 .andExpect(jsonPath("orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("orderDetails[0].imageUrl").value("imageUrl"))
+                .andExpect(jsonPath("orderDetails[0].imageUrl").value("woowa1.com"))
                 .andExpect(jsonPath("orderDetails[0].quantity").value(2));
     }
 
@@ -129,10 +131,10 @@ class OrderControllerTest {
         // given
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
+                        new OrderDetail(2, PRODUCT_BANANA))),
                 new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
-        );
+                        new OrderDetail(4, PRODUCT_APPLE))
+                ));
 
         when(orderService.findOrdersByCustomerId(customerId))
                 .thenReturn(expected.stream()
@@ -148,14 +150,14 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))
                 .andExpect(jsonPath("$[0].orderDetails[0].price").value(1_000))
                 .andExpect(jsonPath("$[0].orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("$[0].orderDetails[0].imageUrl").value("imageUrl"))
+                .andExpect(jsonPath("$[0].orderDetails[0].imageUrl").value("woowa1.com"))
                 .andExpect(jsonPath("$[0].orderDetails[0].quantity").value(2))
 
                 .andExpect(jsonPath("$[1].id").value(2L))
                 .andExpect(jsonPath("$[1].orderDetails[0].productId").value(2L))
                 .andExpect(jsonPath("$[1].orderDetails[0].price").value(2_000))
                 .andExpect(jsonPath("$[1].orderDetails[0].name").value("apple"))
-                .andExpect(jsonPath("$[1].orderDetails[0].imageUrl").value("imageUrl2"))
+                .andExpect(jsonPath("$[1].orderDetails[0].imageUrl").value("woowa2.com"))
                 .andExpect(jsonPath("$[1].orderDetails[0].quantity").value(4));
     }
 }

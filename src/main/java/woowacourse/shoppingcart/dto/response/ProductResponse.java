@@ -25,7 +25,8 @@ public class ProductResponse {
         this.quantity = quantity;
     }
 
-    public static ProductResponse withCart(final Product product, final Cart cart) {
+    public static ProductResponse withCart(final Cart cart) {
+        final Product product = cart.getProduct();
         return new ProductResponse(
                 product.getId(),
                 product.getName(),

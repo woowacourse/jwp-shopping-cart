@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,10 +14,6 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.OrderDetail;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
@@ -25,7 +24,6 @@ class OrdersDetailDaoTest {
     private final OrdersDetailDao ordersDetailDao;
     private long ordersId;
     private long productId;
-    private long customerId;
 
     public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -34,7 +32,7 @@ class OrdersDetailDaoTest {
 
     @BeforeEach
     void setUp() {
-        customerId = 1L;
+        final long customerId = 1L;
         jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
         ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 
@@ -70,7 +68,7 @@ class OrdersDetailDaoTest {
 
         //when
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-                .findOrdersDetailsByOrderId(ordersId);
+                .findOrdersDetailsJoinProductByOrderId(ordersId);
 
         //then
         assertThat(ordersDetailsByOrderId).hasSize(insertCount);

@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -92,7 +93,8 @@ public class CartItemDaoTest {
                 .collect(Collectors.toList());
 
         final List<String> productNames = carts.stream()
-                .map(Cart::getName)
+                .map(Cart::getProduct)
+                .map(Product::getName)
                 .collect(Collectors.toList());
         assertAll(
                 () -> assertThat(quantities).containsExactly(5, 10),

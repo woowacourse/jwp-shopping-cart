@@ -68,13 +68,13 @@ public class ProductService {
 
     private List<ProductResponse> toProductResponseWithCart(final List<Product> products, final List<Cart> carts) {
         return products.stream()
-                .map(product -> ProductResponse.withCart(product, getCartByProduct(carts, product)))
+                .map(product -> ProductResponse.withCart(getCartByProduct(carts, product)))
                 .collect(Collectors.toList());
     }
 
     private Cart getCartByProduct(final List<Cart> carts, final Product product) {
         return carts.stream()
-                .filter(each -> each.getProductId().equals(product.getId()))
+                .filter(each -> each.getProduct().equals(product))
                 .findFirst()
                 .orElseGet(() -> new Cart(null, new Quantity(0), product));
     }
