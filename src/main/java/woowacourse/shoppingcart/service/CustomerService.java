@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.SecurityManager;
+import woowacourse.shoppingcart.domain.*;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
@@ -12,11 +12,14 @@ import woowacourse.shoppingcart.dto.SignUpResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@Transactional
 public class CustomerService {
 
     private static final String DUPLICATED_NAME = "[ERROR] 이미 존재하는 사용자 이름입니다.";
     private static final String DUPLICATED_EMAIL = "[ERROR] 이미 존재하는 이메일입니다.";
-    private static final String NOT_MATCH_PASSWORD = "[ERROR] 비밀번호가 일치하지 않습니다.";
+
+    private static final String NOT_EXIST_NAME = "[ERROR] 존재하지 않는 이름입니다.";
+
     private final CustomerDao customerDao;
 
     public CustomerService(CustomerDao customerDao) {
@@ -27,12 +30,10 @@ public class CustomerService {
         String name = signUpRequest.getUsername();
         String email = signUpRequest.getEmail();
         String password = signUpRequest.getPassword();
-
         validateDuplicatedName(name);
-
         validatedDuplicatedEmail(email);
-
-        String encodedPassword = SecurityManager.generateEncodedPassword(password);
+        Customer customer = new Customer(name, email, password);
+        String encodedPassword = customer.generateEncodedPassword();
         customerDao.saveCustomer(name, email, encodedPassword);
 
         return new SignUpResponse(name, email);
@@ -51,29 +52,30 @@ public class CustomerService {
     }
 
     public CustomerResponse findCustomerInformation(String username) {
+        validateExistName(username);
         Customer customer = customerDao.findCustomerByUserName(username);
-        String email = customer.getEmail();
-        return new CustomerResponse(username, email);
+        return new CustomerResponse(username, customer.getEmail());
+    }
+
+    private void validateExistName(String username) {
+        if (!customerDao.isValidName(username)) {
+            throw new InvalidCustomerException(NOT_EXIST_NAME);
+        }
     }
 
     public void changePassword(String username, ChangePasswordRequest changePasswordRequest) {
         Customer customer = customerDao.findCustomerByUserName(username);
-        String password = changePasswordRequest.getOldPassword();
-        validateSamePassword(password, customer);
-        String newEncodedPassword = SecurityManager.generateEncodedPassword(changePasswordRequest.getNewPassword());
+        Customer requestCustomer = new Customer(username, customer.getEmail(), changePasswordRequest.getPassword());
+        customer.validateSamePassword(requestCustomer);
+        Customer responseCustomer = customer.changePassword(changePasswordRequest.getNewPassword());
+        String newEncodedPassword = responseCustomer.generateEncodedPassword();
         customerDao.updatePassword(username, newEncodedPassword);
     }
 
-    private void validateSamePassword(String password, Customer customer) {
-        if (!SecurityManager.isSamePassword(password, customer.getPassword())) {
-            throw new InvalidCustomerException(NOT_MATCH_PASSWORD);
-        }
-    }
-
     public void deleteUser(String username, DeleteCustomerRequest deleteCustomerRequest) {
-        var customer = customerDao.findCustomerByUserName(username);
-        String password = deleteCustomerRequest.getPassword();
-        validateSamePassword(password, customer);
+        Customer customer= customerDao.findCustomerByUserName(username);
+        Customer requestCustomer = new Customer(username, customer.getEmail(), deleteCustomerRequest.getPassword());
+        customer.validateSamePassword(requestCustomer);
         customerDao.deleteByName(username);
     }
 }

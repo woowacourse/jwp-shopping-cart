@@ -21,8 +21,8 @@ public class JwtTokenProvider {
     @Value("${security.jwt.token.expire-length}")
     private long validityInMilliseconds;
 
-    public String createToken(String payload) {
-        Claims claims = Jwts.claims().setSubject(payload);
+    public String createToken(String userName) {
+        Claims claims = Jwts.claims().setSubject(userName);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
         Key key = generateKey();
@@ -44,7 +44,6 @@ public class JwtTokenProvider {
         try {
             Key key = generateKey();
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             return false;

@@ -28,7 +28,7 @@ public class CustomerController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity.created(URI.create("/users/me")).body(customerService.signUp(signUpRequest));
     }
 
@@ -39,14 +39,14 @@ public class CustomerController {
 
     @PatchMapping("/users/me")
     public ResponseEntity changePassword(@AuthenticationPrincipal String username,
-                                         @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+                                         @RequestBody ChangePasswordRequest changePasswordRequest) {
         customerService.changePassword(username, changePasswordRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/users/me")
     public ResponseEntity deleteCustomer(@AuthenticationPrincipal String username,
-                                         @Valid @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
+                                         @RequestBody DeleteCustomerRequest deleteCustomerRequest) {
         customerService.deleteUser(username, deleteCustomerRequest);
         return ResponseEntity.noContent().build();
     }

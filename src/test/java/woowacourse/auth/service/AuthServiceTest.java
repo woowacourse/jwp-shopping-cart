@@ -34,7 +34,7 @@ public class AuthServiceTest {
 
     @Test
     void 비밀번호가_일치하지_않는_경우() {
-        var signInRequest = new SignInRequest("crew01@naver.com", "a12");
+        var signInRequest = new SignInRequest("crew01@naver.com", "a123456");
 
         assertThatThrownBy(() -> authService.signIn(signInRequest)).isInstanceOf(InvalidCustomerException.class);
     }

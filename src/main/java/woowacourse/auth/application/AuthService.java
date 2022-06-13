@@ -3,16 +3,15 @@ package woowacourse.auth.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.SecurityManager;
+import woowacourse.shoppingcart.domain.*;
 import woowacourse.shoppingcart.dto.SignInRequest;
 import woowacourse.shoppingcart.dto.SignInResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 public class AuthService {
+    private static final String NOT_EXIST_EMAIL = "[ERROR] 존재하지 않는 이메일 입니다.";
 
-    private static final String DIFFERENT_PASSWORD = "[ERROR] 비밀번호가 일치하지 않습니다.";
     private CustomerDao customerDao;
     private JwtTokenProvider jwtTokenProvider;
 
@@ -23,20 +22,19 @@ public class AuthService {
 
     public SignInResponse signIn(SignInRequest signInRequest) {
         String email = signInRequest.getEmail();
-
-        var customer = customerDao.findCustomerByEmail(email);
+        Customer requestedCustomer = new Customer(email, signInRequest.getPassword());
+        validateExistEmail(email);
+        Customer customer = customerDao.findCustomerByEmail(email);
+        customer.validateSamePassword(requestedCustomer);
         String username = customer.getUsername();
-
-        validateSamePassword(signInRequest, customer);
-
         String token = jwtTokenProvider.createToken(username);
 
         return new SignInResponse(username, email, token);
     }
 
-    private void validateSamePassword(SignInRequest signInRequest, Customer customer) {
-        if (!SecurityManager.isSamePassword(signInRequest.getPassword(), customer.getPassword())) {
-            throw new InvalidCustomerException(DIFFERENT_PASSWORD);
+    private void validateExistEmail(String email) {
+        if (!customerDao.isValidEmail(email)) {
+            throw new InvalidCustomerException(NOT_EXIST_EMAIL);
         }
     }
 
@@ -46,5 +44,12 @@ public class AuthService {
 
     public boolean isValidToken(String token) {
         return jwtTokenProvider.validateToken(token);
+    }
+
+    public SignInResponse autoSignIn(String username) {
+        Customer customer = customerDao.findCustomerByUserName(username);
+        String email = customer.getEmail();
+        String token = jwtTokenProvider.createToken(username);
+        return new SignInResponse(username, email, token);
     }
 }

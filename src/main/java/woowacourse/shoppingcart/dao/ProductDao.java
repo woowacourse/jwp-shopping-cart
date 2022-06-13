@@ -2,8 +2,10 @@ package woowacourse.shoppingcart.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
@@ -13,6 +15,13 @@ import java.util.Objects;
 
 @Repository
 public class ProductDao {
+    private static final RowMapper<Product> PRODUCT_MAPPER = (rs, rowNum) -> {
+        var id = rs.getLong("id");
+        var name = rs.getString("name");
+        var price = rs.getInt("price");
+        var imageURL = rs.getString("image_url");
+        return new Product(id, name, price, imageURL);
+    };
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -20,50 +29,33 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
-            return preparedStatement;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
-
-    public Product findProductById(final Long productId) {
+    public Product findProductById(Long productId) {
         try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
-            return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
-                    new Product(
-                            productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
-                    ), productId
-            );
+            final String sql = "SELECT * FROM product WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, PRODUCT_MAPPER, productId);
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            throw new InvalidProductException("[ERROR] 없는 상품입니다.");
         }
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
-        return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image_url")
-                        ));
+        final String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, PRODUCT_MAPPER);
     }
 
-    public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
+    public boolean isValidId(Long id) {
+        String sql = "SELECT * FROM product WHERE exists (SELECT name FROM product WHERE id = ?)";
+        return jdbcTemplate.query(sql, PRODUCT_MAPPER, id).size() > 0;
+    }
+
+
+    public List<Product> findProductsByPage(int pageNum, int perPage) {
+        String sql = "SELECT * FROM product LIMIT ?, ?";
+        return jdbcTemplate.query(sql, PRODUCT_MAPPER, (pageNum - 1) * perPage, perPage);
+    }
+
+    public Long countTotal() {
+        String sql = "SELECT COUNT(id) FROM product";
+        return jdbcTemplate.queryForObject(sql, Long.class);
     }
 }
