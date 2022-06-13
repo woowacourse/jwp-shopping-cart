@@ -108,7 +108,7 @@ Header {
 
 **장바구니 담기**
 
-`POST` /customers/carts
+`POST` /customers/me/carts
 
 ```json
 // request
@@ -143,7 +143,7 @@ Body{
 
 **장바구니 조회**
 
-`GET`  /customers/carts
+`GET`  /customers/me/carts
 
 ```json
 // request
@@ -181,7 +181,7 @@ Header {
 
 **장바구니 삭제**
 
-`DELETE` /customers/carts/{cartItemId}
+`DELETE` /customers/me/carts/{cartItemId}
 
 ```jsx
 // request
@@ -199,7 +199,7 @@ Header {
 
 **장바구니 전체 삭제**
 
-`DELETE` /customers/carts
+`DELETE` /customers/me/carts
 
 ```json
 // request
@@ -215,7 +215,7 @@ Header {
 
 **장바구니 개수 수정**
 
-`PUT` /customers/carts/{cartItemId}
+`PUT` /customers/me/carts/{cartItemId}
 
 ```json
 // request

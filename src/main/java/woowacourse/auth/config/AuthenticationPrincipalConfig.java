@@ -23,7 +23,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authCheckInterceptor())
                 .addPathPatterns("/customers/me")
-                .addPathPatterns("/customers/carts")
+                .addPathPatterns("/customers/me/carts")
                 .addPathPatterns("/customers/orders");
     }
 

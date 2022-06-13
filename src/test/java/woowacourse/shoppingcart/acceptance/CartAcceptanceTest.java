@@ -115,7 +115,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
                 .body(requestBody)
-                .when().post("/customers/carts")
+                .when().post("/customers/me/carts")
                 .then().log().all()
                 .extract();
     }
@@ -125,7 +125,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
-                .when().get("/customers/carts")
+                .when().get("/customers/me/carts")
                 .then().log().all()
                 .extract();
     }
@@ -135,7 +135,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
-                .when().delete("/customers/carts/{cartId}", cartId)
+                .when().delete("/customers/me/carts/{cartId}", cartId)
                 .then().log().all()
                 .extract();
     }
@@ -145,7 +145,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
-                .when().delete("/customers/carts")
+                .when().delete("/customers/me/carts")
                 .then().log().all()
                 .extract();
     }
@@ -156,7 +156,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
                 .body(cartQuantityRequest)
-                .when().put("/customers/carts/{cartId}", cartId)
+                .when().put("/customers/me/carts/{cartId}", cartId)
                 .then().log().all()
                 .extract();
     }
