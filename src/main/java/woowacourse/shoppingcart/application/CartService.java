@@ -13,7 +13,6 @@ import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.dto.request.CartRequest;
 import woowacourse.shoppingcart.dto.request.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequests;
-import woowacourse.shoppingcart.dto.response.CartResponse;
 import woowacourse.shoppingcart.dto.response.CartResponses;
 
 @Service
@@ -57,10 +56,7 @@ public class CartService {
         cartItemDao.updateCartItems(carts);
 
         List<Cart> updatedCarts = getUpdatedCarts(username, updateCartRequests);
-        List<CartResponse> cartResponses = updatedCarts.stream()
-                .map(CartResponse::from)
-                .collect(Collectors.toList());
-        return new CartResponses(cartResponses);
+        return CartResponses.from(updatedCarts);
     }
 
     private List<Cart> getUpdatedCarts(String username, UpdateCartRequests updateCartRequests) {

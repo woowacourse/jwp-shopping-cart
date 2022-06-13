@@ -10,7 +10,7 @@ public class UpdatePasswordRequest {
     @NotBlank
     private String newPassword;
 
-    public UpdatePasswordRequest() {
+    private UpdatePasswordRequest() {
     }
 
     public UpdatePasswordRequest(String password, String newPassword) {

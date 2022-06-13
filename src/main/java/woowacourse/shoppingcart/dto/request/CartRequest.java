@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dto.request;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 public class CartRequest {
@@ -10,9 +11,10 @@ public class CartRequest {
     @Positive
     private Integer quantity;
 
+    @NotNull
     private Boolean checked;
 
-    public CartRequest() {
+    private CartRequest() {
     }
 
     public CartRequest(Long productId, Integer quantity, Boolean checked) {

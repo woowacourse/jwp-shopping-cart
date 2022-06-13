@@ -7,7 +7,7 @@ public class DeleteProductRequest {
 
     private List<CartIdRequest> cartItems;
 
-    public DeleteProductRequest() {
+    private DeleteProductRequest() {
     }
 
     public DeleteProductRequest(List<CartIdRequest> cartItems) {

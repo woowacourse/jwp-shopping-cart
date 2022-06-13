@@ -8,10 +8,10 @@ public class ProductResponses {
 
     private List<ProductResponse> products;
 
-    public ProductResponses() {
+    private ProductResponses() {
     }
 
-    public ProductResponses(List<ProductResponse> products) {
+    private ProductResponses(List<ProductResponse> products) {
         this.products = products;
     }
 

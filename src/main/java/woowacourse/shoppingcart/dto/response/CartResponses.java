@@ -8,10 +8,10 @@ public class CartResponses {
 
     private List<CartResponse> cartItems;
 
-    public CartResponses() {
+    private CartResponses() {
     }
 
-    public CartResponses(List<CartResponse> cartItems) {
+    private CartResponses(List<CartResponse> cartItems) {
         this.cartItems = cartItems;
     }
 

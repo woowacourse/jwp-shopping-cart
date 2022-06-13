@@ -7,7 +7,7 @@ public class DeleteCustomerRequest {
     @NotBlank
     private String password;
 
-    public DeleteCustomerRequest() {
+    private DeleteCustomerRequest() {
     }
 
     public DeleteCustomerRequest(String password) {

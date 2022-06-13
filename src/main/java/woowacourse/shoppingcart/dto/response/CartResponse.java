@@ -12,11 +12,11 @@ public class CartResponse {
     private int quantity;
     private boolean checked;
 
-    public CartResponse() {
+    private CartResponse() {
     }
 
-    public CartResponse(Long id, Long productId, String name, int price, String imageUrl, int quantity,
-                        boolean checked) {
+    private CartResponse(Long id, Long productId, String name, int price, String imageUrl, int quantity,
+                         boolean checked) {
         this.id = id;
         this.productId = productId;
         this.name = name;

@@ -8,7 +8,7 @@ public class UpdateCartRequests {
 
     private List<UpdateCartRequest> cartItems;
 
-    public UpdateCartRequests() {
+    private UpdateCartRequests() {
     }
 
     public UpdateCartRequests(List<UpdateCartRequest> cartItems) {

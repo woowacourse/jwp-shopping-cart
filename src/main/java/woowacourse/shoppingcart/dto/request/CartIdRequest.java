@@ -7,7 +7,7 @@ public class CartIdRequest {
     @Positive
     private Long id;
 
-    public CartIdRequest() {
+    private CartIdRequest() {
     }
 
     public CartIdRequest(Long id) {

@@ -10,7 +10,7 @@ public class SignInRequest {
     @NotBlank
     private String password;
 
-    public SignInRequest() {
+    private SignInRequest() {
     }
 
     public SignInRequest(String email, String password) {

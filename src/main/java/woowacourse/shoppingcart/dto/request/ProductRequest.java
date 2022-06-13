@@ -10,7 +10,7 @@ public class ProductRequest {
 
     private String imageUrl;
 
-    public ProductRequest() {
+    private ProductRequest() {
     }
 
     public ProductRequest(String name, Integer price, String imageUrl) {
