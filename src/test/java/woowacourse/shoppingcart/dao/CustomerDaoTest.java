@@ -16,12 +16,12 @@ import woowacourse.shoppingcart.domain.Customer;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CustomerDaoImplTest {
+public class CustomerDaoTest {
 
-    private final CustomerDao customerDao;
+    private final CustomerRepository customerDao;
 
-    public CustomerDaoImplTest(DataSource dataSource) {
-        customerDao = new CustomerDaoImpl(dataSource);
+    public CustomerDaoTest(DataSource dataSource) {
+        customerDao = new CustomerDao(dataSource);
     }
 
     @Test
@@ -55,6 +55,14 @@ public class CustomerDaoImplTest {
         customerDao.save(new Customer("레넌", "rennon@woowa.com", "12345678"));
 
         assertThat(customerDao.existByUsername("레넌")).isTrue();
+    }
+
+    @Test
+    @DisplayName("유저 이름이 존재하지 않으면?")
+    void existByUserNameFalse() {
+        customerDao.save(new Customer("레넌", "rennon@woowa.com", "12345678"));
+
+        assertThat(customerDao.existByUsername("그린론")).isFalse();
     }
 
     @Test

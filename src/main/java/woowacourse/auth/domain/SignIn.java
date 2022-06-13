@@ -1,10 +1,5 @@
 package woowacourse.auth.domain;
 
-import woowacourse.auth.support.EmailValidator;
-import woowacourse.auth.support.PasswordValidator;
-import woowacourse.shoppingcart.exception.InvalidEmailException;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
-
 public class SignIn {
 
     private final String email;
@@ -27,16 +22,10 @@ public class SignIn {
     }
 
     private void validateEmail(String email) {
-        EmailValidator emailValidator = new EmailValidator();
-        if (!emailValidator.isValid(email)) {
-            throw new InvalidEmailException();
-        }
+        new UserEmail(email);
     }
 
     private void validatePassword(String password) {
-        PasswordValidator passwordValidator = new PasswordValidator();
-        if (!passwordValidator.isValid(password)) {
-            throw new InvalidPasswordException();
-        }
+        new UserPassword(password);
     }
 }

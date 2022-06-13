@@ -17,18 +17,19 @@ import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidEmailException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.ValidationException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException() {
-        return ResponseEntity.badRequest().body(new ErrorResponse("Unhandled Exception"));
+        return ResponseEntity.internalServerError().body(new ErrorResponse("서버에서 에러가 발생했습니다."));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
@@ -61,16 +62,23 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            InvalidEmailException.class,
+            ValidationException.class,
             InvalidPasswordException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
             InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
     })
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler({
+            NotInCustomerCartItemException.class,
+            NoSuchCustomerException.class
+    })
+    public ResponseEntity<ErrorResponse> handleNotFound(final RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(AuthorizationException.class)

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +20,7 @@ import woowacourse.shoppingcart.domain.Product;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class ProductDaoTest {
 
-    private final ProductDao productDao;
+    private final ProductRepository productDao;
 
     public ProductDaoTest(JdbcTemplate jdbcTemplate) {
         this.productDao = new ProductDao(jdbcTemplate);
@@ -57,18 +58,26 @@ public class ProductDaoTest {
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
     }
 
-    @DisplayName("상품 목록 조회")
+    @DisplayName("상품 목록 조회(page * size부터 size 개수 만큼 반환)")
     @Test
     void getProducts() {
-
         // given
-        final int size = 0;
+        for (int i = 1; i <= 10; i++) {
+            productDao.save(new Product("name" + i, i * 1000, "imageUrl" + i));
+        }
+        final int size = 3; // 3개
+        final int page = 2; // 2페이지
 
         // when
-        final List<Product> products = productDao.findProducts();
+        final List<Product> products = productDao.findProducts(size, page); // 4, 5, 6 번째 데이터
 
         // then
-        assertThat(products).size().isEqualTo(size);
+        assertAll(
+                () -> assertThat(products).size().isEqualTo(size),
+                () -> assertThat(products.get(0).getPrice()).isEqualTo(4000),
+                () -> assertThat(products.get(1).getPrice()).isEqualTo(5000),
+                () -> assertThat(products.get(2).getPrice()).isEqualTo(6000)
+        );
     }
 
     @DisplayName("싱품 삭제")

@@ -1,0 +1,5 @@
+DELETE FROM cart_item WHERE 1
+
+DELETE FROM product WHERE 1
+
+DELETE FROM customer WHERE 1

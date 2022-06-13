@@ -1,17 +1,18 @@
 package woowacourse.auth.ui;
 
-import static woowacourse.auth.support.AuthorizationExtractor.AUTHORIZATION;
-import static woowacourse.auth.support.AuthorizationExtractor.BEARER_TYPE;
-
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import woowacourse.auth.domain.Username;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.JwtTokenProvider;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -27,8 +28,9 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String auth = webRequest.getHeader(AUTHORIZATION);
-        String token = auth.substring(BEARER_TYPE.length()).trim();
-        return jwtTokenProvider.getPayload(token);
+        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        String token = request.getAttribute(ACCESS_TOKEN).toString();
+        Username username = new Username(jwtTokenProvider.getPayload(token));
+        return username.get();
     }
 }

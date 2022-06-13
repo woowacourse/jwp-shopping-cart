@@ -1,10 +1,10 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.auth.support.PasswordCheck;
+import javax.validation.constraints.NotBlank;
 
 public class DeleteCustomerRequest {
 
-    @PasswordCheck
+    @NotBlank
     private String password;
 
     private DeleteCustomerRequest() {

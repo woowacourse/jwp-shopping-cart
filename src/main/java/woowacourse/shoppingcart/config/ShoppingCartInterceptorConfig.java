@@ -1,4 +1,4 @@
-package woowacourse.auth.config;
+package woowacourse.shoppingcart.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -7,19 +7,18 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.ui.LoginInterceptor;
 
 @Configuration
-public class InterceptorConfig implements WebMvcConfigurer {
+public class ShoppingCartInterceptorConfig implements WebMvcConfigurer {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public InterceptorConfig(JwtTokenProvider jwtTokenProvider) {
+    public ShoppingCartInterceptorConfig(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        WebMvcConfigurer.super.addInterceptors(registry);
         registry.addInterceptor(new LoginInterceptor(jwtTokenProvider))
-                .addPathPatterns("/users/**")
+                .addPathPatterns("/users/**", "/cart/**")
                 .excludePathPatterns("/users");
     }
 }

@@ -5,9 +5,12 @@ import woowacourse.shoppingcart.domain.Customer;
 
 public class SignInResponse {
 
-    private final String username;
-    private final String email;
-    private final String token;
+    private String username;
+    private String email;
+    private String token;
+
+    private SignInResponse() {
+    }
 
     public SignInResponse(String username, String email, String token) {
         this.username = username;

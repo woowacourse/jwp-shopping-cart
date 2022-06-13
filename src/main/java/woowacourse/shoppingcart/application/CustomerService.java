@@ -1,9 +1,12 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.CustomerRepository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.SignUpRequest;
@@ -17,10 +20,12 @@ import woowacourse.shoppingcart.exception.NoSuchCustomerException;
 @Service
 public class CustomerService {
 
-    private final CustomerDao customerDao;
+    private final CustomerRepository customerDao;
+    private final CartService cartService;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(CustomerRepository customerDao, CartService cartService) {
         this.customerDao = customerDao;
+        this.cartService = cartService;
     }
 
     @Transactional
@@ -52,7 +57,16 @@ public class CustomerService {
         validateExistUsername(username);
         validatePassword(username, deleteCustomerRequest.getPassword());
 
+        for (Long cartId : getCartIds(username)) {
+            cartService.deleteCart(username, cartId);
+        }
         customerDao.deleteByUsername(username);
+    }
+
+    private List<Long> getCartIds(String username) {
+        return cartService.findCartsByUsername(username).getCartItems().stream()
+                .map(CartResponse::getId)
+                .collect(Collectors.toList());
     }
 
     private void validateDuplicateUsername(String username) {

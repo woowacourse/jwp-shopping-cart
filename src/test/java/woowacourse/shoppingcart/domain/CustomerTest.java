@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.shoppingcart.exception.InvalidEmailException;
-import woowacourse.shoppingcart.exception.InvalidPasswordException;
+import woowacourse.shoppingcart.exception.ValidationException;
 
 class CustomerTest {
     @Test
@@ -16,7 +15,7 @@ class CustomerTest {
         String password = "12345678";
 
         assertThatThrownBy(() -> new Customer(username, email, password))
-                .isInstanceOf(InvalidEmailException.class);
+                .isInstanceOf(ValidationException.class);
     }
 
     @Test
@@ -27,7 +26,7 @@ class CustomerTest {
         String password = "12345678";
 
         assertThatThrownBy(() -> new Customer(username, email, password))
-                .isInstanceOf(InvalidEmailException.class);
+                .isInstanceOf(ValidationException.class);
     }
 
     @Test
@@ -38,6 +37,6 @@ class CustomerTest {
         String password = "1234";
 
         assertThatThrownBy(() -> new Customer(username, email, password))
-                .isInstanceOf(InvalidPasswordException.class);
+                .isInstanceOf(ValidationException.class);
     }
 }

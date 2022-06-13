@@ -1,12 +1,12 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.auth.support.PasswordCheck;
+import javax.validation.constraints.NotBlank;
 
 public class UpdatePasswordRequest {
 
-    @PasswordCheck
+    @NotBlank
     private String password;
-    @PasswordCheck
+    @NotBlank
     private String newPassword;
 
     private UpdatePasswordRequest() {
