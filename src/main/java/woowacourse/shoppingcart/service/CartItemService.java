@@ -81,13 +81,13 @@ public class CartItemService {
         long customerId = findCustomerIdByEmail(email);
         CartItems cartItems = cartItemRepository.findCartItemsByCustomer(customerId);
 
-        List<CartItem> deleteCartItems = cartItemDeletionRequest.getCartItemIds().stream()
+        List<CartItem> cartItemsToDelete = cartItemDeletionRequest.getCartItemIds().stream()
             .map(cartItemRepository::findById)
             .collect(Collectors.toList());
 
-        for (CartItem deleteCartItem : deleteCartItems) {
-            cartItems.checkContain(deleteCartItem);
-            cartItemRepository.delete(deleteCartItem);
+        for (CartItem cartItemToDelete : cartItemsToDelete) {
+            cartItems.checkContain(cartItemToDelete);
+            cartItemRepository.delete(cartItemToDelete);
         }
     }
 
