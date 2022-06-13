@@ -2,7 +2,7 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_REQUEST_1;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.domain.customer.privacy.Birthday;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @DisplayName("인증 관련 기능")
@@ -48,7 +49,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                                 "detailAddress", "zonecode", "terms")
                         .containsExactly(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getProfileImageUrl(),
                                 CUSTOMER_REQUEST_1.getName(), CUSTOMER_REQUEST_1.getGender(),
-                                CUSTOMER_REQUEST_1.getBirthday(), CUSTOMER_REQUEST_1.getContact(),
+                                Birthday.empty().getValue().toString(), CUSTOMER_REQUEST_1.getContact(),
                                 CUSTOMER_REQUEST_1.getAddress(), CUSTOMER_REQUEST_1.getDetailAddress(),
                                 CUSTOMER_REQUEST_1.getZonecode(), CUSTOMER_REQUEST_1.isTerms())
         );
@@ -66,7 +67,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         //then
         assertAll(
                 () -> assertThat(tokenResponse.getAccessToken()).isNotBlank(),
-                () -> assertThat(tokenResponse.getCustomerId()).isPositive()
+                () -> assertThat(tokenResponse.getUserId()).isPositive()
         );
     }
 

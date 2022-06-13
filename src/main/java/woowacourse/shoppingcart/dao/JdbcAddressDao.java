@@ -24,7 +24,7 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public void save(int customerId, FullAddress fullAddress) {
-        String sql = "INSERT INTO FULL_ADDRESS (customer_id, address, detail_address, zone_code) VALUES(?, ?, ?,?)";
+        String sql = "INSERT INTO full_address (customer_id, address, detail_address, zone_code) VALUES(?, ?, ?,?)";
         jdbcTemplate.update(sql, customerId, fullAddress.getAddress().getValue(),
                 fullAddress.getDetailAddress().getValue(),
                 fullAddress.getZoneCode().getValue());
@@ -32,13 +32,13 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public AddressEntity findById(int customerId) {
-        String sql = "SELECT customer_id, address, detail_address, zone_code FROM FULL_ADDRESS WHERE customer_id = ?";
+        String sql = "SELECT customer_id, address, detail_address, zone_code FROM full_address WHERE customer_id = ?";
         return jdbcTemplate.queryForObject(sql, ADDRESS_ENTITY_ROW_MAPPER, customerId);
     }
 
     @Override
     public void update(int customerId, FullAddress fullAddress) {
-        String sql = "UPDATE FULL_ADDRESS SET address = ?, detail_address = ?, zone_code = ? WHERE customer_id = ?";
+        String sql = "UPDATE full_address SET address = ?, detail_address = ?, zone_code = ? WHERE customer_id = ?";
         jdbcTemplate.update(sql, fullAddress.getAddress().getValue(),
                 fullAddress.getDetailAddress().getValue(),
                 fullAddress.getZoneCode().getValue(), customerId);
@@ -46,7 +46,7 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public void delete(int customerId) {
-        String sql = "DELETE FROM FULL_ADDRESS WHERE customer_id = ?";
+        String sql = "DELETE FROM full_address WHERE customer_id = ?";
         jdbcTemplate.update(sql, customerId);
     }
 }

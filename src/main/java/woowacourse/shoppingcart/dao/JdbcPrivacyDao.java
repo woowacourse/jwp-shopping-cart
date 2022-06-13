@@ -24,20 +24,20 @@ public class JdbcPrivacyDao implements PrivacyDao {
 
     @Override
     public void save(int customerId, Privacy privacy) {
-        String sql = "INSERT INTO PRIVACY (customer_id, name, gender, birth_day, contact) VALUES(?, ?, ?, ? ,?)";
+        String sql = "INSERT INTO privacy (customer_id, name, gender, birth_day, contact) VALUES(?, ?, ?, ? ,?)";
         jdbcTemplate.update(sql, customerId, privacy.getName().getValue(), privacy.getGender().getValue(),
                 privacy.getBirthday().getValue(), privacy.getContact().getValue());
     }
 
     @Override
     public PrivacyEntity findById(int customerId) {
-        String sql = "SELECT customer_id, name, gender, birth_day, contact FROM PRIVACY WHERE customer_id = ?";
+        String sql = "SELECT customer_id, name, gender, birth_day, contact FROM privacy WHERE customer_id = ?";
         return jdbcTemplate.queryForObject(sql, PRIVACY_ENTITY_ROW_MAPPER, customerId);
     }
 
     @Override
     public void update(int customerId, Privacy privacy) {
-        String sql = "UPDATE PRIVACY SET name = ?, gender = ?, birth_day = ?, contact = ? WHERE customer_id = ?";
+        String sql = "UPDATE privacy SET name = ?, gender = ?, birth_day = ?, contact = ? WHERE customer_id = ?";
         jdbcTemplate.update(sql, privacy.getName().getValue(), privacy.getGender().getValue(),
                 privacy.getBirthday().getValue(),
                 privacy.getContact().getValue(), customerId);
@@ -45,7 +45,7 @@ public class JdbcPrivacyDao implements PrivacyDao {
 
     @Override
     public void delete(int customerId) {
-        String sql = "DELETE FROM PRIVACY WHERE customer_id = ?";
+        String sql = "DELETE FROM privacy WHERE customer_id = ?";
         jdbcTemplate.update(sql, customerId);
     }
 }

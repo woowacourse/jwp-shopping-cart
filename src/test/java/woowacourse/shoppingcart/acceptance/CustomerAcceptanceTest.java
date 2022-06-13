@@ -2,13 +2,14 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_INVALID_REQUEST_1;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_2;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_INVALID_REQUEST_1;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_REQUEST_1;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_REQUEST_2;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.domain.customer.privacy.Birthday;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
@@ -92,7 +94,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                         .extracting("email", "profileImageUrl", "name", "gender", "birthday", "contact", "terms")
                         .containsExactly(CUSTOMER_REQUEST_1.getEmail(), CUSTOMER_REQUEST_1.getProfileImageUrl(),
                                 CUSTOMER_REQUEST_1.getName(), CUSTOMER_REQUEST_1.getGender(),
-                                CUSTOMER_REQUEST_1.getBirthday(), CUSTOMER_REQUEST_1.getContact(),
+                                Birthday.empty().getValue().toString(), CUSTOMER_REQUEST_1.getContact(),
                                 CUSTOMER_REQUEST_1.isTerms())
         );
 
@@ -136,7 +138,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    private ExtractableResponse<Response> createCustomer(CustomerRequest customerRequest) {
+    public static ExtractableResponse<Response> createCustomer(CustomerRequest customerRequest) {
         Map<String, Object> params = new HashMap<>();
         params.put("email", customerRequest.getEmail());
         params.put("password", customerRequest.getPassword());
@@ -159,12 +161,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private TokenResponse getTokenResponse(String email, String password) {
+    public static TokenResponse getTokenResponse(String email, String password) {
         ExtractableResponse<Response> response = getSignInResponse(email, password);
         return response.jsonPath().getObject(".", TokenResponse.class);
     }
 
-    private ExtractableResponse<Response> getSignInResponse(String email, String password) {
+    public static ExtractableResponse<Response> getSignInResponse(String email, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("password", password);

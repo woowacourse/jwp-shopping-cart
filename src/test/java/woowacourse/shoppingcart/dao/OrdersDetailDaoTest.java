@@ -1,8 +1,14 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_1;
+import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_1;
+import static woowacourse.shoppingcart.fixture.ProductFixtures.PRODUCT_2;
 
 import java.util.List;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,35 +17,34 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.entity.OrdersDetailEntity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrdersDetailDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private final OrdersDetailDao ordersDetailDao;
+    private final ProductDao productDao;
+    private final CustomerDao customerDao;
+    private final OrderDao orderDao;
     private long ordersId;
-    private long productId;
-    private long customerId;
+    private long productId1;
+    private long productId2;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
+    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+        this.ordersDetailDao = new JdbcOrdersDetailDao(jdbcTemplate);
+        this.productDao = new JdbcProductDao(jdbcTemplate);
+        this.customerDao = new JdbcCustomerDao(jdbcTemplate, dataSource);
+        this.orderDao = new JdbcOrderDao(jdbcTemplate);
     }
 
     @BeforeEach
     void setUp() {
-        customerId = 1L;
-        jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
-        ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
-
-        jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
-                , "name", 1000, "imageUrl");
-        productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        int customerId = customerDao.save(CUSTOMER_1);
+        productId1 = productDao.save(PRODUCT_1);
+        productId2 = productDao.save(PRODUCT_2);
+        ordersId = orderDao.addOrders(customerId);
     }
 
     @DisplayName("OrderDatail을 추가하는 기능")
@@ -49,29 +54,41 @@ class OrdersDetailDaoTest {
         int quantity = 5;
 
         //when
-        Long orderDetailId = ordersDetailDao
-                .addOrdersDetail(ordersId, productId, quantity);
+        Long orderDetailId = ordersDetailDao.addOrdersDetail(ordersId, productId1, quantity);
 
         //then
-        assertThat(orderDetailId).isEqualTo(1L);
+        assertThat(orderDetailId).isPositive();
     }
 
-    @DisplayName("OrderId로 OrderDetails 조회하는 기능")
+    @DisplayName("없는 성품을 추가하면 예외가 발생한다.")
     @Test
-    void findOrdersDetailsByOrderId() {
+    void addOrdersDetailByInvalidProductId() {
         //given
-        final int insertCount = 3;
-        for (int i = 0; i < insertCount; i++) {
-            jdbcTemplate
-                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-                            ordersId, productId, 3);
-        }
+        int quantity = 5;
 
         //when
-        final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-                .findOrdersDetailsByOrderId(ordersId);
+        assertThatThrownBy(() -> ordersDetailDao.addOrdersDetail(ordersId, 9999999999L, quantity))
+                .isInstanceOf(RuntimeException.class);
+    }
 
-        //then
-        assertThat(ordersDetailsByOrderId).hasSize(insertCount);
+    @DisplayName("orderId로 orderDetails 조회하는 기능")
+    @Test
+    public void findOrdersDetailsByOrderId() {
+        // given
+        ordersDetailDao.addOrdersDetail(ordersId, productId1, 3);
+        ordersDetailDao.addOrdersDetail(ordersId, productId2, 4);
+
+        // when
+        final List<OrdersDetailEntity> ordersDetailsByOrderId = ordersDetailDao.findOrdersDetailsByOrderId(ordersId);
+
+        // then
+        assertThat(ordersDetailsByOrderId)
+                .extracting("productId", "name", "price", "imageUrl", "description", "stock", "quantity")
+                .containsExactly(
+                        tuple(productId1, PRODUCT_1.getName(), PRODUCT_1.getPrice().getValue(), PRODUCT_1.getImageUrl(),
+                                PRODUCT_1.getDescription(), PRODUCT_1.getStock().getValue(), 3),
+                        tuple(productId2, PRODUCT_2.getName(), PRODUCT_2.getPrice().getValue(), PRODUCT_2.getImageUrl(),
+                                PRODUCT_2.getDescription(), PRODUCT_2.getStock().getValue(), 4)
+                );
     }
 }

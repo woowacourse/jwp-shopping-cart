@@ -1,10 +1,13 @@
 package woowacourse.auth.application;
 
+import java.util.Map;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.HandlerMapping;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.LoginFailedException;
+import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.password.Password;
@@ -25,6 +28,7 @@ public class AuthService {
         String email = tokenRequest.getEmail();
         String password = tokenRequest.getPassword();
         validateEmailExisting(email);
+
         CustomerEntity customerEntity = customerDao.findByEmail(email);
         validatePassword(password, customerEntity);
 
@@ -46,5 +50,24 @@ public class AuthService {
         if (!encryptedPassword.matches(password)) {
             throw new LoginFailedException();
         }
+    }
+
+    public int getCustomerId(String token) {
+        final String accessToken = AuthorizationExtractor.extract(token);
+
+        validateToken(accessToken);
+
+        final int customerId = Integer.parseInt(jwtTokenProvider.getPayload(accessToken));
+        validateCustomerId(customerId);
+
+        return customerId;
+    }
+
+    private void validateToken(String accessToken) {
+        jwtTokenProvider.validateToken(accessToken);
+    }
+
+    private void validateCustomerId(int customerId) {
+        customerDao.findById(customerId);
     }
 }

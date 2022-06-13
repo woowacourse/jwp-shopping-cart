@@ -2,29 +2,29 @@ package woowacourse.auth.dto;
 
 public class TokenResponse {
     private String accessToken;
-    private int customerId;
+    private int userId;
 
     public TokenResponse() {
     }
 
-    public TokenResponse(String accessToken, int customerId) {
+    public TokenResponse(String accessToken, int userId) {
         this.accessToken = accessToken;
-        this.customerId = customerId;
+        this.userId = userId;
     }
 
     public String getAccessToken() {
         return accessToken;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public int getUserId() {
+        return userId;
     }
 
     @Override
     public String toString() {
         return "TokenResponse{" +
                 "accessToken='" + accessToken + '\'' +
-                ", customerId=" + customerId +
+                ", userId=" + userId +
                 '}';
     }
 }

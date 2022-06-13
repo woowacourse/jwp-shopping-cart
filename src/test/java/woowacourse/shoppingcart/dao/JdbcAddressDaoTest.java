@@ -2,11 +2,9 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static woowacourse.shoppingcart.Fixtures.ADDRESS_ENTITY_1;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_1;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_ENTITY_1;
-import static woowacourse.shoppingcart.Fixtures.FULL_ADDRESS_1;
-import static woowacourse.shoppingcart.Fixtures.FULL_ADDRESS_2;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_1;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.FULL_ADDRESS_1;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.FULL_ADDRESS_2;
 
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;

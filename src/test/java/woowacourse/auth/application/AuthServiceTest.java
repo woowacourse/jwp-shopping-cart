@@ -3,8 +3,8 @@ package woowacourse.auth.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.Fixtures.CUSTOMER_REQUEST_1;
-import static woowacourse.shoppingcart.Fixtures.TOKEN_REQUEST_1;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.CUSTOMER_REQUEST_1;
+import static woowacourse.shoppingcart.fixture.CustomerFixtures.TOKEN_REQUEST_1;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,7 +44,7 @@ class AuthServiceTest {
         // then
         assertAll(
                 () -> assertThat(tokenResponse.getAccessToken()).isNotBlank(),
-                () -> assertThat(tokenResponse.getCustomerId()).isPositive()
+                () -> assertThat(tokenResponse.getUserId()).isPositive()
         );
     }
 

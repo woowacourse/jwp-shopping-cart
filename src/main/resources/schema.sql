@@ -1,24 +1,10 @@
-drop table if exists orders_detail;
-
-drop table if exists orders;
-
-drop table if exists cart_item;
-
-drop table if exists product;
-
-drop table if exists full_address;
-
-drop table if exists privacy;
-
-drop table if exists customer;
-
 create table customer
 (
     id                bigint       not null auto_increment,
     email             varchar(255) not null unique,
     password          varchar(255) not null,
     profile_image_url varchar(255) not null,
-    created_at        timestamp default current_timestamp,
+    created_at        timestamp not null default current_timestamp,
     terms             tinyint(1) not null,
     primary key (id)
 );
@@ -56,6 +42,8 @@ create table product
     name      varchar(255) not null,
     price     integer      not null,
     image_url varchar(255),
+    description varchar(255),
+    stock int,
     primary key (id)
 );
 
@@ -64,6 +52,7 @@ create table cart_item
     id          bigint not null auto_increment,
     customer_id bigint not null,
     product_id  bigint not null,
+    quantity int not null,
     primary key (id)
 );
 
