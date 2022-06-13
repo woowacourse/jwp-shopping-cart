@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.cart.ui;
 
-import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.cart.application.CartService;
+import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
 import woowacourse.shoppingcart.cart.dto.CartItemResponse;
@@ -32,7 +32,7 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<CartItemsResponse> getCartItems(@Login final Customer customer) {
-        final List<CartItem> cartItems = cartService.findCartsBy(customer);
+        final Cart cartItems = cartService.findCartBy(customer);
         final CartItemsResponse response = CartItemsResponse.from(cartItems);
         return ResponseEntity
                 .ok()

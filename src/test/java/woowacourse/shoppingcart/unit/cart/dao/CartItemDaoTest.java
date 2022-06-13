@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.product.domain.Product;
@@ -30,32 +31,34 @@ class CartItemDaoTest extends DaoTest {
     }
 
     @Test
-    @DisplayName("Customer의 ID에 해당하는 모든 Cart 목록을 조회힌다.")
+    @DisplayName("Customer의 ID에 해당하는 Cart를 조회힌다.")
     void findAllByCustomerId() {
         // given
         final Long customerId = 2L;
-        final List<CartItem> expected = new ArrayList<>();
+        final List<CartItem> expectedCartItems = new ArrayList<>();
 
         cartItemDao.addCartItem(customerId, 1L);
         final CartItem cartItem1 = cartItemDao.findByProductAndCustomerId(1L, customerId);
         final CartItem updatedCartItem1 = cartItem1.changeQuantity(4);
         cartItemDao.updateQuantity(updatedCartItem1);
-        expected.add(updatedCartItem1);
+        expectedCartItems.add(updatedCartItem1);
 
         cartItemDao.addCartItem(customerId, 5L);
         final CartItem cartItem2 = cartItemDao.findByProductAndCustomerId(5L, customerId);
         final CartItem updatedCartItem2 = cartItem2.changeQuantity(6);
         cartItemDao.updateQuantity(updatedCartItem2);
-        expected.add(updatedCartItem2);
+        expectedCartItems.add(updatedCartItem2);
 
         cartItemDao.addCartItem(customerId, 3L);
         final CartItem cartItem3 = cartItemDao.findByProductAndCustomerId(3L, customerId);
         final CartItem updatedCartItem3 = cartItem3.changeQuantity(2);
         cartItemDao.updateQuantity(updatedCartItem3);
-        expected.add(updatedCartItem3);
+        expectedCartItems.add(updatedCartItem3);
+
+        final Cart expected = new Cart(expectedCartItems);
 
         // when
-        final List<CartItem> actual = cartItemDao.findAllByCustomerId(customerId);
+        final Cart actual = cartItemDao.findCartByCustomerId(customerId);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -73,7 +76,8 @@ class CartItemDaoTest extends DaoTest {
         cartItemDao.deleteCartItem(cartId);
 
         // then
-        final List<Long> productIds = cartItemDao.findAllByCustomerId(customerId)
+        final List<Long> productIds = cartItemDao.findCartByCustomerId(customerId)
+                .getValues()
                 .stream()
                 .map(CartItem::getProduct)
                 .map(Product::getId)

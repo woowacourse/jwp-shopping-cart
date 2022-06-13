@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
@@ -180,8 +181,9 @@ class CartItemControllerTest extends ControllerTest {
                 new CartItem(7L, carrot),
                 new CartItem(8L, carrot)
         );
-        given(cartService.findCartsBy(customer))
-                .willReturn(cartItems);
+        final Cart cart = new Cart(cartItems);
+        given(cartService.findCartBy(customer))
+                .willReturn(cart);
 
         // when
         final ResultActions perform = mockMvc.perform(

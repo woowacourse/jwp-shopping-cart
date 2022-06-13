@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.product.domain.Product;
@@ -34,7 +35,7 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CartItem> findAllByCustomerId(final Long customerId) {
+    public Cart findCartByCustomerId(final Long customerId) {
         final String sql = ""
                 + "SELECT ci.id, "
                 + "p.id AS product_id, "
@@ -46,7 +47,8 @@ public class CartItemDao {
                 + "INNER JOIN product AS p ON ci.product_id = p.id "
                 + "WHERE ci.customer_id = ?";
 
-        return jdbcTemplate.query(sql, rowMapper, customerId);
+        final List<CartItem> cartItems = jdbcTemplate.query(sql, rowMapper, customerId);
+        return new Cart(cartItems);
     }
 
     public Long addCartItem(final Long customerId, final Long productId) {

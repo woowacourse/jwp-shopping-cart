@@ -1,9 +1,9 @@
 package woowacourse.shoppingcart.cart.application;
 
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
+import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemException;
@@ -23,8 +23,8 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartItem> findCartsBy(final Customer customer) {
-        return cartItemDao.findAllByCustomerId(customer.getId());
+    public Cart findCartBy(final Customer customer) {
+        return cartItemDao.findCartByCustomerId(customer.getId());
     }
 
     public Long addCart(final Long productId, final Customer customer) {

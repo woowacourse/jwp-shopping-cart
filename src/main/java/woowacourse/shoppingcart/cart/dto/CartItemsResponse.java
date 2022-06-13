@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.cart.dto;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import woowacourse.shoppingcart.cart.domain.CartItem;
+import woowacourse.shoppingcart.cart.domain.Cart;
 
 public class CartItemsResponse {
 
@@ -12,8 +12,10 @@ public class CartItemsResponse {
         this.cartList = cartList;
     }
 
-    public static CartItemsResponse from(final List<CartItem> cartItems) {
-        final List<CartItemResponse> responses = cartItems.stream()
+    public static CartItemsResponse from(final Cart cart) {
+        final List<CartItemResponse> responses = cart
+                .getValues()
+                .stream()
                 .map(CartItemResponse::new)
                 .distinct()
                 .collect(Collectors.toList());

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemException;
@@ -38,9 +39,11 @@ class CartItemServiceIntegrationTest extends IntegrationTest {
         }
 
         // when
-        final List<CartItem> actual = cartService.findCartsBy(customer);
+        final Cart actual = cartService.findCartBy(customer);
 
-        final List<Long> actualProductIds = actual.stream()
+        final List<Long> actualProductIds = actual
+                .getValues()
+                .stream()
                 .map(CartItem::getProduct)
                 .map(Product::getId)
                 .collect(Collectors.toList());
@@ -128,7 +131,8 @@ class CartItemServiceIntegrationTest extends IntegrationTest {
         // when
         cartService.deleteCartBy(customer, productId);
 
-        final List<Long> actualProductIds = cartService.findCartsBy(customer)
+        final List<Long> actualProductIds = cartService.findCartBy(customer)
+                .getValues()
                 .stream()
                 .map(CartItem::getProduct)
                 .map(Product::getId)
