@@ -21,10 +21,10 @@ create table if not exists product
 
 create table if not exists cart_item
 (
-    id          bigint not null auto_increment,
-    customer_id bigint not null,
-    product_id  bigint not null,
-    quantity    bigint not null,
+    id                bigint       not null auto_increment,
+    customer_username varchar(255) not null,
+    product_id        bigint       not null,
+    quantity          bigint       not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 

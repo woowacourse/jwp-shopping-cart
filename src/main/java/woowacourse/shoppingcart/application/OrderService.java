@@ -29,10 +29,10 @@ public class OrderService {
     }
 
     public Long addOrder(final List<Long> productIds, final String customerUsername) {
-        final Long customerId = customerDao.findIdByUsername(customerUsername);
+        Long customerId = customerDao.findIdByUsername(customerUsername);
         final Long orderId = orderDao.addOrders(customerId);
         for (Long productId : productIds) {
-            final CartItem cartItem = cartDao.findCartItemByProductId(productId, customerId)
+            final CartItem cartItem = cartDao.findCartItemByProductId(productId, customerUsername)
                     .orElseThrow(InvalidCartItemException::new);
             ordersDetailDao.addOrdersDetail(orderId, productId, cartItem.getQuantity());
         }

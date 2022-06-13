@@ -27,6 +27,8 @@ public class CartDaoTest {
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
+    private static final String CART_TEST_USERNAME = "puterism";
+
     public CartDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         cartDao = new CartDao(jdbcTemplate);
@@ -38,15 +40,15 @@ public class CartDaoTest {
         productDao.save(new Product("banana", 1_000, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, 1)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, 1)", 1L, 2L);
+        cartDao.addCartItem(CART_TEST_USERNAME, 1L);
+        cartDao.addCartItem(CART_TEST_USERNAME, 2L);
     }
 
-    @DisplayName("구매자 id로 해당 구매자가 담은 장바구니 아이템 목록을 가져온다.")
+    @DisplayName("구매자 username로 해당 구매자가 담은 장바구니 아이템 목록을 가져온다.")
     @Test
     void findCartsByCustomerId() {
         // when
-        final List<CartItem> cartItems = cartDao.findCartsByCustomerId(1L);
+        final List<CartItem> cartItems = cartDao.findCartItemsByCustomerUsername(CART_TEST_USERNAME);
 
         // then
         assertAll(
@@ -55,21 +57,21 @@ public class CartDaoTest {
         );
     }
 
-    @DisplayName("구매자 id로 해당 구매자가 담은 장바구니 상품 id 목록을 가져온다.")
+    @DisplayName("구매자 username로 해당 구매자가 담은 장바구니 상품 id 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
         // when
-        final List<Long> productIds = cartDao.findProductIdsByCustomerId(1L);
+        final List<Long> productIds = cartDao.findProductIdsByCustomerUsername(CART_TEST_USERNAME);
 
         // then
         assertThat(productIds).containsAll(List.of(1L, 2L));
     }
 
-    @DisplayName("구매자 id와 상품 id로 장바구니에 담긴 상품 정보를 가져온다.")
+    @DisplayName("구매자 username과 상품 id로 장바구니에 담긴 상품 정보를 가져온다.")
     @Test
     void findCart() {
         // when
-        CartItem cartItem = cartDao.findCartItemByProductId(1L, 1L)
+        CartItem cartItem = cartDao.findCartItemByProductId(1L, CART_TEST_USERNAME)
                 .orElseThrow(InvalidCartItemException::new);
 
         // then
@@ -86,7 +88,7 @@ public class CartDaoTest {
         final Long productId = productDao.save(new Product("kiwi", 3_000, "woowakiwi.com"));
 
         // when
-        final Long actual = cartDao.addCartItem(1L, productId);
+        final Long actual = cartDao.addCartItem(CART_TEST_USERNAME, productId);
 
         // then
         assertThat(actual).isEqualTo(productId);
@@ -95,9 +97,9 @@ public class CartDaoTest {
     @DisplayName("장바구니 상품의 수량을 변경한다.")
     @Test
     void updateCartItemQuantity() {
-        cartDao.updateCartItemQuantity(3, 2L, 1L);
+        cartDao.updateCartItemQuantity(3, 2L, CART_TEST_USERNAME);
 
-        final List<CartItem> cartItems = cartDao.findCartsByCustomerId(1L);
+        final List<CartItem> cartItems = cartDao.findCartItemsByCustomerUsername(CART_TEST_USERNAME);
 
         assertThat(cartItems.get(1).getQuantity()).isEqualTo(3);
     }
@@ -107,11 +109,11 @@ public class CartDaoTest {
     void deleteCartItem() {
         // given
         final Long productId = productDao.save(new Product("kiwi", 3_000, "woowakiwi.com"));
-        cartDao.addCartItem(1L, productId);
+        cartDao.addCartItem(CART_TEST_USERNAME, productId);
 
         // when
-        cartDao.deleteCartItem(productId, 1L);
-        final List<Long> productIds = cartDao.findProductIdsByCustomerId(1L);
+        cartDao.deleteCartItem(productId, CART_TEST_USERNAME);
+        final List<Long> productIds = cartDao.findProductIdsByCustomerUsername(CART_TEST_USERNAME);
 
         // then
         assertThat(productIds).doesNotContain(productId);
@@ -121,8 +123,8 @@ public class CartDaoTest {
     @Test
     void deleteCart() {
         // when
-        cartDao.deleteCartByCustomerId(1L);
-        final List<CartItem> actual = cartDao.findCartsByCustomerId(1L);
+        cartDao.deleteAllCartItems(CART_TEST_USERNAME);
+        final List<CartItem> actual = cartDao.findCartItemsByCustomerUsername("puterism");
 
         // then
         assertThat(actual.size()).isEqualTo(0);
