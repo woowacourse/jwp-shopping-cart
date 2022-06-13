@@ -1,6 +1,9 @@
 package woowacourse.shoppingcart.dao.entity;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.vo.Account;
+import woowacourse.shoppingcart.domain.customer.vo.Address;
+import woowacourse.shoppingcart.domain.customer.vo.Nickname;
 import woowacourse.shoppingcart.domain.customer.vo.Password;
 import woowacourse.shoppingcart.domain.customer.vo.PhoneNumber;
 
@@ -35,8 +38,8 @@ public class CustomerEntity {
     }
 
     public Customer toCustomer() {
-        return new Customer(id, account, nickname, Password.encryptText(password), address,
-                new PhoneNumber(phoneNumber));
+        return new Customer(id, new Account(account), new Nickname(nickname), Password.encryptText(password),
+                new Address(address), new PhoneNumber(phoneNumber));
     }
 
     public Long getId() {
