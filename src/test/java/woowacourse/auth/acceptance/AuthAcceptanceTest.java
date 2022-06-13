@@ -123,7 +123,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     private static ExtractableResponse<Response> 내_정보_조회_OPTIONS() {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().options("/api/customers")
+                .when().options("/api/customer")
                 .then().log().all()
                 .extract();
     }
@@ -132,7 +132,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("/api/customers/login")
+                .when().post("/api/customer/login")
                 .then().log().all()
                 .extract();
     }
@@ -142,7 +142,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new PasswordRequest(password))
-                .when().post("/api/customers/password")
+                .when().post("/api/customer/password")
                 .then().log().all()
                 .extract();
     }

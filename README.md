@@ -6,7 +6,7 @@
 #### 회원 가입
 - request  
 
-`POST /api/customers/signup`  
+`POST /api/customer/signup`  
 
 ```json
 {
@@ -114,7 +114,7 @@ Location : "/api/products/{productId}"
 
 - request  
 
-`POST /api/customers/login`  
+`POST /api/customer/login`  
 
 ```json
 {
@@ -138,7 +138,7 @@ Location : "/api/products/{productId}"
 - 
 - request
 
-`GET /api/customers`  
+`GET /api/customer`  
 
 - response
 
@@ -157,7 +157,7 @@ Location : "/api/products/{productId}"
 #### 회원 정보 수정
 - request  
 
-`PATCH /api/customers`  
+`PATCH /api/customer`  
 
 ```json
 {
@@ -173,7 +173,7 @@ Location : "/api/products/{productId}"
 #### 회원 탈퇴
 - request  
 
-`DELETE /api/customers`  
+`DELETE /api/customer`  
 
 - response
 

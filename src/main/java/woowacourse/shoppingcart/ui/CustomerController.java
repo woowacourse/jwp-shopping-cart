@@ -19,7 +19,7 @@ import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api/customer")
 public class CustomerController {
 
     private final CustomerService customerService;

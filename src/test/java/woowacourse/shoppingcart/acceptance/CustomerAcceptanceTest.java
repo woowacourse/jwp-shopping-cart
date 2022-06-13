@@ -97,7 +97,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("/api/customers/signup")
+                .when().post("/api/customer/signup")
                 .then().log().all()
                 .extract();
     }
@@ -106,7 +106,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "Bearer " + accessToken)
-                .when().get("/api/customers")
+                .when().get("/api/customer")
                 .then().log().all()
                 .extract();
     }
@@ -117,7 +117,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put("/api/customers")
+                .when().put("/api/customer")
                 .then().log().all()
                 .extract();
     }
@@ -128,7 +128,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().patch("/api/customers/password")
+                .when().patch("/api/customer/password")
                 .then().log().all()
                 .extract();
     }
@@ -136,7 +136,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     public static ExtractableResponse<Response> 회원_탈퇴_요청(final String accessToken) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
-                .when().delete("/api/customers")
+                .when().delete("/api/customer")
                 .then().log().all()
                 .extract();
     }
