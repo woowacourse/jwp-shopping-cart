@@ -8,12 +8,14 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.dto.request.CartRequest;
 import woowacourse.shoppingcart.dto.request.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequests;
 import woowacourse.shoppingcart.dto.response.CartResponses;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class, readOnly = true)
@@ -30,18 +32,31 @@ public class CartService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Long addCart(String username, CartRequest cartRequest) {
+    public void addCart(String username, CartRequest cartRequest) {
+        validateQuantity(cartRequest.getQuantity());
+        validateChecked(cartRequest.getChecked());
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
         Product product = productDao.findProductById(cartRequest.getProductId());
 
         if (cartItemDao.existByProductId(customerId, cartRequest.getProductId())) {
-            cartItemDao.updateCartItemByProductId(
-                    new Cart(product, cartRequest.getQuantity() + 1, cartRequest.getChecked()));
-            return 0L;
+            cartItemDao.updateCartItemByProductId(customerId, new Cart(product, cartRequest.getQuantity() + 1, cartRequest.getChecked()));
+            return;
         }
 
         Cart cart = new Cart(product, cartRequest.getQuantity(), cartRequest.getChecked());
-        return cartItemDao.addCartItem(customerId, cart).getId();
+        cartItemDao.addCartItem(customerId, cart);
+    }
+
+    private void validateQuantity(Integer quantity) {
+        if (quantity < 0) {
+            throw new InvalidCartItemException("수량은 0 이상이어야 합니다.");
+        }
+    }
+
+    private void validateChecked(Boolean checked) {
+        if (checked == null) {
+            throw new InvalidCartItemException("구매 여부는 비어서는 안됩니다.");
+        }
     }
 
     public CartResponses findCartsByUsername(String username) {
@@ -73,9 +88,22 @@ public class CartService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteCart(DeleteProductRequest deleteProductRequest) {
-        List<Long> cartIds = deleteProductRequest.cartIds();
-        cartItemDao.deleteCartItems(cartIds);
+    public void deleteCart(String username, DeleteProductRequest deleteProductRequest) {
+        Customer customer = customerDao.findByUsername(new Username(username));
+        List<Long> deleteCartIds = deleteProductRequest.cartIds();
+        List<Cart> carts = cartItemDao.findByCustomerId(customer.getId());
+        List<Long> cartIds = getCartIds(carts);
+
+        if (!cartIds.containsAll(deleteCartIds)) {
+            throw new InvalidCartItemException();
+        }
+        cartItemDao.deleteCartItems(deleteCartIds);
+    }
+
+    private List<Long> getCartIds(List<Cart> carts) {
+        return carts.stream()
+                .map(Cart::getId)
+                .collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)

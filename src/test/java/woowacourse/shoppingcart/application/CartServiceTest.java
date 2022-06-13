@@ -9,6 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.dto.request.CartIdRequest;
 import woowacourse.shoppingcart.dto.request.CartRequest;
 import woowacourse.shoppingcart.dto.request.DeleteProductRequest;
@@ -32,18 +36,26 @@ class CartServiceTest {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private CustomerDao customerDao;
+
+    @Autowired
+    private CartItemDao cartItemDao;
+
     @Test
     @DisplayName("장바구니에 상품을 추가할 수 있다.")
     void addCart() {
         // given
+        Long productId = productService.addProduct(new ProductRequest("치킨", 20_000, "http://example.com/chicken.jpg"));
         customerService.addCustomer(new SignUpRequest("rennon", "rennon@woowa.com", "123456"));
-        productService.addProduct(new ProductRequest("치킨", 20_000, "http://example.com/chicken.jpg"));
 
         // when
-        Long id = cartService.addCart("rennon", new CartRequest(1L, 1, true));
+        cartService.addCart("rennon", new CartRequest(1L, 1, true));
+        Long customerId = customerDao.findByUsername(new Username("rennon")).getId();
+        boolean result = cartItemDao.existByProductId(customerId, productId);
 
         // then
-        assertThat(id).isEqualTo(1L);
+        assertThat(result).isTrue();
     }
 
     @Test
@@ -55,10 +67,13 @@ class CartServiceTest {
         cartService.addCart("rennon", new CartRequest(1L, 1, true));
 
         // when
-        Long cartId = cartService.addCart("rennon", new CartRequest(1L, 1, true));
+        cartService.addCart("rennon", new CartRequest(1L, 1, true));
+        Long customerId = customerDao.findByUsername(new Username("rennon")).getId();
+        List<Cart> carts = cartItemDao.findByCustomerId(customerId);
+        int quantity = carts.get(0).getQuantity();
 
         // then
-        assertThat(cartId).isEqualTo(0L);
+        assertThat(quantity).isEqualTo(2);
     }
 
     @Test
@@ -114,7 +129,8 @@ class CartServiceTest {
         cartService.addCart("rennon", new CartRequest(3L, 1, true));
 
         // when
-        cartService.deleteCart(new DeleteProductRequest(List.of(new CartIdRequest(1L), new CartIdRequest(3L))));
+        cartService.deleteCart("rennon",
+                new DeleteProductRequest(List.of(new CartIdRequest(1L), new CartIdRequest(3L))));
         List<CartResponse> cartResponse = cartService.findCartsByUsername("rennon").getCartItems();
 
         // then

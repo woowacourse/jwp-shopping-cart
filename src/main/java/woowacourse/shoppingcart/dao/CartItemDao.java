@@ -74,9 +74,9 @@ public class CartItemDao {
         }
     }
 
-    public void updateCartItemByProductId(Cart cart) {
-        String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE product_id = ?";
-        jdbcTemplate.update(sql, cart.getQuantity(), cart.isChecked(), cart.getProduct().getId());
+    public void updateCartItemByProductId(Long customerId, Cart cart) {
+        String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE customer_id = ? and product_id = ?";
+        jdbcTemplate.update(sql, cart.getQuantity(), cart.isChecked(), customerId, cart.getProduct().getId());
     }
 
     public void updateCartItems(List<Cart> carts) {

@@ -122,13 +122,15 @@ public class CartItemDaoTest {
     @DisplayName("장바구니 아이템을 상품 id로 수정한다.")
     void updateCartItemByProductId() {
         //given
+        Long customerId = 1L;
         Product product = new Product(1L, "banana", 1_000, "woowa1.com");
         Cart cart = new Cart(product, 2, true);
 
         // when
-        cartItemDao.updateCartItemByProductId(cart);
-        Integer quantity = jdbcTemplate.queryForObject("SELECT quantity FROM cart_item WHERE product_id = ?",
-                Integer.class, 1L);
+        cartItemDao.updateCartItemByProductId(customerId, cart);
+        Integer quantity = jdbcTemplate.queryForObject(
+                "SELECT quantity FROM cart_item WHERE customer_id = ? and product_id = ?",
+                Integer.class, customerId, 1L);
 
         // then
         assertThat(quantity).isEqualTo(2);
