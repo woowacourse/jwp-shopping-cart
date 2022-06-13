@@ -1,6 +1,7 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.acceptance.RequestHandler.postRequest;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -11,7 +12,6 @@ import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.acceptance.RequestHandler;
 import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 
 @DisplayName("인증 관련 기능")
@@ -25,11 +25,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginSuccess() {
         // given
-        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+        postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
         // when
-        final ExtractableResponse<Response> response = RequestHandler.postRequest(
+        final ExtractableResponse<Response> response = postRequest(
                 "/auth/login", new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
 
         // then
@@ -43,11 +43,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginFailedWithNoSuchEmail() {
         // given
-        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+        postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
         // when
-        final ExtractableResponse<Response> response = RequestHandler.postRequest(
+        final ExtractableResponse<Response> response = postRequest(
                 "/auth/login", new TokenRequest("noGuest@woowa.com", CUSTOMER_PASSWORD));
 
         // then
@@ -61,11 +61,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void loginFailedWithWrongPassword() {
         // given
-        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+        postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
         // when
-        final ExtractableResponse<Response> response = RequestHandler.postRequest(
+        final ExtractableResponse<Response> response = postRequest(
                 "/auth/login", new TokenRequest(CUSTOMER_EMAIL, "wrongqwe123!@#"));
 
         // then
@@ -82,12 +82,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final String expiredToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjUzOTkzMzM3LCJleHAiOjE2NTM5OTMzMzd9."
                 + "rlmlgHw_zjq7eY4FAgBU3Fx2Pq9rUgSdE9le9kpwd4w";
 
-        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+        postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
         // when
-        RequestHandler.postRequest("/auth/login", new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
-        final ExtractableResponse<Response> wrongResponse = RequestHandler.postRequest("/auth/logout", expiredToken);
+        postRequest("/auth/login", new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
+        final ExtractableResponse<Response> wrongResponse = postRequest("/auth/logout", expiredToken);
 
         // then
         assertThat(wrongResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -100,12 +100,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         final String tamperedToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiaWF0IjoxNjUzOTkzMzM3LCJleHAiOjE2NTM5OTMzMzd9."
                 + "rlmlgHw_zjq7eY4FAgBU3Fx2Pq9rUgSdE9le9kpwd4w";
 
-        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+        postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
         // when
-        RequestHandler.postRequest("/auth/login", new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
-        final ExtractableResponse<Response> wrongResponse = RequestHandler.postRequest("/auth/logout", tamperedToken);
+        postRequest("/auth/login", new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
+        final ExtractableResponse<Response> wrongResponse = postRequest("/auth/logout", tamperedToken);
 
         // then
         assertThat(wrongResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());

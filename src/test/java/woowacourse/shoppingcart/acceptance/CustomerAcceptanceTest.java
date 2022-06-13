@@ -2,6 +2,10 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.acceptance.RequestHandler.deleteRequest;
+import static woowacourse.shoppingcart.acceptance.RequestHandler.getRequest;
+import static woowacourse.shoppingcart.acceptance.RequestHandler.patchRequest;
+import static woowacourse.shoppingcart.acceptance.RequestHandler.postRequest;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -33,7 +37,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD);
 
         // when
-        final ExtractableResponse<Response> response = RequestHandler.postRequest("/customers",
+        final ExtractableResponse<Response> response = postRequest("/customers",
                 customerRegisterRequest);
 
         // then
@@ -50,11 +54,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void registerCustomerWithDuplicatedEmail() {
         // given
-        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+        postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
         // when
-        final ExtractableResponse<Response> response = RequestHandler.postRequest("/customers",
+        final ExtractableResponse<Response> response = postRequest("/customers",
                 new CustomerRegisterRequest(CUSTOMER_EMAIL, "guest1", CUSTOMER_PASSWORD));
 
         // then
@@ -67,15 +71,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void findCustomer() {
         // given
-        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+        postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
         // when
-        final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
+        final ExtractableResponse<Response> response = postRequest("/auth/login",
                 new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
         final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
 
-        final ExtractableResponse<Response> getResponse = RequestHandler.getRequest(
+        final ExtractableResponse<Response> getResponse = getRequest(
                 "/customers", tokenResponse.getAccessToken());
 
         // then
@@ -89,18 +93,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+        postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
         // when
-        final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
+        final ExtractableResponse<Response> response = postRequest("/auth/login",
                 new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
         final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
 
         final CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
                 "newGuest", CUSTOMER_PASSWORD, "qwer1234!@#$");
-        RequestHandler.patchRequest("/customers/profile", customerUpdateRequest, tokenResponse.getAccessToken());
-        ExtractableResponse<Response> getResponse = RequestHandler.getRequest("/customers",
+        patchRequest("/customers/profile", customerUpdateRequest, tokenResponse.getAccessToken());
+        ExtractableResponse<Response> getResponse = getRequest("/customers",
                 tokenResponse.getAccessToken());
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -112,18 +116,18 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void validatePassword() {
         // given
-        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+        postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
         // when
-        final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
+        final ExtractableResponse<Response> response = postRequest("/auth/login",
                 new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
 
         // then
         final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
         final CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
                 "newGuest", "wrongqwe123!@#", "qwer1234!@#$");
-        final ExtractableResponse<Response> patchResponse = RequestHandler.patchRequest(
+        final ExtractableResponse<Response> patchResponse = patchRequest(
                 "/customers/password", customerUpdateRequest, tokenResponse.getAccessToken());
 
         assertThat(patchResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -135,16 +139,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void removeCustomer() {
         // given
-        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+        postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
         final CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD);
 
         // when
-        final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
+        final ExtractableResponse<Response> response = postRequest("/auth/login",
                 new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
         final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
 
-        final ExtractableResponse<Response> deleteResponse = RequestHandler.deleteRequest(
+        final ExtractableResponse<Response> deleteResponse = deleteRequest(
                 "/customers", customerRemoveRequest, tokenResponse.getAccessToken());
 
         // then
@@ -155,16 +159,16 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void removeCustomerWithWrongPassword() {
         // given
-        RequestHandler.postRequest("/customers", new CustomerRegisterRequest(
+        postRequest("/customers", new CustomerRegisterRequest(
                 CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
         final CustomerRemoveRequest customerRemoveRequest = new CustomerRemoveRequest(CUSTOMER_PASSWORD + "1");
 
         // when
-        final ExtractableResponse<Response> response = RequestHandler.postRequest("/auth/login",
+        final ExtractableResponse<Response> response = postRequest("/auth/login",
                 new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
         final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
 
-        final ExtractableResponse<Response> deleteResponse = RequestHandler.deleteRequest(
+        final ExtractableResponse<Response> deleteResponse = deleteRequest(
                 "/customers", customerRemoveRequest, tokenResponse.getAccessToken());
 
         // then

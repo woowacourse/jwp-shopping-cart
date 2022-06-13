@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.shoppingcart.acceptance.RequestHandler.getRequest;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -19,7 +20,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품 목록을 조회한다")
     @Test
     void findProducts() {
-        ExtractableResponse<Response> response = RequestHandler.getRequest("/products");
+        ExtractableResponse<Response> response = getRequest("/products");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         List<Long> resultProductIds = response.jsonPath().getList(".", ProductResponse.class).stream()
@@ -31,7 +32,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("상품을 단건 조회한다")
     @Test
     void findProduct() {
-        ExtractableResponse<Response> response = RequestHandler.getRequest("/products/1");
+        ExtractableResponse<Response> response = getRequest("/products/1");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getObject(".", ProductResponse.class))
@@ -42,7 +43,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     @DisplayName("존재하지 않는 아이디로 상품을 조회하면 에러가 발생한다.")
     @Test
     void findProductByInvalidId() {
-        ExtractableResponse<Response> response = RequestHandler.getRequest("/products/3");
+        ExtractableResponse<Response> response = getRequest("/products/3");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(response.jsonPath().getObject(".", ExceptionResponse.class).getMessage())
