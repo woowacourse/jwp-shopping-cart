@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
 import woowacourse.shoppingcart.dto.cartItem.CartItemsResponse;
@@ -43,8 +42,13 @@ public class CartItemController {
                 .path("/{cartItemId}")
                 .buildAndExpand(cartItemId)
                 .toUri();
-        final CartItem cartItem = cartService.findById(cartItemId);
-        return ResponseEntity.created(responseLocation).body(CartItemResponse.from(cartItem));
+        return ResponseEntity.created(responseLocation).build();
+    }
+
+    @GetMapping("/{cartItemId}")
+    public ResponseEntity<CartItemResponse> getCartItem(@PathVariable final Long cartItemId,
+                                               @AuthenticationPrincipal Long customerId) {
+        return ResponseEntity.ok().body(CartItemResponse.from(cartService.findById(cartItemId)));
     }
 
     @PatchMapping("/{cartItemId}")

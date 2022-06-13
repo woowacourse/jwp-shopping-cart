@@ -9,7 +9,6 @@ import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.dto.cartItem.CartItemAddRequest;
 import woowacourse.shoppingcart.dto.cartItem.CartItemsResponse;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -53,9 +52,4 @@ public class CartService {
         cartItemDao.deleteById(cartItemId, customerId);
     }
 
-    private void validateCartItemExist(final Long customerId, final Long cartItemId) {
-        if (!cartItemDao.isCartItemExistByCustomer(cartItemId, customerId)) {
-            throw new NotInCustomerCartItemException();
-        }
-    }
 }

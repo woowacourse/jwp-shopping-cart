@@ -125,7 +125,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static Long 장바구니_아이템_추가되어_있음(CartItemAddRequest request, String token) {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(request, token);
-        return response.jsonPath().getLong("cartItem.id");
+        String[] path = response.header("Location").split("/");
+        return Long.parseLong(path[path.length - 1]);
     }
 
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
