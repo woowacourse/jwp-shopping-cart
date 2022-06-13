@@ -3,9 +3,9 @@ package woowacourse.shoppingcart.ui;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.shoppingcart.support.LookUpCustomer;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.dto.CustomerWithId;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
@@ -24,8 +24,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> products(@LookUpCustomer CustomerWithId user) {
-        return ResponseEntity.ok(productService.findAll(user));
+    public ResponseEntity<List<ProductResponse>> products() {
+        return ResponseEntity.ok(productService.findAll());
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<List<ProductResponse>> productsByCustomer(@AuthenticationPrincipal final Customer customer) {
+        return ResponseEntity.ok(productService.findProductsByCustomer(customer));
     }
 
     @PostMapping

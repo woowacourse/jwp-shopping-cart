@@ -7,38 +7,31 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.support.AuthenticationPrincipalArgumentResolver;
+import woowacourse.auth.support.AuthenticationProductInterceptor;
 import woowacourse.auth.support.JwtTokenInterceptor;
-import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.support.CustomerArgumentResolver;
 
 import java.util.List;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     private final AuthService authService;
-    private final JwtTokenProvider jwtTokenProvider;
     private final JwtTokenInterceptor jwtTokenInterceptor;
+    private final AuthenticationProductInterceptor authenticationProductInterceptor;
 
-    public AuthenticationPrincipalConfig(final AuthService authService, final JwtTokenProvider jwtTokenProvider, final JwtTokenInterceptor jwtTokenInterceptor) {
+    public AuthenticationPrincipalConfig(final AuthService authService, final JwtTokenInterceptor jwtTokenInterceptor, final AuthenticationProductInterceptor authenticationProductInterceptor) {
         this.authService = authService;
-        this.jwtTokenProvider = jwtTokenProvider;
         this.jwtTokenInterceptor = jwtTokenInterceptor;
+        this.authenticationProductInterceptor = authenticationProductInterceptor;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
-        argumentResolvers.add(customerArgumentResolver());
     }
 
     @Bean
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
         return new AuthenticationPrincipalArgumentResolver(authService);
-    }
-
-    @Bean
-    public CustomerArgumentResolver customerArgumentResolver() {
-        return new CustomerArgumentResolver(jwtTokenProvider);
     }
 
     @Override
@@ -47,5 +40,8 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/**")
                 .excludePathPatterns("/api/login", "/api/products/**",
                         "/api/customers", "/api/customers/exists");
+
+        registry.addInterceptor(authenticationProductInterceptor)
+                .addPathPatterns("/api/products");
     }
 }

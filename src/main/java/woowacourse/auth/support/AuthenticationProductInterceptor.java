@@ -7,23 +7,32 @@ import woowacourse.auth.application.exception.InvalidTokenException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Component
-public class JwtTokenInterceptor implements HandlerInterceptor {
+public class AuthenticationProductInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public JwtTokenInterceptor(final JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationProductInterceptor(final JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
+                             final Object handler) throws IOException {
         if (HttpMethod.OPTIONS.matches(request.getMethod())) {
             return true;
         }
-        String token = AuthorizationExtractor.extract(request);
-        validateToken(token);
+        if (!HttpMethod.GET.matches(request.getMethod())) {
+            return true;
+        }
+        final String token = AuthorizationExtractor.extract(request);
+        if (token != null) {
+            validateToken(token);
+            response.sendRedirect(request.getRequestURI() + "/me");
+            return false;
+        }
         return true;
     }
 
@@ -32,5 +41,4 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
             throw new InvalidTokenException();
         }
     }
-
 }

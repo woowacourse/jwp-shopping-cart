@@ -237,6 +237,7 @@ public class OrderControllerTest {
                         )
                 ));
     }
+
     @DisplayName("주문 전체 조회 문서화")
     @Test
     void findOrders() throws Exception {

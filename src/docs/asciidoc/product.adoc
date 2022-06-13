@@ -11,22 +11,52 @@
 ---
 == 상품 API
 
-=== 상품 전체 조회
+=== 로그인한 사용자의 상품 전체 조회할 때 redirect
 
 `GET /api/products`
 
 요청 HTTP
 
-include::{snippets}/product-get/http-request.adoc[]
+include::{snippets}/products-get-redirect/http-request.adoc[]
 
 요청 헤더
 
-include::{snippets}/product-get/request-headers.adoc[]
+include::{snippets}/products-get-redirect/request-headers.adoc[]
 
 성공 응답 HTTP
 
-include::{snippets}/product-get/http-response.adoc[]
-include::{snippets}/product-get/response-fields.adoc[]
+include::{snippets}/products-get-redirect/http-response.adoc[]
+include::{snippets}/products-get-redirect/response-headers.adoc[]
+
+=== redirect된 로그인한 사용자의 상품 전체 조회
+
+`GET /api/products/me`
+
+요청 HTTP
+
+include::{snippets}/products-get-login/http-request.adoc[]
+
+요청 헤더
+
+include::{snippets}/products-get-login/request-headers.adoc[]
+
+성공 응답 HTTP
+
+include::{snippets}/products-get-login/http-response.adoc[]
+include::{snippets}/products-get-login/response-fields.adoc[]
+
+=== 로그인 안 한 사용자의 상품 전체 조회
+
+`GET /api/products`
+
+요청 HTTP
+
+include::{snippets}/products-get-logout/http-request.adoc[]
+
+성공 응답 HTTP
+
+include::{snippets}/products-get-logout/http-response.adoc[]
+include::{snippets}/products-get-logout/response-fields.adoc[]
 
 === 상품 추가
 

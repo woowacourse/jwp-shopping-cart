@@ -20,6 +20,8 @@ import woowacourse.shoppingcart.config.RestDocsConfig;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
@@ -35,7 +37,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static woowacourse.fixture.TokenFixture.ACCESS_TOKEN;
 import static woowacourse.fixture.TokenFixture.BEARER;
 
@@ -48,13 +50,8 @@ class ProductControllerTest {
     @MockBean
     private ProductService productService;
     @MockBean
-    private CustomerDao customerDao;
-    @MockBean
     private AuthService authService;
-    @MockBean
-    private CartItemDao cartItemDao;
-    @MockBean
-    private ProductDao productDao;
+
 
     @MockBean
     private JwtTokenProvider jwtTokenProvider;
@@ -63,9 +60,34 @@ class ProductControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @DisplayName("상품 전체 조회 문서화")
+    @DisplayName("로그인한 사용자의 상품 전체 조회할 때 redirect 문서화")
     @Test
-    void products() throws Exception {
+    void productsWithRedirect() throws Exception {
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
+        given(jwtTokenProvider.getPayload(any())).willReturn("1");
+
+        ResultActions results = mvc.perform(get("/api/products")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .characterEncoding("UTF-8"));
+
+        results.andExpect(redirectedUrl("/api/products/me"))
+                .andDo(print())
+                .andDo(document("products-get-redirect",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("유저가 로그인 상태면 토큰이 들어있고 /api/products/me로 리다이렉트 되고, " +
+                                        "로그인이 안된 상태면 토큰이 없습니다.").optional()
+                        ),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.LOCATION).description("redirect할 url입니다.")
+                        )
+                ));
+    }
+
+    @DisplayName("로그인한 사용자의 상품 전체 조회 문서화")
+    @Test
+    void productsWithLogin() throws Exception {
+        Customer customer = new Customer(1L, "giron", new Password("!@3123ASD"));
         List<Product> products = List.of(
                 new Product(1L, "제품1", 5000, "www.imageUrl1.com"),
                 new Product(2L, "제품2", 1000, "www.image2.com"));
@@ -74,20 +96,50 @@ class ProductControllerTest {
                 .map(ProductResponse::new).collect(Collectors.toList());
 
         given(jwtTokenProvider.validateToken(any())).willReturn(true);
-        given(jwtTokenProvider.getPayload(any())).willReturn("1");
-        given(productService.findAll(any())).willReturn(responses);
+        given(authService.getAuthenticatedCustomer(ACCESS_TOKEN)).willReturn(customer);
+        given(productService.findProductsByCustomer(customer)).willReturn(responses);
 
-        ResultActions results = mvc.perform(get("/api/products")
+        ResultActions results = mvc.perform(get("/api/products/me")
                 .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
 
         results.andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("product-get",
+                .andDo(document("products-get-login",
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("유저가 로그인 상태면 토큰이 들어있고, 아니면 토큰이 없습니다.").optional()
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 뒤에 accessToken이 들어있습니다")
                         ),
+                        responseFields(
+                                fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품의 식별자"),
+                                fieldWithPath("[].name").type(JsonFieldType.STRING).description("상품의 이름"),
+                                fieldWithPath("[].price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                fieldWithPath("[].imageUrl").type(JsonFieldType.STRING).description("상품 이미지 url"),
+                                fieldWithPath("[].cartId").type(JsonFieldType.NUMBER).description("유저가 로그인했으면 장바구니 식별자, 안했으면 null").optional(),
+                                fieldWithPath("[].quantity").type(JsonFieldType.NUMBER).description("유저가 로그인했으면 장바구니에 담은 수량, 안했으면 0")
+                        )
+                ));
+    }
+
+    @DisplayName("로그인 안 한 사용자의 상품 전체 조회 문서화")
+    @Test
+    void productsWithLogOut() throws Exception {
+        List<Product> products = List.of(
+                new Product(1L, "제품1", 5000, "www.imageUrl1.com"),
+                new Product(2L, "제품2", 1000, "www.image2.com"));
+
+        List<ProductResponse> responses = products.stream()
+                .map(ProductResponse::new).collect(Collectors.toList());
+
+        given(productService.findAll()).willReturn(responses);
+
+        ResultActions results = mvc.perform(get("/api/products")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .characterEncoding("UTF-8"));
+
+        results.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("products-get-logout",
                         responseFields(
                                 fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품의 식별자"),
                                 fieldWithPath("[].name").type(JsonFieldType.STRING).description("상품의 이름"),

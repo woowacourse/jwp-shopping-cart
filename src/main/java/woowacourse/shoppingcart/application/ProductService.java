@@ -3,14 +3,11 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.application.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.CustomerWithId;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
 
@@ -23,37 +20,20 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
 
-    public ProductService(final ProductDao productDao, final CartItemDao cartItemDao, final CustomerDao customerDao) {
+    public ProductService(final ProductDao productDao, final CartItemDao cartItemDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findAll(final CustomerWithId user) {
+    public List<ProductResponse> findAll() {
         List<Product> products = productDao.findProducts();
-        if (user.isNotLogin()) {
-            return products.stream()
-                    .map(ProductResponse::new)
-                    .collect(Collectors.toList());
-        }
-        Customer customer = customerDao.findById(user.getId())
-                .orElseThrow(InvalidCustomerException::new);
-
-        return markProducts(products, customer);
+        return products.stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toList());
     }
 
-    private List<ProductResponse> markProducts(final List<Product> products, final Customer customer) {
-        List<ProductResponse> productResponses = new ArrayList<>();
-        for (final Product product : products) {
-            ProductResponse productResponse = new ProductResponse(product);
-            checkSameProduct(product, productResponse, customer.getId());
-            productResponses.add(productResponse);
-        }
-        return productResponses;
-    }
 
     private void checkSameProduct(final Product product, final ProductResponse productResponse, final Long customerId) {
         List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
@@ -76,5 +56,21 @@ public class ProductService {
 
     public void deleteById(final Long productId) {
         productDao.delete(productId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> findProductsByCustomer(final Customer customer) {
+        List<Product> products = productDao.findProducts();
+        return getProductInCart(products, customer);
+    }
+
+    private List<ProductResponse> getProductInCart(final List<Product> products, final Customer customer) {
+        List<ProductResponse> productResponses = new ArrayList<>();
+        for (final Product product : products) {
+            ProductResponse productResponse = new ProductResponse(product);
+            checkSameProduct(product, productResponse, customer.getId());
+            productResponses.add(productResponse);
+        }
+        return productResponses;
     }
 }
