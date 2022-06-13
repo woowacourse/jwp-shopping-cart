@@ -1,23 +1,21 @@
 package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import woowacourse.shoppingcart.exception.format.InvalidPasswordFormatException;
+import woowacourse.shoppingcart.support.PasswordEncoder;
 
 public class Password {
     private static final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,}$";
 
     private final String value;
-    private final PasswordEncoder passwordEncoder;
 
-    public Password(String value, PasswordEncoder passwordEncoder) {
+    public Password(String value) {
         this.value = value;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    public static Password fromPlainText(String value, PasswordEncoder passwordEncoder) {
+    public static Password fromPlainText(String value) {
         validateFormat(value);
-        return new Password(passwordEncoder.encode(value), passwordEncoder);
+        return new Password(PasswordEncoder.encrypt(value));
     }
 
     private static void validateFormat(String value) {
@@ -27,7 +25,7 @@ public class Password {
     }
 
     public boolean matches(String plainText) {
-        return passwordEncoder.matches(plainText, value);
+        return value.equals(PasswordEncoder.encrypt(plainText));
     }
 
     public String getValue() {

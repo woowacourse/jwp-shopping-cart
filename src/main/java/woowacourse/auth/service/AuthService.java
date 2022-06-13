@@ -1,56 +1,50 @@
 package woowacourse.auth.service;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.authentication.LoginFailedException;
-import woowacourse.auth.exception.authorization.AuthorizationException;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;
-import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @Service
 public class AuthService {
-    private final CustomerDao customerDao;
+    private final CustomerRepository customerRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
-        this.customerDao = customerDao;
+    public AuthService(CustomerRepository customerRepository, JwtTokenProvider jwtTokenProvider) {
+        this.customerRepository = customerRepository;
         this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    public void validateToken(String accessToken) {
+        jwtTokenProvider.validateToken(accessToken);
     }
 
     public TokenResponse generateToken(TokenRequest tokenRequest) {
         String email = tokenRequest.getEmail();
         String password = tokenRequest.getPassword();
         validateEmailExisting(email);
-        CustomerEntity customerEntity = customerDao.findByEmail(email);
-        validatePassword(password, customerEntity);
 
-        int customerId = customerEntity.getId();
+        Customer customer = customerRepository.findByEmail(email);
+        validatePassword(password, customer);
+
+        long customerId = customer.getId();
         String token = jwtTokenProvider.createToken(String.valueOf(customerId));
 
         return new TokenResponse(token, customerId);
     }
 
-    public void validateToken(String accessToken, String customerId) {
-        jwtTokenProvider.validateToken(accessToken);
-        String payload = jwtTokenProvider.getPayload(accessToken);
-
-        if (!payload.equals(customerId)) {
-            throw new AuthorizationException();
-        }
-    }
-
     private void validateEmailExisting(String email) {
-        if (!customerDao.hasEmail(email)) {
+        if (!customerRepository.existsByEmail(email)) {
             throw new LoginFailedException();
         }
     }
 
-    private void validatePassword(String password, CustomerEntity customerEntity) {
-        Password cipherPassword = new Password(customerEntity.getPassword(), new BCryptPasswordEncoder());
+    private void validatePassword(String password, Customer customer) {
+        Password cipherPassword = customer.getPassword();
         boolean isValid = cipherPassword.matches(password);
 
         if (!isValid) {

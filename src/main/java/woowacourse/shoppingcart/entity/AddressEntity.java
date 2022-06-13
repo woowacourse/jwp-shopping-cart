@@ -1,23 +1,23 @@
 package woowacourse.shoppingcart.entity;
 
 public class AddressEntity {
-    private final Integer customerId;
+    private final Long customerId;
     private final String address;
     private final String detailAddress;
-    private final String zoneCode;
+    private final String zonecode;
 
-    public AddressEntity(Integer customerId, String address, String detailAddress, String zoneCode) {
+    public AddressEntity(Long customerId, String address, String detailAddress, String zonecode) {
         this.customerId = customerId;
         this.address = address;
         this.detailAddress = detailAddress;
-        this.zoneCode = zoneCode;
+        this.zonecode = zonecode;
     }
 
-    public AddressEntity(String address, String detailAddress, String zoneCode) {
-        this(null, address, detailAddress, zoneCode);
+    public AddressEntity(String address, String detailAddress, String zonecode) {
+        this(null, address, detailAddress, zonecode);
     }
 
-    public Integer getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 
@@ -29,8 +29,8 @@ public class AddressEntity {
         return detailAddress;
     }
 
-    public String getZoneCode() {
-        return zoneCode;
+    public String getZonecode() {
+        return zonecode;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class AddressEntity {
                 "customerId=" + customerId +
                 ", address='" + address + '\'' +
                 ", detailAddress='" + detailAddress + '\'' +
-                ", zoneCode='" + zoneCode + '\'' +
+                ", zonecode='" + zonecode + '\'' +
                 '}';
     }
 }

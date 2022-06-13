@@ -1,22 +1,30 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.entity.PrivacyEntity;
 
 @Repository
 public class JdbcPrivacyDao implements PrivacyDao {
+    private static final String CUSTOMER_ID_COLUMN = "customer_id";
+    private static final String NAME_COLUMN = "name";
+    private static final String GENDER_COLUMN = "gender";
+    private static final String BIRTH_DAY_COLUMN = "birth_day";
+    private static final String CONTACT_COLUMN = "contact";
+
     private static final RowMapper<PrivacyEntity> PRIVACY_ENTITY_ROW_MAPPER = (rs, rowNum) -> new PrivacyEntity(
-            rs.getInt("customer_id"),
-            rs.getString("name"),
-            rs.getString("gender"),
-            rs.getTimestamp("birth_day").toLocalDateTime().toLocalDate(),
-            rs.getString("contact")
+            rs.getLong(CUSTOMER_ID_COLUMN),
+            rs.getString(NAME_COLUMN),
+            rs.getString(GENDER_COLUMN),
+            rs.getTimestamp(BIRTH_DAY_COLUMN).toLocalDateTime().toLocalDate(),
+            rs.getString(CONTACT_COLUMN)
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -28,30 +36,46 @@ public class JdbcPrivacyDao implements PrivacyDao {
     }
 
     @Override
-    public void save(PrivacyEntity privacyEntity) {
-        String sql = "INSERT INTO PRIVACY (customer_id, name, gender, birth_day, contact) VALUES(:customerId, :name, :gender, :birthday ,:contact)";
+    public void save(long customerId, PrivacyEntity privacyEntity) {
+        String sql = "INSERT INTO privacy (customer_id, name, gender, birth_day, contact) VALUES(:customer_id, :name, :gender, :birth_day, :contact)";
 
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(privacyEntity);
-        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+        Map<String, Object> params = new HashMap<>();
+        params.put(CUSTOMER_ID_COLUMN, customerId);
+        params.put(NAME_COLUMN, privacyEntity.getName());
+        params.put(GENDER_COLUMN, privacyEntity.getGender());
+        params.put(BIRTH_DAY_COLUMN, privacyEntity.getBirthday());
+        params.put(CONTACT_COLUMN, privacyEntity.getContact());
+
+        namedParameterJdbcTemplate.update(sql, params);
     }
 
     @Override
-    public PrivacyEntity findById(int id) {
-        String sql = "SELECT customer_id, name, gender, birth_day, contact FROM PRIVACY WHERE customer_id = ?";
-        return jdbcTemplate.queryForObject(sql, PRIVACY_ENTITY_ROW_MAPPER, id);
+    public Optional<PrivacyEntity> findById(long customerId) {
+        try {
+            String sql = "SELECT customer_id, name, gender, birth_day, contact FROM privacy WHERE customer_id = ?";
+            return Optional.of(jdbcTemplate.queryForObject(sql, PRIVACY_ENTITY_ROW_MAPPER, customerId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public void update(PrivacyEntity privacyEntity) {
-        String sql = "UPDATE PRIVACY SET name = :name, gender = :gender, birth_day = :birthday, contact = :contact WHERE customer_id = :customerId";
+    public void update(long customerId, PrivacyEntity privacyEntity) {
+        String sql = "UPDATE privacy SET name = :name, gender = :gender, birth_day = :birth_day, contact = :contact WHERE customer_id = :customer_id";
 
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(privacyEntity);
-        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+        Map<String, Object> params = new HashMap<>();
+        params.put(NAME_COLUMN, privacyEntity.getName());
+        params.put(GENDER_COLUMN, privacyEntity.getGender());
+        params.put(BIRTH_DAY_COLUMN, privacyEntity.getBirthday());
+        params.put(CONTACT_COLUMN, privacyEntity.getContact());
+        params.put(CUSTOMER_ID_COLUMN, customerId);
+
+        namedParameterJdbcTemplate.update(sql, params);
     }
 
     @Override
-    public void delete(int customerId) {
-        String sql = "DELETE FROM PRIVACY WHERE customer_id = ?";
+    public void delete(long customerId) {
+        String sql = "DELETE FROM privacy WHERE customer_id = ?";
         jdbcTemplate.update(sql, customerId);
     }
 }

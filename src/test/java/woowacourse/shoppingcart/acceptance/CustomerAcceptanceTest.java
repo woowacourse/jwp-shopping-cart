@@ -26,14 +26,103 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.AcceptanceTest;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
 
 @DisplayName("회원 기능 인수 테스트")
+@Sql("classpath:schema.sql")
 public class CustomerAcceptanceTest extends AcceptanceTest {
+    @Test
+    @DisplayName("이메일 중복 검사")
+    void validateEmailDuplication() {
+        // given
+        회원가입_요청(CUSTOMER_REQUEST_1);
+
+        // when
+        ExtractableResponse<Response> response = 이메일_중복_체크_요청(EMAIL_VALUE_1);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getBoolean("isDuplicated")).isTrue()
+        );
+    }
+
+    private ExtractableResponse<Response> 회원가입_요청(CustomerRequest customerRequest) {
+        return RestAssured.given().log().all()
+                .body(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    private int 회원가입_요청_후_사용자_ID_반환(CustomerRequest customerRequest) {
+        ExtractableResponse<Response> response = 회원가입_요청(customerRequest);
+        return Integer.parseInt(response.header("Location").split("/")[3]);
+    }
+
+    private ExtractableResponse<Response> 로그인_요청(String email, String password) {
+        return RestAssured.given().log().all()
+                .body(new TokenRequest(email, password))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/customer/authentication/sign-in")
+                .then().log().all()
+                .extract();
+    }
+
+    private TokenResponse 로그인_요청_후_토큰_DTO_반환(String email, String password) {
+        ExtractableResponse<Response> response = 로그인_요청(email, password);
+        return response.jsonPath().getObject(".", TokenResponse.class);
+    }
+
+    private ExtractableResponse<Response> 이메일_중복_체크_요청(String email) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/validation?email=" + email)
+                .then().log().all()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 사용자_정보_조회_요청(int customerId, String accessToken) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .when().get("/api/customers/" + customerId)
+                .then().log().all().extract();
+    }
+
+    private ExtractableResponse<Response> 사용자_정보_수정_요청(int customerId, String accessToken,
+                                                       CustomerRequest customerRequest) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(customerRequest)
+                .when().put("/api/customers/" + customerId)
+                .then().log().all().extract();
+    }
+
+    private ExtractableResponse<Response> 회원탈퇴_요청(int customerId, String accessToken) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .when().delete("/api/customers/" + customerId)
+                .then().log().all().extract();
+    }
+
+    private void 만료된_토큰인지_확인(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+    }
+
+    private void 유효하지_않은_토큰인지_확인(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
     @DisplayName("회원가입")
     @Nested
     class join extends AcceptanceTest {
@@ -211,92 +300,5 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             // then
             만료된_토큰인지_확인(response);
         }
-    }
-
-    @Test
-    @DisplayName("이메일 중복 검사")
-    void validateEmailDuplication() {
-        // given
-        회원가입_요청(CUSTOMER_REQUEST_1);
-
-        // when
-        ExtractableResponse<Response> response = 이메일_중복_체크_요청(EMAIL_VALUE_1);
-
-        // then
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getBoolean("isDuplicated")).isTrue()
-        );
-    }
-
-    private ExtractableResponse<Response> 회원가입_요청(CustomerRequest customerRequest) {
-        return RestAssured.given().log().all()
-                .body(customerRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/customers")
-                .then().log().all()
-                .extract();
-    }
-
-    private int 회원가입_요청_후_사용자_ID_반환(CustomerRequest customerRequest) {
-        ExtractableResponse<Response> response = 회원가입_요청(customerRequest);
-        return Integer.parseInt(response.header("Location").split("/")[3]);
-    }
-
-    private ExtractableResponse<Response> 로그인_요청(String email, String password) {
-        return RestAssured.given().log().all()
-                .body(new TokenRequest(email, password))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/customer/authentication/sign-in")
-                .then().log().all()
-                .extract();
-    }
-
-    private TokenResponse 로그인_요청_후_토큰_DTO_반환(String email, String password) {
-        ExtractableResponse<Response> response = 로그인_요청(email, password);
-        return response.jsonPath().getObject(".", TokenResponse.class);
-    }
-
-    private ExtractableResponse<Response> 이메일_중복_체크_요청(String email) {
-        return RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/api/validation?email=" + email)
-                .then().log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 사용자_정보_조회_요청(int customerId, String accessToken) {
-        return RestAssured.given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
-                .when().get("/api/customers/" + customerId)
-                .then().log().all().extract();
-    }
-
-    private ExtractableResponse<Response> 사용자_정보_수정_요청(int customerId, String accessToken,
-                                                       CustomerRequest customerRequest) {
-        return RestAssured.given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerRequest)
-                .when().put("/api/customers/" + customerId)
-                .then().log().all().extract();
-    }
-
-    private ExtractableResponse<Response> 회원탈퇴_요청(int customerId, String accessToken) {
-        return RestAssured.given().log().all()
-                .header("Authorization", "Bearer " + accessToken)
-                .when().delete("/api/customers/" + customerId)
-                .then().log().all().extract();
-    }
-
-    private void 만료된_토큰인지_확인(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
-    }
-
-    private void 유효하지_않은_토큰인지_확인(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }

@@ -1,8 +1,6 @@
 package woowacourse.auth.support;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,8 +18,8 @@ public class JwtTokenProvider {
     private final SecretKey secretKey;
     private final long validityInMilliseconds;
 
-    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") final String secretKey,
-                            @Value("${security.jwt.token.expire-length}") final long validityInMilliseconds) {
+    public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
+                            @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
         this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.validityInMilliseconds = validityInMilliseconds;
     }
@@ -44,12 +42,10 @@ public class JwtTokenProvider {
 
     public void validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
-            System.out.println(!claims.getBody().getExpiration().before(new Date()));
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
         } catch (ExpiredJwtException e) {
             throw new ExpiredTokenException();
         } catch (JwtException | IllegalArgumentException e) {
-            e.printStackTrace();
             throw new InvalidTokenException();
         }
     }

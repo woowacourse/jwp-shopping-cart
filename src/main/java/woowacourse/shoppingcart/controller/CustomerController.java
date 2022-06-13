@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.EmailDuplicationResponse;
 import woowacourse.shoppingcart.service.CustomerService;
 
 @RestController
@@ -27,7 +27,7 @@ public class CustomerController {
 
     @PostMapping("/customers")
     public ResponseEntity<Void> createCustomer(@RequestBody CustomerRequest customerRequest) {
-        int id = customerService.create(customerRequest);
+        long id = customerService.create(customerRequest);
         return ResponseEntity.created(URI.create("/api/customers/" + id)).build();
     }
 

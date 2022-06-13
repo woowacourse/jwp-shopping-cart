@@ -1,91 +1,66 @@
 package woowacourse.shoppingcart.service;
 
-import java.time.format.DateTimeFormatter;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.AddressDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.PrivacyDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.address.FullAddress;
 import woowacourse.shoppingcart.domain.customer.privacy.Privacy;
-import woowacourse.shoppingcart.dto.AddressResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.EmailDuplicationResponse;
-import woowacourse.shoppingcart.entity.AddressEntity;
-import woowacourse.shoppingcart.entity.CustomerEntity;
-import woowacourse.shoppingcart.entity.PrivacyEntity;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.EmailDuplicationResponse;
+import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.notfound.CustomerNotFoundException;
+import woowacourse.shoppingcart.repository.CustomerRepository;
 
 @Transactional
 @Service
 public class CustomerService {
-    private final CustomerDao customerDao;
-    private final PrivacyDao privacyDao;
-    private final AddressDao addressDao;
+    private final CustomerRepository customerRepository;
 
-    public CustomerService(CustomerDao customerDao, PrivacyDao privacyDao, AddressDao addressDao) {
-        this.customerDao = customerDao;
-        this.privacyDao = privacyDao;
-        this.addressDao = addressDao;
+    public CustomerService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
     }
 
-    public int create(CustomerRequest customerRequest) {
+    public long create(CustomerRequest customerRequest) {
+        validateDuplicateEmail(customerRequest);
+
         Customer customer = convertRequestToCustomer(customerRequest);
-        CustomerEntity customerEntity = convertCustomerToEntity(customer);
-        int customerId = customerDao.save(customerEntity);
-
-        PrivacyEntity privacyEntity = convertPrivacyToEntity(customerId, customer.getPrivacy());
-        AddressEntity addressEntity = convertAddressToEntity(customerId, customer.getFullAddress());
-
-        privacyDao.save(privacyEntity);
-        addressDao.save(addressEntity);
-
-        return customerId;
+        return customerRepository.save(customer);
     }
 
-    public CustomerResponse getCustomerById(int id) {
+    private void validateDuplicateEmail(CustomerRequest customerRequest) {
+        if (customerRepository.existsByEmail(customerRequest.getEmail())) {
+            throw new DuplicateEmailException();
+        }
+    }
+
+    public CustomerResponse getCustomerById(long id) {
         try {
-            CustomerEntity customerEntity = customerDao.findById(id);
-            PrivacyEntity privacyEntity = privacyDao.findById(id);
-            AddressEntity addressEntity = addressDao.findById(id);
-            return convertEntityToResponse(customerEntity, privacyEntity, addressEntity);
+            Customer customer = customerRepository.findById(id);
+            return new CustomerResponse(customer);
         } catch (EmptyResultDataAccessException e) {
             throw new CustomerNotFoundException();
         }
     }
 
-    public void updateCustomerById(int customerId, CustomerRequest customerRequest) {
+    public void updateCustomerById(long customerId, CustomerRequest customerRequest) {
         validateExists(customerId);
-
-        Customer customer = convertRequestToCustomer(customerRequest);
-        CustomerEntity customerEntity = convertCustomerToEntity(customer);
-        PrivacyEntity privacyEntity = convertPrivacyToEntity(customerId, customer.getPrivacy());
-        AddressEntity addressEntity = convertAddressToEntity(customerId, customer.getFullAddress());
-
-        customerDao.update(customerId, customerEntity);
-        privacyDao.update(privacyEntity);
-        addressDao.update(addressEntity);
+        Customer newCustomer = convertRequestToCustomer(customerRequest);
+        customerRepository.updateById(customerId, newCustomer);
     }
 
-    public void deleteCustomer(int customerId) {
+    public void deleteCustomer(long customerId) {
         validateExists(customerId);
-
-        addressDao.delete(customerId);
-        privacyDao.delete(customerId);
-        customerDao.delete(customerId);
+        customerRepository.deleteById(customerId);
     }
 
     public EmailDuplicationResponse isDuplicatedEmail(String email) {
-        return new EmailDuplicationResponse(customerDao.hasEmail(email));
+        return new EmailDuplicationResponse(customerRepository.existsByEmail(email));
     }
 
-    private void validateExists(int customerId) {
-        try {
-            customerDao.findById(customerId);
-        } catch (EmptyResultDataAccessException e) {
+    private void validateExists(long customerId) {
+        if (!customerRepository.existsById(customerId)) {
             throw new CustomerNotFoundException();
         }
     }
@@ -93,37 +68,10 @@ public class CustomerService {
     private Customer convertRequestToCustomer(CustomerRequest customerRequest) {
         Privacy privacy = Privacy.of(customerRequest.getName(), customerRequest.getGender(),
                 customerRequest.getBirthday(), customerRequest.getContact());
-        FullAddress fullAddress = FullAddress.of(customerRequest.getFullAddress().getAddress(),
-                customerRequest.getFullAddress().getDetailAddress(), customerRequest.getFullAddress().getZoneCode());
+        FullAddress fullAddress = FullAddress.of(customerRequest.getAddress(), customerRequest.getDetailAddress(),
+                customerRequest.getZonecode());
 
         return Customer.of(customerRequest.getEmail(), customerRequest.getPassword(),
                 customerRequest.getProfileImageUrl(), privacy, fullAddress, customerRequest.isTerms());
-    }
-
-    private CustomerEntity convertCustomerToEntity(Customer customer) {
-        return new CustomerEntity(customer.getEmail().getValue(), customer.getPassword().getValue(),
-                customer.getProfileImageUrl().getValue(), customer.isTerms());
-    }
-
-    private PrivacyEntity convertPrivacyToEntity(int customerId, Privacy privacy) {
-        return new PrivacyEntity(customerId, privacy.getName().getValue(), privacy.getGender().getValue(),
-                privacy.getBirthday().getValue(), privacy.getContact().getValue());
-    }
-
-    private AddressEntity convertAddressToEntity(int customerId, FullAddress fullAddress) {
-        return new AddressEntity(customerId, fullAddress.getAddress().getValue(),
-                fullAddress.getDetailAddress().getValue(),
-                fullAddress.getZoneCode().getValue());
-    }
-
-    private CustomerResponse convertEntityToResponse(CustomerEntity customerEntity, PrivacyEntity privacyEntity,
-                                                     AddressEntity addressEntity) {
-        AddressResponse addressResponse = new AddressResponse(addressEntity.getAddress(),
-                addressEntity.getDetailAddress(), addressEntity.getZoneCode());
-
-        return new CustomerResponse(customerEntity.getEmail(), customerEntity.getProfileImageUrl(),
-                privacyEntity.getName(), privacyEntity.getGender(),
-                privacyEntity.getBirthday().format(DateTimeFormatter.ISO_DATE), privacyEntity.getContact(),
-                addressResponse, customerEntity.isTerms());
     }
 }

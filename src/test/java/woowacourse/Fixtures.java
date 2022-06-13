@@ -2,18 +2,13 @@ package woowacourse;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.dto.AddressRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.entity.AddressEntity;
 import woowacourse.shoppingcart.entity.CustomerEntity;
 import woowacourse.shoppingcart.entity.PrivacyEntity;
 
 public class Fixtures {
-    public static final PasswordEncoder BCRYPT_PASSWORD_ENCODER = new BCryptPasswordEncoder();
-
     // gender
     public static final String GENDER_MALE = "male";
     public static final String GENDER_FEMALE = "female";
@@ -46,16 +41,12 @@ public class Fixtures {
     public static final boolean TERMS_2 = true;
 
     // requests
-    public static final AddressRequest ADDRESS_REQUEST_1 = new AddressRequest(ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1,
-            ZONE_CODE_VALUE_1);
     public static final CustomerRequest CUSTOMER_REQUEST_1 = new CustomerRequest(EMAIL_VALUE_1, PASSWORD_VALUE_1,
             PROFILE_IMAGE_URL_VALUE_1, NAME_VALUE_1, GENDER_MALE, BIRTHDAY_FORMATTED_VALUE_1, CONTACT_VALUE_1,
-            ADDRESS_REQUEST_1, true);
-    public static final AddressRequest ADDRESS_REQUEST_2 = new AddressRequest(ADDRESS_VALUE_2, DETAIL_ADDRESS_VALUE_2,
-            ZONE_CODE_VALUE_2);
+            ADDRESS_VALUE_1, DETAIL_ADDRESS_VALUE_1, ZONE_CODE_VALUE_1, true);
     public static final CustomerRequest CUSTOMER_REQUEST_2 = new CustomerRequest(EMAIL_VALUE_2, PASSWORD_VALUE_2,
             PROFILE_IMAGE_URL_VALUE_2, NAME_VALUE_2, GENDER_MALE, BIRTHDAY_FORMATTED_VALUE_2, CONTACT_VALUE_2,
-            ADDRESS_REQUEST_2, true);
+            ADDRESS_VALUE_2, DETAIL_ADDRESS_VALUE_2, ZONE_CODE_VALUE_2, true);
     public static final TokenRequest TOKEN_REQUEST_1 = new TokenRequest(EMAIL_VALUE_1, PASSWORD_VALUE_1);
     public static final TokenRequest TOKEN_REQUEST_2 = new TokenRequest(EMAIL_VALUE_2, PASSWORD_VALUE_2);
 
@@ -69,9 +60,14 @@ public class Fixtures {
 
     // etc
     public static final String EXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJodWRpIiwiaWF0IjoxNjU0NDA1NDkzLCJleHAiOjE2NTQ0MDU0OTN9.azYu1VAO1BkS9u1tfZGK6VlHwi9CPA-CAIgWH5KF1bM\n";
-
+    // product1
+    public static final String PRODUCT_NAME_VALUE_1 = "치킨";
+    public static final String PRODUCT_DESCRIPTION_VALUE_1 = "치킨 입니다";
+    public static final Integer PRODUCT_PRICE_VALUE_1 = 15_000;
+    public static final Integer PRODUCT_STOCK_VALUE_1 = 10;
+    public static final String PRODUCT_IMAGE_URL_VALUE_1 = "http://image.com/1234";
     // invalid fixtures
-    public static CustomerRequest CUSTOMER_INVALID_REQUEST_1 = new CustomerRequest("seongwoo0513", "string&123",
+    public static final CustomerRequest CUSTOMER_INVALID_REQUEST_1 = new CustomerRequest("seongwoo0513", "string&123",
             "http://gravatar.com/avatar/1?d=identicon",
-            "조동현", "male", "1999-03-23", "01012345678", new AddressRequest("서울특별시 성동구 왕십리역", "길바닥", "54321"), true);
+            "조동현", "male", "1999-03-23", "01012345678", "서울특별시 성동구 왕십리역", "길바닥", "54321", true);
 }
