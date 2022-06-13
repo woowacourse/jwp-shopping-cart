@@ -39,8 +39,7 @@ public class OrderService {
     }
 
     public Long addOrder(final List<OrderRequest> orderDetailRequests, final Long customerId) {
-        final Customer customer = customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+        final Customer customer = getCustomer(customerId);
         final Long ordersId = orderDao.addOrders(customer.getId());
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
@@ -63,9 +62,7 @@ public class OrderService {
     }
 
     private void validateOrderIdByCustomerName(final Long customerId, final Long orderId) {
-        final Customer customer = customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
-
+        final Customer customer = getCustomer(customerId);
         if (!orderDao.isValidOrderId(customer.getId(), orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
@@ -73,8 +70,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrdersResponse> findOrdersByCustomerId(final Long customerId) {
-        final Customer customer = customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+        final Customer customer = getCustomer(customerId);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customer.getId());
 
         final List<Orders> ordersByCustomerId = orderIds.stream()
@@ -83,6 +79,11 @@ public class OrderService {
         return ordersByCustomerId.stream()
                 .map(OrdersResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    private Customer getCustomer(final Long customerId) {
+        return customerDao.findById(customerId)
+                .orElseThrow(InvalidCustomerException::new);
     }
 
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {

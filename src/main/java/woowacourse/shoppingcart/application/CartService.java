@@ -28,8 +28,7 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public List<CartResponse> findCartsByCustomerId(final Long customerId) {
-        final Customer customer = customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+        final Customer customer = getCustomer(customerId);
         final List<Cart> carts = cartItemDao.findAllJoinProductByCustomerId(customer.getId());
         return carts.stream()
                 .map(CartResponse::new)
@@ -37,8 +36,7 @@ public class CartService {
     }
 
     public Long addCart(final Long productId, final Long customerId) {
-        final Customer customer = customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+        final Customer customer = getCustomer(customerId);
         try {
             return cartItemDao.addCartItem(customer.getId(), productId);
         } catch (Exception e) {
@@ -58,12 +56,16 @@ public class CartService {
     }
 
     private void validateCustomerCart(final Long cartId, final Long customerId) {
-        final Customer customer = customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+        final Customer customer = getCustomer(customerId);
         final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customer.getId());
         if (cartIds.contains(cartId)) {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+    
+    private Customer getCustomer(final Long customerId) {
+        return customerDao.findById(customerId)
+                .orElseThrow(InvalidCustomerException::new);
     }
 }

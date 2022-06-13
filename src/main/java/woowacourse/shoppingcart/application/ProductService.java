@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -40,19 +39,10 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductResponse> findProductsByCustomerId(final Long customerId) {
-        final Customer customer = customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+        final Customer customer = getCustomer(customerId);
         final List<Product> products = productDao.findProducts();
         final List<Cart> carts = cartItemDao.findAllJoinProductByCustomerId(customer.getId());
-        List<ProductResponse> productResponses = new ArrayList<>();
-        for (Product product : products) {
-            final Cart cart = carts.stream()
-                    .filter(each -> each.getProductId().equals(product.getId()))
-                    .findFirst()
-                    .orElseGet(() -> new Cart(null, new Quantity(0), product));
-            productResponses.add(ProductResponse.withCart(product, cart));
-        }
-        return productResponses;
+        return toProductResponseWithCart(products, carts);
     }
 
     @Transactional(readOnly = true)
@@ -65,19 +55,28 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> findPageableProductsByCustomerId(final int size, final int page,
                                                                   final Long customerId) {
-        final Customer customer = customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+        final Customer customer = getCustomer(customerId);
         final List<Product> products = productDao.findPageableProducts(size, page);
         final List<Cart> carts = cartItemDao.findAllJoinProductByCustomerId(customer.getId());
-        List<ProductResponse> productResponses = new ArrayList<>();
-        for (Product product : products) {
-            final Cart cart = carts.stream()
-                    .filter(each -> each.getProductId().equals(product.getId()))
-                    .findFirst()
-                    .orElseGet(() -> new Cart(null, new Quantity(0), product));
-            productResponses.add(ProductResponse.withCart(product, cart));
-        }
-        return productResponses;
+        return toProductResponseWithCart(products, carts);
+    }
+
+    private Customer getCustomer(final Long customerId) {
+        return customerDao.findById(customerId)
+                .orElseThrow(InvalidCustomerException::new);
+    }
+
+    private List<ProductResponse> toProductResponseWithCart(final List<Product> products, final List<Cart> carts) {
+        return products.stream()
+                .map(product -> ProductResponse.withCart(product, getCartByProduct(carts, product)))
+                .collect(Collectors.toList());
+    }
+
+    private Cart getCartByProduct(final List<Cart> carts, final Product product) {
+        return carts.stream()
+                .filter(each -> each.getProductId().equals(product.getId()))
+                .findFirst()
+                .orElseGet(() -> new Cart(null, new Quantity(0), product));
     }
 
     public Long addProduct(final ProductAddRequest productAddRequest) {
