@@ -5,9 +5,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class AccountTest {
+
+    @DisplayName("아이디 길이가 4~15자이고 소문자 혹은 숫자의 조합으로 이루어지면 아이디를 생성한다.")
+    @ParameterizedTest
+    @CsvSource(value = {"ham2", "hamcheeseburger"})
+    void makeAccount(String value) {
+        assertThat(new Account(value)).isNotNull();
+    }
 
     @DisplayName("아이디가 비어있으면 예외를 발생한다.")
     @ParameterizedTest

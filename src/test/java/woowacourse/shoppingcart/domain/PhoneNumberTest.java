@@ -1,13 +1,21 @@
 package woowacourse.shoppingcart.domain;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PhoneNumberTest {
+
+    @DisplayName("핸드폰 번호 길이가 11자이면 핸드폰 번호가 생성된다.")
+    @Test
+    void makePhoneNumber() {
+        assertThat(new PhoneNumber("01012345678")).isNotNull();
+    }
 
     @DisplayName("핸드폰 번호가 비어있으면 예외를 발생한다.")
     @ParameterizedTest

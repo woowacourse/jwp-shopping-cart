@@ -5,9 +5,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class NicknameTest {
+
+    @DisplayName("닉네임의 길이가 2~10이면 닉네임을 생성한다.")
+    @ParameterizedTest
+    @CsvSource(value = {"ni", "nickname12"})
+    void makeNickname(String nickname) {
+        assertThat(new Nickname(nickname)).isNotNull();
+    }
 
     @DisplayName("닉네임이 비어있으면 예외를 발생한다.")
     @ParameterizedTest

@@ -5,9 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ImageUrlTest {
+
+    @DisplayName("이미지 주소 길이가 2000자 이하이면 이미지 주소를 생성한다.")
+    @Test
+    void makeImageUrl() {
+        final String value = "a".repeat(2000);
+
+        assertThat(new ImageUrl(value)).isNotNull();
+    }
 
     @DisplayName("이미지 주소가 비어있으면 예외를 발생한다.")
     @ParameterizedTest

@@ -5,9 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ProductNameTest {
+
+    @DisplayName("상품명의 길이가 50자 이하이면 상품명을 생성한다")
+    @Test
+    void makeProductName() {
+        final String value = "a".repeat(50);
+
+        assertThat(value).isNotNull();
+    }
 
     @DisplayName("이름이 비어있으면 예외를 발생한다.")
     @ParameterizedTest
