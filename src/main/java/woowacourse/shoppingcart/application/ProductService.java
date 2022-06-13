@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.exception.BadRequestException;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ProductRequest;
@@ -13,7 +14,7 @@ import woowacourse.shoppingcart.dto.ProductResponse;
 @Transactional(rollbackFor = Exception.class)
 public class ProductService {
 
-    private ProductDao productDao;
+    private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
@@ -36,7 +37,10 @@ public class ProductService {
     }
 
     public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+        final int affectedRows = productDao.delete(productId);
+        if (affectedRows != 1) {
+            throw new BadRequestException("상품이 삭제 되지 않았습니다.");
+        }
     }
 
     public static ProductResponse convertResponseToProduct(Product product) {

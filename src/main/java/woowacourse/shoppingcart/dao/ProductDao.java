@@ -66,8 +66,8 @@ public class ProductDao {
         });
     }
 
-    public void delete(final Long productId) {
+    public int delete(final Long productId) {
         final String query = "DELETE FROM product WHERE id = :productId";
-        namedJdbcTemplate.update(query, Map.of("productId", productId));
+        return namedJdbcTemplate.update(query, Map.of("productId", productId));
     }
 }
