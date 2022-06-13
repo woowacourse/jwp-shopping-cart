@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
@@ -28,10 +27,8 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Void> add(@RequestBody final ProductRequest product) {
         final long productId = productService.addProduct(product);
-        final URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/" + productId)
-                .build().toUri();
+        final URI uri = UriCreator.withCurrentPath(String.format("/%d", productId));
+
         return ResponseEntity.created(uri).build();
     }
 

@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.CartRequest;
@@ -28,11 +27,8 @@ public class CartItemController {
     @PostMapping
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal long customerId, @RequestBody CartRequest cartRequest) {
         final Long cartId = cartService.addCart(cartRequest.getProductId(), customerId);
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
-                .toUri();
+        final URI responseLocation = UriCreator.withCurrentPath(String.format("/%d", cartId));
+
         return ResponseEntity.created(responseLocation).build();
     }
 

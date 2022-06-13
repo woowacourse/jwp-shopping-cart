@@ -27,7 +27,10 @@ public class OrderController {
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final long customerId,
                                          @RequestBody @Valid final OrderRequest ordersRequest) {
         final long orderId = orderService.addOrder(ordersRequest, customerId);
-        return ResponseEntity.created(URI.create("/customers/orders/" + orderId))
+
+        final URI responseUri = UriCreator.withCurrentPath(String.format("%d", orderId));
+
+        return ResponseEntity.created(responseUri)
                 .build();
     }
 
