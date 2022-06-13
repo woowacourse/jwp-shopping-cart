@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -50,17 +51,21 @@ public class CartDao {
     }
 
     public Optional<CartItem> findCartItemByProductId(final Long productId, final Long customerId) {
-        final String sql = "SELECT product.id as id, " +
-                "product.name as name, " +
-                "product.price as price, " +
-                "product.thumbnail as thumbnail, " +
-                "cart_item.quantity as quantity " +
-                "FROM cart_item " +
-                "INNER JOIN product " +
-                "ON cart_item.product_id = product.id " +
-                "WHERE cart_item.product_id = ? and cart_item.customer_id = ?";
+        try {
+            final String sql = "SELECT product.id as id, " +
+                    "product.name as name, " +
+                    "product.price as price, " +
+                    "product.thumbnail as thumbnail, " +
+                    "cart_item.quantity as quantity " +
+                    "FROM cart_item " +
+                    "INNER JOIN product " +
+                    "ON cart_item.product_id = product.id " +
+                    "WHERE cart_item.product_id = ? and cart_item.customer_id = ?";
 
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, CART_ROW_MAPPER, productId, customerId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, CART_ROW_MAPPER, productId, customerId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public Long addCartItem(final Long customerId, final Long productId) {
