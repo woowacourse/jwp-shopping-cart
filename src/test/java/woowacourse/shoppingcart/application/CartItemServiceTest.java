@@ -105,7 +105,7 @@ class CartItemServiceTest {
         cartService.addCart(new CartProductRequest(product2.getId(), 1L, true), "greenlawn");
 
         //when
-        cartService.deleteCart("greenlawn", new DeleteProductRequest(List.of(new IdRequest(1L), new IdRequest(2L))));
+        cartService.deleteCart("greenlawn", new DeleteCartItemRequest(List.of(new IdRequest(1L), new IdRequest(2L))));
 
         //then
         assertThat(cartService.findCart("greenlawn").getCartItems().size()).isEqualTo(0);

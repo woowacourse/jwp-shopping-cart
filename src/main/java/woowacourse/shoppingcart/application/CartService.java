@@ -9,7 +9,6 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.dto.IdRequest;
 import woowacourse.shoppingcart.dto.CartItemsResponse;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.*;
@@ -56,9 +55,14 @@ public class CartService {
     @Transactional
     public CartItemsResponse updateCartItems(String customerName, UpdateCartItemsRequest updateCartItemsRequest) {
         Long customerId = customerDao.findByUsername(customerName).getId();
-        for (UpdateCartItemRequest request : updateCartItemsRequest.getCartItems()) {
-            cartItemDao.updateById(request.getId(), customerId, request.getQuantity(), request.isChecked());
-        }
+        List<CartItem> cartItems = updateCartItemsRequest.getCartItems()
+                .stream()
+                .map(request -> new CartItem(request.getId(), cartItemDao.findCartIdById(request.getId()).getProduct(),
+                        request.getQuantity(), request.isChecked()))
+                .collect(Collectors.toList());
+
+        cartItemDao.updateByIds(customerId, cartItems);
+
         return findUpdateCartProducts(updateCartItemsRequest);
     }
 
@@ -72,11 +76,9 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCart(String customerName, DeleteProductRequest deleteProductRequest) {
+    public void deleteCart(String customerName, DeleteCartItemRequest deleteCartItemRequest) {
         Long customerId = customerDao.findByUsername(customerName).getId();
-        for (IdRequest idRequest : deleteProductRequest.getCartItems()) {
-            cartItemDao.deleteCartItemById(idRequest.getId(), customerId);
-        }
+        cartItemDao.deleteCartItemById(deleteCartItemRequest.getCartItems(), customerId);
     }
 
     @Transactional

@@ -150,7 +150,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 token, "/cart", HttpStatus.CREATED.value());
 
         //when & then
-        DeleteProductRequest request = new DeleteProductRequest(List.of(new IdRequest(1L), new IdRequest(3L)));
+        DeleteCartItemRequest request = new DeleteCartItemRequest(List.of(new IdRequest(1L), new IdRequest(3L)));
 
 
         RestAssuredFixture.delete(request, token, "/cart", HttpStatus.NO_CONTENT.value());

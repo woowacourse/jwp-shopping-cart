@@ -38,8 +38,8 @@ public class CartItemController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String userNameByToken, @RequestBody DeleteProductRequest deleteProductRequest) {
-        cartService.deleteCart(userNameByToken, deleteProductRequest);
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String userNameByToken, @RequestBody DeleteCartItemRequest deleteCartItemRequest) {
+        cartService.deleteCart(userNameByToken, deleteCartItemRequest);
         return ResponseEntity.noContent().build();
     }
 

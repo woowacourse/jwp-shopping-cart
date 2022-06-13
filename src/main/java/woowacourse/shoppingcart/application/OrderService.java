@@ -37,15 +37,17 @@ public class OrderService {
         Long customerId = customerDao.findByUsername(customerName).getId();
         Long ordersId = orderDao.addOrders(customerId);
 
+        List<Long> cartIds = orderDetailRequests.stream()
+                .map(OrderRequest::getCartId)
+                .collect(Collectors.toList());
         for (OrderRequest orderDetail : orderDetailRequests) {
-            Long cartId = orderDetail.getCartId();
             Long productId = cartItemDao.findCartIdById(orderDetail.getCartId())
                     .getProduct()
                     .getId();
             int quantity = orderDetail.getQuantity();
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItemById(cartId, customerId);
         }
+        cartItemDao.deleteCartItemById(cartIds, customerId);
         return ordersId;
     }
 

@@ -1,8 +1,12 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -92,13 +96,37 @@ public class CartItemDao {
         jdbcTemplate.update(sql, quantity, checked, id, customerId);
     }
 
-    public void deleteCartItemById(Long id, Long customerId) {
-        final String sql = "DELETE FROM cart_item WHERE id = ? AND customer_id = ?";
-        jdbcTemplate.update(sql, id, customerId);
+    public void updateByIds(Long customerId, List<CartItem> cartItems) {
+        final String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE id = ? AND customer_id = ?";
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int index) throws SQLException {
+                CartItem cartItem = cartItems.get(index);
+                ps.setLong(1, cartItem.getQuantity());
+                ps.setBoolean(2, cartItem.isChecked());
+                ps.setLong(3, cartItem.getId());
+                ps.setLong(4, customerId);
+            }
+            @Override
+            public int getBatchSize() {
+                return cartItems.size();
+            }
+        });
     }
 
+
+    public void deleteCartItemById(List<Long> ids, Long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE id = ? AND customer_id = ?";
+        List<Object[]> batchArgs = new ArrayList<>();
+        for (Long id : ids) {
+            batchArgs.add(new Object[] {id, customerId});
+        }
+        jdbcTemplate.batchUpdate(sql, batchArgs);
+    }
+
+
     public void deleteAll(Long id) {
-        final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
+        String sql = "DELETE FROM cart_item WHERE customer_id = ?";
         jdbcTemplate.update(sql, id);
     }
 }
