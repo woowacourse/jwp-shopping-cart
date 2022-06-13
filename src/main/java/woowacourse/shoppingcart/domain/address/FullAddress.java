@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain.address;
 
+import woowacourse.auth.exception.BadRequestException;
+
 public class FullAddress {
 
     static final String INVALID_ZONE_CODE_FORMAT = "유효하지 않은 우편번호입니다.";
@@ -22,7 +24,7 @@ public class FullAddress {
 
     private void validateZoneCode(String zoneCode) {
         if (zoneCode.length() != PROPER_ZONE_CODE_LENGTH) {
-            throw new IllegalArgumentException(INVALID_ZONE_CODE_FORMAT);
+            throw new BadRequestException(INVALID_ZONE_CODE_FORMAT);
         }
     }
 

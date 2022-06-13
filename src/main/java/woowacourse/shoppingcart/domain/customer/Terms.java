@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import woowacourse.auth.exception.BadRequestException;
+
 public class Terms {
 
     static final String DISAGREED_TERMS = "약관에 동의하지 않았습니다.";
@@ -13,7 +15,7 @@ public class Terms {
 
     private void validateTerms(boolean target) {
         if (!target) {
-            throw new IllegalArgumentException(DISAGREED_TERMS);
+            throw new BadRequestException(DISAGREED_TERMS);
         }
     }
 

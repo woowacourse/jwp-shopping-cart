@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import io.jsonwebtoken.SignatureException;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -32,6 +33,11 @@ public class ControllerAdvice {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorDto> handleUnauthorizedException(UnauthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ErrorDto> handleSignatureException(SignatureException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(e.getMessage()));
     }
 

@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import woowacourse.auth.exception.BadRequestException;
 
 @DisplayName("Terms 는")
 public class TermsTest {
@@ -24,7 +25,7 @@ public class TermsTest {
         @DisplayName("약관에 동의하지 않았다면 예외를 던진다.")
         void invalidTerms() {
             assertThatThrownBy(() -> new Terms(false))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage(Terms.DISAGREED_TERMS);
         }
     }

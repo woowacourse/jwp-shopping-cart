@@ -129,7 +129,7 @@ class CustomerServiceTest {
                     new AddressRequest("d", "e", "54321"), true);
 
             assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("비밀번호는 8글자 이상 20글자 이하, 영문, 특수문자, 숫자 최소 1개씩 으로 이뤄져야합니다.");
         }
 
@@ -144,7 +144,7 @@ class CustomerServiceTest {
                     new AddressRequest("d", "e", "54321"), true);
 
             assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("이름은 최대 5글자, 한글로 이뤄져야합니다.");
         }
 
@@ -159,7 +159,7 @@ class CustomerServiceTest {
                     new AddressRequest("d", "e", "54321"), true);
 
             assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("올바르지 않은 생년월일입니다.");
         }
 
@@ -174,7 +174,7 @@ class CustomerServiceTest {
                     new AddressRequest("d", "e", "54321"), true);
 
             assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("핸드폰 양식의 전화번호를 입력해야합니다.");
         }
     }

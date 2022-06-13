@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import woowacourse.auth.exception.BadRequestException;
 
 @DisplayName("BirthDay 는")
 class BirthdayTest {
@@ -24,7 +25,7 @@ class BirthdayTest {
         @DisplayName("생년월일이 유효하지 않으면 에러를 던진다.")
         void invalidBirthday() {
             assertThatThrownBy(() -> new Birthday("1998-31-07"))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage(Birthday.INVALID_BIRTHDAY_FORMAT);
         }
     }

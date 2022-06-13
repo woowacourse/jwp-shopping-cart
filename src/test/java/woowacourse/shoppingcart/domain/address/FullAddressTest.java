@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import woowacourse.auth.exception.BadRequestException;
 
 @DisplayName("FullAddress 는")
 class FullAddressTest {
@@ -24,7 +25,7 @@ class FullAddressTest {
         @Test
         void invalidZoneCode() {
             assertThatThrownBy(() -> new FullAddress("a", "b", "1234"))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage(FullAddress.INVALID_ZONE_CODE_FORMAT);
         }
     }

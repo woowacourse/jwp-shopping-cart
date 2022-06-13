@@ -4,7 +4,6 @@ import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,22 +33,22 @@ public class CustomerController {
         return ResponseEntity.created(URI.create("/api/customers/" + customerId)).build();
     }
 
-    @GetMapping("/customers/{customerId}")
+    @GetMapping("/customers")
     public ResponseEntity<CustomerResponse> findCustomerInformation(
-            @AuthenticationPrincipal @PathVariable Long customerId) {
+            @AuthenticationPrincipal Long customerId) {
         CustomerResponse response = customerService.findCustomerById(customerId);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/customers/{customerId}")
-    public ResponseEntity<Void> updateCustomerInformation(@AuthenticationPrincipal @PathVariable Long customerId,
+    @PutMapping("/customers")
+    public ResponseEntity<Void> updateCustomerInformation(@AuthenticationPrincipal Long customerId,
                                                           @RequestBody final ModifiedCustomerRequest request) {
         customerService.updateCustomer(customerId, ModifiedCustomerDto.fromModifiedCustomerRequest(request));
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/customers/{customerId}")
-    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal @PathVariable Long customerId) {
+    @DeleteMapping("/customers")
+    public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal Long customerId) {
         customerService.deleteCustomer(customerId);
         return ResponseEntity.noContent().build();
     }

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
 import java.util.regex.Pattern;
+import woowacourse.auth.exception.BadRequestException;
 
 public class Birthday {
 
@@ -17,7 +18,7 @@ public class Birthday {
 
     private void validateBirthday(final String birthday) {
         if (!COMPILED_PATTERN.matcher(birthday).matches()) {
-            throw new IllegalArgumentException(INVALID_BIRTHDAY_FORMAT);
+            throw new BadRequestException(INVALID_BIRTHDAY_FORMAT);
         }
     }
 

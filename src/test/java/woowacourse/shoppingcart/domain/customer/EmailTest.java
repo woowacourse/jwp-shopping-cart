@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import woowacourse.auth.exception.BadRequestException;
 
 @DisplayName("Email 은")
 public class EmailTest {
@@ -24,7 +25,7 @@ public class EmailTest {
         @DisplayName("이메일 주소가 올바르지 않으면 예외를 던진다.")
         void invalidEmailForm() {
             assertThatThrownBy(() -> new Email("her0807naver.com"))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage(Email.INVALID_EMAIL_FORMAT);
         }
     }

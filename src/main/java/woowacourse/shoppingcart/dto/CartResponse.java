@@ -8,7 +8,8 @@ public class CartResponse {
     public Product product;
     public int quantity;
 
-    public CartResponse() {}
+    public CartResponse() {
+    }
 
     public CartResponse(Long id, Product product, int quantity) {
         this.id = id;
@@ -28,7 +29,8 @@ public class CartResponse {
 
         public String imageUrl;
 
-        public Product() {}
+        public Product() {
+        }
 
         public Product(Long productId, String name, int price, String imageUrl) {
             this.productId = productId;
@@ -48,6 +50,7 @@ public class CartResponse {
         public int getPrice() {
             return price;
         }
+
         public String getImageUrl() {
             return imageUrl;
         }
