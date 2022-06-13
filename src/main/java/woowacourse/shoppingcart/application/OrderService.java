@@ -36,7 +36,7 @@ public class OrderService {
         final Long ordersId = orderDao.addOrders(memberId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
-            Cart cart = cartItemDao.findCartByMemberId(orderDetail.getCartId());
+            Cart cart = cartItemDao.findCartById(orderDetail.getCartId());
             ordersDetailDao.addOrdersDetail(ordersId, cart.getProductId(), cart.getQuantity());
             cartItemDao.deleteCartItem(cart.getId());
         }

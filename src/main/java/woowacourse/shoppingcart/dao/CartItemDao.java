@@ -35,7 +35,7 @@ public class CartItemDao {
         ), memberId);
     }
 
-    public Cart findCartByMemberId(final Long cartId) {
+    public Cart findCartById(final Long cartId) {
         try {
             final String sql = "SELECT ci.id, ci.product_id, p.name, p.price, p.image_url, ci.quantity "
                     + "FROM cart_item AS ci "
