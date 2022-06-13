@@ -65,6 +65,21 @@ public class ProductDaoTest {
         assertThat(result).usingRecursiveComparison().isEqualTo(expectedProduct);
     }
 
+    @DisplayName("product ID 리스트에 해당하는 모든 상품을 찾는다")
+    @Test
+    void findProductsByIdsIn() {
+        Product product1 = new Product("초콜렛", 1_000, 100, "www.test.com");
+        final Long productId1 = productDao.save(product1);
+        final Product savedProduct1 = new Product(productId1, "초콜렛", 1_000, 100, "www.test.com");
+        Product product2 = new Product("사탕", 1_000, 100, "www.test.com");
+        final Long productId2 = productDao.save(product2);
+        final Product savedProduct2 = new Product(productId2, "사탕", 1_000, 100, "www.test.com");
+
+        List<Product> products = productDao.findProductsByIdsIn(List.of(productId1, productId2));
+
+        assertThat(products).usingRecursiveComparison().isEqualTo(List.of(savedProduct1, savedProduct2));
+    }
+
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {

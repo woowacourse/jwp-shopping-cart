@@ -1,8 +1,10 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -42,6 +44,25 @@ public class OrdersDetailDao {
             return preparedStatement;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public void saveAll(final Long orderId, final List<OrderDetail> orderDetails) {
+        final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                OrderDetail orderDetail = orderDetails.get(i);
+                ps.setLong(1, orderId);
+                ps.setLong(2, orderDetail.getProductId());
+                ps.setLong(3, orderDetail.getQuantity());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return orderDetails.size();
+            }
+        });
     }
 
     public List<OrderDetail> findOrderDetailsByOrderIdAndCustomerId(final Long orderId, final Long customerId) {

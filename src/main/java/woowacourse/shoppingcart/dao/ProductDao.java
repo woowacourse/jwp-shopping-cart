@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -58,6 +59,13 @@ public class ProductDao {
     public List<Product> findProducts() {
         final String query = "SELECT id, name, price, stock, image_url FROM product";
         return jdbcTemplate.query(query, productRowMapper);
+    }
+
+    public List<Product> findProductsByIdsIn(final List<Long> ids) {
+        final String in = String.join(",", Collections.nCopies(ids.size(), "?"));
+        final String query = "SELECT id, name, price, stock, image_url FROM product "
+                + "WHERE id IN (" + in + ")";
+        return jdbcTemplate.query(query, productRowMapper, ids.toArray());
     }
 
     public void updateStock(final Product product) {

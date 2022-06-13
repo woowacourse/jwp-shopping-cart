@@ -35,26 +35,39 @@ public class OrderService {
 
     public Long save(final List<OrderRequest> orderDetailRequests, final Long customerId) {
         final Long orderId = orderDao.save(customerId);
+        List<Long> cartItemIds = collectCartItemIds(orderDetailRequests);
+        List<CartItem> cartItems = cartItemDao.findByIdsIn(cartItemIds);
+        List<OrderDetail> orderDetails = collectOrderDetails(cartItems);
 
-        for (final OrderRequest request : orderDetailRequests) {
-            saveOrderThenRemoveCartItem(orderId, request, customerId);
-        }
+        reduceOrderedStock(orderDetails, findProductsInCartItems(cartItems));
+
+        ordersDetailDao.saveAll(orderId, orderDetails);
+        cartItemDao.deleteByIdsIn(cartItemIds, customerId);
 
         return orderId;
     }
 
-    private void saveOrderThenRemoveCartItem(Long orderId, OrderRequest request, Long customerId) {
-        CartItem cartItem = cartItemDao.findById(request.getCartItemId());
-        OrderDetail orderDetail = OrderDetail.from(cartItem);
-        reduceProductStock(orderDetail);
-        ordersDetailDao.save(orderId, orderDetail);
-        cartItemDao.deleteById(cartItem.getId(), customerId);
+    private List<OrderDetail> collectOrderDetails(List<CartItem> cartItems) {
+        return cartItems.stream().map(OrderDetail::from).collect(Collectors.toList());
     }
 
-    private void reduceProductStock(OrderDetail orderDetail) {
-        Product product = productDao.findProductById(orderDetail.getProductId());
-        product.reduceStock(orderDetail.getQuantity());
-        productDao.updateStock(product);
+    private List<Long> collectCartItemIds(List<OrderRequest> orderDetailRequests) {
+        return orderDetailRequests.stream().map(OrderRequest::getCartItemId)
+                .collect(Collectors.toList());
+    }
+
+    private void reduceOrderedStock(List<OrderDetail> orderDetails, Map<Long, Product> products) {
+        for (OrderDetail orderDetail : orderDetails) {
+            products.get(orderDetail.getProductId()).reduceStock(orderDetail.getQuantity());
+        }
+    }
+
+    private Map<Long, Product> findProductsInCartItems(List<CartItem> cartItems) {
+        List<Long> productIds = cartItems.stream().map(cartItem -> cartItem.getProduct().getId())
+                .collect(Collectors.toList());
+        Map<Long, Product> products = productDao.findProductsByIdsIn(productIds)
+                .stream().collect(Collectors.toMap(Product::getId, product -> product));
+        return products;
     }
 
     public OrderResponse findOrderByCustomerId(final Long customerId, final Long orderId) {
@@ -63,7 +76,6 @@ public class OrderService {
     }
 
     public OrdersResponse findOrdersByCustomerId(final Long customerId) {
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
         List<OrderDetail> orderDetails = ordersDetailDao.findAllByCustomerId(customerId);
 
         return new OrdersResponse(collectOrderDetailsToOrder(orderDetails));

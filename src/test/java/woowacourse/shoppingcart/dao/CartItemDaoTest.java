@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -73,6 +74,22 @@ public class CartItemDaoTest {
         assertThat(result).usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(cartItem);
+    }
+
+    @DisplayName("id 리스트에 해당하는 모든 카트 아이템 조회")
+    @Test
+    void findByIdsIn() {
+        final Long customerId = 1L;
+        Product product1 = new Product(1L, "banana", 1_000, 100, "woowa1.com");
+        Product product2 = new Product(2L, "apple", 2_000, 100, "woowa2.com");
+
+        CartItem cartItem1 = new CartItem(product1, 1);
+        Long cartItemId1 = cartItemDao.save(customerId, cartItem1);
+        CartItem cartItem2 = new CartItem(product2, 1);
+        Long cartItemId2 = cartItemDao.save(customerId, cartItem2);
+
+        List<CartItem> cartItems = cartItemDao.findByIdsIn(List.of(cartItemId1, cartItemId2));
+        assertThat(cartItems.size()).isEqualTo(2);
     }
 
     @DisplayName("회원 id로 모든 카트 아이템을 가져온다.")
@@ -149,6 +166,20 @@ public class CartItemDaoTest {
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
         assertThat(productIds).containsExactly(2L);
+    }
+
+    @DisplayName("id 리스트에 해당하는 모든 카트 아이템 삭제")
+    @Test
+    void deleteByIdsIn() {
+        final Long cartId1 = 1L;
+        final Long cartId2 = 2L;
+        final Long customerId = 1L;
+
+        cartItemDao.deleteByIdsIn(new ArrayList<>(List.of(1L, 2L)), customerId);
+
+        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+
+        assertThat(productIds).doesNotContain(cartId1, cartId2);
     }
 
     @DisplayName("해당 id의 customer_id가 주어진 customer_id와 일치하므로 true를 반환한다.")

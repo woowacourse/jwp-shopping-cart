@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -67,6 +68,15 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, cartItemRowMapper, customerId);
     }
 
+    public List<CartItem> findByIdsIn(final List<Long> ids) {
+        final String in = String.join(",", Collections.nCopies(ids.size(), "?"));
+        final String sql =
+                "SELECT c.id, c.quantity, c.product_id, p.name, p.price, p.stock, p.image_url FROM cart_item c " +
+                        "INNER JOIN product p ON c.product_id = p.id " +
+                        "WHERE c.id IN (" + in + ")";
+        return jdbcTemplate.query(sql, cartItemRowMapper, ids.toArray());
+    }
+
     public List<Long> findIdsByCustomerId(final Long customerId) {
         final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
 
@@ -98,6 +108,17 @@ public class CartItemDao {
                 + "WHERE id = ? AND customer_id = ?";
         final int rowCount = jdbcTemplate.update(sql, id, customerId);
         if (rowCount == 0) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public void deleteByIdsIn(final List<Long> ids, final Long customerId) {
+        final String in = String.join(",", Collections.nCopies(ids.size(), "?"));
+        final String sql = "DELETE FROM cart_item "
+                + "WHERE id iN (" + in + ") AND customer_id = ?";
+        ids.add(customerId);
+        final int rowCount = jdbcTemplate.update(sql, ids.toArray());
+        if (rowCount != ids.size() - 1) {
             throw new InvalidCartItemException();
         }
     }
