@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dto;
 import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
+
     @NotNull
     private Long cartId;
 
