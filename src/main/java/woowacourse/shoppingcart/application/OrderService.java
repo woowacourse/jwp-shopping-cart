@@ -5,12 +5,10 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.*;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrdersResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,9 +35,6 @@ public class OrderService {
         Long customerId = customerDao.findByUsername(customerName).getId();
         Long ordersId = orderDao.addOrders(customerId);
 
-        List<Long> cartIds = orderDetailRequests.stream()
-                .map(OrderRequest::getCartId)
-                .collect(Collectors.toList());
         for (OrderRequest orderDetail : orderDetailRequests) {
             Long productId = cartItemDao.findCartIdById(orderDetail.getCartId())
                     .getProduct()
@@ -47,8 +42,15 @@ public class OrderService {
             int quantity = orderDetail.getQuantity();
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
         }
-        cartItemDao.deleteCartItemById(cartIds, customerId);
+        resetCart(orderDetailRequests, customerId);
         return ordersId;
+    }
+
+    private void resetCart(List<OrderRequest> orderDetailRequests, Long customerId) {
+        List<Long> cartIds = orderDetailRequests.stream()
+                .map(OrderRequest::getCartId)
+                .collect(Collectors.toList());
+        cartItemDao.deleteCartItemById(cartIds, customerId);
     }
 
     @Transactional(readOnly = true)
@@ -76,12 +78,10 @@ public class OrderService {
     }
 
     private Orders findOrderResponseDtoByOrderId(Long orderId) {
-        List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            Product product = productDao.findProductById(productQuantity.getProductId());
-            int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
-        }
-        return new Orders(orderId, ordersDetails);
+        List<OrderDetail> orderDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId)
+                .stream()
+                .map(orderDetail -> new OrderDetail(productDao.findProductById(orderDetail.getProductId()), orderDetail.getQuantity()))
+                .collect(Collectors.toList());
+        return new Orders(orderId, orderDetails);
     }
 }
