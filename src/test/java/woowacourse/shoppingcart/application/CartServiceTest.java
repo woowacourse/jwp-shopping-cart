@@ -19,7 +19,7 @@ import woowacourse.shoppingcart.dto.request.CartAddRequest;
 import woowacourse.shoppingcart.dto.request.CartDeleteRequest;
 import woowacourse.shoppingcart.dto.request.CartUpdateRequest;
 import woowacourse.shoppingcart.dto.response.CartResponse;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.exception.notFound.NotInCustomerCartItemException;
 
 
 @SpringBootTest

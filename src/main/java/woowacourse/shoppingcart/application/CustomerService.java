@@ -2,8 +2,8 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.exception.EmailDuplicateException;
-import woowacourse.exception.PasswordIncorrectException;
+import woowacourse.exception.badRequest.EmailDuplicateException;
+import woowacourse.exception.unauthorization.PasswordIncorrectException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
@@ -13,7 +13,7 @@ import woowacourse.shoppingcart.dto.request.CustomerRequest;
 import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.request.CustomerUpdateProfileRequest;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
+import woowacourse.exception.notFound.CustomerNotFoundException;
 
 @Service
 @Transactional

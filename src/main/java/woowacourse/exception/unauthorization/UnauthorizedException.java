@@ -1,4 +1,4 @@
-package woowacourse.exception;
+package woowacourse.exception.unauthorization;
 
 public class UnauthorizedException extends RuntimeException {
 
@@ -6,5 +6,9 @@ public class UnauthorizedException extends RuntimeException {
 
     public UnauthorizedException() {
         super(DEFAULT_MESSAGE);
+    }
+
+    public UnauthorizedException(String message) {
+        super(message);
     }
 }

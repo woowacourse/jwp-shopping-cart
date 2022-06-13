@@ -1,8 +1,8 @@
 package woowacourse.shoppingcart.domain;
 
 import java.util.regex.Pattern;
-import woowacourse.exception.EncodedPasswordNotCorrectException;
-import woowacourse.exception.PasswordInvalidException;
+import woowacourse.exception.badRequest.EncodedPasswordNotCorrectException;
+import woowacourse.exception.badRequest.PasswordInvalidException;
 import woowacourse.shoppingcart.application.PasswordEncoderAdapter;
 
 public class Password {

@@ -13,49 +13,26 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.exception.EmailDuplicateException;
-import woowacourse.exception.EmailFormattingException;
-import woowacourse.exception.LoginFailureException;
-import woowacourse.exception.PasswordInvalidException;
-import woowacourse.exception.PasswordIncorrectException;
-import woowacourse.exception.TokenInvalidException;
-import woowacourse.exception.UnauthorizedException;
+import woowacourse.exception.badRequest.BadRequestException;
+import woowacourse.exception.notFound.NotFoundException;
+import woowacourse.exception.unauthorization.UnauthorizedException;
 import woowacourse.shoppingcart.dto.response.ExceptionResponse;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidPageException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(ControllerAdvice.class);
 
-    @ExceptionHandler({EmailDuplicateException.class, EmailFormattingException.class,
-            PasswordInvalidException.class, InvalidPageException.class})
-    public ResponseEntity<ExceptionResponse> handleBadRequestException(IllegalArgumentException e) {
+    @ExceptionHandler({BadRequestException.class})
+    public ResponseEntity<ExceptionResponse> handleBadRequestException(BadRequestException e) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({CustomerNotFoundException.class, InvalidProductException.class,
-            NotInCustomerCartItemException.class, InvalidOrderException.class})
-    public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException e) {
+    @ExceptionHandler({NotFoundException.class})
+    public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException e) {
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({LoginFailureException.class, PasswordIncorrectException.class})
-    public ResponseEntity<ExceptionResponse> handleUnAuthorizationException(IllegalArgumentException e) {
-        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(TokenInvalidException.class)
-    public ResponseEntity<ExceptionResponse> handleTokenInvalidException(TokenInvalidException e) {
-        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(UnauthorizedException.class)
+    @ExceptionHandler({UnauthorizedException.class})
     public ResponseEntity<ExceptionResponse> handleUnauthorizedException(UnauthorizedException e) {
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
@@ -84,14 +61,6 @@ public class ControllerAdvice {
             ConstraintViolationException.class,
     })
     public ResponseEntity handleInvalidRequest(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler({
-            InvalidCustomerException.class,
-            InvalidCartItemException.class
-    })
-    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

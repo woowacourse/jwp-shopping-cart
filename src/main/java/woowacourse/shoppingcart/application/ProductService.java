@@ -10,7 +10,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.ProductRequest;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.dto.response.ProductsResponse;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.exception.notFound.InvalidProductException;
 
 @Service
 @Transactional

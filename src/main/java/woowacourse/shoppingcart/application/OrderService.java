@@ -14,8 +14,8 @@ import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
 import woowacourse.shoppingcart.dto.response.OrdersResponse;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.exception.notFound.InvalidOrderException;
+import woowacourse.exception.notFound.InvalidProductException;
 
 @Service
 @Transactional

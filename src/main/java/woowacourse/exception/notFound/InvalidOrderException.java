@@ -1,6 +1,6 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.exception.notFound;
 
-public class InvalidOrderException extends RuntimeException {
+public class InvalidOrderException extends NotFoundException {
     public InvalidOrderException() {
         this("유효하지 않은 주문입니다.");
     }

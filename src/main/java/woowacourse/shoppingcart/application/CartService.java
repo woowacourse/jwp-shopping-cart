@@ -11,9 +11,9 @@ import woowacourse.shoppingcart.dto.request.CartAddRequest;
 import woowacourse.shoppingcart.dto.request.CartDeleteRequest;
 import woowacourse.shoppingcart.dto.request.CartUpdateRequest;
 import woowacourse.shoppingcart.dto.response.CartResponse;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.exception.badRequest.InvalidCustomerException;
+import woowacourse.exception.notFound.InvalidProductException;
+import woowacourse.exception.notFound.NotInCustomerCartItemException;
 
 @Service
 @Transactional

@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.domain;
 
-import woowacourse.exception.PasswordIncorrectException;
-
 public class Customer {
     private final Long id;
     private final Email email;

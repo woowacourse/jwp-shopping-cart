@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.domain;
 
-import woowacourse.shoppingcart.exception.InvalidPageException;
+import woowacourse.exception.badRequest.InvalidPageException;
 
 public class Page {
 

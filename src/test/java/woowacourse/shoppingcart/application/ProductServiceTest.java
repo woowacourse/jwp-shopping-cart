@@ -15,7 +15,7 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.dto.response.ProductsResponse;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.exception.notFound.InvalidProductException;
 
 @SpringBootTest
 @TestConstructor(autowireMode = AutowireMode.ALL)

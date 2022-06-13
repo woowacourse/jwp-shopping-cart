@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.exception.UnauthorizedException;
+import woowacourse.exception.unauthorization.UnauthorizedException;
 
 public class AuthInterceptor implements HandlerInterceptor {
 

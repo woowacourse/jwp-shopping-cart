@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.exception.badRequest.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {

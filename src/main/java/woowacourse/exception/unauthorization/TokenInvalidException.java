@@ -1,6 +1,6 @@
-package woowacourse.exception;
+package woowacourse.exception.unauthorization;
 
-public class TokenInvalidException extends IllegalArgumentException {
+public class TokenInvalidException extends UnauthorizedException {
     private static final String DEFAULT_MESSAGE = "유효하지 않은 토큰입니다";
 
     public TokenInvalidException() {
