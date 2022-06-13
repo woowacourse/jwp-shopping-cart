@@ -26,8 +26,9 @@ public class CustomerService {
     }
 
     public Long create(CustomerRequest customerRequest) {
-        customerDao.findByEmail(customerRequest.getEmail())
-                .orElseThrow(EmailDuplicateException::new);
+        if (customerDao.findByEmail(customerRequest.getEmail()).isPresent()) {
+            throw new EmailDuplicateException();
+        }
 
         final Customer customer = new Customer(
                 new Email(customerRequest.getEmail()),
