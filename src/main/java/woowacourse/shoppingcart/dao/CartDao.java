@@ -101,11 +101,11 @@ public class CartDao {
         }
     }
 
-    public void deleteCartItem(final Long productId, final String customerUsername) {
+    public void deleteCartItem(final List<Long> productIds, final String customerUsername) {
         final String sql =
-                "DELETE FROM cart_item WHERE product_id = :product_id and customer_username = :customer_username";
+                "DELETE FROM cart_item WHERE product_id in (:product_ids) and customer_username = :customer_username";
 
-        final SqlParameterSource sqlParameterSource = new MapSqlParameterSource("product_id", productId)
+        final SqlParameterSource sqlParameterSource = new MapSqlParameterSource("product_ids", productIds)
                 .addValue("customer_username", customerUsername);
         final int rowCount = jdbcTemplate.update(sql, sqlParameterSource);
         if (rowCount == 0) {

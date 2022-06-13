@@ -66,16 +66,13 @@ public class CartService {
 
     public void deleteCartItem(final String customerUsername, final List<Long> productIds) {
         validateCustomerCart(customerUsername, productIds);
-        for (Long productId : productIds) {
-            cartDao.deleteCartItem(productId, customerUsername);
-        }
+        cartDao.deleteCartItem(productIds, customerUsername);
     }
 
     private void validateCustomerCart(final String customerUsername, final List<Long> productIdsToDelete) {
         final List<Long> productIds = cartDao.findProductIdsByCustomerUsername(customerUsername);
-        if (productIds.containsAll(productIdsToDelete)) {
-            return;
+        if (!productIds.containsAll(productIdsToDelete)) {
+            throw new NotInCustomerCartItemException();
         }
-        throw new NotInCustomerCartItemException();
     }
 }

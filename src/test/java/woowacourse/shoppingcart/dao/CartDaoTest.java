@@ -112,7 +112,7 @@ public class CartDaoTest {
         cartDao.addCartItem(CART_TEST_USERNAME, productId);
 
         // when
-        cartDao.deleteCartItem(productId, CART_TEST_USERNAME);
+        cartDao.deleteCartItem(List.of(productId), CART_TEST_USERNAME);
         final List<Long> productIds = cartDao.findProductIdsByCustomerUsername(CART_TEST_USERNAME);
 
         // then
