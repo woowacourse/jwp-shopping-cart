@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,5 +47,9 @@ public class OrderService {
         if (cart.isEmpty()) {
             throw new InvalidOrderException("해당 고객의 장바구니가 존재하지 않습니다.");
         }
+    }
+
+    public List<Order> findAll(long customerId) {
+        return orderDao.findAllByCustomerId(customerId);
     }
 }

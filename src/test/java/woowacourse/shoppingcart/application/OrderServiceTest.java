@@ -18,6 +18,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.order.Order;
 import woowacourse.shoppingcart.domain.order.OrderItem;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
@@ -26,6 +27,8 @@ import woowacourse.shoppingcart.exception.InvalidOrderException;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class OrderServiceTest {
+
+    private static final long CUSTOMER_ID = 1L;
 
     private final OrderService orderService;
     private final CartService cartService;
@@ -47,8 +50,8 @@ public class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        cartService.addCartItem(1L, 1L, 3);
-        cartService.addCartItem(2L, 1L, 4);
+        cartService.addCartItem(1L, CUSTOMER_ID, 3);
+        cartService.addCartItem(2L, CUSTOMER_ID, 4);
     }
 
     @Test
@@ -64,7 +67,7 @@ public class OrderServiceTest {
     @DisplayName("주문을 저장한다. 주문한 상품 재고가 감소함을 검증한다.")
     void save() {
         //when
-        Long orderId = orderService.save(1L);
+        Long orderId = orderService.save(CUSTOMER_ID);
 
         //then
         int quantityOfProduct1 = productService.findProductById(1L).getQuantity();
@@ -78,5 +81,21 @@ public class OrderServiceTest {
             () -> assertThat(quantityOfProduct1).isEqualTo(7),
             () -> assertThat(quantityOfProduct2).isEqualTo(6)
         );
+    }
+
+    @Test
+    @DisplayName("주문 내역 전체를 조회한다.")
+    void findAll() {
+        //given
+        orderService.save(CUSTOMER_ID);
+
+        //when
+        List<Order> orders = orderService.findAll(CUSTOMER_ID);
+
+        //then
+        List<Order> expected = List.of(new Order(CUSTOMER_ID, List.of(new OrderItem(1L, 3),
+            new OrderItem(2L, 4))));
+        assertThat(orders).usingRecursiveComparison()
+            .isEqualTo(expected);
     }
 }

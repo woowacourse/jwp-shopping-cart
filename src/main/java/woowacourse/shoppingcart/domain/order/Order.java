@@ -9,22 +9,30 @@ public class Order {
 
     private final Long id;
     private final Long customerId;
-    private final Cart cart;
+    private final OrderItems orderItems;
+
+    public Order(Long customerId, List<OrderItem> orderItems) {
+        this(null, customerId, orderItems);
+    }
 
     public Order(Long customerId, Cart cart) {
         this(null, customerId, cart);
     }
 
-    public Order(Long id, Long customerId, Cart cart) {
+    public Order(Long id, Long customerId, List<OrderItem> orderItems) {
         this.id = id;
         this.customerId = customerId;
-        this.cart = cart;
+        this.orderItems = new OrderItems(orderItems);
+    }
+
+    public Order(Long id, Long customerId, Cart cart) {
+        this(id, customerId, cart.getValue().stream()
+            .map(OrderItem::from)
+            .collect(Collectors.toList()));
     }
 
     public List<OrderItem> getOrderItems() {
-        return cart.getValue().stream()
-            .map(OrderItem::from)
-            .collect(Collectors.toList());
+        return orderItems.getValue();
     }
 
     public Long getId() {

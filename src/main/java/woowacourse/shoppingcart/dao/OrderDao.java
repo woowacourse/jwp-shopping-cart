@@ -61,4 +61,17 @@ public class OrderDao {
             orderId
         );
     }
+
+    public List<Order> findAllByCustomerId(long customerId) {
+        List<Long> ids = findIdsByCustomerId(customerId);
+        return ids.stream()
+            .map(id -> new Order(customerId, findOrderDetailsByOrderId(id)))
+            .collect(Collectors.toList());
+    }
+
+    private List<Long> findIdsByCustomerId(long customerId) {
+        final String sql = "SELECT id FROM orders WHERE customer_id = ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+    }
 }

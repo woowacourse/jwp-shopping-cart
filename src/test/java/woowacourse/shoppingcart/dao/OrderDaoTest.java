@@ -63,4 +63,21 @@ public class OrderDaoTest {
         assertThat(orderItems).usingRecursiveComparison()
             .isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("주문 내역 전체를 조회한다.")
+    void findAll() {
+        //given
+        Order order = new Order(1L, new Cart(List.of(cartItem1, cartItem2)));
+        orderDao.save(order);
+
+        //when
+        List<Order> orders = orderDao.findAllByCustomerId(1L);
+
+        //then
+        List<Order> expected = List.of(new Order(1L, List.of(new OrderItem(1L, 3),
+            new OrderItem(2L, 4))));
+        assertThat(orders).usingRecursiveComparison()
+            .isEqualTo(expected);
+    }
 }
