@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.unit.DaoTest;
@@ -45,5 +47,17 @@ class ProductDaoTest extends DaoTest {
 
         // then
         assertThat(products).size().isEqualTo(size);
+    }
+
+
+    @ParameterizedTest
+    @DisplayName("id에 해당하는 상품이 존재 여부를 확인한다.")
+    @CsvSource(value = {"1:true", "999:false"}, delimiter = ':')
+    void existProduct_existProduct_trueReturned(final Long productId, final boolean expected) {
+        // when
+        final boolean actual = productDao.existProduct(productId);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
     }
 }

@@ -42,4 +42,9 @@ public class ProductDao {
                                 resultSet.getString("image_url")
                         ));
     }
+
+    public boolean existProduct(final Long id) {
+        final String query = "SELECT EXISTS(SELECT id FROM product WHERE id = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, id);
+    }
 }
