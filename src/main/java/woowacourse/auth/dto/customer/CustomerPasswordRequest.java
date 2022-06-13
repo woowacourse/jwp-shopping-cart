@@ -14,11 +14,7 @@ import lombok.NoArgsConstructor;
 public class CustomerPasswordRequest {
 
 	@NotBlank
-	@Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{4,20}",
-		message = "비밀번호 형식이 올바르지 않습니다.")
 	private String password;
 	@NotBlank
-	@Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{4,20}",
-		message = "비밀번호 형식이 올바르지 않습니다.")
 	private String newPassword;
 }
