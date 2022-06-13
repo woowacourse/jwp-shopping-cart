@@ -69,7 +69,7 @@ public class CartDaoTest {
     @Test
     void findCart() {
         // when
-        CartItem cartItem = cartDao.findCartByProductId(1L, 1L)
+        CartItem cartItem = cartDao.findCartItemByProductId(1L, 1L)
                 .orElseThrow(InvalidCartItemException::new);
 
         // then

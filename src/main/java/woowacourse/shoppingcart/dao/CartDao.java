@@ -49,7 +49,7 @@ public class CartDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
     }
 
-    public Optional<CartItem> findCartByProductId(final Long productId, final Long customerId) {
+    public Optional<CartItem> findCartItemByProductId(final Long productId, final Long customerId) {
         final String sql = "SELECT product.id as id, " +
                 "product.name as name, " +
                 "product.price as price, " +

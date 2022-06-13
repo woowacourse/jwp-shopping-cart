@@ -38,7 +38,7 @@ public class OrderService {
         final Long customerId = customerDao.findIdByUsername(customerUsername);
         final Long orderId = orderDao.addOrders(customerId);
         for (Long productId : productIds) {
-            final CartItem cartItem = cartDao.findCartByProductId(productId, customerId)
+            final CartItem cartItem = cartDao.findCartItemByProductId(productId, customerId)
                     .orElseThrow(InvalidCartItemException::new);
             ordersDetailDao.addOrdersDetail(orderId, productId, cartItem.getQuantity());
         }
