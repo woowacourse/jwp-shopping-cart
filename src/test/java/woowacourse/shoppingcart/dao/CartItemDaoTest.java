@@ -27,15 +27,15 @@ import woowacourse.shoppingcart.domain.Username;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartDaoTest {
+public class CartItemDaoTest {
 
-    private final CartDao cartDao;
+    private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public CartDaoTest(DataSource dataSource) {
-        cartDao = new CartDao(dataSource);
+    public CartItemDaoTest(DataSource dataSource) {
+        cartItemDao = new CartItemDao(dataSource);
         customerDao = new CustomerDao(dataSource);
         productDao = new ProductDao(dataSource);
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -64,7 +64,7 @@ public class CartDaoTest {
     @Test
     void addCartItem() {
         // given
-        System.out.println("??" + cartDao.findByCustomerId(1L));
+        System.out.println("??" + cartItemDao.findByCustomerId(1L));
 
         Long customerId = 1L;
         Long productId = 4L;
@@ -74,7 +74,7 @@ public class CartDaoTest {
         productDao.save(product);
 
         // when
-        CartItem cartItem = cartDao.addCartItem(customerId, new CartItem(product, quantity, checked));
+        CartItem cartItem = cartItemDao.addCartItem(customerId, new CartItem(product, quantity, checked));
 
         // then
         assertThat(cartItem.getId()).isEqualTo(4L);
@@ -87,7 +87,7 @@ public class CartDaoTest {
         Long customerId = 1L;
 
         // when
-        boolean result = cartDao.existByProductId(customerId, 1L);
+        boolean result = cartItemDao.existByProductId(customerId, 1L);
 
         // then
         assertThat(result).isTrue();
@@ -100,7 +100,7 @@ public class CartDaoTest {
         Long customerId = 1L;
 
         // when
-        boolean result = cartDao.existByProductId(customerId, 10L);
+        boolean result = cartItemDao.existByProductId(customerId, 10L);
 
         // then
         assertThat(result).isFalse();
@@ -113,7 +113,7 @@ public class CartDaoTest {
         Long customerId = 1L;
 
         // when
-        Cart cart = cartDao.findByCustomerId(customerId);
+        Cart cart = cartItemDao.findByCustomerId(customerId);
         List<Long> cartIds = cart.getValue().stream()
                 .map(CartItem::getId)
                 .collect(Collectors.toList());
@@ -123,32 +123,14 @@ public class CartDaoTest {
     }
 
     @Test
-    @DisplayName("장바구니 아이템을 상품 id로 수정한다.")
-    void updateCartItemByProductId() {
-        //given
-        Long customerId = 1L;
-        Product product = new Product(1L, "banana", 1_000, "woowa1.com");
-        CartItem cartItem = new CartItem(product, 2, true);
-
-        // when
-        cartDao.updateCartItemByProductId(customerId, cartItem);
-        Integer quantity = jdbcTemplate.queryForObject(
-                "SELECT quantity FROM cart_item WHERE customer_id = ? and product_id = ?",
-                Integer.class, customerId, 1L);
-
-        // then
-        assertThat(quantity).isEqualTo(2);
-    }
-
-    @Test
     @DisplayName("장바구니 아이템을 수정한다.")
     void updateCartItem() {
         // given
         Long customerId = 1L;
 
         // when
-        cartDao.updateCartItems(List.of(new CartItem(1L, 1, false), new CartItem(3L, 3, true)));
-        Cart cart = cartDao.findByCustomerId(customerId);
+        cartItemDao.updateCartItems(List.of(new CartItem(1L, 1, false), new CartItem(3L, 3, true)));
+        Cart cart = cartItemDao.findByCustomerId(customerId);
         CartItem firstCartItemItem = cart.getValue().get(0);
         CartItem thirdCartItemItem = cart.getValue().get(2);
 
@@ -160,14 +142,30 @@ public class CartDaoTest {
     }
 
     @Test
+    @DisplayName("장바구니 수량을 증가시킨다.")
+    void increaseQuantity() {
+        // given
+        Long customerId = 1L;
+        Product product = productDao.findProductById(1L);
+
+        // when
+        cartItemDao.increaseQuantity(customerId, new CartItem(1L, product, 4, false));
+        Cart cart = cartItemDao.findByCustomerId(customerId);
+        CartItem firstCartItem = cart.getValue().get(0);
+
+        // then
+        assertThat(firstCartItem.getQuantity()).isEqualTo(5);
+    }
+
+    @Test
     @DisplayName("장바구니의 아이템 일부를 삭제한다.")
     void deleteCartItem() {
         // given
         Long customerId = 1L;
 
         // when
-        cartDao.deleteCartItems(List.of(1L, 2L));
-        Cart cart = cartDao.findByCustomerId(customerId);
+        cartItemDao.deleteCartItems(List.of(1L, 2L));
+        Cart cart = cartItemDao.findByCustomerId(customerId);
         List<Long> cartIds = cart.getValue().stream()
                 .map(CartItem::getId)
                 .collect(Collectors.toList());
@@ -183,8 +181,8 @@ public class CartDaoTest {
         Long customerId = 1L;
 
         // when
-        cartDao.deleteAllCartItem(customerId);
-        Cart cart = cartDao.findByCustomerId(customerId);
+        cartItemDao.deleteAllCartItem(customerId);
+        Cart cart = cartItemDao.findByCustomerId(customerId);
 
         // then
         assertThat(cart.getValue()).size().isEqualTo(0);

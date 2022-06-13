@@ -19,7 +19,7 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
-public class CartDao {
+public class CartItemDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<CartItem> cartRowMapper = (rs, rowNum) ->
@@ -35,7 +35,7 @@ public class CartDao {
                     rs.getBoolean("checked")
             );
 
-    public CartDao(DataSource dataSource) {
+    public CartItemDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("cart_item")
@@ -76,11 +76,6 @@ public class CartDao {
         }
     }
 
-    public void updateCartItemByProductId(Long customerId, CartItem cartItem) {
-        String sql = "UPDATE cart_item SET quantity = ?, checked = ? WHERE customer_id = ? and product_id = ?";
-        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.isChecked(), customerId, cartItem.getProduct().getId());
-    }
-
     public void updateCartItems(List<CartItem> cartItems) {
         String sql = "UPDATE cart_item SET quantity =?, checked = ? WHERE id = ?";
 
@@ -100,6 +95,12 @@ public class CartDao {
                     }
                 });
     }
+
+    public void increaseQuantity(Long customerId, CartItem cartItem) {
+        final String sql = "UPDATE cart_item SET quantity = quantity + ? WHERE customer_id = ? and product_id = ?";
+        jdbcTemplate.update(sql, cartItem.getQuantity(), customerId, cartItem.getProduct().getId());
+    }
+
 
     public void deleteCartItems(List<Long> cartIds) {
         String sql = "DELETE FROM cart_item WHERE id = ?";

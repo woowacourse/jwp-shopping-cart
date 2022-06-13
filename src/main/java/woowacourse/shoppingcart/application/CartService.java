@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.application;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.CartDao;
+import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
@@ -21,12 +21,12 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 @Transactional(readOnly = true)
 public class CartService {
 
-    private final CartDao cartDao;
+    private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(CartDao cartDao, CustomerDao customerDao, ProductDao productDao) {
-        this.cartDao = cartDao;
+    public CartService(CartItemDao cartItemDao, CustomerDao customerDao, ProductDao productDao) {
+        this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
     }
@@ -36,18 +36,19 @@ public class CartService {
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
         Product product = productDao.findProductById(cartRequest.getProductId());
 
-        if (cartDao.existByProductId(customerId, cartRequest.getProductId())) {
-            cartDao.updateCartItemByProductId(customerId, new CartItem(product, cartRequest.getQuantity() + 1, cartRequest.getChecked()));
+        if (cartItemDao.existByProductId(customerId, cartRequest.getProductId())) {
+            cartItemDao.increaseQuantity(customerId,
+                    new CartItem(product, cartRequest.getQuantity(), cartRequest.getChecked()));
             return;
         }
 
         CartItem cartItem = new CartItem(product, cartRequest.getQuantity(), cartRequest.getChecked());
-        cartDao.addCartItem(customerId, cartItem);
+        cartItemDao.addCartItem(customerId, cartItem);
     }
 
     public CartResponse findCartByUsername(String username) {
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
-        Cart cart = cartDao.findByCustomerId(customerId);
+        Cart cart = cartItemDao.findByCustomerId(customerId);
         return CartResponse.from(cart);
     }
 
@@ -57,14 +58,14 @@ public class CartService {
         validateCart(username, updateCartIds);
 
         List<CartItem> cartItems = updateCartRequests.toCart();
-        cartDao.updateCartItems(cartItems);
+        cartItemDao.updateCartItems(cartItems);
         List<CartItem> updatedCartItems = getUpdatedCart(username, updateCartIds);
         return CartResponse.from(updatedCartItems);
     }
 
     private void validateCart(String username, List<Long> cartIdsWithRequest) {
         Customer customer = customerDao.findByUsername(new Username(username));
-        Cart cart = cartDao.findByCustomerId(customer.getId());
+        Cart cart = cartItemDao.findByCustomerId(customer.getId());
         List<Long> cartIds = cart.getCartItemIds();
 
         if (!cartIds.containsAll(cartIdsWithRequest)) {
@@ -79,19 +80,19 @@ public class CartService {
 
     private Cart getCartByUsername(String username) {
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
-        return cartDao.findByCustomerId(customerId);
+        return cartItemDao.findByCustomerId(customerId);
     }
 
     @Transactional
     public void deleteCartItem(String username, DeleteProductRequest deleteProductRequest) {
         List<Long> deleteCartIds = deleteProductRequest.toCartIds();
         validateCart(username, deleteCartIds);
-        cartDao.deleteCartItems(deleteCartIds);
+        cartItemDao.deleteCartItems(deleteCartIds);
     }
 
     @Transactional
     public void deleteAllCartItem(String username) {
         Long customerId = customerDao.findByUsername(new Username(username)).getId();
-        cartDao.deleteAllCartItem(customerId);
+        cartItemDao.deleteAllCartItem(customerId);
     }
 }
