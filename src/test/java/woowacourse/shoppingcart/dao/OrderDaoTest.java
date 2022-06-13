@@ -6,6 +6,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -19,12 +21,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrderDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final OrderDao orderDao;
 
-    public OrderDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.orderDao = new OrderDao(jdbcTemplate);
+    public OrderDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.orderDao = new OrderDao(namedParameterJdbcTemplate);
     }
 
     @DisplayName("Order를 추가하는 기능")
@@ -45,8 +47,9 @@ class OrderDaoTest {
     void findOrderIdsByCustomerId() {
         //given
         final Long customerId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource("customerid", customerId);
+        namedParameterJdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (:customerid)", parameterSource);
+        namedParameterJdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (:customerid)", parameterSource);
 
         //when
         final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);

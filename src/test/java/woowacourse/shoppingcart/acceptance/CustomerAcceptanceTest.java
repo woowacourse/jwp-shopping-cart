@@ -25,7 +25,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> createResponse = 회원_가입("testx", "1A2B5c78!");
 
         assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(createResponse.header("Location")).isEqualTo("/api/customers/testx");
     }
 
     @Test
@@ -60,7 +59,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(getResponse.body().jsonPath().getString("name")).isEqualTo("testx");
+        assertThat(getResponse.body().jsonPath().getString("userName")).isEqualTo("testx");
     }
 
     @Test
@@ -81,40 +80,29 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void 중복_아이디_검사() {
         회원_가입("testx", "1a2b3c4D!");
 
-        Map<String, String> params = new HashMap<>();
-        params.put("userName", "testx");
-
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(params)
-                .when().post("/api/customers/duplication")
+                .when().get("/api/customers/exists?userName=testx")
                 .then().log().all()
                 .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body().jsonPath().getBoolean("result")).isTrue();
+        assertThat(response.body().jsonPath().getBoolean("isDuplicate")).isTrue();
     }
 
     @Test
     void 중복되지_않은_아이디_검사() {
         회원_가입("testx", "1a2b3c4D!");
-
-        Map<String, String> params = new HashMap<>();
-        params.put("userName", "testxy");
-
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(params)
-                .when().post("/api/customers/duplication")
+                .when().get("/api/customers/exists?userName=testxy")
                 .then().log().all()
                 .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.body().jsonPath().getBoolean("result")).isFalse();
+        assertThat(response.body().jsonPath().getBoolean("isDuplicate")).isFalse();
     }
 
     @Test

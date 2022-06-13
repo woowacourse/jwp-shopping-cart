@@ -2,13 +2,13 @@ package woowacourse.shoppingcart.dto;
 
 public class CheckDuplicateResponse {
 
-    private final boolean result;
+    private final boolean isDuplicate;
 
-    public CheckDuplicateResponse(boolean result) {
-        this.result = result;
+    public CheckDuplicateResponse(boolean isDuplicate) {
+        this.isDuplicate = isDuplicate;
     }
 
-    public boolean isResult() {
-        return result;
+    public boolean getIsDuplicate() {
+        return isDuplicate;
     }
 }

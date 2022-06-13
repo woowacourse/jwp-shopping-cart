@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.*;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.User.User;
 import woowacourse.shoppingcart.domain.customer.UserName;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
@@ -33,14 +34,13 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        UserName userName = new UserName(customerName);
-        final Long customerId = customerDao.findIdByUserName(userName);
-        final Long ordersId = orderDao.addOrders(customerId);
+    public Long addOrder(final List<OrderRequest> orderDetailRequests, final User user) {
+        final long customerId = customerDao.findIdByUserName(user.getUserName());
+        final long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
+            final long cartId = orderDetail.getCartId();
+            final long productId = cartItemDao.findProductIdByCartId(cartId);
             final int quantity = orderDetail.getQuantity();
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
@@ -50,23 +50,25 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
+    public Orders findOrderById(final User user, final Long orderId) {
+        validateOrderIdByCustomerName(user.getUserName(), orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        UserName userName = new UserName(customerName);
+    private void validateOrderIdByCustomerName(final UserName userName, final Long orderId) {
         final Long customerId = customerDao.findIdByUserName(userName);
 
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
+        if (checkInvalidOrderId(orderId, customerId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        UserName userName = new UserName(customerName);
-        final Long customerId = customerDao.findIdByUserName(userName);
+    private boolean checkInvalidOrderId(Long orderId, Long customerId) {
+        return !orderDao.isValidOrderId(customerId, orderId);
+    }
+
+    public List<Orders> findOrdersByCustomerName(final User user) {
+        final long customerId = customerDao.findIdByUserName(user.getUserName());
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()

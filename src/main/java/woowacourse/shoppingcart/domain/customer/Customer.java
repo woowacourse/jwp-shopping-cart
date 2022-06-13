@@ -4,11 +4,13 @@ import woowacourse.shoppingcart.support.Encryptor;
 
 public class Customer {
 
-    private Long id;
+    private long id;
     private UserName name;
+
     private Password password;
 
-    public Customer(Long id, String name, String password) {
+
+    public Customer(long id, String name, String password) {
         this.id = id;
         this.name = new UserName(name);
         this.password = Password.toPassword(password);
@@ -19,7 +21,7 @@ public class Customer {
         this.password = Password.toPasswordWithEncrypt(password, encryptor);
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

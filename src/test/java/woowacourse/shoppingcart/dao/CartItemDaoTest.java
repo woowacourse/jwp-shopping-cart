@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
@@ -20,14 +22,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
+
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
+    public CartItemDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        cartItemDao = new CartItemDao(namedParameterJdbcTemplate);
+        productDao = new ProductDao(namedParameterJdbcTemplate);
     }
 
     @BeforeEach
@@ -35,8 +38,12 @@ public class CartItemDaoTest {
         productDao.save(new Product("banana", 1_000, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource("customerid", 1L);
+        parameterSource.addValue("productid", 1L);
+        namedParameterJdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(:customerid, :productid)", parameterSource);
+        MapSqlParameterSource parameterSource2 = new MapSqlParameterSource("customerid", 1L);
+        parameterSource2.addValue("productid", 2L);
+        namedParameterJdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(:customerid, :productid)", parameterSource2);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
