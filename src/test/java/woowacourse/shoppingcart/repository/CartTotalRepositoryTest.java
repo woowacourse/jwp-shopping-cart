@@ -30,15 +30,15 @@ import woowacourse.shoppingcart.repository.dao.ProductDao;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
-public class CartItemRepositoryTest {
+public class CartTotalRepositoryTest {
 
-    private final CartItemRepository cartItemRepository;
+    private final CartTotalRepository cartTotalRepository;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public CartItemRepositoryTest(NamedParameterJdbcTemplate jdbcTemplate) {
+    public CartTotalRepositoryTest(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        cartItemRepository = new CartItemRepository(new CartItemDao(jdbcTemplate),
+        cartTotalRepository = new CartTotalRepository(new CartItemDao(jdbcTemplate),
                 new ProductDao(jdbcTemplate),
                 new CustomerDao(jdbcTemplate)
         );
@@ -61,10 +61,10 @@ public class CartItemRepositoryTest {
         final Long productId = 10L;
 
         // when
-        cartItemRepository.createAll(customerId, List.of(productId));
+        cartTotalRepository.createAll(customerId, List.of(productId));
 
         // then
-        assertDoesNotThrow(() -> cartItemRepository.findIdByCustomerIdAndProductId(customerId,productId));
+        assertDoesNotThrow(() -> cartTotalRepository.findIdByCustomerIdAndProductId(customerId,productId));
     }
 
     @DisplayName("카트에 이미 해당 아이템이 있을 시 개수 +1을 한다 ")
@@ -75,12 +75,12 @@ public class CartItemRepositoryTest {
         final Long productId = 3L;
 
         // when
-        cartItemRepository.createAll(customerId, List.of(productId));
-        Long id = cartItemRepository.findIdByCustomerIdAndProductId(customerId, productId);
-        cartItemRepository.plusQuantityByIds(List.of(id));
+        cartTotalRepository.createAll(customerId, List.of(productId));
+        Long id = cartTotalRepository.findIdByCustomerIdAndProductId(customerId, productId);
+        cartTotalRepository.plusQuantityByIds(List.of(id));
 
         // then
-        assertThat(cartItemRepository.findById(id).getQuantity()).isEqualTo(2);
+        assertThat(cartTotalRepository.findById(id).getQuantity()).isEqualTo(2);
     }
 
     @DisplayName("카트에 담긴 물품의 개수를 수정한다. ")
@@ -89,12 +89,12 @@ public class CartItemRepositoryTest {
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
-        cartItemRepository.createAll(customerId, List.of(productId));
-        Long cartId = cartItemRepository.findIdByCustomerIdAndProductId(customerId, productId);
-        Cart cartOne = cartItemRepository.findById(cartId);
+        cartTotalRepository.createAll(customerId, List.of(productId));
+        Long cartId = cartTotalRepository.findIdByCustomerIdAndProductId(customerId, productId);
+        Cart cartOne = cartTotalRepository.findById(cartId);
 
         // when
-        Cart cart = cartItemRepository.update(
+        Cart cart = cartTotalRepository.update(
                 new CartEntity(cartOne.getId(), customerId, productId, cartOne.getQuantity()));
 
         // then
@@ -108,12 +108,12 @@ public class CartItemRepositoryTest {
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
-        cartItemRepository.createAll(customerId, List.of(productId));
-        Long cartId = cartItemRepository.findIdByCustomerIdAndProductId(customerId, productId);
+        cartTotalRepository.createAll(customerId, List.of(productId));
+        Long cartId = cartTotalRepository.findIdByCustomerIdAndProductId(customerId, productId);
 
         // when
-        cartItemRepository.plusQuantityByIds(List.of(cartId));
-        Cart cart = cartItemRepository.findById(cartId);
+        cartTotalRepository.plusQuantityByIds(List.of(cartId));
+        Cart cart = cartTotalRepository.findById(cartId);
 
         // then
         assertThat(cart.getQuantity()).isEqualTo(2);
@@ -127,7 +127,7 @@ public class CartItemRepositoryTest {
         final Long customerId = 1L;
 
         // when
-        final List<Cart> carts = cartItemRepository.findCartsByCustomerId(customerId);
+        final List<Cart> carts = cartTotalRepository.findCartsByCustomerId(customerId);
 
         // then
         assertThat(carts).hasSize(2);
@@ -140,11 +140,11 @@ public class CartItemRepositoryTest {
         final Long cartId = 1L;
 
         // when
-        cartItemRepository.deleteById(cartId);
+        cartTotalRepository.deleteById(cartId);
 
         // then
         final Long customerId = 1L;
-        final List<Cart> carts = cartItemRepository.findCartsByCustomerId(customerId);
+        final List<Cart> carts = cartTotalRepository.findCartsByCustomerId(customerId);
 
         assertThat(carts).hasSize(1);
     }

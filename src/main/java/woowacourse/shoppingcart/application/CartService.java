@@ -12,23 +12,23 @@ import woowacourse.shoppingcart.dto.CartProductInfoResponse;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductIdRequest;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-import woowacourse.shoppingcart.repository.CartItemRepository;
+import woowacourse.shoppingcart.repository.CartTotalRepository;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
-    private final CartItemRepository cartItemRepository;
+    private final CartTotalRepository cartTotalRepository;
 
-    public CartService(final CartItemRepository cartItemRepository) {
-        this.cartItemRepository = cartItemRepository;
+    public CartService(final CartTotalRepository cartTotalRepository) {
+        this.cartTotalRepository = cartTotalRepository;
     }
 
     @Transactional(readOnly = true)
     public List<CartResponse> findCartsByCustomerId(final Long customerId) {
-        cartItemRepository.validateCustomerId(customerId);
+        cartTotalRepository.validateCustomerId(customerId);
 
-        return cartItemRepository.findCartsByCustomerId(customerId)
+        return cartTotalRepository.findCartsByCustomerId(customerId)
                 .stream()
                 .map(CartResponse::of)
                 .collect(Collectors.toList());
@@ -36,7 +36,7 @@ public class CartService {
 
     public List<CartProductInfoResponse> addCarts(final List<ProductIdRequest> productIdRequests,
                                                   final Long customerId) {
-        cartItemRepository.validateCustomerId(customerId);
+        cartTotalRepository.validateCustomerId(customerId);
 
         plusQuantityCarts(productIdRequests, customerId);
         createCarts(productIdRequests, customerId);
@@ -48,38 +48,38 @@ public class CartService {
     private void plusQuantityCarts(List<ProductIdRequest> productIdRequests, Long customerId) {
         List<Long> containedCartIds = productIdRequests.stream()
                 .map(ProductIdRequest::getId)
-                .filter(productId -> cartItemRepository.contains(productId, customerId))
-                .map(productId -> cartItemRepository.findIdByCustomerIdAndProductId(customerId, productId))
+                .filter(productId -> cartTotalRepository.contains(productId, customerId))
+                .map(productId -> cartTotalRepository.findIdByCustomerIdAndProductId(customerId, productId))
                 .collect(Collectors.toList());
-        cartItemRepository.plusQuantityByIds(containedCartIds);
+        cartTotalRepository.plusQuantityByIds(containedCartIds);
     }
 
     private void createCarts(List<ProductIdRequest> productIdRequests, Long customerId) {
         List<Long> notContainedProductIds = productIdRequests.stream()
                 .map(ProductIdRequest::getId)
-                .filter(productId -> !cartItemRepository.contains(productId, customerId))
+                .filter(productId -> !cartTotalRepository.contains(productId, customerId))
                 .collect(Collectors.toList());
-        cartItemRepository.createAll(customerId, notContainedProductIds);
+        cartTotalRepository.createAll(customerId, notContainedProductIds);
     }
 
     private CartProductInfoResponse toCartInfoRequest(final ProductIdRequest productIdRequest, final Long customerId) {
         Long productId = productIdRequest.getId();
 
-        cartItemRepository.validateCustomerId(customerId);
-        cartItemRepository.validateProductId(productId);
+        cartTotalRepository.validateCustomerId(customerId);
+        cartTotalRepository.validateProductId(productId);
 
-        Long id = cartItemRepository.findIdByCustomerIdAndProductId(customerId, productId);
-        return new CartProductInfoResponse(id, cartItemRepository.findById(id).getQuantity());
+        Long id = cartTotalRepository.findIdByCustomerIdAndProductId(customerId, productId);
+        return new CartProductInfoResponse(id, cartTotalRepository.findById(id).getQuantity());
     }
 
     public CartProductInfoResponse patchCart(final CartProductInfoRequest cartProductInfoRequest,
                                              final Long customerId) {
         Long productId = cartProductInfoRequest.getId();
 
-        cartItemRepository.validateProductId(productId);
-        cartItemRepository.validateCustomerId(customerId);
+        cartTotalRepository.validateProductId(productId);
+        cartTotalRepository.validateCustomerId(customerId);
 
-        Cart cart = cartItemRepository.update(
+        Cart cart = cartTotalRepository.update(
                 getCartEntity(cartProductInfoRequest.getId(), customerId, cartProductInfoRequest));
         return new CartProductInfoResponse(cart.getId(), cart.getQuantity());
     }
@@ -93,10 +93,10 @@ public class CartService {
                 .map(CartIdRequest::getId)
                 .collect(Collectors.toList());
 
-        cartItemRepository.validateCustomerId(customerId);
+        cartTotalRepository.validateCustomerId(customerId);
         validateCustomerCarts(cartIds, customerId);
 
-        cartItemRepository.deleteByIds(cartIds);
+        cartTotalRepository.deleteByIds(cartIds);
     }
 
     private void validateCustomerCarts(List<Long> cartIds, Long customerId) {
@@ -104,7 +104,7 @@ public class CartService {
     }
 
     private void validateCustomerCart(final Long cartId, final Long customerId) {
-        List<Cart> cartsByCustomerId = cartItemRepository.findCartsByCustomerId(customerId);
+        List<Cart> cartsByCustomerId = cartTotalRepository.findCartsByCustomerId(customerId);
         boolean noCustomerCart = cartsByCustomerId.stream()
                 .map(Cart::getId)
                 .noneMatch(id -> id.equals(cartId));

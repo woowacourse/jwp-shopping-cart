@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.Entity.CartEntity;
@@ -13,14 +12,14 @@ import woowacourse.shoppingcart.repository.dao.CustomerDao;
 import woowacourse.shoppingcart.repository.dao.ProductDao;
 
 @Repository
-public class CartItemRepository {
+public class CartTotalRepository {
 
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final CustomerDao customerDao;
 
-    public CartItemRepository(final CartItemDao cartItemDao,
-                              ProductDao productDao, CustomerDao customerDao) {
+    public CartTotalRepository(final CartItemDao cartItemDao,
+                               ProductDao productDao, CustomerDao customerDao) {
         this.cartItemDao = cartItemDao;
         this.productDao = productDao;
         this.customerDao = customerDao;

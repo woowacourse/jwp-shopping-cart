@@ -121,7 +121,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 장바구니_아이템_수정_요청(토큰, new CartProductInfoRequest(105L, quantity));
 
         BAD_REQUEST(response);
-        예외메세지_검증(response, "유효하지 않은 장바구니입니다.");
+        예외메세지_검증(response, "올바르지 않은 사용자 이름이거나 상품 아이디 입니다.");
     }
 
     @DisplayName("토큰이 잘못될 경우 요청할 수 없다.")
