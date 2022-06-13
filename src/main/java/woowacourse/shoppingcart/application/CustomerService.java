@@ -13,7 +13,7 @@ import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(rollbackFor = Exception.class)
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -24,7 +24,6 @@ public class CustomerService {
         this.encryption = encryption;
     }
 
-    @Transactional
     public void save(final CustomerSignUpRequest request) {
         if (customerDao.existCustomerByUsername(request.getUsername())) {
             throw new InvalidCustomerException("이미 존재하는 유저 이름입니다.");
@@ -40,18 +39,16 @@ public class CustomerService {
         return CustomerResponse.from(customerDao.findById(customerId));
     }
 
-    @Transactional
     public void update(final CustomerUpdateRequest request, final Long customerId) {
         customerDao.update(request.toCustomerWithId(customerId));
     }
 
-    @Transactional
     public void updatePassword(final Long customerId, final CustomerUpdatePasswordRequest request) {
         customerDao.updatePasswordById(customerId, encodePassword(request.getPassword()));
     }
 
-    @Transactional
     public void delete(final Long customerId) {
         customerDao.deleteById(customerId);
     }
+
 }

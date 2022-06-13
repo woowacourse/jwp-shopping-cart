@@ -22,7 +22,6 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    @Transactional
     public Long add(final Long customerId, final CartItemAddRequest request) {
         Product product = productDao.findProductById(request.getProductId());
         CartItem cartItem = new CartItem(product, request.getQuantity());
@@ -41,7 +40,6 @@ public class CartService {
         return new CartItemsResponse(cartItemDao.findAllByCustomerId(customerId));
     }
 
-    @Transactional
     public void updateQuantity(final Long cartItemId, final Long customerId, final int quantity) {
         CartItem cartItem = cartItemDao.findById(cartItemId);
         cartItem.changeQuantity(quantity);
