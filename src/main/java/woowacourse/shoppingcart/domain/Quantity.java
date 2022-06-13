@@ -1,8 +1,11 @@
 package woowacourse.shoppingcart.domain;
 
-import woowacourse.shoppingcart.exception.IllegalFormException;
+import woowacourse.shoppingcart.exception.QuantityRangeException;
 
 public class Quantity {
+
+    private static final int MINIMUM_QUANTITY = 0;
+    private static final int MAXIMUM_QUANTITY = 99;
 
     private final int value;
 
@@ -12,8 +15,8 @@ public class Quantity {
     }
 
     private void validateRange(int value) {
-        if (value < 0 || value > 99) {
-            throw new IllegalFormException("수량");
+        if (value < MINIMUM_QUANTITY || value > MAXIMUM_QUANTITY) {
+            throw new QuantityRangeException();
         }
     }
 

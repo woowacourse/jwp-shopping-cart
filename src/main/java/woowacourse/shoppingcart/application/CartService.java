@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.response.CartResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -50,9 +51,10 @@ public class CartService {
         cartItemDao.deleteCartItem(cartId);
     }
 
-    public void updateQuantity(final Long cartId, final int quantity, final Long customerId) {
+    public void updateQuantity(final Long cartId, final int updateQuantity, final Long customerId) {
         validateCustomerCart(cartId, customerId);
-        cartItemDao.updateQuantity(quantity, cartId);
+        final Quantity quantity = new Quantity(updateQuantity);
+        cartItemDao.updateQuantity(quantity.getValue(), cartId);
     }
 
     private void validateCustomerCart(final Long cartId, final Long customerId) {
