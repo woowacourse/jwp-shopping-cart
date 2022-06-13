@@ -48,7 +48,8 @@ public class CartService {
 
     private boolean hasProductInCart(final Long productId, final String customerUsername) {
         final Long customerId = customerDao.findIdByUsername(customerUsername);
-        return cartDao.findProductIdsByCustomerId(customerId).contains(productId);
+        return cartDao.findProductIdsByCustomerId(customerId)
+                .contains(productId);
     }
 
     public void updateCartItemQuantity(final int quantity, final Long productId, final String customerUsername) {
