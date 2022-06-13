@@ -50,7 +50,7 @@ public class OrderService {
             ProductStock productStock = productDao.findProductStockById(cartItem.getProductId());
 
             cartItems.checkContain(cartItem);
-            cartItem.checkStock(productStock);
+            cartItem.checkEnoughStockToOrder(productStock);
 
             productDao.update(productStock.reduce(cartItem));
 
