@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.Entity.CartEntity;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.dto.CartIdRequest;
 import woowacourse.shoppingcart.dto.CartProductInfoRequest;
 import woowacourse.shoppingcart.dto.CartProductInfoResponse;
@@ -38,29 +39,17 @@ public class CartService {
     public List<CartProductInfoResponse> addCarts(final List<ProductIdRequest> productIdRequests,
                                                   final Long customerId) {
         cartTotalRepository.validateCustomerId(customerId);
+        List<Long> productIds = productIdRequests.stream()
+                .map(ProductIdRequest::getId)
+                .collect(Collectors.toList());
 
-        plusQuantityCarts(productIdRequests, customerId);
-        createCarts(productIdRequests, customerId);
+        Carts containedCarts = new Carts(cartTotalRepository.findByCustomerIdAndProductIds(customerId, productIds));
+        cartTotalRepository.plusQuantityByIds(containedCarts.getCartIds());
+        cartTotalRepository.createAll(customerId, containedCarts.findNotInProductIds(productIds));
+
         return productIdRequests.stream()
                 .map(productIdRequest -> toCartInfoRequest(productIdRequest, customerId))
                 .collect(Collectors.toList());
-    }
-
-    private void plusQuantityCarts(List<ProductIdRequest> productIdRequests, Long customerId) {
-        List<Long> containedCartIds = productIdRequests.stream()
-                .map(ProductIdRequest::getId)
-                .filter(productId -> cartTotalRepository.contains(productId, customerId))
-                .map(productId -> cartTotalRepository.findIdByCustomerIdAndProductId(customerId, productId))
-                .collect(Collectors.toList());
-        cartTotalRepository.plusQuantityByIds(containedCartIds);
-    }
-
-    private void createCarts(List<ProductIdRequest> productIdRequests, Long customerId) {
-        List<Long> notContainedProductIds = productIdRequests.stream()
-                .map(ProductIdRequest::getId)
-                .filter(productId -> !cartTotalRepository.contains(productId, customerId))
-                .collect(Collectors.toList());
-        cartTotalRepository.createAll(customerId, notContainedProductIds);
     }
 
     private CartProductInfoResponse toCartInfoRequest(final ProductIdRequest productIdRequest, final Long customerId) {

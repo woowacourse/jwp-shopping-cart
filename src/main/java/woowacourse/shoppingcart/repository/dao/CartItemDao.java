@@ -47,18 +47,18 @@ public class CartItemDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public int[] createAll(Long customerId, List<Long> productIds) {
+    public void createAll(Long customerId, List<Long> productIds) {
         final String query = "INSERT INTO cart_item (customer_id, product_id, quantity) VALUES (:customer_id, :product_id, :quantity)";
-        return jdbcTemplate.batchUpdate(query, SqlParameterSourceUtils.createBatch(
+        jdbcTemplate.batchUpdate(query, SqlParameterSourceUtils.createBatch(
                 productIds.stream()
                         .map(productId -> Map.of("customer_id", customerId, "product_id", productId, "quantity", 1))
                         .collect(Collectors.toList()))
         );
     }
 
-    public int[] updateAll(List<CartEntity> cartEntities) {
+    public void updateAll(List<CartEntity> cartEntities) {
         final String query = "UPDATE cart_item SET customer_id = :customer_id , product_id = :product_id, quantity = :quantity";
-        return jdbcTemplate.batchUpdate(query, SqlParameterSourceUtils.createBatch(
+        jdbcTemplate.batchUpdate(query, SqlParameterSourceUtils.createBatch(
                 cartEntities.stream()
                         .map(cartEntity -> Map.of(
                                 "customer_id", cartEntity.getCustomerId(),
@@ -87,7 +87,7 @@ public class CartItemDao {
         return jdbcTemplate.update(query, Map.of("id", id));
     }
 
-    public Optional<Long> findIdByCustomerIdAndProductId(Long customerId, Long productId) {
+    public Optional<Long> findIdByCustomerIdAndProductIds(Long customerId, Long productId) {
         final String query = "SELECT id FROM cart_item WHERE customer_id = :customerId AND product_id = :productId LIMIT 1";
         try {
             Map<String, Long> map = Map.of("productId", productId, "customerId", customerId);
@@ -95,6 +95,12 @@ public class CartItemDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<CartEntity> findByCustomerIdAndProductIds(Long customerId, List<Long> productIds) {
+        final String query = "SELECT * FROM cart_item WHERE customer_id = :customerId AND product_id IN ( :productIds )";
+        Map<String, Object> map = Map.of("customerId", customerId, "productIds", productIds);
+        return jdbcTemplate.query(query, map, ROW_MAPPER);
     }
 
     public int[] deleteByIds(final List<Long> ids) {

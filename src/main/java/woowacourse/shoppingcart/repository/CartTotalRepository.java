@@ -26,7 +26,8 @@ public class CartTotalRepository {
     }
 
     public Long findIdByCustomerIdAndProductId(Long customerId, Long productId) {
-        return cartItemDao.findIdByCustomerIdAndProductId(customerId, productId).orElseThrow(ResourceNotFoundException::new);
+        return cartItemDao.findIdByCustomerIdAndProductIds(customerId, productId)
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     public void createAll(final Long customerId, final List<Long> productIds) {
@@ -39,10 +40,6 @@ public class CartTotalRepository {
                 .map(CartEntity::plusQuantity)
                 .collect(Collectors.toList());
         cartItemDao.updateAll(cartEntities);
-    }
-
-    public boolean contains(Long productId, Long customerId) {
-        return cartItemDao.findIdByCustomerIdAndProductId(customerId,productId).isPresent();
     }
 
     public void validateCustomerId(final Long customerId) {
@@ -66,6 +63,11 @@ public class CartTotalRepository {
         return cartEntities.stream()
                 .map(this::toCart)
                 .collect(Collectors.toList());
+    }
+
+    public List<Cart> findByCustomerIdAndProductIds(Long customerId, List<Long> productIds) {
+        List<CartEntity> containedCarts = cartItemDao.findByCustomerIdAndProductIds(customerId, productIds);
+        return toCarts(containedCarts);
     }
 
     public List<Cart> findCartsByCustomerId(final Long customerId) {
