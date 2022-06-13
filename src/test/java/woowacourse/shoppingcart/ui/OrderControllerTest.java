@@ -1,6 +1,19 @@
 package woowacourse.shoppingcart.ui;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,21 +23,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.service.OrderService;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -56,15 +57,15 @@ public class OrderControllerTest {
                 .thenReturn(expectedOrderId);
 
         // when // then
-        mockMvc.perform(post("/api/customers/" + customerName + "/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(objectMapper.writeValueAsString(requestDtos))
-        ).andDo(print())
+        mockMvc.perform(post("/customers/" + customerName + "/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(requestDtos))
+                ).andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
-                        "/api/" + customerName + "/orders/" + expectedOrderId));
+                        customerName + "/orders/" + expectedOrderId));
     }
 
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
@@ -81,8 +82,8 @@ public class OrderControllerTest {
                 .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
-        ).andDo(print())
+        mockMvc.perform(get("/customers/" + customerName + "/orders/" + orderId)
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
                 .andExpect(jsonPath("orderDetails[0].productId").value(2L))
@@ -108,8 +109,8 @@ public class OrderControllerTest {
                 .thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
-        ).andDo(print())
+        mockMvc.perform(get("/customers/" + customerName + "/orders/")
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))

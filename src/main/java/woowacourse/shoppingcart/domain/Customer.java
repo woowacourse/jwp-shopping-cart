@@ -33,6 +33,13 @@ public class Customer {
         return this.password.equals(password);
     }
 
+    public void checkPasswordWithEncryption(String naivePassword) {
+        String encryptedPassword = CryptoUtils.encrypt(naivePassword);
+        if (!isSamePassword(encryptedPassword)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
     public Long getId() {
         return id;
     }
@@ -47,12 +54,5 @@ public class Customer {
 
     public String getPassword() {
         return password;
-    }
-
-    public void checkPasswordWithEncryption(String naivePassword) {
-        String encryptedPassword = CryptoUtils.encrypt(naivePassword);
-        if (!isSamePassword(encryptedPassword)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
     }
 }

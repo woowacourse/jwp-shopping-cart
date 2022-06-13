@@ -19,10 +19,10 @@ public class AuthService {
     }
 
     public TokenResponse login(TokenRequest tokenRequest) {
-        Customer customer = customerDao.findByLoginId(tokenRequest.getEmail());
+        Customer customer = customerDao.findByLoginId(tokenRequest.getLoginId());
         customer.checkPasswordWithEncryption(tokenRequest.getPassword());
 
-        String token = tokenProvider.createToken(tokenRequest.getEmail());
-        return new TokenResponse(token);
+        String token = tokenProvider.createToken(tokenRequest.getLoginId());
+        return new TokenResponse(token, customer.getName());
     }
 }

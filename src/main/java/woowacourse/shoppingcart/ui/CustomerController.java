@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.service.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerAddRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 
 @RestController
 @RequestMapping("/customers")
@@ -29,7 +29,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerResponse> save(@RequestBody @Valid CustomerRequest request) {
+    public ResponseEntity<CustomerResponse> save(@RequestBody @Valid CustomerAddRequest request) {
         CustomerResponse response = customerService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

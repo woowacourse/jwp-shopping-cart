@@ -1,4 +1,4 @@
-insert into customer (loginid, name, password)
+insert into customer (login_id, name, password)
 values ('test1', 'puterism', 'Qwer1234!'),
        ('test2', 'tanney-102', 'Qwer1234!'),
        ('test3', 'jho2301', 'Qwer1234!'),
