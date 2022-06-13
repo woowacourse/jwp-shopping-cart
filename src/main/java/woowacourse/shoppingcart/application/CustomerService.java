@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 
 @Service
-@Transactional(rollbackFor = Exception.class, readOnly = true)
+@Transactional(readOnly = true)
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -29,7 +29,7 @@ public class CustomerService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public SignUpResponse addCustomer(SignUpRequest signUpRequest) {
         validateDuplicateUsername(signUpRequest.getUsername());
         validateDuplicateEmail(signUpRequest.getEmail());
@@ -58,7 +58,7 @@ public class CustomerService {
         return CustomerResponse.from(customer);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void updateCustomer(String username, UpdatePasswordRequest updatePasswordRequest) {
         Customer customer = customerDao.findByUsername(new Username(username));
         validatePassword(updatePasswordRequest.getPassword(), customer.getPassword().getValue());
@@ -66,7 +66,7 @@ public class CustomerService {
         customerDao.updatePassword(customer.getId(), new Password(newEncodePassword));
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void deleteCustomer(String username, DeleteCustomerRequest deleteCustomerRequest) {
         Customer customer = customerDao.findByUsername(new Username(username));
         validatePassword(deleteCustomerRequest.getPassword(), customer.getPassword().getValue());

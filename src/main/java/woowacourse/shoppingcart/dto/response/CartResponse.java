@@ -1,80 +1,36 @@
 package woowacourse.shoppingcart.dto.response;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.CartItem;
 
 public class CartResponse {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
-    private int quantity;
-    private boolean checked;
+    private List<CartItemResponse> cartItems;
 
     private CartResponse() {
     }
 
-    private CartResponse(Long id, Long productId, String name, int price, String imageUrl, int quantity,
-                         boolean checked) {
-        this.id = id;
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.quantity = quantity;
-        this.checked = checked;
+    private CartResponse(List<CartItemResponse> cartItems) {
+        this.cartItems = cartItems;
     }
 
-    public static CartResponse from(CartItem cartItem) {
-        return new CartResponse(
-                cartItem.getId(),
-                cartItem.getProduct().getId(),
-                cartItem.getProduct().getName(),
-                cartItem.getProduct().getPrice(),
-                cartItem.getProduct().getImageUrl(),
-                cartItem.getQuantity(),
-                cartItem.isChecked()
-        );
+    public static CartResponse from(List<CartItem> cartItems) {
+        List<CartItemResponse> cartItemResponse = cartItems.stream()
+                .map(CartItemResponse::from)
+                .collect(Collectors.toList());
+        return new CartResponse(cartItemResponse);
     }
 
-    public Long getId() {
-        return id;
+    public static CartResponse from(Cart cart) {
+        List<CartItemResponse> cartItemRespons = cart.getValue().stream()
+                .map(CartItemResponse::from)
+                .collect(Collectors.toList());
+        return new CartResponse(cartItemRespons);
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public boolean isChecked() {
-        return checked;
-    }
-
-    @Override
-    public String toString() {
-        return "CartResponse{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", quantity=" + quantity +
-                ", checked=" + checked +
-                '}';
+    public List<CartItemResponse> getCartItems() {
+        return cartItems;
     }
 }

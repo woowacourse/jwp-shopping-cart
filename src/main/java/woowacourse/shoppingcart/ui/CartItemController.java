@@ -15,7 +15,7 @@ import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.dto.request.CartRequest;
 import woowacourse.shoppingcart.dto.request.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequests;
-import woowacourse.shoppingcart.dto.response.CartResponses;
+import woowacourse.shoppingcart.dto.response.CartResponse;
 
 @RestController
 @RequestMapping("/cart")
@@ -34,26 +34,26 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<CartResponses> getCartItems(@AuthenticationPrincipal String usernameByToken) {
-        return ResponseEntity.ok().body(cartService.findCartsByUsername(usernameByToken));
+    public ResponseEntity<CartResponse> getCartItems(@AuthenticationPrincipal String usernameByToken) {
+        return ResponseEntity.ok().body(cartService.findCartByUsername(usernameByToken));
     }
 
     @PatchMapping
-    public ResponseEntity<CartResponses> updateCartItems(@AuthenticationPrincipal String usernameByToken,
-                                                         @RequestBody @Valid UpdateCartRequests updateCartRequests) {
+    public ResponseEntity<CartResponse> updateCartItems(@AuthenticationPrincipal String usernameByToken,
+                                                        @RequestBody @Valid UpdateCartRequests updateCartRequests) {
         return ResponseEntity.ok(cartService.updateCartItems(usernameByToken, updateCartRequests));
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String usernameByToken,
                                                @RequestBody @Valid DeleteProductRequest deleteProductRequest) {
-        cartService.deleteCart(usernameByToken, deleteProductRequest);
+        cartService.deleteCartItem(usernameByToken, deleteProductRequest);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/all")
     public ResponseEntity<Void> deleteAllCartItem(@AuthenticationPrincipal String usernameByToken) {
-        cartService.deleteAllCart(usernameByToken);
+        cartService.deleteAllCartItem(usernameByToken);
         return ResponseEntity.noContent().build();
     }
 }

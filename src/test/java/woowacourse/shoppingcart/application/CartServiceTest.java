@@ -12,7 +12,6 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.dto.request.CartIdRequest;
 import woowacourse.shoppingcart.dto.request.CartRequest;
@@ -21,8 +20,8 @@ import woowacourse.shoppingcart.dto.request.ProductRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequests;
+import woowacourse.shoppingcart.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.dto.response.CartResponse;
-import woowacourse.shoppingcart.dto.response.CartResponses;
 
 @SpringBootTest
 @Sql("classpath:schema.sql")
@@ -86,11 +85,11 @@ class CartServiceTest {
         cartService.addCart("rennon", new CartRequest(1L, 1, true));
 
         // when
-        CartResponses cartResponses = cartService.findCartsByUsername("rennon");
-        List<CartResponse> cartResponse = cartResponses.getCartItems();
+        CartResponse cartResponse = cartService.findCartByUsername("rennon");
+        List<CartItemResponse> cartItemResponse = cartResponse.getCartItems();
 
         // then
-        assertThat(cartResponse).size().isEqualTo(1);
+        assertThat(cartItemResponse).size().isEqualTo(1);
     }
 
     @Test
@@ -108,7 +107,7 @@ class CartServiceTest {
         // when
         UpdateCartRequests updateCartRequests = new UpdateCartRequests(List.of(new UpdateCartRequest(1L, 10, true)));
         cartService.updateCartItems("rennon", updateCartRequests);
-        List<CartResponse> cartItems = cartService.findCartsByUsername("rennon").getCartItems();
+        List<CartItemResponse> cartItems = cartService.findCartByUsername("rennon").getCartItems();
         // then
         Assertions.assertAll(
                 () -> assertThat(cartItems.get(0).getQuantity()).isEqualTo(10),
@@ -130,12 +129,12 @@ class CartServiceTest {
         cartService.addCart("rennon", new CartRequest(3L, 1, true));
 
         // when
-        cartService.deleteCart("rennon",
+        cartService.deleteCartItem("rennon",
                 new DeleteProductRequest(List.of(new CartIdRequest(1L), new CartIdRequest(3L))));
-        List<CartResponse> cartResponse = cartService.findCartsByUsername("rennon").getCartItems();
+        List<CartItemResponse> cartItemResponse = cartService.findCartByUsername("rennon").getCartItems();
 
         // then
-        assertThat(cartResponse).size().isEqualTo(1);
+        assertThat(cartItemResponse).size().isEqualTo(1);
     }
 
     @Test
@@ -147,10 +146,10 @@ class CartServiceTest {
         cartService.addCart("rennon", new CartRequest(1L, 1, true));
 
         // when
-        cartService.deleteAllCart("rennon");
-        List<CartResponse> cartResponse = cartService.findCartsByUsername("rennon").getCartItems();
+        cartService.deleteAllCartItem("rennon");
+        List<CartItemResponse> cartItemResponse = cartService.findCartByUsername("rennon").getCartItems();
 
         // then
-        assertThat(cartResponse).size().isEqualTo(0);
+        assertThat(cartItemResponse).size().isEqualTo(0);
     }
 }

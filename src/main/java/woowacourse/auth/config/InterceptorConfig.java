@@ -23,10 +23,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         WebMvcConfigurer.super.addInterceptors(registry);
         registry.addInterceptor(new LoginInterceptor(authService, jwtTokenProvider))
+                .addPathPatterns("/**")
                 .excludePathPatterns("/login/**")
-                .addPathPatterns("/users/**")
-                .excludePathPatterns("/users")
-                .addPathPatterns("/cart")
-                .addPathPatterns("/token/refresh");
+                .excludePathPatterns("/products/**")
+                .excludePathPatterns("/users");
     }
 }

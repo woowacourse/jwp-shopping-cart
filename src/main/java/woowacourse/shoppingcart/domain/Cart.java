@@ -16,7 +16,7 @@ public class Cart {
         return Collections.unmodifiableList(value);
     }
 
-    public List<CartItem> getExistingIds(List<Long> cartIds) {
+    public List<CartItem> getExistingCartItem(List<Long> cartIds) {
         return value.stream()
                 .filter(it -> cartIds.contains(it.getId()))
                 .collect(Collectors.toList());

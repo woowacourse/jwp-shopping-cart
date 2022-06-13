@@ -23,8 +23,8 @@ import woowacourse.shoppingcart.dto.request.DeleteProductRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequest;
 import woowacourse.shoppingcart.dto.request.UpdateCartRequests;
+import woowacourse.shoppingcart.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.dto.response.CartResponse;
-import woowacourse.shoppingcart.dto.response.CartResponses;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
@@ -174,10 +174,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
     public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, String... productNames) {
         List<String> resultProductIds = response
-                .as(CartResponses.class)
+                .as(CartResponse.class)
                 .getCartItems()
                 .stream()
-                .map(CartResponse::getName)
+                .map(CartItemResponse::getName)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productNames);
     }
