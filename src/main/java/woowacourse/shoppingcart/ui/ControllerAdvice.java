@@ -23,6 +23,7 @@ import woowacourse.shoppingcart.exception.ForbiddenAccessException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerPropertyException;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.ProductNotFoundException;
@@ -89,6 +90,7 @@ public class ControllerAdvice {
         InvalidCustomerException.class,
         InvalidCartItemException.class,
         InvalidProductException.class,
+        InvalidOrderException.class,
         NotInCustomerCartItemException.class,
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)

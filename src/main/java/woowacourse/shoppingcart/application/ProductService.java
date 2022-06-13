@@ -32,6 +32,11 @@ public class ProductService {
         return productDao.findProductById(productId);
     }
 
+    public void updateProductQuantity(long productId, int quantity) {
+        productDao.findProductById(productId);
+        productDao.updateQuantity(productId, quantity);
+    }
+
     public void deleteProductById(long productId) {
         if (productDao.delete(productId) == 0) {
             throw new ProductNotFoundException();

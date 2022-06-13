@@ -76,4 +76,8 @@ public class CartService {
         cart.update(product, count);
         cartItemDao.updateCount(customerId, cart.getItemOf(product));
     }
+
+    public void deleteCart(long customerId) {
+        cartItemDao.deleteCartItemsByCustomerId(customerId);
+    }
 }

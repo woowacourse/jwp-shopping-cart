@@ -67,6 +67,12 @@ public class ProductDao {
                 ));
     }
 
+    public void updateQuantity(long productId, int quantity) {
+        final String sql = "UPDATE product SET quantity = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql, quantity, productId);
+    }
+
     public int delete(long productId) {
         final String query = "DELETE FROM product WHERE id = ?";
         return jdbcTemplate.update(query, productId);

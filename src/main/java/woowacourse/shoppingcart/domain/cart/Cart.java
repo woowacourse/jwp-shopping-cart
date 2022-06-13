@@ -51,6 +51,10 @@ public class Cart {
             .orElseThrow(() -> new InvalidCartItemException("카트에 담겨있지 않은 상품입니다."));
     }
 
+    public boolean isEmpty() {
+        return value.isEmpty();
+    }
+
     public List<CartItem> getValue() {
         return List.copyOf(value);
     }

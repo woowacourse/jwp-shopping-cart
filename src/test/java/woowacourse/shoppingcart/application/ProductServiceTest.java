@@ -96,4 +96,23 @@ public class ProductServiceTest {
         assertThatThrownBy(() -> productService.deleteProductById(99L))
             .isInstanceOf(ProductNotFoundException.class);
     }
+
+    @Test
+    @DisplayName("Product 의 재고를 업데이트 한다.")
+    void updateQuantity() {
+        //when
+        productService.updateProductQuantity(1L, 7);
+
+        //then
+        int actual = productService.findProductById(1L).getQuantity();
+        assertThat(actual).isEqualTo(7);
+    }
+
+    @DisplayName("존재하지 않는 ID로 Product 재고를 업데이트하면 예외를 던진다.")
+    @Test
+    void updateQuantity_notFound() {
+        // when, then
+        assertThatThrownBy(() -> productService.updateProductQuantity(99L, 7))
+            .isInstanceOf(ProductNotFoundException.class);
+    }
 }

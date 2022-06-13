@@ -21,30 +21,6 @@ public class CartControllerTest extends AcceptanceTest {
 
     private static final long CUSTOMER_ID = 1L;
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, long customerId, Long productId,
-        int count) {
-        CartItemRequest request = new CartItemRequest(productId, count);
-
-        return RestAssured
-            .given().log().all()
-            .header("Authorization", "Bearer " + token)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(request)
-            .when().post("/api/customers/{customerId}/carts", customerId)
-            .then().log().all()
-            .extract();
-    }
-
-    public static ExtractableResponse<Response> 장바구니_아이템_삭제_요청(String token, long customerId, long productId) {
-        return RestAssured
-            .given().log().all()
-            .header("Authorization", "Bearer " + token)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().delete("/api/customers/{customerId}/carts?productId={productId}", customerId, productId)
-            .then().log().all()
-            .extract();
-    }
-
     @Test
     @DisplayName("없는 상품 ID로 아이템 추가 요청할 경우 404 응답을 반환한다.")
     void addCartItem_notFound() {
@@ -161,6 +137,20 @@ public class CartControllerTest extends AcceptanceTest {
         return loginTokenResponse.getAccessToken();
     }
 
+    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, long customerId, Long productId,
+        int count) {
+        CartItemRequest request = new CartItemRequest(productId, count);
+
+        return RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + token)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(request)
+            .when().post("/api/customers/{customerId}/carts", customerId)
+            .then().log().all()
+            .extract();
+    }
+
     private ExtractableResponse<Response> 장바구니_아이템_구매_수_업데이트(String token, long customerId, Long productId, int count) {
         CartItemUpdateRequest request = new CartItemUpdateRequest(count);
         return RestAssured
@@ -169,6 +159,16 @@ public class CartControllerTest extends AcceptanceTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(request)
             .when().patch("/api/customers/{customerId}/carts?productId={productId}", customerId, productId)
+            .then().log().all()
+            .extract();
+    }
+
+    public static ExtractableResponse<Response> 장바구니_아이템_삭제_요청(String token, long customerId, long productId) {
+        return RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + token)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().delete("/api/customers/{customerId}/carts?productId={productId}", customerId, productId)
             .then().log().all()
             .extract();
     }

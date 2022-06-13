@@ -65,10 +65,10 @@ public class CartItemDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void deleteCartItem(long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
+    public void deleteCartItemsByCustomerId(long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
 
-        final int rowCount = jdbcTemplate.update(sql, id);
+        final int rowCount = jdbcTemplate.update(sql, customerId);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }

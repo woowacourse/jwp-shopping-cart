@@ -45,6 +45,10 @@ public class CartItem {
         return product.isSameId(productId);
     }
 
+    public int getQuantityAfterOrder() {
+        return quantity.getValue() - count.getValue();
+    }
+
     public Long getId() {
         return id;
     }
