@@ -5,13 +5,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.application.dto.OrderRequestDto;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -26,11 +24,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Void> add(@AuthenticationPrincipal final Long customerId,
                                     @RequestBody @Valid final List<OrderRequest> orderRequests) {
-        final List<OrderRequestDto> orderRequestDtos = orderRequests.stream()
-                .map(request -> new OrderRequestDto(request.getCartId(), request.getQuantity()))
-                .collect(Collectors.toList());
-
-        final Long orderId = orderService.addOrder(customerId, orderRequestDtos);
+        final Long orderId = orderService.addOrder(customerId, orderRequests);
 
         return ResponseEntity.created(URI.create("/api/customer/orders/" + orderId)).build();
     }

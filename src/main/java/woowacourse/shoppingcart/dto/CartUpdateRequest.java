@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.application.dto.CartUpdateServiceRequest;
-
 public class CartUpdateRequest {
 
     private Long productId;
@@ -13,10 +11,6 @@ public class CartUpdateRequest {
     public CartUpdateRequest(final Long productId, final Integer quantity) {
         this.productId = productId;
         this.quantity = quantity;
-    }
-
-    public CartUpdateServiceRequest toServiceDto() {
-        return new CartUpdateServiceRequest(productId, quantity);
     }
 
     public Long getProductId() {

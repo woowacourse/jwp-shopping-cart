@@ -21,7 +21,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public TokenResponse login(@RequestBody @Valid final TokenRequest tokenRequest) {
-        final String token = authService.certify(tokenRequest.toServiceDto());
+        final String token = authService.certify(tokenRequest);
         return new TokenResponse(token);
     }
 }

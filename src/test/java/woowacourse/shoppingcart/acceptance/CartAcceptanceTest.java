@@ -14,7 +14,6 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.CartDeleteRequest;
-import woowacourse.shoppingcart.application.dto.CartServiceResponse;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.CartSaveRequest;
 import woowacourse.shoppingcart.dto.CartUpdateRequest;
@@ -37,23 +36,17 @@ public class CartAcceptanceTest extends AcceptanceTest {
         super.setUp();
 
         // 토큰 발급
-        accessToken = requestPostWithBody("/api/login", new TokenRequest(EMAIL, PASSWORD))
-                .as(TokenResponse.class)
-                .getAccessToken();
+        accessToken = requestPostWithBody("/api/login", new TokenRequest(EMAIL, PASSWORD)).as(TokenResponse.class).getAccessToken();
     }
 
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
         // given, when
-        final ExtractableResponse<Response> response =
-                requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(productId1, 1));
+        final ExtractableResponse<Response> response = requestPostWithTokenAndBody("/api/customer/carts", accessToken, new CartSaveRequest(productId1, 1));
 
         // then
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(response.header("Location")).isNotBlank()
-        );
+        assertAll(() -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()), () -> assertThat(response.header("Location")).isNotBlank());
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
@@ -70,7 +63,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getList(".", CartServiceResponse.class)).usingRecursiveComparison()
+                () -> assertThat(response.jsonPath().getList(".", CartResponse.class)).usingRecursiveComparison()
                         .ignoringFields("id")
                         .isEqualTo(List.of(
                                 new CartResponse(null, productId1, "치킨", 10_000, "http://example.com/chicken.jpg", 1),

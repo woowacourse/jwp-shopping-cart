@@ -2,13 +2,13 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.application.dto.OrderRequestDto;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -34,13 +34,13 @@ public class OrderService {
     }
 
     @Transactional
-    public Long addOrder(final Long customerId, final List<OrderRequestDto> orderRequestDtos) {
+    public Long addOrder(final Long customerId, final List<OrderRequest> orderRequests) {
         validateCustomerExists(customerId);
         final Long ordersId = orderDao.addOrders(customerId);
-        for (final OrderRequestDto orderRequestDto : orderRequestDtos) {
-            final Long cartId = orderRequestDto.getCartId();
+        for (final OrderRequest orderRequest : orderRequests) {
+            final Long cartId = orderRequest.getCartId();
             final Long productId = cartItemDao.findProductIdById(cartId);
-            ordersDetailDao.addOrdersDetail(ordersId, productId, orderRequestDto.getQuantity());
+            ordersDetailDao.addOrdersDetail(ordersId, productId, orderRequest.getQuantity());
             cartItemDao.deleteCartItem(cartId);
         }
 

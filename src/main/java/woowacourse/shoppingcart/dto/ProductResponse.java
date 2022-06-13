@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.application.dto.ProductServiceResponse;
-
 public class ProductResponse {
 
     private Long id;
@@ -17,15 +15,6 @@ public class ProductResponse {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-    }
-
-    public static ProductResponse from(final ProductServiceResponse serviceResponse) {
-        return new ProductResponse(
-                serviceResponse.getId(),
-                serviceResponse.getName(),
-                serviceResponse.getPrice(),
-                serviceResponse.getImageUrl()
-        );
     }
 
     public Long getId() {

@@ -10,14 +10,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import woowacourse.shoppingcart.application.dto.CartDeleteServiceRequest;
-import woowacourse.shoppingcart.application.dto.CartSaveServiceRequest;
-import woowacourse.shoppingcart.application.dto.CartUpdateServiceRequest;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.*;
-import woowacourse.shoppingcart.application.dto.CartServiceResponse;
+import woowacourse.shoppingcart.dto.CartDeleteRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.CartSaveRequest;
+import woowacourse.shoppingcart.dto.CartUpdateRequest;
 import woowacourse.shoppingcart.exception.AlreadyInCartException;
 import woowacourse.shoppingcart.util.PasswordEncryptor;
 import java.util.List;
@@ -42,7 +42,7 @@ class CartServiceTest {
     @Test
     void add() {
         // given
-        final CartSaveServiceRequest request = new CartSaveServiceRequest(1L, 5);
+        final CartSaveRequest request = new CartSaveRequest(1L, 5);
         final String password = PasswordEncryptor.encrypt("12345678");
         final Customer customer = new Customer(1L, "썬", new Email("sun@gmail.com"), new EncodedPassword(password));
         final Product product = new Product(1L, "치킨", 3000, "www.chicken.com");
@@ -59,7 +59,7 @@ class CartServiceTest {
     @Test
     void add_duplicateCartItemExists_throwsException() {
         // given
-        final CartSaveServiceRequest request = new CartSaveServiceRequest(1L, 5);
+        final CartSaveRequest request = new CartSaveRequest(1L, 5);
 
         // when
         when(cartItemDao.existsInCart(any(Long.class), any(Long.class)))
@@ -83,8 +83,8 @@ class CartServiceTest {
         // then
         assertThat(cartService.findAllByCustomerId(1L)).usingRecursiveComparison()
                 .isEqualTo(List.of(
-                        new CartServiceResponse(1L, 1L, "치킨", 3000, "www.chicken.com", 5),
-                        new CartServiceResponse(2L, 2L, "피자", 4000, "www.pizza.com", 5)
+                        new CartResponse(1L, 1L, "치킨", 3000, "www.chicken.com", 5),
+                        new CartResponse(2L, 2L, "피자", 4000, "www.pizza.com", 5)
                 ));
     }
 
@@ -100,7 +100,7 @@ class CartServiceTest {
         // when
         when(cartItemDao.findCartByCustomerIdAndProductId(any(Long.class), any(Long.class)))
                 .thenReturn(Optional.of(cart));
-        cartService.updateQuantity(customer.getId(), new CartUpdateServiceRequest(product.getId(), 1000));
+        cartService.updateQuantity(customer.getId(), new CartUpdateRequest(product.getId(), 1000));
 
         // then
         verify(cartItemDao, times(1)).update(cart, customer.getId());
@@ -117,7 +117,7 @@ class CartServiceTest {
         when(cartItemDao.findIdsByCustomerId(any(Long.class)))
                 .thenReturn(List.of(1L, 2L));
 
-        cartService.delete(customer.getId(), new CartDeleteServiceRequest(List.of(1L, 2L)));
+        cartService.delete(customer.getId(), new CartDeleteRequest(List.of(1L, 2L)));
 
         // then
         verify(cartItemDao, times(1)).deleteAllById(List.of(1L, 2L));

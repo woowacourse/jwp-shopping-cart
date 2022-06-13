@@ -14,7 +14,7 @@ import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
+import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
 
 @SpringBootTest
 @Sql("classpath:data.sql")
@@ -38,7 +38,7 @@ class AuthControllerTest {
     void login() {
         // given
         final TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
-        customerService.save(new CustomerSaveServiceRequest(NAME, EMAIL, PASSWORD));
+        customerService.save(new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
 
         // when
         final TokenResponse tokenResponse = authController.login(tokenRequest);
@@ -63,7 +63,7 @@ class AuthControllerTest {
     @DisplayName("로그인시 비밀번호가 일치하지 않는 경우 예외가 발생한다.")
     void login_passwordNotMatch_throwsException() {
         // given
-        customerService.save(new CustomerSaveServiceRequest(NAME, EMAIL, PASSWORD));
+        customerService.save(new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
 
         // when, then
         final TokenRequest tokenRequest = new TokenRequest(EMAIL, "1213123213123212");

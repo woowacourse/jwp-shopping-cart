@@ -1,7 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.application.dto.PageServiceRequest;
-
 public class PageRequest {
 
     private Integer page;
@@ -13,10 +11,6 @@ public class PageRequest {
     public PageRequest(final Integer page, final Integer size) {
         this.page = page;
         this.size = size;
-    }
-
-    public PageServiceRequest toServiceDto() {
-        return new PageServiceRequest(page, size);
     }
 
     public Integer getPage() {

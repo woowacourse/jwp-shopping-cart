@@ -2,12 +2,12 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.application.dto.PageServiceRequest;
-import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
-import woowacourse.shoppingcart.application.dto.ProductServiceResponse;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Page;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.PageRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductSaveRequest;
 import woowacourse.shoppingcart.exception.DataNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,20 +23,22 @@ public class ProductService {
     }
 
     @Transactional
-    public Long addProduct(final ProductSaveServiceRequest request) {
-        return productDao.save(request.toEntity());
+    public Long addProduct(final ProductSaveRequest request) {
+        final Product product = new Product(request.getName(), request.getPrice(), request.getImageUrl());
+        return productDao.save(product);
     }
 
-    public ProductServiceResponse findById(final Long productId) {
+    public ProductResponse findById(final Long productId) {
         final Product product = findProduct(productId);
-        return ProductServiceResponse.from(product);
+        return new ProductResponse(productId, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public List<ProductServiceResponse> findAllByPage(final PageServiceRequest request) {
-        final Page page = Page.of(request.getNumber(), request.getSize());
+    public List<ProductResponse> findAllByPage(final PageRequest request) {
+        final Page page = Page.of(request.getPage(), request.getSize());
         final List<Product> products = productDao.findProducts(page);
+
         return products.stream()
-                .map(ProductServiceResponse::from)
+                .map(p -> new ProductResponse(p.getId(), p.getName(), p.getPrice(), p.getImageUrl()))
                 .collect(Collectors.toList());
     }
 

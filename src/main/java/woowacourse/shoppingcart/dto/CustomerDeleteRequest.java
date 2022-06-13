@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.application.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.domain.PlainPassword;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -18,10 +17,6 @@ public class CustomerDeleteRequest {
 
     public CustomerDeleteRequest(final String password) {
         this.password = password;
-    }
-
-    public CustomerDeleteServiceRequest toServiceRequest(final Long id) {
-        return new CustomerDeleteServiceRequest(id, password);
     }
 
     public String getPassword() {

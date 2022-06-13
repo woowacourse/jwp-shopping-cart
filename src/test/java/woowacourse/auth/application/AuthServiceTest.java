@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import woowacourse.auth.application.dto.LoginServiceRequest;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -42,14 +42,14 @@ class AuthServiceTest {
     void certify() {
         // given
         final String token = "dsfsdfds";
-        final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", RAW_PASSWORD);
-        when(customerDao.findByEmail(new Email(loginServiceRequest.getEmail())))
+        final TokenRequest tokenRequest = new TokenRequest("klay@gmail.com", RAW_PASSWORD);
+        when(customerDao.findByEmail(new Email(tokenRequest.getEmail())))
                 .thenReturn(Optional.of(new Customer(1L, "클레이", new Email("clay@gmail.com"), PASSWORD)));
         when(jwtTokenProvider.createToken(Long.toString(1L)))
                 .thenReturn(token);
 
         // when
-        final String actual = authService.certify(loginServiceRequest);
+        final String actual = authService.certify(tokenRequest);
 
         // then
         assertThat(actual).isEqualTo(token);
@@ -59,12 +59,12 @@ class AuthServiceTest {
     @DisplayName("존재하지 않는 이메일로 사용자를 인증할 경우 예외가 발생한다.")
     void certify_invalidEmail_throwsException() {
         // given
-        final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", RAW_PASSWORD);
-        when(customerDao.findByEmail(new Email(loginServiceRequest.getEmail())))
+        final TokenRequest tokenRequest = new TokenRequest("klay@gmail.com", RAW_PASSWORD);
+        when(customerDao.findByEmail(new Email(tokenRequest.getEmail())))
                 .thenReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> authService.certify(loginServiceRequest))
+        assertThatThrownBy(() -> authService.certify(tokenRequest))
                 .isInstanceOf(NoSuchEmailException.class);
     }
 
@@ -72,12 +72,12 @@ class AuthServiceTest {
     @DisplayName("사용자 인증 시 비밀번호가 일치하지 않을 경우 예외가 발생한다.")
     void certify_passwordNotMatch_throwsException() {
         // given
-        final LoginServiceRequest loginServiceRequest = new LoginServiceRequest("klay@gmail.com", "11111111");
-        when(customerDao.findByEmail(new Email(loginServiceRequest.getEmail())))
+        final TokenRequest tokenRequest = new TokenRequest("klay@gmail.com", "11111111");
+        when(customerDao.findByEmail(new Email(tokenRequest.getEmail())))
                 .thenReturn(Optional.of(new Customer(1L, "클레이", new Email("klay@gmail.com"), PASSWORD)));
 
         // when, then
-        assertThatThrownBy(() -> authService.certify(loginServiceRequest))
+        assertThatThrownBy(() -> authService.certify(tokenRequest))
                 .isInstanceOf(PasswordNotMatchException.class);
     }
 }

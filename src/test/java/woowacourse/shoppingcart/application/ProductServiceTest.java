@@ -9,12 +9,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import woowacourse.shoppingcart.application.dto.PageServiceRequest;
-import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
-import woowacourse.shoppingcart.application.dto.ProductServiceResponse;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Page;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.PageRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductSaveRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,13 +34,13 @@ class ProductServiceTest {
     @DisplayName("상품을 등록한다.")
     @Test
     void addProduct() {
-        final ProductSaveServiceRequest productSaveServiceRequest =
-                new ProductSaveServiceRequest(NAME, PRICE, IMAGE_URL);
+        final ProductSaveRequest productSaveRequest =
+                new ProductSaveRequest(NAME, PRICE, IMAGE_URL);
 
         when(productDao.save(any(Product.class)))
                 .thenReturn(1L);
 
-        assertThat(productService.addProduct(productSaveServiceRequest)).isOne();
+        assertThat(productService.addProduct(productSaveRequest)).isOne();
     }
 
     @DisplayName("ID를 통해 상품을 조회한다.")
@@ -48,19 +48,19 @@ class ProductServiceTest {
     void findById() {
         // given
         final long productId = 1L;
-        final ProductSaveServiceRequest productSaveServiceRequest =
-                new ProductSaveServiceRequest(NAME, PRICE, IMAGE_URL);
-        final Product product = new Product(productId, productSaveServiceRequest.getName(),
-                productSaveServiceRequest.getPrice(), productSaveServiceRequest.getImageUrl());
+        final ProductSaveRequest productSaveRequest =
+                new ProductSaveRequest(NAME, PRICE, IMAGE_URL);
+        final Product product = new Product(productId, productSaveRequest.getName(),
+                productSaveRequest.getPrice(), productSaveRequest.getImageUrl());
 
         // when
         when(productDao.findProductById(any(Long.class)))
                 .thenReturn(Optional.of(product));
-        final ProductServiceResponse response = productService.findById(productId);
+        final ProductResponse response = productService.findById(productId);
 
         // then
         assertThat(response).usingRecursiveComparison()
-                .isEqualTo(new ProductServiceResponse(1L, NAME, PRICE, IMAGE_URL));
+                .isEqualTo(new ProductResponse(1L, NAME, PRICE, IMAGE_URL));
     }
 
     @DisplayName("페이지에 해당하는 존재하는 상품을 모두 조회한다.")
@@ -69,7 +69,7 @@ class ProductServiceTest {
         // given
         final Product product1 = new Product(1L, NAME, PRICE, IMAGE_URL);
         final Product product2 = new Product(2L, "피자", 3000, "www.pizza.com");
-        final PageServiceRequest pageServiceRequest = new PageServiceRequest(1, 2);
+        final PageRequest pageServiceRequest = new PageRequest(1, 2);
 
         // when
         when(productDao.findProducts(any(Page.class)))
@@ -78,8 +78,8 @@ class ProductServiceTest {
         // then
         assertThat(productService.findAllByPage(pageServiceRequest)).usingRecursiveComparison()
                 .isEqualTo(List.of(
-                        new ProductServiceResponse(1L, NAME, PRICE, IMAGE_URL),
-                        new ProductServiceResponse(2L, "피자", 3000, "www.pizza.com")
+                        new ProductResponse(1L, NAME, PRICE, IMAGE_URL),
+                        new ProductResponse(2L, "피자", 3000, "www.pizza.com")
                 ));
 
     }

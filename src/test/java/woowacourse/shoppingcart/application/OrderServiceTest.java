@@ -10,12 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import woowacourse.shoppingcart.application.dto.OrderRequestDto;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.domain.*;
+import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -48,7 +48,7 @@ class OrderServiceTest {
         // given
         final String password = PasswordEncryptor.encrypt("12345678");
         final Customer customer = new Customer(1L, "썬", new Email("sun@gmail.com"), new EncodedPassword(password));
-        final OrderRequestDto orderRequestDto = new OrderRequestDto(1L, 10);
+        final OrderRequest orderRequest = new OrderRequest(1L, 10);
 
         // when
         when(customerDao.findById(any(Long.class)))
@@ -61,7 +61,7 @@ class OrderServiceTest {
                 .thenReturn(any(Long.class));
 
         // then
-        assertThatCode(() -> orderService.addOrder(customer.getId(), List.of(orderRequestDto)))
+        assertThatCode(() -> orderService.addOrder(customer.getId(), List.of(orderRequest)))
                 .doesNotThrowAnyException();
     }
 
@@ -69,14 +69,14 @@ class OrderServiceTest {
     @Test
     void addOrder_customerNotExist_throwsException() {
         // given
-        final OrderRequestDto orderRequestDto = new OrderRequestDto(1L, 10);
+        final OrderRequest orderRequest = new OrderRequest(1L, 10);
 
         // when
         when(customerDao.findById(1L))
                 .thenReturn(Optional.empty());
 
         // then
-        assertThatThrownBy(() -> orderService.addOrder(1L, List.of(orderRequestDto)))
+        assertThatThrownBy(() -> orderService.addOrder(1L, List.of(orderRequest)))
                 .isInstanceOf(CustomerNotFoundException.class);
 
     }

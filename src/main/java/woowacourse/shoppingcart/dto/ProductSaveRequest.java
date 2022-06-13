@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -23,10 +22,6 @@ public class ProductSaveRequest {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-    }
-
-    public ProductSaveServiceRequest toServiceDto() {
-        return new ProductSaveServiceRequest(name, price, imageUrl);
     }
 
     public String getName() {

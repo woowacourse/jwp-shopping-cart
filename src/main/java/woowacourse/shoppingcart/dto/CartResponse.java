@@ -10,7 +10,7 @@ public class CartResponse {
     private final int quantity;
 
     public CartResponse(final Long id, final Long productId, final String name,
-                               final int price, final String imageUrl, final int quantity) {
+                        final int price, final String imageUrl, final int quantity) {
         this.id = id;
         this.productId = productId;
         this.name = name;

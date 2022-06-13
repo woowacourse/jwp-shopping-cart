@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.application.dto.CustomerPasswordUpdateServiceRequest;
 import woowacourse.shoppingcart.domain.PlainPassword;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -23,10 +22,6 @@ public class CustomerPasswordUpdateRequest {
     public CustomerPasswordUpdateRequest(final String oldPassword, final String newPassword) {
         this.oldPassword = oldPassword;
         this.newPassword = newPassword;
-    }
-
-    public CustomerPasswordUpdateServiceRequest toServiceRequest(final Long id) {
-        return new CustomerPasswordUpdateServiceRequest(id, oldPassword, newPassword);
     }
 
     public String getOldPassword() {

@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 import woowacourse.shoppingcart.domain.PlainPassword;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -31,10 +30,6 @@ public class CustomerRegisterRequest {
         this.name = name;
         this.email = email;
         this.password = password;
-    }
-
-    public CustomerSaveServiceRequest toServiceDto() {
-        return new CustomerSaveServiceRequest(name, email, password);
     }
 
     public String getName() {
