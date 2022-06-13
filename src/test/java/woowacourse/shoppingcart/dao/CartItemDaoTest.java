@@ -133,4 +133,16 @@ public class CartItemDaoTest {
         //then
         assertThat(ids).containsExactly(1L, 2L);
     }
+
+    @Test
+    void findCartsByLoginId() {
+        //given
+        String loginId = "test1";
+
+        //when
+        List<CartItem> carts = cartItemDao.findCartsByLoginId(loginId);
+
+        //then
+        assertThat(carts.size()).isEqualTo(2);
+    }
 }

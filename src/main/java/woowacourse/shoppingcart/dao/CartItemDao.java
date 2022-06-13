@@ -71,6 +71,15 @@ public class CartItemDao {
         }
     }
 
+    public List<CartItem> findCartsByLoginId(String loginId) {
+        final String sql =
+                "SELECT cart_item.id, product.id , product.name, product.price, product.image_url, cart_item.quantity "
+                        + "FROM cart_item INNER JOIN product ON cart_item.product_id = product.id "
+                        + "INNER JOIN customer ON cart_item.customer_id = customer.id "
+                        + "WHERE customer.login_id = ?";
+        return jdbcTemplate.query(sql, cartRowMapper, loginId);
+    }
+
     public Long addCartItem(final Long customerId, final Long productId, final int quantity) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();

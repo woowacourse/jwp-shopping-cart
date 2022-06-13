@@ -23,9 +23,8 @@ public class CartItemRepository {
     }
 
     public List<Cart> findCartsByLoginId(String loginId) {
-        List<Long> cartIds = cartItemDao.findIdsByLoginId(loginId);
-        return cartIds.stream()
-                .map(cartItemDao::findCartByCartId)
+        List<CartItem> cartItems = cartItemDao.findCartsByLoginId(loginId);
+        return cartItems.stream()
                 .map(Cart::new)
                 .collect(Collectors.toList());
     }
