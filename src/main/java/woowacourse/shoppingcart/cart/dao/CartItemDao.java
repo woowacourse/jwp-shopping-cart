@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.product.domain.Product;
 
@@ -16,14 +16,14 @@ import woowacourse.shoppingcart.product.domain.Product;
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Cart> rowMapper = (resultSet, rowNumber) -> {
+    private final RowMapper<CartItem> rowMapper = (resultSet, rowNumber) -> {
         final Product product = new Product(
                 resultSet.getLong("product_id"),
                 resultSet.getString("name"),
                 resultSet.getInt("price"),
                 resultSet.getString("image_url")
         );
-        return new Cart(
+        return new CartItem(
                 resultSet.getLong("id"),
                 product,
                 resultSet.getInt("quantity")
@@ -34,7 +34,7 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Cart> findAllByCustomerId(final Long customerId) {
+    public List<CartItem> findAllByCustomerId(final Long customerId) {
         final String sql = ""
                 + "SELECT ci.id, "
                 + "p.id AS product_id, "
@@ -76,7 +76,7 @@ public class CartItemDao {
         return jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId);
     }
 
-    public Cart findByProductAndCustomerId(final Long productId, final Long customerId) {
+    public CartItem findByProductAndCustomerId(final Long productId, final Long customerId) {
         try {
             final String sql = ""
                     + "SELECT ci.id, "
@@ -94,8 +94,8 @@ public class CartItemDao {
         }
     }
 
-    public void updateQuantity(final Cart cart) {
+    public void updateQuantity(final CartItem cartItem) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cart.getQuantity(), cart.getId());
+        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
     }
 }

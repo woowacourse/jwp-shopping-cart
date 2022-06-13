@@ -15,9 +15,9 @@ import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 
 @DisplayName("장바구니 관련 기능")
-class CartAcceptanceTest extends AcceptanceTest {
+class CartItemAcceptanceTest extends AcceptanceTest {
 
-    private static final String REQUEST_URL = "/users/me/carts";
+    private static final String REQUEST_URL = "/users/me/cartItems";
 
     @DisplayName("장바구니 아이템 추가")
     @Test

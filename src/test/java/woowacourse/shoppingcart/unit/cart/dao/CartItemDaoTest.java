@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.unit.DaoTest;
@@ -34,28 +34,28 @@ class CartItemDaoTest extends DaoTest {
     void findAllByCustomerId() {
         // given
         final Long customerId = 2L;
-        final List<Cart> expected = new ArrayList<>();
+        final List<CartItem> expected = new ArrayList<>();
 
         cartItemDao.addCartItem(customerId, 1L);
-        final Cart cart1 = cartItemDao.findByProductAndCustomerId(1L, customerId);
-        final Cart updatedCart1 = cart1.changeQuantity(4);
-        cartItemDao.updateQuantity(updatedCart1);
-        expected.add(updatedCart1);
+        final CartItem cartItem1 = cartItemDao.findByProductAndCustomerId(1L, customerId);
+        final CartItem updatedCartItem1 = cartItem1.changeQuantity(4);
+        cartItemDao.updateQuantity(updatedCartItem1);
+        expected.add(updatedCartItem1);
 
         cartItemDao.addCartItem(customerId, 5L);
-        final Cart cart2 = cartItemDao.findByProductAndCustomerId(5L, customerId);
-        final Cart updatedCart2 = cart2.changeQuantity(6);
-        cartItemDao.updateQuantity(updatedCart2);
-        expected.add(updatedCart2);
+        final CartItem cartItem2 = cartItemDao.findByProductAndCustomerId(5L, customerId);
+        final CartItem updatedCartItem2 = cartItem2.changeQuantity(6);
+        cartItemDao.updateQuantity(updatedCartItem2);
+        expected.add(updatedCartItem2);
 
         cartItemDao.addCartItem(customerId, 3L);
-        final Cart cart3 = cartItemDao.findByProductAndCustomerId(3L, customerId);
-        final Cart updatedCart3 = cart3.changeQuantity(2);
-        cartItemDao.updateQuantity(updatedCart3);
-        expected.add(updatedCart3);
+        final CartItem cartItem3 = cartItemDao.findByProductAndCustomerId(3L, customerId);
+        final CartItem updatedCartItem3 = cartItem3.changeQuantity(2);
+        cartItemDao.updateQuantity(updatedCartItem3);
+        expected.add(updatedCartItem3);
 
         // when
-        final List<Cart> actual = cartItemDao.findAllByCustomerId(customerId);
+        final List<CartItem> actual = cartItemDao.findAllByCustomerId(customerId);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -75,7 +75,7 @@ class CartItemDaoTest extends DaoTest {
         // then
         final List<Long> productIds = cartItemDao.findAllByCustomerId(customerId)
                 .stream()
-                .map(Cart::getProduct)
+                .map(CartItem::getProduct)
                 .map(Product::getId)
                 .collect(Collectors.toList());
 
@@ -121,10 +121,10 @@ class CartItemDaoTest extends DaoTest {
         final Long cartId = cartItemDao.addCartItem(customerId, productId);
 
         final Product product = productDao.findProductById(productId);
-        final Cart expected = new Cart(cartId, product, 1);
+        final CartItem expected = new CartItem(cartId, product, 1);
 
         // when
-        final Cart actual = cartItemDao.findByProductAndCustomerId(productId, customerId);
+        final CartItem actual = cartItemDao.findByProductAndCustomerId(productId, customerId);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -152,12 +152,12 @@ class CartItemDaoTest extends DaoTest {
 
         final int quantity = 77;
         final Product product = productDao.findProductById(productId);
-        final Cart cart = new Cart(cartId, product, quantity);
+        final CartItem cartItem = new CartItem(cartId, product, quantity);
 
         // when
-        cartItemDao.updateQuantity(cart);
+        cartItemDao.updateQuantity(cartItem);
 
-        final Cart actual = cartItemDao.findByProductAndCustomerId(productId, customerId);
+        final CartItem actual = cartItemDao.findByProductAndCustomerId(productId, customerId);
 
         // then
         assertThat(actual.getQuantity()).isEqualTo(quantity);

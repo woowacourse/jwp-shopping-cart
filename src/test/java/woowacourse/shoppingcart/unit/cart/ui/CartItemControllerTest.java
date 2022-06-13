@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemException;
@@ -39,7 +39,7 @@ import woowacourse.shoppingcart.unit.ControllerTest;
 
 class CartItemControllerTest extends ControllerTest {
 
-    private static final String REQUEST_URL = "/users/me/carts";
+    private static final String REQUEST_URL = "/users/me/cartItems";
 
     @Test
     @DisplayName("장바구니에 상품을 추가한다.")
@@ -170,18 +170,18 @@ class CartItemControllerTest extends ControllerTest {
         final Product apple = new Product(1L, "사과", 1700, "apple.org");
         final Product carrot = new Product(2L, "당근", 800, "carrot.io");
 
-        final List<Cart> carts = List.of(
-                new Cart(1L, apple),
-                new Cart(2L, apple),
-                new Cart(3L, apple),
-                new Cart(4L, carrot),
-                new Cart(5L, carrot),
-                new Cart(6L, carrot),
-                new Cart(7L, carrot),
-                new Cart(8L, carrot)
+        final List<CartItem> cartItems = List.of(
+                new CartItem(1L, apple),
+                new CartItem(2L, apple),
+                new CartItem(3L, apple),
+                new CartItem(4L, carrot),
+                new CartItem(5L, carrot),
+                new CartItem(6L, carrot),
+                new CartItem(7L, carrot),
+                new CartItem(8L, carrot)
         );
         given(cartService.findCartsBy(customer))
-                .willReturn(carts);
+                .willReturn(cartItems);
 
         // when
         final ResultActions perform = mockMvc.perform(
@@ -226,9 +226,9 @@ class CartItemControllerTest extends ControllerTest {
         final QuantityChangingRequest request = new QuantityChangingRequest(3);
         final String json = objectMapper.writeValueAsString(request);
 
-        final Cart cart = new Cart(1L, product, request.getQuantity());
+        final CartItem cartItem = new CartItem(1L, product, request.getQuantity());
         given(cartService.changeQuantity(customer, product.getId(), request))
-                .willReturn(cart);
+                .willReturn(cartItem);
 
         // when
         final ResultActions perform = mockMvc.perform(

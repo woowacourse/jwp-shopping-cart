@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.shoppingcart.cart.application.CartService;
-import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
 import woowacourse.shoppingcart.cart.dto.CartItemResponse;
 import woowacourse.shoppingcart.cart.dto.CartItemsResponse;
@@ -21,7 +21,7 @@ import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.support.Login;
 
 @RestController
-@RequestMapping("/users/me/carts")
+@RequestMapping("/users/me/cartItems")
 public class CartItemController {
 
     private final CartService cartService;
@@ -32,8 +32,8 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<CartItemsResponse> getCartItems(@Login final Customer customer) {
-        final List<Cart> carts = cartService.findCartsBy(customer);
-        final CartItemsResponse response = CartItemsResponse.from(carts);
+        final List<CartItem> cartItems = cartService.findCartsBy(customer);
+        final CartItemsResponse response = CartItemsResponse.from(cartItems);
         return ResponseEntity
                 .ok()
                 .body(response);
@@ -52,8 +52,8 @@ public class CartItemController {
     public ResponseEntity<CartItemResponse> changeQuantity(@Login final Customer customer,
                                                            @PathVariable final Long productId,
                                                            @RequestBody @Valid final QuantityChangingRequest request) {
-        final Cart changedCart = cartService.changeQuantity(customer, productId, request);
-        final CartItemResponse response = new CartItemResponse(changedCart);
+        final CartItem changedCartItem = cartService.changeQuantity(customer, productId, request);
+        final CartItemResponse response = new CartItemResponse(changedCartItem);
         return ResponseEntity
                 .ok(response);
     }

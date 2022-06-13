@@ -7,23 +7,23 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.exception.badrequest.InvalidQuantityException;
 import woowacourse.shoppingcart.product.domain.Product;
 
-class CartTest {
+class CartItemTest {
 
     @Test
     @DisplayName("수량을 변경한다.")
     void changeQuantity() {
         // given
         final Product product = new Product(1L, "빠나나", 850, "bbanana.com");
-        final Cart cart = new Cart(1L, product);
+        final CartItem cartItem = new CartItem(1L, product);
 
         final int expected = 7;
 
         // when
-        final Cart actual = cart.changeQuantity(expected);
+        final CartItem actual = cartItem.changeQuantity(expected);
 
         // then
         assertThat(actual.getQuantity()).isEqualTo(expected);
@@ -35,10 +35,10 @@ class CartTest {
     void changeQuantity_invalidValue_exceptionThrown(final int quantity) {
         // given
         final Product product = new Product(1L, "빠나나", 850, "bbanana.com");
-        final Cart cart = new Cart(1L, product);
+        final CartItem cartItem = new CartItem(1L, product);
 
         // when, then
-        assertThatThrownBy(() -> cart.changeQuantity(quantity))
+        assertThatThrownBy(() -> cartItem.changeQuantity(quantity))
                 .isInstanceOf(InvalidQuantityException.class);
     }
 }

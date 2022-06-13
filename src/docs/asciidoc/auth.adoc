@@ -1,4 +1,4 @@
-= Shopping cart API - rick
+= Shopping cartItem API - rick
 :toc: left
 :toclevels: 2
 :sectlinks:

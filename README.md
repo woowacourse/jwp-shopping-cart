@@ -12,4 +12,4 @@
 - [회원 기능](http://ec2-3-39-194-30.ap-northeast-2.compute.amazonaws.com:8080/docs/customer.html)
 - [인증/인가 기능](http://ec2-3-39-194-30.ap-northeast-2.compute.amazonaws.com:8080/docs/auth.html)
 - [상품 기능](http://ec2-3-39-194-30.ap-northeast-2.compute.amazonaws.com:8080/docs/product.html)
-- [장바구니 기능](http://ec2-3-39-194-30.ap-northeast-2.compute.amazonaws.com:8080/docs/cart.html)
+- [장바구니 기능](http://ec2-3-39-194-30.ap-northeast-2.compute.amazonaws.com:8080/docs/cartItem.html)

@@ -8,20 +8,16 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import woowacourse.shoppingcart.cart.application.CartService;
-import woowacourse.shoppingcart.cart.dao.CartItemDao;
-import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemException;
 import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
-import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.integration.IntegrationTest;
 import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
 
-class CartServiceIntegrationTest extends IntegrationTest {
+class CartItemServiceIntegrationTest extends IntegrationTest {
 
     private Customer customer;
 
@@ -42,10 +38,10 @@ class CartServiceIntegrationTest extends IntegrationTest {
         }
 
         // when
-        final List<Cart> actual = cartService.findCartsBy(customer);
+        final List<CartItem> actual = cartService.findCartsBy(customer);
 
         final List<Long> actualProductIds = actual.stream()
-                .map(Cart::getProduct)
+                .map(CartItem::getProduct)
                 .map(Product::getId)
                 .collect(Collectors.toList());
 
@@ -101,7 +97,7 @@ class CartServiceIntegrationTest extends IntegrationTest {
         final QuantityChangingRequest request = new QuantityChangingRequest(quantity);
 
         // when
-        final Cart actual = cartService.changeQuantity(customer, productId, request);
+        final CartItem actual = cartService.changeQuantity(customer, productId, request);
 
         // then
         assertThat(actual.getQuantity()).isEqualTo(quantity);
@@ -134,7 +130,7 @@ class CartServiceIntegrationTest extends IntegrationTest {
 
         final List<Long> actualProductIds = cartService.findCartsBy(customer)
                 .stream()
-                .map(Cart::getProduct)
+                .map(CartItem::getProduct)
                 .map(Product::getId)
                 .collect(Collectors.toList());
 

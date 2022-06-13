@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.cart.dto;
 
 import java.util.Objects;
-import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.product.domain.Product;
 
 public class CartItemResponse {
@@ -12,14 +12,14 @@ public class CartItemResponse {
     private final String imageUrl;
     private final int quantity;
 
-    public CartItemResponse(final Cart cart) {
-        final Product product = cart.getProduct();
+    public CartItemResponse(final CartItem cartItem) {
+        final Product product = cartItem.getProduct();
 
         this.id = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();
         this.imageUrl = product.getImageUrl();
-        this.quantity = cart.getQuantity();
+        this.quantity = cartItem.getQuantity();
     }
 
     public Long getId() {

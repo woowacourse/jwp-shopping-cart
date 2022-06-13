@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
-import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemException;
 import woowacourse.shoppingcart.customer.domain.Customer;
@@ -23,7 +23,7 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<Cart> findCartsBy(final Customer customer) {
+    public List<CartItem> findCartsBy(final Customer customer) {
         return cartItemDao.findAllByCustomerId(customer.getId());
     }
 
@@ -36,15 +36,15 @@ public class CartService {
         return cartItemDao.addCartItem(customer.getId(), productId);
     }
 
-    public Cart changeQuantity(final Customer customer, final Long productId, final QuantityChangingRequest request) {
-        final Cart cart = cartItemDao.findByProductAndCustomerId(productId, customer.getId());
-        final Cart updatedCart = cart.changeQuantity(request.getQuantity());
-        cartItemDao.updateQuantity(updatedCart);
-        return updatedCart;
+    public CartItem changeQuantity(final Customer customer, final Long productId, final QuantityChangingRequest request) {
+        final CartItem cartItem = cartItemDao.findByProductAndCustomerId(productId, customer.getId());
+        final CartItem updatedCartItem = cartItem.changeQuantity(request.getQuantity());
+        cartItemDao.updateQuantity(updatedCartItem);
+        return updatedCartItem;
     }
 
     public void deleteCartBy(final Customer customer, final Long productId) {
-        final Cart cart = cartItemDao.findByProductAndCustomerId(productId, customer.getId());
-        cartItemDao.deleteCartItem(cart.getId());
+        final CartItem cartItem = cartItemDao.findByProductAndCustomerId(productId, customer.getId());
+        cartItemDao.deleteCartItem(cartItem.getId());
     }
 }

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import woowacourse.shoppingcart.cart.application.CartService;
-import woowacourse.shoppingcart.cart.domain.Cart;
+import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.cart.exception.badrequest.DuplicateCartItemException;
 import woowacourse.shoppingcart.cart.exception.badrequest.NoExistCartItemException;
@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.product.exception.notfound.NotFoundProductException;
 import woowacourse.shoppingcart.unit.ServiceMockTest;
 
-class CartServiceTest extends ServiceMockTest {
+class CartItemServiceTest extends ServiceMockTest {
 
     @InjectMocks
     private CartService cartService;
@@ -89,14 +89,14 @@ class CartServiceTest extends ServiceMockTest {
         final String imageUrl = "fake.org";
         final Product product = new Product(productId, name, price, imageUrl);
 
-        final Cart existCart = new Cart(1L, product, 8);
+        final CartItem existCartItem = new CartItem(1L, product, 8);
         given(cartItemDao.findByProductAndCustomerId(productId, customer.getId()))
-                .willReturn(existCart);
+                .willReturn(existCartItem);
 
-        final Cart expected = new Cart(1L, product, quantity);
+        final CartItem expected = new CartItem(1L, product, quantity);
 
         // when
-        final Cart actual = cartService.changeQuantity(customer, productId, request);
+        final CartItem actual = cartService.changeQuantity(customer, productId, request);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -128,9 +128,9 @@ class CartServiceTest extends ServiceMockTest {
         final Long productId = 1L;
         final Product product = new Product(productId, "망고", 1990, "man.go");
 
-        final Cart cart = new Cart(1L, product, 3);
+        final CartItem cartItem = new CartItem(1L, product, 3);
         given(cartItemDao.findByProductAndCustomerId(productId, customer.getId()))
-                .willReturn(cart);
+                .willReturn(cartItem);
 
         // when, then
         assertThatCode(() -> cartService.deleteCartBy(customer, productId))

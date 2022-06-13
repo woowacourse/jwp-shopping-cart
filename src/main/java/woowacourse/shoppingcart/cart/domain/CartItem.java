@@ -3,27 +3,27 @@ package woowacourse.shoppingcart.cart.domain;
 import java.util.Objects;
 import woowacourse.shoppingcart.product.domain.Product;
 
-public class Cart {
+public class CartItem {
 
     private Long id;
     private Product product;
     private Quantity quantity;
 
-    private Cart() {
+    private CartItem() {
     }
 
-    public Cart(final Long id, final Product product) {
+    public CartItem(final Long id, final Product product) {
         this(id, product, 1);
     }
 
-    public Cart(final Long id, final Product product, final int quantity) {
+    public CartItem(final Long id, final Product product, final int quantity) {
         this.id = id;
         this.product = product;
         this.quantity = Quantity.from(quantity);
     }
 
-    public Cart changeQuantity(final int quantity) {
-        return new Cart(id, product, quantity);
+    public CartItem changeQuantity(final int quantity) {
+        return new CartItem(id, product, quantity);
     }
 
     public Long getId() {
@@ -46,9 +46,9 @@ public class Cart {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Cart cart = (Cart) o;
-        return Objects.equals(id, cart.id) && Objects.equals(product, cart.product)
-                && Objects.equals(quantity, cart.quantity);
+        final CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id) && Objects.equals(product, cartItem.product)
+                && Objects.equals(quantity, cartItem.quantity);
     }
 
     @Override
