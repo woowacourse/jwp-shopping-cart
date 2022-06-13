@@ -38,8 +38,8 @@ create table cart_item
 
 create table orders
 (
-    id          bigint not null auto_increment,
-    customer_id bigint not null,
+    id                bigint       not null auto_increment,
+    customer_username varchar(255) not null,
     primary key (id)
 );
 

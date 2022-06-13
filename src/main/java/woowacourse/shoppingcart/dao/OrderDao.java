@@ -17,25 +17,20 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrders(final Long customerId) {
-        final String sql = "INSERT INTO orders (customer_id) VALUES (?)";
+    public Long addOrders(final String customerUsername) {
+        final String sql = "INSERT INTO orders (customer_username) VALUES (?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
+            preparedStatement.setString(1, customerUsername);
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
-    public List<Long> findOrderIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM orders WHERE customer_id = ? ";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
-    }
-
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
+    public List<Long> findOrderIdsByCustomerUsername(final String customerUsername) {
+        final String sql = "SELECT id FROM orders WHERE customer_username = ? ";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerUsername);
     }
 }

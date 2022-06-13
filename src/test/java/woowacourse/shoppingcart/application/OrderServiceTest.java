@@ -12,7 +12,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductRequest;
 import woowacourse.shoppingcart.dto.ProductResponse;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 import java.util.List;
 
@@ -77,8 +77,8 @@ class OrderServiceTest {
     void addOrder_notExistItemsInCart() {
         List<Long> invalidProductIds = List.of(productResponse1.getId() + 100L, productResponse2.getId() + 100L);
 
-        assertThatExceptionOfType(InvalidCartItemException.class)
+        assertThatExceptionOfType(NotInCustomerCartItemException.class)
                 .isThrownBy(() -> orderService.addOrder(invalidProductIds, "kth990303"))
-                .withMessageContaining("유효");
+                .withMessageContaining("존재");
     }
 }

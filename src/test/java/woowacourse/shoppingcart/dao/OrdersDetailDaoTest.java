@@ -26,6 +26,7 @@ class OrdersDetailDaoTest {
     private long ordersId;
     private long productId;
     private long customerId;
+    private String customerUsername;
 
     public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -35,7 +36,8 @@ class OrdersDetailDaoTest {
     @BeforeEach
     void setUp() {
         customerId = 1L;
-        jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
+        customerUsername = "kth990303";
+        jdbcTemplate.update("INSERT INTO orders (customer_username) VALUES (?)", customerUsername);
         ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 
         jdbcTemplate.update("INSERT INTO product (name, price, thumbnail) VALUES (?, ?, ?)"

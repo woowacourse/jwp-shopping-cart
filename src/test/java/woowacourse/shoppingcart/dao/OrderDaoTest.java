@@ -31,10 +31,10 @@ class OrderDaoTest {
     @Test
     void addOrders() {
         //given
-        final Long customerId = 1L;
+        final String customerUsername = "kth990303";
 
         //when
-        final Long orderId = orderDao.addOrders(customerId);
+        final Long orderId = orderDao.addOrders(customerUsername);
 
         //then
         assertThat(orderId).isNotNull();
@@ -44,12 +44,12 @@ class OrderDaoTest {
     @Test
     void findOrderIdsByCustomerId() {
         //given
-        final Long customerId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+        final String customerUsername = "kth990303";
+        jdbcTemplate.update("INSERT INTO ORDERS (customer_username) VALUES (?)", customerUsername);
+        jdbcTemplate.update("INSERT INTO ORDERS (customer_username) VALUES (?)", customerUsername);
 
         //when
-        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
+        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerUsername(customerUsername);
 
         //then
         assertThat(orderIdsByCustomerId).hasSize(2);
