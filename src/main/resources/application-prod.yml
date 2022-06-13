@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${username}
+    url: jdbc:mysql://192.168.0.204:3306/eve?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true
+    password: ${password}
+
+security:
+  jwt:
+    token:
+      expire-length: '3600000'
+      secret-key: ${secret-key}
