@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import java.util.Objects;
+
 public class EncodedPassword {
 
     public static final int ENCODED_LENGTH = 64;
@@ -17,11 +19,24 @@ public class EncodedPassword {
         }
     }
 
-    public boolean isSamePassword(EncodedPassword otherPassword) {
-        return value.equals(otherPassword.value);
-    }
-
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        EncodedPassword that = (EncodedPassword) o;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

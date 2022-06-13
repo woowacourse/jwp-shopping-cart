@@ -23,7 +23,7 @@ public class Customer {
     }
 
     public boolean isSamePassword(EncodedPassword otherPassword) {
-        return password.isSamePassword(otherPassword);
+        return password.equals(otherPassword);
     }
 
     public Long getId() {
