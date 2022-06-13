@@ -2,16 +2,16 @@ package woowacourse.auth.dto;
 
 public class TokenRequest {
 
-    private Long id;
+    private Long CustomerId;
 
     public TokenRequest() {
     }
 
-    public TokenRequest(final Long id) {
-        this.id = id;
+    public TokenRequest(final Long CustomerId) {
+        this.CustomerId = CustomerId;
     }
 
-    public Long getId() {
-        return id;
+    public Long getCustomerId() {
+        return CustomerId;
     }
 }

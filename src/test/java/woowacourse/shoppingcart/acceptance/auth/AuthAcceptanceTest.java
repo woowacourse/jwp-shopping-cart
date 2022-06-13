@@ -2,9 +2,9 @@ package woowacourse.shoppingcart.acceptance.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.나의_정보조회;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.로그인;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.회원가입;
+import static woowacourse.Fixtures.나의_정보조회;
+import static woowacourse.Fixtures.로그인;
+import static woowacourse.Fixtures.회원가입;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -67,7 +67,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode())
                         .isEqualTo(HttpStatus.FORBIDDEN.value()),
                 () -> assertThat(response.body().asString())
-                        .isEqualTo("토큰이 유효하지 않습니다.")
+                        .contains("토큰이 유효하지 않습니다.")
         );
     }
 
@@ -94,7 +94,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode())
                         .isEqualTo(HttpStatus.FORBIDDEN.value()),
                 () -> assertThat(response.body().asString())
-                        .isEqualTo("토큰이 유효하지 않습니다.")
+                        .contains("토큰이 유효하지 않습니다.")
         );
     }
 }

@@ -1,7 +1,9 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
@@ -16,9 +18,12 @@ import woowacourse.shoppingcart.repository.CustomerRepository;
 @Service
 public class CustomerService {
 
-    private CustomerRepository customerRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final CustomerRepository customerRepository;
 
-    public CustomerService(final CustomerRepository customerRepository) {
+    public CustomerService(JwtTokenProvider jwtTokenProvider,
+                           final CustomerRepository customerRepository) {
+        this.jwtTokenProvider = jwtTokenProvider;
         this.customerRepository = customerRepository;
     }
 
@@ -27,40 +32,48 @@ public class CustomerService {
     }
 
     public CustomerLoginResponse login(final CustomerLoginRequest request) {
-        Customer customer = customerRepository.login(request.getUserId(), request.getPassword());
-        return CustomerLoginResponse.ofExceptToken(customer);
+        Customer customer = customerRepository.findValidUser(request.getUserId(), request.getPassword());
+        String token = jwtTokenProvider.createToken(String.valueOf(customer.getId()));
+        return CustomerLoginResponse.of(customer, token);
     }
 
+    @Transactional(readOnly = true)
     public CustomerResponse findById(final TokenRequest request) {
-        Customer customer = customerRepository.findById(request.getId());
+        Customer customer = customerRepository.findById(request.getCustomerId());
         return CustomerResponse.of(customer);
     }
 
+    @Transactional
     public void update(final TokenRequest tokenRequest, final CustomerUpdateRequest customerUpdateRequest) {
-        Customer oldCustomer = customerRepository.findById(tokenRequest.getId());
+        Customer oldCustomer = customerRepository.findById(tokenRequest.getCustomerId());
         Customer newCustomer = customerUpdateRequest.updatedCustomer(oldCustomer);
         customerRepository.update(newCustomer);
     }
 
+    @Transactional
     public void updatePassword(final TokenRequest tokenRequest, final PasswordChangeRequest passwordChangeRequest) {
         Password oldPassword = new Password(passwordChangeRequest.getOldPassword());
         Password newPassword = new Password(passwordChangeRequest.getNewPassword());
-        customerRepository.updatePassword(tokenRequest.getId(), oldPassword, newPassword);
+        customerRepository.updatePassword(tokenRequest.getCustomerId(), oldPassword, newPassword);
     }
 
+    @Transactional
     public void withdraw(final TokenRequest request) {
-        customerRepository.delete(request.getId());
+        customerRepository.delete(request.getCustomerId());
     }
 
+    @Transactional
     public void checkDuplicateUsername(final String username) {
         customerRepository.validateDuplicateUsername(username);
     }
 
+    @Transactional
     public void checkDuplicateNickname(final String nickname) {
         customerRepository.validateDuplicateNickname(nickname);
     }
 
+    @Transactional
     public void matchPassword(final TokenRequest tokenRequest, final PasswordRequest passwordRequest) {
-        customerRepository.matchPassword(tokenRequest.getId(), passwordRequest.getPassword());
+        customerRepository.matchPassword(tokenRequest.getCustomerId(), passwordRequest.getPassword());
     }
 }

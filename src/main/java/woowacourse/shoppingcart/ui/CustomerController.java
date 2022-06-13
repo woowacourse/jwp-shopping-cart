@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
@@ -24,13 +23,9 @@ import woowacourse.shoppingcart.dto.PasswordRequest;
 @RestController
 public class CustomerController {
 
-    private final JwtTokenProvider jwtTokenProvider;
-
     private final CustomerService customerService;
 
-    public CustomerController(final JwtTokenProvider jwtTokenProvider,
-                              final CustomerService customerService) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public CustomerController(final CustomerService customerService) {
         this.customerService = customerService;
     }
 
@@ -42,15 +37,24 @@ public class CustomerController {
 
     @PostMapping("/customers/login")
     public ResponseEntity<CustomerLoginResponse> login(final @RequestBody CustomerLoginRequest request) {
-        CustomerLoginResponse response = customerService.login(request);
-        String accessToken = jwtTokenProvider.createToken(String.valueOf(response.getId()));
-        return ResponseEntity.ok().body(response.setToken(accessToken));
+        return ResponseEntity.ok().body(customerService.login(request));
+    }
+
+    @GetMapping(value = "/customers/check", params = "userId")
+    public ResponseEntity<Void> checkDuplicateUsername(final @RequestParam String userId) {
+        customerService.checkDuplicateUsername(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/customers/check", params = "nickname")
+    public ResponseEntity<Void> checkDuplicateNickname(final @RequestParam String nickname) {
+        customerService.checkDuplicateNickname(nickname);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/auth/customers/profile")
     public ResponseEntity<CustomerResponse> getProfile(final @AuthenticationPrincipal TokenRequest request) {
-        CustomerResponse response = customerService.findById(request);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(customerService.findById(request));
     }
 
     @PatchMapping("/auth/customers/profile")
@@ -71,18 +75,6 @@ public class CustomerController {
     public ResponseEntity<Void> withdraw(final @AuthenticationPrincipal TokenRequest request) {
         customerService.withdraw(request);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping(value = "/auth/customers/check", params = "userId")
-    public ResponseEntity<Void> checkDuplicateUsername(final @RequestParam(name = "userId") String username) {
-        customerService.checkDuplicateUsername(username);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(value = "/auth/customers/check", params = "nickname")
-    public ResponseEntity<Void> checkDuplicateNickname(final @RequestParam String nickname) {
-        customerService.checkDuplicateNickname(nickname);
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/auth/customers/match/password")

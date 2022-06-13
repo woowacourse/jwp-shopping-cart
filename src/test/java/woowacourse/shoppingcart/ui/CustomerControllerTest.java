@@ -101,7 +101,7 @@ class CustomerControllerTest {
                 .thenReturn(new CustomerResponse(1L, "jo@naver.com", "jojogreen"));
 
         // then
-        String token = jwtTokenProvider.createToken(String.valueOf(request.getId()));
+        String token = jwtTokenProvider.createToken(String.valueOf(request.getCustomerId()));
         mockMvc.perform(get("/auth/customers/profile")
                         .header("Authorization", "Bearer " + token)
                 ).andDo(print())
@@ -119,7 +119,7 @@ class CustomerControllerTest {
         CustomerUpdateRequest updateRequest = new CustomerUpdateRequest("hunch");
 
         // then
-        String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getId()));
+        String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getCustomerId()));
         mockMvc.perform(patch("/auth/customers/profile")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -137,7 +137,7 @@ class CustomerControllerTest {
         PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest("1234", "2345");
 
         // then
-        String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getId()));
+        String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getCustomerId()));
         mockMvc.perform(patch("/auth/customers/profile/password")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -154,7 +154,7 @@ class CustomerControllerTest {
         TokenRequest tokenRequest = new TokenRequest(1L);
 
         // then
-        String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getId()));
+        String token = jwtTokenProvider.createToken(String.valueOf(tokenRequest.getCustomerId()));
         mockMvc.perform(delete("/auth/customers/profile")
                         .header("Authorization", "Bearer " + token)
                 ).andDo(print())

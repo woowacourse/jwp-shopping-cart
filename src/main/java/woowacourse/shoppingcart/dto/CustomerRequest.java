@@ -18,7 +18,7 @@ public class CustomerRequest {
     }
 
     public Customer toInitCustomer() {
-        return Customer.ofNullId(userId,password,nickname);
+        return Customer.ofNullId(userId, password, nickname);
     }
 
     public String getUserId() {

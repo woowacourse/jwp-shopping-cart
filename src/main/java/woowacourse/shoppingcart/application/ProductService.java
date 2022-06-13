@@ -1,11 +1,12 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.exception.custum.InvalidInputException;
 import woowacourse.shoppingcart.repository.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -16,19 +17,22 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    @Transactional(readOnly = true)
+    public List<ProductResponse> findProductsOfPage(final int pageNumber, final int limit) {
+        validateLimit(limit);
+        return productDao.findByPage(pageNumber, limit).stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    @Transactional(readOnly = true)
+    public ProductResponse findProductById(final Long productId) {
+        return ProductResponse.of(productDao.findById(productId));
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
-    }
-
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+    private void validateLimit(int limit) {
+        if (limit < 1) {
+            throw new InvalidInputException("페이지");
+        }
     }
 }

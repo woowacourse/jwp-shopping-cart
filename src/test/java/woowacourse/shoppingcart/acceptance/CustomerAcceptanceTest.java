@@ -2,29 +2,32 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.BAD_REQUEST;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.NOT_FOUND;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.NO_CONTENT;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.OK;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.UNAUTHORIZED;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.나의_정보조회;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.내_정보_수정;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.로그인;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.비밀번호_변경;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.예외메세지_검증;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.회원가입;
-import static woowacourse.shoppingcart.acceptance.AcceptanceFixtures.회원탈퇴;
+import static woowacourse.Fixtures.BAD_REQUEST;
+import static woowacourse.Fixtures.NOT_FOUND;
+import static woowacourse.Fixtures.NO_CONTENT;
+import static woowacourse.Fixtures.OK;
+import static woowacourse.Fixtures.UNAUTHORIZED;
+import static woowacourse.Fixtures.나의_정보조회;
+import static woowacourse.Fixtures.내_정보_수정;
+import static woowacourse.Fixtures.로그인;
+import static woowacourse.Fixtures.비밀번호_변경;
+import static woowacourse.Fixtures.예외메세지_검증;
+import static woowacourse.Fixtures.회원가입;
+import static woowacourse.Fixtures.회원탈퇴;
 
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerLoginResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordChangeRequest;
+import woowacourse.shoppingcart.dto.PasswordRequest;
 
 @DisplayName("회원 관련 인수테스트")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -153,7 +156,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> 나의_정보조회Response = 나의_정보조회(accessToken);
         assertAll(
                 () -> NOT_FOUND(나의_정보조회Response),
-                () -> 예외메세지_검증(나의_정보조회Response, "존재하지 않는 회원입니다.")
+                () -> 예외메세지_검증(나의_정보조회Response, "존재하지 않는 데이터입니다.")
         );
 
     }
@@ -180,7 +183,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // 예외를 발생시킨다.
         assertAll(
                 () -> NOT_FOUND(response),
-                () -> 예외메세지_검증(response, "존재하지 않는 회원입니다.")
+                () -> 예외메세지_검증(response, "존재하지 않는 데이터입니다.")
         );
     }
 
@@ -232,7 +235,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // 예외를 발생시킨다.
         assertAll(
                 () -> NOT_FOUND(response),
-                () -> 예외메세지_검증(response, "존재하지 않는 회원입니다.")
+                () -> 예외메세지_검증(response, "존재하지 않는 데이터입니다.")
         );
     }
 
@@ -290,7 +293,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         // 기존 비밀번호가 일치하지 않는 상황에서 비밀번호를 변경한다.
-        ExtractableResponse<Response> response = 비밀번호_변경(new PasswordChangeRequest("1234abcd$", "1234abcd@"), accessToken);
+        ExtractableResponse<Response> response = 비밀번호_변경(new PasswordChangeRequest("1234abcd$", "1234abcd@"),
+                accessToken);
 
         // then
         // 예외를 발생시킨다.
@@ -335,13 +339,85 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         // 존재하지 않는 회원의 비밀번호를 변경한다.
-        ExtractableResponse<Response> response = 비밀번호_변경(new PasswordChangeRequest("1234abcd!", "1234abcd@"), accessToken);
+        ExtractableResponse<Response> response = 비밀번호_변경(new PasswordChangeRequest("1234abcd!", "1234abcd@"),
+                accessToken);
 
         // then
         // 예외를 발생시킨다.
         assertAll(
                 () -> NOT_FOUND(response),
-                () -> 예외메세지_검증(response, "존재하지 않는 회원입니다.")
+                () -> 예외메세지_검증(response, "존재하지 않는 데이터입니다.")
         );
+    }
+
+    @Test
+    void 중복된_회원여부를_검사한다() {
+        // given
+        회원가입(new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!"));
+
+        // when
+        // then
+        OK(아이디중복검사("hunch@naver.com"));
+        BAD_REQUEST(아이디중복검사("jo@naver.com"));
+    }
+
+    private ExtractableResponse<Response> 아이디중복검사(String username) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("userId", username)
+                .when().get("customers/check")
+                .then().log().all()
+                .extract();
+
+    }
+
+    @Test
+    void 중복된_닉네임여부를_검사한다() {
+        // given
+        회원가입(new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!"));
+
+        // when
+        // then
+        OK(닉네임중복검사("hunch"));
+        BAD_REQUEST(닉네임중복검사("jojogreen"));
+    }
+
+    private ExtractableResponse<Response> 닉네임중복검사(String nickname) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("nickname", nickname)
+                .when().get("customers/check")
+                .then().log().all()
+                .extract();
+
+    }
+
+    @Test
+    void 토큰속_아이디의_비밀번호가_요청값과_일치하는지_검증한다() {
+        // given
+        // 회원가입을 하고 로그인을 하여 토큰을 발급받는다.
+        회원가입(new CustomerRequest("jo@naver.com", "jojogreen", "1234abcd!"));
+        String accessToken = 로그인(new CustomerLoginRequest("jo@naver.com", "1234abcd!"))
+                .as(CustomerLoginResponse.class)
+                .getAccessToken();
+
+        //when then
+        OK(비밀번호_검증(new PasswordRequest("1234abcd!"), accessToken));
+        BAD_REQUEST(비밀번호_검증(new PasswordRequest("1234abcd@"), accessToken));
+
+
+    }
+
+    private ExtractableResponse<Response> 비밀번호_검증(PasswordRequest passwordRequest, String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(passwordRequest)
+                .when().post("/auth/customers/match/password")
+                .then().log().all()
+                .extract();
     }
 }
