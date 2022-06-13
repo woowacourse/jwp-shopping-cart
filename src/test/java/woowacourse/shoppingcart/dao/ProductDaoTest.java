@@ -13,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
@@ -49,7 +48,7 @@ public class ProductDaoTest {
         Long productId = productDao.save(product);
 
         Product expectedProduct =
-                new Product(productId, product.getName(), product.getImageUrl(),product.getPrice());
+                new Product(productId, product.getName(), product.getImageUrl(), product.getPrice());
 
         // when
         Product actualProduct = productDao.findProductById(productId);

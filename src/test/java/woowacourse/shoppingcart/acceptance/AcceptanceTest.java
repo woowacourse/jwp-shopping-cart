@@ -20,11 +20,6 @@ public class AcceptanceTest {
     @LocalServerPort
     int port;
 
-    @BeforeEach
-    public void setUp() {
-        RestAssured.port = port;
-    }
-
     public static <T> RequestSpecification createBody(String token, T request) {
         return RestAssured.given().log().all()
                 .auth().oauth2(token)
@@ -69,5 +64,10 @@ public class AcceptanceTest {
                 .when()
                 .delete(uri)
                 .then().log().all();
+    }
+
+    @BeforeEach
+    public void setUp() {
+        RestAssured.port = port;
     }
 }

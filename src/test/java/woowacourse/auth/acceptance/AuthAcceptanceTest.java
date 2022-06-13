@@ -17,6 +17,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     private final LoginRequest loginRequest = new LoginRequest("email", "Pw123456!");
 
+    public static String 로그인_후_토큰_획득() {
+        return requestHttpPost("", new LoginRequest("email", "Pw123456!"), "/auth/login")
+                .extract().as(TokenResponse.class).getAccessToken();
+    }
+
     @DisplayName("Bearer Auth 로그인 성공")
     @Test
     void myInfoWithBearerAuth() {
@@ -68,10 +73,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.UNAUTHORIZED.value());
         response.body(containsString("토큰 정보가 존재하지 않습니다."));
-    }
-
-    public static String 로그인_후_토큰_획득() {
-        return requestHttpPost("", new LoginRequest("email", "Pw123456!"), "/auth/login")
-                .extract().as(TokenResponse.class).getAccessToken();
     }
 }

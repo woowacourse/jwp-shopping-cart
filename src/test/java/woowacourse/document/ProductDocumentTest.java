@@ -31,13 +31,6 @@ import woowacourse.shoppingcart.dto.ProductsResponse;
 @SpringBootTest
 class ProductDocumentTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private ProductService productService;
-
     private final Product product1 = new Product(
             1L, "콜드 브루 몰트",
             "https://image.istarbucks.co.kr/upload/store/skuimg/2021/02/[9200000001636]_20210225093600536.jpg",
@@ -46,6 +39,12 @@ class ProductDocumentTest {
             2L, "바닐라 크림 콜드 브루",
             "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000000487]_20210430112319040.jpg",
             4500);
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @MockBean
+    private ProductService productService;
 
     @Test
     void findWithMember() throws Exception {

@@ -6,8 +6,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,15 +32,6 @@ import woowacourse.shoppingcart.dto.OrderResponse;
 @SpringBootTest
 class OrderDocumentTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private OrderService orderService;
-
     private final Product product1 = new Product(
             1L, "콜드 브루 몰트",
             "https://image.istarbucks.co.kr/upload/store/skuimg/2021/02/[9200000001636]_20210225093600536.jpg",
@@ -49,6 +40,14 @@ class OrderDocumentTest {
             2L, "바닐라 크림 콜드 브루",
             "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000000487]_20210430112319040.jpg",
             4500);
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @MockBean
+    private OrderService orderService;
 
     @Test
     void orderItem() throws Exception {

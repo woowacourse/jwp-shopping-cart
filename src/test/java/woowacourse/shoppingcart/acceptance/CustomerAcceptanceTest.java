@@ -19,6 +19,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             "email", "Pw123456!", "name", "010-1234-5678", "address");
     private final LoginRequest loginRequest = new LoginRequest("email", "Pw123456!");
 
+    public static void 회원_추가되어_있음() {
+        CustomerRequest customer = new CustomerRequest(
+                "email", "Pw123456!", "user", "010-1234-5678", "address");
+        requestHttpPost("", customer, "/customers");
+    }
+
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
@@ -89,11 +95,5 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ValidatableResponse response = requestHttpGet(accessToken, "/customers");
         response.statusCode(HttpStatus.BAD_REQUEST.value());
         response.body(containsString("존재하지 않는 유저입니다."));
-    }
-
-    public static void 회원_추가되어_있음() {
-        CustomerRequest customer = new CustomerRequest(
-                "email", "Pw123456!", "user", "010-1234-5678", "address");
-        requestHttpPost("", customer, "/customers");
     }
 }
