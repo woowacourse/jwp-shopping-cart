@@ -121,7 +121,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 주문하기_요청(orderRequests, token);
         return Long.parseLong(response.header("Location").split("/orders/")[1]);
     }
-//
+
     public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }

@@ -45,7 +45,7 @@ class OrdersDetailDaoTest {
     @DisplayName("OrderDatail을 추가하는 기능")
     @Test
     void save() {
-        OrderDetail orderDetail = new OrderDetail(5, productId, 1_000, "coffee", "coffee.png");
+        OrderDetail orderDetail = new OrderDetail(5, ordersId, productId, 1_000, "coffee", "coffee.png");
 
         Long orderDetailId = ordersDetailDao.save(ordersId, orderDetail);
 

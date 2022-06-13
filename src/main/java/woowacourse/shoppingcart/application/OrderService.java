@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,10 +64,18 @@ public class OrderService {
 
     public OrdersResponse findOrdersByCustomerId(final Long customerId) {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
+        List<OrderDetail> orderDetails = ordersDetailDao.findAllByCustomerId(customerId);
 
-        return new OrdersResponse(orderIds.stream()
-                .map(orderId -> findOrderByCustomerId(customerId, orderId))
-                .collect(Collectors.toList()));
+        return new OrdersResponse(collectOrderDetailsToOrder(orderDetails));
+    }
+
+    private List<OrderResponse> collectOrderDetailsToOrder(List<OrderDetail> orderDetails) {
+        Map<Long, List<OrderDetail>> groupedOrderDetails = orderDetails.stream()
+                .collect(Collectors.groupingBy(OrderDetail::getOrderId));
+
+        return groupedOrderDetails.keySet().stream()
+                .map(orderId -> new OrderResponse(orderId, groupedOrderDetails.get(orderId)))
+                .collect(Collectors.toList());
     }
 
 }
