@@ -49,17 +49,27 @@ public class CartItemService {
     }
 
     public List<CartItemResponse> findCartItems(String email) {
-        final Customer customer = customerDao.findByEmail(email);
-        final List<CartItem> cartItems = cartItemDao.findAllByCustomerId(customer.getId());
+        final List<CartItem> cartItems = findCartItemsByEmail(email);
         return cartItems.stream()
                 .map(cartItem -> CartItemResponse.of(cartItem.getId(), cartItem.getQuantity(), cartItem.getProduct()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    private List<CartItem> findCartItemsByEmail(String email) {
+        final Customer customer = customerDao.findByEmail(email);
+        final List<CartItem> cartItems = cartItemDao.findAllByCustomerId(customer.getId());
+        return cartItems;
+    }
+
     public CartItemResponse findCartItem(String email, Long cartItemId) {
+        final CartItem cartItem = findCartItemByEmail(email, cartItemId);
+        return CartItemResponse.of(cartItem.getId(), cartItem.getQuantity(), cartItem.getProduct());
+    }
+
+    private CartItem findCartItemByEmail(String email, Long cartItemId) {
         final Customer customer = customerDao.findByEmail(email);
         final CartItem cartItem = cartItemDao.findByCustomerId(customer.getId(), cartItemId);
-        return CartItemResponse.of(cartItem.getId(), cartItem.getQuantity(), cartItem.getProduct());
+        return cartItem;
     }
 
     @Transactional
