@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 public class CartItemRequest {
 
@@ -8,6 +9,7 @@ public class CartItemRequest {
     private Long productId;
 
     @NotNull
+    @PositiveOrZero(message = "Invalid Quantity")
     private Integer quantity;
 
     public CartItemRequest() {
