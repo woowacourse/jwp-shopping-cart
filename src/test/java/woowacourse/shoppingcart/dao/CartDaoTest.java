@@ -64,11 +64,14 @@ public class CartDaoTest {
     @Test
     void addCartItem() {
         // given
+        System.out.println("??" + cartDao.findByCustomerId(1L));
+
         Long customerId = 1L;
-        Long productId = 1L;
-        Integer quantity = 1;
-        Boolean checked = true;
-        Product product = productDao.findProductById(productId);
+        Long productId = 4L;
+        int quantity = 1;
+        boolean checked = true;
+        Product product = new Product(productId, "pizza", 20_000, "woowa4.com");
+        productDao.save(product);
 
         // when
         CartItem cartItem = cartDao.addCartItem(customerId, new CartItem(product, quantity, checked));
