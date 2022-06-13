@@ -21,7 +21,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
         String token = AuthorizationExtractor.extract(request);
-
         if (!jwtTokenProvider.validateToken(token)) {
             throw new InvalidTokenException();
         }
