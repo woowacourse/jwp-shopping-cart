@@ -24,7 +24,8 @@ import woowacourse.shoppingcart.dto.ChangeCartItemQuantityRequest;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 
 @JdbcTest
-@Sql("/data.sql")
+@Transactional
+@Sql("/data-test.sql")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class CartItemServiceTest {
 

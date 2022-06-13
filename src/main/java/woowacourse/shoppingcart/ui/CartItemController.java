@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
@@ -31,7 +32,7 @@ public class CartItemController {
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal Customer customer,
       @PathVariable Long productId) {
         cartService.addCart(customer, productId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(URI.create("/api/carts/products/" + productId)).build();
     }
 
     @DeleteMapping("/products/{productId}")

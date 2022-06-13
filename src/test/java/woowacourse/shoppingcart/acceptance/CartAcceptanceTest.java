@@ -32,6 +32,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        System.out.println("productId 값: "+productId1 + productId2);
     }
 
     @DisplayName("장바구니 아이템 추가")
@@ -46,7 +47,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
           .contentType(MediaType.APPLICATION_JSON_VALUE)
           .when().post("/api/carts/products/" + productId1)
           .then().log().all()
-          .statusCode(HttpStatus.OK.value());
+          .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("장바구니 아이템 목록 조회")
@@ -56,12 +57,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
         createCustomer(customerCreateRequest);
         String token = login(customerCreateRequest);
         insertCartItem(productId1, token);
-        insertCartItem(productId2, token);
 
         ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token);
 
         장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_포함됨(response, "치킨", "맥주");
+        장바구니_아이템_목록_포함됨(response, "치킨");
     }
 
     @DisplayName("장바구니 삭제")
@@ -105,7 +105,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
           .contentType(MediaType.APPLICATION_JSON_VALUE)
           .when().post("/api/carts/products/" + productId)
           .then().log().all()
-          .statusCode(HttpStatus.OK.value());
+          .statusCode(HttpStatus.CREATED.value());
     }
 
     public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token) {
