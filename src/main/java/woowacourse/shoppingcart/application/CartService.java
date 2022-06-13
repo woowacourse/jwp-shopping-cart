@@ -46,18 +46,18 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public CartItemResponse addCart(final Long productId, final int stock, final String customerName) {
+    public CartItemResponse addCart(final Long productId, final int quantity, final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         Product product = productDao.findProductById(productId);
-        removeProductStock(product, stock);
+        removeProductQuantity(product, quantity);
         try {
-            Long cartItemId = cartItemDao.addCartItem(customerId, productId, stock);
+            Long cartItemId = cartItemDao.addCartItem(customerId, productId, quantity);
             return new CartItemResponse(
                 cartItemId,
                 productId,
                 product.getName(),
                 product.getPrice(),
-                stock,
+                quantity,
                 product.getImageUrl()
             );
         } catch (DataAccessException e) {
@@ -65,8 +65,8 @@ public class CartService {
         }
     }
 
-    private void removeProductStock(Product product, int stock) {
-        product.removeStock(stock);
+    private void removeProductQuantity(Product product, int quantity) {
+        product.removeQuantity(quantity);
         updateProduct(product);
     }
 
@@ -74,12 +74,12 @@ public class CartService {
         validateCustomerCart(cartItemId, customerName);
         CartItem cartItem = cartItemDao.findById(cartItemId);
         Product product = productDao.findProductById(cartItemDao.findProductIdById(cartItemId));
-        addProductStock(product, cartItem.getStock());
+        addProductQuantity(product, cartItem.getQuantity());
         cartItemDao.deleteCartItem(cartItemId);
     }
 
-    private void addProductStock(Product product, int stock) {
-        product.addStock(stock);
+    private void addProductQuantity(Product product, int quantity) {
+        product.addQuantity(quantity);
         updateProduct(product);
     }
 
@@ -103,8 +103,8 @@ public class CartService {
         CartItem cartItem = cartItemDao.findById(cartId);
         Product product = productDao.findProductById(cartItem.getProductId());
 
-        product.addStock(cartItem.getStock() - quantity);
-        cartItem.updateStock(quantity);
+        product.addQuantity(cartItem.getQuantity() - quantity);
+        cartItem.updateQuantity(quantity);
 
         productDao.update(product);
         cartItemDao.update(cartItem);

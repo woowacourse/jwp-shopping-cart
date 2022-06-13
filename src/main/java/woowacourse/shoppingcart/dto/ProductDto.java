@@ -6,17 +6,17 @@ public class ProductDto {
     private Long id;
     private String name;
     private int price;
-    private int stock;
+    private int quantity;
     private String imageURL;
 
     private ProductDto() {
     }
 
-    public ProductDto(Long id, String name, int price, int stock, String imageURL) {
+    public ProductDto(Long id, String name, int price, int quantity, String imageURL) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.stock = stock;
+        this.quantity = quantity;
         this.imageURL = imageURL;
     }
 
@@ -25,7 +25,7 @@ public class ProductDto {
             product.getId(),
             product.getName(),
             product.getPrice(),
-            product.getStock(),
+            product.getQuantity(),
             product.getImageUrl()
         );
     }
@@ -42,8 +42,8 @@ public class ProductDto {
         return price;
     }
 
-    public int getStock() {
-        return stock;
+    public int getQuantity() {
+        return quantity;
     }
 
     public String getImageURL() {

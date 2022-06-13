@@ -32,7 +32,7 @@ public class ProductService {
         Product product = new Product(
             productRequest.getName(),
             productRequest.getPrice(),
-            productRequest.getStock(),
+            productRequest.getQuantity(),
             productRequest.getImageURL()
         );
 

@@ -6,7 +6,7 @@ public class CartItem {
     private Long productId;
     private String name;
     private int price;
-    private int stock;
+    private int quantity;
     private String imageUrl;
 
     public CartItem() {
@@ -24,12 +24,12 @@ public class CartItem {
         this.imageUrl = imageUrl;
     }
 
-    public CartItem(Long id, Long productId, String name, int price, int stock, String imageUrl) {
+    public CartItem(Long id, Long productId, String name, int price, int quantity, String imageUrl) {
         this.id = id;
         this.productId = productId;
         this.name = name;
         this.price = price;
-        this.stock = stock;
+        this.quantity = quantity;
         this.imageUrl = imageUrl;
     }
 
@@ -49,20 +49,20 @@ public class CartItem {
         return price;
     }
 
-    public int getStock() {
-        return stock;
+    public int getQuantity() {
+        return quantity;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void updateStock(int quantity) {
+    public void updateQuantity(int quantity) {
         if (quantity < 0) {
             throw new IllegalArgumentException("수량은 음수로 지정할 수 없습니다.");
         }
 
-        this.stock = quantity;
+        this.quantity = quantity;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class CartItem {
 
         if (getPrice() != cartItem.getPrice())
             return false;
-        if (getStock() != cartItem.getStock())
+        if (getQuantity() != cartItem.getQuantity())
             return false;
         if (getId() != null ? !getId().equals(cartItem.getId()) : cartItem.getId() != null)
             return false;
@@ -93,7 +93,7 @@ public class CartItem {
         result = 31 * result + (getProductId() != null ? getProductId().hashCode() : 0);
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
         result = 31 * result + getPrice();
-        result = 31 * result + getStock();
+        result = 31 * result + getQuantity();
         result = 31 * result + (getImageUrl() != null ? getImageUrl().hashCode() : 0);
         return result;
     }

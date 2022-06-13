@@ -33,11 +33,11 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final int stock = 20;
+        final int quantity = 20;
         final String imageUrl = "www.test.com";
 
         // when
-        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, quantity, imageUrl));
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -49,10 +49,10 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final int stock = 10;
+        final int quantity = 10;
         final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, stock, imageUrl);
+        final Long productId = productDao.save(new Product(name, price, quantity, imageUrl));
+        final Product expectedProduct = new Product(productId, name, price, quantity, imageUrl);
 
         // when
         final Product product = productDao.findProductById(productId);
@@ -81,10 +81,10 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final int stock = 10;
+        final int quantity = 10;
         final String imageUrl = "www.test.com";
 
-        Long savedId = productDao.save(new Product(name, price, stock, imageUrl));
+        Long savedId = productDao.save(new Product(name, price, quantity, imageUrl));
         Product newProduct = new Product(savedId, name, price, 5, imageUrl);
 
         // when
@@ -101,10 +101,10 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final int stock = 10;
+        final int quantity = 10;
         final String imageUrl = "www.test.com";
 
-        final Long productId = productDao.save(new Product(name, price, stock, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, quantity, imageUrl));
         final int beforeSize = productDao.findProducts().size();
 
         // when

@@ -37,8 +37,8 @@ public class CartItemItemDaoTest {
         productDao.save(new Product("banana", 1_000, 10, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, 20, "woowa2.com"));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, stock) VALUES(?, ?, ?)", 1L, 1L, 1);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, stock) VALUES(?, ?, ?)", 1L, 2L, 2);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 1);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 2);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
@@ -120,7 +120,7 @@ public class CartItemItemDaoTest {
 
     @DisplayName("cartItem의 수량을 수정한다.")
     @Test
-    void updateStock() {
+    void updateQuantity() {
 
         // given
         CartItem cartItem = new CartItem(1L, 1L, "banana", 1_000, 5, "woowa1.com");
@@ -130,6 +130,6 @@ public class CartItemItemDaoTest {
         CartItem findCartItem = cartItemDao.findById(1L);
 
         // then
-        assertThat(findCartItem.getStock()).isEqualTo(5);
+        assertThat(findCartItem.getQuantity()).isEqualTo(5);
     }
 }

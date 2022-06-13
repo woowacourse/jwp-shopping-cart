@@ -23,7 +23,7 @@ public class CartItemDao {
 
     public CartItem findById(Long id) {
         final String sql = "SELECT ci.id as cart_item_id, ci.product_id as cart_item_product_id, p.name as product_name,"
-            + " p.price as product_price, ci.stock as cart_item_stock, p.image_url as product_image_url "
+            + " p.price as product_price, ci.quantity as cart_item_quantity, p.image_url as product_image_url "
             + "FROM cart_item as ci "
             + "LEFT JOIN product AS p ON ci.product_id = p.id "
             + "WHERE ci.id = ?";
@@ -52,15 +52,15 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId, final int stock) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id, stock) VALUES(?, ?, ?)";
+    public Long addCartItem(final Long customerId, final Long productId, final int quantity) {
+        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[] {"id"});
             preparedStatement.setLong(1, customerId);
             preparedStatement.setLong(2, productId);
-            preparedStatement.setInt(3, stock);
+            preparedStatement.setInt(3, quantity);
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -76,17 +76,18 @@ public class CartItemDao {
     }
 
     public void update(final CartItem cartItem) {
-        final String sql = "UPDATE cart_item SET stock = ? WHERE id = ?";
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
 
         jdbcTemplate.update(sql,
-            cartItem.getStock(),
+            cartItem.getQuantity(),
             cartItem.getId()
         );
     }
 
     public List<CartItem> findAllByCustomerId(final Long customerId) {
-        final String sql = "SELECT ci.id as cart_item_id, ci.product_id as cart_item_product_id, p.name as product_name,"
-            + " p.price as product_price, ci.stock as cart_item_stock, p.image_url as product_image_url "
+        final String sql =
+            "SELECT ci.id as cart_item_id, ci.product_id as cart_item_product_id, p.name as product_name,"
+                + " p.price as product_price, ci.quantity as cart_item_quantity, p.image_url as product_image_url "
                 + "FROM cart_item as ci "
                 + "LEFT JOIN product AS p ON ci.product_id = p.id "
                 + "WHERE ci.customer_id = ?";
@@ -100,7 +101,7 @@ public class CartItemDao {
             resultSet.getLong("cart_item_product_id"),
             resultSet.getString("product_name"),
             resultSet.getInt("product_price"),
-            resultSet.getInt("cart_item_stock"),
+            resultSet.getInt("cart_item_quantity"),
             resultSet.getString("product_image_url")
         );
     }

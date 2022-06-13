@@ -9,16 +9,16 @@ public class ProductRequest {
     @Min(value = 0, message = "상품의 가격은 음수일 수 없습니다.")
     private int price;
     @Min(value = 0, message = "재고가 음수일 수 없습니다.")
-    private int stock;
+    private int quantity;
     private String imageURL;
 
     private ProductRequest() {
     }
 
-    public ProductRequest(String name, int price, int stock, String imageURL) {
+    public ProductRequest(String name, int price, int quantity, String imageURL) {
         this.name = name;
         this.price = price;
-        this.stock = stock;
+        this.quantity = quantity;
         this.imageURL = imageURL;
     }
 
@@ -30,8 +30,8 @@ public class ProductRequest {
         return price;
     }
 
-    public int getStock() {
-        return stock;
+    public int getQuantity() {
+        return quantity;
     }
 
     public String getImageURL() {

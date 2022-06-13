@@ -49,7 +49,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("상품을 추가할떄 재고가 음수이면 안된다.")
     @Test
-    void addMinusStock() {
+    void addMinusQuantity() {
         ProductRequest 치킨 = new ProductRequest("치킨", 10_000, -20, "http://example.com/chicken.jpg");
         ExtractableResponse<Response> response = 상품_등록_요청(치킨);
 
@@ -121,9 +121,9 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
+            .when().delete("/api/products/{productId}", productId)
+            .then().log().all()
+            .extract();
     }
 
     public static void 상품_추가됨(ExtractableResponse<Response> response) {
@@ -131,8 +131,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 상품_등록되어_있음(String name, int price, int stock, String imageUrl) {
-        ProductRequest productRequest = new ProductRequest(name, price, stock, imageUrl);
+    public static Long 상품_등록되어_있음(String name, int price, int quantity, String imageUrl) {
+        ProductRequest productRequest = new ProductRequest(name, price, quantity, imageUrl);
         ExtractableResponse<Response> response = 상품_등록_요청(productRequest);
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }

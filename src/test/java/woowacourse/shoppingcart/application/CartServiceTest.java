@@ -43,7 +43,7 @@ class CartServiceTest {
 
         // then
         assertAll(
-            () -> assertThat(product.getStock()).isEqualTo(10),
+            () -> assertThat(product.getQuantity()).isEqualTo(10),
             () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(10)
         );
     }
@@ -62,7 +62,7 @@ class CartServiceTest {
         Product product = productDao.findProductById(productId);
 
         // then
-        assertThat(product.getStock()).isEqualTo(20);
+        assertThat(product.getQuantity()).isEqualTo(20);
     }
 
     @DisplayName("카트 상품의 수량을 늘리면 상품의 재고는 감소해야한다.")
@@ -79,7 +79,7 @@ class CartServiceTest {
         Product product = productDao.findProductById(productId);
 
         // then
-        assertThat(product.getStock()).isEqualTo(5);
+        assertThat(product.getQuantity()).isEqualTo(5);
     }
 
     @DisplayName("카트 상품의 수량을 상품의 재고보다 더 많이 늘릴 수 없다.")
@@ -112,7 +112,7 @@ class CartServiceTest {
         Product product = productDao.findProductById(productId);
 
         // then
-        assertThat(product.getStock()).isEqualTo(15);
+        assertThat(product.getQuantity()).isEqualTo(15);
     }
 
     @DisplayName("아이템 삭제시에 해당 customer의 cartItem이 맞지 않으면 예외를 반환해야 한다.")

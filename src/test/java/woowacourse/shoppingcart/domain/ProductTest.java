@@ -9,28 +9,28 @@ class ProductTest {
 
     @DisplayName("상품의 재고를 감소한다.")
     @Test
-    void removeStock() {
+    void removeQuantity() {
         Product product = new Product("치킨", 10_000, 10, "http://example.chicken.jpg");
-        product.removeStock(5);
+        product.removeQuantity(5);
 
-        assertThat(product.getStock()).isEqualTo(5);
+        assertThat(product.getQuantity()).isEqualTo(5);
     }
 
     @DisplayName("상품의 현재 재고보다 더 많이 꺼낼 수 없다.")
     @Test
-    void removeOverStock() {
+    void removeOverQuantity() {
         Product product = new Product("치킨", 10_000, 10, "http://example.chicken.jpg");
 
-        assertThatThrownBy(() -> product.removeStock(12))
+        assertThatThrownBy(() -> product.removeQuantity(12))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("상품의 재고를 증가한다.")
     @Test
-    void addStock() {
+    void addQuantity() {
         Product product = new Product("치킨", 10_000, 10, "http://example.chicken.jpg");
-        product.addStock(5);
+        product.addQuantity(5);
 
-        assertThat(product.getStock()).isEqualTo(15);
+        assertThat(product.getQuantity()).isEqualTo(15);
     }
 }

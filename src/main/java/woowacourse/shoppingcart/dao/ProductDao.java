@@ -22,14 +22,14 @@ public class ProductDao {
     }
 
     public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, stock, image_url) VALUES (?, ?, ?, ?)";
+        final String query = "INSERT INTO product (name, price, quantity, image_url) VALUES (?, ?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
                     connection.prepareStatement(query, new String[]{"id"});
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setInt(3, product.getStock());
+            preparedStatement.setInt(3, product.getQuantity());
             preparedStatement.setString(4, product.getImageUrl());
             return preparedStatement;
         }, keyHolder);
@@ -39,14 +39,14 @@ public class ProductDao {
 
     public Product findProductById(final Long productId) {
         try {
-            final String query = "SELECT name, price, stock, image_url FROM product WHERE id = ?";
+            final String query = "SELECT name, price, quantity, image_url FROM product WHERE id = ?";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                     new Product(
-                            productId,
-                            resultSet.getString("name"),
-                            resultSet.getInt("price"),
-                            resultSet.getInt("stock"),
-                            resultSet.getString("image_url")
+                        productId,
+                        resultSet.getString("name"),
+                        resultSet.getInt("price"),
+                        resultSet.getInt("quantity"),
+                        resultSet.getString("image_url")
                     ), productId
             );
         } catch (EmptyResultDataAccessException e) {
@@ -55,24 +55,24 @@ public class ProductDao {
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, stock, image_url FROM product";
+        final String query = "SELECT id, name, price, quantity, image_url FROM product";
         return jdbcTemplate.query(query,
                 (resultSet, rowNumber) ->
                         new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getInt("stock"),
-                                resultSet.getString("image_url")
+                            resultSet.getLong("id"),
+                            resultSet.getString("name"),
+                            resultSet.getInt("price"),
+                            resultSet.getInt("quantity"),
+                            resultSet.getString("image_url")
                         ));
     }
 
     public void update(Product product) {
-        final String query = "UPDATE product SET name = ?, price = ?, stock = ?, image_url = ? WHERE id = ?";
+        final String query = "UPDATE product SET name = ?, price = ?, quantity = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(query,
             product.getName(),
             product.getPrice(),
-            product.getStock(),
+            product.getQuantity(),
             product.getImageUrl(),
             product.getId()
         );

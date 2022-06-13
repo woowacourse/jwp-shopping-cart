@@ -4,37 +4,37 @@ public class Product {
     private Long id;
     private String name;
     private Integer price;
-    private Integer stock;
+    private Integer quantity;
     private String imageUrl;
 
     public Product() {
     }
 
-    public Product(final Long id, final String name, final int price, final int stock, final String imageUrl) {
+    public Product(final Long id, final String name, final int price, final int quantity, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.stock = stock;
+        this.quantity = quantity;
         this.imageUrl = imageUrl;
     }
 
-    public Product(final String name, final int price, final int stock, final String imageUrl) {
-        this(null, name, price, stock, imageUrl);
+    public Product(final String name, final int price, final int quantity, final String imageUrl) {
+        this(null, name, price, quantity, imageUrl);
     }
 
-    public void removeStock(int stock) {
-        if (this.stock - stock < 0) {
+    public void removeQuantity(int quantity) {
+        if (this.quantity - quantity < 0) {
             throw new IllegalArgumentException("현재 수량보다 더 많이 꺼낼 수 없습니다.");
         }
-        this.stock -= stock;
+        this.quantity -= quantity;
     }
 
-    public void addStock(int stock) {
-        if (stock < 0) {
-            removeStock(-stock);
+    public void addQuantity(int quantity) {
+        if (quantity < 0) {
+            removeQuantity(-quantity);
             return;
         }
-        this.stock += stock;
+        this.quantity += quantity;
     }
 
     public String getName() {
@@ -45,8 +45,8 @@ public class Product {
         return price;
     }
 
-    public int getStock() {
-        return stock;
+    public int getQuantity() {
+        return quantity;
     }
 
     public String getImageUrl() {
