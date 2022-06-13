@@ -46,7 +46,7 @@ class OrderDetailDaoTest {
         productId = productDao.save(new Product(new ProductName("name"), 1000, new ImageUrl("imageUrl"))).getId();
     }
 
-    @DisplayName("OrderDatail을 추가하는 기능")
+    @DisplayName("주문에 대한 상세 정보를 저장한다.")
     @Test
     void addOrdersDetail() {
         //given
@@ -70,7 +70,7 @@ class OrderDetailDaoTest {
         assertThat(affectedRows).isEqualTo(2);
     }
 
-    @DisplayName("OrderId로 OrderDetails 조회하는 기능")
+    @DisplayName("주문 id로 주문 상세 정보들을 조회한다.")
     @Test
     void findOrdersDetailsByOrderId() {
         //given

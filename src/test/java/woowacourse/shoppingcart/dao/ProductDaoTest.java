@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.ProductName;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,7 +29,7 @@ public class ProductDaoTest {
         this.productDao = new ProductDao(namedParameterJdbcTemplate);
     }
 
-    @DisplayName("Product를 저장하면, id를 반환한다.")
+    @DisplayName("상품을 저장한다.")
     @Test
     void save() {
         // given
@@ -43,7 +44,7 @@ public class ProductDaoTest {
         assertThat(product.getId()).isEqualTo(5L);
     }
 
-    @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
+    @DisplayName("상품의 id로 상품을 조회한다.")
     @Test
     void findProductById() {
         // given
@@ -51,13 +52,17 @@ public class ProductDaoTest {
         final int price = 1_000;
         final String imageUrl = "www.test.com";
         final Product product = productDao.save(new Product(new ProductName(name), price, new ImageUrl(imageUrl)));
+
+        // when
+        final Optional<Product> savedProduct = productDao.findById(5L);
         final Product expectedProduct = new Product(5L, new ProductName(name), price, new ImageUrl(imageUrl));
 
         // then
-        assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
+        assert (savedProduct).isPresent();
+        assertThat(savedProduct.get()).usingRecursiveComparison().isEqualTo(expectedProduct);
     }
 
-    @DisplayName("상품 목록 조회")
+    @DisplayName("저장된 모든 상품을 조회한다.")
     @Test
     void getProducts() {
         // when
@@ -67,7 +72,7 @@ public class ProductDaoTest {
         assertThat(products).size().isEqualTo(4);
     }
 
-    @DisplayName("싱품 삭제")
+    @DisplayName("상품의 id로 특정 상품을 삭제한다.")
     @Test
     void deleteProduct() {
         // given

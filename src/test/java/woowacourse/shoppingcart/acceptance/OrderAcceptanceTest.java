@@ -44,7 +44,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_추가되어_있음(accessToken, productId2);
     }
 
-    @DisplayName("주문하기")
+    @DisplayName("상품들의 수량을 지정하여 주문한다.")
     @Test
     void addOrder() {
         final OrderRequest ordersRequest = new OrderRequest(
@@ -76,7 +76,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         assertThat(cart).hasSize(0);
     }
 
-    @DisplayName("주문 내역 조회")
+    @DisplayName("주문 목록을 조회한다.")
     @Test
     void getOrders() {
         주문하기_요청_성공되어_있음(accessToken, new OrderRequest(Collections.singletonList(new OrderDetailRequest(productId1, 2))));
@@ -88,7 +88,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         주문_내역_포함됨(response, 1L, 2L);
     }
 
-    @DisplayName("주문 단일 조회")
+    @DisplayName("한 개의 주문을 조회한다.")
     @Test
     void getOrder() {
         주문하기_요청_성공되어_있음(accessToken, new OrderRequest(Arrays.asList(

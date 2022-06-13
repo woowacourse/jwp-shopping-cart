@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
@@ -26,7 +25,7 @@ class OrderDaoTest {
         this.orderDao = new OrderDao(namedParameterJdbcTemplate);
     }
 
-    @DisplayName("Order를 추가하는 기능")
+    @DisplayName("주문을 저장한다.")
     @Test
     void addOrders() {
         //given
@@ -39,7 +38,7 @@ class OrderDaoTest {
         assertThat(orderId).isEqualTo(1L);
     }
 
-    @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
+    @DisplayName("해당 회원의 주문 id들을 불러온다.")
     @Test
     void findOrderIdsByCustomerId() {
         //given

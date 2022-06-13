@@ -15,7 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
-    @DisplayName("상품을 추가한다")
+
+    @DisplayName("상품을 추가한다.")
     @Test
     void addProduct() {
         ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
@@ -23,7 +24,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_추가됨(response);
     }
 
-    @DisplayName("상품 목록을 조회한다")
+    @DisplayName("상품 목록을 조회한다.")
     @Test
     void getProducts() {
         Long productId1 = 상품을_등록함("치킨", 10_000, "http://example.com/chicken.jpg");
@@ -35,7 +36,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_목록_포함됨(productId1, productId2, response);
     }
 
-    @DisplayName("상품을 조회한다")
+    @DisplayName("상품을 조회한다.")
     @Test
     void getProduct() {
         Long productId = 상품을_등록함("치킨", 10_000, "http://example.com/chicken.jpg");
@@ -46,7 +47,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         상품_조회됨(response, productId);
     }
 
-    @DisplayName("상품을 삭제한다")
+    @DisplayName("상품을 삭제한다.")
     @Test
     void deleteProduct() {
         Long productId = 상품을_등록함("치킨", 10_000, "http://example.com/chicken.jpg");

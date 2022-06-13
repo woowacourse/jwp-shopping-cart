@@ -39,7 +39,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         productId2 = 상품을_등록함("맥주", 20_000, "http://example.com/beer.jpg");
     }
 
-    @DisplayName("장바구니 아이템 추가")
+    @DisplayName("장바구니에 상품을 추가한다.")
     @Test
     void addCartItem() {
         ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1);
@@ -47,7 +47,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_추가됨(response);
     }
 
-    @DisplayName("장바구니 아이템 목록 조회")
+    @DisplayName("장바구니 상품 목록을 조회한다.")
     @Test
     void getCartItems() {
         장바구니_아이템_추가되어_있음(accessToken, productId1);
@@ -59,7 +59,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
     }
 
-    @DisplayName("장바구니 삭제")
+    @DisplayName("장바구니에서 상품을 삭제한다.")
     @Test
     void deleteCartItem() {
         장바구니_아이템_추가되어_있음(accessToken, productId1);
