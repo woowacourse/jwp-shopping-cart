@@ -118,9 +118,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
     private ExtractableResponse<Response> 상품_및_장바구니_생성_후_주문_등록(String token, String productName, int productPrice,
                                                                int quantity) {
         Long productId = 상품_등록_후_id_반환(productName, productPrice, "test.png");
-        Long cartId = 장바구니_추가_후_id_반환(token, productId);
 
-        Map<String, Object> request = 주문_등록_요청값(cartId, quantity);
+        Map<String, Object> request = 주문_등록_요청값(productId, quantity);
 
         return RestAssured
                 .given().log().all()
@@ -132,14 +131,9 @@ class OrderAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private Long 장바구니_추가_후_id_반환(String token, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_추가(token, productId);
-        return Long.parseLong(response.header(LOCATION).split("/cart/")[1]);
-    }
-
-    private Map<String, Object> 주문_등록_요청값(Long cartId, int quantity) {
+    private Map<String, Object> 주문_등록_요청값(Long productId, int quantity) {
         Map<String, Object> orderDetail = new HashMap<>();
-        orderDetail.put("id", cartId);
+        orderDetail.put("id", productId);
         orderDetail.put("quantity", quantity);
 
         Map<String, Object> request = new HashMap<>();

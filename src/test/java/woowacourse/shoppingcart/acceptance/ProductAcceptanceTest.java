@@ -85,7 +85,7 @@ class ProductAcceptanceTest extends AcceptanceTest {
         // given
 
         // when
-        ExtractableResponse<Response> response = id로_상품_조회(1L);
+        ExtractableResponse<Response> response = id로_상품_조회(0L);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
