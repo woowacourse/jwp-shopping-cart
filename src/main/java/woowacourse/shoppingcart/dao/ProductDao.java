@@ -1,15 +1,14 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class ProductDao {
@@ -60,6 +59,18 @@ public class ProductDao {
                                 resultSet.getInt("price"),
                                 resultSet.getString("image_url")
                         ));
+    }
+
+    public List<Product> findPageableProducts(final int limit, final int offset) {
+        final String query = "SELECT id, name, price, image_url FROM product LIMIT (?) OFFSET (?)";
+        return jdbcTemplate.query(query,
+                (resultSet, rowNumber) ->
+                        new Product(
+                                resultSet.getLong("id"),
+                                resultSet.getString("name"),
+                                resultSet.getInt("price"),
+                                resultSet.getString("image_url")
+                        ), limit, offset);
     }
 
     public void delete(final Long productId) {

@@ -17,8 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.ProductAddRequest;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 
 @DisplayName("상품 관련 기능")
@@ -39,12 +39,7 @@ public class ProductAcceptanceTest extends AcceptanceShoppingCartTest {
         Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> response = 비로그인_상품_목록_조회_요청();
 
         조회_응답됨(response);
         상품_목록_포함됨(productId1, productId2, response);
@@ -97,18 +92,18 @@ public class ProductAcceptanceTest extends AcceptanceShoppingCartTest {
     }
 
     public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
+        ProductAddRequest productAddRequest = new ProductAddRequest(name, price, imageUrl);
 
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
+                .body(productAddRequest)
                 .when().post("/api/products")
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 상품_목록_조회_요청() {
+    public static ExtractableResponse<Response> 비로그인_상품_목록_조회_요청() {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -181,8 +176,8 @@ public class ProductAcceptanceTest extends AcceptanceShoppingCartTest {
     }
 
     public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
-        Product resultProduct = response.as(Product.class);
-        assertThat(resultProduct.getId()).isEqualTo(productId);
+        ProductResponse productResponse = response.as(ProductResponse.class);
+        assertThat(productResponse.getId()).isEqualTo(productId);
     }
 
     public static void 상품_삭제됨(ExtractableResponse<Response> response) {

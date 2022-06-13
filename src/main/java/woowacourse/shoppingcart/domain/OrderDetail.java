@@ -2,14 +2,11 @@ package woowacourse.shoppingcart.domain;
 
 public class OrderDetail {
 
-    private Long productId;
-    private int quantity;
+    private final Long productId;
+    private final int quantity;
     private int price;
     private String name;
     private String imageUrl;
-
-    private OrderDetail() {
-    }
 
     public OrderDetail(final Long productId, final int quantity) {
         this.productId = productId;

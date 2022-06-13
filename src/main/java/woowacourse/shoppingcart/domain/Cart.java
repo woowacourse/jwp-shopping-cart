@@ -4,15 +4,12 @@ import java.util.Objects;
 
 public class Cart {
 
-    private Long id;
-    private Quantity quantity;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
-
-    private Cart() {
-    }
+    private final Long id;
+    private final Quantity quantity;
+    private final Long productId;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
     public Cart(final Long id, final Quantity quantity, final Product product) {
         this(id, quantity, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());

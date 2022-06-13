@@ -12,6 +12,7 @@ import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.Quantity;
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.request.ProductAddRequest;
 import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -54,13 +55,16 @@ public class ProductService {
         return productResponses;
     }
 
-    public Long addProduct(final Product product) {
+    public Long addProduct(final ProductAddRequest productAddRequest) {
+        final Product product = new Product(productAddRequest.getName(), productAddRequest.getPrice(),
+                productAddRequest.getImageUrl());
         return productDao.save(product);
     }
 
     @Transactional(readOnly = true)
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductResponse findProductById(final Long productId) {
+        final Product product = productDao.findProductById(productId);
+        return ProductResponse.withOutCart(product);
     }
 
     public void deleteProductById(final Long productId) {
