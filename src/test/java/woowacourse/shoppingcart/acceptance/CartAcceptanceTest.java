@@ -70,11 +70,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, nickname, password);
         createCustomer(customerCreateRequest);
         String token = login(customerCreateRequest);
-        insertCartItem(productId1, token);
+        insertCartItem(productId2, token);
 
         RestAssured.given().log().all()
           .auth().oauth2(token)
-          .delete("/api/carts/products/" + productId1)
+          .delete("/api/carts/products/" + productId2)
           .then()
           .log().all()
           .statusCode(HttpStatus.NO_CONTENT.value());
