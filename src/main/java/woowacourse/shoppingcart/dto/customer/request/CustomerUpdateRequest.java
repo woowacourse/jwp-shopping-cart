@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto.customer;
+package woowacourse.shoppingcart.dto.customer.request;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -8,12 +8,13 @@ public class CustomerUpdateRequest {
 
     @NotEmpty(message = "address는 필수 입력 사항압니다.")
     @Size(max = 255, message = "address 형식이 올바르지 않습니다. (길이: 255 이하)")
-    private String address;
+    private final String address;
 
     @Pattern(regexp = "\\d{3}-\\d{4}-\\d{4}", message = "전화번호 형식이 올바르지 않습니다. (형식: 000-0000-0000)")
-    private String phoneNumber;
+    private final String phoneNumber;
 
     private CustomerUpdateRequest() {
+        this(null, null);
     }
 
     public CustomerUpdateRequest(String address, String phoneNumber) {

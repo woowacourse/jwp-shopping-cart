@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.exception;
+package woowacourse.auth.exception;
 
 public class NoAuthorizationHeaderException extends RuntimeException {
     public NoAuthorizationHeaderException() {

@@ -94,3 +94,89 @@
     - [x] Authorization 자체가 없는 경우 커스텀 예외 처리
 
 </details>
+
+<details>
+<summary>소니의 1단계 두번째 리뷰</summary>
+
+- Service
+    - [x] optional.get() 대신 optional.orElseThrow() 사용하기
+    - [x] 비밀번호를 검증 로직을 customer로 이동
+
+</details>
+
+<details>
+<summary>2단계 기능 목록</summary>
+
+### 기능 목록
+
+[링크](https://puzzled-mongoose-068.notion.site/API-7fd3d9e631e747f895ebced15b351db3)
+
+- 고객(customer) 관련 기능
+    - 회원가입
+    - 회원 정보 조회
+    - 회원 정보 수정
+    - 회원 탈퇴
+    - [x] username 중복 확인
+    - [x] email 중복 확인
+    - [x] username, email 중복 확인에 대한 인수테스트 추가
+- 상품(product) 관련 기능
+    - 상품 조회
+    - 상품 전체 조회
+    - 상품 추가
+    - 상품 삭제
+    - [x] product 테이블에 selling (판매중인지) 칼럼 추가
+    - [x] product 삭제 시 실제로 delete 하는 것이 아닌 selling=false 로 수정
+    - [x] 상품 전체 조회했을 때 delete 되지 않은 product만 보여주도록 수정
+    - [x] 상품 필드에 description 추가
+- 장바구니(cartItem) 관련 기능
+    - 장바구니 조회
+    - 장바구니 추가
+    - 장바구니 삭제
+    - [x] 장바구니 품목 수량 수정
+    - [x] cart -> cartItem 으로 변경하기
+    - [x] cartItem 테이블에 quantity 칼럼 추가
+    - [x] 이미 담겨있는 상품을 다시 담을 경우 수량을 더해 update (insert ignore 사용)
+    - [x] username 기반에서 token 기반으로 수정
+- 주문(order) 관련 기능
+    - 주문하기
+    - 주문 단건 조회
+    - 모든 주문 내역 조회
+    - [x] username 기반에서 token 기반으로 수정
+
+### 레거시 리팩터링
+
+- [x] test fixture 만들어 중복코드 제거하기
+- [x] jdbcTemplate 대신 NamedParameterJdbcTemplate과 SimpleJdbcInsert 사용하도록 수정
+- [x] controller 중복 Path RequestMapping 으로 제거
+- [x] 파라미터 final 제거
+- [x] dto로 사용되고 있는 domain 패키지를 dto 패키지로 수정
+- [x] domain 새로 만들기
+- api 명세 수정
+    - [x] 팀 회의로 결정된 api 명세에 맞도록 path 수정
+    - [x] 팀 회의로 결정된 api 명세에 맞도록 request, response 수정
+    - [x] 팀 회의로 결정된 api 명세에 맞도록 예외처리 수정
+- [x] dao에서 조회하는 값이 없느면 error를 반환하던 코드를 Optional을 반환하도록 수정
+- [x] PathVariable customerName 를 token 을 이용하도록 수정
+
+</details>
+
+<details>
+<summary>소니의 2단계 첫번째 리뷰</summary>
+
+- service
+    - [x] CartItemService에서 findCartsByCustomerName의 중복 로직 없애기
+        - (hint: findCartIdsByCustomerName 에서 join 사용)
+    - [x] Transactional 에서 적절한 옵션 사용하기 (hint: 조회 로직에는 readOnly 옵션)
+    - [x] CartItemService에서 updateQuantity가 LoginCustomer에 맞는 사용자의 cartItem인지 확인하기
+    - [ ] OrderService에서 for문을 순회하며 db를 조회하는 로직의 비용 문제 해결하기
+
+</details>
+
+<details>
+<summary>소니의 2단계 두번째 리뷰</summary>
+
+- repository
+  - [x] for문을 이용해 단건 조회하는 대신 한번에 List로 받아오기
+  - [x] Key를 productId로 하고 Value는 Product로 하는 Map을 만들어 cartItem 만들기
+
+</details>

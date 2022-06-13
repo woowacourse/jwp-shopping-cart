@@ -13,7 +13,9 @@ import Fixture.SimpleRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.request.EmailDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.request.UsernameDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -93,5 +95,39 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();
+    }
+
+    @DisplayName("회원 username 중복 검증을 한다.")
+    @Test
+    void checkDuplicateUsername() {
+        SimpleRestAssured.saveCustomer(YAHO_SAVE_REQUEST);
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new UsernameDuplicateRequest(YAHO_USERNAME))
+                .when().post("/api/customers/duplication/username")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        boolean duplicated = response.jsonPath().getObject("duplicated", Boolean.class);
+        assertThat(duplicated).isEqualTo(true);
+    }
+
+    @DisplayName("회원 email 중복 검증을 한다.")
+    @Test
+    void checkDuplicateEmail() {
+        SimpleRestAssured.saveCustomer(YAHO_SAVE_REQUEST);
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new EmailDuplicateRequest(YAHO_EMAIL))
+                .when().post("/api/customers/duplication/email")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        boolean duplicated = response.jsonPath().getObject("duplicated", Boolean.class);
+        assertThat(duplicated).isEqualTo(true);
     }
 }

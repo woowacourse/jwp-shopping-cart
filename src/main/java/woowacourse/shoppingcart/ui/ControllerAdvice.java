@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.ui;
 
+import java.util.List;
+
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +15,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import woowacourse.auth.exception.InvalidTokenException;
-import woowacourse.shoppingcart.exception.*;
-
-import javax.validation.ConstraintViolationException;
-import java.util.List;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NoSuchProductException;
+import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.dto.ErrorResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
+
+    @ExceptionHandler(NoSuchProductException.class)
+    public ResponseEntity<ErrorResponse> handleNoSuchData(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
+    }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<ErrorResponse> handle() {
@@ -27,8 +38,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final BindingResult bindingResult) {
-        final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        final FieldError mainError = fieldErrors.get(0);
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        FieldError mainError = fieldErrors.get(0);
 
         return ResponseEntity.badRequest().body(new ErrorResponse(mainError.getDefaultMessage()));
     }

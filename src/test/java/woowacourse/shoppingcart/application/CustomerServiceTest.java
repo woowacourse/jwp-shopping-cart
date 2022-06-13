@@ -1,21 +1,8 @@
 package woowacourse.shoppingcart.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static Fixture.CustomerFixtures.MAT_ADDRESS;
-import static Fixture.CustomerFixtures.MAT_EMAIL;
-import static Fixture.CustomerFixtures.MAT_PHONE_NUMBER;
-import static Fixture.CustomerFixtures.MAT_SAVE_REQUEST;
-import static Fixture.CustomerFixtures.MAT_USERNAME;
-import static Fixture.CustomerFixtures.UPDATE_ADDRESS;
-import static Fixture.CustomerFixtures.UPDATE_PHONE_NUMBER;
-import static Fixture.CustomerFixtures.UPDATE_REQUEST;
-import static Fixture.CustomerFixtures.YAHO_ADDRESS;
-import static Fixture.CustomerFixtures.YAHO_EMAIL;
-import static Fixture.CustomerFixtures.YAHO_PHONE_NUMBER;
-import static Fixture.CustomerFixtures.YAHO_SAVE_REQUEST;
-import static Fixture.CustomerFixtures.YAHO_USERNAME;
+import static Fixture.CustomerFixtures.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,9 +10,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.customer.CustomerResponse;
-import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
+
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
+import woowacourse.shoppingcart.dto.customer.request.CustomerSaveRequest;
+import woowacourse.shoppingcart.dto.customer.request.EmailDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.request.UsernameDuplicateRequest;
+import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.response.EmailDuplicateResponse;
+import woowacourse.shoppingcart.dto.customer.response.UsernameDuplicateResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
@@ -42,9 +34,7 @@ class CustomerServiceTest {
     @DisplayName("customer를 저장한다.")
     @Test
     void save() {
-        CustomerSaveRequest request = MAT_SAVE_REQUEST;
-
-        CustomerResponse response = customerService.save(request);
+        CustomerResponse response = customerService.save(MAT_SAVE_REQUEST);
 
         assertAll(() -> {
             assertThat(response.getId()).isNotNull();
@@ -82,8 +72,7 @@ class CustomerServiceTest {
     @DisplayName("customer를 수정한다.")
     @Test
     void update() {
-        CustomerSaveRequest request = MAT_SAVE_REQUEST;
-        customerService.save(request);
+        customerService.save(MAT_SAVE_REQUEST);
 
         customerService.update(new LoginCustomer(MAT_USERNAME), UPDATE_REQUEST);
 
@@ -120,5 +109,41 @@ class CustomerServiceTest {
     void delete_error_notExist_username() {
         assertThatThrownBy(() -> customerService.delete(new LoginCustomer(YAHO_USERNAME)))
                 .isInstanceOf(InvalidCustomerException.class);
+    }
+
+    @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=ture를 반환한다.")
+    @Test
+    void checkDuplicateUsername_true() {
+        customerService.save(YAHO_SAVE_REQUEST);
+        UsernameDuplicateResponse response = customerService.checkUsernameDuplicate(
+                new UsernameDuplicateRequest(YAHO_USERNAME));
+        assertThat(response.isDuplicated()).isTrue();
+    }
+
+    @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=false를 반환한다.")
+    @Test
+    void checkDuplicateUsername_false() {
+        customerService.save(YAHO_SAVE_REQUEST);
+        UsernameDuplicateResponse response = customerService.checkUsernameDuplicate(
+                new UsernameDuplicateRequest(MAT_USERNAME));
+        assertThat(response.isDuplicated()).isFalse();
+    }
+
+    @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=ture를 반환한다.")
+    @Test
+    void checkDuplicateEmail_true() {
+        customerService.save(YAHO_SAVE_REQUEST);
+        EmailDuplicateResponse response = customerService.checkEmailDuplicate(
+                new EmailDuplicateRequest(YAHO_EMAIL));
+        assertThat(response.isDuplicated()).isTrue();
+    }
+
+    @DisplayName("이미 존재하는 username을 입력한 경우 dublicate=false를 반환한다.")
+    @Test
+    void checkDuplicateEmail_false() {
+        customerService.save(YAHO_SAVE_REQUEST);
+        EmailDuplicateResponse response = customerService.checkEmailDuplicate(
+                new EmailDuplicateRequest(MAT_EMAIL));
+        assertThat(response.isDuplicated()).isFalse();
     }
 }

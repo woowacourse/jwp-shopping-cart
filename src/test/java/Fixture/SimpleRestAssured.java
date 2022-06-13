@@ -10,8 +10,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.customer.CustomerResponse;
-import woowacourse.shoppingcart.dto.customer.CustomerSaveRequest;
+import woowacourse.shoppingcart.dto.customer.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.request.CustomerSaveRequest;
 
 public class SimpleRestAssured {
 

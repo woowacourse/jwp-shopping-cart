@@ -70,13 +70,33 @@ public class CustomerDaoTest {
         assertDoesNotThrow(() -> customerDao.delete(savedCustomer));
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
+    @DisplayName("username을 통해 조회를 하면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
         Customer savedCustomer = customerDao.save(MAT);
 
-        Long foundCustomerId = customerDao.findIdByUsername(MAT_USERNAME);
+        Long foundCustomerId = customerDao.findIdByUsername(MAT_USERNAME).getAsLong();
 
         assertThat(foundCustomerId).isEqualTo(savedCustomer.getId());
+    }
+
+    @DisplayName("email을 통해 조회를 하면, 있는 경우 email을 반환한다.")
+    @Test
+    void findEmailByEmail_exist() {
+        customerDao.save(YAHO);
+
+        Optional<String> email = customerDao.findEmailByEmail(YAHO_EMAIL);
+
+        assertThat(email.get()).isEqualTo(YAHO_EMAIL);
+    }
+
+    @DisplayName("email을 통해 조회를 하면, 없는 경우 빈값을 반환한다.")
+    @Test
+    void findEmailByEmail_notExist() {
+        customerDao.save(YAHO);
+
+        Optional<String> email = customerDao.findEmailByEmail(MAT_EMAIL);
+
+        assertThat(email).isEmpty();
     }
 }

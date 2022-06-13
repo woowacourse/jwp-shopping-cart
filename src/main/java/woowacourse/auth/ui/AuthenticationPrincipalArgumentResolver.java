@@ -7,12 +7,10 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.TokenProvider;
 import woowacourse.shoppingcart.dto.customer.LoginCustomer;
-import woowacourse.shoppingcart.exception.NoAuthorizationHeaderException;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 

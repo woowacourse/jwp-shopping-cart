@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto.customer;
+package woowacourse.shoppingcart.dto.customer.response;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
 
