@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -25,7 +26,7 @@ public class OrderDao {
             preparedStatement.setLong(1, memberId);
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public List<Long> findOrderIdsByMemberId(final Long memberId) {
@@ -35,6 +36,6 @@ public class OrderDao {
 
     public boolean isValidOrderId(final Long memberId, final Long orderId) {
         final String query = "SELECT EXISTS(SELECT * FROM orders WHERE member_id = ? AND id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, memberId, orderId);
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, memberId, orderId));
     }
 }

@@ -10,10 +10,6 @@ public class Cart {
     private int totalPrice;
     private int quantity;
 
-    public Cart(final Long id, final Product product, final int quantity) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
-    }
-
     public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl,
                 final int quantity) {
         this.id = id;
@@ -23,6 +19,10 @@ public class Cart {
         this.imageUrl = imageUrl;
         this.totalPrice = price * quantity;
         this.quantity = quantity;
+    }
+
+    public Cart(final Long id, final Product product, final int quantity) {
+        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
     }
 
     public Long getId() {

@@ -1,15 +1,11 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
@@ -20,23 +16,13 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
 
-    public CartService(CartItemDao cartItemDao, ProductDao productDao) {
+    public CartService(CartItemDao cartItemDao) {
         this.cartItemDao = cartItemDao;
-        this.productDao = productDao;
     }
 
     public List<CartItemResponse> findCartsByMemberId(final Long memberId) {
-        final List<Long> cartIds = findCartIdsByMemberId(memberId);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            final int cartItemQuantity = cartItemDao.findProductQuantityIdById(cartId);
-            carts.add(new Cart(cartId, product, cartItemQuantity));
-        }
+        final List<Cart> carts = cartItemDao.findCartsByMemberId(memberId);
         return carts.stream()
                 .map(CartItemResponse::from)
                 .collect(Collectors.toUnmodifiableList());

@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static woowacourse.helper.fixture.MemberFixture.EMAIL;
 import static woowacourse.helper.fixture.MemberFixture.NAME;
 import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
@@ -18,7 +17,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.member.dao.MemberDao;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -50,15 +48,6 @@ public class CartItemDaoTest {
         assertThat(cartId).isEqualTo(1L);
     }
 
-    @DisplayName("멤버 아이디를 넣으면, 해당 멤버가 구매한 상품의 아이디 목록을 가져온다.")
-    @Test
-    void findProductIdsByMemberId() {
-        cartItemDao.addCartItem(1L, 1L);
-
-        final List<Long> productsIds = cartItemDao.findProductIdsByMemberId(1L);
-        assertThat(productsIds).containsExactly(1L);
-    }
-
     @DisplayName("멤버 아이디를 넣으면, 해당 장바구니 아이디들을 가져온다.")
     @Test
     void findIdsByMemberId() {
@@ -66,26 +55,5 @@ public class CartItemDaoTest {
 
         final List<Long> cartIds = cartItemDao.findIdsByMemberId(1L);
         assertThat(cartIds).containsExactly(1L);
-    }
-
-    @DisplayName("장바구니 아이템의 수량을 업데이트한다.")
-    @Test
-    void updateCartItemQuantity() {
-        Long cartId = cartItemDao.addCartItem(1L, 1L);
-
-        cartItemDao.updateCartItemQuantity(cartId, 3);
-
-        assertThat(cartItemDao.findProductQuantityIdById(cartId)).isEqualTo(3);
-    }
-
-    @DisplayName("멤버의 장바구니 아이템을 삭제한다.")
-    @Test
-    void deleteCartItem() {
-        Long id = cartItemDao.addCartItem(1L, 1L);
-
-        cartItemDao.deleteCartItem(id);
-
-        assertThatThrownBy(() -> cartItemDao.findProductIdById(id))
-                .isInstanceOf(InvalidCartItemException.class);
     }
 }

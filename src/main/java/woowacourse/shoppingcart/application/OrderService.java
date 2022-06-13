@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -9,8 +8,8 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrdersResponse;
@@ -37,12 +36,9 @@ public class OrderService {
         final Long ordersId = orderDao.addOrders(memberId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = cartItemDao.findProductQuantityIdById(cartId);
-
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+            Cart cart = cartItemDao.findCartByMemberId(orderDetail.getCartId());
+            ordersDetailDao.addOrdersDetail(ordersId, cart.getProductId(), cart.getQuantity());
+            cartItemDao.deleteCartItem(cart.getId());
         }
 
         return ordersId;
@@ -68,13 +64,7 @@ public class OrderService {
     }
 
     private OrdersResponse findOrdersByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(orderDetail.getProductId());
-            final int quantity = orderDetail.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
-        }
-
+        final List<OrderDetail> ordersDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId);
         List<OrderDetailResponse> orderDetailResponses = ordersDetails.stream()
                 .map(OrderDetailResponse::from)
                 .collect(Collectors.toUnmodifiableList());
