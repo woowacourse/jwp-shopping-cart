@@ -8,7 +8,6 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.DuplicatedCartProductException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
 @Service
@@ -42,12 +41,8 @@ public class CartService {
         if (cartItemDao.existByProductId(productId, customerId)) {
             throw new DuplicatedCartProductException();
         }
-        try {
-            Long cartId = cartItemDao.addCartItem(customerId, productId);
-            return CartResponse.of(cartItemDao.findCartById(cartId));
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
+        Long cartId = cartItemDao.addCartItem(customerId, productId);
+        return CartResponse.of(cartItemDao.findCartById(cartId));
     }
 
     public void deleteCart(final String customerName, final Long cartId) {
