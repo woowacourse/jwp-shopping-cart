@@ -10,6 +10,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.dao.entity.CartItemEntity;
 import woowacourse.shoppingcart.dao.entity.ProductEntity;
+import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.ui.dto.CartItemRequest;
@@ -29,22 +31,16 @@ public class CartService {
     }
 
     public Long create(CartItemRequest cartItemRequest, Long customerId) {
-        Long productId = cartItemRequest.getProductId();
-        validateProduct(productId);
-        return cartItemDao.save(new CartItemEntity(customerId, productId));
-    }
-
-    private void validateProduct(Long productId) {
-        if (!productDao.existsById(productId)) {
-            throw new InvalidProductException();
-        }
+        Product product = findProductById(cartItemRequest.getProductId());
+        Cart cart = new Cart(null, customerId, product);
+        return cartItemDao.save(CartItemEntity.from(cart));
     }
 
     @Transactional(readOnly = true)
     public List<ProductResponse> findByCustomerId(Long customerId) {
         validateCustomer(customerId);
         List<Long> productIds = findProductIdsByCustomerId(customerId);
-        return convertToProductReponses(productDao.findByIds(productIds));
+        return convertToProductResponses(productDao.findByIds(productIds));
     }
 
     private void validateCustomer(Long customerId) {
@@ -60,13 +56,22 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private List<ProductResponse> convertToProductReponses(List<ProductEntity> productEntities) {
+    private List<ProductResponse> convertToProductResponses(List<ProductEntity> productEntities) {
         return productEntities.stream()
                 .map(productEntity -> ProductResponse.from(productEntity.toProduct()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public void delete(Long customerId, CartItemRequest cartItemRequest) {
-        cartItemDao.delete(new CartItemEntity(customerId, cartItemRequest.getProductId()));
+        Product product = findProductById(cartItemRequest.getProductId());
+        Cart cart = new Cart(null, customerId, product);
+        cartItemDao.delete(CartItemEntity.from(cart));
+    }
+
+    private Product findProductById(Long productId) {
+        ProductEntity productEntity = productDao.findById(productId)
+                .orElseThrow(InvalidProductException::new);
+
+        return productEntity.toProduct();
     }
 }

@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dao.entity;
 
+import woowacourse.shoppingcart.domain.cart.Cart;
+
 public class CartItemEntity {
 
     private final Long id;
@@ -14,6 +16,10 @@ public class CartItemEntity {
 
     public CartItemEntity(Long customerId, Long productId) {
         this(null, customerId, productId);
+    }
+
+    public static CartItemEntity from(Cart cart) {
+        return new CartItemEntity(cart.getId(), cart.getCustomerId(), cart.getProduct().getId());
     }
 
     public Long getId() {
