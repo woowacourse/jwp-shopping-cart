@@ -2,13 +2,14 @@ package woowacourse.shoppingcart.domain.customer;
 
 import woowacourse.shoppingcart.domain.customer.vo.Email;
 import woowacourse.shoppingcart.domain.customer.vo.Password;
+import woowacourse.shoppingcart.domain.customer.vo.Username;
 
 public class Customer {
 
     private final Long id;
     private final Email email;
     private final Password password;
-    private final String username;
+    private final Username username;
 
     public Customer(String email, String password, String username) {
         this(null, email, password, username);
@@ -18,7 +19,7 @@ public class Customer {
         this.id = id;
         this.email = Email.from(email);
         this.password = Password.from(password);
-        this.username = username;
+        this.username = Username.from(username);
     }
 
     public void checkPasswordIsSame(String password) {
@@ -38,6 +39,6 @@ public class Customer {
     }
 
     public String getUsername() {
-        return username;
+        return username.getUsername();
     }
 }
