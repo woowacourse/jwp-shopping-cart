@@ -44,17 +44,20 @@ public class OrderService {
         return ordersId;
     }
 
+    @Transactional(readOnly = true)
     public OrdersResponse findOrderById(final Long memberId, final Long orderId) {
         validateOrderIdByMemberId(memberId, orderId);
         return findOrdersByOrderId(orderId);
     }
 
+    @Transactional(readOnly = true)
     private void validateOrderIdByMemberId(final Long memberId, final Long orderId) {
         if (!orderDao.isValidOrderId(memberId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
+    @Transactional(readOnly = true)
     public List<OrdersResponse> findOrdersByMemberId(final Long memberId) {
         final List<Long> orderIds = orderDao.findOrderIdsByMemberId(memberId);
 
@@ -63,6 +66,7 @@ public class OrderService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional(readOnly = true)
     private OrdersResponse findOrdersByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId);
         List<OrderDetailResponse> orderDetailResponses = ordersDetails.stream()

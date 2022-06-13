@@ -21,6 +21,7 @@ public class CartService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemResponse> findCartsByMemberId(final Long memberId) {
         final List<Cart> carts = cartItemDao.findCartsByMemberId(memberId);
         return carts.stream()
@@ -28,6 +29,7 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional(readOnly = true)
     private List<Long> findCartIdsByMemberId(final Long memberId) {
         return cartItemDao.findIdsByMemberId(memberId);
     }
@@ -57,6 +59,7 @@ public class CartService {
         cartItemDao.deleteCartItem(cartId);
     }
 
+    @Transactional(readOnly = true)
     private void validateMemberCart(final Long cartId, final Long memberId) {
         final List<Long> cartIds = findCartIdsByMemberId(memberId);
         if (cartIds.contains(cartId)) {

@@ -18,6 +18,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findProducts() {
         return productDao.findProducts().stream()
                 .map(ProductResponse::from)
@@ -30,6 +31,7 @@ public class ProductService {
         return productDao.save(product);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         return ProductResponse.from(productDao.findProductById(productId));
     }
