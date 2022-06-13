@@ -43,30 +43,36 @@ public class CustomerService {
         return CustomerResponse.of(customer);
     }
 
+    @Transactional
     public void update(final TokenRequest tokenRequest, final CustomerUpdateRequest customerUpdateRequest) {
         Customer oldCustomer = customerRepository.findById(tokenRequest.getCustomerId());
         Customer newCustomer = customerUpdateRequest.updatedCustomer(oldCustomer);
         customerRepository.update(newCustomer);
     }
 
+    @Transactional
     public void updatePassword(final TokenRequest tokenRequest, final PasswordChangeRequest passwordChangeRequest) {
         Password oldPassword = new Password(passwordChangeRequest.getOldPassword());
         Password newPassword = new Password(passwordChangeRequest.getNewPassword());
         customerRepository.updatePassword(tokenRequest.getCustomerId(), oldPassword, newPassword);
     }
 
+    @Transactional
     public void withdraw(final TokenRequest request) {
         customerRepository.delete(request.getCustomerId());
     }
 
+    @Transactional
     public void checkDuplicateUsername(final String username) {
         customerRepository.validateDuplicateUsername(username);
     }
 
+    @Transactional
     public void checkDuplicateNickname(final String nickname) {
         customerRepository.validateDuplicateNickname(nickname);
     }
 
+    @Transactional
     public void matchPassword(final TokenRequest tokenRequest, final PasswordRequest passwordRequest) {
         customerRepository.matchPassword(tokenRequest.getCustomerId(), passwordRequest.getPassword());
     }

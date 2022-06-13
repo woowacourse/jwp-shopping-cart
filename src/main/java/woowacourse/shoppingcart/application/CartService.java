@@ -34,6 +34,7 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public List<CartProductInfoResponse> addCarts(final List<ProductIdRequest> productIdRequests,
                                                   final Long customerId) {
         cartTotalRepository.validateCustomerId(customerId);
@@ -72,6 +73,7 @@ public class CartService {
         return new CartProductInfoResponse(id, cartTotalRepository.findById(id).getQuantity());
     }
 
+    @Transactional
     public CartProductInfoResponse patchCart(final CartProductInfoRequest cartProductInfoRequest,
                                              final Long customerId) {
         Long productId = cartProductInfoRequest.getId();
@@ -88,6 +90,7 @@ public class CartService {
         return new CartEntity(id, customerId, infoRequest.getId(), infoRequest.getQuantity());
     }
 
+    @Transactional
     public void deleteCarts(final Long customerId, final List<CartIdRequest> cartIdRequests) {
         List<Long> cartIds = cartIdRequests.stream()
                 .map(CartIdRequest::getId)
