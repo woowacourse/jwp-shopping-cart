@@ -7,10 +7,10 @@ import woowacourse.shoppingcart.domain.cart.Cart;
 
 public class CartResponse {
 
-    private final List<CartItemResponse> value;
+    private final List<CartItemResponse> cartItemResponses;
 
     private CartResponse(List<CartItemResponse> cartItemResponses) {
-        this.value = cartItemResponses;
+        this.cartItemResponses = cartItemResponses;
     }
 
     public static CartResponse from(Cart cart) {
@@ -19,13 +19,13 @@ public class CartResponse {
     }
 
     private static List<CartItemResponse> convertCartToCartItemResponses(Cart cart) {
-        return cart.getValue()
+        return cart.getCartItems()
             .stream()
             .map(CartItemResponse::from)
             .collect(Collectors.toList());
     }
 
-    public List<CartItemResponse> getValue() {
-        return value;
+    public List<CartItemResponse> getCartItemResponses() {
+        return cartItemResponses;
     }
 }

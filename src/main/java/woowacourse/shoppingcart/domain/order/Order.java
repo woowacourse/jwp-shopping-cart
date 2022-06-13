@@ -26,13 +26,13 @@ public class Order {
     }
 
     public Order(Long id, Long customerId, Cart cart) {
-        this(id, customerId, cart.getValue().stream()
+        this(id, customerId, cart.getCartItems().stream()
             .map(OrderItem::from)
             .collect(Collectors.toList()));
     }
 
     public List<OrderItem> getOrderItems() {
-        return orderItems.getValue();
+        return orderItems.getOrderItems();
     }
 
     public Long getId() {

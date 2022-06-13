@@ -83,7 +83,7 @@ public class CartServiceTest {
         cartItemDao.addCartItem(CUSTOMER_ID, getCartItem(1L, 1));
         cartItemDao.addCartItem(CUSTOMER_ID, getCartItem(2L, 1));
 
-        List<CartItem> cartItems = cartService.findCartByCustomerId(CUSTOMER_ID).getValue();
+        List<CartItem> cartItems = cartService.findCartByCustomerId(CUSTOMER_ID).getCartItems();
 
         //then
         assertAll(

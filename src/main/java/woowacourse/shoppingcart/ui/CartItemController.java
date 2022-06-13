@@ -42,7 +42,7 @@ public class CartItemController {
         authorizationValidator.validate(customerId, customer);
         Cart cart = cartService.findCartByCustomerId(customerId);
         CartResponse cartResponse = CartResponse.from(cart);
-        return ResponseEntity.ok().body(cartResponse.getValue());
+        return ResponseEntity.ok().body(cartResponse.getCartItemResponses());
     }
 
     @PostMapping

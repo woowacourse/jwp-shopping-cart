@@ -4,13 +4,13 @@ import java.util.List;
 
 public class OrderItems {
 
-    private final List<OrderItem> value;
+    private final List<OrderItem> orderItems;
 
-    public OrderItems(List<OrderItem> value) {
-        this.value = List.copyOf(value);
+    public OrderItems(List<OrderItem> orderItems) {
+        this.orderItems = List.copyOf(orderItems);
     }
 
-    public List<OrderItem> getValue() {
-        return value;
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
     }
 }

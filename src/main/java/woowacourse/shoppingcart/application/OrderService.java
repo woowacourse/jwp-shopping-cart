@@ -39,7 +39,7 @@ public class OrderService {
     }
 
     private void updateProductsQuantity(Cart cart) {
-        for (CartItem cartItem : cart.getValue()) {
+        for (CartItem cartItem : cart.getCartItems()) {
             productService.updateProductQuantity(cartItem.getProductId(), cartItem.getQuantityAfterOrder());
         }
     }
