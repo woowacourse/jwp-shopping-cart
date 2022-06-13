@@ -74,18 +74,17 @@ public class OrderControllerTest {
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
     @Test
     void findOrder() throws Exception {
-
         // given
-        final String customerName = "pobi";
+        final String email = "pobi@gmail.com";
         final Long orderId = 1L;
         final Orders expected = new Orders(orderId,
                 Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
 
-        when(orderService.findOrderById(customerName, orderId))
-                .thenReturn(expected);
+        when(jwtTokenProvider.getPayload(any())).thenReturn(email);
+        when(orderService.findOrderById(email, orderId)).thenReturn(expected);
 
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
+        mockMvc.perform(get("/api/customers/orders/" + orderId)
         ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
@@ -96,11 +95,11 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("orderDetails[0].quantity").value(2));
     }
 
-    @DisplayName("사용자 이름을 통해 주문 내역 목록을 조회하면, 주문 내역 목록을 받는다.")
+    @DisplayName("사용자 이메일을 통해 주문 내역 목록을 조회하면, 주문 내역 목록을 받는다.")
     @Test
     void findOrders() throws Exception {
         // given
-        final String email = "pobi";
+        final String email = "pobi@gmail.com";
         final List<Orders> expected = Arrays.asList(
                 new Orders(1L, Collections.singletonList(
                         new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
@@ -108,9 +107,8 @@ public class OrderControllerTest {
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
-        when(jwtTokenProvider.getPayload(any())).thenReturn(any());
-        when(orderService.findOrdersByCustomerEmail(email))
-                .thenReturn(expected);
+        when(jwtTokenProvider.getPayload(any())).thenReturn(email);
+        when(orderService.findOrdersByCustomerEmail(email)).thenReturn(expected);
 
         // when // then
         mockMvc.perform(get("/api/customers/orders/")

@@ -51,8 +51,8 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
+    public Orders findOrderById(final String email, final Long orderId) {
+        validateOrderIdByCustomerEmail(email, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
@@ -65,8 +65,8 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
+    private void validateOrderIdByCustomerEmail(final String email, final Long orderId) {
+        final Long customerId = customerService.getCustomerByEmail(email).getId();
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");

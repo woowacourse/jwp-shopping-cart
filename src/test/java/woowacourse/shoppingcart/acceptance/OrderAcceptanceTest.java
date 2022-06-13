@@ -81,8 +81,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 new OrderRequest(cartId1, 2),
                 new OrderRequest(cartId2, 4)
         ));
-
-        ExtractableResponse<Response> response = 주문_단일_조회_요청(NICKNAME, orderId);
+        String accessToken = 로그인_요청(new TokenRequest(EMAIL, PASSWORD));
+        ExtractableResponse<Response> response = 주문_단일_조회_요청(accessToken, orderId);
 
         주문_조회_응답됨(response);
         주문_조회됨(response, orderId);
@@ -108,11 +108,12 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 주문_단일_조회_요청(String userName, Long orderId) {
+    public static ExtractableResponse<Response> 주문_단일_조회_요청(String accessToken, Long orderId) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
+                .when().get("/api/customers/orders/{orderId}", orderId)
                 .then().log().all()
                 .extract();
     }
