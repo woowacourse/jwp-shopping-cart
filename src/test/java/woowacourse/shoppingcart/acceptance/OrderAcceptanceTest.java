@@ -25,7 +25,6 @@ import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구�
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 @DisplayName("주문 관련 기능")
-@Disabled
 @SuppressWarnings("NonAsciiCharacters")
 public class OrderAcceptanceTest extends AcceptanceTest {
 

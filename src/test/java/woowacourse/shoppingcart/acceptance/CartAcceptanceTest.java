@@ -48,7 +48,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         List<CartItemResponse> cartItemResponses = 장바구니_아이템_목록_조회(accessToken);
 
         assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
                 () -> assertThat(cartItemResponses).usingRecursiveComparison()
                         .isEqualTo(List.of(new CartItemResponse(productId1, "치킨", 10_000, 1, "http://example.com/chicken.jpg")))
         );

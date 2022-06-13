@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.dto.CartItemResponse;
 import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -26,8 +27,8 @@ public class CartItemController {
 
     @PostMapping("/products/{productId}")
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal String email, @PathVariable Long productId) {
-        cartService.addCart(email, productId);
-        return ResponseEntity.ok().build();
+        Long cartId = cartService.addCart(email, productId);
+        return ResponseEntity.created(URI.create("/api/carts/" + cartId)).build();
     }
 
     @PatchMapping("/products/{productId}")
