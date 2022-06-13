@@ -1,19 +1,18 @@
 package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customers/{customerName}/carts")
+@RequestMapping("/api/carts")
 public class CartItemController {
     private final CartService cartService;
 
@@ -22,26 +21,28 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal String email) {
+        return ResponseEntity.ok().body(cartService.findCartsByCustomerEmail(email));
     }
 
-    @PostMapping
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-                                      @PathVariable final String customerName) {
-        final Long cartId = cartService.addCart(product.getId(), customerName);
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
-                .toUri();
-        return ResponseEntity.created(responseLocation).build();
+    @PostMapping("/products/{productId}")
+    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal String email, @PathVariable Long productId) {
+        Long cartId = cartService.addCart(email, productId);
+        return ResponseEntity.created(URI.create("/api/carts/" + cartId)).build();
     }
 
-    @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-                                         @PathVariable final Long cartId) {
-        cartService.deleteCart(customerName, cartId);
+    @PatchMapping("/products/{productId}")
+    public ResponseEntity<Void> updateCartItemQuantity(
+            @AuthenticationPrincipal String email,
+            @PathVariable Long productId,
+            @Valid @RequestBody UpdateQuantityRequest request) {
+        cartService.updateQuantity(email, productId, request.getQuantity());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String email, @PathVariable Long productId) {
+        cartService.deleteCartItem(email, productId);
         return ResponseEntity.noContent().build();
     }
 }

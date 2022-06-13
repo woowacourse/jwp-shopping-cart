@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
@@ -13,7 +14,6 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/api/customers/{customerName}/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -21,24 +21,24 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> addOrder(@PathVariable final String customerName,
+    @PostMapping("/api/customers/orders")
+    public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final String email,
                                    @RequestBody @Valid final List<OrderRequest> orderDetails) {
-        final Long orderId = orderService.addOrder(orderDetails, customerName);
+        final Long orderId = orderService.addOrder(orderDetails, email);
         return ResponseEntity.created(
-                URI.create("/api/" + customerName + "/orders/" + orderId)).build();
+                URI.create("/api/orders/" + orderId)).build();
     }
 
-    @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
+    @GetMapping("/api/customers/orders/{orderId}")
+    public ResponseEntity<Orders> findOrder(@AuthenticationPrincipal String email,
                                             @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(customerName, orderId);
+        final Orders order = orderService.findOrderById(email, orderId);
         return ResponseEntity.ok(order);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
+    @GetMapping("/api/customers/orders")
+    public ResponseEntity<List<Orders>> findOrders(@AuthenticationPrincipal String email) {
+        final List<Orders> orders = orderService.findOrdersByCustomerEmail(email);
         return ResponseEntity.ok(orders);
     }
 }

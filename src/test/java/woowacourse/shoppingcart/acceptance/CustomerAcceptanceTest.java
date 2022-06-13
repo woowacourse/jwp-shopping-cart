@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.ChangeCustomerRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CreateCustomerRequest;
@@ -78,7 +77,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String password = "Password12345!";
         createCustomer(new CreateCustomerRequest(email, "범고래1", password));
 
-        String accessToken = loginAndGetAccessToken(new TokenRequest(email, password));
+        String accessToken = 로그인_요청(new TokenRequest(email, password));
 
         // when: 회원삭제 요청후 로그인하면
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -105,7 +104,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String email = "beomWhale1@naver.com";
         String password = "Password12345!";
         createCustomer(new CreateCustomerRequest(email, "범고래1", password));
-        String accessToken = loginAndGetAccessToken(new TokenRequest(email, password));
+        String accessToken = 로그인_요청(new TokenRequest(email, password));
 
         // when: 패스워드 변경 요청을 보내고, 변경된 패스워드로 로그인하면
         String newPassword = "Password123456!";
@@ -126,7 +125,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String email = "beomWhale1@naver.com";
         String password = "Password12345!";
         createCustomer(new CreateCustomerRequest(email, "범고래1", password));
-        String accessToken = loginAndGetAccessToken(new TokenRequest(email, password));
+        String accessToken = 로그인_요청(new TokenRequest(email, password));
 
         // when: 닉네임 변경 요청을 보내고 회원정보를 조회하면
         String newNickname = "changed";
@@ -156,7 +155,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         createCustomer(new CreateCustomerRequest("beomWhale1@naver.com", nickname, "Password12345!"));
         createCustomer(new CreateCustomerRequest(email, "범고래2", password));
 
-        String accessToken = loginAndGetAccessToken(new TokenRequest(email, password));
+        String accessToken = 로그인_요청(new TokenRequest(email, password));
 
         // when: 기존에 존재하는 닉네임으로 닉네임을 변경하면
         ExtractableResponse<Response> response = changeNicknameRequest(nickname, accessToken);
@@ -192,22 +191,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .then().extract();
     }
 
-    private String loginAndGetAccessToken(TokenRequest tokenRequest) {
-        return sendLoginRequest(tokenRequest.getEmail(), tokenRequest.getPassword())
-                .as(TokenResponse.class)
-                .getAccessToken();
-    }
-
-    private ExtractableResponse<Response> sendLoginRequest(String email, String password) {
-        return RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new TokenRequest(email, password))
-                .when().log().all()
-                .post("/api/login")
-                .then().log().all()
-                .extract();
-    }
-
     private ExtractableResponse<Response> sendCreateCustomerRequest(CreateCustomerRequest customerCreateRequest) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -215,17 +198,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when()
                 .post("/api/customers")
                 .then().log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> createCustomer(
-            CreateCustomerRequest customerCreateRequest) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerCreateRequest)
-                .when()
-                .post("/api/customers")
-                .then()
                 .extract();
     }
 }

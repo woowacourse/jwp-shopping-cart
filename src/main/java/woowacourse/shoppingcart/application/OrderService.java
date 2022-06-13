@@ -6,6 +6,7 @@ import woowacourse.shoppingcart.dao.*;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
@@ -22,18 +23,20 @@ public class OrderService {
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
+    private final CustomerService customerService;
 
-    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao, final CartItemDao cartItemDao,
+                        final CustomerDao customerDao, final ProductDao productDao, final CustomerService customerService) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
         this.productDao = productDao;
+        this.customerService = customerService;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
+    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String email) {
+        final Long customerId = customerService.getCustomerByEmail(email).getId();
         final Long ordersId = orderDao.addOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
@@ -48,32 +51,32 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
+    public Orders findOrderById(final String email, final Long orderId) {
+        validateOrderIdByCustomerEmail(email, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
+    public List<Orders> findOrdersByCustomerEmail(final String email) {
+        Customer customer = customerService.getCustomerByEmail(email);
+        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customer.getId());
+
+        return orderIds.stream()
+                .map(this::findOrderResponseDtoByOrderId)
+                .collect(Collectors.toList());
+    }
+
+    private void validateOrderIdByCustomerEmail(final String email, final Long orderId) {
+        final Long customerId = customerService.getCustomerByEmail(email).getId();
 
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByNickname(customerName);
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
-
-        return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
-                .collect(Collectors.toList());
-    }
-
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
+            final Product product = productDao.findProductById(productQuantity.getProductId()).get();
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }

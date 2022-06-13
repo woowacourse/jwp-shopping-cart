@@ -37,16 +37,22 @@ create table cart_item
     id          bigint not null auto_increment,
     customer_id bigint not null,
     product_id  bigint not null,
+    quantity integer not null default 1,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table cart_item
     add constraint fk_cart_item_to_customer
-        foreign key (customer_id) references customer (id);
+        foreign key (customer_id) references customer (id)
+            on delete cascade on delete cascade;
 
 alter table cart_item
     add constraint fk_cart_item_to_product
-        foreign key (product_id) references product (id);
+        foreign key (product_id) references product (id)
+            on delete cascade on delete cascade;
+
+alter table cart_item
+    add unique cart_item_unique_index(customer_id, product_id);
 
 create table orders
 (

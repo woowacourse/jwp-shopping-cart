@@ -59,7 +59,7 @@ public class CustomerService {
         }
     }
 
-    private Customer getCustomerByEmail(String email) {
+    public Customer getCustomerByEmail(String email) {
         return customerDao.findIdByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     }

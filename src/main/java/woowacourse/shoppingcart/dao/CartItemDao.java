@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
@@ -39,14 +40,14 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
+    public Long addCartItem(final CartItem cartItem) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
+            preparedStatement.setLong(1, cartItem.getCustomerId());
+            preparedStatement.setLong(2, cartItem.getProductId());
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -59,5 +60,38 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public List<CartItem> findCartItemsByCustomerId(Long customerId) {
+        final String sql = "SELECT c.id, c.customer_id, p.id as product_id, p.name, c.quantity, p.price, p.image_url " +
+                "FROM cart_item as c " +
+                "INNER JOIN product as p ON p.id = c.product_id " +
+                "WHERE c.customer_id = ?";
+
+        List<CartItem> query = jdbcTemplate.query(sql, (resultSet, rowNum) -> new CartItem(
+                resultSet.getLong("id"),
+                resultSet.getLong("customer_id"),
+                resultSet.getLong("product_id"),
+                resultSet.getString("name"),
+                resultSet.getInt("price"),
+                resultSet.getInt("quantity"),
+                resultSet.getString("image_url")
+        ), customerId);
+        return query;
+    }
+
+    public void updateQuantity(Long customerId, Long productId, int quantity) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE product_id = ? and customer_id = ?";
+        jdbcTemplate.update(sql, quantity, productId, customerId);
+    }
+
+    public void deleteCartItem(Long customerId, Long productId) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = ? and product_id = ?";
+        jdbcTemplate.update(sql, customerId, productId);
+    }
+
+    public boolean existsByCustomerIdAndProductId(Long customerId, Long productId) {
+        final String sql = "SELECT EXISTS (SELECT * FROM cart_item WHERE customer_id = ? and product_id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId));
     }
 }

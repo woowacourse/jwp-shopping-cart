@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.domain;
 public class Product {
     private Long id;
     private String name;
-    private Integer price;
+    private Price price;
     private String imageUrl;
 
     public Product() {
@@ -12,7 +12,7 @@ public class Product {
     public Product(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;
-        this.price = price;
+        this.price = new Price(price);
         this.imageUrl = imageUrl;
     }
 
@@ -25,7 +25,7 @@ public class Product {
     }
 
     public int getPrice() {
-        return price;
+        return price.getValue();
     }
 
     public String getImageUrl() {

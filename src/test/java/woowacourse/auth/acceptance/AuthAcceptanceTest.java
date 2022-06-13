@@ -28,7 +28,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         createCustomer(email, nickname, password);
 
         // when: 생성된 회원의 이메일과 비밀번호로 로그인 요청을 보내면
-        String accessToken = loginAndGetAccessToken(new TokenRequest(email, password));
+        String accessToken = 로그인_요청(new TokenRequest(email, password));
 
         // then: 엑세스 토큰이 발급된다.
         assertThat(accessToken).isNotNull();
@@ -44,7 +44,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         String password = "Password12345!";
         createCustomer(email, nickname, password);
 
-        String accessToken  = loginAndGetAccessToken(new TokenRequest(email, password));
+        String accessToken  = 로그인_요청(new TokenRequest(email, password));
 
         // when: 회원정보를 조회하면
         CustomerResponse customerResponse = RestAssured.given().log().all()
@@ -106,26 +106,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then().extract();
     }
 
-    private String loginAndGetAccessToken(TokenRequest tokenRequest) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .post("/api/login")
-                .then().extract()
-                .body().jsonPath().getString("accessToken");
-    }
-
     private void createCustomer(String email, String nickname, String password) {
         sendCreateCustomerRequest(new CreateCustomerRequest(email, nickname, password));
     }
 
     private ExtractableResponse<Response> sendCreateCustomerRequest(CreateCustomerRequest customerCreateRequest) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerCreateRequest)
-                .when()
-                .post("/api/customers")
-                .then()
-                .extract();
+        return createCustomer(customerCreateRequest);
     }
 }
