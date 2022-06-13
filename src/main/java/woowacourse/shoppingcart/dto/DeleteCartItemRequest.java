@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DeleteCartItemRequest {
 
@@ -14,9 +13,7 @@ public class DeleteCartItemRequest {
         this.cartItems = cartItems;
     }
 
-    public List<Long> getCartItems() {
-        return cartItems.stream()
-                .map(IdRequest::getId)
-                .collect(Collectors.toList());
+    public List<IdRequest> getCartItems() {
+        return cartItems;
     }
 }

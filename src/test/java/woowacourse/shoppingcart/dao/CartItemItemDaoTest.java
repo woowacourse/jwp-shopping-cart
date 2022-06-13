@@ -16,6 +16,7 @@ import woowacourse.shoppingcart.dto.CartProductResponse;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -78,9 +79,26 @@ public class CartItemItemDaoTest {
 
     }
 
+    @DisplayName("장바구니 아이템 복수 삭제")
     @Test
-    @DisplayName("장바구니 상품 정보 수정")
-    void modifyItem() {
+    void deleteByIds() {
+        //given
+        Product product = productDao.save(new Product("apple", 1000, "woowa2.com"));
+        cartItemDao.addCartItem(1L, product.getId(), 1L, true);
+
+        Product product2 = productDao.save(new Product("apple", 1000, "woowa2.com"));
+        final Long cartItemId2 = cartItemDao.addCartItem(1L, product2.getId(), 1L, true);
+
+        //when
+        cartItemDao.deleteCartItemById(List.of(1L, 2L), 1L);
+
+        //then
+        assertThat(cartItemDao.findIdsByCustomerId(1L).size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 정보 수정 - 단일")
+    void updateItem() {
         //given
         Product product = productDao.save(new Product("apple", 1000, "woowa2.com"));
         cartItemDao.addCartItem(1L, product.getId(), 1L, true);
@@ -89,6 +107,23 @@ public class CartItemItemDaoTest {
         Long cartItemId2 = cartItemDao.addCartItem(1L, product2.getId(), 1L, true);
 
         cartItemDao.updateById(cartItemId2, 1L, 3L, false);
+
+        assertThat(cartItemDao.findCartIdById(cartItemId2).getQuantity()).isEqualTo(3L);
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 정보 수정 - 복수")
+    void updateItems() {
+        //given
+        Product product = productDao.save(new Product("apple", 1000, "woowa2.com"));
+        cartItemDao.addCartItem(1L, product.getId(), 1L, true);
+
+        Product product2 = productDao.save(new Product("apple", 1000, "woowa2.com"));
+        Long cartItemId2 = cartItemDao.addCartItem(1L, product2.getId(), 1L, true);
+
+        cartItemDao.updateByIds(1L,
+                List.of(new CartItem(1L, product, 2L, false),
+                        new CartItem(2L, product, 3L, false)));
 
         assertThat(cartItemDao.findCartIdById(cartItemId2).getQuantity()).isEqualTo(3L);
     }

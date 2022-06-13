@@ -78,7 +78,12 @@ public class CartService {
     @Transactional
     public void deleteCart(String customerName, DeleteCartItemRequest deleteCartItemRequest) {
         Long customerId = customerDao.findByUsername(customerName).getId();
-        cartItemDao.deleteCartItemById(deleteCartItemRequest.getCartItems(), customerId);
+        List<Long> ids = deleteCartItemRequest.getCartItems()
+                .stream()
+                .map(request -> cartItemDao.findCartIdById(request.getId()).getId())
+                .collect(Collectors.toList());
+
+        cartItemDao.deleteCartItemById(ids, customerId);
     }
 
     @Transactional

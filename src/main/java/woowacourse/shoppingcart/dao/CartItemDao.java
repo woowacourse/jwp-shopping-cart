@@ -114,14 +114,22 @@ public class CartItemDao {
         });
     }
 
-
     public void deleteCartItemById(List<Long> ids, Long customerId) {
         final String sql = "DELETE FROM cart_item WHERE id = ? AND customer_id = ?";
-        List<Object[]> batchArgs = new ArrayList<>();
-        for (Long id : ids) {
-            batchArgs.add(new Object[] {id, customerId});
-        }
-        jdbcTemplate.batchUpdate(sql, batchArgs);
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int index) throws SQLException {
+                Long id = ids.get(index);
+                ps.setLong(1, id);
+                ps.setLong(2, customerId);
+            }
+
+            @Override
+            public int getBatchSize() {
+                return ids.size();
+            }
+        });
     }
 
 
