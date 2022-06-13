@@ -19,11 +19,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUserNameRequest;
-import woowacourse.shoppingcart.dto.DuplicateResponse;
-import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUserNameRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.DuplicateResponse;
+import woowacourse.shoppingcart.dto.response.ErrorResponse;
 
 @DisplayName("회원 관련 기능")
 @SuppressWarnings("NonAsciiCharacters")
@@ -180,27 +180,6 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
         );
     }
 
-    private ExtractableResponse<Response> 회원가입_요청(final CustomerRequest request) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers")
-                .then().log().all()
-                .extract();
-    }
-
-    private TokenResponse 로그인_요청_토큰_생성됨(final TokenRequest tokenRequest) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when().post("/api/login")
-                .then().log().all()
-                .extract()
-                .as(TokenResponse.class);
-    }
-
     private ExtractableResponse<Response> 내_정보_조회_요청(final TokenResponse tokenResponse) {
         return RestAssured
                 .given().log().all()
@@ -235,8 +214,7 @@ public class CustomerAcceptanceTest extends AcceptanceShoppingCartTest {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/api/customers/duplication")
+                .when().get("/api/customers/exists?userName=" + request.getUserName())
                 .then().log().all()
                 .extract();
     }

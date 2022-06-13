@@ -1,45 +1,53 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Objects;
+import woowacourse.shoppingcart.exception.QuantityNotMatchException;
+
 public class Cart {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final Long id;
+    private final Quantity quantity;
+    private final Product product;
 
-    private Cart() {
-    }
-
-    public Cart(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-    }
-
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl) {
+    public Cart(final Long id, final Quantity quantity, final Product product) {
         this.id = id;
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+        this.product = product;
+    }
+
+    public void checkQuantity(final int quantity) {
+        if (!this.quantity.equals(new Quantity(quantity))) {
+            throw new QuantityNotMatchException();
+        }
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getProductId() {
-        return productId;
+    public int getQuantity() {
+        return quantity.getValue();
     }
 
-    public String getName() {
-        return name;
+    public Product getProduct() {
+        return product;
     }
 
-    public int getPrice() {
-        return price;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Cart cart = (Cart) o;
+        return Objects.equals(id, cart.id) && Objects.equals(quantity, cart.quantity)
+                && Objects.equals(product, cart.product);
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, quantity, product);
     }
 }

@@ -23,10 +23,9 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.PasswordEncryptor;
 import woowacourse.shoppingcart.domain.customer.UserName;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUserNameRequest;
-import woowacourse.shoppingcart.dto.DuplicateResponse;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.DuplicateResponse;
 import woowacourse.shoppingcart.exception.CannotUpdateUserNameException;
 import woowacourse.shoppingcart.exception.DuplicatedNameException;
 import woowacourse.shoppingcart.exception.IllegalFormException;
@@ -251,8 +250,7 @@ class CustomerServiceTest {
                 .willReturn(true);
 
         // when
-        CustomerUserNameRequest customerUserNameRequest = new CustomerUserNameRequest(userName);
-        final DuplicateResponse isDuplicateUserName = customerService.isDuplicateUserName(customerUserNameRequest);
+        final DuplicateResponse isDuplicateUserName = customerService.isDuplicateUserName(userName);
 
         // then
         assertAll(

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -15,9 +16,11 @@ import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:schema.sql")
+@Sql(scripts = {"classpath:schema.sql", "classpath:data_product.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class ProductDaoTest {
+class ProductDaoTest {
+
+    private static final int DATA_SIZE = 19;
 
     private final ProductDao productDao;
 
@@ -37,7 +40,7 @@ public class ProductDaoTest {
         final Long productId = productDao.save(new Product(name, price, imageUrl));
 
         // then
-        assertThat(productId).isEqualTo(1L);
+        assertThat(productId).isNotNull();
     }
 
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
@@ -60,14 +63,29 @@ public class ProductDaoTest {
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {
-        // given
-        final int size = 0;
-
         // when
         final List<Product> products = productDao.findProducts();
 
         // then
-        assertThat(products).size().isEqualTo(size);
+        assertThat(products).size().isEqualTo(DATA_SIZE);
+    }
+
+    @DisplayName("페이징 처리 상품 목록 조회")
+    @Test
+    void getPageableProducts() {
+        // given
+        final int limitSize = 10;
+
+        // when
+        final List<Product> firstProducts = productDao.findPageableProducts(limitSize, 0);
+        final List<Product> secondProducts = productDao.findPageableProducts(limitSize, 10);
+
+        // then
+        assertAll(
+                () -> assertThat(firstProducts).size().isEqualTo(limitSize),
+                () -> assertThat(secondProducts).size().isEqualTo(DATA_SIZE - limitSize),
+                () -> assertThat(firstProducts).doesNotContainAnyElementsOf(secondProducts)
+        );
     }
 
     @DisplayName("싱품 삭제")
