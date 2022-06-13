@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
@@ -11,7 +12,6 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.cart.CartItemCreateRequest;
 import woowacourse.shoppingcart.dto.cart.CartItemDto;
-import woowacourse.shoppingcart.dto.cart.CartItemDtos;
 import woowacourse.shoppingcart.exception.ExistSameProductIdException;
 import woowacourse.shoppingcart.exception.NoSuchProductException;
 import woowacourse.shoppingcart.exception.OutOfStockException;
@@ -31,14 +31,9 @@ public class CartItemService {
     public List<CartItemDto> findCartsByCustomerId(final Long customerId) {
         List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
 
-        CartItemDtos cartItemDtos = new CartItemDtos();
-
-        for (final CartItem cartItem : cartItems) {
-            final Product product = productDao.getProductById(cartItem.getProductId());
-            cartItemDtos.add(new CartItemDto(product, cartItem.getCount()));
-        }
-
-        return cartItemDtos.getValues();
+        return cartItems.stream()
+                .map(item -> new CartItemDto(productDao.getProductById(item.getProductId()), item.getCount()))
+                .collect(Collectors.toList());
     }
 
     public Long addCartItem(final Long customerId, final CartItemCreateRequest request) {
