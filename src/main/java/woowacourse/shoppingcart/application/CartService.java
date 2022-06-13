@@ -28,7 +28,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public CartResponse findCartsByCustomerName(final String customerUsername) {
+    public CartResponse findCartsByCustomerUsername(final String customerUsername) {
         final Long customerId = customerDao.findIdByUsername(customerUsername);
         final List<CartItemResponse> cartItemResponses = cartDao.findCartsByCustomerId(customerId)
                 .stream()

@@ -23,7 +23,7 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<CartResponse> getCartItems(@AuthenticationPrincipal Customer customer) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customer.getUsername()));
+        return ResponseEntity.ok().body(cartService.findCartsByCustomerUsername(customer.getUsername()));
     }
 
     @PostMapping("/{productId}")
