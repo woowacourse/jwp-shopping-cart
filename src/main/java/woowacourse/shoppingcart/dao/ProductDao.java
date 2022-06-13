@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -7,12 +10,14 @@ import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Objects;
-
 @Repository
 public class ProductDao {
+
+    private static final String NAME = "name";
+    private static final String PRICE = "price";
+    private static final String IMAGE_URL = "image_url";
+    private static final String ID = "id";
+
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
@@ -24,7 +29,7 @@ public class ProductDao {
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
-                    connection.prepareStatement(query, new String[]{"id"});
+                    connection.prepareStatement(query, new String[]{ID});
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getPrice());
             preparedStatement.setString(3, product.getImageUrl());
@@ -40,11 +45,12 @@ public class ProductDao {
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                     new Product(
                             productId,
-                            resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
+                            resultSet.getString(NAME),
+                            resultSet.getInt(PRICE),
+                            resultSet.getString(IMAGE_URL)
                     ), productId
             );
-        } catch (EmptyResultDataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             throw new InvalidProductException();
         }
     }
@@ -54,10 +60,10 @@ public class ProductDao {
         return jdbcTemplate.query(query,
                 (resultSet, rowNumber) ->
                         new Product(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getInt("price"),
-                                resultSet.getString("image_url")
+                                resultSet.getLong(ID),
+                                resultSet.getString(NAME),
+                                resultSet.getInt(PRICE),
+                                resultSet.getString(IMAGE_URL)
                         ));
     }
 

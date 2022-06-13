@@ -10,6 +10,10 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 
 @Repository
 public class OrdersDetailDao {
+
+    private static final String PRODUCT_ID = "product_id";
+    private static final String QUANTITY = "quantity";
+
     private final JdbcTemplate jdbcTemplate;
 
     public OrdersDetailDao(final JdbcTemplate jdbcTemplate) {
@@ -21,7 +25,7 @@ public class OrdersDetailDao {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            final PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setLong(1, ordersId);
             preparedStatement.setLong(2, productId);
             preparedStatement.setLong(3, quantity);
@@ -33,8 +37,8 @@ public class OrdersDetailDao {
     public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
         final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-                rs.getLong("product_id"),
-                rs.getInt("quantity")
+                rs.getLong(PRODUCT_ID),
+                rs.getInt(QUANTITY)
         ), orderId);
     }
 }

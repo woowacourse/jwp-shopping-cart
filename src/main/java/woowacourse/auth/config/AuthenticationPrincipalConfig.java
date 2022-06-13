@@ -12,21 +12,22 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
+
     private final AuthService authService;
     private final CustomerDao customerDao;
 
-    public AuthenticationPrincipalConfig(AuthService authService, CustomerDao customerDao) {
+    public AuthenticationPrincipalConfig(final AuthService authService, final CustomerDao customerDao) {
         this.authService = authService;
         this.customerDao = customerDao;
     }
 
     @Override
-    public void addArgumentResolvers(List argumentResolvers) {
+    public void addArgumentResolvers(final List argumentResolvers) {
         argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
     }
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor())
                 .addPathPatterns("/users/me")
                 .excludePathPatterns("/login")

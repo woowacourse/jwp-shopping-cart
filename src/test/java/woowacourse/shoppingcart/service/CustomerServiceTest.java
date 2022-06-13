@@ -16,7 +16,7 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql("/init.sql")
 public class CustomerServiceTest {
 
     @Autowired
@@ -58,7 +58,7 @@ public class CustomerServiceTest {
     @Test
     void 비밀번호를_수정하는_경우() {
         var username = "puterism";
-        var authorizedCustomer = new AuthorizedCustomer(username, "crew01@naver.com", "a12345");
+        var authorizedCustomer = new AuthorizedCustomer(1L, username, "crew01@naver.com", "a12345");
         var changePasswordRequest = new ChangePasswordRequest("a12345", "a123456");
 
         customerService.changePassword(authorizedCustomer, changePasswordRequest);
@@ -71,7 +71,7 @@ public class CustomerServiceTest {
     @Test
     void 비밀번호를_수정할때_현재_비밀번호가_일치하지_않는_경우() {
         var username = "puterism";
-        var authorizedCustomer = new AuthorizedCustomer(username, "crew01@naver.com", "a12345");
+        var authorizedCustomer = new AuthorizedCustomer(1L, username, "crew01@naver.com", "a12345");
         var changePasswordRequest = new ChangePasswordRequest("a1234567", "a123456");
 
         assertThatThrownBy(
@@ -82,7 +82,7 @@ public class CustomerServiceTest {
     @Test
     void 회원탈퇴시_현재_비밀번호가_일치하지_않는_경우() {
         var username = "puterism";
-        var authorizedCustomer = new AuthorizedCustomer(username, "crew01@naver.com", "a12345");
+        var authorizedCustomer = new AuthorizedCustomer(1L, username, "crew01@naver.com", "a12345");
         var deleteCustomerRequest = new DeleteCustomerRequest("1231");
 
         assertThatThrownBy(() -> customerService.deleteUser(authorizedCustomer, deleteCustomerRequest)).isInstanceOf(
@@ -92,7 +92,7 @@ public class CustomerServiceTest {
     @Test
     void 회원탈퇴() {
         String username = "puterism";
-        var authorizedCustomer = new AuthorizedCustomer(username, "crew01@naver.com", "a12345");
+        var authorizedCustomer = new AuthorizedCustomer(1L, username, "crew01@naver.com", "a12345");
         var deleteCustomerRequest = new DeleteCustomerRequest("a12345");
 
         customerService.deleteUser(authorizedCustomer, deleteCustomerRequest);

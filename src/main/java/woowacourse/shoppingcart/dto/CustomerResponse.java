@@ -1,15 +1,16 @@
 package woowacourse.shoppingcart.dto;
 
 public class CustomerResponse {
+
     private final String username;
     private final String email;
 
-    public CustomerResponse(String username, String email) {
+    public CustomerResponse(final String username, final String email) {
         this.username = username;
         this.email = email;
     }
 
-    public static CustomerResponse from(AuthorizedCustomer authorizedCustomer) {
+    public static CustomerResponse from(final AuthorizedCustomer authorizedCustomer) {
         return new CustomerResponse(authorizedCustomer.getUsername(), authorizedCustomer.getEmail());
     }
 
