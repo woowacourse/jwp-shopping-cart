@@ -8,9 +8,8 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.PasswordRequest;
 import woowacourse.shoppingcart.dto.UsernameDuplicationResponse;
 import woowacourse.shoppingcart.exception.InvalidArgumentRequestException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class CustomerService {
     private final CustomerDao customerDao;
@@ -49,16 +48,14 @@ public class CustomerService {
     }
 
     public void updatePassword(Customer customer, PasswordRequest passwordRequest) {
-        validateCorrectPassword(customer.getUsername(), passwordRequest.getOldPassword());
+        validateCorrectPassword(customer, passwordRequest.getOldPassword());
         EncodePassword encodePassword = passwordEncoder.encode(new RawPassword(passwordRequest.getNewPassword()));
         Customer updateCustomer = customer.updatePassword(encodePassword);
         customerDao.updatePassword(updateCustomer.getPassword(), customer.getUsername());
     }
 
-    private void validateCorrectPassword(String username, String oldPassword) {
+    private void validateCorrectPassword(Customer customer, String oldPassword) {
         EncodePassword encodeOldPassword = passwordEncoder.encode(new RawPassword(oldPassword));
-        Customer customer = customerDao.findCustomerByUsername(username)
-                .orElseThrow(InvalidCustomerException::new);
         if (!customer.getPassword().equals(encodeOldPassword.getPassword())) {
             throw new InvalidArgumentRequestException("비밀번호가 일치하지 않습니다.");
         }

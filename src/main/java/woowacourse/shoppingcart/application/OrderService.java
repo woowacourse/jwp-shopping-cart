@@ -11,8 +11,8 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.util.List;
 
-@Service
 @Transactional(rollbackFor = Exception.class)
+@Service
 public class OrderService {
 
     private final OrderDao orderDao;

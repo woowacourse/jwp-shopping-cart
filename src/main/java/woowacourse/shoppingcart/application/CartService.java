@@ -14,8 +14,8 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 @Transactional(rollbackFor = Exception.class)
+@Service
 public class CartService {
 
     private final CartDao cartDao;
@@ -28,6 +28,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public CartResponse findCartsByCustomerUsername(final String customerUsername) {
         final Long customerId = customerDao.findIdByUsername(customerUsername);
         final List<CartItemResponse> cartItemResponses = cartDao.findCartsByCustomerId(customerId)

@@ -12,8 +12,8 @@ import woowacourse.shoppingcart.exception.InvalidProductException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 @Transactional(rollbackFor = Exception.class)
+@Service
 public class ProductService {
     private final ProductDao productDao;
 
@@ -27,6 +27,7 @@ public class ProductService {
         return productDao.save(product);
     }
 
+    @Transactional(readOnly = true)
     public ProductsResponse findProducts() {
         List<Product> products = productDao.findProducts();
         List<ProductResponse> productResponses = products.stream()
@@ -35,6 +36,7 @@ public class ProductService {
         return new ProductsResponse(productResponses);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(final Long productId) {
         Product product = productDao.findProductById(productId)
                 .orElseThrow(() -> new InvalidProductException("존재하지 않는 상품입니다."));
