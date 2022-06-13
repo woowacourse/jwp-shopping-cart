@@ -5,7 +5,7 @@ import woowacourse.shoppingcart.domain.CartItem;
 public class CartItemResponse {
 
     private ProductResponse product;
-    private Integer quantity;
+    private int quantity;
 
     public CartItemResponse() {
     }
@@ -15,7 +15,7 @@ public class CartItemResponse {
         this.quantity = cartItem.getQuantity();
     }
 
-    public CartItemResponse(ProductResponse product, Integer quantity) {
+    public CartItemResponse(ProductResponse product, int quantity) {
         this.product = product;
         this.quantity = quantity;
     }
@@ -24,7 +24,7 @@ public class CartItemResponse {
         return product;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 }

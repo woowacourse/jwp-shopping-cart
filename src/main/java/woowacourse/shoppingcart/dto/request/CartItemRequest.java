@@ -3,12 +3,12 @@ package woowacourse.shoppingcart.dto.request;
 public class CartItemRequest {
 
     private Long productId;
-    private Integer quantity;
+    private int quantity;
 
     public CartItemRequest() {
     }
 
-    public CartItemRequest(Long productId, Integer quantity) {
+    public CartItemRequest(Long productId, int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }
@@ -17,7 +17,7 @@ public class CartItemRequest {
         return productId;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 }

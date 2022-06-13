@@ -5,14 +5,14 @@ import woowacourse.shoppingcart.domain.Product;
 public class ProductRequest {
 
     private String name;
-    private Integer price;
-    private Integer stock;
+    private int price;
+    private int stock;
     private String imageUrl;
 
     private ProductRequest() {
     }
 
-    public ProductRequest(String name, Integer price, Integer stock, String imageUrl) {
+    public ProductRequest(String name, int price, int stock, String imageUrl) {
         this.name = name;
         this.price = price;
         this.stock = stock;
@@ -27,11 +27,11 @@ public class ProductRequest {
         return name;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public Integer getStock() {
+    public int getStock() {
         return stock;
     }
 

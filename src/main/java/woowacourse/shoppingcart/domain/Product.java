@@ -6,15 +6,15 @@ public class Product {
 
     private final Long id;
     private final String name;
-    private final Integer price;
-    private Integer stock;
+    private final int price;
+    private int stock;
     private final String imageUrl;
 
-    public Product(String name, Integer price, Integer stock, String imageUrl) {
+    public Product(String name, int price, int stock, String imageUrl) {
         this(null, name, price, stock, imageUrl);
     }
 
-    public Product(Long id, String name, Integer price, Integer stock, String imageUrl) {
+    public Product(Long id, String name, int price, int stock, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -53,11 +53,11 @@ public class Product {
         return name;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public Integer getStock() {
+    public int getStock() {
         return stock;
     }
 

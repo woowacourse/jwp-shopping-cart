@@ -6,8 +6,8 @@ public class ProductResponse {
 
     private Long id;
     private String name;
-    private Integer price;
-    private Integer stock;
+    private int price;
+    private int stock;
     private String imageUrl;
 
     private ProductResponse() {
@@ -17,7 +17,7 @@ public class ProductResponse {
         this(product.getId(), product.getName(), product.getPrice(), product.getStock(), product.getImageUrl());
     }
 
-    public ProductResponse(Long id, String name, Integer price, Integer stock, String imageUrl) {
+    public ProductResponse(Long id, String name, int price, int stock, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -33,11 +33,11 @@ public class ProductResponse {
         return name;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public Integer getStock() {
+    public int getStock() {
         return stock;
     }
 

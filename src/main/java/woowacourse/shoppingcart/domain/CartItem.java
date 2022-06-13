@@ -7,13 +7,13 @@ public class CartItem {
     private final Long id;
     private final Long memberId;
     private final Product product;
-    private Integer quantity;
+    private int quantity;
 
-    public CartItem(Long memberId, Product product, Integer quantity) {
+    public CartItem(Long memberId, Product product, int quantity) {
         this(null, memberId, product, quantity);
     }
 
-    public CartItem(Long id, Long memberId, Product product, Integer quantity) {
+    public CartItem(Long id, Long memberId, Product product, int quantity) {
         validateQuantity(product, quantity);
         this.id = id;
         this.memberId = memberId;
