@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import woowacourse.exception.InputFormatException;
+import woowacourse.shoppingcart.customer.domain.Password;
 
 public class PasswordTest {
 
