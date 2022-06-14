@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -18,8 +19,10 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public List<ProductResponse> findProducts() {
+        return productDao.findProducts().stream()
+            .map(ProductResponse::of)
+            .collect(Collectors.toList());
     }
 
     public Long addProduct(final ProductRequest productRequest) {

@@ -26,7 +26,6 @@ class ProductApiTest extends TestSupport {
             .andDo(
                 restDocs.document(
                     requestFields(
-                        fieldWithPath("id").description("id"),
                         fieldWithPath("name").description("name"),
                         fieldWithPath("price").description("price"),
                         fieldWithPath("imageUrl").description("imageUrl")
