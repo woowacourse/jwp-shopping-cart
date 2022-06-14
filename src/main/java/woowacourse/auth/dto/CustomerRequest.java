@@ -8,10 +8,11 @@ public class CustomerRequest {
     private String phone;
     private String address;
 
-    public CustomerRequest() {
+    private CustomerRequest() {
     }
 
-    public CustomerRequest(final String email, final String password, final String name, final String phone, final String address) {
+    public CustomerRequest(final String email, final String password, final String name, final String phone,
+                           final String address) {
         this.email = email;
         this.password = password;
         this.name = name;

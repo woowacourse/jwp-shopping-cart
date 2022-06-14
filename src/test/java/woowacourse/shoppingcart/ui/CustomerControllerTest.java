@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.notNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,10 +27,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import woowacourse.auth.config.AuthenticationPrincipalArgumentResolver;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.ui.AuthenticationPrincipalArgumentResolver;
 import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.dto.EmailValidationRequest;
 import woowacourse.shoppingcart.exception.InvalidTokenException;
 
 @SpringBootTest
@@ -137,10 +139,12 @@ public class CustomerControllerTest {
     @Test
     void checkEmail() throws Exception {
         // given
-        when(customerService.validateEmail(("test@test.com")))
-                .thenReturn(true);
+        doNothing().when(customerService)
+                .validateEmail("test@test.com");
         // when
-        ResultActions perform = mockMvc.perform(post("/customers/email"));
+        ResultActions perform = mockMvc.perform(post("/customers/email/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new EmailValidationRequest("test@test.com"))));
         // then
         perform.andDo(print())
                 .andExpect(status().isOk());
@@ -164,5 +168,27 @@ public class CustomerControllerTest {
         perform.andDo(print())
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("message").exists());
+    }
+
+    @DisplayName("회원 이름 조회 성공 시 상태코드 200과 회원 이름을 반환한다.")
+    @Test
+    void findCustomerName() throws Exception {
+        // given
+        when(authenticationPrincipalArgumentResolver.supportsParameter((MethodParameter) notNull()))
+                .thenReturn(true);
+        when(authenticationPrincipalArgumentResolver.resolveArgument(
+                (MethodParameter) notNull()
+                , (ModelAndViewContainer) notNull()
+                , (NativeWebRequest) notNull()
+                , (WebDataBinderFactory) notNull()))
+                .thenReturn(1L);
+        when(customerService.findCustomerById(any(Long.class)))
+                .thenReturn(new CustomerResponse(1L, "test@test.com", "bunny", "010-0000-0000", "서울시 종로구"));
+        // when
+        ResultActions perform = mockMvc.perform(get("/customers/name"));
+        // then
+        perform.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value("bunny"));
     }
 }

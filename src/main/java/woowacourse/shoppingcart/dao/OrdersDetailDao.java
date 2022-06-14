@@ -11,6 +11,7 @@ import java.util.List;
 
 @Repository
 public class OrdersDetailDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public OrdersDetailDao(final JdbcTemplate jdbcTemplate) {

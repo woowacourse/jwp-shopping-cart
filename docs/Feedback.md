@@ -21,6 +21,30 @@
     - [x] name이 unique로 되어있음. -> email로 수정 필요
 - [x] ArgumentResolver 기능 구현
 
+## 2차 피드백
+
+- [ ] `CustomerController`
+    - [ ] 기존 CustomerRequest 외 Request 객체 활용
+- [x] `Domain`
+    - [x] `Email`, `Password`를 객체로 분리하여 검증 관리
+        - 현재 코드에서 Validator로 분리하여 처리하는 것에 대해 객체지향의 역할과 책임의 관점에서 고민
+- [x] `Exception`
+    - [x] `Exception.class` -> `RuntimeException.class`
+        - 500 에러 반환 처리
+    - [x] 응답 메세지 한글로 통일화
+        - 파악 용이
+- [ ] URL
+    - `GET /customers`로 개인정보를 조회하는 것이 맞는지
+- [x] `Argumnet Resolver`
+    - UI 패키지로 분리한 이유, config 패키지로 분리에 대해 고민
+- [x] `AuthorizationExtractor`
+    - 메서드 분리
+- [ ] `CustomerService`
+    - [ ] `Service`에서 DTO 응답
+        - Controller 가 아닌 Service에서 응답한 이유
+    - [ ] `CustomerResponse.from(customer)`, 정적 팩터리 메서드 활용
+- [x] DTO 클래스 기본 생성자의 접근제어자 private
+
 ### 시나리오
 
 Feature: 지하철 노선 관리

@@ -1,7 +1,11 @@
 package woowacourse.auth.dto;
 
 public class ErrorResponse {
+
     private String message;
+
+    private ErrorResponse() {
+    }
 
     public ErrorResponse(String message) {
         this.message = message;

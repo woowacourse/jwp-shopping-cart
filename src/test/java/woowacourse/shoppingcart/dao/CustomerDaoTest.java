@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -105,7 +105,7 @@ public class CustomerDaoTest {
         final String sql = "insert into customer(email, name, phone, address, password) values (:email, :name, :phone, :address, :password)";
         jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(customer));
 
-        Customer update = new Customer(1L, EMAIL, "bunny", "010-9999-9999", "Seoul City", PASSWORD);
+        Customer update = new Customer(1L, new Customer(EMAIL, "bunny", "010-9999-9999", "Seoul City", PASSWORD));
 
         customerDao.edit(update);
         Customer customer = customerDao.findById(1L);

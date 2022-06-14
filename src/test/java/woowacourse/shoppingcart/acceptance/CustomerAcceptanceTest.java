@@ -12,6 +12,7 @@ import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.EmailValidationRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -33,7 +34,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(registerCustomerResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(customerResponse.getId()).isEqualTo(26L),
+                () -> assertThat(customerResponse.getId()).isEqualTo(1L),
                 () -> assertThat(customerResponse.getEmail()).isEqualTo(EMAIL),
                 () -> assertThat(customerResponse.getName()).isEqualTo(NAME),
                 () -> assertThat(customerResponse.getPhone()).isEqualTo(PHONE),
@@ -49,14 +50,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         postWithBody("/customers", customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
-        String accessToken = postWithBody("/customers/login", tokenRequest).as(TokenResponse.class).getAccessToken();
+        String accessToken = postWithBody("/auth/login", tokenRequest).as(TokenResponse.class).getAccessToken();
         // when
         CustomerRequest updateCustomerRequest = new CustomerRequest(EMAIL, PASSWORD, "bani", PHONE, ADDRESS);
         putByTokenWithBody("/customers", accessToken, updateCustomerRequest);
         // then
         CustomerResponse customerResponse = getByToken("/customers", accessToken).as(CustomerResponse.class);
         assertAll(
-                () -> assertThat(customerResponse.getId()).isEqualTo(26L),
+                () -> assertThat(customerResponse.getId()).isEqualTo(1L),
                 () -> assertThat(customerResponse.getEmail()).isEqualTo(EMAIL),
                 () -> assertThat(customerResponse.getName()).isEqualTo("bani"),
                 () -> assertThat(customerResponse.getPhone()).isEqualTo(PHONE),
@@ -72,7 +73,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         postWithBody("/customers", customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
-        String accessToken = postWithBody("/customers/login", tokenRequest).as(TokenResponse.class).getAccessToken();
+        String accessToken = postWithBody("/auth/login", tokenRequest).as(TokenResponse.class).getAccessToken();
         // when
         ExtractableResponse<Response> response = deleteWithToken("/customers", accessToken);
         // then
@@ -87,7 +88,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         postWithBody("/customers", customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
-        String accessToken = postWithBody("/customers/login", tokenRequest).as(TokenResponse.class).getAccessToken();
+        String accessToken = postWithBody("/auth/login", tokenRequest).as(TokenResponse.class).getAccessToken();
         // when
         ExtractableResponse<Response> customerResponse = getByToken("/customers", accessToken + "l");
         // then
@@ -97,7 +98,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("회원 가입 전 이메일 검증 시 중복된 이메일으로 검증 요청을 보낸다면 상태코드 200과 false를 반환한다.")
+    @DisplayName("회원 가입 전 이메일 검증 시 중복된 이메일으로 검증 요청을 보낸다면 상태코드 400을 반환한다.")
     @Test
     void validateDuplicateEmail() {
         // when
@@ -105,10 +106,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> registerCustomerResponse = postWithBody("/customers", customerRequest);
         CustomerResponse customerResponse = registerCustomerResponse.body().as(CustomerResponse.class);
         // then
-        ExtractableResponse<Response> response = postWithBody("/customers/email", customerRequest.getEmail());
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(200),
-                () -> assertThat(response.body().asString()).isEqualTo("false")
-        );
+        ExtractableResponse<Response> response = postWithBody("/customers/email/validate",
+                new EmailValidationRequest(customerRequest.getEmail()));
+        assertThat(response.statusCode()).isEqualTo(400);
+    }
+
+    @DisplayName("회원 가입 전 이메일 검증 시 신규 이메일로 검증 요청을 보낸다면 상태코드 200을 반환한다.")
+    @Test
+    void validateEmail() {
+        // when
+        CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
+        // then
+        ExtractableResponse<Response> response = postWithBody("/customers/email/validate",
+                new EmailValidationRequest(customerRequest.getEmail()));
+        assertThat(response.statusCode()).isEqualTo(200);
     }
 }

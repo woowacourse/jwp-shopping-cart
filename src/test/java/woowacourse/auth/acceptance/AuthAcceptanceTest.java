@@ -31,7 +31,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         postWithBody("/customers", customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
-        String accessToken = postWithBody("/customers/login", tokenRequest)
+        String accessToken = postWithBody("/auth/login", tokenRequest)
                 .as(TokenResponse.class)
                 .getAccessToken();
         // when
@@ -39,7 +39,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertAll(
-                () -> assertThat(customerResponse.getId()).isEqualTo(26L),
+                () -> assertThat(customerResponse.getId()).isEqualTo(1L),
                 () -> assertThat(customerResponse.getEmail()).isEqualTo(EMAIL),
                 () -> assertThat(customerResponse.getName()).isEqualTo(NAME),
                 () -> assertThat(customerResponse.getPhone()).isEqualTo(PHONE),
@@ -55,7 +55,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         postWithBody("/customers", customerRequest);
         // when
         TokenRequest tokenRequest = new TokenRequest("test@test.com", PASSWORD);
-        ExtractableResponse<Response> loginResponse = postWithBody("/customers/login", tokenRequest);
+        ExtractableResponse<Response> loginResponse = postWithBody("/auth/login", tokenRequest);
         // then
         assertAll(
                 () -> assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -71,7 +71,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         postWithBody("/customers", customerRequest);
         // when
         TokenRequest tokenRequest = new TokenRequest(EMAIL, "Bunny1234!");
-        ExtractableResponse<Response> loginResponse = postWithBody("/customers/login", tokenRequest);
+        ExtractableResponse<Response> loginResponse = postWithBody("/auth/login", tokenRequest);
         // then
         assertAll(
                 () -> assertThat(loginResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),

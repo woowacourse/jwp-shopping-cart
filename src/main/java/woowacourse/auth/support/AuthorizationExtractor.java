@@ -11,18 +11,28 @@ public class AuthorizationExtractor {
 
     public static String extract(HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
+        String authHeaderValue = null;
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
-            if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
-                String authHeaderValue = value.substring(BEARER_TYPE.length()).trim();
-                request.setAttribute(ACCESS_TOKEN_TYPE, value.substring(0, BEARER_TYPE.length()).trim());
-                int commaIndex = authHeaderValue.indexOf(',');
-                if (commaIndex > 0) {
-                    authHeaderValue = authHeaderValue.substring(0, commaIndex);
-                }
-                return authHeaderValue;
-            }
+            authHeaderValue = getAuthHeaderValue(request, value);
+        }
+        return authHeaderValue;
+    }
+
+    private static String getAuthHeaderValue(HttpServletRequest request, String value) {
+        if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
+            request.setAttribute(ACCESS_TOKEN_TYPE, value.substring(0, BEARER_TYPE.length()).trim());
+            return generateAuthHeaderValue(value);
         }
         return null;
+    }
+
+    private static String generateAuthHeaderValue(String value) {
+        String authHeaderValue = value.substring(BEARER_TYPE.length()).trim();
+        int commaIndex = authHeaderValue.indexOf(',');
+        if (commaIndex > 0) {
+            authHeaderValue = authHeaderValue.substring(0, commaIndex);
+        }
+        return authHeaderValue;
     }
 }

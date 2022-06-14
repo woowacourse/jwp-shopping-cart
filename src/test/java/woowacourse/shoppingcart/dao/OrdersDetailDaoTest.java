@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,13 +10,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.OrderDetail;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -22,19 +23,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OrdersDetailDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final OrdersDetailDao ordersDetailDao;
+    private final CustomerDao customerDao;
+
     private long ordersId;
     private long productId;
     private long customerId;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
+    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.customerDao = new CustomerDao(namedParameterJdbcTemplate);
         this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
     }
 
     @BeforeEach
     void setUp() {
-        customerId = 1L;
+        Customer customer = customerDao.save(new Customer("abc@abc.com", "abc", "010-0000-0000", "seoul", "Test1234!"));
+        customerId = customer.getId();
         jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
         ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
 
@@ -63,11 +70,9 @@ class OrdersDetailDaoTest {
         //given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
-            jdbcTemplate
-                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
+            jdbcTemplate.update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
                             ordersId, productId, 3);
         }
-
         //when
         final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
                 .findOrdersDetailsByOrderId(ordersId);

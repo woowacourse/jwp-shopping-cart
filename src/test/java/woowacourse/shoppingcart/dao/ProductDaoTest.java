@@ -61,7 +61,6 @@ public class ProductDaoTest {
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {
-
         // given
         final int size = 0;
 

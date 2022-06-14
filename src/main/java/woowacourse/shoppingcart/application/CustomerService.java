@@ -3,10 +3,8 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.CustomerRequest;
 import woowacourse.auth.dto.CustomerResponse;
-import woowacourse.auth.utils.Encryptor;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.CustomerInformationValidator;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @Service
 public class CustomerService {
@@ -18,10 +16,8 @@ public class CustomerService {
     }
 
     public CustomerResponse register(CustomerRequest customerRequest) {
-        CustomerInformationValidator.validatePassword(customerRequest.getPassword());
         final Customer customer = new Customer(customerRequest.getEmail(), customerRequest.getName(),
-                customerRequest.getPhone(), customerRequest.getAddress(),
-                Encryptor.encrypt(customerRequest.getPassword()));
+                customerRequest.getPhone(), customerRequest.getAddress(), customerRequest.getPassword());
         final Customer savedCustomer = customerDao.save(customer);
         return new CustomerResponse(savedCustomer.getId(), savedCustomer.getEmail(), savedCustomer.getName(),
                 savedCustomer.getPhone(), savedCustomer.getAddress());
@@ -34,10 +30,9 @@ public class CustomerService {
     }
 
     public void edit(Long id, CustomerRequest customerRequest) {
-        CustomerInformationValidator.validatePassword(customerRequest.getPassword());
-        final Customer customer = new Customer(id, customerRequest.getEmail(), customerRequest.getName(),
+        final Customer customer = new Customer(id, new Customer(customerRequest.getEmail(), customerRequest.getName(),
                 customerRequest.getPhone(), customerRequest.getAddress(),
-                Encryptor.encrypt(customerRequest.getPassword()));
+                customerRequest.getPassword()));
         customerDao.edit(customer);
     }
 
@@ -45,7 +40,9 @@ public class CustomerService {
         customerDao.delete(id);
     }
 
-    public boolean validateEmail(String email) {
-        return customerDao.findByEmail(email).isPresent();
+    public void validateEmail(String email) {
+        if (customerDao.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("중복된 email 입니다.");
+        }
     }
 }

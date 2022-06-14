@@ -33,6 +33,17 @@ public class AcceptanceTest {
                 .extract();
     }
 
+    public ExtractableResponse<Response> postWithBodyByToken(String uri, String accessToken, Object body) {
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(body)
+                .when().post(uri)
+                .then().log().all()
+                .extract();
+    }
+
     public ExtractableResponse<Response> getByToken(String uri, String accessToken) {
         return RestAssured
                 .given().log().all()
@@ -54,11 +65,33 @@ public class AcceptanceTest {
                 .extract();
     }
 
+    public ExtractableResponse<Response> patchByTokenWithBody(String uri, String accessToken, Object body) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().oauth2(accessToken)
+                .body(body)
+                .when().patch(uri)
+                .then().log().all()
+                .extract();
+    }
+
     public ExtractableResponse<Response> deleteWithToken(String uri, String accessToken) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().oauth2(accessToken)
+                .when().delete(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    public ExtractableResponse<Response> deleteWithBodyByToken(String uri, String accessToken, Object body) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().oauth2(accessToken)
+                .body(body)
                 .when().delete(uri)
                 .then().log().all()
                 .extract();
