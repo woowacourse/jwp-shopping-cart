@@ -62,9 +62,7 @@ public class CartItemService {
     }
 
     public boolean existProduct(final long customerId, final long productId) {
-        Customer customer = getByCustomerId(customerId);
-        List<CartItem> cartItems = cartItemDao.findByCustomerId(customer.getId());
-        return isContain(cartItems, productId);
+        return cartItemDao.existProduct(customerId, productId);
     }
 
     private void validateCustomerCart(final long customerId, final CartItemDeleteRequest cartItemDeleteRequest) {

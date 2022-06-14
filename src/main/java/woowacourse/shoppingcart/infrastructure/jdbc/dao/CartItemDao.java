@@ -86,4 +86,13 @@ public class CartItemDao {
                 .addValue("productId", productId);
         jdbcTemplate.update(sql, parameters);
     }
+
+    public boolean existProduct(long customerId, long productId) {
+        final String sql = "SELECT EXISTS("
+                + "SELECT * FROM cart_item WHERE customer_id = (:customerId) AND product_id = (:productId))";
+
+        final SqlParameterSource parameters = new MapSqlParameterSource("customerId", customerId)
+                .addValue("productId", productId);
+        return jdbcTemplate.queryForObject(sql, parameters, Boolean.class);
+    }
 }
