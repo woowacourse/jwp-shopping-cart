@@ -12,22 +12,30 @@ public class AuthorizationExtractor {
         Enumeration<String> headers = extractHeaders(request);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
-            if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
-                String authHeaderValue = value.substring(BEARER_TYPE.length()).trim();
+            if (isBearerToken(value)) {
+                String token = value.substring(BEARER_TYPE.length()).trim();
                 request.setAttribute(ACCESS_TOKEN_TYPE, value.substring(0, BEARER_TYPE.length()).trim());
-                int commaIndex = authHeaderValue.indexOf(',');
-                if (commaIndex > 0) {
-                    authHeaderValue = authHeaderValue.substring(0, commaIndex);
-                }
-                return authHeaderValue;
+                token = parseToken(token);
+                return token;
             }
         }
-
         return null;
     }
 
     private static Enumeration<String> extractHeaders(HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         return headers;
+    }
+
+    private static boolean isBearerToken(String value) {
+        return value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase());
+    }
+
+    private static String parseToken(String token) {
+        int commaIndex = token.indexOf(',');
+        if (commaIndex > 0) {
+            token = token.substring(0, commaIndex);
+        }
+        return token;
     }
 }
