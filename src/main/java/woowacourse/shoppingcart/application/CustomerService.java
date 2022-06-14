@@ -18,6 +18,11 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
+    public Customer findById(Long id) {
+        return customerDao.findById(id)
+                .orElseThrow(InvalidCustomerBadRequestException::new);
+    }
+
     public Long register(CustomerSignUpRequest request) {
         if (customerDao.existByEmail(request.getEmail())) {
             throw new DuplicateCustomerBadRequestException();
@@ -28,16 +33,8 @@ public class CustomerService {
         return customer.getId();
     }
 
-    public Customer findById(Long id) {
-        return customerDao.findById(id)
-                .orElseThrow(InvalidCustomerBadRequestException::new);
-    }
-
     public void delete(Customer customer) {
         String email = customer.getEmail();
-        if (!customerDao.existByEmail(email)) {
-            throw new InvalidCustomerBadRequestException();
-        }
         customerDao.deleteByEmail(email);
     }
 

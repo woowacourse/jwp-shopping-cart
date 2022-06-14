@@ -33,10 +33,12 @@ class CustomerServiceTest {
     @Autowired
     private CustomerDao customerDao;
 
+    private Long customerId;
+
     @BeforeEach
     void setUp() {
         CustomerSignUpRequest request = new CustomerSignUpRequest(EMAIL, PASSWORD, NICKNAME);
-        customerService.register(request);
+        customerId = customerService.register(request);
     }
 
     @DisplayName("정상적으로 회원 등록")
@@ -94,25 +96,17 @@ class CustomerServiceTest {
         assertThat(customerDao.existByEmail(EMAIL)).isFalse();
     }
 
-    @DisplayName("존재하지 않는 이메일로 수정 시 예외 발생")
-    @Test
-    void updateByNotExistEmail() {
-        Customer notFoundCustomer = new Customer(NOT_FOUND_EMAIL, "invalidPwd1", "invalid");
-        assertThatThrownBy(() -> customerService.update(notFoundCustomer,
-                new CustomerUpdateRequest(NICKNAME, PASSWORD)))
-                .isInstanceOf(InvalidCustomerBadRequestException.class);
-    }
-
     @DisplayName("정상적인 회원 정보 수정")
     @Test
     void updateCustomer() {
-        Customer validCustomer = new Customer(EMAIL, PASSWORD, NICKNAME);
+        Customer customer = customerService.findById(customerId);
         String newNickname = "토닉2";
         String newPassword = "newPassword1";
-        customerService.update(validCustomer, new CustomerUpdateRequest(newNickname, newPassword));
-        Customer customer = customerDao.findByEmail(EMAIL).get();
+        customerService.update(customer, new CustomerUpdateRequest(newNickname, newPassword));
 
-        assertThat(customer.getPassword()).isEqualTo(PasswordEncoder.encrypt(newPassword));
-        assertThat(customer.getNickname()).isEqualTo(newNickname);
+        Customer resultCustomer = customerDao.findByEmail(EMAIL).get();
+
+        assertThat(resultCustomer.getPassword()).isEqualTo(PasswordEncoder.encrypt(newPassword));
+        assertThat(resultCustomer.getNickname()).isEqualTo(newNickname);
     }
 }
