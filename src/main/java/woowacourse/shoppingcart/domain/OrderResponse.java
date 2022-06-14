@@ -2,12 +2,12 @@ package woowacourse.shoppingcart.domain;
 
 import java.util.List;
 
-public class Orders {
+public class OrderResponse {
 
     private final Long orderId;
     private final List<OrderDetail> order;
 
-    public Orders(final Long orderId, final List<OrderDetail> order) {
+    public OrderResponse(Long orderId, List<OrderDetail> order) {
         this.orderId = orderId;
         this.order = order;
     }

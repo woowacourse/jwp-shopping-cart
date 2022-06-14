@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.OrderResponse;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
 import woowacourse.shoppingcart.dto.response.CartResponse;
 
@@ -258,14 +258,14 @@ public class AcceptanceTest {
     }
 
     public void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-                .map(Orders::getOrderId)
+        List<Long> resultOrderIds = response.jsonPath().getList(".", OrderResponse.class).stream()
+                .map(OrderResponse::getOrderId)
                 .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
     }
 
     public void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-        Orders resultOrder = response.as(Orders.class);
+        OrderResponse resultOrder = response.as(OrderResponse.class);
         assertThat(resultOrder.getOrderId()).isEqualTo(orderId);
     }
 }

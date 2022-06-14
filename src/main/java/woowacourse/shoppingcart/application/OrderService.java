@@ -10,7 +10,7 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.shoppingcart.domain.OrderResponse;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
@@ -28,7 +28,8 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
 
-    public OrderService(OrderDao orderDao, OrdersDetailDao ordersDetailDao,
+    public OrderService(OrderDao orderDao,
+            OrdersDetailDao ordersDetailDao,
             CartItemDao cartItemDao,
             ProductRepository productRepository,
             CustomerRepository customerRepository) {
@@ -60,12 +61,12 @@ public class OrderService {
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
     }
 
-    public Orders findOrderById(Long customerId, Long orderId) {
-        validateOrderIdByCustomerName(customerId, orderId);
+    public OrderResponse findOrderById(Long customerId, Long orderId) {
+        validateOrderIdByCustomerId(customerId, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByCustomerName(Long customerId, Long orderId) {
+    private void validateOrderIdByCustomerId(Long customerId, Long orderId) {
         Customer customer = getCustomer(customerId);
 
         if (!orderDao.isValidOrderId(customer.getId(), orderId)) {
@@ -73,7 +74,7 @@ public class OrderService {
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(Long customerId) {
+    public List<OrderResponse> findOrdersByCustomerName(Long customerId) {
         Customer customer = getCustomer(customerId);
         List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customer.getId());
 
@@ -82,14 +83,19 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private Orders findOrderResponseDtoByOrderId(Long orderId) {
+    private OrderResponse findOrderResponseDtoByOrderId(Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            Product product = productRepository.findById(productQuantity.getId()).get();
-            int quantity = productQuantity.getQuantity();
+        for (OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
+            Product product = getProduct(orderDetail);
+            int quantity = orderDetail.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }
 
-        return new Orders(orderId, ordersDetails);
+        return new OrderResponse(orderId, ordersDetails);
+    }
+
+    private Product getProduct(OrderDetail orderDetail) {
+        return productRepository.findById(orderDetail.getId())
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 상품입니다."));
     }
 }
