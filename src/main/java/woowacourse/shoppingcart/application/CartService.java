@@ -24,7 +24,7 @@ public class CartService {
         this.productService = productService;
     }
 
-    public Long enrollProduct(final Long customerId, final Long productId) {
+    public Long enrollCartItem(final Long customerId, final Long productId) {
         try {
             return cartItemDao.addCartItem(customerId, productId, INITIAL_QUANTITY);
         } catch (Exception e) {

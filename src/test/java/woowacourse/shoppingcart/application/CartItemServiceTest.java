@@ -36,7 +36,7 @@ class CartItemServiceTest {
                 .thenReturn(1L);
 
         // when
-        Long addedItemId = cartService.enrollProduct(1L, 1L);
+        Long addedItemId = cartService.enrollCartItem(1L, 1L);
 
         // then
         assertThat(addedItemId).isOne();

@@ -16,10 +16,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.dto.AddCartItemRequest;
-import woowacourse.shoppingcart.dto.CartDto;
-import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
-import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
+import woowacourse.shoppingcart.dto.cart.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.cart.CartDto;
+import woowacourse.shoppingcart.dto.cart.DeleteCartItemRequest;
+import woowacourse.shoppingcart.dto.cart.UpdateCartItemRequest;
 
 @RestController
 @RequestMapping("/api/customer/cartItems")
@@ -31,8 +31,8 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartDto>> getCartItems(@AuthenticationPrincipal final Long id) {
-        final List<CartItem> cartItems = cartService.findCartItemsByCustomerId(id);
+    public ResponseEntity<List<CartDto>> getCartItems(@AuthenticationPrincipal final Long customerId) {
+        final List<CartItem> cartItems = cartService.findCartItemsByCustomerId(customerId);
         final List<CartDto> cartDtos = cartItems.stream()
                 .map(CartDto::from)
                 .collect(Collectors.toList());
@@ -40,13 +40,12 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final Long id,
-                                            @Valid @RequestBody final AddCartItemRequest request) {
-        final Long cartId = cartService.enrollProduct(id, request.getProductId());
+    public ResponseEntity<Void> enrollCartItem(@AuthenticationPrincipal final Long customerId,
+                                               @Valid @RequestBody final AddCartItemRequest request) {
+        cartService.enrollCartItem(customerId, request.getProductId());
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
+                .build()
                 .toUri();
         return ResponseEntity.created(responseLocation).build();
     }
