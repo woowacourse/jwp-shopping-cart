@@ -29,7 +29,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthCheckInterceptor authCheckInterceptor() {
-        return new AuthCheckInterceptor(jwtTokenProvider);
+        return new AuthCheckInterceptor(jwtTokenProvider, authService);
     }
 
     @Override
