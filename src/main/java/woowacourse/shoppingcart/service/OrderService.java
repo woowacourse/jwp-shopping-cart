@@ -9,5 +9,5 @@ public interface OrderService {
 
     Order findByOrderId(long orderId);
 
-    List<Order> findAll();
+    List<Order> findOrdersByCustomerId(long customerId);
 }

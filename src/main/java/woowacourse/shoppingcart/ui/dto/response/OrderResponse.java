@@ -3,9 +3,12 @@ package woowacourse.shoppingcart.ui.dto.response;
 import java.util.List;
 
 public class OrderResponse {
-    private final long totalPrice;
-    private final long id;
-    private final List<OrderDetailResponse> orderDetails;
+    private long totalPrice;
+    private long id;
+    private List<OrderDetailResponse> orderDetails;
+
+    public OrderResponse() {
+    }
 
     public OrderResponse(final long totalPrice, final long id, final List<OrderDetailResponse> orderDetailResponses) {
         this.totalPrice = totalPrice;

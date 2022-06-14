@@ -3,12 +3,12 @@ package woowacourse.shoppingcart.infra.dao.entity;
 public class OrderEntity {
     private final long orderId;
     private final long orderDetailId;
-    private final long cartId;
+    private final Long cartId;
     private final long customerId;
     private final ProductEntity productEntity;
     private final int quantity;
 
-    public OrderEntity(final long orderId, final long orderDetailId, final long cartId, final long customerId,
+    public OrderEntity(final long orderId, final long orderDetailId, final Long cartId, final long customerId,
                        final ProductEntity productEntity,
                        final int quantity) {
         this.orderId = orderId;
@@ -17,6 +17,11 @@ public class OrderEntity {
         this.customerId = customerId;
         this.productEntity = productEntity;
         this.quantity = quantity;
+    }
+
+    public OrderEntity(final long orderId, final long orderDetailId, final long customerId,
+                       final ProductEntity productEntity, final int quantity) {
+        this(orderId, orderDetailId, null, customerId, productEntity, quantity);
     }
 
     public long getOrderId() {
