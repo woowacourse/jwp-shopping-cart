@@ -1,0 +1,28 @@
+= Shopping cartItem API - rick
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-order]]
+== 주문 관련 기능
+
+[[resources-order-add-order]]
+=== 주문 생성
+
+[[resources-order-add-order-success]]
+==== 성공
+
+===== HTTP Request
+
+include::{snippets}/add-order-contains-all/http-request.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/add-order-contains-all/http-response.adoc[]
+
+[[resources-order-add-order-not-contains]]
+==== 실패 - 장바구니에 담겨있지 않는 상품 주문 요청
+
+===== HTTP Response
+
+include::{snippets}/add-order-not-contains/http-response.adoc[]

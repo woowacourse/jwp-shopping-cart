@@ -60,7 +60,7 @@ class OrderControllerTest extends ControllerTest {
                 .andExpect(header().string(HttpHeaders.LOCATION, "/users/me/orders/" + orderId));
 
         // docs
-        perform.andDo(document("addOrder-containsAll",
+        perform.andDo(document("add-order-contains-all",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestHeaders(
@@ -103,7 +103,7 @@ class OrderControllerTest extends ControllerTest {
         perform.andExpect(status().isNotFound());
 
         // docs
-        perform.andDo(document("addOrder-notContains",
+        perform.andDo(document("add-order-not-contains",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestHeaders(
