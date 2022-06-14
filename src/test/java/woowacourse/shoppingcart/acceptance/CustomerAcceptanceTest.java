@@ -117,7 +117,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         CustomerNameResponse name = RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .when()
-                .get("/customers/name")
+                .get("/customers/me/name")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(CustomerNameResponse.class);

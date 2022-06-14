@@ -38,7 +38,7 @@ public class CustomerController {
         return customerService.save(customerRequest);
     }
 
-    @GetMapping("/name")
+    @GetMapping("/me/name")
     @ResponseStatus(HttpStatus.OK)
     public CustomerNameResponse showCustomerName(@AuthenticationPrincipal Long customerId) {
         return customerService.findNameById(customerId);

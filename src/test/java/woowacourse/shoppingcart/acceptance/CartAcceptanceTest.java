@@ -168,7 +168,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequest)
-                .when().post("/customers/carts")
+                .when().post("/customers/me/carts")
                 .then().log().all()
                 .extract();
     }
@@ -178,7 +178,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/customers/carts")
+                .when().get("/customers/me/carts")
                 .then().log().all()
                 .extract();
     }
@@ -190,7 +190,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productIdsRequest)
-                .when().delete("/customers/carts")
+                .when().delete("/customers/me/carts")
                 .then().log().all()
                 .extract();
     }
@@ -203,7 +203,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequest)
-                .when().patch("/customers/carts")
+                .when().patch("/customers/me/carts")
                 .then().log().all()
                 .extract();
     }
