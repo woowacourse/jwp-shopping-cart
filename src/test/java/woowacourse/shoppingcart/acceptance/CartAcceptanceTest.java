@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
+    private static final String USER = "hoho";
 
     private Long productId1;
     private Long productId2;
@@ -27,7 +27,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 추가")
     @Test
     void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
+        String accessToken = 회원_가입_후_토큰_발급(USER, "Abc1234!");
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(accessToken, productId1);
 
         장바구니_아이템_추가됨(response);
     }
@@ -35,10 +36,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가되어_있음(USER, productId1);
-        장바구니_아이템_추가되어_있음(USER, productId2);
+        String accessToken = 회원_가입_후_토큰_발급(USER, "Abc1234!");
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+        장바구니_아이템_추가되어_있음(accessToken, productId1);
+        장바구니_아이템_추가되어_있음(accessToken, productId2);
+
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(accessToken);
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
@@ -47,9 +50,11 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+        String accessToken = 회원_가입_후_토큰_발급(USER, "Abc1234!");
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        Long cartId = 장바구니_아이템_추가되어_있음(accessToken, productId1);
+
+        ExtractableResponse<Response> response = 장바구니_삭제_요청(accessToken, cartId);
 
         장바구니_삭제됨(response);
     }
