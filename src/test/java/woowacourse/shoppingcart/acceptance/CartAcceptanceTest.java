@@ -1,122 +1,132 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.ShoppingCartFixture.목장갑;
+import static woowacourse.ShoppingCartFixture.잉_로그인요청;
+import static woowacourse.ShoppingCartFixture.장바구니_URI;
+import static woowacourse.ShoppingCartFixture.케이블타이;
+import static woowacourse.ShoppingCartFixture.팝업카드;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Cart;
+import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.ui.dto.request.CartDeleteRequest;
+import woowacourse.shoppingcart.ui.dto.request.CartQuantityUpdateRequest;
+import woowacourse.shoppingcart.ui.dto.response.CartResponse;
 
 @DisplayName("장바구니 관련 기능")
-@Disabled
+@Sql({"/truncate.sql", "/auth.sql", "/product.sql"})
 public class CartAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
-    private Long productId1;
-    private Long productId2;
-
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-    }
-
-    @DisplayName("장바구니 아이템 추가")
+    @DisplayName("장바구니에 상품ID를 전달해서 아이템을 추가할 수 있다")
     @Test
     void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
+        // given
+        final String 엑세스토큰 = getToken(잉_로그인요청);
 
-        장바구니_아이템_추가됨(response);
+        // when
+        final ExtractableResponse<Response> 장바구니_추가_전_장바구니조회 = get(장바구니_URI, 엑세스토큰);
+        final ExtractableResponse<Response> 장바구니담기 = postWithToken(장바구니_URI, 팝업카드, 엑세스토큰);
+        final ExtractableResponse<Response> 장바구니_추가_후_장바구니조회 = get(장바구니_URI, 엑세스토큰);
+        final List<CartResponse> 장바구니_아이템_목록 = 장바구니_추가_후_장바구니조회.body().jsonPath().getList(".", CartResponse.class);
+
+        // then
+        assertAll(
+                () -> 정상응답_OK(장바구니_추가_전_장바구니조회),
+                () -> 비어있음(장바구니_추가_전_장바구니조회),
+                () -> 정상응답_OK(장바구니담기),
+                () -> 정상응답_OK(장바구니_추가_후_장바구니조회),
+                () -> 비어있지않음(장바구니_추가_후_장바구니조회),
+                () -> assertThat(장바구니_아이템_목록).extracting("name").containsExactly("배달이 친구들 팝업카드")
+        );
     }
 
-    @DisplayName("장바구니 아이템 목록 조회")
+    @DisplayName("비어있는 장바구니에 세 종류의 아이템을 추가하고 조회하면 세 종류의 아이템이 조회되어야 한다")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가되어_있음(USER, productId1);
-        장바구니_아이템_추가되어_있음(USER, productId2);
+        // given
+        final String 엑세스토큰 = getToken(잉_로그인요청);
+        final ExtractableResponse<Response> 장바구니_추가_전_장바구니조회 = get(장바구니_URI, 엑세스토큰);
+        final ExtractableResponse<Response> 케이블타이_장바구니담기 = postWithToken(장바구니_URI, 케이블타이, 엑세스토큰);
+        final ExtractableResponse<Response> 목장갑_장바구니담기 = postWithToken(장바구니_URI, 목장갑, 엑세스토큰);
+        final ExtractableResponse<Response> 팝업카드_장바구니담기 = postWithToken(장바구니_URI, 팝업카드, 엑세스토큰);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
+        // when
+        final ExtractableResponse<Response> 장바구니_추가_후_장바구니조회 = get(장바구니_URI, 엑세스토큰);
+        final List<CartResponse> 장바구니_아이템들 = 장바구니_추가_후_장바구니조회.body().jsonPath().getList(".", CartResponse.class);
 
-        장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_포함됨(response, productId1, productId2);
+        // then
+        assertAll(
+                () -> 정상응답_OK(장바구니_추가_전_장바구니조회),
+                () -> 비어있음(장바구니_추가_전_장바구니조회),
+                () -> 정상응답_OK(케이블타이_장바구니담기),
+                () -> 정상응답_OK(목장갑_장바구니담기),
+                () -> 정상응답_OK(팝업카드_장바구니담기),
+                () -> 정상응답_OK(장바구니_추가_후_장바구니조회),
+                () -> 비어있지않음(장바구니_추가_후_장바구니조회),
+                () -> assertThat(장바구니_아이템들).extracting("name")
+                        .containsExactly("배달이친구들 케이블타이", "을지로 목장갑. 위잉 뚝딱", "배달이 친구들 팝업카드")
+        );
     }
 
-    @DisplayName("장바구니 삭제")
+    @DisplayName("엑세스토큰, 상품ID, 희망수량을 전달해서 장바구니 내 수량을 수정할 수 있다")
+    @Test
+    void modifyCartItemQuantity() {
+        // given
+        final String 엑세스토큰 = getToken(잉_로그인요청);
+        final ExtractableResponse<Response> 케이블타이_장바구니담기 = postWithToken(장바구니_URI, 케이블타이, 엑세스토큰);
+        final ExtractableResponse<Response> 장바구니_추가_후_장바구니조회 = get(장바구니_URI, 엑세스토큰);
+        final int 케이블타이_수량 = 장바구니_추가_후_장바구니조회.body().jsonPath().getList(".", CartResponse.class).get(0).getQuantity();
+
+        // when
+        final int 수정희망수량 = 13;
+        final ExtractableResponse<Response> 수량수정응답 = put(장바구니_URI, new CartQuantityUpdateRequest(1L, 수정희망수량), 엑세스토큰);
+        final ExtractableResponse<Response> 수정후_장바구니조회 = get(장바구니_URI, 엑세스토큰);
+        final int 수정후_케이블타이_수량 = 수정후_장바구니조회.body().jsonPath().getList(".", CartResponse.class).get(0).getQuantity();
+
+        // then
+        assertAll(
+                () -> 정상응답_OK(케이블타이_장바구니담기),
+                () -> 정상응답_OK(장바구니_추가_후_장바구니조회),
+                () -> assertThat(케이블타이_수량).isOne(),
+                () -> 정상응답_OK(수량수정응답),
+                () -> 정상응답_OK(수정후_장바구니조회),
+                () -> assertThat(수정후_케이블타이_수량).isEqualTo(수정희망수량)
+        );
+    }
+
+    @DisplayName("장바구니에 아이템 세 종류의 상품을 담고 두 종류의 상품을 삭제하면 하나만 남아야 한다")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+        // given
+        final String 엑세스토큰 = getToken(잉_로그인요청);
+        final ExtractableResponse<Response> 장바구니_추가_전_장바구니조회 = get(장바구니_URI, 엑세스토큰);
+        final ExtractableResponse<Response> 케이블타이_장바구니담기 = postWithToken(장바구니_URI, 케이블타이, 엑세스토큰);
+        final ExtractableResponse<Response> 목장갑_장바구니담기 = postWithToken(장바구니_URI, 목장갑, 엑세스토큰);
+        final ExtractableResponse<Response> 팝업카드_장바구니담기 = postWithToken(장바구니_URI, 팝업카드, 엑세스토큰);
+        final ExtractableResponse<Response> 장바구니_추가_후_장바구니조회 = get(장바구니_URI, 엑세스토큰);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        // when
+        final ExtractableResponse<Response> 케이블타이_팝업카드_제거 = delete(장바구니_URI, new CartDeleteRequest(List.of(1L, 3L)),
+                엑세스토큰);//get(장바구니_URI, 엑세스토큰).jsonPath().getList(".", CartResponse.class).size()
+        final ExtractableResponse<Response> 장바구니_제거_후_장바구니조회 = get(장바구니_URI, 엑세스토큰);
+        final List<CartResponse> 장바구니_제거_후_아이템_목록 = 장바구니_제거_후_장바구니조회.body().jsonPath().getList(".", CartResponse.class);
 
-        장바구니_삭제됨(response);
-    }
-
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", userName)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", userName)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
-    }
-
-    public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
-                .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productIds);
-    }
-
-    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        // then
+        assertAll(
+                () -> 정상응답_OK(장바구니_추가_전_장바구니조회),
+                () -> 비어있음(장바구니_추가_전_장바구니조회),
+                () -> 정상응답_OK(케이블타이_장바구니담기),
+                () -> 정상응답_OK(목장갑_장바구니담기),
+                () -> 정상응답_OK(팝업카드_장바구니담기),
+                () -> 정상응답_OK(장바구니_추가_후_장바구니조회),
+                () -> 비어있지않음(장바구니_추가_후_장바구니조회),
+                () -> 삭제성공_NO_CONTENT(케이블타이_팝업카드_제거),
+                () -> assertThat(장바구니_제거_후_아이템_목록.size()).isOne(),
+                () -> assertThat(장바구니_제거_후_아이템_목록).extracting("name").containsExactly("을지로 목장갑. 위잉 뚝딱")
+        );
     }
 }
