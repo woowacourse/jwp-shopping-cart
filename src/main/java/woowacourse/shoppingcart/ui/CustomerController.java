@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.application.dto.CustomerDetailServiceResponse;
-import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
-import woowacourse.shoppingcart.dto.CustomerDetailResponse;
-import woowacourse.shoppingcart.dto.CustomerPasswordUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerProfileUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDetailResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerPasswordUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerProfileUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 
 @RestController
 @RequestMapping("/api/customer")
@@ -37,15 +37,15 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<CustomerDetailResponse> showMyDetail(@AuthenticationPrincipal final Long id) {
-        final CustomerDetailServiceResponse serviceResponse = customerService.findById(id);
-        final CustomerDetailResponse customerDetailResponse = CustomerDetailResponse.from(serviceResponse);
+        final Customer customer = customerService.findById(id);
+        CustomerDetailResponse customerDetailResponse = CustomerDetailResponse.from(customer);
         return ResponseEntity.ok(customerDetailResponse);
     }
 
     @PutMapping("/profile")
     public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal final Long id,
                                               @RequestBody @Valid final CustomerProfileUpdateRequest request) {
-        customerService.updateName(request.toServiceRequest(id));
+        customerService.updateProfile(request.toServiceRequest(id));
         return ResponseEntity.noContent().build();
     }
 

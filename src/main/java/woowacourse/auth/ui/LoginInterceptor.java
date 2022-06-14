@@ -21,7 +21,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(final HttpServletRequest request,
                              final HttpServletResponse response,
                              final Object handler) {
-        if (ExcludeApi.matches(request)) {
+        if (ExcludedApi.matches(request)) {
             return true;
         }
 
@@ -33,23 +33,29 @@ public class LoginInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    enum ExcludeApi {
-        SIGN_UP(HttpMethod.POST, "/api/customer");
+    enum ExcludedApi {
+        SIGN_UP(HttpMethod.POST, "/api/customer"),
+        PRE_FLIGHT(HttpMethod.OPTIONS, "");
 
         private final HttpMethod method;
         private final String uri;
 
-        ExcludeApi(final HttpMethod method, final String uri) {
+        ExcludedApi(final HttpMethod method, final String uri) {
             this.method = method;
             this.uri = uri;
         }
 
         static boolean matches(final HttpServletRequest request) {
             return Arrays.stream(values())
-                    .anyMatch(api -> api.isExclude(request));
+                    .anyMatch(api -> api.isExcluded(request))
+                    || isPreFlight(request);
         }
 
-        private boolean isExclude(final HttpServletRequest request) {
+        static boolean isPreFlight(final HttpServletRequest request) {
+            return PRE_FLIGHT.method.name().equals(request.getMethod());
+        }
+
+        private boolean isExcluded(final HttpServletRequest request) {
             return request.getMethod().equals(this.method.name())
                     && request.getRequestURI().equals(this.uri);
         }

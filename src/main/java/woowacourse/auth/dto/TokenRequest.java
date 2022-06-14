@@ -4,7 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import woowacourse.auth.application.dto.LoginServiceRequest;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.customer.RawPassword;
 
 public class TokenRequest {
 
@@ -17,7 +17,7 @@ public class TokenRequest {
     private String email;
 
     @NotBlank(message = INVALID_PASSWORD_LENGTH_MESSAGE)
-    @Size(min = Password.MIN_RAW_VALUE_LENGTH, message = INVALID_PASSWORD_LENGTH_MESSAGE)
+    @Size(min = RawPassword.MIN_RAW_VALUE_LENGTH, message = INVALID_PASSWORD_LENGTH_MESSAGE)
     private String password;
 
     private TokenRequest() {

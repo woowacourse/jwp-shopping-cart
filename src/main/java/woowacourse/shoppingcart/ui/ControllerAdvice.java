@@ -14,24 +14,19 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthorizationFailureException;
-import woowacourse.shoppingcart.exception.CustomerInfoNotMatchException;
-import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.dto.advice.ErrorResponse;
 import woowacourse.shoppingcart.exception.DomainException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
-        return ResponseEntity.internalServerError().body(new ErrorResponse("예상하지 못한 예외가 발생했습니다."));
-    }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<ErrorResponse> handle() {
         return ResponseEntity.badRequest().body(new ErrorResponse("존재하지 않는 데이터 요청입니다."));
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final String errorMessage = fieldErrors.stream()
@@ -49,10 +44,7 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({
-            DomainException.class,
-            CustomerInfoNotMatchException.class
-    })
+    @ExceptionHandler(DomainException.class)
     public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
@@ -60,5 +52,15 @@ public class ControllerAdvice {
     @ExceptionHandler(AuthorizationFailureException.class)
     public ResponseEntity<ErrorResponse> handleAuthorizationFailureException(final AuthorizationFailureException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(final NotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+        return ResponseEntity.internalServerError().body(new ErrorResponse("예상하지 못한 예외가 발생했습니다."));
     }
 }

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
 public class OrderDetail {
+
     private Long productId;
     private int quantity;
     private int price;
@@ -26,6 +27,10 @@ public class OrderDetail {
         this.name = name;
         this.imageUrl = imageUrl;
         this.quantity = quantity;
+    }
+
+    public long calculateTotalPrice() {
+        return (long) this.price * this.quantity;
     }
 
     public Long getProductId() {

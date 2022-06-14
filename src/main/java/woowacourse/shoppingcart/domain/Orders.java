@@ -12,6 +12,14 @@ public class Orders {
         this.orderDetails = orderDetails;
     }
 
+    public Long calculateTotalPrice() {
+        long result = 0;
+        for (OrderDetail orderDetail : orderDetails) {
+            result += orderDetail.calculateTotalPrice();
+        }
+        return result;
+    }
+
     public Long getId() {
         return id;
     }

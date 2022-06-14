@@ -10,14 +10,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.exception.NoSuchEmailException;
-import woowacourse.shoppingcart.exception.PasswordNotMatchException;
+import woowacourse.auth.exception.NoSuchEmailException;
+import woowacourse.auth.exception.PasswordNotMatchException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 
 @SpringBootTest
-@Sql("classpath:addCustomers.sql")
+@Sql("classpath:resetTables.sql")
 class AuthControllerTest {
 
     private static final String NAME = "klay";

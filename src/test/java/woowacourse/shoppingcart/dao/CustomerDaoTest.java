@@ -10,9 +10,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Password;
-import woowacourse.shoppingcart.util.BcryptConvertor;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.HashedPassword;
+import woowacourse.shoppingcart.domain.customer.RawPassword;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -24,7 +24,7 @@ public class CustomerDaoTest {
     private static final String RAW_EMAIL = "sunyong@gmail.com";
     private static final String EMAIL = RAW_EMAIL;
     private static final String RAW_PASSWORD = "12345678";
-    private static final Password PASSWORD = Password.fromRawValue(RAW_PASSWORD, new BcryptConvertor());
+    private static final HashedPassword PASSWORD = HashedPassword.from(new RawPassword(RAW_PASSWORD));
 
     private final CustomerDao customerDao;
 
@@ -157,7 +157,7 @@ public class CustomerDaoTest {
         // given
         final Customer customer = new Customer(NAME, EMAIL, PASSWORD);
         final Customer savedCustomer = customerDao.save(customer);
-        final Password newPassword = Password.fromRawValue("newpassword123", new BcryptConvertor());
+        final HashedPassword newPassword = HashedPassword.from(new RawPassword("newpassword123"));
 
         // when
         final Customer updatedCustomer = new Customer(savedCustomer.getId(), NAME, EMAIL, newPassword);

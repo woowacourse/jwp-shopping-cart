@@ -1,19 +1,28 @@
 package woowacourse.shoppingcart.ui;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.Request;
-import woowacourse.shoppingcart.application.CartService;
-
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.dto.cart.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.cart.CartDto;
+import woowacourse.shoppingcart.dto.cart.DeleteCartItemRequest;
+import woowacourse.shoppingcart.dto.cart.UpdateCartItemRequest;
 
 @RestController
-@RequestMapping("/api/customers/{customerName}/carts")
+@RequestMapping("/api/customer/cartItems")
 public class CartItemController {
     private final CartService cartService;
 
@@ -22,26 +31,36 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<List<CartDto>> getCartItems(@AuthenticationPrincipal final Long customerId) {
+        final List<CartItem> cartItems = cartService.findCartItemsByCustomerId(customerId);
+        final List<CartDto> cartDtos = cartItems.stream()
+                .map(CartDto::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(cartDtos);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-                                      @PathVariable final String customerName) {
-        final Long cartId = cartService.addCart(product.getId(), customerName);
+    public ResponseEntity<Void> enrollCartItem(@AuthenticationPrincipal final Long customerId,
+                                               @Valid @RequestBody final AddCartItemRequest request) {
+        cartService.enrollCartItem(customerId, request.getProductId());
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
+                .build()
                 .toUri();
         return ResponseEntity.created(responseLocation).build();
     }
 
-    @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-                                         @PathVariable final Long cartId) {
-        cartService.deleteCart(customerName, cartId);
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final Long customerId,
+                                               @Valid @RequestBody DeleteCartItemRequest request) {
+        cartService.deleteItems(customerId, request.getCartIds());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateCartItem(@AuthenticationPrincipal final Long customerId,
+                                               @Valid @RequestBody UpdateCartItemRequest request) {
+        cartService.update(customerId, request.getProductId(), request.getQuantity());
         return ResponseEntity.noContent().build();
     }
 }
