@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.domain.cart;
 
-import woowacourse.shoppingcart.exception.bodyexception.IllegalQuantityException;
+import woowacourse.shoppingcart.exception.bodyexception.ValidateException;
 
 public class Quantity {
 
@@ -15,7 +15,7 @@ public class Quantity {
 
     private void validate(int value) {
         if (value < MIN_VALUE) {
-            throw new IllegalQuantityException();
+            throw new ValidateException("1100", "잘못된 형식입니다.");
         }
     }
 

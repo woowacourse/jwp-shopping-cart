@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.domain.customer;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import woowacourse.shoppingcart.exception.bodyexception.IllegalPasswordException;
+import woowacourse.shoppingcart.exception.bodyexception.ValidateException;
 
 public class Password {
 
@@ -21,7 +21,7 @@ public class Password {
 
     public static Password hashPassword(String value) {
         if (!Pattern.matches(REGEX, value)) {
-            throw new IllegalPasswordException();
+            throw new ValidateException("1000", "비밀번호 양식이 잘못 되었습니다.");
         }
         String encryptedPassword = BCrypt.hashpw(value, BCrypt.gensalt());
         return new Password(encryptedPassword);

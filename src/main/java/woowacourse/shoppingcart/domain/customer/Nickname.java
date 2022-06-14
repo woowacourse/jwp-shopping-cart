@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
-import woowacourse.shoppingcart.exception.bodyexception.IllegalNicknameException;
+import woowacourse.shoppingcart.exception.bodyexception.ValidateException;
 
 public class Nickname {
 
@@ -17,7 +17,7 @@ public class Nickname {
 
     private void validate(String value) {
         if (!Pattern.matches(REGEX, value)) {
-            throw new IllegalNicknameException();
+            throw new ValidateException("1000", "닉네임 양식이 잘못 되었습니다.");
         }
     }
 

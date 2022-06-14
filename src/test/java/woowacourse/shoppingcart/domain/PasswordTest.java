@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.shoppingcart.domain.customer.Password;
-import woowacourse.shoppingcart.exception.bodyexception.IllegalPasswordException;
+import woowacourse.shoppingcart.exception.bodyexception.ValidateException;
 
 public class PasswordTest {
 
@@ -18,7 +18,8 @@ public class PasswordTest {
     void new_wrongForm_exceptionThrown(String value) {
         // when, then
         assertThatThrownBy(() -> Password.hashPassword(value))
-                .isInstanceOf(IllegalPasswordException.class);
+                .isInstanceOf(ValidateException.class)
+                .hasMessage("비밀번호 양식이 잘못 되었습니다.");
     }
 
     @DisplayName("Password를 생성하면, 비밀번호가 암호화 된다.")

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.shoppingcart.domain.customer.Nickname;
-import woowacourse.shoppingcart.exception.bodyexception.IllegalNicknameException;
+import woowacourse.shoppingcart.exception.bodyexception.ValidateException;
 
 public class NicknameTest {
 
@@ -16,6 +16,7 @@ public class NicknameTest {
     void new_wrongForm_exceptionThrown(String value) {
         // when, then
         assertThatThrownBy(() -> new Nickname(value))
-                .isInstanceOf(IllegalNicknameException.class);
+                .isInstanceOf(ValidateException.class)
+                .hasMessage("닉네임 양식이 잘못 되었습니다.");
     }
 }

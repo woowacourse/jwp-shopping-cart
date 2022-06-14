@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import woowacourse.shoppingcart.domain.cart.Quantity;
-import woowacourse.shoppingcart.exception.bodyexception.IllegalQuantityException;
+import woowacourse.shoppingcart.exception.bodyexception.ValidateException;
 
 public class QuantityTest {
 
@@ -16,6 +16,7 @@ public class QuantityTest {
     void new_notPositive_exceptionThrown(int value) {
         // when, then
         assertThatThrownBy(() -> new Quantity(value))
-                .isInstanceOf(IllegalQuantityException.class);
+                .isInstanceOf(ValidateException.class)
+                .hasMessage("잘못된 형식입니다.");
     }
 }
