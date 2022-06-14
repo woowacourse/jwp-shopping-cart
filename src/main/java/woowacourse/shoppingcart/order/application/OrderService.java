@@ -79,12 +79,11 @@ public class OrderService {
         return new Orders(orderId, ordersDetails);
     }
 
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
+    public List<Orders> findAllOrders(final Customer customer) {
+        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customer.getId());
 
         return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
+                .map(this::findOrderResponseDtoByOrderId)
                 .collect(Collectors.toList());
     }
 }

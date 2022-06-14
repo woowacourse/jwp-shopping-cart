@@ -110,4 +110,33 @@ class OrderServiceIntegrationTest extends IntegrationTest {
         assertThatThrownBy(() -> orderService.findOrderById(customer, 999L))
                 .isInstanceOf(NotFoundOrderException.class);
     }
+
+    @Test
+    @DisplayName("Customer의 모든 Order를 조회한다.")
+    void findAllOrders() {
+        // given
+        cartItemDao.addCartItem(customer.getId(), 1L);
+        cartItemDao.addCartItem(customer.getId(), 2L);
+        cartItemDao.addCartItem(customer.getId(), 3L);
+
+        final List<OrderCreationRequest> firstOrderRequest = List.of(
+                new OrderCreationRequest(1L),
+                new OrderCreationRequest(3L)
+        );
+        final Long firstOrderId = orderService.addOrder(firstOrderRequest, customer);
+
+        final List<OrderCreationRequest> secondOrderRequest = List.of(
+                new OrderCreationRequest(2L)
+        );
+        final Long secondOrderId = orderService.addOrder(secondOrderRequest, customer);
+
+        // when
+        final List<Orders> actual = orderService.findAllOrders(customer);
+        final List<Long> actualOrderIds = actual.stream()
+                .map(Orders::getId)
+                .collect(Collectors.toList());
+
+        // then
+        assertThat(actualOrderIds).containsExactly(firstOrderId, secondOrderId);
+    }
 }
