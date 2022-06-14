@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.cart.application;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,10 +78,11 @@ public class CartService {
     }
 
     private void deleteCart(final long customerId, final long productId) {
-        cartItemDao.findAllByCustomerId(customerId)
+        final List<Long> targetItems = cartItemDao.findAllByCustomerId(customerId)
                 .stream()
                 .filter(it -> Objects.equals(it.getProductId(), productId))
-                .findAny()
-                .ifPresent(it -> cartItemDao.deleteCartItem(it.getId()));
+                .map(Cart::getId)
+                .collect(Collectors.toUnmodifiableList());
+        cartItemDao.deleteCartItems(targetItems);
     }
 }

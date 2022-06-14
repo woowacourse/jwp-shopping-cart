@@ -59,4 +59,13 @@ public class CartItemDao {
         final SqlParameterSource parameters = new MapSqlParameterSource("id", id);
         jdbcTemplate.update(sql, parameters);
     }
+
+    public void deleteCartItems(final List<Long> ids) {
+        if (ids.isEmpty()) {
+            return;
+        }
+        final String sql = "DELETE FROM cart_item WHERE id in (:ids)";
+        final SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
+        jdbcTemplate.update(sql, parameters);
+    }
 }
