@@ -18,7 +18,7 @@ public class Quantity {
         }
     }
 
-    public long get() {
+    public long value() {
         return value;
     }
 }

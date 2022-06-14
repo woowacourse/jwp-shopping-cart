@@ -48,7 +48,7 @@ public class Password {
         return Objects.hash(value);
     }
 
-    public String get() {
+    public String value() {
         return value;
     }
 }

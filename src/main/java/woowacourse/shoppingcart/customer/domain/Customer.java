@@ -59,14 +59,14 @@ public class Customer {
     }
 
     public String getEmail() {
-        return email.get();
+        return email.value();
     }
 
     public String getNickname() {
-        return nickname.get();
+        return nickname.value();
     }
 
     public String getPassword() {
-        return password.get();
+        return password.value();
     }
 }

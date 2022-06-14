@@ -36,6 +36,6 @@ public class Cart {
     }
 
     public long getQuantity() {
-        return quantity.get();
+        return quantity.value();
     }
 }

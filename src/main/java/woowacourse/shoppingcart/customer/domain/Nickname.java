@@ -26,7 +26,7 @@ public class Nickname {
         return (length < MIN_LENGTH) || (length > MAX_LENGTH);
     }
 
-    public String get() {
+    public String value() {
         return value;
     }
 }
