@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.dto.CustomerDto;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.PasswordDto;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
@@ -36,6 +38,12 @@ public class AuthController {
     @GetMapping
     public ResponseEntity<CustomerResponse> findCustomerInfo(HttpServletRequest request) {
         Customer customer = authService.findCustomerByUsername((String) request.getAttribute("username"));
-        return ResponseEntity.ok().body(CustomerResponse.from(customer));
+        return ResponseEntity.ok().body(new CustomerResponse(CustomerDto.from(customer)));
+    }
+
+    @PostMapping("/password")
+    public ResponseEntity<Void> checkPassword(@RequestBody PasswordDto passwordDto, HttpServletRequest request) {
+        authService.matchPassword((String)request.getAttribute("username"), passwordDto);
+        return ResponseEntity.ok().build();
     }
 }

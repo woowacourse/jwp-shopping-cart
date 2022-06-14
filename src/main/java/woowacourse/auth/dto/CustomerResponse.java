@@ -1,38 +1,19 @@
 package woowacourse.auth.dto;
 
-import woowacourse.shoppingcart.domain.customer.Customer;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CustomerResponse {
-    private String username;
-    private String phoneNumber;
-    private String address;
+    @JsonProperty("customer")
+    private CustomerDto customerDto;
 
-    public CustomerResponse() {
+    private CustomerResponse() {
     }
 
-    public CustomerResponse(String username, String phoneNumber, String address) {
-        this.username = username;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
+    public CustomerResponse(CustomerDto customerDto) {
+        this.customerDto = customerDto;
     }
 
-    public static CustomerResponse from(Customer customer) {
-        return new CustomerResponse(
-            customer.getUsername().getValue(),
-            customer.getPhoneNumber().getValue(),
-            customer.getAddress()
-        );
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getAddress() {
-        return address;
+    public CustomerDto getCustomerDto() {
+        return customerDto;
     }
 }

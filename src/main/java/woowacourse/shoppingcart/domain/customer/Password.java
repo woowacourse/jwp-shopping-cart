@@ -1,43 +1,27 @@
 package woowacourse.shoppingcart.domain.customer;
 
-import java.util.regex.Pattern;
-
 import woowacourse.shoppingcart.exception.PasswordMisMatchException;
 
 public class Password {
-    private static final int MIN_LENGTH = 8;
-    private static final int MAX_LENGTH = 20;
-    private static final Pattern PATTERN = Pattern.compile("^(?=.*[0-9])(?=.*[a-zA-Z])[A-Za-z0-9]{8,20}$");
 
     private final String value;
 
-    public Password(String value) {
-        validateLength(value);
-        validatePattern(value);
-
+    private Password(String value) {
         this.value = value;
     }
 
-    private void validateLength(String value) {
-        if (value.length() < MIN_LENGTH || value.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("이름의 길이는 " + MIN_LENGTH + "자 이상 " + MAX_LENGTH + "자 이하여야 합니다.");
-        }
-    }
-
-    private void validatePattern(String value) {
-        if (!PATTERN.matcher(value).find()) {
-            throw new IllegalArgumentException("password는 영어와 숫자로 이루어져야 합니다.");
-        }
+    public static Password from(String value) {
+        return new Password(value);
     }
 
     public void match(String password) {
-        if (!value.equals(password)) {
+        if (!this.equals(Password.from(password))) {
             throw new PasswordMisMatchException();
         }
     }
 
     public Password update(String password) {
-        return new Password(password);
+        return Password.from(password);
     }
 
     public String getValue() {

@@ -20,11 +20,11 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String token = AuthorizationExtractor.extract(request);
         if (HttpMethod.OPTIONS.matches(request.getMethod())) {
-            setUsernameAndReturn(request, token);
+            return true;
         }
 
+        String token = AuthorizationExtractor.extract(request);
         if (!jwtTokenProvider.validateToken(token)) {
             throw new AuthorizationException();
         }

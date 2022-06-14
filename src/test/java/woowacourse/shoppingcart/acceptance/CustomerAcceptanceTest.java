@@ -12,9 +12,9 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
+import woowacourse.auth.dto.CustomerDto;
 import woowacourse.auth.dto.CustomerResponse;
 import woowacourse.auth.dto.LoginRequest;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.ExceptionResponse;
 import woowacourse.shoppingcart.dto.SignupRequest;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
@@ -29,13 +29,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
+        ExtractableResponse<Response> response = 회원가입_되어있음(signupRequest);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -46,25 +40,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void addDuplicatedCustomer() {
         // given
         SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
-        RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
+        회원가입_되어있음(signupRequest);
 
         // when
         SignupRequest duplicatedUsernameSignupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
 
         // then
-        RestAssured.given().log().all()
-            .body(duplicatedUsernameSignupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
+        회원가입_되어있음(duplicatedUsernameSignupRequest);
     }
 
     @DisplayName("회원가입 시 username은 3자 이상 ~ 15자 이하로만 이루어져 있어야 된다.")
@@ -74,14 +56,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         SignupRequest signupRequest = new SignupRequest("do", "ehdgh1234", "01022728572", "인천 서구 검단로 851 동부아파트 108동 303호");
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
-
+        ExtractableResponse<Response> response = 회원가입_되어있음(signupRequest);
         ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
 
         // then
@@ -99,14 +74,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         SignupRequest signupRequest = new SignupRequest("do", "a", "1", "인천 서구 검단로 851 동부아파트 108동 303호");
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
-
+        ExtractableResponse<Response> response = 회원가입_되어있음(signupRequest);
         ExceptionResponse exceptionResponse = response.as(ExceptionResponse.class);
 
         // then
@@ -123,36 +91,20 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
 
-        RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
+        회원가입_되어있음(signupRequest);
 
-        String accessToken = RestAssured
-            .given().log().all()
-            .body(new LoginRequest("dongho108", "ehdgh1234"))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/api/customers/login")
-            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+        LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        String accessToken = 로그인하고_토큰받아옴(loginRequest);
 
         // when
-        CustomerResponse customerResponse = RestAssured
-            .given().log().all()
-            .auth().oauth2(accessToken)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/api/customers")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
+        CustomerResponse customerResponse = 내_정보_조회해옴(accessToken);
+        CustomerDto customerDto = customerResponse.getCustomerDto();
 
         // then
         assertAll(
-            () -> assertThat(customerResponse.getUsername()).isEqualTo(signupRequest.getUsername()),
-            () -> assertThat(customerResponse.getPhoneNumber()).isEqualTo(signupRequest.getPhoneNumber()),
-            () -> assertThat(customerResponse.getAddress()).isEqualTo(signupRequest.getAddress())
+            () -> assertThat(customerDto.getUsername()).isEqualTo(signupRequest.getUsername()),
+            () -> assertThat(customerDto.getPhoneNumber()).isEqualTo(signupRequest.getPhoneNumber()),
+            () -> assertThat(customerDto.getAddress()).isEqualTo(signupRequest.getAddress())
         );
     }
 
@@ -162,44 +114,21 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
 
-        RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
+        회원가입_되어있음(signupRequest);
 
-        String accessToken = RestAssured
-            .given().log().all()
-            .body(new LoginRequest("dongho108", "ehdgh1234"))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/api/customers/login")
-            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+        LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        String accessToken = 로그인하고_토큰받아옴(loginRequest);
 
         UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("01011112222", "서울시 강남구");
-        ValidatableResponse validatableResponse = RestAssured
-            .given().log().all()
-            .auth().oauth2(accessToken)
-            .body(updateCustomerRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().put("/api/customers")
-            .then().log().all();
+        ValidatableResponse validatableResponse = 내_정보_수정함(accessToken, updateCustomerRequest);
 
-        CustomerResponse customerResponse = RestAssured
-            .given().log().all()
-            .auth().oauth2(accessToken)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/api/customers")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
+        CustomerResponse customerResponse = 내_정보_조회해옴(accessToken);
+        CustomerDto customerDto = customerResponse.getCustomerDto();
 
         assertAll(
             () -> validatableResponse.statusCode(HttpStatus.NO_CONTENT.value()),
-            () -> assertThat(customerResponse.getPhoneNumber()).isEqualTo(updateCustomerRequest.getPhoneNumber()),
-            () -> assertThat(customerResponse.getAddress()).isEqualTo(updateCustomerRequest.getAddress())
+            () -> assertThat(customerDto.getPhoneNumber()).isEqualTo(updateCustomerRequest.getPhoneNumber()),
+            () -> assertThat(customerDto.getAddress()).isEqualTo(updateCustomerRequest.getAddress())
         );
     }
 
@@ -209,21 +138,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
 
-        RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
+        회원가입_되어있음(signupRequest);
 
-        String accessToken = RestAssured
-            .given().log().all()
-            .body(new LoginRequest("dongho108", "ehdgh1234"))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/api/customers/login")
-            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+        LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        String accessToken = 로그인하고_토큰받아옴(loginRequest);
 
         UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("password1234");
         RestAssured
@@ -242,22 +160,23 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         SignupRequest signupRequest = new SignupRequest("dongho108", "ehdgh1234", "01022728572", "인천 서구 검단로");
 
-        RestAssured.given().log().all()
-            .body(signupRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post("/api/customers/signup")
-            .then().log().all()
-            .extract();
+        회원가입_되어있음(signupRequest);
 
-        String accessToken = RestAssured
+        LoginRequest loginRequest = new LoginRequest("dongho108", "ehdgh1234");
+        String accessToken = 로그인하고_토큰받아옴(loginRequest);
+
+        회원_삭제함(accessToken);
+
+        RestAssured
             .given().log().all()
-            .body(new LoginRequest("dongho108", "ehdgh1234"))
+            .body(loginRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when().post("/api/customers/login")
-            .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+            .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
 
+    private void 회원_삭제함(String accessToken) {
         RestAssured.given().log().all()
             .auth().oauth2(accessToken)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -265,13 +184,26 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .delete("/api/customers")
             .then().log().all()
             .extract();
+    }
 
-        RestAssured
+    private CustomerResponse 내_정보_조회해옴(String accessToken) {
+        return RestAssured
             .given().log().all()
-            .body(new LoginRequest("dongho108", "ehdgh1234"))
+            .auth().oauth2(accessToken)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/api/customers")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value()).extract().as(CustomerResponse.class);
+    }
+
+    private ValidatableResponse 내_정보_수정함(String accessToken, UpdateCustomerRequest updateCustomerRequest) {
+        return RestAssured
+            .given().log().all()
+            .auth().oauth2(accessToken)
+            .body(updateCustomerRequest)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/api/customers/login")
-            .then().log().all().statusCode(HttpStatus.UNAUTHORIZED.value());
+            .when().put("/api/customers")
+            .then().log().all();
     }
 }

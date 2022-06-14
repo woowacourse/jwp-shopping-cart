@@ -1,7 +1,6 @@
 package woowacourse.auth.application;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -75,7 +74,7 @@ class AuthServiceTest {
         customerService.save(signupRequest);
 
         // when
-        LoginRequest loginRequest = new LoginRequest("dongho108", "password");
+        LoginRequest loginRequest = new LoginRequest("dongho108", "password1234");
 
         // then
         assertThatThrownBy(() -> authService.validateLogin(loginRequest))

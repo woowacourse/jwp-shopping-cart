@@ -21,7 +21,7 @@ class CustomerTest {
         Customer customer = Customer.of(username, password, phoneNumber, address);
         assertAll(
             () -> assertThat(customer.getUsername()).isEqualTo(new Username(username)),
-            () -> assertThat(customer.getPassword()).isEqualTo(new Password(password)),
+            () -> assertThat(customer.getPassword()).isEqualTo(Password.from(password)),
             () -> assertThat(customer.getPhoneNumber()).isEqualTo(new PhoneNumber(phoneNumber)),
             () -> assertThat(customer.getAddress()).isEqualTo(address)
         );
@@ -97,6 +97,6 @@ class CustomerTest {
         String newPassword = "password1111";
         customer.updatePassword(newPassword);
 
-        assertThat(customer.getPassword().getValue()).isEqualTo(newPassword);
+        assertThat(customer.getPassword()).isEqualTo(Password.from(newPassword));
     }
 }
