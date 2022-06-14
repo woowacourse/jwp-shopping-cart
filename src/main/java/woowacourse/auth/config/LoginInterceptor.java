@@ -25,8 +25,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        boolean hasAnnotation = checkAnnotation(handler);
-        if (!hasAnnotation) {
+        if (!hasAnnotation(handler)) {
             return true;
         }
 
@@ -34,13 +33,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private boolean checkAnnotation(Object handler) {
+    private boolean hasAnnotation(Object handler) {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
-        if (null != handlerMethod.getMethodAnnotation(Auth.class)) {
-            return true;
-        }
-        return false;
+        return null != handlerMethod.getMethodAnnotation(Auth.class);
     }
 
     private void validateToken(HttpServletRequest request) {
