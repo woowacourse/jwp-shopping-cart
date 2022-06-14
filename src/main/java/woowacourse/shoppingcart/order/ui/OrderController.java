@@ -27,8 +27,8 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderResponse> addOrder(@AuthenticationPrincipal final Long customerId,
-                                         @RequestBody final OrderRequest orderRequest) {
-        final Long orderId = orderService.addOrder(customerId, orderRequest);
+                                                  @RequestBody final OrderRequest orderRequest) {
+        final long orderId = orderService.addOrder(customerId, orderRequest);
         final OrderResponse orderResponse = orderService.findOrderById(customerId, orderId);
         return ResponseEntity.created(
                 URI.create("/orders/" + orderResponse.getId())).body(orderResponse);
@@ -36,7 +36,7 @@ public class OrderController {
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> findOrder(@AuthenticationPrincipal final Long customerId,
-                                            @PathVariable final Long orderId) {
+                                                   @PathVariable final Long orderId) {
         final OrderResponse orderResponse = orderService.findOrderById(customerId, orderId);
         return ResponseEntity.ok(orderResponse);
     }
