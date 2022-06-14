@@ -36,9 +36,9 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
+    public ResponseEntity<Orders> findOrder(@Login final Customer customer,
                                             @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(customerName, orderId);
+        final Orders order = orderService.findOrderById(customer, orderId);
         return ResponseEntity.ok(order);
     }
 
