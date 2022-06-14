@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.infra.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -65,12 +66,64 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    public void save(final List<CartEntity> cartEntities) {
-        deleteByCartIds(getCartIds(cartEntities));
+    public void save(final long customerId, final List<CartEntity> cartEntities) {
+        if (cartEntities.isEmpty()) {
+            deleteAllCartItemsByCustomerId(customerId);
+            return;
+        }
 
-        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
+        checkDeletedCartItems(customerId, getCartIds(cartEntities));
+        updateQuantity(cartEntities);
+        insertNew(cartEntities);
+    }
 
-        jdbcTemplate.batchUpdate(sql, getParams(cartEntities));
+    private void updateQuantity(final List<CartEntity> cartEntities) {
+        final List<CartEntity> cartsThatAlreadyExists = cartEntities.stream()
+                .filter(entity -> Objects.nonNull(entity.getId()))
+                .collect(Collectors.toList());
+
+        final String updateSql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        jdbcTemplate.batchUpdate(updateSql, getQuantityAndId(cartsThatAlreadyExists));
+    }
+
+    private void insertNew(final List<CartEntity> cartEntities) {
+        final List<CartEntity> newCarts = cartEntities.stream()
+                .filter(entity -> Objects.isNull(entity.getId()))
+                .collect(Collectors.toList());
+
+        final String insertSql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
+        jdbcTemplate.batchUpdate(insertSql, getInsertCartItemParams(newCarts));
+    }
+
+    private List<Object[]> getInsertCartItemParams(final List<CartEntity> cartEntities) {
+        return cartEntities.stream()
+                .map(entity -> new Object[]{entity.getCustomerId(), entity.getProductEntity().getId(),
+                        entity.getQuantity()})
+                .collect(Collectors.toList());
+    }
+
+    private void deleteAllCartItemsByCustomerId(final long customerId) {
+        final String sql = "DELETE FROM cart_item WHERE customer_id = ?";
+        jdbcTemplate.update(sql, customerId);
+    }
+
+    private void checkDeletedCartItems(final long customerId, final List<Long> cartIds) {
+        if (cartIds.isEmpty()) {
+            return;
+        }
+
+        final String inSql = String.join(", ", Collections.nCopies(cartIds.size(), "?"));
+        final String sql = String.format("DELETE FROM cart_item WHERE customer_id = ? AND id NOT IN (%s)", inSql);
+
+        jdbcTemplate.update(sql, getDeletedCartItemQueryParams(customerId, cartIds));
+    }
+
+    private Object[] getDeletedCartItemQueryParams(final long customerId, final List<Long> cartIds) {
+        final List<Object> params = new ArrayList<>();
+        params.add(customerId);
+        params.addAll(cartIds);
+
+        return params.toArray();
     }
 
     @Override
@@ -80,9 +133,15 @@ public class JdbcCartDao implements CartDao {
         }
 
         final String inSql = String.join(",", Collections.nCopies(cartIds.size(), "?"));
-        final String sql = "DELETE FROM cart_item WHERE id IN (%s)";
+        final String sql = String.format("DELETE FROM cart_item WHERE id IN (%s)", inSql);
 
-        jdbcTemplate.update(String.format(sql, inSql), cartIds.toArray());
+        jdbcTemplate.update(sql, toArrayParams(cartIds));
+    }
+
+    private List<Object[]> toArrayParams(final List<Long> cartIds) {
+        return cartIds.stream()
+                .map(id -> new Object[]{id})
+                .collect(Collectors.toList());
     }
 
     private List<Long> getCartIds(final List<CartEntity> cartEntities) {
@@ -92,10 +151,9 @@ public class JdbcCartDao implements CartDao {
                 .collect(Collectors.toList());
     }
 
-    private List<Object[]> getParams(final List<CartEntity> cartEntities) {
+    private List<Object[]> getQuantityAndId(final List<CartEntity> cartEntities) {
         return cartEntities.stream()
-                .map(entity -> new Object[]{entity.getCustomerId(), entity.getProductEntity().getId(),
-                        entity.getQuantity()})
+                .map(entity -> new Object[]{entity.getQuantity(), entity.getCustomerId()})
                 .collect(Collectors.toList());
     }
 }
