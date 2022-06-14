@@ -30,7 +30,7 @@ class MemberDaoTest {
     @DisplayName("이메일로 회원을 찾아 반환한다.")
     @Test
     void findMemberByEmail() {
-        Member member = memberDao.findByEmail("ari@wooteco.com");
+        Member member = memberDao.getByEmail("ari@wooteco.com");
         assertThat(member.getName()).isEqualTo("아리");
     }
 
@@ -38,7 +38,7 @@ class MemberDaoTest {
     @Test
     void findMemberByNotExistEmail() {
         assertThatThrownBy(
-                () -> memberDao.findByEmail("pobi@wooteco.com")
+                () -> memberDao.getByEmail("pobi@wooteco.com")
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("해당 이메일로 가입된 회원은 존재하지 않습니다.");
     }
@@ -67,7 +67,7 @@ class MemberDaoTest {
     @DisplayName("id로 회원을 찾아 반환한다.")
     @Test
     void findMemberById() {
-        Member member = memberDao.findById(1L);
+        Member member = memberDao.getById(1L);
         assertThat(member.getName()).isEqualTo("아리");
     }
 
@@ -75,7 +75,7 @@ class MemberDaoTest {
     @Test
     void findMemberByNotExistId() {
         assertThatThrownBy(
-                () -> memberDao.findById(100L)
+                () -> memberDao.getById(100L)
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
     }
@@ -85,7 +85,7 @@ class MemberDaoTest {
     void updateName() {
         memberDao.updateNameById(1L, "메아리");
 
-        Member member = memberDao.findById(1L);
+        Member member = memberDao.getById(1L);
         assertThat(member.getName()).isEqualTo("메아리");
     }
 
@@ -94,7 +94,7 @@ class MemberDaoTest {
     void updatePassword() {
         memberDao.updatePasswordById(1L, "InputPassword!");
 
-        Member member = memberDao.findById(1L);
+        Member member = memberDao.getById(1L);
         assertThat(member.getPassword()).isEqualTo("InputPassword!");
     }
 
@@ -104,7 +104,7 @@ class MemberDaoTest {
         memberDao.deleteById(1L);
 
         assertThatThrownBy(
-                () -> memberDao.findById(1L)
+                () -> memberDao.getById(1L)
         ).isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 회원입니다.");
 

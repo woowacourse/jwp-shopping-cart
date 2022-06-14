@@ -76,7 +76,7 @@ public class MemberService {
     }
 
     private Member findMemberByEmail(String email) {
-        return memberDao.findByEmail(email);
+        return memberDao.getByEmail(email);
     }
 
     private void validateDuplicateEmail(String email) {
@@ -86,7 +86,7 @@ public class MemberService {
     }
 
     private Member findMemberById(long id) {
-        return memberDao.findById(id);
+        return memberDao.getById(id);
     }
 
     private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {

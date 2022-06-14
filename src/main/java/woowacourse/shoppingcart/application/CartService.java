@@ -63,7 +63,7 @@ public class CartService {
     }
 
     private void validateMember(final long memberId) {
-        memberDao.findById(memberId);
+        memberDao.getById(memberId);
     }
 
     private void validateProduct(final long productId) {

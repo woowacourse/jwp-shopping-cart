@@ -12,7 +12,6 @@ import woowacourse.member.domain.SavedPassword;
 import woowacourse.member.exception.MemberNotFoundException;
 
 import javax.sql.DataSource;
-import java.util.Locale;
 
 @Repository
 public class MemberDao {
@@ -35,7 +34,7 @@ public class MemberDao {
                     new SavedPassword(resultSet.getString("password"))
             );
 
-    public Member findByEmail(String email) {
+    public Member getByEmail(String email) {
         try {
             String SQL = "SELECT id, email, name, password FROM member WHERE email = ?";
             return jdbcTemplate.queryForObject(SQL, rowMapper, email);
@@ -54,7 +53,7 @@ public class MemberDao {
         simpleJdbcInsert.execute(namedParameterSource);
     }
 
-    public Member findById(long id) {
+    public Member getById(long id) {
         try {
             String SQL = "SELECT id, email, name, password FROM member WHERE id = ?";
             return jdbcTemplate.queryForObject(SQL, rowMapper, id);
@@ -76,14 +75,5 @@ public class MemberDao {
     public void deleteById(long id) {
         String SQL = "DELETE FROM member WHERE id = ?";
         jdbcTemplate.update(SQL, id);
-    }
-
-    public long findIdByName(final String userName) {
-        try {
-            final String query = "SELECT id FROM member WHERE name = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
-        }
     }
 }
