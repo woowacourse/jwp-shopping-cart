@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import woowacourse.shoppingcart.domain.Product;
 
-public class OrderedProducts {
+public class OrderedProduct {
 
     private Long productId;
     private int quantity;
@@ -12,10 +12,10 @@ public class OrderedProducts {
     @JsonProperty("thumbnailImage")
     private ImageDto thumbnailImage;
 
-    public OrderedProducts() {
+    public OrderedProduct() {
     }
 
-    public OrderedProducts(Long productId, int quantity, int price, String name, ImageDto thumbnailImage) {
+    public OrderedProduct(Long productId, int quantity, int price, String name, ImageDto thumbnailImage) {
         this.productId = productId;
         this.quantity = quantity;
         this.price = price;
@@ -23,8 +23,8 @@ public class OrderedProducts {
         this.thumbnailImage = thumbnailImage;
     }
 
-    public static OrderedProducts of(Product product, int quantity) {
-        return new OrderedProducts(product.getId(), quantity,
+    public static OrderedProduct of(Product product, int quantity) {
+        return new OrderedProduct(product.getId(), quantity,
                 product.getPrice(), product.getName(), ImageDto.of(product.getImage()));
     }
 

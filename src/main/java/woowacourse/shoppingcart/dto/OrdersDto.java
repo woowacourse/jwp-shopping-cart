@@ -7,20 +7,20 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 public class OrdersDto {
 
     private Long id;
-    private List<OrderedProducts> orderedProducts;
+    private List<OrderedProduct> orderedProducts;
 
     public OrdersDto() {
     }
 
-    public OrdersDto(Long id, List<OrderedProducts> orderedProducts) {
+    public OrdersDto(Long id, List<OrderedProduct> orderedProducts) {
         this.id = id;
         this.orderedProducts = orderedProducts;
     }
 
     public static OrdersDto of(Long id, List<OrderDetail> orderDetails) {
-        List<OrderedProducts> orderedProducts = new LinkedList<>();
+        List<OrderedProduct> orderedProducts = new LinkedList<>();
         for (OrderDetail orderDetail : orderDetails) {
-            orderedProducts.add(OrderedProducts.of(orderDetail.getProduct(), orderDetail.getQuantity()));
+            orderedProducts.add(OrderedProduct.of(orderDetail.getProduct(), orderDetail.getQuantity()));
         }
         return new OrdersDto(id, orderedProducts);
     }
@@ -29,7 +29,7 @@ public class OrdersDto {
         return id;
     }
 
-    public List<OrderedProducts> getOrderedProducts() {
+    public List<OrderedProduct> getOrderedProducts() {
         return orderedProducts;
     }
 }

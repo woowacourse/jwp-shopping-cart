@@ -18,7 +18,7 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.ImageDto;
-import woowacourse.shoppingcart.dto.OrderedProducts;
+import woowacourse.shoppingcart.dto.OrderedProduct;
 import woowacourse.shoppingcart.dto.OrdersDto;
 import woowacourse.shoppingcart.dto.ProductRequest;
 
@@ -61,7 +61,7 @@ public class OrderServiceTest {
 
         // then
         OrdersDto ordersDto = orderService.findOrderByCustomerAndOrderId(customer, orderId);
-        List<OrderedProducts> orderedProducts = ordersDto.getOrderedProducts();
+        List<OrderedProduct> orderedProducts = ordersDto.getOrderedProducts();
         assertThat(orderId).isEqualTo(ordersDto.getId());
         assertThat(orderedProducts.get(0).getName()).isEqualTo("치킨");
 
@@ -85,7 +85,7 @@ public class OrderServiceTest {
 
         // then
         OrdersDto ordersDto = orderService.findOrderByCustomerAndOrderId(customer, orderId);
-        List<OrderedProducts> orderedProducts = ordersDto.getOrderedProducts();
+        List<OrderedProduct> orderedProducts = ordersDto.getOrderedProducts();
         assertThat(orderedProducts).hasSize(3);
     }
 }
