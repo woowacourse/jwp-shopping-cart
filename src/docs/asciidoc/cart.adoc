@@ -14,65 +14,65 @@
 
 ===== HTTP Request
 
-include::{snippets}/add-cartItem-item/http-request.adoc[]
+include::{snippets}/add-cart-item/http-request.adoc[]
 
 ===== HTTP Response
 
-include::{snippets}/add-cartItem-item/http-response.adoc[]
+include::{snippets}/add-cart-item/http-response.adoc[]
 
 [[resources-cartItem-add-item-duplicate-product]]
 ==== 실패 - 이미 추가한 상품 추가
 
 ===== HTTP Response
 
-include::{snippets}/add-cartItem-item-duplicate-product/http-response.adoc[]
+include::{snippets}/add-cart-item-duplicate-product/http-response.adoc[]
 
 [[resources-cartItem-add-item-not-exist-product]]
 ==== 실패 - 존재하지 않는 상품 추가
 
 ===== HTTP Response
 
-include::{snippets}/add-cartItem-item-not-exist-product/http-response.adoc[]
+include::{snippets}/add-cart-item-not-exist-product/http-response.adoc[]
 
 [[resources-cartItem-get-cartItem-items]]
 === 장바구니 상품 목록 조회
 
 ==== HTTP Request
 
-include::{snippets}/get-cartItem-items/http-request.adoc[]
+include::{snippets}/get-cart-items/http-request.adoc[]
 
 ==== HTTP Response
 
-include::{snippets}/get-cartItem-items/http-response.adoc[]
+include::{snippets}/get-cart-items/http-response.adoc[]
 
 ==== Response body fields
 
-include::{snippets}/get-cartItem-items/response-fields.adoc[]
+include::{snippets}/get-cart-items/response-fields.adoc[]
 
 [[resources-cartItem-delete-cartItem-item]]
 === 장바구니 상품 삭제
 
 ==== HTTP Request
 
-include::{snippets}/delete-cartItem-item/http-request.adoc[]
+include::{snippets}/delete-cart-item/http-request.adoc[]
 
 ==== Request path variables
 
-include::{snippets}/delete-cartItem-item/path-parameters.adoc[]
+include::{snippets}/delete-cart-item/path-parameters.adoc[]
 
 [[resources-cartItem-delete-cartItem-item-success]]
 ==== 성공
 
 ===== HTTP Response
 
-include::{snippets}/delete-cartItem-item/http-response.adoc[]
+include::{snippets}/delete-cart-item/http-response.adoc[]
 
 [[resources-cartItem-delete-cartItem-item-not-exist-item]]
 ==== 실패 - 존재하지 않는 상품
 
 ===== HTTP Response
 
-include::{snippets}/delete-cartItem-item-not-exist-item/http-response.adoc[]
+include::{snippets}/delete-cart-item-not-exist-item/http-response.adoc[]
 
 [[resources-cartItem-change-quantity]]
 === 장바구니 상품 수량 변경
