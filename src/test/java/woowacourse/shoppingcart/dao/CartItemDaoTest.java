@@ -43,7 +43,7 @@ public class CartItemDaoTest {
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 1);
     }
 
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @DisplayName("고객 아이디를 넣으면, 해당 고객이 구매한 상품의 아이디 목록을 가져온다.")
     @Test
     void findProductIdsByCustomerId() {
 
@@ -57,7 +57,7 @@ public class CartItemDaoTest {
         assertThat(productsIds).containsExactly(1L, 2L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("고객 Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
     @Test
     void findIdsByCustomerId() {
 
@@ -71,7 +71,7 @@ public class CartItemDaoTest {
         assertThat(cartIds).containsExactly(1L, 2L);
     }
 
-    @DisplayName("Cart Id를 넣으면, 해당 상품 Id를 가져온다.")
+    @DisplayName("장바구니 Id를 넣으면, 해당 상품 Id를 가져온다.")
     @Test
     void findProductIdById() {
 
@@ -85,7 +85,7 @@ public class CartItemDaoTest {
         assertThat(productId).isEqualTo(1L);
     }
 
-    @DisplayName("존재하지 않는 Cart Id를 넣으면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 장바구니 Id를 넣으면 예외가 발생한다.")
     @Test
     void findProductIdByIdFail() {
 
@@ -97,7 +97,7 @@ public class CartItemDaoTest {
                 .isInstanceOf(InvalidCartItemException.class);
     }
 
-    @DisplayName("Cart Id를 넣으면, 해당 상품 Quantity 를 가져온다.")
+    @DisplayName("장바구니 Id를 넣으면, 해당 상품의 수량을 가져온다.")
     @Test
     void findProductQuantityById() {
 
@@ -111,7 +111,7 @@ public class CartItemDaoTest {
         assertThat(quantity).isEqualTo(1);
     }
 
-    @DisplayName("존재하지 않는 Cart Id를 넣으면 예외가 발생한다.")
+    @DisplayName("존재하지 않는 장바구니 Id를 넣으면 예외가 발생한다.")
     @Test
     void findProductQuantityByIdFail() {
 
@@ -123,7 +123,7 @@ public class CartItemDaoTest {
                 .isInstanceOf(InvalidCartItemException.class);
     }
 
-    @DisplayName("Customer Id 와 Product Id 를 통해 수량을 찾아낸다.")
+    @DisplayName("고객 Id 와 상품 Id 를 통해 수량을 찾아낸다.")
     @Test
     void findQuantityByCustomerIdAndProductId() {
 
@@ -140,7 +140,7 @@ public class CartItemDaoTest {
         assertThat(quantity).isEqualTo(1);
     }
 
-    @DisplayName("Customer Id 와 Product Id 를 통해 수량을 찾을 수 없을 경우 빈 값을 반환한다.")
+    @DisplayName("고객 Id 와 상품 Id 를 통해 수량을 찾을 수 없을 경우 빈 값을 반환한다.")
     @Test
     void findQuantityByCustomerIdAndProductIdEmpty() {
 
@@ -155,7 +155,7 @@ public class CartItemDaoTest {
         assertThat(quantity).isEmpty();
     }
 
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("장바구니에 상품을 담으면, 담긴 장바구니 아이디를 반환한다. ")
     @Test
     void addCartItem() {
 
@@ -171,7 +171,7 @@ public class CartItemDaoTest {
         assertThat(cartId).isEqualTo(3L);
     }
 
-    @DisplayName("Cart Id를 통해 장바구니 수량을 수정한다.")
+    @DisplayName("장바구니 Id를 통해 장바구니 수량을 수정한다.")
     @Test
     void modifyQuantity() {
 
@@ -189,7 +189,7 @@ public class CartItemDaoTest {
         assertThat(actual).isEqualTo(3);
     }
 
-    @DisplayName("존재하지 않는 Cart Id를 통해 장바구니 수량을 수정할 경우 예외가 발생한다.")
+    @DisplayName("존재하지 않는 장바구니 Id를 통해 장바구니 수량을 수정할 경우 예외가 발생한다.")
     @Test
     void modifyQuantityFail() {
 
@@ -212,7 +212,7 @@ public class CartItemDaoTest {
         );
     }
 
-    @DisplayName("Cart Id를 통해 장바구니 항목을 제거한다.")
+    @DisplayName("장바구니 Id를 통해 장바구니 항목을 제거한다.")
     @Test
     void deleteCartItem() {
 
@@ -229,7 +229,7 @@ public class CartItemDaoTest {
         assertThat(productIds).containsExactly(2L);
     }
 
-    @DisplayName("존재하지 않는 Cart Id를 통해 장바구니 항목을 제거할 경우 예외가 발생한다.")
+    @DisplayName("존재하지 않는 장바구니 Id를 통해 장바구니 항목을 제거할 경우 예외가 발생한다.")
     @Test
     void deleteCartItemFail() {
 
