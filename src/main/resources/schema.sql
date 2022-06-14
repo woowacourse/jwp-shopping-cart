@@ -17,9 +17,6 @@ create table member
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-alter table member
-    add unique key (name);
-
 create table product
 (
     id        bigint       not null auto_increment,
@@ -34,16 +31,17 @@ create table cart_item
     id          bigint not null auto_increment,
     member_id bigint not null,
     product_id  bigint not null,
+    quantity integer not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table cart_item
     add constraint fk_cart_item_to_member
-        foreign key (member_id) references member (id);
+        foreign key (member_id) references member (id) on delete cascade;
 
 alter table cart_item
     add constraint fk_cart_item_to_product
-        foreign key (product_id) references product (id);
+        foreign key (product_id) references product (id) on delete cascade;
 
 create table orders
 (
@@ -54,7 +52,7 @@ create table orders
 
 alter table orders
     add constraint fk_orders_to_member
-        foreign key (member_id) references member (id);
+        foreign key (member_id) references member (id) on delete cascade;
 
 create table orders_detail
 (
@@ -67,8 +65,8 @@ create table orders_detail
 
 alter table orders_detail
     add constraint fk_orders_detail_to_orders
-        foreign key (orders_id) references orders (id);
+        foreign key (orders_id) references orders (id) on delete cascade;
 
 alter table orders_detail
     add constraint fk_orders_detail_to_product
-        foreign key (product_id) references product (id);
+        foreign key (product_id) references product (id) on delete cascade;

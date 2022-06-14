@@ -1,15 +1,15 @@
 package woowacourse.shoppingcart.domain;
 
 public class Product {
-    private Long id;
+    private long id;
     private String name;
-    private Integer price;
+    private int price;
     private String imageUrl;
 
     public Product() {
     }
 
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
+    public Product(final long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -17,7 +17,7 @@ public class Product {
     }
 
     public Product(final String name, final int price, final String imageUrl) {
-        this(null, name, price, imageUrl);
+        this(0L, name, price, imageUrl);
     }
 
     public String getName() {
@@ -32,7 +32,7 @@ public class Product {
         return imageUrl;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 }

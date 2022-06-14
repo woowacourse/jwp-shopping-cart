@@ -2,7 +2,7 @@
 
 장바구니 미션 저장소
 
-## [API 문서](https://docs.google.com/spreadsheets/d/1UiGWACAXId9vdAOr9JxzcCNc96RMGHGG9DHJr5tJGMc/edit?usp=sharing)
+## [API 문서](https://documenter.getpostman.com/view/4349900/Uz5KmEco)
 
 ## 기능 명세
 

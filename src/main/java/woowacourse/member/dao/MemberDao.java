@@ -12,8 +12,6 @@ import woowacourse.member.domain.SavedPassword;
 import woowacourse.member.exception.MemberNotFoundException;
 
 import javax.sql.DataSource;
-import java.util.Locale;
-import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -36,18 +34,17 @@ public class MemberDao {
                     new SavedPassword(resultSet.getString("password"))
             );
 
-    public Optional<Member> findByEmail(String email) {
+    public Member getByEmail(String email) {
         try {
             String SQL = "SELECT id, email, name, password FROM member WHERE email = ?";
-            Member member = jdbcTemplate.queryForObject(SQL, rowMapper, email);
-            return Optional.ofNullable(member);
+            return jdbcTemplate.queryForObject(SQL, rowMapper, email);
         } catch (final EmptyResultDataAccessException e) {
-            return Optional.empty();
+            throw new MemberNotFoundException("해당 이메일로 가입된 회원은 존재하지 않습니다.");
         }
     }
 
     public boolean existsByEmail(String email) {
-        String SQL = "SELECT EXISTS (SELECT * FROM MEMBER WHERE email = ?)";
+        String SQL = "SELECT EXISTS (SELECT * FROM member WHERE email = ?)";
         return jdbcTemplate.queryForObject(SQL, Boolean.class, email);
     }
 
@@ -56,13 +53,12 @@ public class MemberDao {
         simpleJdbcInsert.execute(namedParameterSource);
     }
 
-    public Optional<Member> findById(long id) {
+    public Member getById(long id) {
         try {
             String SQL = "SELECT id, email, name, password FROM member WHERE id = ?";
-            Member member = jdbcTemplate.queryForObject(SQL, rowMapper, id);
-            return Optional.ofNullable(member);
+            return jdbcTemplate.queryForObject(SQL, rowMapper, id);
         } catch (final EmptyResultDataAccessException e) {
-            return Optional.empty();
+            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
         }
     }
 
@@ -79,14 +75,5 @@ public class MemberDao {
     public void deleteById(long id) {
         String SQL = "DELETE FROM member WHERE id = ?";
         jdbcTemplate.update(SQL, id);
-    }
-
-    public Long findIdByName(final String userName) {
-        try {
-            final String query = "SELECT id FROM member WHERE name = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new MemberNotFoundException("존재하지 않는 회원입니다.");
-        }
     }
 }

@@ -6,11 +6,10 @@ import woowacourse.member.dao.MemberDao;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInMemberCartItemException;
+import woowacourse.shoppingcart.dto.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.PutCartItemRequest;
+import woowacourse.shoppingcart.exception.cart.NotInMemberCartException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,42 +26,55 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByMemberName(final String memberName) {
-        final List<Long> cartIds = findCartIdsByMemberName(memberName);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
+    @Transactional(readOnly = true)
+    public List<Cart> findCartsByMemberId(final long memberId) {
+        validateMember(memberId);
+        return cartItemDao.findCartsByMemberId(memberId);
     }
 
-    private List<Long> findCartIdsByMemberName(final String memberName) {
-        final Long memberId = memberDao.findIdByName(memberName);
-        return cartItemDao.findIdsByMemberId(memberId);
-    }
+    public void addCartItem(final long memberId, final AddCartItemRequest request) {
+        long productId = request.getProductId();
 
-    public Long addCart(final Long productId, final String memberName) {
-        final Long memberId = memberDao.findIdByName(memberName);
-        try {
-            return cartItemDao.addCartItem(memberId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
-    }
+        validateMember(memberId);
+        validateProduct(productId);
 
-    public void deleteCart(final String memberName, final Long cartId) {
-        validateMemberCart(cartId, memberName);
-        cartItemDao.deleteCartItem(cartId);
-    }
+        long cartId = cartItemDao.findIdIfExistByMemberIdAndProductId(memberId, productId);
 
-    private void validateMemberCart(final Long cartId, final String memberName) {
-        final List<Long> cartIds = findCartIdsByMemberName(memberName);
-        if (cartIds.contains(cartId)) {
+        if (cartId > 0) {
+            cartItemDao.plusQuantityById(cartId);
             return;
         }
-        throw new NotInMemberCartItemException();
+
+        cartItemDao.add(memberId, productId, 1);
     }
+
+    public void updateCartItem(long memberId, long cartId, PutCartItemRequest request) {
+        validateMember(memberId);
+        validateMemberCart(memberId, cartId);
+
+        cartItemDao.update(cartId, request.getQuantity());
+    }
+
+    public void deleteCart(final long memberId, final long cartId) {
+        validateMember(memberId);
+        validateMemberCart(memberId, cartId);
+
+        cartItemDao.delete(cartId);
+    }
+
+    private void validateMember(final long memberId) {
+        memberDao.getById(memberId);
+    }
+
+    private void validateProduct(final long productId) {
+        productDao.getById(productId);
+    }
+
+    private void validateMemberCart(final long memberId, final long cartId) {
+        if (cartItemDao.isValidCartIdByMemberId(memberId, cartId)) {
+            return;
+        }
+        throw new NotInMemberCartException("해당 사용자의 유효한 장바구니가 아닙니다.");
+    }
+
 }

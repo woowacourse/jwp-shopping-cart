@@ -22,7 +22,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public Long logIn(LoginRequest request) {
+    public long logIn(LoginRequest request) {
         Member member = findMemberByEmail(request.getEmail());
         Password password = new InputPassword(request.getPassword());
 
@@ -76,8 +76,7 @@ public class MemberService {
     }
 
     private Member findMemberByEmail(String email) {
-        return memberDao.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException("해당 이메일로 가입된 회원은 존재하지 않습니다."));
+        return memberDao.getByEmail(email);
     }
 
     private void validateDuplicateEmail(String email) {
@@ -87,8 +86,7 @@ public class MemberService {
     }
 
     private Member findMemberById(long id) {
-        return memberDao.findById(id)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+        return memberDao.getById(id);
     }
 
     private void validateUpdatePassword(UpdatePasswordRequest request, Member member) {

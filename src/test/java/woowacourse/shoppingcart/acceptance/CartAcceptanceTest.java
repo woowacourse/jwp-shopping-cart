@@ -1,122 +1,118 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.member.dto.request.LoginRequest;
+import woowacourse.shoppingcart.dto.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.PutCartItemRequest;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static woowacourse.acceptance.RestAssuredConvenienceMethod.*;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "아리";
-    private Long productId1;
-    private Long productId2;
 
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
+    private static final String URL = "/api/members/me/carts";
 
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+
+    @DisplayName("아이템 조회 - 성공한 경우 200 ok가 반환된다.")
+    @Test
+    void getCarts() {
+        getRequestWithToken(token(), URL)
+                .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("장바구니 아이템 추가")
+    @DisplayName("아이템 조회 - 토큰 없이 접근한 경우 401 Unauthorized가 반환된다.")
+    @Test
+    void getCartsWithoutToken() {
+        getRequestWithoutToken(URL)
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("아이템 추가 - 성공한 경우 201 Created가 반환된다.")
     @Test
     void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
+        AddCartItemRequest request = new AddCartItemRequest(3L);
 
-        장바구니_아이템_추가됨(response);
+        postRequestWithToken(token(), request, URL)
+                .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("장바구니 아이템 목록 조회")
+    @DisplayName("아이템 추가 - 잘못된 입력의 경우 400 Bad Request가 반환된다.")
     @Test
-    void getCartItems() {
-        장바구니_아이템_추가되어_있음(USER, productId1);
-        장바구니_아이템_추가되어_있음(USER, productId2);
+    void addBad() {
+        AddCartItemRequest request = new AddCartItemRequest(99L);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
-
-        장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_포함됨(response, productId1, productId2);
+        postRequestWithToken(token(), request, URL)
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("장바구니 삭제")
+    @DisplayName("아이템 추가 - 토큰 없이 접근한 경우 401 Unauthorized가 반환된다.")
+    @Test
+    void addWithoutToken() {
+        AddCartItemRequest request = new AddCartItemRequest(3L);
+
+        postRequestWithoutToken(request, URL)
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+
+    @DisplayName("수량 변경 - 성공한 경우 200 ok가 반환된다.")
+    @Test
+    void putCartItem() {
+        PutCartItemRequest request = new PutCartItemRequest(10);
+        putRequestWithToken(token(), request, URL + "/1")
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("수량 변경 - 잘못된 입력의 경우 400 Bad Request가 반환된다.")
+    @Test
+    void putBad() {
+        PutCartItemRequest request = new PutCartItemRequest(10);
+
+        putRequestWithToken(token(), request, URL + "/99")
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("수량 변경 - 토큰 없이 접근한 경우 401 Unauthorized가 반환된다.")
+    @Test
+    void putWithoutToken() {
+        PutCartItemRequest request = new PutCartItemRequest(10);
+
+        putRequestWithoutToken(request, URL + "/1")
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+
+    @DisplayName("삭제 - 성공한 경우 204 No Content가 반환된다.")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
-
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
-
-        장바구니_삭제됨(response);
+        deleteRequestWithToken(token(), List.of(), URL + "/1")
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/members/{memberName}/carts", userName)
-                .then().log().all()
-                .extract();
+    @DisplayName("삭제 - 잘못된 입력의 경우 400 Bad Request가 반환된다.")
+    @Test
+    void deleteBad() {
+        deleteRequestWithToken(token(), List.of(), URL + "/99")
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/members/{memberName}/carts", userName)
-                .then().log().all()
-                .extract();
+    @DisplayName("삭제 - 토큰 없이 접근한 경우 401 Unauthorized가 반환된다.")
+    @Test
+    void deleteWithoutToken() {
+        deleteRequestWithoutToken(URL + "/1")
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/members/{memberName}/carts/{cartId}", userName, cartId)
-                .then().log().all()
-                .extract();
+    private String token() {
+        LoginRequest loginRequest = new LoginRequest("ari@wooteco.com", "Wooteco1!");
+        return postRequestWithoutToken(loginRequest, "/api/auth")
+                .extract().as(TokenResponse.class).getAccessToken();
     }
 
-    public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
-    }
-
-    public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
-                .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productIds);
-    }
-
-    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
 }

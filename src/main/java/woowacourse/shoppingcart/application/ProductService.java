@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.AddProductRequest;
 
 import java.util.List;
 
@@ -16,19 +17,21 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<Product> findProducts() {
         return productDao.findProducts();
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    public void addProduct(final AddProductRequest request) {
+        productDao.save(new Product(request.getName(), request.getPrice(), request.getImageUrl()));
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    @Transactional(readOnly = true)
+    public Product findProductById(final long productId) {
+        return productDao.getById(productId);
     }
 
-    public void deleteProductById(final Long productId) {
+    public void deleteProductById(final long productId) {
         productDao.delete(productId);
     }
 }

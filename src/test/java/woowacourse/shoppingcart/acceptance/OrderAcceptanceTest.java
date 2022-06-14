@@ -1,134 +1,93 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import woowacourse.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.member.dto.request.LoginRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static woowacourse.acceptance.RestAssuredConvenienceMethod.*;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "렉스";
-    private Long cartId1;
-    private Long cartId2;
 
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
+    private static final String URI = "/api/members/me/orders";
 
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
-    }
-
-    @DisplayName("주문하기")
+    @DisplayName("주문하기 - 성공한 경우 201 Created가 반환된다.")
     @Test
     void addOrder() {
-        List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
-                .map(cartId -> new OrderRequest(cartId, 10))
-                .collect(Collectors.toList());
-
-        ExtractableResponse<Response> response = 주문하기_요청(USER, orderRequests);
-
-        주문하기_성공함(response);
+        OrderRequest request = new OrderRequest(1L, 1);
+        postRequestWithToken(token(), List.of(request), URI)
+                .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("주문 내역 조회")
+    @DisplayName("주문하기 - 토큰 없이 접근한 경우 401 Unauthorized가 반환된다.")
+    @Test
+    void addOrderWithoutToken() {
+        OrderRequest request = new OrderRequest(1L, 1);
+        postRequestWithoutToken(List.of(request), URI)
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("주문하기 - 잘못된 입력의 경우 400 Bad Request가 반환된다.")
+    @Test
+    void addBad() {
+        OrderRequest request = new OrderRequest(5L, 1);
+        postRequestWithToken(token(), List.of(request), URI)
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("주문 내역 조회 - 성공한 경우 200 ok가 반환된다.")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
+        postRequestWithToken(token(), List.of(new OrderRequest(1L, 1)), URI);
 
-        ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
-
-        주문_조회_응답됨(response);
-        주문_내역_포함됨(response, orderId1, orderId2);
+        getRequestWithToken(token(), URI)
+                .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("주문 단일 조회")
+    @DisplayName("주문 내역 조회 - 토큰 없이 접근한 경우 401 Unauthorized가 반환된다.")
+    @Test
+    void getOrdersWithoutToken() {
+        postRequestWithToken(token(), List.of(new OrderRequest(1L, 1)), URI);
+
+        getRequestWithoutToken(URI)
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("주문 단일 조회 - 성공한 경우 200 ok가 반환된다.")
     @Test
     void getOrder() {
-        Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
-                new OrderRequest(cartId1, 2),
-                new OrderRequest(cartId2, 4)
-        ));
+        postRequestWithToken(token(), List.of(new OrderRequest(1L, 1)), URI);
 
-        ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
-
-        주문_조회_응답됨(response);
-        주문_조회됨(response, orderId);
+        getRequestWithToken(token(), URI + "/1")
+                .statusCode(HttpStatus.OK.value());
     }
 
-    public static ExtractableResponse<Response> 주문하기_요청(String userName, List<OrderRequest> orderRequests) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(orderRequests)
-                .when().post("/api/members/{memberName}/orders", userName)
-                .then().log().all()
-                .extract();
+    @DisplayName("주문 딘일 조회 - 토큰 없이 접근한 경우 401 Unauthorized가 반환된다.")
+    @Test
+    void getOrderWithoutToken() {
+        postRequestWithToken(token(), List.of(new OrderRequest(1L, 1)), URI);
+
+        getRequestWithoutToken(URI + "/1")
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
-    public static ExtractableResponse<Response> 주문_내역_조회_요청(String userName) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/members/{memberName}/orders", userName)
-                .then().log().all()
-                .extract();
+    @DisplayName("주문 단일 조회 - 잘못된 입력의 경우 400 Bad Request가 반환된다.")
+    @Test
+    void getBadOrder() {
+        getRequestWithToken(token(), URI + "/200")
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    public static ExtractableResponse<Response> 주문_단일_조회_요청(String userName, Long orderId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/members/{memberName}/orders/{orderId}", userName, orderId)
-                .then().log().all()
-                .extract();
+    private String token() {
+        LoginRequest loginRequest = new LoginRequest("ari@wooteco.com", "Wooteco1!");
+        return postRequestWithoutToken(loginRequest, "/api/auth")
+                .extract().as(TokenResponse.class).getAccessToken();
     }
 
-    public static void 주문하기_성공함(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static Long 주문하기_요청_성공되어_있음(String userName, List<OrderRequest> orderRequests) {
-        ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
-        return Long.parseLong(response.header("Location").split("/orders/")[1]);
-    }
-
-    public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-                .map(Orders::getId)
-                .collect(Collectors.toList());
-        assertThat(resultOrderIds).contains(orderIds);
-    }
-
-    private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-        Orders resultOrder = response.as(Orders.class);
-        assertThat(resultOrder.getId()).isEqualTo(orderId);
-    }
 }

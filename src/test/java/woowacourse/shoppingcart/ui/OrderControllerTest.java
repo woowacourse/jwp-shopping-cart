@@ -2,33 +2,29 @@ package woowacourse.shoppingcart.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.OrderRequest;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class OrderControllerTest {
+class OrderControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,93 +32,63 @@ public class OrderControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private OrderService orderService;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
-    @DisplayName("CREATED와 Location을 반환한다.")
-    @Test
-    void addOrder() throws Exception {
-        // given
-        final Long cartId = 1L;
-        final int quantity = 5;
-        final Long cartId2 = 1L;
-        final int quantity2 = 5;
-        final String memberName = "pobi";
-        final List<OrderRequest> requestDtos =
-                Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
+    @DisplayName("addOrder메서드는")
+    @Nested
+    class addOrderTest {
 
-        final Long expectedOrderId = 1L;
-        when(orderService.addOrder(any(), eq(memberName)))
-                .thenReturn(expectedOrderId);
+        @DisplayName("장바구니 번호에 빈값은 허용하지 않는다.")
+        @ParameterizedTest
+        @NullSource
+        void addWithNullCartId(Long cartId) throws Exception {
+            List<OrderRequest> request = List.of(new OrderRequest(cartId, 3));
+            System.out.println(objectMapper.writeValueAsString(request));
+            assertBadRequestFromPost("/api/members/me/orders", request, "장바구니 번호는 빈값일 수 없습니다.");
+        }
 
-        // when // then
-        mockMvc.perform(post("/api/members/" + memberName + "/orders")
+        @DisplayName("장바구니 번호가 long의 범위를 넘어가는 경우는 허용하지 않는다.")
+        @Test
+        void maxCartId() throws Exception {
+            assertBadRequestFromPost("/api/members/me/orders", "[{\"cartId\":9223372036854775808,\"quantity\":1}]", "out of range of long");
+        }
+
+        @DisplayName("수량에 1이상의 정수만 허용한다.")
+        @ParameterizedTest
+        @ValueSource(ints = {-1, 0})
+        void negativeQuantity(int quantity) throws Exception {
+            List<OrderRequest> request = List.of(new OrderRequest(1L, quantity));
+            assertBadRequestFromPost("/api/members/me/orders", request, "수량은 1이상이어야 합니다.");
+        }
+
+        @DisplayName("수량이 int의 범위를 넘어가는 경우는 허용하지 않는다.")
+        @Test
+        void maxQuantity() throws Exception {
+            assertBadRequestFromPost("/api/members/me/orders", "[{\"cartId\":1,\"quantity\":2147483648}]", "out of range of int");
+        }
+    }
+
+    void assertBadRequestFromPost(String uri, String request, String errorMessage) throws Exception {
+        String token = jwtTokenProvider.createToken("1");
+
+        mockMvc.perform(post(uri)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsString(requestDtos))
-                ).andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"))
-                .andExpect(header().string("Location",
-                        "/api/" + memberName + "/orders/" + expectedOrderId));
+                        .content(request)
+                ).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString(errorMessage)));
     }
 
-    @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
-    @Test
-    void findOrder() throws Exception {
+    void assertBadRequestFromPost(String uri, Object request, String errorMessage) throws Exception {
+        String token = jwtTokenProvider.createToken("1");
 
-        // given
-        final String memberName = "pobi";
-        final Long orderId = 1L;
-        final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
-
-        when(orderService.findOrderById(memberName, orderId))
-                .thenReturn(expected);
-
-        // when // then
-        mockMvc.perform(get("/api/members/" + memberName + "/orders/" + orderId)
-                ).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(orderId))
-                .andExpect(jsonPath("orderDetails[0].productId").value(2L))
-                .andExpect(jsonPath("orderDetails[0].price").value(1_000))
-                .andExpect(jsonPath("orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("orderDetails[0].imageUrl").value("imageUrl"))
-                .andExpect(jsonPath("orderDetails[0].quantity").value(2));
+        mockMvc.perform(post(uri)
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                ).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", containsString(errorMessage)));
     }
 
-    @DisplayName("사용자 이름을 통해 주문 내역 목록을 조회하면, 주문 내역 목록을 받는다.")
-    @Test
-    void findOrders() throws Exception {
-        // given
-        final String memberName = "pobi";
-        final List<Orders> expected = Arrays.asList(
-                new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
-                new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
-        );
-
-        when(orderService.findOrdersByMemberName(memberName))
-                .thenReturn(expected);
-
-        // when // then
-        mockMvc.perform(get("/api/members/" + memberName + "/orders/")
-                ).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))
-                .andExpect(jsonPath("$[0].orderDetails[0].price").value(1_000))
-                .andExpect(jsonPath("$[0].orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("$[0].orderDetails[0].imageUrl").value("imageUrl"))
-                .andExpect(jsonPath("$[0].orderDetails[0].quantity").value(2))
-
-                .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].orderDetails[0].productId").value(2L))
-                .andExpect(jsonPath("$[1].orderDetails[0].price").value(2_000))
-                .andExpect(jsonPath("$[1].orderDetails[0].name").value("apple"))
-                .andExpect(jsonPath("$[1].orderDetails[0].imageUrl").value("imageUrl2"))
-                .andExpect(jsonPath("$[1].orderDetails[0].quantity").value(4));
-    }
 }
