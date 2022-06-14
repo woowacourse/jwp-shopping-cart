@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 public class DeleteCustomerRequest {
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9]*$")
+    @Pattern(regexp = "^[a-zA-Z\\\\d`~!@#$%^&*()-_=+]{6,}$")
     @Size(min = 6)
     private String password;
 

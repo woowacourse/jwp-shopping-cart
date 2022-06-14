@@ -1,32 +1,47 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsResponse;
+import woowacourse.shoppingcart.dto.ProductRequest;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class ProductService {
+
+    private static final Long DEFAULT_PAGE = 1L;
+
     private final ProductDao productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    @Transactional(readOnly = true)
+    public ProductsResponse findProducts(Long size, Long page) {
+        return ProductsResponse.from(productDao.findProducts((page - DEFAULT_PAGE) * size, size));
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    @Transactional(readOnly = true)
+    public ProductsResponse findAllProducts() {
+        return new ProductsResponse(productDao.findAllProducts());
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    @Transactional
+    public ProductResponse addProduct(ProductRequest productRequest) {
+        Product product = productDao.save(new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl()));
+        return ProductResponse.from(product);
     }
 
+    @Transactional(readOnly = true)
+    public ProductResponse findProductById(final Long productId) {
+        Product product = productDao.findProductById(productId);
+        return ProductResponse.from(product);
+    }
+
+    @Transactional
     public void deleteProductById(final Long productId) {
         productDao.delete(productId);
     }

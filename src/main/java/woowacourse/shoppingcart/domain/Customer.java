@@ -34,6 +34,7 @@ public class Customer {
         if (username == null || email == null || password == null) {
             throw new IllegalArgumentException("유저 네임과 이메일, 비밀번호는 null이 안됩니다.");
         }
+
         if (username.isBlank() || email.isBlank() || password.isBlank()) {
             throw new IllegalArgumentException("유저 네임과 이메일, 비밀번호를 모두 입력해주세요.");
         }

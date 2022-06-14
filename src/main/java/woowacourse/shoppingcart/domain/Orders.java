@@ -4,15 +4,12 @@ import java.util.List;
 
 public class Orders {
 
-    private Long id;
-    private List<OrderDetail> orderDetails;
+    private final Long id;
+    private final List<OrderDetail> orderDetails;
 
     public Orders(final Long id, final List<OrderDetail> orderDetails) {
         this.id = id;
         this.orderDetails = orderDetails;
-    }
-
-    private Orders() {
     }
 
     public Long getId() {

@@ -31,7 +31,7 @@ public class CustomerDao {
     public CustomerDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("CUSTOMER")
+                .withTableName("customer")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -58,13 +58,18 @@ public class CustomerDao {
         }
     }
 
-    public boolean existByUserName(String username) {
+    public Customer findByEmail(String email) {
         try {
-            String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ?)";
-            return jdbcTemplate.queryForObject(query, Boolean.class, username);
+            final String query = "SELECT id, username, email, password FROM customer WHERE email = ?";
+            return jdbcTemplate.queryForObject(query, customerRowMapper, email);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }
+    }
+
+    public boolean existByUserName(String username) {
+        String query = "SELECT EXISTS (SELECT * FROM customer WHERE username = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, username);
     }
 
     public boolean existByEmail(String email) {
@@ -95,21 +100,12 @@ public class CustomerDao {
     }
 
     public void updatePassword(Long id, String password) {
-        final String query = "UPDATE CUSTOMER SET password = ? WHERE id = ?";
+        final String query = "UPDATE customer SET password = ? WHERE id = ?";
         jdbcTemplate.update(query, password, id);
     }
 
     public void deleteByUserName(String username) {
         final String query = "DELETE FROM customer WHERE username = ?";
         jdbcTemplate.update(query, username);
-    }
-
-    public Customer findByEmail(String email) {
-        try {
-            final String query = "SELECT id, username, email, password FROM customer WHERE email = ?";
-            return jdbcTemplate.queryForObject(query, customerRowMapper, email);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
     }
 }

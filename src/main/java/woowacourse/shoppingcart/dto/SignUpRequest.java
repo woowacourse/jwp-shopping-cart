@@ -17,8 +17,7 @@ public class SignUpRequest {
     @Size(max = 64)
     private String email;
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9]*$")
-    @Size(min = 6)
+    @Pattern(regexp = "^.*(?=^.{8,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$")
     private String password;
 
     private SignUpRequest() {

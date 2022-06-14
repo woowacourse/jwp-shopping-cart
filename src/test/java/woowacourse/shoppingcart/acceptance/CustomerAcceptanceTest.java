@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
+import io.restassured.config.RestAssuredConfig;
+import io.restassured.config.SSLConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,7 +27,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("회원가입을 할 수 있다.")
     void addCustomer() {
-        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "123456q!q!");
 
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value())
                 .body("username", is("alien"))
@@ -36,7 +38,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입을 할 수 없다 - 중복된 이름 입력")
     void addCustomerDuplicateUsernameException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "123456q!");
 
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value())
                 .body("username", is("alien"))
@@ -50,14 +52,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입을 할 수 없다 - 중복된 이메일 입력")
     void addCustomerDuplicateEmailException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("alien", "alien@woowa.com", "123456q!");
 
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value())
                 .body("username", is("alien"))
                 .body("email", is("alien@woowa.com"));
 
         //when & then
-        SignUpRequest signUpRequest2 = new SignUpRequest("rennon", "alien@woowa.com", "123456");
+        SignUpRequest signUpRequest2 = new SignUpRequest("rennon", "alien@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest2, "users", HttpStatus.BAD_REQUEST.value());
     }
 
@@ -66,7 +68,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입을 할 수 없다 - username null 검증")
     void addCustomerWrongUsernameException(String username) {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest(username, "alien@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest(username, "alien@woowa.com", "123456q!");
 
         //when & then
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.BAD_REQUEST.value());
@@ -81,7 +83,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .mapToObj(Integer::toString)
                 .collect(Collectors.joining());
 
-        SignUpRequest signUpRequest = new SignUpRequest(username, "alien@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest(username, "alien@woowa.com", "123456q!");
 
         //when & then
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.BAD_REQUEST.value());
@@ -96,7 +98,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .mapToObj(Integer::toString)
                 .collect(Collectors.joining());
 
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", email + "@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", email + "@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.BAD_REQUEST.value());
     }
 
@@ -129,10 +131,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인을 할 수 있다.")
     void signInCustomer() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
@@ -145,11 +147,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인을 할 수 없다. - 등록되지 않은 email")
     void signUnauthorizedEmailException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
         //when & then
-        LogInRequest logInRequest = new LogInRequest("rennon1@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon1@woowa.com", "123456q!");
         RestAssuredFixture.post(logInRequest, "/login", HttpStatus.UNAUTHORIZED.value());
     }
 
@@ -157,11 +159,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인을 할 수 없다. - 등록된 정보와 다른 password")
     void signInUnauthorizedPasswordException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
         //when & then
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123578");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123578q!");
         RestAssuredFixture.post(logInRequest, "/login", HttpStatus.UNAUTHORIZED.value());
     }
 
@@ -170,11 +172,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인 할 수 없다 - email null 검증")
     void signInBlankEmailException(String email) {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
         //when & then
-        LogInRequest logInRequest = new LogInRequest(email, "123456");
+        LogInRequest logInRequest = new LogInRequest(email, "123456q!");
         RestAssuredFixture.post(logInRequest, "/login", HttpStatus.BAD_REQUEST.value());
     }
 
@@ -182,11 +184,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인을 할 수 없다. - email에 한글을 입력한 경우")
     void signInEmailException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
         //when & then
-        LogInRequest logInRequest = new LogInRequest("레넌@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("레넌@woowa.com", "123456q!");
         RestAssuredFixture.post(logInRequest, "/login", HttpStatus.UNAUTHORIZED.value());
     }
 
@@ -194,11 +196,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인을 할 수 없다. - email 형식이 맞지 않는 경우")
     void signInWrongFormatEmailException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
         //when & then
-        LogInRequest logInRequest = new LogInRequest("rennonwoowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennonwoowa.com", "123456q!");
         RestAssuredFixture.post(logInRequest, "/login", HttpStatus.BAD_REQUEST.value());
     }
 
@@ -206,10 +208,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMe() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
@@ -222,7 +224,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void getMeException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
         //when & then
@@ -233,14 +235,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
-        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("123456", "125678");
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("123456q!", "125678");
         RestAssuredFixture.patch(updatePasswordRequest, token, "/users/me", HttpStatus.OK.value());
     }
 
@@ -248,11 +250,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMeThrowException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
         //when & then
-        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("123456", "125678");
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("123456q!", "125678");
         RestAssuredFixture.patch(updatePasswordRequest, "", "/users/me", HttpStatus.UNAUTHORIZED.value());
     }
 
@@ -260,14 +262,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("123456");
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("123456q!");
         RestAssuredFixture.delete(deleteCustomerRequest, token, "/users/me", HttpStatus.NO_CONTENT.value());
     }
 
@@ -275,10 +277,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteInValidPasswordException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
-        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456");
+        LogInRequest logInRequest = new LogInRequest("rennon@woowa.com", "123456q!");
         String token = RestAssuredFixture.getSignInResponse(logInRequest, "/login").getToken();
 
         //when & then
@@ -290,11 +292,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMeThrowException() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456q!");
         RestAssuredFixture.post(signUpRequest, "users", HttpStatus.CREATED.value());
 
         //when & then
-        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("123456");
+        DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("123456q!");
         RestAssuredFixture.delete(deleteCustomerRequest, "", "/users/me", HttpStatus.UNAUTHORIZED.value());
     }
 }
