@@ -25,6 +25,14 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("주문하기 - 토큰 없이 접근한 경우 401 Unauthorized가 반환된다.")
+    @Test
+    void addOrderWithoutToken() {
+        OrderRequest request = new OrderRequest(1L, 1);
+        postRequestWithoutToken(List.of(request), URI)
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
     @DisplayName("주문하기 - 잘못된 입력의 경우 400 Bad Request가 반환된다.")
     @Test
     void addBad() {
@@ -36,10 +44,19 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회 - 성공한 경우 200 ok가 반환된다.")
     @Test
     void getOrders() {
-        postRequestWithoutToken(List.of(new OrderRequest(1L, 1)), URI);
+        postRequestWithToken(token(), List.of(new OrderRequest(1L, 1)), URI);
 
         getRequestWithToken(token(), URI)
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("주문 내역 조회 - 토큰 없이 접근한 경우 401 Unauthorized가 반환된다.")
+    @Test
+    void getOrdersWithoutToken() {
+        postRequestWithToken(token(), List.of(new OrderRequest(1L, 1)), URI);
+
+        getRequestWithoutToken(URI)
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("주문 단일 조회 - 성공한 경우 200 ok가 반환된다.")
@@ -49,6 +66,15 @@ public class OrderAcceptanceTest extends AcceptanceTest {
 
         getRequestWithToken(token(), URI + "/1")
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("주문 딘일 조회 - 토큰 없이 접근한 경우 401 Unauthorized가 반환된다.")
+    @Test
+    void getOrderWithoutToken() {
+        postRequestWithToken(token(), List.of(new OrderRequest(1L, 1)), URI);
+
+        getRequestWithoutToken(URI + "/1")
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("주문 단일 조회 - 잘못된 입력의 경우 400 Bad Request가 반환된다.")

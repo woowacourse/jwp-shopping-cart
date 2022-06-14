@@ -36,8 +36,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBind() {
-        return new ErrorResponse("바인딩에 실패했습니다.");
+    public ErrorResponse handleBind(BindException e) {
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler({
