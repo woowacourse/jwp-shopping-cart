@@ -35,4 +35,8 @@ public class Product {
     public Long getId() {
         return id;
     }
+
+    public boolean matchId(Long id) {
+        return this.id.equals(id);
+    }
 }

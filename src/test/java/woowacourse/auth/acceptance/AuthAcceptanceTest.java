@@ -1,21 +1,19 @@
 package woowacourse.auth.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -99,16 +97,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private ExtractableResponse<Response> createCustomer(CustomerCreateRequest customerCreateRequest) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerCreateRequest)
-                .when()
-                .post("/api/customers")
-                .then()
-                .extract();
-    }
-
     @DisplayName("Bearer Auth 로그인 실패")
     @Test
     void myInfoWithBadBearerAuth() {
@@ -138,15 +126,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo("비밀번호가 일치하지 않습니다.")
         );
-    }
-
-    @DisplayName("Bearer Auth 유효하지 않은 토큰")
-    @Test
-    void myInfoWithWrongBearerAuth() {
-        // when
-        // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
-
-        // then
-        // 내 정보 조회 요청이 거부된다
     }
 }

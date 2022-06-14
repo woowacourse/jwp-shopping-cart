@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +20,15 @@ import java.util.List;
 @RestControllerAdvice
 public class ControllerAdvice {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+    public ResponseEntity<ErrorResponse> handleUnhandledException(RuntimeException exception) {
         return ResponseEntity.badRequest().body(new ErrorResponse("Unhandled Exception"));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<ErrorResponse> handle() {
+    public ResponseEntity<ErrorResponse> handle(EmptyResultDataAccessException exception) {
         return ResponseEntity.badRequest().body(new ErrorResponse("존재하지 않는 데이터 요청입니다."));
     }
 

@@ -5,7 +5,6 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.LoginCustomer;
 
 @Service
 public class AuthService {
@@ -31,9 +30,8 @@ public class AuthService {
         }
     }
 
-    public LoginCustomer findLoginCustomer(String email) {
-        Customer customer = customerDao.findIdByEmail(email)
+    public Customer findLoginCustomer(String email) {
+        return customerDao.findIdByEmail(email)
           .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        return LoginCustomer.from(customer);
     }
 }

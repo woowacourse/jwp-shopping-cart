@@ -20,12 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
+    private final String email = "beomWhale@naver.com";
+    private final String nickname = "beomWhale";
+    private final String password = "Password1234!";
 
     @DisplayName("이메일, 패스워드, 닉네임을 입력 받아 회원가입을 한다.")
     @Test
     void addCustomer() {
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-            "beomWhale1@naver.com", "범고래1", "Password12345!");
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, nickname, password);
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -41,15 +43,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("이메일, 패스워드, 닉네임을 입력 받아 회원가입을 한다.")
+    @DisplayName("중복된 이메일로 회원가입을 할 경우, 예외가 발생한다.")
     @Test
     void throwExceptionWhenDuplicateEmail() {
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-            "beomWhale1@naver.com", "범고래1", "Password12345!");
-
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, nickname, password);
         createCustomer(customerCreateRequest);
+
         CustomerCreateRequest duplicationEmailCreateRequest = new CustomerCreateRequest(
-            "beomWhale1@naver.com", "범고래2", "Password123456!");
+            email, "범고래2", "Password123456!");
         ExtractableResponse<Response> response = createCustomer(duplicationEmailCreateRequest);
 
         assertAll(
@@ -61,11 +62,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("닉네임이 중복될 경우, 예외 응답을 반환한다.")
     @Test
     void duplicateCustomerNickname() {
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-            "beomWhale2@naver.com", "범고래2", "Password12345!");
+        CustomerCreateRequest customerCreateRequest1 = new CustomerCreateRequest(email, nickname, password);
+        createCustomer(customerCreateRequest1);
 
-        createCustomer(customerCreateRequest);
-        ExtractableResponse<Response> response = createCustomer(customerCreateRequest);
+        CustomerCreateRequest customerCreateRequest2 = new CustomerCreateRequest("beomWhale2@naver.com", nickname, "Password1231!");
+        ExtractableResponse<Response> response = createCustomer(customerCreateRequest2);
 
         assertAll(
             () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -78,14 +79,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given: 회원 가입이 되어있다.
-        String email = "beomWhale1@naver.com";
-        String password = "Password12345!";
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-            email, "범고래1", password);
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, nickname, password);
         createCustomer(customerCreateRequest);
 
         TokenRequest tokenRequest = new TokenRequest(email, password);
-
         String token = createToken(email, password);
 
         // when
@@ -126,13 +123,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void changePassword() {
         // given: 회원 가입이 되어있다.
-        String email = "beomWhale1@naver.com";
-        String password = "Password12345!";
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-            email, "범고래1", password);
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, nickname, password);
         createCustomer(customerCreateRequest);
 
-        String token = createToken(email, password);
+        String token = login(customerCreateRequest);
 
         // when
         String newPassword = "Password123456!";
@@ -165,13 +159,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void changeNickname() {
         // given: 회원 가입이 되어있다.
-        String email = "beomWhale1@naver.com";
-        String password = "Password12345!";
-        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
-            email, "범고래1", password);
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, nickname, password);
         createCustomer(customerCreateRequest);
 
-        String token = createToken(email, password);
+        String token = login(customerCreateRequest);
 
         // when
         String newNickname = "changed";
@@ -204,18 +195,15 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void throwExceptionWhenDuplicateNickname() {
         // given
-        String nickname = "범고래1";
-        createCustomer(
-            new CustomerCreateRequest("beomWhale1@naver.com", nickname, "Password12345!"));
+        CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, nickname, password);
+        createCustomer(customerCreateRequest);
+        String token = login(customerCreateRequest);
 
-        String email = "beomWhale2@naver.com";
-        String password = "Password12345!";
-        createCustomer(new CustomerCreateRequest(email, "범고래2", password));
-
-        String token = createToken(email, password);
+        String duplicateNickname = "duplicate";
+        createCustomer(new CustomerCreateRequest("beomWhale2@naver.com", duplicateNickname, "Password12345!"));
 
         // when
-        ChangeCustomerRequest changeCustomerRequest = new ChangeCustomerRequest(nickname);
+        ChangeCustomerRequest changeCustomerRequest = new ChangeCustomerRequest(duplicateNickname);
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
             .auth().oauth2(token)
@@ -232,16 +220,5 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             () -> assertThat(response.body().jsonPath().getString("message")).isEqualTo(
                 "이미 존재하는 닉네임입니다.")
         );
-    }
-
-    private ExtractableResponse<Response> createCustomer(
-        CustomerCreateRequest customerCreateRequest) {
-        return RestAssured.given()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(customerCreateRequest)
-            .when()
-            .post("/api/customers")
-            .then()
-            .extract();
     }
 }

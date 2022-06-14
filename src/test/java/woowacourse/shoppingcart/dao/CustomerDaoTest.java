@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -18,7 +17,7 @@ import java.util.Optional;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema-test.sql", "classpath:data-test.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
 
@@ -47,21 +46,6 @@ public class CustomerDaoTest {
 
         // given
         final String nickname = "test4";
-        customerDao.save(new Customer("test4@naver.com", "test4", "Password123!"));
-
-        // when
-        final Long customerId = customerDao.findIdByNickname(nickname);
-
-        // then
-        assertThat(customerId).isNotNull();
-    }
-
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
-        // given
-        final String nickname = "Test4";
         customerDao.save(new Customer("test4@naver.com", "test4", "Password123!"));
 
         // when
