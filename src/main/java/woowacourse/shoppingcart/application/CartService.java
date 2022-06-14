@@ -1,68 +1,89 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dao.AccountDao;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Account;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-
-import java.util.ArrayList;
-import java.util.List;
+import woowacourse.shoppingcart.exception.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.InvalidAccountException;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
+    private final AccountDao accountDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final AccountDao accountDao,
+                       final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
+        this.accountDao = accountDao;
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    @Transactional
+    public Long addProduct(String email, long productId) {
+        Account account = accountDao.findByEmail(email)
+            .orElseThrow(InvalidAccountException::new);
+        Product product = productDao.findProductById(productId)
+            .orElseThrow(NotFoundProductException::new);
 
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+        if (cartItemDao.existByAccountIdAndProductId(account.getId(), product.getId())) {
+            throw new DuplicateCartItemException();
         }
-        return carts;
+
+        return cartItemDao.save(new CartItem(product, 1, account.getId()));
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+    public List<CartItem> findCartsByEmail(String email) {
+        Account account = accountDao.findByEmail(email)
+            .orElseThrow(InvalidAccountException::new);
+        return cartItemDao.findByAccountId(account.getId());
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
+    public CartItem findCartByEmailAndProductId(String email, long productId) {
+        Account account = accountDao.findByEmail(email)
+            .orElseThrow(InvalidAccountException::new);
+        Product product = productDao.findProductById(productId)
+            .orElseThrow(NotFoundProductException::new);
+
+        return cartItemDao.findByAccountIdAndProductId(account.getId(), product.getId())
+            .orElseThrow(InvalidCartItemException::new);
+    }
+
+    @Transactional
+    public void deleteProduct(String email, long productId) {
+        Account account = accountDao.findByEmail(email)
+            .orElseThrow(InvalidAccountException::new);
+        Product product = productDao.findProductById(productId)
+            .orElseThrow(NotFoundProductException::new);
+
+        if (!cartItemDao.existByAccountIdAndProductId(account.getId(), product.getId())) {
+            throw new InvalidCartItemException();
         }
+
+        cartItemDao.deleteCartItem(account.getId(), product.getId());
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
-    }
+    @Transactional
+    public void updateProduct(String email, long productId, int quantity) {
+        Account account = accountDao.findByEmail(email)
+            .orElseThrow(InvalidAccountException::new);
+        Product product = productDao.findProductById(productId)
+            .orElseThrow(NotFoundProductException::new);
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
+        if (!cartItemDao.existByAccountIdAndProductId(account.getId(), product.getId())) {
+            throw new InvalidCartItemException();
         }
-        throw new NotInCustomerCartItemException();
+
+        cartItemDao.updateCartItem(account.getId(), product.getId(), quantity);
     }
 }

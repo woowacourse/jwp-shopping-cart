@@ -1,11 +1,11 @@
 package woowacourse.shoppingcart.exception;
 
-public class InvalidCartItemException extends RuntimeException {
-    public InvalidCartItemException() {
-        this("유효하지 않은 장바구니입니다.");
-    }
+public class InvalidCartItemException extends BadRequestException {
 
-    public InvalidCartItemException(final String msg) {
-        super(msg);
+    private static final String MESSAGE = "장바구니에 상품이 존재하지 않습니다.";
+    private static final int ERROR_CODE = 1102;
+
+    public InvalidCartItemException() {
+        super(ERROR_CODE, MESSAGE);
     }
 }

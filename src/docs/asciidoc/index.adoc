@@ -1,0 +1,188 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+= 장바구니 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 회원 관리
+[[create-me]]
+=== 회원가입
+
+==== HTTP 요청
+include::{snippets}/create-me/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/create-me/http-response.adoc[]
+
+==== 요청 필드
+include::{snippets}/create-me/request-fields.adoc[]
+
+[[login]]
+=== 토큰 요청
+
+==== HTTP 요청
+include::{snippets}/login/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/login/http-response.adoc[]
+
+==== 요청 필드
+include::{snippets}/login/request-fields.adoc[]
+
+==== 응답 필드
+include::{snippets}/login/response-fields.adoc[]
+
+[[query-me]]
+=== 회원정보 요청
+
+==== HTTP 요청
+include::{snippets}/query-me/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/query-me/http-response.adoc[]
+
+==== 응답 필드
+include::{snippets}/query-me/response-fields.adoc[]
+
+[[update-me]]
+=== 회원정보 수정
+
+==== HTTP 요청
+include::{snippets}/update-me/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/update-me/http-response.adoc[]
+
+==== 요청 헤더
+include::{snippets}/update-me/request-headers.adoc[]
+
+==== 요청 필드
+include::{snippets}/update-me/request-fields.adoc[]
+
+[[delete-me]]
+=== 회원 탈퇴
+
+==== HTTP 요청
+include::{snippets}/delete-me/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/delete-me/http-response.adoc[]
+
+==== 요청 헤더
+include::{snippets}/delete-me/request-headers.adoc[]
+
+== 상품
+
+[[query-products]]
+=== 상품 목록 조회
+
+==== HTTP 요청
+include::{snippets}/query-products/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/query-products/http-response.adoc[]
+
+==== 응답 필드
+include::{snippets}/query-products/response-fields.adoc[]
+
+[[query-product]]
+=== 상품 조회
+
+==== HTTP 요청
+include::{snippets}/query-product/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/query-product/http-response.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/query-product/path-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/query-product/response-fields.adoc[]
+
+[[create-product]]
+=== 상품 추가
+
+==== HTTP 요청
+include::{snippets}/create-product/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/create-product/http-response.adoc[]
+
+==== 요청 헤더
+include::{snippets}/create-product/request-headers.adoc[]
+
+==== 요청 필드
+include::{snippets}/create-product/request-fields.adoc[]
+
+==== 응답 필드
+include::{snippets}/create-product/response-fields.adoc[]
+
+== 장바구니
+
+[[create-cart-item]]
+=== 장바구니 상품 추가
+==== HTTP 요청
+include::{snippets}/create-cart-item/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/create-cart-item/http-response.adoc[]
+
+==== 요청 필드
+include::{snippets}/create-cart-item/request-fields.adoc[]
+
+==== 요청 헤더
+include::{snippets}/create-cart-item/request-headers.adoc[]
+
+[[delete-cart-item]]
+=== 장바구니 상품 삭제
+==== HTTP 요청
+include::{snippets}/delete-cart-item/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/delete-cart-item/http-response.adoc[]
+
+==== 요청 헤더
+include::{snippets}/delete-cart-item/request-headers.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/delete-cart-item/path-parameters.adoc[]
+
+[[update-cart-item]]
+=== 장바구니 상품 수정
+==== HTTP 요청
+include::{snippets}/update-cart-item/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/update-cart-item/http-response.adoc[]
+
+==== 요청 헤더
+include::{snippets}/update-cart-item/request-headers.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/update-cart-item/path-parameters.adoc[]
+
+==== 요청 필드
+include::{snippets}/update-cart-item/request-fields.adoc[]
+
+==== 응답 필드
+include::{snippets}/update-cart-item/response-fields.adoc[]
+
+=== 장바구니 목록 조회
+==== HTTP 요청
+include::{snippets}/query-cart-item/http-request.adoc[]
+
+==== HTTP 응답
+include::{snippets}/query-cart-item/http-response.adoc[]
+
+==== 요청 헤더
+include::{snippets}/query-cart-item/request-headers.adoc[]
+
+==== 응답 필드
+include::{snippets}/query-cart-item/response-fields.adoc[]

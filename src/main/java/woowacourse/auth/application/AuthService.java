@@ -1,35 +1,36 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.exception.InvalidLoginFormException;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.auth.support.PasswordEncoder;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.dao.AccountDao;
+import woowacourse.shoppingcart.domain.Account;
+import woowacourse.shoppingcart.exception.InvalidAccountException;
 
 @Service
+@Transactional(readOnly = true)
 public class AuthService {
 
-    private final CustomerDao customerDao;
+    private final AccountDao accountDao;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
-        this.customerDao = customerDao;
+    public AuthService(AccountDao accountDao, JwtTokenProvider jwtTokenProvider) {
+        this.accountDao = accountDao;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public String createToken(TokenRequest tokenRequest) {
-        Customer customer = customerDao.findByEmail(tokenRequest.getEmail())
-                .orElseThrow(InvalidCustomerException::new);
+        Account account = accountDao.findByEmail(tokenRequest.getEmail())
+            .orElseThrow(InvalidAccountException::new);
 
         String encryptPassword = PasswordEncoder.encrypt(tokenRequest.getPassword());
-        if (!customer.isValidPassword(encryptPassword)) {
+        if (!account.isValidPassword(encryptPassword)) {
             throw new InvalidLoginFormException();
         }
 
         return jwtTokenProvider.createToken(tokenRequest.getEmail());
     }
-
 }

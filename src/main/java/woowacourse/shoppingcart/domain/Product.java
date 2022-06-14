@@ -1,13 +1,13 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Objects;
+
 public class Product {
+
     private Long id;
     private String name;
     private Integer price;
     private String imageUrl;
-
-    public Product() {
-    }
 
     public Product(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;

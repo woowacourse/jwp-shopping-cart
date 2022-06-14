@@ -1,19 +1,31 @@
 package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.blankString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 @DisplayName("인증 관련 기능")
@@ -70,22 +82,34 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         );
     }
 
-
     @DisplayName("정상 케이스일 때 토큰과 함께 200을 응답")
     @Test
     void validCustomerLoginRequest() {
-        String email = "email@email.com";
-        String password = "12345678a";
-        String nickname = "tonic";
+        회원가입_요청("email@email.com", "12345678a", "tonic");
 
-        회원가입_요청(email, password, nickname);
-
-        ExtractableResponse<Response> response = 로그인_요청(email, password);
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getString("accessToken")).isNotBlank()
-        );
+        RestAssured
+            .given(spec).log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(Map.of("email", "email@email.com", "password", "12345678a"))
+            .filter(document("login",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Content-Type").description("컨텐츠 타입")
+                ),
+                requestFields(
+                    fieldWithPath("email").description("사용자 이메일"),
+                    fieldWithPath("password").description("사용자 비밀번호")
+                ),
+                responseFields(
+                    fieldWithPath("accessToken").description("사용자 JWT 토큰")
+                )
+            ))
+            .when().log().all()
+            .post("/login")
+            .then().log().all()
+            .assertThat().statusCode(HttpStatus.OK.value())
+            .assertThat().body("accessToken", not(blankString()));
     }
 
     @DisplayName("토큰이 없이 회원 정보를 조회하는 경우 401 반환")

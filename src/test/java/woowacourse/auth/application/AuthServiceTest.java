@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.exception.InvalidLoginFormException;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.application.AccountService;
 import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.InvalidAccountException;
 
 @SpringBootTest
 @Transactional
@@ -29,7 +29,7 @@ public class AuthServiceTest {
     private AuthService authService;
 
     @Autowired
-    private CustomerService customerService;
+    private AccountService accountService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -37,7 +37,7 @@ public class AuthServiceTest {
     @BeforeEach
     void setUp() {
         SignUpRequest signUpRequest = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
-        customerService.registerCustomer(signUpRequest);
+        accountService.saveAccount(signUpRequest);
     }
 
     @DisplayName("존재하지 않는 로그인 정보일 경우에 예외를 발생")
@@ -46,7 +46,7 @@ public class AuthServiceTest {
         String notFoundEmail = "notFoundEmail@email.com";
         assertThatThrownBy(() ->
                 authService.createToken(new TokenRequest(notFoundEmail, PASSWORD))
-        ).isInstanceOf(InvalidCustomerException.class);
+        ).isInstanceOf(InvalidAccountException.class);
     }
 
     @DisplayName("존재하는 로그인 정보일 경우 토큰 반환")
