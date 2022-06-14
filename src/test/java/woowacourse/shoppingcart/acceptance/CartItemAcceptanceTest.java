@@ -160,12 +160,12 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public ExtractableResponse<Response> 장바구니_아이템_삭제_요청_토큰(String token, Long cartId) {
+    public ExtractableResponse<Response> 장바구니_아이템_삭제_요청_토큰(String token, Long cartItemId) {
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().oauth2(token)
-            .when().delete("/api/cartItems/{cartId}", cartId)
+            .when().delete("/api/cartItems/{cartItemId}", cartItemId)
             .then().log().all()
             .extract();
     }

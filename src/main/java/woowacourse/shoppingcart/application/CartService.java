@@ -41,7 +41,7 @@ public class CartService {
         return new CartItemsResponse(cartItemResponses);
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
+    private List<Long> findCartItemIdsByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         return cartItemDao.findIdsByCustomerId(customerId);
     }
@@ -91,16 +91,16 @@ public class CartService {
         }
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
+    private void validateCustomerCart(final Long cartItemId, final String customerName) {
+        final List<Long> cartItemIds = findCartItemIdsByCustomerName(customerName);
+        if (cartItemIds.contains(cartItemId)) {
             return;
         }
         throw new NotInCustomerCartItemException();
     }
 
-    public void updateQuantity(final Long cartId, final int quantity) {
-        CartItem cartItem = cartItemDao.findById(cartId);
+    public void updateQuantity(final Long cartItemId, final int quantity) {
+        CartItem cartItem = cartItemDao.findById(cartItemId);
         Product product = productDao.findProductById(cartItem.getProductId());
 
         product.addQuantity(cartItem.getQuantity() - quantity);
