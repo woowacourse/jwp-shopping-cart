@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
 public class CustomerLoginRequest {
+
     private String userId;
     private String password;
 

@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.ExceptionRequest;
 import woowacourse.shoppingcart.dto.PasswordChangeRequest;
 
 public class AcceptanceFixtures {
@@ -100,6 +101,6 @@ public class AcceptanceFixtures {
     }
 
     public static void 예외메세지_검증(final ExtractableResponse<Response> response, final String message) {
-        assertThat(response.body().asString()).isEqualTo(message);
+        assertThat(response.body().as(ExceptionRequest.class).getMessage()).isEqualTo(message);
     }
 }

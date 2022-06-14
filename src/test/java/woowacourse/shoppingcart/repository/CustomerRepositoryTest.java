@@ -11,11 +11,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.PasswordChangeRequest;
+import woowacourse.shoppingcart.dto.TokenRequest;
 import woowacourse.shoppingcart.exception.ResourceNotFoundException;
+import woowacourse.shoppingcart.repository.dao.CartItemDao;
 import woowacourse.shoppingcart.repository.dao.CustomerDao;
 
 
@@ -28,7 +29,10 @@ class CustomerRepositoryTest {
 
     @Autowired
     public CustomerRepositoryTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.customerRepository = new CustomerRepository(new CustomerDao(namedParameterJdbcTemplate));
+        this.customerRepository = new CustomerRepository(
+                new CustomerDao(namedParameterJdbcTemplate),
+                new CartItemDao(namedParameterJdbcTemplate)
+        );
     }
 
     @DisplayName("customer 를 DB에 저장하고 아이디로 customer 를 찾는다.")
@@ -38,10 +42,10 @@ class CustomerRepositoryTest {
         Customer customer = Customer.ofNullId("jo@naver.com", "abcde123!", "jojogreen");
 
         // when
-        Long id = customerRepository.create(customer);
+        Long id = customerRepository.insert(customer);
 
         // then
-        Customer createdCustomer = customerRepository.findById(id);
+        Customer createdCustomer = customerRepository.selectById(id);
         assertThat(createdCustomer)
                 .usingRecursiveComparison()
                 .ignoringFields("id")
@@ -53,10 +57,10 @@ class CustomerRepositoryTest {
     void login() {
         // given
         Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
-        customerRepository.create(customer);
+        customerRepository.insert(customer);
 
         // when
-        Customer loginCustomerResult = customerRepository.login("jo@naver.com", "1234abcd!");
+        Customer loginCustomerResult = customerRepository.selectByUsernameAndPassword("jo@naver.com", "1234abcd!");
 
         // then
         assertThat(loginCustomerResult)
@@ -70,14 +74,14 @@ class CustomerRepositoryTest {
     void update() {
         // given
         Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
-        Long id = customerRepository.create(customer);
+        Long id = customerRepository.insert(customer);
         Customer newCustomer = new Customer(id, "jo@naver.com", "1234abcd!", "hunch");
 
         // when
         customerRepository.update(newCustomer);
 
         // then
-        assertThat(customerRepository.findById(id))
+        assertThat(customerRepository.selectById(id))
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(newCustomer);
@@ -88,7 +92,7 @@ class CustomerRepositoryTest {
     void updatePassword() {
         // given
         Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
-        Long id = customerRepository.create(customer);
+        Long id = customerRepository.insert(customer);
         PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest("1234abcd!", "1234abcd@");
         Password oldPassword = new Password(passwordChangeRequest.getOldPassword());
         Password newPassword = new Password(passwordChangeRequest.getNewPassword());
@@ -97,7 +101,7 @@ class CustomerRepositoryTest {
         customerRepository.updatePassword(id, oldPassword, newPassword);
 
         // then
-        assertThat(customerRepository.findById(id).getPassword())
+        assertThat(customerRepository.selectById(id).getPassword())
                 .isEqualTo(newPassword.getPassword());
     }
 
@@ -106,14 +110,14 @@ class CustomerRepositoryTest {
     void delete() {
         // given
         Customer customer = Customer.ofNullId("jo@naver.com", "1234abcd!", "jojogreen");
-        Long id = customerRepository.create(customer);
+        Long id = customerRepository.insert(customer);
         TokenRequest tokenRequest = new TokenRequest(id);
 
         // when
         customerRepository.delete(tokenRequest.getId());
 
         // then
-        assertThatThrownBy(() -> customerRepository.findById(id))
+        assertThatThrownBy(() -> customerRepository.selectById(id))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }

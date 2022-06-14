@@ -15,12 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerLoginRequest;
@@ -29,9 +28,10 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.PasswordChangeRequest;
+import woowacourse.shoppingcart.dto.TokenRequest;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(CustomerController.class)
+@Import(JwtTokenProvider.class)
 class CustomerControllerTest {
 
     @Autowired
@@ -46,8 +46,8 @@ class CustomerControllerTest {
     @MockBean
     private CustomerService customerService;
 
-    @Test
     @DisplayName("회원 가입을 한다.")
+    @Test
     void signUp() throws Exception {
         // given
         CustomerRequest request = new CustomerRequest("jo@naver.com", "jojogreen", "1234");
@@ -67,8 +67,8 @@ class CustomerControllerTest {
                 .andExpect(header().string("Location", "/customers/1"));
     }
 
-    @Test
     @DisplayName("로그인을 한다.")
+    @Test
     void login() throws Exception {
         // given
         CustomerLoginRequest request = new CustomerLoginRequest("jiwoo@naver.com", "1234");
@@ -90,8 +90,8 @@ class CustomerControllerTest {
                 .andExpect(jsonPath("nickname").value("hunch"));
     }
 
-    @Test
     @DisplayName("내 정보를 조회한다.")
+    @Test
     void getProfile() throws Exception {
         // given
         TokenRequest request = new TokenRequest(1L);
@@ -111,8 +111,8 @@ class CustomerControllerTest {
                 .andExpect(jsonPath("nickname").value("jojogreen"));
     }
 
-    @Test
     @DisplayName("내 정보를 수정한다.")
+    @Test
     void updateProfile() throws Exception {
         // given
         TokenRequest tokenRequest = new TokenRequest(1L);
@@ -129,8 +129,8 @@ class CustomerControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
     @DisplayName("비밀번호를 변경한다.")
+    @Test
     void updatePassword() throws Exception {
         // given
         TokenRequest tokenRequest = new TokenRequest(1L);
@@ -147,8 +147,8 @@ class CustomerControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
     @DisplayName("회원 탈퇴한다.")
+    @Test
     void withdraw() throws Exception {
         // given
         TokenRequest tokenRequest = new TokenRequest(1L);

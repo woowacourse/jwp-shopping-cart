@@ -1,33 +1,30 @@
 package woowacourse.shoppingcart.application;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.repository.dao.ProductDao;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.repository.ProductRepository;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ProductService {
-    private final ProductDao productDao;
 
-    public ProductService(final ProductDao productDao) {
-        this.productDao = productDao;
+    private final ProductRepository productRepository;
+
+    public ProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public ProductResponse findById(final Long productId) {
+        Product product = productRepository.selectById(productId);
+        return ProductResponse.of(product);
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
-    }
-
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
-    }
-
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+    public List<ProductResponse> findProductsOfPage(final int page, final int limit) {
+        List<Product> productsOfPage = productRepository.selectProductsOfPage(page, limit);
+        return productsOfPage.stream().map(ProductResponse::of).collect(Collectors.toList());
     }
 }

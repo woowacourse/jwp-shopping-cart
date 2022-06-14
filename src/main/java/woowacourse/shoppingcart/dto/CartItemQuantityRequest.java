@@ -1,14 +1,14 @@
 package woowacourse.shoppingcart.dto;
 
-public class OrderRequest {
+public class CartItemQuantityRequest {
 
     private Long id;
     private int quantity;
 
-    public OrderRequest() {
+    public CartItemQuantityRequest() {
     }
 
-    public OrderRequest(final Long id, final int quantity) {
+    public CartItemQuantityRequest(final Long id, final int quantity) {
         this.id = id;
         this.quantity = quantity;
     }
