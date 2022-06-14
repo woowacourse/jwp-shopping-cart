@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import woowacourse.shoppingcart.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.auth.dto.LoginResponse;
 import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
+import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
 import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.support.AuthorizationExtractor;
 
@@ -83,6 +84,18 @@ public abstract class AcceptanceTest {
                 .body(request)
                 .when()
                 .post("/users/me/cartItems")
+                .then().log().all();
+    }
+
+    protected ValidatableResponse putCartItemQuantity(final Long productId, final QuantityChangingRequest request) {
+        return RestAssured
+                .given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .put("/users/me/cartItems/{productId}", productId)
                 .then().log().all();
     }
 }

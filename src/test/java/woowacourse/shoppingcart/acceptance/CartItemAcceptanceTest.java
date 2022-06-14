@@ -62,15 +62,7 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         final QuantityChangingRequest request = new QuantityChangingRequest(quantity);
 
         // when
-        final ValidatableResponse response = RestAssured
-                .given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .put(REQUEST_URL + "/{productId}", productId)
-                .then().log().all();
+        final ValidatableResponse response = putCartItemQuantity(productId, request);
 
         // then
         response.statusCode(HttpStatus.OK.value())
