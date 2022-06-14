@@ -15,6 +15,10 @@ public class Cart {
         this.quantity = quantity;
     }
 
+    public Cart(final long customerId, final Product product, final int quantity) {
+        this(null, customerId, product, quantity);
+    }
+
     public boolean isSameProductId(final long productId) {
         return product.isSameId(productId);
     }
