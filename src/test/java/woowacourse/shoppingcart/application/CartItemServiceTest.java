@@ -65,7 +65,7 @@ class CartItemServiceTest {
     }
 
     @Test
-    @DisplayName("장바구니 수량을 수정하는 기능")
+    @DisplayName("장바구니 수량을 하나 추가하는 기능")
     void updateCartItem() {
         // given
         final CartItem rice = new CartItem(1L, 1L, "밥", 1000, "www.naver.com", 1);
