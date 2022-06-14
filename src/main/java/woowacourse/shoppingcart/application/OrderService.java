@@ -2,20 +2,24 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.application.dto.request.CartItemRequest;
+import woowacourse.shoppingcart.application.dto.request.CustomerIdentificationRequest;
 import woowacourse.shoppingcart.dao.*;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.application.dto.request.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.dataformat.QuantityDataFormatException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class OrderService {
+
+    private static final int MINIMUM_QUANTITY = 1;
 
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
@@ -32,20 +36,9 @@ public class OrderService {
         this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
-
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
-
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
-        }
-
-        return ordersId;
+    @Transactional
+    public void addOrder(final CustomerIdentificationRequest customerIdentificationRequest, final CartItemRequest cartItemRequest) {
+        validateQuantity(cartItemRequest.getQuantity());
     }
 
     public Orders findOrderById(final String customerName, final Long orderId) {
@@ -73,11 +66,17 @@ public class OrderService {
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
+            final Product product = productDao.findById(productQuantity.getProductId()).get();
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }
 
         return new Orders(orderId, ordersDetails);
+    }
+
+    private void validateQuantity(final int quantity) {
+        if (quantity < MINIMUM_QUANTITY) {
+            throw new QuantityDataFormatException("수량은 1 이상이어야 합니다.");
+        }
     }
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Product;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,10 +17,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.fixture.AuthFixture.login;
+import static woowacourse.fixture.ProductFixture.addProduct;
+import static woowacourse.fixture.ProductFixture.findProductById;
+import static woowacourse.fixture.ProductFixture.getProductId;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static woowacourse.fixture.CartItemFixture.addCartItems;
 
 @DisplayName("장바구니 관련 기능 인수테스트")
 public class CartAcceptanceTest extends AcceptanceTest {
+
     private static final String USER = "puterism";
     private Long productId1;
     private Long productId2;
@@ -33,13 +40,23 @@ public class CartAcceptanceTest extends AcceptanceTest {
         productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
     }
 
-//    @DisplayName("장바구니 아이템 추가")
-//    @Test
-//    void addCartItem() {
-//        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
-//
-//        장바구니_아이템_추가됨(response);
-//    }
+    @DisplayName("장바구니에 상품을 등록한다.")
+    @Test
+    void addCartItem() {
+        // given
+        ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
+        String token = firstResponse.body().jsonPath().getString("accessToken");
+
+        Long productId1 = getProductId("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId2 = getProductId("치킨", 10_000, "http://example.com/chicken.jpg");
+        Long productId3 = getProductId("치킨", 10_000, "http://example.com/chicken.jpg");
+
+        // when
+        ExtractableResponse<Response> response = addCartItems(token, List.of(productId1, productId2, productId3));
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
 
 //    @DisplayName("장바구니 아이템 목록 조회")
 //    @Test

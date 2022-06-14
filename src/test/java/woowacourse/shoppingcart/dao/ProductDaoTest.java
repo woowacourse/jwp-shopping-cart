@@ -11,8 +11,10 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -27,68 +29,70 @@ public class ProductDaoTest {
         this.productDao = new ProductDao(jdbcTemplate);
     }
 
-    @DisplayName("Product를 저장하면, id를 반환한다.")
+    @DisplayName("상품을 저장한다.")
     @Test
     void save() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        Long productId = productDao.save(new Product("초콜렛", 1_000, "www.test.com"));
 
         // then
-        assertThat(productId).isEqualTo(1L);
+        Product product = productDao.findById(productId).get();
+
+        assertAll(
+                () -> assertThat(product.getId()).isEqualTo(productId),
+                () -> assertThat(product.getName()).isEqualTo("초콜렛"),
+                () -> assertThat(product.getPrice()).isEqualTo(1_000),
+                () -> assertThat(product.getImageUrl()).isEqualTo("www.test.com")
+        );
     }
 
-    @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
+    @DisplayName("productID 를 이용하여 상품을 조회한다.")
     @Test
-    void findProductById() {
+    void findById() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        Long productId = productDao.save(new Product("초콜렛", 1_000, "www.test.com"));
 
         // when
-        final Product product = productDao.findProductById(productId);
+        Product product = productDao.findById(productId).get();
 
         // then
-        assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
+        assertThat(product).usingRecursiveComparison().isEqualTo(
+                new Product(productId, "초콜렛", 1_000, "www.test.com")
+        );
     }
 
-    @DisplayName("상품 목록 조회")
+    @DisplayName("현재 페이지에 해당되는 상품 목록을 조회한다.")
     @Test
-    void getProducts() {
-
+    void findProductsInPage() {
         // given
-        final int size = 0;
+        productDao.save(new Product("초콜렛", 1_000, "www.test.com"));
+        productDao.save(new Product("초콜렛2", 1_000, "www.test2.com"));
+        productDao.save(new Product("초콜렛3", 1_000, "www.test3.com"));
+        productDao.save(new Product("초콜렛4", 1_000, "www.test4.com"));
 
         // when
-        final List<Product> products = productDao.findProducts();
+        List<Product> products = productDao.findProductsInPage(1L, 5L);
+        List<String> productNames = products.stream()
+                .map(Product::getName)
+                .collect(Collectors.toList());
 
         // then
-        assertThat(products).size().isEqualTo(size);
+        assertAll(
+                () -> assertThat(products).size().isEqualTo(4),
+                () -> assertThat(productNames).contains("초콜렛", "초콜렛2", "초콜렛3", "초콜렛4")
+        );
     }
 
-    @DisplayName("싱품 삭제")
+    @DisplayName("싱품을 삭제한다.")
     @Test
-    void deleteProduct() {
+    void delete() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final int beforeSize = productDao.findProducts().size();
+        Long productId = productDao.save(new Product("초콜렛", 1_000, "www.test.com"));
 
         // when
         productDao.delete(productId);
 
         // then
-        final int afterSize = productDao.findProducts().size();
-        assertThat(beforeSize - 1).isEqualTo(afterSize);
+        assertThat(productDao.findById(productId).isEmpty()).isTrue();
     }
 }
