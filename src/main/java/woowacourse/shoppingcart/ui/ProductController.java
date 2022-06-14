@@ -33,11 +33,9 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final Product product) {
         final Long productId = productService.addProduct(product);
-        final URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/" + productId)
-                .build().toUri();
-        return ResponseEntity.created(uri).build();
+
+        return ResponseEntity.created(
+                URI.create("api/products/"+productId)).build();
     }
 
     @GetMapping("/{productId}")
