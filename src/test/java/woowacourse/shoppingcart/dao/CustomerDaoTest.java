@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.support.PasswordEncoder;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.EncodedPassword;
+import woowacourse.shoppingcart.domain.customer.UnEncodedPassword;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 
 @JdbcTest
@@ -35,7 +37,9 @@ public class CustomerDaoTest {
     @Test
     void save() {
         // given
-        CustomerCreateRequest customer = new CustomerCreateRequest("roma@naver.com", "roma", "12345678");
+        EncodedPassword encodedPassword = passwordEncoder.encode(new UnEncodedPassword("12345678"));
+        CustomerCreateRequest customer = new CustomerCreateRequest("roma@naver.com", "roma",
+                encodedPassword.getValue());
 
         // when
         Long savedId = customerDao.save(customer);
@@ -78,7 +82,8 @@ public class CustomerDaoTest {
         Customer customer = customerDao.findById(1L).orElse(null);
 
         // then
-        String encodedPassword = passwordEncoder.encode("12349053145");
+        UnEncodedPassword unEncodedPassword = new UnEncodedPassword("12349053145");
+        EncodedPassword encodedPassword = passwordEncoder.encode(unEncodedPassword);
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", encodedPassword);
 
         assertThat(customer).usingRecursiveComparison()
@@ -92,7 +97,8 @@ public class CustomerDaoTest {
         Customer customer = customerDao.findByEmail("puterism@naver.com").orElse(null);
 
         // then
-        String encodedPassword = passwordEncoder.encode("12349053145");
+        UnEncodedPassword unEncodedPassword = new UnEncodedPassword("12349053145");
+        EncodedPassword encodedPassword = passwordEncoder.encode(unEncodedPassword);
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", encodedPassword);
 
         assertThat(customer).usingRecursiveComparison()
@@ -103,8 +109,10 @@ public class CustomerDaoTest {
     @Test
     void findByEmailAndPassword() {
         // when
-        String encodedPassword = passwordEncoder.encode("12349053145");
-        Customer customer = customerDao.findByEmailAndPassword("puterism@naver.com", encodedPassword).orElse(null);
+        UnEncodedPassword unEncodedPassword = new UnEncodedPassword("12349053145");
+        EncodedPassword encodedPassword = passwordEncoder.encode(unEncodedPassword);
+        Customer customer = customerDao.findByEmailAndPassword("puterism@naver.com", encodedPassword.getValue())
+                .orElse(null);
 
         // then
         Customer expected = new Customer(1L, "puterism@naver.com", "puterism", encodedPassword);
@@ -118,7 +126,9 @@ public class CustomerDaoTest {
     @Test
     void update() {
         // given
-        CustomerCreateRequest customer = new CustomerCreateRequest("roma@naver.com", "roma", "12345678");
+        EncodedPassword encodedPassword = passwordEncoder.encode(new UnEncodedPassword("12345678"));
+        CustomerCreateRequest customer = new CustomerCreateRequest("roma@naver.com", "roma",
+                encodedPassword.getValue());
 
         // when
         Long savedId = customerDao.save(customer);
@@ -126,6 +136,7 @@ public class CustomerDaoTest {
         Customer result = customerDao.findById(savedId).orElse(null);
 
         // then
+        assert result != null;
         assertThat(result.getUsername()).isEqualTo("philz");
     }
 

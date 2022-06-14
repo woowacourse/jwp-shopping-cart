@@ -10,7 +10,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.EncodedPassword;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -105,19 +106,19 @@ public class CustomerDao {
         );
     }
 
-    private RowMapper<Customer> rowMapper() {
-        return ((rs, rowNum) -> new Customer(
-                rs.getLong("id"),
-                rs.getString("email"),
-                rs.getString("username"),
-                rs.getString("password")
-        ));
-    }
-
     public void delete(Long id) {
         String sql = "delete from customer where id = :id";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
 
         jdbcTemplate.update(sql, namedParameters);
+    }
+
+    private RowMapper<Customer> rowMapper() {
+        return ((rs, rowNum) -> new Customer(
+                rs.getLong("id"),
+                rs.getString("email"),
+                rs.getString("username"),
+                new EncodedPassword(rs.getString("password"))
+        ));
     }
 }

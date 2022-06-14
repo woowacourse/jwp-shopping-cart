@@ -32,9 +32,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입")
     @Test
     void addCustomer() {
+        // when
         ExtractableResponse<Response> response = 회원가입_요청(
                 new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
 
+        // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
                 () -> assertThat(response.header("Location")).startsWith("/api/customers/")
@@ -44,11 +46,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입시 중복된 email로 가입하려는 경우 400 응답을 반환한다.")
     @Test
     void addCustomer_duplicated_email() {
+        // when
         ExtractableResponse<Response> response = 회원가입_요청(
                 new CustomerCreateRequest("puterism@naver.com", "roma", "12345678"));
 
         ErrorResponseWithField errorResponseWithField = response.as(ErrorResponseWithField.class);
 
+        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(errorResponseWithField).usingRecursiveComparison()
                 .isEqualTo(new ErrorResponseWithField("email", "이미 가입된 이메일입니다."));
@@ -57,11 +61,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입시 중복된 username으로 가입하려는 경우 400 응답을 반환한다.")
     @Test
     void addCustomer_duplicated_username() {
+        // when
         ExtractableResponse<Response> response = 회원가입_요청(
                 new CustomerCreateRequest("philz@naver.com", "puterism", "12345678"));
 
         ErrorResponseWithField errorResponseWithField = response.as(ErrorResponseWithField.class);
 
+        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(errorResponseWithField).usingRecursiveComparison()
                 .isEqualTo(new ErrorResponseWithField("username", "이미 가입된 닉네임입니다."));
@@ -117,16 +123,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 조회")
     @Test
     void findCustomer() {
+        // given
         ExtractableResponse<Response> createResponse = 회원가입_요청(
                 new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
         long savedId = ID_추출(createResponse);
 
+        // when
         String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
         ExtractableResponse<Response> response = 회원조회_요청(token, savedId);
 
         CustomerResponse customerResponse = response.as(CustomerResponse.class);
         CustomerResponse expected = new CustomerResponse(savedId, "roma@naver.com", "roma");
 
+        // then
         assertAll(
                 () -> assertThat(customerResponse).usingRecursiveComparison()
                         .isEqualTo(expected)
@@ -154,14 +163,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 수정")
     @Test
     void update() {
+        // given
         long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
-
         String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+
+        // when
         ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("sojukang"));
 
         CustomerResponse customerResponse = response.as(CustomerResponse.class);
         CustomerResponse expected = new CustomerResponse(savedId, "roma@naver.com", "sojukang");
 
+        // then
         assertAll(
                 () -> assertThat(customerResponse).usingRecursiveComparison()
                         .isEqualTo(expected)
@@ -171,24 +183,29 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 수정시 기존과 같은 username을 입력한 경우 200 OK를 응답한다.")
     @Test
     void update_same_origin_name() {
+        // given
         long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
-
         String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+
+        // when
         ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("roma"));
 
+        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     @DisplayName("내 정보 수정 시 중복된 username으로 변경하려는 경우 400 응답을 반환한다.")
     @Test
     void update_duplicated_username() {
+        // given
         long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
-
         String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
-        ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("yujo11"));
 
+        // when
+        ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("yujo11"));
         ErrorResponseWithField errorResponseWithField = response.as(ErrorResponseWithField.class);
 
+        // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(errorResponseWithField).usingRecursiveComparison()
@@ -233,33 +250,44 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원탈퇴")
     @Test
     void delete() {
+        // given
         long savedId = 회원가입_요청_및_ID_추출(
                 new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
         String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
 
+        // when
         ExtractableResponse<Response> response = 회원탈퇴_요청(token, savedId, new PasswordRequest("12345678"));
 
+        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("다른 사람의 id로 회원탈퇴 하려하면 403을 반환한다")
     @Test
     void delete_otherId() {
+        // given
         long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
         String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
         long 다른사람의_ID = savedId + 1;
+
+        // when
         ExtractableResponse<Response> response = 회원탈퇴_요청(token, 다른사람의_ID, new PasswordRequest("12345678"));
 
+        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     @DisplayName("회원 탈퇴시 입력한 비밀번호가 일치하지 않으면 400을 반환한다")
     @Test
     void delete_notMatchPassword() {
+        // given
         long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
         String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+
+        // when
         ExtractableResponse<Response> response = 회원탈퇴_요청(token, savedId, new PasswordRequest("kkkkkkkk"));
 
+        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }

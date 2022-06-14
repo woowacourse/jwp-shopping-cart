@@ -18,7 +18,9 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.EncodedPassword;
+import woowacourse.shoppingcart.domain.customer.UnEncodedPassword;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -61,10 +63,11 @@ public class CustomerServiceTest {
     @Test
     void findById() {
         // when
-        Customer customer = customerService.findById(1L);
+        Customer customer = customerService.getById(1L);
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+        EncodedPassword encodedPassword = passwordEncoder.encode(new UnEncodedPassword("12349053145"));
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", encodedPassword);
 
         assertThat(customer).usingRecursiveComparison()
                 .ignoringFields("password")
@@ -75,10 +78,11 @@ public class CustomerServiceTest {
     @Test
     void findByEmail() {
         // when
-        Customer customer = customerService.findByEmail("puterism@naver.com");
+        Customer customer = customerService.getByEmail("puterism@naver.com");
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism",
+                new EncodedPassword(customer.getPassword()));
 
         assertThat(customer).usingRecursiveComparison()
                 .ignoringFields("password")
@@ -89,11 +93,11 @@ public class CustomerServiceTest {
     @Test
     void findByEmailAndPassword() {
         // when
-        String encodedPassword = passwordEncoder.encode("12349053145");
-        Customer customer = customerService.findByEmailAndPassword("puterism@naver.com", encodedPassword);
+        EncodedPassword encodedPassword = passwordEncoder.encode(new UnEncodedPassword("12349053145"));
+        Customer customer = customerService.getByEmailAndPassword("puterism@naver.com", encodedPassword.getValue());
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", encodedPassword);
 
         assertThat(customer).usingRecursiveComparison()
                 .ignoringFields("password")
@@ -104,7 +108,7 @@ public class CustomerServiceTest {
     @Test
     void findById_throwNotExistId() {
         // when then
-        assertThatThrownBy(() -> customerService.findById(100L))
+        assertThatThrownBy(() -> customerService.getById(100L))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
@@ -113,7 +117,7 @@ public class CustomerServiceTest {
     @Test
     void findByEmail_throwNotExistId() {
         // when then
-        assertThatThrownBy(() -> customerService.findByEmail("rorororo@naver.com"))
+        assertThatThrownBy(() -> customerService.getByEmail("rorororo@naver.com"))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
@@ -126,7 +130,7 @@ public class CustomerServiceTest {
             "failemail@naver.com:failpassword"}, delimiter = ':')
     void findByEmailAndPassword_throwNotExistId(String email, String password) {
         // when then
-        assertThatThrownBy(() -> customerService.findByEmailAndPassword(email, password))
+        assertThatThrownBy(() -> customerService.getByEmailAndPassword(email, password))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
@@ -143,6 +147,7 @@ public class CustomerServiceTest {
         Customer result = customerDao.findById(savedId).orElse(null);
 
         // then
+        assert result != null;
         assertThat(result.getUsername()).isEqualTo("philz");
     }
 
@@ -157,7 +162,7 @@ public class CustomerServiceTest {
         customerService.delete(savedId);
 
         // then
-        assertThatThrownBy(() -> customerService.findById(savedId))
+        assertThatThrownBy(() -> customerService.getById(savedId))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
@@ -166,23 +171,26 @@ public class CustomerServiceTest {
     @Test
     void checkSamePassword() {
         // given
-        String enteredPassword = "123456789";
-        String savedPassword = passwordEncoder.encode(enteredPassword);
+        UnEncodedPassword enteredPassword = new UnEncodedPassword("123456789");
+        EncodedPassword savedPassword = passwordEncoder.encode(enteredPassword);
+        Customer customer = new Customer("hi@naver.com", "user", savedPassword);
 
         // when then
         Assertions.assertThatNoException()
-                .isThrownBy(() -> customerService.checkSamePassword(savedPassword, "123456789"));
+                .isThrownBy(() -> customerService.checkSamePassword(customer, enteredPassword));
     }
 
     @DisplayName("checkSamePassword는 Password 일치하지 않으면 예외를 발생시킨다.")
     @Test
     void checkSamePassword_unmatch_password() {
         // given
-        String enteredPassword = "123456789";
-        String savedPassword = passwordEncoder.encode(enteredPassword);
+        UnEncodedPassword enteredPassword = new UnEncodedPassword("123456789");
+        EncodedPassword encode = passwordEncoder.encode(enteredPassword);
+        Customer customer = new Customer("hi@naver.com", "user", encode);
 
         // when then
-        Assertions.assertThatThrownBy(() -> customerService.checkSamePassword(savedPassword, "abcdefgh"))
+        Assertions.assertThatThrownBy(
+                        () -> customerService.checkSamePassword(customer, new UnEncodedPassword("failPassword")))
                 .isInstanceOf(NotMatchPasswordException.class);
     }
 }

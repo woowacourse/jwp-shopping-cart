@@ -13,25 +13,29 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.LoginFailException;
+import woowacourse.auth.exception.NoCustomerTokenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.dto.ErrorResponseWithField;
 import woowacourse.shoppingcart.exception.DuplicateDomainException;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
+import woowacourse.shoppingcart.exception.ExistSameProductIdException;
 import woowacourse.shoppingcart.exception.ForbiddenAccessException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NoSuchProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.NotMatchPasswordException;
+import woowacourse.shoppingcart.exception.OutOfStockException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleUnhandledException() {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleUnhandledException(RuntimeException exception) {
+        exception.printStackTrace();
         return new ErrorResponse("Unhandled Exception");
     }
 
@@ -56,7 +60,7 @@ public class ControllerAdvice {
         return new ErrorResponseWithField(exception.getField(), exception.getMessage());
     }
 
-    @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
+    @ExceptionHandler({LoginFailException.class, InvalidTokenException.class, NoCustomerTokenException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleLoginFailException(Exception exception) {
         return new ErrorResponse(exception.getMessage());
@@ -80,13 +84,22 @@ public class ControllerAdvice {
     @ExceptionHandler({
             InvalidCustomerException.class,
             InvalidCartItemException.class,
-            InvalidProductException.class,
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
-            NotMatchPasswordException.class
+            NotMatchPasswordException.class,
+            OutOfStockException.class,
+            ExistSameProductIdException.class,
+            IllegalArgumentException.class,
+            IllegalStateException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidAccess(final RuntimeException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler(NoSuchProductException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNoSuchAccess(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());
     }
 }

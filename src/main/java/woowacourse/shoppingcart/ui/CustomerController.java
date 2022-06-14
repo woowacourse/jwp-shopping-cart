@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.UnEncodedPassword;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
@@ -50,7 +51,7 @@ public class CustomerController {
                                    @AuthenticationPrincipal Customer customer) {
         validateAuthorizedUser(id, customer);
         customerService.update(id, request);
-        Customer updatedCustomer = customerService.findById(id);
+        Customer updatedCustomer = customerService.getById(id);
 
         return new CustomerResponse(updatedCustomer);
     }
@@ -61,7 +62,7 @@ public class CustomerController {
                        @RequestBody PasswordRequest request,
                        @AuthenticationPrincipal Customer customer) {
         validateAuthorizedUser(id, customer);
-        customerService.checkSamePassword(customer.getPassword(), request.getPassword());
+        customerService.checkSamePassword(customer, new UnEncodedPassword(request.getPassword()));
         customerService.delete(id);
     }
 

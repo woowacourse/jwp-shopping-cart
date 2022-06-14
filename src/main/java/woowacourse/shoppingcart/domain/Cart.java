@@ -1,45 +1,22 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Cart {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final List<CartItem> items;
 
-    public Cart() {
+    public Cart(List<CartItem> items) {
+        this.items = new ArrayList<>(items);
     }
 
-    public Cart(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-    }
+    public boolean containsProductId(Long productId) {
+        List<Long> productIds = items.stream()
+                .map(CartItem::getProductId)
+                .collect(Collectors.toList());
 
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl) {
-        this.id = id;
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+        return productIds.contains(productId);
     }
 }

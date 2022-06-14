@@ -4,10 +4,13 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.LoginFailException;
+import woowacourse.auth.exception.NoCustomerTokenException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.EncodedPassword;
+import woowacourse.shoppingcart.domain.customer.UnEncodedPassword;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
@@ -27,8 +30,8 @@ public class AuthService {
     }
 
     public TokenResponse createToken(TokenRequest request) {
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-        Customer loginCustomer = fetchUser(request, encodedPassword);
+        EncodedPassword encodedPassword = passwordEncoder.encode(new UnEncodedPassword(request.getPassword()));
+        Customer loginCustomer = fetchUser(request, encodedPassword.getValue());
         String token = jwtTokenProvider.createToken(loginCustomer.getEmail());
 
         return new TokenResponse(token, jwtTokenProvider.getValidityInMilliseconds(),
@@ -37,7 +40,7 @@ public class AuthService {
 
     private Customer fetchUser(TokenRequest request, String encodedPassword) {
         try {
-            return customerService.findByEmailAndPassword(request.getEmail(), encodedPassword);
+            return customerService.getByEmailAndPassword(request.getEmail(), encodedPassword);
         } catch (InvalidCustomerException exception) {
             throw new LoginFailException();
         }
@@ -45,6 +48,15 @@ public class AuthService {
 
     public Customer findCustomerByToken(String token) {
         String email = jwtTokenProvider.getPayload(token);
-        return customerService.findByEmail(email);
+        return customerService.getByEmail(email);
+    }
+
+    public void validateExistCustomerByToken(String token) {
+        String email = jwtTokenProvider.getPayload(token);
+        try {
+            customerService.getByEmail(email);
+        } catch (InvalidCustomerException customerException) {
+            throw new NoCustomerTokenException();
+        }
     }
 }

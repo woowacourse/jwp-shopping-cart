@@ -8,7 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.dto.product.ProductCreateRequest;
+import woowacourse.shoppingcart.exception.NoSuchProductException;
 
 @Repository
 public class ProductDao {
@@ -19,45 +20,47 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final Product product) {
-        final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
+    public Long save(final ProductCreateRequest product) {
+        final String query = "INSERT INTO product (name, price, image_url, quantity) VALUES (?, ?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
                     connection.prepareStatement(query, new String[]{"id"});
             preparedStatement.setString(1, product.getName());
             preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
+            preparedStatement.setString(3, product.getThumbnailUrl());
+            preparedStatement.setInt(4, product.getQuantity());
             return preparedStatement;
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Product getProductById(final Long productId) {
         try {
-            final String query = "SELECT name, price, image_url FROM product WHERE id = ?";
+            final String query = "SELECT name, price, image_url, quantity FROM product WHERE id = ?";
             return jdbcTemplate.queryForObject(query, (resultSet, rowNumber) ->
                     new Product(
                             productId,
                             resultSet.getString("name"), resultSet.getInt("price"),
-                            resultSet.getString("image_url")
+                            resultSet.getString("image_url"), resultSet.getInt("quantity")
                     ), productId
             );
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidProductException();
+            throw new NoSuchProductException();
         }
     }
 
     public List<Product> findProducts() {
-        final String query = "SELECT id, name, price, image_url FROM product";
+        final String query = "SELECT id, name, price, image_url, quantity FROM product";
         return jdbcTemplate.query(query,
                 (resultSet, rowNumber) ->
                         new Product(
                                 resultSet.getLong("id"),
                                 resultSet.getString("name"),
                                 resultSet.getInt("price"),
-                                resultSet.getString("image_url")
+                                resultSet.getString("image_url"),
+                                resultSet.getInt("quantity")
                         ));
     }
 

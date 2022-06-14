@@ -6,7 +6,7 @@ public class NotMatchPasswordException extends RuntimeException {
         this("비밀번호가 일치하지 않습니다.");
     }
 
-    public NotMatchPasswordException(final String msg) {
-        super(msg);
+    public NotMatchPasswordException(final String message) {
+        super(message);
     }
 }

@@ -3,7 +3,9 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.EncodedPassword;
+import woowacourse.shoppingcart.domain.customer.UnEncodedPassword;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
@@ -25,22 +27,24 @@ public class CustomerService {
     public Long save(CustomerCreateRequest request) {
         validateUsernameDuplication(request.getUsername());
         validateEmailDuplication(request.getEmail());
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        UnEncodedPassword password = new UnEncodedPassword(request.getPassword());
+        request.setPassword(passwordEncoder.encode(password).getValue());
 
         return customerDao.save(request);
     }
 
-    public Customer findById(long id) {
+    public Customer getById(long id) {
         return customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
     }
 
-    public Customer findByEmail(String email) {
+    public Customer getByEmail(String email) {
         return customerDao.findByEmail(email)
                 .orElseThrow(InvalidCustomerException::new);
     }
 
-    public Customer findByEmailAndPassword(String email, String password) {
+    public Customer getByEmailAndPassword(String email, String password) {
         return customerDao.findByEmailAndPassword(email, password)
                 .orElseThrow(InvalidCustomerException::new);
     }
@@ -55,7 +59,7 @@ public class CustomerService {
     }
 
     private boolean isSameOriginUsername(Long id, CustomerUpdateRequest request) {
-        Customer foundCustomer = findById(id);
+        Customer foundCustomer = getById(id);
         return foundCustomer.getUsername().equals(request.getUsername());
     }
 
@@ -79,12 +83,12 @@ public class CustomerService {
     }
 
     private void validateCustomerExists(Long id) {
-        findById(id);
+        getById(id);
     }
 
-    public void checkSamePassword(String savedPassword, String enteredPassword) {
-        String encodedPassword = passwordEncoder.encode(enteredPassword);
-        if (!savedPassword.equals(encodedPassword)) {
+    public void checkSamePassword(Customer customer, UnEncodedPassword enteredPassword) {
+        EncodedPassword encodedPassword = passwordEncoder.encode(enteredPassword);
+        if (!customer.isSamePassword(encodedPassword)) {
             throw new NotMatchPasswordException();
         }
     }
