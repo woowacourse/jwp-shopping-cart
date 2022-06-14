@@ -48,7 +48,7 @@ public class CartItemController {
     public ResponseEntity<CartItemResponse> updateCartItemQuantity(
         @AuthenticationPrincipal LoginCustomer loginCustomer,
         @PathVariable final Long cartId, @RequestBody QuantityRequest quantityRequest) {
-        CartItemResponse cartItemResponse = cartService.updateCardItemQuantity(loginCustomer.getId(), cartId, quantityRequest.getQuantity());
+        CartItemResponse cartItemResponse = cartService.updateCartItemQuantity(loginCustomer.getId(), cartId, quantityRequest.getQuantity());
         return ResponseEntity.ok().body(cartItemResponse);
     }
 

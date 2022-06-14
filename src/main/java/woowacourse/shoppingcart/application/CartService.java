@@ -51,7 +51,7 @@ public class CartService {
         }
     }
 
-    public CartItemResponse updateCardItemQuantity(Long customerId, Long cartId, int quantity) {
+    public CartItemResponse updateCartItemQuantity(Long customerId, Long cartId, int quantity) {
         CartItem cartItem = cartItemDao.findByCartId(cartId);
         cartItemDao.updateCartItemQuantity(customerId, cartId, quantity);
         cartItem.updateQuantity(quantity);
