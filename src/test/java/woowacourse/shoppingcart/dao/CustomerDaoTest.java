@@ -45,7 +45,7 @@ public class CustomerDaoTest {
         customerDao.save(new Customer("email@email.com", "password123!A", "rookie"));
 
         // when
-        Customer customer = customerDao.findByEmailAndPassword("email@email.com", "password123!A").get();
+        Customer customer = customerDao.findByEmail("email@email.com").get();
 
         // then
         assertThat(customer).usingRecursiveComparison()
@@ -93,31 +93,4 @@ public class CustomerDaoTest {
         // then
         assertThat(customerDao.findById(1L)).isEmpty();
     }
-
-//    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
-//    @Test
-//    void findIdByUserNameTest() {
-//
-//        // given
-//        final String userName = "puterism";
-//
-//        // when
-//        final Long customerId = customerDao.findIdByUserName(userName);
-//
-//        // then
-//        assertThat(customerId).isEqualTo(1L);
-//    }
-//
-//    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-//    @Test
-//    void findIdByUserNameTestIgnoreUpperLowerCase() {
-//        // given
-//        final String userName = "gwangyeol-iM";
-//
-//        // when
-//        final Long customerId = customerDao.findIdByUserName(userName);
-//
-//        // then
-//        assertThat(customerId).isEqualTo(16L);
-//    }
 }

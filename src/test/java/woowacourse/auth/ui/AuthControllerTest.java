@@ -3,7 +3,7 @@ package woowacourse.auth.ui;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,9 +57,9 @@ public class AuthControllerTest {
         // then
         assertAll(
                 () -> 이메일_공백.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 이메일은 공백일 수 없습니다.")),
+                        .andExpect(jsonPath("$.message").value("[ERROR] 이메일은 공백일 수 없습니다.")),
                 () -> 비밀번호_공백.andExpect(status().isBadRequest())
-                        .andExpect(content().string("[ERROR] 비밀번호는 공백일 수 없습니다."))
+                        .andExpect(jsonPath("$.message").value("[ERROR] 비밀번호는 공백일 수 없습니다."))
         );
     }
 

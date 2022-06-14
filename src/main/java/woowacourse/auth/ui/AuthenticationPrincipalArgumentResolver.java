@@ -27,10 +27,11 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         String token = AuthorizationExtractor.extract(Objects.requireNonNull(request));
-        String id= jwtTokenProvider.getPayload(token);
+        String id = jwtTokenProvider.getPayload(token);
 
         return new LoginCustomer(Long.valueOf(id));
     }

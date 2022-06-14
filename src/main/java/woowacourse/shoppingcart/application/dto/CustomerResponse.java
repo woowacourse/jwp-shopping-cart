@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.application.dto;
 
-import java.util.Objects;
 import woowacourse.shoppingcart.domain.Customer;
 
 public class CustomerResponse {
@@ -32,23 +31,5 @@ public class CustomerResponse {
 
     public String getNickname() {
         return nickname;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof CustomerResponse)) {
-            return false;
-        }
-        CustomerResponse that = (CustomerResponse) o;
-        return Objects.equals(id, that.id) && Objects.equals(email, that.email)
-                && Objects.equals(nickname, that.nickname);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, nickname);
     }
 }

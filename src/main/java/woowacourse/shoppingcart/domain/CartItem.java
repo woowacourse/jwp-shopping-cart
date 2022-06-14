@@ -2,34 +2,20 @@ package woowacourse.shoppingcart.domain;
 
 import java.util.Objects;
 
-public class Product {
-
-    private static final int PRODUCT_BELOW_PRICE = 0;
+public class CartItem {
 
     private Long id;
     private String name;
     private int price;
+    private int quantity;
     private String imageUrl;
 
-    public Product() {
-    }
-
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
-        validatePrice(price);
+    public CartItem(Long id, String name, int price, int quantity, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.quantity = quantity;
         this.imageUrl = imageUrl;
-    }
-
-    private void validatePrice(int price) {
-        if (price <= PRODUCT_BELOW_PRICE) {
-            throw new IllegalArgumentException("0원 이하의 가격은 상품으로 등록 할 수 없습니다.");
-        }
-    }
-
-    public Product(final String name, final int price, final String imageUrl) {
-        this(null, name, price, imageUrl);
     }
 
     public Long getId() {
@@ -44,6 +30,10 @@ public class Product {
         return price;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -53,11 +43,11 @@ public class Product {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Product)) {
+        if (!(o instanceof CartItem)) {
             return false;
         }
-        Product product = (Product) o;
-        return Objects.equals(id, product.id);
+        CartItem cartItem = (CartItem) o;
+        return Objects.equals(id, cartItem.id);
     }
 
     @Override

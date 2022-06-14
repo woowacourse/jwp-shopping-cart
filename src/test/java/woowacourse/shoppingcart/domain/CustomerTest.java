@@ -40,19 +40,6 @@ class CustomerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"", " ", "pas12A!", "passwordPASSWORD1234!", "password123!", "PASSWORD123!", "password123A", "passwordA!"})
-    @DisplayName("패스워드는 8자 이상 20자 이하, 대소문자, 특수문자, 숫자 하나이상을 포함하지 않으면 예외가 발생한다.")
-    void checkPassword(String password) {
-        // given
-        String email = "email@email.com";
-        String nickname = "rookie";
-
-        // when & then
-        assertThatThrownBy(() -> new Customer(1L, email, password, nickname))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @ParameterizedTest
     @ValueSource(strings = {"", " ", "!", "nickname123"})
     @DisplayName("닉네임은 1자 이상 10자 이하, 한글, 영어, 숫자가 아니라면 예외가 발생한다.")
     void checkNickname(String nickname) {

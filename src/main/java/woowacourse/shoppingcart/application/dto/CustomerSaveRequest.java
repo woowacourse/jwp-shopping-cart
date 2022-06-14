@@ -18,8 +18,8 @@ public class CustomerSaveRequest {
         this.nickname = nickname;
     }
 
-    public Customer toEntity() {
-        return new Customer(email, password, nickname);
+    public Customer toEntity(String encoderPassword) {
+        return new Customer(email, encoderPassword, nickname);
     }
 
     public String getEmail() {

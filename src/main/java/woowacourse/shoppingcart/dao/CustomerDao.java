@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
@@ -40,17 +39,6 @@ public class CustomerDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameter).longValue();
     }
 
-    public Long findIdByUserName(final String userName) {
-        try {
-            final String query = "SELECT id FROM customer WHERE username = :username";
-            SqlParameterSource nameParameters = new MapSqlParameterSource("username", userName);
-
-            return template.queryForObject(query, nameParameters, Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
-    }
-
     public boolean existByEmail(String email) {
         String sql = "SELECT exists (SELECT * FROM customer WHERE email = :email)";
         MapSqlParameterSource nameParameters = new MapSqlParameterSource("email", email);
@@ -77,10 +65,9 @@ public class CustomerDao {
         }
     }
 
-    public Optional<Customer> findByEmailAndPassword(String email, String password) {
-        String query = "SELECT id, email, password, nickname FROM customer WHERE email = :email AND password = :password";
-        MapSqlParameterSource nameParameters = new MapSqlParameterSource("email", email)
-                .addValue("password", password);
+    public Optional<Customer> findByEmail(String email) {
+        String query = "SELECT id, email, password, nickname FROM customer WHERE email = :email";
+        MapSqlParameterSource nameParameters = new MapSqlParameterSource("email", email);
         try {
             Customer customer = template.queryForObject(query, nameParameters, CUSTOMER_ROW_MAPPER);
             return Optional.ofNullable(customer);

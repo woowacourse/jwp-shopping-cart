@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.config;
+package woowacourse.global.exception.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
