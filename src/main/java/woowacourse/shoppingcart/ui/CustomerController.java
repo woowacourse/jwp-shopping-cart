@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.ui.dto.CustomerRequest;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.application.dto.CustomerResponse;
+import woowacourse.shoppingcart.ui.dto.CustomerUpdateRequest;
+import woowacourse.shoppingcart.ui.dto.PasswordRequest;
 
 @RestController
 public class CustomerController {

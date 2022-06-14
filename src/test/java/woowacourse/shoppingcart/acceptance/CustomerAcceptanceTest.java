@@ -13,12 +13,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @DisplayName("회원 관련 기능")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-public class CustomerAcceptanceTest extends AcceptanceTest {
+class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 회원_가입_정상_요청() {
@@ -35,7 +36,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                         "5678"));
 
         // then
-        assertThat(response.statusCode()).isEqualTo(201);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header(LOCATION)).isEqualTo("/signin");
     }
 
@@ -56,7 +57,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
@@ -74,7 +75,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("계정은 4 ~ 15자로 생성 가능합니다");
     }
 
@@ -93,7 +94,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("계정은 4 ~ 15자로 생성 가능합니다");
     }
 
@@ -112,7 +113,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
     }
 
@@ -131,7 +132,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
     }
 
@@ -150,7 +151,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
     }
 
@@ -169,7 +170,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.");
     }
 
@@ -188,7 +189,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("비밀번호는 8 ~ 20자로 생성 가능합니다.");
     }
 
@@ -207,7 +208,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("비밀번호는 8 ~ 20자로 생성 가능합니다.");
     }
 
@@ -226,7 +227,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("비밀번호는 대소문자, 숫자, 특수 문자를 포함해야 생성 가능합니다.");
     }
 
@@ -245,7 +246,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("주소는 최대 255자까지 가능합니다.");
     }
 
@@ -264,7 +265,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("주소는 빈 값 생성이 불가능합니다.");
     }
 
@@ -283,7 +284,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("휴대폰 번호양식이 불일치 합니다.");
     }
 
@@ -302,7 +303,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_가입(request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("휴대폰 번호는 숫자만 가능합니다.");
     }
 
@@ -318,7 +319,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_조회(accessToken);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(findValue(response, "account")).isEqualTo(account);
     }
 
@@ -336,7 +337,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_조회(accessToken);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(404);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(findValue(response, "message")).contains("존재하지 않는 사용자입니다.");
     }
 
@@ -359,7 +360,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
 
         // then
-        assertThat(response.statusCode()).isEqualTo(401);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         assertThat(findValue(response, "message")).isEqualTo("유효하지 않은 토큰입니다.");
     }
 
@@ -375,7 +376,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_탈퇴(accessToken, password);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(204);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
@@ -389,7 +390,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_탈퇴(accessToken, "1111");
 
         // then
-        assertThat(response.statusCode()).isEqualTo(401);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         assertThat(findValue(response, "message")).contains("비밀번호가 일치하지 않습니다.");
     }
 
@@ -413,7 +414,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         ExtractableResponse<Response> customerResponse = 회원_조회(accessToken);
 
-        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(findValue(customerResponse, "nickname")).isEqualTo(nickname);
         assertThat(findValue(customerResponse, "address")).isEqualTo(address);
         assertThat(findPhoneNumberValue(customerResponse, "start")).isEqualTo(start);
@@ -439,7 +440,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_수정(accessToken, request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
     }
 
@@ -461,7 +462,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_수정(accessToken, request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
     }
 
@@ -483,7 +484,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_수정(accessToken, request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("닉네임은 2 ~ 10자로 생성 가능합니다");
     }
 
@@ -505,7 +506,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_수정(accessToken, request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("주소는 최대 255자까지 가능합니다.");
     }
 
@@ -527,7 +528,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_수정(accessToken, request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("주소는 빈 값 생성이 불가능합니다.");
     }
 
@@ -549,7 +550,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_수정(accessToken, request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("휴대폰 번호양식이 불일치 합니다.");
     }
 
@@ -571,102 +572,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원_수정(accessToken, request);
 
         // then
-        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(findValue(response, "message")).contains("휴대폰 번호양식이 불일치 합니다.");
-    }
-
-
-    private String findValue(ExtractableResponse<Response> response, String value) {
-        return response.body().jsonPath().getString(value);
     }
 
     private String findPhoneNumberValue(ExtractableResponse<Response> response, String value) {
         return String.valueOf(response.body().jsonPath().getMap("phoneNumber").get(value));
     }
 
-    private Map<String, Object> 회원_정보(String account, String nickname, String password, String address, String start,
-                                      String middle, String last) {
-        Map<String, Object> request = new HashMap<>();
-        request.put("account", account);
-        request.put("nickname", nickname);
-        request.put("password", password);
-        request.put("address", address);
-        request.put("phoneNumber", 휴대폰_정보(start, middle, last));
-        return request;
-    }
-
-    private Map<String, String> 휴대폰_정보(String start, String middle, String last) {
-        Map<String, String> phoneNumber = new HashMap<>();
-        phoneNumber.put("start", start);
-        phoneNumber.put("middle", middle);
-        phoneNumber.put("last", last);
-        return phoneNumber;
-    }
-
-    private ExtractableResponse<Response> 회원_가입(Map<String, Object> request) {
-        return RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/signup")
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 로그인_후_토큰_발급(String account, String password) {
-        Map<String, Object> request = new HashMap<>();
-        request.put("account", account);
-        request.put("password", password);
-
-        return RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when()
-                .post("/signin")
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private String 회원_가입_후_토큰_발급(String account, String password) {
-        회원_가입(회원_정보(account,
-                "에덴",
-                password,
-                "에덴 동산",
-                "010",
-                "1234",
-                "5678"));
-
-        return findValue(로그인_후_토큰_발급(account, password), "accessToken");
-    }
-
     private ExtractableResponse<Response> 회원_조회(String accessToken) {
-        return RestAssured.given()
-                .log().all()
+        return RestAssured.given().log().all()
                 .header(AUTHORIZATION, BEARER + accessToken)
-                .when()
-                .get("/customers")
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 회원_탈퇴(String accessToken, String password) {
-        Map<String, Object> request = new HashMap<>();
-        request.put("password", password);
-
-        return RestAssured.given()
-                .log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, BEARER + accessToken)
-                .body(request)
-                .when()
-                .delete("/customers")
-                .then()
-                .log().all()
+                .when().get("/customers")
+                .then().log().all()
                 .extract();
     }
 
@@ -679,15 +597,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     private ExtractableResponse<Response> 회원_수정(String accessToken, Map<String, Object> request) {
-        return RestAssured.given()
-                .log().all()
+        return RestAssured.given().log().all()
                 .header(AUTHORIZATION, BEARER + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when()
-                .put("/customers")
-                .then()
-                .log().all()
+                .when().put("/customers")
+                .then().log().all()
                 .extract();
     }
 }

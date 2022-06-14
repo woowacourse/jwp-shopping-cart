@@ -2,6 +2,8 @@ package woowacourse.common.advice;
 
 import java.util.List;
 import javax.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -17,23 +19,26 @@ import woowacourse.common.exception.NotFoundException;
 import woowacourse.common.exception.UnauthorizedException;
 
 @RestControllerAdvice
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 public class ControllerAdvice {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerAdvice.class);
+
     @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUnhandledException(Exception e) {
+        LOGGER.error(e.getMessage(), e);
         return new ErrorResponse("예상치 못한 에러가 발생했습니다. 잠시후 요청 바랍니다.");
     }
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handle() {
+    public ErrorResponse handleEmptyResultDataAccess(EmptyResultDataAccessException e) {
+        LOGGER.error(e.getMessage(), e);
         return new ErrorResponse("존재하지 않는 데이터 요청입니다.");
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleInvalidRequest(final BindingResult bindingResult) {
+    @ExceptionHandler
+    public ErrorResponse handleInvalidRequest(MethodArgumentNotValidException e, BindingResult bindingResult) {
+        LOGGER.error(e.getMessage(), e);
+
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
@@ -44,8 +49,8 @@ public class ControllerAdvice {
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidRequest(final RuntimeException e) {
+        LOGGER.error(e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
 
@@ -55,18 +60,21 @@ public class ControllerAdvice {
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBadRequest(RuntimeException e) {
+        LOGGER.error(e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleUnauthorized(UnauthorizedException e) {
+        LOGGER.error(e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFound(NotFoundException e) {
+        LOGGER.error(e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
 }

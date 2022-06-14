@@ -2,13 +2,13 @@ package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.SignInRequest;
+import woowacourse.auth.ui.dto.SignInRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.common.exception.UnauthorizedException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.TokenResponse;
-import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.auth.application.dto.TokenResponse;
+import woowacourse.shoppingcart.dao.entity.CustomerEntity;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service

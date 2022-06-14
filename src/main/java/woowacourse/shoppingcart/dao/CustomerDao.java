@@ -1,9 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -13,8 +11,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.entity.CustomerEntity;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.dao.entity.CustomerEntity;
 
 @Repository
 public class CustomerDao {
@@ -34,17 +31,6 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long findIdByAccount(final String account) {
-        try {
-            final String sql = "SELECT id FROM customer WHERE account = :account";
-            SqlParameterSource source = new MapSqlParameterSource("account",
-                    account.toLowerCase(Locale.ROOT));
-            return jdbcTemplate.queryForObject(sql, source, Long.class);
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
-    }
-
     public Long save(CustomerEntity customerEntity) {
         String sql = "INSERT INTO customer (account, nickname, password, address, phone_number) "
                 + "VALUES (:account, :nickname, :password, :address, :phoneNumber)";
@@ -54,28 +40,16 @@ public class CustomerDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public boolean existsByAccount(String account) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM customer WHERE account = :account)";
-        SqlParameterSource source = new MapSqlParameterSource("account", account);
-        return Objects.requireNonNull(jdbcTemplate.queryForObject(sql, source, Boolean.class));
+    public Optional<CustomerEntity> findById(Long customerId) {
+        String sql = "SELECT id, account, nickname, password, address, phone_number FROM customer WHERE id = :customerId";
+        SqlParameterSource source = new MapSqlParameterSource("customerId", customerId);
+        return Optional.ofNullable(DataAccessUtils.singleResult(jdbcTemplate.query(sql, source, ROW_MAPPER)));
     }
 
     public Optional<CustomerEntity> findByAccount(String account) {
-        String sql = "SELECT * FROM customer WHERE account = :account";
+        String sql = "SELECT id, account, nickname, password, address, phone_number FROM customer WHERE account = :account";
         SqlParameterSource source = new MapSqlParameterSource("account", account);
         return Optional.ofNullable(DataAccessUtils.singleResult(jdbcTemplate.query(sql, source, ROW_MAPPER)));
-    }
-
-    public Optional<CustomerEntity> findById(Long customerId) {
-        String sql = "SELECT * FROM customer WHERE id = :customerId";
-        SqlParameterSource source = new MapSqlParameterSource("customerId", customerId);
-        return Optional.ofNullable(DataAccessUtils.singleResult(jdbcTemplate.query(sql, source, ROW_MAPPER)));
-    }
-
-    public void deleteById(Long customerId) {
-        String sql = "DELETE FROM customer WHERE id  = :customerId";
-        SqlParameterSource source = new MapSqlParameterSource("customerId", customerId);
-        jdbcTemplate.update(sql, source);
     }
 
     public boolean existsById(Long customerId) {
@@ -84,9 +58,22 @@ public class CustomerDao {
         return Objects.requireNonNull(jdbcTemplate.queryForObject(sql, source, Boolean.class));
     }
 
+    public boolean existsByAccount(String account) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM customer WHERE account = :account)";
+        SqlParameterSource source = new MapSqlParameterSource("account", account);
+        return Objects.requireNonNull(jdbcTemplate.queryForObject(sql, source, Boolean.class));
+    }
+
     public void update(CustomerEntity customerEntity) {
-        String sql = "UPDATE customer SET nickname = :nickname, address = :address, phone_number = :phoneNumber where id = :id";
+        String sql = "UPDATE customer SET nickname = :nickname, address = :address, phone_number = :phoneNumber "
+                + "where id = :id";
         SqlParameterSource source = new BeanPropertySqlParameterSource(customerEntity);
+        jdbcTemplate.update(sql, source);
+    }
+
+    public void deleteById(Long customerId) {
+        String sql = "DELETE FROM customer WHERE id  = :customerId";
+        SqlParameterSource source = new MapSqlParameterSource("customerId", customerId);
         jdbcTemplate.update(sql, source);
     }
 }

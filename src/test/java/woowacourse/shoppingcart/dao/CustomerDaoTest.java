@@ -12,44 +12,20 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.entity.CustomerEntity;
+import woowacourse.shoppingcart.dao.entity.CustomerEntity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = "classpath:schema.sql")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings({"NonAsciiCharacters"})
-public class CustomerDaoTest {
+class CustomerDaoTest {
 
     private final CustomerDao customerDao;
 
     public CustomerDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(jdbcTemplate);
-    }
-
-    @Test
-    void 계정을_통해_아이디를_검색() {
-        // given
-        final String account = "puterism";
-
-        // when
-        final Long customerId = customerDao.findIdByAccount(account);
-
-        // then
-        assertThat(customerId).isEqualTo(1L);
-    }
-
-    @Test
-    void 대소문자_구분없이_계정을_통해_아이디를_검색() {
-        // given
-        final String account = "gwangyeol-iM";
-
-        // when
-        final Long customerId = customerDao.findIdByAccount(account);
-
-        // then
-        assertThat(customerId).isEqualTo(16L);
     }
 
     @Test
