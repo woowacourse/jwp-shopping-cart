@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.support.Auth;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CartService;
 import woowacourse.shoppingcart.application.CustomerService;
@@ -34,6 +35,7 @@ public class CartItemController {
         this.customerService = customerService;
     }
 
+    @Auth
     @PostMapping
     public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal String email,
                                             @RequestBody CartAdditionRequest request) {
@@ -42,6 +44,7 @@ public class CartItemController {
         return ResponseEntity.noContent().build();
     }
 
+    @Auth
     @GetMapping
     public ResponseEntity<CartsResponse> getCartItems(@AuthenticationPrincipal String email) {
         Customer customer = customerService.getByEmail(email);
@@ -54,6 +57,7 @@ public class CartItemController {
         return ResponseEntity.ok().body(new CartsResponse(cartResponses));
     }
 
+    @Auth
     @PutMapping("/{productId}")
     public ResponseEntity<CartResponse> updateCartItem(@AuthenticationPrincipal String email, @Valid @RequestBody
             CartUpdationRequest request, @PathVariable Long productId) {
@@ -64,6 +68,7 @@ public class CartItemController {
         return ResponseEntity.ok(CartResponse.from(cart));
     }
 
+    @Auth
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal String email,
                                                @PathVariable Long productId) {

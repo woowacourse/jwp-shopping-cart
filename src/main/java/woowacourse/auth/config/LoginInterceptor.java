@@ -3,7 +3,9 @@ package woowacourse.auth.config;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import woowacourse.auth.support.Auth;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.exception.nobodyexception.UnauthorizedTokenException;
@@ -23,8 +25,22 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        boolean hasAnnotation = checkAnnotation(handler);
+        if (!hasAnnotation) {
+            return true;
+        }
+
         validateToken(request);
         return true;
+    }
+
+    private boolean checkAnnotation(Object handler) {
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
+
+        if (null != handlerMethod.getMethodAnnotation(Auth.class)) {
+            return true;
+        }
+        return false;
     }
 
     private void validateToken(HttpServletRequest request) {
