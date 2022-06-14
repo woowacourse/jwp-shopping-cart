@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerNameResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -35,10 +36,16 @@ public class CustomerService {
         return CustomerResponse.from(customer);
     }
 
-    public CustomerResponse find(Long customerId) {
+    public CustomerResponse findById(Long customerId) {
         checkExistById(customerId);
         Customer customer = customerDao.findById(customerId);
         return CustomerResponse.from(customer);
+    }
+
+    public CustomerNameResponse findNameById(Long customerId) {
+        checkExistById(customerId);
+        String name = customerDao.findNameById(customerId);
+        return new CustomerNameResponse(name);
     }
 
     private void checkExistById(Long customerId) {

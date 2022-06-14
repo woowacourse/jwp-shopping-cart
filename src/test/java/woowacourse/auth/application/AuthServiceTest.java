@@ -49,5 +49,4 @@ class AuthServiceTest {
                 .hasMessageContaining("Email 또는 Password가 일치하지 않습니다.");
     }
 
-
 }

@@ -51,34 +51,16 @@ public class CustomerDaoTest {
         assertThat(responseId).isEqualTo(customerId);
     }
 
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
+    @DisplayName("id가 일치하는 customer 의 name 을 반환한다.")
     @Test
-    @Disabled
-    void findIdByUserNameTest() {
+    void findNameById() {
+        Customer customer =
+                new Customer("email", "Pw123456!", "name", "010-1234-5678", "address");
+        Long customerId = customerDao.save(customer);
 
-        // given
-        final String userName = "puterism";
+        String name = customerDao.findNameById(customerId);
 
-        // when
-        final Long customerId = customerDao.findIdByName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(1L);
-    }
-
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    @Disabled
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
-        // given
-        final String userName = "gwangyeol-iM";
-
-        // when
-        final Long customerId = customerDao.findIdByName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(16L);
+        assertThat(name).isEqualTo("name");
     }
 
     @DisplayName("email이 존재하는지 확인한다.")

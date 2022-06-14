@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CustomerNameResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -23,24 +24,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void isDuplicationEmail() {
         // given
         CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+        saveCustomerApi(customerRequest);
 
         // when
-        RestAssured.given().log().all()
-                .body(customerRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers")
-                .then().log().all()
-                .extract();
-
+        String email = "email";
         ExceptionResponse response = RestAssured.given().log().all()
-                .param("email", "email")
+                .param("email", email)
                 .when()
-                .post("/customers/email")
+                .post("/customers/email/validate")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().as(ExceptionResponse.class);
 
+        //then
         assertThat(response.getMessage()).isEqualTo("중복된 email 입니다.");
     }
 
@@ -51,7 +47,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .param("email", "email")
                 .when()
-                .post("/customers/email")
+                .post("/customers/email/validate")
                 .then().log().all()
                 .extract();
 
@@ -65,13 +61,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
 
         // when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .body(customerRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers")
-                .then().log().all()
-                .extract();
+        ExtractableResponse<Response> response = saveCustomerApi(customerRequest);
         CustomerResponse customerResponse = response.jsonPath().getObject(".", CustomerResponse.class);
 
         // then
@@ -85,29 +75,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void updateMe() {
         // given
         CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+        saveCustomerApi(customerRequest);
 
-        RestAssured.given().log().all()
-                .body(customerRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers")
-                .then().log().all()
-                .extract();
-
-        String accessToken = RestAssured.given().log().all()
-                .body(new TokenRequest("email", "Pw123456!"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/auth/login")
-                .then().log().all()
-                .extract().as(TokenResponse.class).getAccessToken();
+        TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
+        String accessToken = getAccessToken(tokenRequest);
         //when
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .body(new CustomerRequest("email", "Pw123456!", "judy", "010-1111-2222", "address2"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/customers")
+                .put("/customers/me")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
@@ -116,7 +94,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/customers")
+                .get("/customers/me")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(CustomerResponse.class);
@@ -125,32 +103,42 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .containsExactly("email", "judy", "010-1111-2222", "address2");
     }
 
+    @DisplayName("회원 이름 조회")
+    @Test
+    void findName() {
+        // given
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+        saveCustomerApi(customerRequest);
+
+        TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
+        String accessToken = getAccessToken(tokenRequest);
+
+        //then
+        CustomerNameResponse name = RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
+                .when()
+                .get("/customers/me/name")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(CustomerNameResponse.class);
+
+        assertThat(name.getName()).isEqualTo("name");
+    }
+
     @DisplayName("회원탈퇴")
     @Test
     void deleteMe() {
         // given
         CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+        saveCustomerApi(customerRequest);
 
-        RestAssured.given().log().all()
-                .body(customerRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/customers")
-                .then().log().all()
-                .extract();
-
-        String accessToken = RestAssured.given().log().all()
-                .body(new TokenRequest("email", "Pw123456!"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/auth/login")
-                .then().log().all()
-                .extract().as(TokenResponse.class).getAccessToken();
+        TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
+        String accessToken = getAccessToken(tokenRequest);
         //when
         RestAssured.given().log().all()
                 .auth().oauth2(accessToken)
                 .when()
-                .delete("/customers")
+                .delete("/customers/me")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value())
                 .extract();
@@ -159,11 +147,31 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/customers")
+                .get("/customers/me")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().as(ExceptionResponse.class);
 
-        assertThat(response.getMessage()).isEqualTo("존재하지 않는 유저입니다.");
+        assertThat(response.getMessage()).isEqualTo("존재하지 않는 회원입니다.");
+    }
+
+    public static ExtractableResponse<Response> saveCustomerApi(CustomerRequest customerRequest) {
+        return RestAssured.given().log().all()
+                .body(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/customers")
+                .then().log().all()
+                .extract();
+    }
+
+    private String getAccessToken(TokenRequest tokenRequest) {
+        return RestAssured.given().log().all()
+                .body(tokenRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/auth/login")
+                .then().log().all()
+                .extract().as(TokenResponse.class).getAccessToken();
     }
 }

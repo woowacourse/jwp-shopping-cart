@@ -1,121 +1,211 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Cart;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import org.springframework.test.context.jdbc.Sql;
+import woowacourse.auth.dto.ExceptionResponse;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.CartRequest;
+import woowacourse.shoppingcart.dto.CartResponse;
+import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.ProductIdsRequest;
 
 @DisplayName("장바구니 관련 기능")
+@Sql(scripts = "classpath:schema.sql")
 public class CartAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
-    private Long productId1;
-    private Long productId2;
 
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-    }
-
-    @DisplayName("장바구니 아이템 추가")
+    @DisplayName("장바구니 아이템 1개 추가 후, 장바구니 아이템 목록 조회")
     @Test
     void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
+        //given
+        String accessToken = getAccessToken();
+        addCartItemApi(accessToken, 1L, 5);
 
-        장바구니_아이템_추가됨(response);
+        //when
+        ExtractableResponse<Response> response = findCartItemsApi(accessToken);
+        List<CartResponse> cartResponses = response.jsonPath().getList(".", CartResponse.class);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(cartResponses.size()).isEqualTo(1);
+        CartResponse cart = cartResponses.get(0);
+        assertThat(cart).extracting("id", "name", "price", "imageUrl", "quantity")
+                .containsExactly(1L, "콜드 브루 몰트", 4800,
+                        "https://image.istarbucks.co.kr/upload/store/skuimg/2021/02/[9200000001636]_20210225093600536.jpg",
+                        5);
     }
 
-    @DisplayName("장바구니 아이템 목록 조회")
+    @DisplayName("존재하지 않는 회원이 장바구니에 아이템을 담을 경우, 예외를 발생시킨다.")
     @Test
-    void getCartItems() {
-        장바구니_아이템_추가되어_있음(USER, productId1);
-        장바구니_아이템_추가되어_있음(USER, productId2);
+    void addCartItemWhoNonCustomerException() {
+        //when
+        ExtractableResponse<Response> response = addCartItemApi("", 1L, 5);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
-
-        장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_포함됨(response, productId1, productId2);
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("토큰 정보가 없습니다.");
     }
 
-    @DisplayName("장바구니 삭제")
+    @DisplayName("장바구니에 양수가 아닌 수의 아이템을 담을 경우, 예외를 발생시킨다.")
+    @Test
+    void addCartItemNotPositiveQuantityException() {
+        //given
+        String accessToken = getAccessToken();
+
+        //when
+        ExtractableResponse<Response> response = addCartItemApi(accessToken, 1L, 0);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("올바르지 않은 상품 수량 형식입니다.");
+    }
+
+    @DisplayName("장바구니에 담긴 아이템의 수량을 수정한다.")
+    @Test
+    void updateCartItemQuantity() {
+        //given
+        String accessToken = getAccessToken();
+        addCartItemApi(accessToken, 1L, 5);
+
+        //when
+        updateCartItemQuantityApi(accessToken, 1L, 10);
+
+        //then
+        ExtractableResponse<Response> response = findCartItemsApi(accessToken);
+        List<CartResponse> productResponses = response.jsonPath().getList(".", CartResponse.class);
+
+        assertThat(productResponses.size()).isEqualTo(1);
+        productResponses.forEach(cartResponse -> assertThat(cartResponse.getQuantity()).isEqualTo(10));
+    }
+
+    @DisplayName("장바구니 상품의 개수를 수정할 때, 음수인 경우 예외를 발생시킨다.")
+    @Test
+    void updateCartNotPositiveQuantity() {
+        //given
+        String accessToken = getAccessToken();
+        addCartItemApi(accessToken, 1L, 5);
+
+        //when
+        ExtractableResponse<Response> response = updateCartItemQuantityApi(accessToken, 1L, 0);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("올바르지 않은 상품 수량 형식입니다.");
+    }
+
+    @DisplayName("장바구니 아이템 3개 추가 후, 장바구니에서 1개를 삭제하고 장바구니 목록 조회")
     @Test
     void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
+        //given
+        String accessToken = getAccessToken();
+        addCartItemApi(accessToken, 1L, 5);
+        addCartItemApi(accessToken, 2L, 5);
+        addCartItemApi(accessToken, 3L, 5);
 
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
+        //when
+        ExtractableResponse<Response> deleteResponse = deleteCartItemApi(accessToken, List.of(2L));
 
-        장바구니_삭제됨(response);
+        ExtractableResponse<Response> response = findCartItemsApi(accessToken);
+        List<CartResponse> cartResponses = response.jsonPath().getList(".", CartResponse.class);
+
+        //then
+        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(cartResponses.size()).isEqualTo(2);
+
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
+    @DisplayName("장바구니에 존재하지 않는 상품을 장바구니에서 삭제할 경우, 예외를 발생시킨다.")
+    @Test
+    void deleteCartWhenNotSaveCartException() {
+        //given
+        String accessToken = getAccessToken();
+        addCartItemApi(accessToken, 1L, 5);
+        addCartItemApi(accessToken, 2L, 5);
+        addCartItemApi(accessToken, 3L, 5);
+
+        //when
+        ExtractableResponse<Response> deleteResponse = deleteCartItemApi(accessToken, List.of(4L));
+
+        //then
+        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(deleteResponse.as(ExceptionResponse.class).getMessage()).isEqualTo("유효하지 않은 장바구니입니다.");
+    }
+
+    public static String getAccessToken() {
+        CustomerRequest customerRequest = new CustomerRequest("email", "Pw123456!", "name", "010-1234-5678", "address");
+
+        RestAssured.given().log().all()
+                .body(customerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/customers")
+                .then().log().all()
+                .extract();
+
+        return RestAssured.given().log().all()
+                .body(new TokenRequest("email", "Pw123456!"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/auth/login")
+                .then().log().all()
+                .extract().as(TokenResponse.class).getAccessToken();
+    }
+
+    public static ExtractableResponse<Response> addCartItemApi(String accessToken, Long productId, int quantity) {
+        CartRequest cartRequest = new CartRequest(productId, quantity);
 
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", userName)
+                .body(cartRequest)
+                .when().post("/customers/me/carts")
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
+    public static ExtractableResponse<Response> findCartItemsApi(String accessToken) {
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", userName)
+                .when().get("/customers/me/carts")
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
+    public static ExtractableResponse<Response> deleteCartItemApi(String accessToken, List<Long> productIds) {
+        ProductIdsRequest productIdsRequest = new ProductIdsRequest(productIds);
         return RestAssured
                 .given().log().all()
+                .auth().oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", userName, cartId)
+                .body(productIdsRequest)
+                .when().delete("/customers/me/carts")
                 .then().log().all()
                 .extract();
     }
 
-    public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
+    public static ExtractableResponse<Response> updateCartItemQuantityApi(String accessToken, Long productId,
+                                                                          int quantity) {
+        CartRequest cartRequest = new CartRequest(productId, quantity);
+        return RestAssured
+                .given().log().all()
+                .auth().oauth2(accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(cartRequest)
+                .when().patch("/customers/me/carts")
+                .then().log().all()
+                .extract();
     }
 
-    public static Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
-    }
-
-    public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
-                .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productIds);
-    }
-
-    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
 }

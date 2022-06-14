@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dto.CustomerNameResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -62,7 +63,7 @@ class CustomerServiceTest {
                 new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
         CustomerResponse savedResponse = customerService.save(customer);
 
-        CustomerResponse customerResponse = customerService.find(1L);
+        CustomerResponse customerResponse = customerService.findById(1L);
 
         assertThat(customerResponse).extracting("email", "name", "phone", "address")
                 .containsExactly(savedResponse.getEmail(), savedResponse.getName(),
@@ -72,9 +73,21 @@ class CustomerServiceTest {
     @DisplayName("존재하지 않는 id를 이용하여 회원 정보를 조회하면 예외가 발생한다.")
     @Test
     void checkExistByIdExceptionWhenFind() {
-        assertThatThrownBy(() -> customerService.find(1L))
+        assertThatThrownBy(() -> customerService.findById(1L))
                 .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 유저입니다.");
+                .hasMessageContaining("존재하지 않는 회원입니다.");
+    }
+
+    @DisplayName("customer id을 이용하여 회원 이름을 조회한다.")
+    @Test
+    void findCustomerNameById() {
+        CustomerRequest customer =
+                new CustomerRequest("email", "Pw123456!", "name", "010-2222-3333", "address");
+        customerService.save(customer);
+
+        CustomerNameResponse name = customerService.findNameById(1L);
+
+        assertThat(name.getName()).isEqualTo("name");
     }
 
     @DisplayName("회원 정보를 수정한다.")
@@ -88,7 +101,7 @@ class CustomerServiceTest {
                 new CustomerRequest("email", "Pw123456~~", "eve", "010-1111-2222", "address2");
         customerService.update(1L, customerRequest);
 
-        CustomerResponse customerResponse = customerService.find(1L);
+        CustomerResponse customerResponse = customerService.findById(1L);
         assertThat(customerResponse).extracting("email", "name", "phone", "address")
                 .containsExactly("email", "eve", "010-1111-2222", "address2");
     }
@@ -100,7 +113,7 @@ class CustomerServiceTest {
                 new CustomerRequest("email", "Pw123456~~", "eve", "010-1111-2222", "address2");
         assertThatThrownBy(() -> customerService.update(1L, customerRequest))
                 .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 유저입니다.");
+                .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
     @DisplayName("id를 이용하여 customer를 삭제한다.")
@@ -112,9 +125,9 @@ class CustomerServiceTest {
 
         customerService.delete(1L);
 
-        assertThatThrownBy(() -> customerService.find(1L))
+        assertThatThrownBy(() -> customerService.findById(1L))
                 .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 유저입니다.");
+                .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 
     @DisplayName("존재하지 않는 id를 이용하여 회원을 삭제하면 예외가 발생한다.")
@@ -122,6 +135,6 @@ class CustomerServiceTest {
     void checkExistByIdExceptionWhenDelete() {
         assertThatThrownBy(() -> customerService.delete(1L))
                 .isInstanceOf(InvalidCustomerException.class)
-                .hasMessageContaining("존재하지 않는 유저입니다.");
+                .hasMessageContaining("존재하지 않는 회원입니다.");
     }
 }

@@ -8,16 +8,12 @@ public class Customer {
     private static final int MAXIMUM_NAME_LENGTH = 30;
     private static final String PHONE_REGEX = "^010-\\d{4}-\\d{4}$";
 
-    private Long id;
-    private String email;
-    private Password password;
-    private String name;
-    private String phone;
-    private String address;
-
-    private Customer() {
-
-    }
+    private final Long id;
+    private final String email;
+    private final Password password;
+    private final String name;
+    private final String phone;
+    private final String address;
 
     public Customer(String email, String password, String name, String phone, String address) {
         this(null, email, Password.encrypt(password), name, phone, address);
