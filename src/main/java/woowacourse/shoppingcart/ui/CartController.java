@@ -55,8 +55,9 @@ public class CartController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCart(@RequestBody CartDeleteRequest cartDeleteRequest) {
-        cartService.deleteByCartIds(cartDeleteRequest.getCartIds());
+    public ResponseEntity<Void> deleteCart(@LoginMemberPrincipal LoginMember loginMember,
+                                           @RequestBody CartDeleteRequest cartDeleteRequest) {
+        cartService.deleteByCartIds(loginMember.getId(), cartDeleteRequest.getCartIds());
 
         return ResponseEntity.noContent().build();
     }

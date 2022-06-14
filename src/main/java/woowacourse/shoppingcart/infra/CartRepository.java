@@ -4,9 +4,9 @@ import java.util.List;
 import woowacourse.shoppingcart.domain.Carts;
 
 public interface CartRepository {
-    Carts findCartsByMemberId(long memberId);
+    Carts findCartsByCustomerId(long memberId);
 
     void saveCarts(Carts carts);
 
-    void deleteByCartIds(List<Long> cartIds);
+    void deleteCartItemsByProductIds(List<Long> cartIds);
 }

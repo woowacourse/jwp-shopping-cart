@@ -19,7 +19,7 @@ public class JdbcCartRepository implements CartRepository {
     }
 
     @Override
-    public Carts findCartsByMemberId(final long memberId) {
+    public Carts findCartsByCustomerId(final long memberId) {
         final List<CartEntity> cartEntities = cartDao.findCartsByMemberId(memberId);
 
         return new Carts(memberId, toCarts(cartEntities));
@@ -44,12 +44,12 @@ public class JdbcCartRepository implements CartRepository {
     public void saveCarts(final Carts carts) {
         final List<CartEntity> cartEntities = toEntities(carts);
 
-        cartDao.save(cartEntities);
+        cartDao.save(carts.getCustomerId(), cartEntities);
     }
 
     @Override
-    public void deleteByCartIds(final List<Long> cartIds) {
-        cartDao.deleteByCartIds(cartIds);
+    public void deleteCartItemsByProductIds(final List<Long> productIds) {
+        cartDao.deleteByCartIds(productIds);
     }
 
     private List<CartEntity> toEntities(final Carts carts) {

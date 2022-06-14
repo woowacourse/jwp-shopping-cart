@@ -2,19 +2,32 @@ package woowacourse.shoppingcart.domain;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import woowacourse.exception.badrequest.CartDuplicateException;
 import woowacourse.exception.notfound.CartNotFoundException;
 
 public class Carts {
-    private final long memberId;
+    private final long customerId;
     private final List<Cart> carts;
 
-    public Carts(final long memberId, final List<Cart> carts) {
-        this.memberId = memberId;
+    public Carts(final long customerId, final List<Cart> carts) {
+        this.customerId = customerId;
         this.carts = carts;
     }
 
     public void addCart(final Cart cart) {
+        validateAlreadyExists(cart);
         carts.add(cart);
+    }
+
+    private void validateAlreadyExists(final Cart cart) {
+        final boolean exists = carts.stream()
+                .map(Cart::getProduct)
+                .collect(Collectors.toList())
+                .contains(cart.getProduct());
+
+        if (exists) {
+            throw new CartDuplicateException();
+        }
     }
 
     public void updateQuantity(final long productId, final int quantity) {
@@ -36,8 +49,8 @@ public class Carts {
         carts.removeAll(orderingCarts);
     }
 
-    public long getMemberId() {
-        return memberId;
+    public long getCustomerId() {
+        return customerId;
     }
 
     public List<Cart> getCarts() {

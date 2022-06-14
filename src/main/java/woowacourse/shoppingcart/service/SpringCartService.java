@@ -22,30 +22,34 @@ public class SpringCartService implements CartService {
 
     @Transactional
     @Override
-    public void add(final long memberId, final long productId) {
+    public void add(final long customerId, final long productId) {
         final Product product = productService.findById(productId);
-        final Cart cart = new Cart(null, memberId, product, DEFAULT_QUANTITY);
+        final Cart cart = new Cart(null, customerId, product, DEFAULT_QUANTITY);
 
-        final Carts carts = cartRepository.findCartsByMemberId(memberId);
+        final Carts carts = cartRepository.findCartsByCustomerId(customerId);
         carts.addCart(cart);
         cartRepository.saveCarts(carts);
     }
 
     @Override
     public Carts findCartsByCustomerId(final long id) {
-        return cartRepository.findCartsByMemberId(id);
+        return cartRepository.findCartsByCustomerId(id);
     }
 
     @Override
-    public void updateQuantity(final long id, final long productId, final int quantity) {
-        final Carts carts = cartRepository.findCartsByMemberId(id);
+    public void updateQuantity(final long customerId, final long productId, final int quantity) {
+        final Carts carts = cartRepository.findCartsByCustomerId(customerId);
         carts.updateQuantity(productId, quantity);
 
         cartRepository.saveCarts(carts);
     }
 
     @Override
-    public void deleteByCartIds(final List<Long> cartIds) {
-        cartRepository.deleteByCartIds(cartIds);
+    public void deleteByCartIds(final long customerId, final List<Long> cartIds) {
+        final Carts carts = cartRepository.findCartsByCustomerId(customerId);
+        final List<Cart> cartsByIds = carts.getCartsByIds(cartIds);
+        carts.emptyCarts(cartsByIds);
+
+        cartRepository.saveCarts(carts);
     }
 }
