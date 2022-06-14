@@ -33,7 +33,7 @@ class OrderDaoTest {
         final Long customerId = 1L;
 
         //when
-        final Long orderId = orderDao.addOrders(customerId);
+        final Long orderId = orderDao.save(customerId);
 
         //then
         assertThat(orderId).isNotNull();

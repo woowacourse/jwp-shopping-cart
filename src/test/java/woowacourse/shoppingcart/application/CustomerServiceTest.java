@@ -12,7 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.common.exception.AuthException;
 import woowacourse.common.exception.JoinException;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
 
 @SpringBootTest
@@ -106,6 +106,6 @@ class CustomerServiceTest {
         customerService.register(email, password, username);
 
         //then
-        assertThatThrownBy(() -> customerService.delete(email,"wrongPwd0!")).isInstanceOf(AuthException.class);
+        assertThatThrownBy(() -> customerService.delete(email, "wrongPwd0!")).isInstanceOf(AuthException.class);
     }
 }

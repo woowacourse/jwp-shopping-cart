@@ -1,62 +1,95 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import woowacourse.common.exception.NotFoundException;
+import woowacourse.common.exception.dto.ErrorResponse;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.ThumbnailImage;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
+    private static final RowMapper<CartItem> CART_ROW_MAPPER = (resultSet, rowNumber) ->
+            new CartItem(
+                    resultSet.getLong("id"),
+                    resultSet.getInt("quantity"),
+                    new Product(
+                            resultSet.getLong("productId"),
+                            resultSet.getString("name"),
+                            resultSet.getInt("price"),
+                            resultSet.getInt("stock_quantity"),
+                            new ThumbnailImage(
+                                    resultSet.getString("url"),
+                                    resultSet.getString("alt")
+                            )
+                    )
+            );
+
     private final JdbcTemplate jdbcTemplate;
 
     public CartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Long> findProductIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
-    }
-
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
-    }
-
-    public Long findProductIdById(final Long cartId) {
+    public CartItem getById(final Long cartId) {
+        final String sql =
+                "SELECT c.id, c.quantity, p.id AS productId, p.name, p.price, p.stock_quantity, t.url, t.alt "
+                        + "FROM cart_item AS c, product AS p, thumbnail_image as t "
+                        + "WHERE c.id = ? AND (c.product_id = p.id AND t.product_id = p.id)";
         try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
+            return jdbcTemplate.queryForObject(sql, CART_ROW_MAPPER, cartId);
         } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
+            throw new NotFoundException("존재하지 않는 장바구니입니다.", ErrorResponse.NOT_EXIST_CART_ITEM);
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+    public List<CartItem> getAllByCustomerId(final Long customerId) {
+        final String sql =
+                "SELECT c.id, c.quantity, p.id AS productId, p.name, p.price, p.stock_quantity, t.url, t.alt "
+                        + "FROM cart_item AS c, product AS p, thumbnail_image as t "
+                        + "WHERE c.customer_id = ? AND (c.product_id = p.id AND t.product_id = p.id)";
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return jdbcTemplate.query(sql, CART_ROW_MAPPER, customerId);
     }
 
-    public void deleteCartItem(final Long id) {
+    public Long save(final Long customerId, final int quantity, final Long productId) {
+        final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("customer_id", customerId);
+        params.put("quantity", quantity);
+        params.put("product_id", productId);
+
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+    }
+
+    public void delete(final Long id) {
         final String sql = "DELETE FROM cart_item WHERE id = ?";
 
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public void updateCartQuantity(CartItem cartItem) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql, cartItem.getQuantity(), cartItem.getId());
+    }
+
+    public boolean existsProductIdAndCustomerId(Long productId, Long customerId) {
+        final String sql = "SELECT exists(SELECT id FROM cart_item WHERE customer_id = ? AND product_id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, customerId, productId));
     }
 }

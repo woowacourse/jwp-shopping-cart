@@ -14,13 +14,13 @@ public class PasswordTest {
     @ParameterizedTest(name = "{0}은 영어, 숫자, 특수문자가 모두 들어있지 않으므로 에러가 발생한다.")
     @ValueSource(strings = {"5566", "1", "12!", "abc", "a", "a!", "1!", "!!!"})
     void passwordNotContainsAll(String value) {
-        assertThatThrownBy(()-> Password.fromPlainInput(value)).isInstanceOf(InputFormatException.class);
+        assertThatThrownBy(() -> Password.fromPlainInput(value)).isInstanceOf(InputFormatException.class);
     }
 
     @ParameterizedTest(name = "{0}은 영어, 숫자, 특수문자가 모두 들어있으나 8~12자가 아니므로 에러가 발생한다.")
-    @ValueSource(strings = {"5566aa!","11223344aabb!"})
+    @ValueSource(strings = {"5566aa!", "11223344aabb!"})
     void passwordFailByLength(String value) {
-        assertThatThrownBy(()-> Password.fromPlainInput(value)).isInstanceOf(InputFormatException.class);
+        assertThatThrownBy(() -> Password.fromPlainInput(value)).isInstanceOf(InputFormatException.class);
     }
 
     @DisplayName("같은 문자열로 암호화하였을 경우 두 암호화된 패스워드는 같다.")

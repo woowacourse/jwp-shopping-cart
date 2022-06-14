@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.customer;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

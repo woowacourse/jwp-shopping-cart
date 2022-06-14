@@ -1,7 +1,6 @@
 package woowacourse.shoppingcart.dao;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,10 +8,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.common.exception.LoginException;
+import woowacourse.common.exception.NotFoundException;
 import woowacourse.common.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
@@ -29,12 +28,12 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long getIdByUsername(final String userName) {
+    public Long getIdByEmail(final String email) {
         try {
-            final String query = "SELECT id FROM customer WHERE username = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            final String query = "SELECT id FROM customer WHERE email = ?";
+            return jdbcTemplate.queryForObject(query, Long.class, email);
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new NotFoundException("존재하지 않는 사용자입니다.", ErrorResponse.NOT_EXIST_CUSTOMER);
         }
     }
 
@@ -76,7 +75,7 @@ public class CustomerDao {
     }
 
     public boolean existsByEmail(String email) {
-        final String sql = "SELECT exists(SELECT * FROM customer WHERE email = ?)";
+        final String sql = "SELECT exists(SELECT id FROM customer WHERE email = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, email);
     }
 }

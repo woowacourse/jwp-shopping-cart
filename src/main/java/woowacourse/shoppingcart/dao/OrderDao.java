@@ -1,10 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,16 +15,14 @@ public class OrderDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addOrders(final Long customerId) {
-        final String sql = "INSERT INTO orders (customer_id) VALUES (?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Long save(final Long customerId) {
+        final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("orders")
+                .usingGeneratedKeyColumns("id");
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        Map<String, Long> params = Map.of("customer_id", customerId);
+
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public List<Long> findOrderIdsByCustomerId(final Long customerId) {
@@ -33,8 +30,8 @@ public class OrderDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
+    public boolean existByOrderIdAndCustomerId(final Long customerId, final Long orderId) {
+        final String query = "SELECT EXISTS(SELECT id FROM orders WHERE customer_id = ? AND id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
     }
 }

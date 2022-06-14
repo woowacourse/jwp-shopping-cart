@@ -34,7 +34,20 @@ public class AcceptanceTestFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> patchMethodRequestWithBearerAuth(Object request, String token, String path) {
+    public static ExtractableResponse<Response> postMethodRequestWithBearerAuth(Object request, String token,
+                                                                                String path) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post(path)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> patchMethodRequestWithBearerAuth(Object request, String token,
+                                                                                 String path) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + token)
                 .body(request)
@@ -45,10 +58,30 @@ public class AcceptanceTestFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> deleteMethodRequestWithBearerAuth(Object request, String token, String path) {
+    public static ExtractableResponse<Response> deleteMethodRequest(String path) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete(path)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> deleteMethodRequestWithBearerAuthAndBody(Object request, String token,
+                                                                                         String path) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + token)
                 .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete(path)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> deleteMethodRequestWithBearerAuth(String token, String path) {
+        return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .delete(path)

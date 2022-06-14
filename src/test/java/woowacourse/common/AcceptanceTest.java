@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.acceptance;
+package woowacourse.common;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "classpath:truncate.sql")
-@ActiveProfiles("test")
+@ActiveProfiles("local")
 public class AcceptanceTest {
     @LocalServerPort
     int port;
