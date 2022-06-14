@@ -33,7 +33,7 @@ import woowacourse.shoppingcart.exception.OutOfStockException;
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleUnhandledException(RuntimeException exception) {
         exception.printStackTrace();
         return new ErrorResponse("Unhandled Exception");
