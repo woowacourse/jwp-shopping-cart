@@ -6,7 +6,6 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -67,8 +66,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         final TokenResponse tokenResponse = 로그인을_한다("giron", RAW_BASIC_PASSWORD).as(TokenResponse.class);
         // when
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword("giron", "87654321");
+        CustomerRequest request =
+                new CustomerRequest("giron", "8@76!432Aa1");
 
         ExtractableResponse<Response> extractableResponse = RestAssured
                 .given().log().all()
@@ -136,7 +135,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .param("userName", userName)
                 .body(userName)
-                .when().get("/api/customers/duplication")
+                .when().get("/api/customers/exists")
                 .then().log().all()
                 .extract();
 
@@ -159,24 +158,37 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호의 길이는 8이상 16이하여야 합니다.")
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("비밀번호는 8~16자의 영문 대문자 1개 이상, 소문자 1개 이상, 숫자 1개 이상, 특수문자 1개 이상이어야 합니다. : " + password)
         );
     }
 
     @DisplayName("회원 가입할 때 유저 이름이 잘못된 경우 400-BAD_REQUEST를 반환한다.")
     @ParameterizedTest
-    @ValueSource(strings = {"a","", " ", "123456678zuduihsfnsdfda"})
-    @NullSource
+    @ValueSource(strings = {"a", "", " ", "123456678zuduihsfnsdfda"})
     void signUpWithWrongUserName(String userName) {
 
         // when
-        final ExtractableResponse<Response> response = 회원가입을_한다(userName, "12345678");
+        final ExtractableResponse<Response> response = 회원가입을_한다(userName, "@Aa23445678");
 
         final ErrorResponse errorResponse = response.as(ErrorResponse.class);
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름의 길이는 5이상 20이하여야 합니다.")
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름의 길이는 5이상 20이하여야 합니다. : " + userName)
+        );
+    }
+
+    @DisplayName("회원 가입할 때 유저 이름이 잘못된 경우 400-BAD_REQUEST를 반환한다.")
+    void signUpWithNullUserName() {
+
+        // when
+        final ExtractableResponse<Response> response = 회원가입을_한다(null, "@Aa23445678");
+
+        final ErrorResponse errorResponse = response.as(ErrorResponse.class);
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(errorResponse.getMessage()).isEqualTo("유저 이름의 길이는 5이상 20이하여야 합니다. : ")
         );
     }
 }

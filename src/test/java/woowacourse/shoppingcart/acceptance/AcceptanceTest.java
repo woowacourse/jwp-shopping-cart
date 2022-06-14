@@ -7,8 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 
@@ -16,8 +15,7 @@ import static woowacourse.fixture.TokenFixture.BEARER;
 
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@ActiveProfiles("test")
+@Sql({"/schema.sql", "/data.sql"})
 public class AcceptanceTest {
     @LocalServerPort
     int port;
@@ -39,8 +37,8 @@ public class AcceptanceTest {
     }
 
     protected ExtractableResponse<Response> 회원가입을_한다(final String userName, final String password) {
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword(userName, password);
+        CustomerRequest request =
+                new CustomerRequest(userName, password);
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

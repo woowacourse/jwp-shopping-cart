@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
-import static woowacourse.fixture.PasswordFixture.ENCRYPTED_BASIC_PASSWORD;
+import static woowacourse.fixture.PasswordFixture.ORIGIN_USER_1_PASSWORD;
 import static woowacourse.fixture.PasswordFixture.RAW_BASIC_PASSWORD;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,8 +52,8 @@ class CustomerServiceTest {
         given(customerDao.save(userName, password.getValue())).willReturn(1L);
 
         // when
-        final CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword(userName, RAW_BASIC_PASSWORD);
+        final CustomerRequest request =
+                new CustomerRequest(userName, RAW_BASIC_PASSWORD);
         final Long id = customerService.signUp(request);
 
         // then
@@ -73,7 +73,7 @@ class CustomerServiceTest {
         given(customerDao.existsByUserName(userName)).willReturn(true);
 
         // when
-        final CustomerRequest.UserNameAndPassword request = new CustomerRequest.UserNameAndPassword(userName,
+        final CustomerRequest request = new CustomerRequest(userName,
                 RAW_BASIC_PASSWORD);
 
         // then
@@ -91,7 +91,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
+        Customer customer = new Customer(id, userName, ORIGIN_USER_1_PASSWORD);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
         // when
@@ -126,14 +126,14 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
+        Customer customer = new Customer(id, userName, ORIGIN_USER_1_PASSWORD);
         Customer updatedCustomer = new Customer(id, userName, "321");
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
         given(customerDao.update(id, userName, "321")).willReturn(updatedCustomer);
 
         // when
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword("giron", "321");
+        CustomerRequest request =
+                new CustomerRequest("giron", "321");
         CustomerResponse response = customerService.updateById(id, request);
 
         // then
@@ -152,8 +152,8 @@ class CustomerServiceTest {
         given(customerDao.findById(id)).willReturn(Optional.empty());
 
         // when
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword("giron", "87654321");
+        CustomerRequest request =
+                new CustomerRequest("giron", "87654321");
 
         // then
         assertAll(
@@ -170,12 +170,12 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
+        Customer customer = new Customer(id, userName, ORIGIN_USER_1_PASSWORD);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
 
         // when
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword("tiki12", "87654321");
+        CustomerRequest request =
+                new CustomerRequest("tiki12", "87654321");
 
         // then
         assertAll(
@@ -192,7 +192,7 @@ class CustomerServiceTest {
         // given
         final Long id = 1L;
         final String userName = "giron";
-        Customer customer = new Customer(id, userName, ENCRYPTED_BASIC_PASSWORD);
+        Customer customer = new Customer(id, userName, ORIGIN_USER_1_PASSWORD);
         given(customerDao.findById(id)).willReturn(Optional.of(customer));
         doNothing().when(customerDao).deleteById(id);
 

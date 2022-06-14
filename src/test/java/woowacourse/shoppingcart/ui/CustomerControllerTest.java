@@ -14,6 +14,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.config.RestDocsConfig;
 import woowacourse.shoppingcart.domain.Customer;
@@ -32,6 +33,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static woowacourse.fixture.TokenFixture.ACCESS_TOKEN;
+import static woowacourse.fixture.TokenFixture.BEARER;
 
 @DisplayName("유저 API 문서화")
 @AutoConfigureRestDocs
@@ -43,6 +46,8 @@ class CustomerControllerTest {
     private CustomerService customerService;
     @MockBean
     private AuthService authService;
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
     @Autowired
     private MockMvc mvc;
     @Autowired
@@ -51,8 +56,8 @@ class CustomerControllerTest {
     @DisplayName("유저 회원가입 문서화")
     @Test
     void createCustomer() throws Exception {
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword("giron", "pas1@A!sword");
+        CustomerRequest request =
+                new CustomerRequest("giron", "pas1@A!sword");
 
         given(customerService.signUp(request)).willReturn(1L);
 
@@ -69,7 +74,7 @@ class CustomerControllerTest {
                                 fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
                         ),
                         responseHeaders(
-                                headerWithName("Location").description("/api/customers/{유저 id} 형태")
+                                headerWithName("Location").description("Location의 url마지막에 customer의 식별자가 있습니다")
                         )
                 ));
 
@@ -82,10 +87,11 @@ class CustomerControllerTest {
         CustomerResponse response = new CustomerResponse(customer);
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
         given(customerService.getMeById(any())).willReturn(response);
 
         ResultActions results = mvc.perform(get("/api/customers/me")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
 
@@ -104,17 +110,18 @@ class CustomerControllerTest {
     @DisplayName("내 정보 업데이트 문서화")
     @Test
     void updateCustomer() throws Exception {
-        Customer customer = new Customer(1L, "giron", "paA@14sswordd");
+        Customer customer = new Customer(1L, "giron", "paA@14ssdd");
 
         CustomerResponse response = new CustomerResponse(customer);
-        CustomerRequest.UserNameAndPassword request =
-                new CustomerRequest.UserNameAndPassword("giron", "updatePa!sD@");
+        CustomerRequest request =
+                new CustomerRequest("giron", "upda12ePa!sD@");
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
         given(customerService.updateById(any(), any())).willReturn(response);
 
         ResultActions results = mvc.perform(put("/api/customers/me")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(request)));
@@ -141,10 +148,11 @@ class CustomerControllerTest {
         Customer customer = new Customer(1L, "giron", "paA@14sswordd");
 
         given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
         willDoNothing().given(customerService).deleteById(any());
 
         ResultActions results = mvc.perform(delete("/api/customers/me")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
+                .header(HttpHeaders.AUTHORIZATION, BEARER + ACCESS_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
 
@@ -160,15 +168,13 @@ class CustomerControllerTest {
     @DisplayName("중복 이름 확인 문서화")
     @Test
     void duplicateUserName() throws Exception {
-        Customer customer = new Customer(1L, "giron", "paA@14sswordd");
 
         DuplicateResponse response = new DuplicateResponse(false);
 
-        given(authService.getAuthenticatedCustomer(any())).willReturn(customer);
+        given(jwtTokenProvider.validateToken(any())).willReturn(true);
         given(customerService.isDuplicateUserName(any())).willReturn(response);
 
-        ResultActions results = mvc.perform(get("/api/customers/duplication")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer dcvqe4t42d1dsafadar3$")
+        ResultActions results = mvc.perform(get("/api/customers/exists")
                 .param("userName", "giron")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("UTF-8"));
@@ -176,9 +182,6 @@ class CustomerControllerTest {
         results.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("customer-duplication-check-name",
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer 뒤에 accessToken이 들어있습니다")
-                        ),
                         requestParameters(
                                 parameterWithName("userName").description("중복검사 확인 할 유저 이름")
                         ),

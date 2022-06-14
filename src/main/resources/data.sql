@@ -1,5 +1,5 @@
 insert into customer (username, password)
-values ('puterism', '$2a$10$xqy4zIaYu655Gf.vdKHceecQEuPxOO2kSHwERG7oKJ7nngGbx8eYC'),
+values ('puterism', '$2a$10$1wRaEsqHpoMDpNaiHZps0e7ppFAd5pR5S8UIkhYaNMlwTq7RKmxoq'),
        ('tanney-102', '$2a$10$kUW6H9sXRKMOPOPUxqkxouGecNj8OxkXHeCFpiJIrjma1Z7Vw3Dva'),
        ('jho2301', '$2a$10$.UVBbn6Y251OzhCAiXVm3OL70th31dcLY6KszUbB/GdaMN6QphukW'),
        ('365kim', '$2a$10$Bb4b7CZe4oPbXpe1YR0ZcOZt.C5umiTQKZzzbiFdCfMM/cfbcMeSO'),

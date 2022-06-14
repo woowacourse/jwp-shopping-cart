@@ -1,7 +1,7 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.application.exception.InvalidTokenException;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -26,19 +26,14 @@ public class AuthService {
         this.customerDao = customerDao;
     }
 
+    @Transactional(readOnly = true)
     public Customer getAuthenticatedCustomer(final String token) {
-        validateAvailableToken(token);
         Long id = Long.parseLong(jwtTokenProvider.getPayload(token));
         return customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
     }
 
-    private void validateAvailableToken(final String token) {
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException();
-        }
-    }
-
+    @Transactional
     public TokenResponse login(final TokenRequest tokenRequest) {
         final Customer customer = customerDao.findByUserName(tokenRequest.getUserName())
                 .orElseThrow(InvalidCustomerException::new);

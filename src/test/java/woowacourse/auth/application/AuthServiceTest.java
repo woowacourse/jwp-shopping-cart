@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import woowacourse.auth.application.exception.InvalidTokenException;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
@@ -18,11 +17,10 @@ import woowacourse.shoppingcart.domain.PasswordEncrypter;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static woowacourse.fixture.PasswordFixture.ENCRYPTED_BASIC_PASSWORD;
+import static woowacourse.fixture.PasswordFixture.ORIGIN_USER_1_PASSWORD;
 import static woowacourse.fixture.PasswordFixture.RAW_BASIC_PASSWORD;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,9 +71,7 @@ class AuthServiceTest {
         // given
         String userName = "giron";
         String token = "accessToken";
-        Customer customer = new Customer(1L, userName, ENCRYPTED_BASIC_PASSWORD);
-        given(jwtTokenProvider.validateToken(token))
-                .willReturn(true);
+        Customer customer = new Customer(1L, userName, ORIGIN_USER_1_PASSWORD);
         given(jwtTokenProvider.getPayload(token))
                 .willReturn("1");
         given(customerDao.findById(1L))
@@ -87,26 +83,8 @@ class AuthServiceTest {
         // then
         assertAll(
                 () -> assertThat(authenticatedCustomer).isEqualTo(customer),
-                () -> verify(jwtTokenProvider).validateToken(token),
                 () -> verify(jwtTokenProvider).getPayload(token),
                 () -> verify(customerDao).findById(1L)
-        );
-    }
-
-    @DisplayName("JWT 토큰을 받아서 토큰 인증에 실패한다.")
-    @Test
-    void getAuthenticatedCustomerFailure() {
-        // given
-        String token = "accessToken";
-        given(jwtTokenProvider.validateToken(token))
-                .willReturn(false);
-
-        // then
-        assertAll(
-                () -> assertThatThrownBy(() -> authService.getAuthenticatedCustomer(token))
-                        .isExactlyInstanceOf(InvalidTokenException.class)
-                        .hasMessageContaining("유효하지 않은 토큰입니다."),
-                () -> verify(jwtTokenProvider).validateToken(token)
         );
     }
 }

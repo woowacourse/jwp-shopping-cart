@@ -6,12 +6,11 @@ import woowacourse.shoppingcart.application.exception.InvalidProductException;
 import woowacourse.shoppingcart.application.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Carts;
+import woowacourse.shoppingcart.dto.CartResponse;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -19,29 +18,24 @@ public class CartService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    @Transactional(readOnly = true)
+    public List<CartResponse> findAllByCustomerName(final String customerName) {
+        Carts carts = findByCustomerName(customerName);
 
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
+        return carts.getElements().stream()
+                .map(CartResponse::new)
+                .collect(Collectors.toList());
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
+    private Carts findByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+        return new Carts(cartItemDao.findAllByCustomerId(customerId));
     }
 
     public Long addCart(final Long productId, final String customerName) {
@@ -53,16 +47,22 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
+    public void delete(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);
     }
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
+        Carts carts = findByCustomerName(customerName);
+
+        if (carts.haveCartId(cartId)) {
             return;
         }
         throw new NotInCustomerCartItemException();
+    }
+
+    public void updateQuantity(final String userName, final Long cartId, final int quantity) {
+        validateCustomerCart(cartId, userName);
+        cartItemDao.updateQuantity(cartId, quantity);
     }
 }

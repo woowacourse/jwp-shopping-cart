@@ -1,0 +1,97 @@
+= Product 관련 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:snippets: ../../../build/generated-snippets
+
+= Product
+---
+== 상품 API
+
+=== 로그인한 사용자의 상품 전체 조회할 때 redirect
+
+`GET /api/products`
+
+요청 HTTP
+
+include::{snippets}/products-get-redirect/http-request.adoc[]
+
+요청 헤더
+
+include::{snippets}/products-get-redirect/request-headers.adoc[]
+
+성공 응답 HTTP
+
+include::{snippets}/products-get-redirect/http-response.adoc[]
+include::{snippets}/products-get-redirect/response-headers.adoc[]
+
+=== redirect된 로그인한 사용자의 상품 전체 조회
+
+`GET /api/products/me`
+
+요청 HTTP
+
+include::{snippets}/products-get-login/http-request.adoc[]
+
+요청 헤더
+
+include::{snippets}/products-get-login/request-headers.adoc[]
+
+성공 응답 HTTP
+
+include::{snippets}/products-get-login/http-response.adoc[]
+include::{snippets}/products-get-login/response-fields.adoc[]
+
+=== 로그인 안 한 사용자의 상품 전체 조회
+
+`GET /api/products`
+
+요청 HTTP
+
+include::{snippets}/products-get-logout/http-request.adoc[]
+
+성공 응답 HTTP
+
+include::{snippets}/products-get-logout/http-response.adoc[]
+include::{snippets}/products-get-logout/response-fields.adoc[]
+
+=== 상품 추가
+
+`POST /api/products`
+
+요청 HTTP
+
+include::{snippets}/product-add/http-request.adoc[]
+
+성공 응답 HTTP
+
+include::{snippets}/product-add/http-response.adoc[]
+include::{snippets}/product-add/response-headers.adoc[]
+
+=== 상품 단건 조회
+
+`GET /api/products/{productId}`
+
+요청 HTTP
+
+include::{snippets}/product-get-one/http-request.adoc[]
+
+성공 응답 HTTP
+
+include::{snippets}/product-get-one/http-response.adoc[]
+include::{snippets}/product-get-one/response-fields.adoc[]
+
+=== 상품 삭제
+
+`DELETE /api/products/{productId}`
+
+요청 HTTP
+
+include::{snippets}/product-delete/http-request.adoc[]
+
+성공 응답 HTTP
+
+include::{snippets}/product-delete/http-response.adoc[]

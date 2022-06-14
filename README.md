@@ -29,6 +29,9 @@
 - [X] 로그인 기능
     - [X] JWT Access Token을 발급한다.
     - [X] JWT Access Token을 이용하여 유효성을 검증한다.
+- [X] 인터셉터를 적용한다.
+  - [X] 로그인, 회원가입, Products를 제외한 요청 URI에서 토큰을 검증한다.
+- [X] 장바구니/주문과 관련된 API에서 토큰을 통해 현재 사용자를 검증하도록 수정한다.
 
 ## ✏️ Code Review Process
 
