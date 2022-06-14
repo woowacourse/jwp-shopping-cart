@@ -4,55 +4,99 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
+import woowacourse.shoppingcart.domain.cart.Cart;
+import woowacourse.shoppingcart.domain.cart.CartItem;
+import woowacourse.shoppingcart.domain.order.Order;
+import woowacourse.shoppingcart.domain.order.OrderItem;
+
 @JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-class OrderDaoTest {
+public class OrderDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
+    private CartItem cartItem1;
+    private CartItem cartItem2;
+
     private final OrderDao orderDao;
+    private final CartItemDao cartItemDao;
+    private final ProductDao productDao;
 
     public OrderDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
         this.orderDao = new OrderDao(jdbcTemplate);
+        this.productDao = new ProductDao(jdbcTemplate);
+        this.cartItemDao = new CartItemDao(jdbcTemplate);
     }
 
-    @DisplayName("Order를 추가하는 기능")
-    @Test
-    void addOrders() {
-        //given
-        final Long customerId = 1L;
+    @BeforeEach
+    void setUp() {
+        cartItem1 = getCartItem(1L, 1L, 3);
+        cartItem2 = getCartItem(2L, 2L, 4);
+        cartItemDao.addCartItem(1L, cartItem1);
+        cartItemDao.addCartItem(1L, cartItem2);
+    }
 
+    private CartItem getCartItem(long cartItemId, long productId, int count) {
+        return new CartItem(cartItemId, count, productDao.findProductById(productId));
+    }
+
+    @Test
+    @DisplayName("주문을 저장한다.")
+    void save() {
         //when
-        final Long orderId = orderDao.addOrders(customerId);
+        Order order = new Order(1L, new Cart(List.of(cartItem1, cartItem2)));
+        Long orderId = orderDao.save(order);
 
         //then
-        assertThat(orderId).isNotNull();
+        List<OrderItem> orderItems = orderDao.findOrderItemsByOrderId(orderId);
+        List<OrderItem> expected = List.of(new OrderItem(1L, 3), new OrderItem(2L, 4));
+
+        assertThat(orderItems).usingRecursiveComparison()
+            .isEqualTo(expected);
     }
 
-    @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
     @Test
-    void findOrderIdsByCustomerId() {
+    @DisplayName("주문 내역 전체를 조회한다.")
+    void findAll() {
         //given
-        final Long customerId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+        Order order = new Order(1L, new Cart(List.of(cartItem1, cartItem2)));
+        orderDao.save(order);
 
         //when
-        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
+        List<Order> orders = orderDao.findAllByCustomerId(1L);
 
         //then
-        assertThat(orderIdsByCustomerId).hasSize(2);
+        List<Order> expected = List.of(new Order(1L, List.of(new OrderItem(1L, 3),
+            new OrderItem(2L, 4))));
+        assertThat(orders).usingRecursiveComparison()
+            .ignoringExpectedNullFields()
+            .isEqualTo(expected);
     }
 
+    @Test
+    @DisplayName("단일 주문의 주문 상품 목록 전체를 조회한다.")
+    void findOrderDetailsByOrderId() {
+        //given
+        Order order = new Order(1L, new Cart(List.of(cartItem1, cartItem2)));
+        Long orderId = orderDao.save(order);
+
+        //when
+        List<OrderItem> orderItems = orderDao.findOrderItemsByOrderId(orderId);
+
+        //then
+        List<OrderItem> expected = List.of(new OrderItem(1L, 3),
+            new OrderItem(2L, 4));
+
+        assertThat(orderItems).usingRecursiveComparison()
+            .isEqualTo(expected);
+    }
 }

@@ -1,12 +1,13 @@
 package woowacourse.auth.dto;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
 public class LoginTokenResponse {
 
     private String accessToken;
     private Long expirationTime;
-    private Customer customer;
+    private CustomerResponse customer;
 
     private LoginTokenResponse() {
     }
@@ -14,7 +15,7 @@ public class LoginTokenResponse {
     public LoginTokenResponse(String accessToken, Long expirationTime, Customer customer) {
         this.accessToken = accessToken;
         this.expirationTime = expirationTime;
-        this.customer = customer;
+        this.customer = new CustomerResponse(customer);
     }
 
     public String getAccessToken() {
@@ -25,7 +26,7 @@ public class LoginTokenResponse {
         return expirationTime;
     }
 
-    public Customer getCustomer() {
+    public CustomerResponse getCustomer() {
         return customer;
     }
 }

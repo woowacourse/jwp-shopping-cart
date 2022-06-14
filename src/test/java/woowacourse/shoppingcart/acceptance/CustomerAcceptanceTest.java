@@ -14,6 +14,7 @@ import io.restassured.response.Response;
 import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.LoginTokenResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 
@@ -72,7 +73,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void delete() {
         String token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
-        ExtractableResponse<Response> response = 회원탈퇴_요청(token, 1L);
+        ExtractableResponse<Response> response = 회원탈퇴_요청(token, 1L, "12349053145");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -124,12 +125,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
-    private ExtractableResponse<Response> 회원탈퇴_요청(String token, long id) {
+    private ExtractableResponse<Response> 회원탈퇴_요청(String token, long id, String password) {
+        CustomerDeleteRequest request = new CustomerDeleteRequest(password);
         return RestAssured
             .given().log().all()
             .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().delete("/api/customers/" + id)
+            .body(request)
+            .when().post("/api/customers/{id}", id)
             .then().log().all()
             .extract();
     }

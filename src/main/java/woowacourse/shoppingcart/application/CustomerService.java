@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -10,6 +11,7 @@ import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -54,7 +56,7 @@ public class CustomerService {
             .orElseThrow(InvalidCustomerException::new);
     }
 
-    public void update(Long id, CustomerUpdateRequest request) {
+    public void update(long id, CustomerUpdateRequest request) {
         if (isSameOriginUsername(id, request)) {
             return;
         }
@@ -63,17 +65,20 @@ public class CustomerService {
         customerDao.update(id, request.getUsername());
     }
 
-    private boolean isSameOriginUsername(Long id, CustomerUpdateRequest request) {
+    private boolean isSameOriginUsername(long id, CustomerUpdateRequest request) {
         Customer foundCustomer = findById(id);
         return foundCustomer.isSameUsername(request.getUsername());
     }
 
-    public void delete(Long id) {
-        validateCustomerExists(id);
+    public void delete(long id, String password) {
+        validateDeletable(id, password);
         customerDao.delete(id);
     }
 
-    private void validateCustomerExists(Long id) {
-        findById(id);
+    private void validateDeletable(long id, String password) {
+        Customer customer = findById(id);
+        if (!customer.isSamePassword(password)) {
+            throw new InvalidCustomerException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

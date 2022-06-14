@@ -2,11 +2,11 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 
-public class Password {
+class Password {
 
     private final String value;
 
-    public Password(String value) {
+    Password(String value) {
         validate(value);
         this.value = value;
     }
@@ -36,7 +36,7 @@ public class Password {
         }
     }
 
-    public String getValue() {
+    String getValue() {
         return value;
     }
 }

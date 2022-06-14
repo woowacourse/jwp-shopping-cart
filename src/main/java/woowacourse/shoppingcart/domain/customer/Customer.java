@@ -24,7 +24,7 @@ public class Customer {
         }
     }
 
-    public Customer() {
+    private Customer() {
     }
 
     public Long getId() {
@@ -45,5 +45,13 @@ public class Customer {
 
     public boolean isSameUsername(String username) {
         return this.username.getValue().equals(username);
+    }
+
+    public boolean isSamePassword(String password) {
+        return this.password.getValue().equals(password);
+    }
+
+    public boolean isSameId(long id) {
+        return this.id.equals(id);
     }
 }

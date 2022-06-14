@@ -17,11 +17,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (request.getMethod().equals("POST") && request.getRequestURI().startsWith("/api/customers")) {
+        if (request.getMethod().equals("POST") && request.getRequestURI().equals("/api/customers")) {
             return true;
         }
         String token = AuthorizationExtractor.extract(request);
-
         if (!jwtTokenProvider.validateToken(token)) {
             throw new InvalidTokenException();
         }

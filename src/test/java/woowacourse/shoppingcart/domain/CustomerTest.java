@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.domain.customer;
+package woowacourse.shoppingcart.domain;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerPropertyException;
 
 public class CustomerTest {

@@ -3,13 +3,13 @@ package woowacourse.shoppingcart.domain.customer;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class Email {
+class Email {
 
     private static final Pattern PATTERN = Pattern.compile("^(.+)@(.+)$");
 
     private final String value;
 
-    public Email(String value) {
+    Email(String value) {
         validate(value);
         this.value = value;
     }
@@ -46,7 +46,7 @@ public class Email {
         }
     }
 
-    public String getValue() {
+    String getValue() {
         return value;
     }
 }

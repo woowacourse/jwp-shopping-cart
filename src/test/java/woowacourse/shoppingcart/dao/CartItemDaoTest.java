@@ -14,7 +14,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.cart.CartItem;
+import woowacourse.shoppingcart.domain.cart.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -34,11 +35,11 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
+        productDao.save(new Product("banana", 1_000, "woowa1.com", 10));
+        productDao.save(new Product("apple", 2_000, "woowa2.com", 10));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, 1L, 5);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, 2L, 5);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
@@ -48,9 +49,10 @@ public class CartItemDaoTest {
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
-
+        final int count = 3;
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        CartItem cartItem = new CartItem(count, productDao.findProductById(productId));
+        final Long cartId = cartItemDao.addCartItem(customerId, cartItem);
 
         // then
         assertThat(cartId).isEqualTo(3L);
@@ -84,20 +86,18 @@ public class CartItemDaoTest {
         assertThat(cartIds).containsExactly(1L, 2L);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("Customer Id를 넣으면, 해당 장바구니 상품들을 삭제한다.")
     @Test
     void deleteCartItem() {
-
         // given
-        final Long cartId = 1L;
+        final Long customerId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteCartItemsByCustomerId(customerId);
 
         // then
-        final Long customerId = 1L;
         final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
 
-        assertThat(productIds).containsExactly(2L);
+        assertThat(productIds).isEmpty();
     }
 }

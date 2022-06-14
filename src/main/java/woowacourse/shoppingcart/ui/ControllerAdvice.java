@@ -26,6 +26,7 @@ import woowacourse.shoppingcart.exception.InvalidCustomerPropertyException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.ProductNotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -55,6 +56,12 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseWithField handleDuplicatedRequest(DuplicateCustomerException exception) {
         return new ErrorResponseWithField(exception.getField(), exception.getMessage());
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFoundException(RuntimeException exception) {
+        return new ErrorResponse(exception.getMessage());
     }
 
     @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})

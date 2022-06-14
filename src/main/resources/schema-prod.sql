@@ -1,14 +1,4 @@
-drop table if exists orders_detail;
-
-drop table if exists orders;
-
-drop table if exists cart_item;
-
-drop table if exists product;
-
-drop table if exists customer;
-
-create table customer
+create table if not exists customer
 (
     id       bigint       not null auto_increment,
     username varchar(30)  not null unique,
@@ -17,32 +7,34 @@ create table customer
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-create table product
+create table if not exists product
 (
     id        bigint       not null auto_increment,
     name      varchar(255) not null,
     price     integer      not null,
     image_url varchar(255),
+    quantity  integer      not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-create table cart_item
+create table if not exists cart_item
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,
     product_id  bigint not null,
+    count integer not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table cart_item
     add constraint fk_cart_item_to_customer
-        foreign key (customer_id) references customer (id);
+        foreign key (customer_id) references customer (id) on delete cascade;
 
 alter table cart_item
     add constraint fk_cart_item_to_product
         foreign key (product_id) references product (id);
 
-create table orders
+create table if not exists orders
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,
@@ -50,22 +42,14 @@ create table orders
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table orders
-    add constraint fk_orders_to_customer
-        foreign key (customer_id) references customer (id);
+    add constraint fk_order_to_customer
+        foreign key (customer_id) references customer (id) on delete cascade;
 
-create table orders_detail
+create table if not exists orders_detail
 (
     id         bigint  not null auto_increment,
-    orders_id  bigint  not null,
-    product_id bigint  not null,
-    quantity   integer not null,
+    orders_id  bigint  not null references orders (id),
+    product_id bigint  not null references product (id),
+    count   integer not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
-
-alter table orders_detail
-    add constraint fk_orders_detail_to_orders
-        foreign key (orders_id) references orders (id);
-
-alter table orders_detail
-    add constraint fk_orders_detail_to_product
-        foreign key (product_id) references product (id);

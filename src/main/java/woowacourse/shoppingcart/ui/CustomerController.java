@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,18 +19,20 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
-import woowacourse.shoppingcart.exception.ForbiddenAccessException;
 
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final AuthorizationValidator authorizationValidator;
 
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
+        this.authorizationValidator = new AuthorizationValidator();
     }
 
     @PostMapping
@@ -43,31 +44,26 @@ public class CustomerController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerResponse findCustomer(@PathVariable long id, @AuthenticationPrincipal Customer customer) {
-        validateAuthorizedUser(id, customer);
+        authorizationValidator.validate(id, customer);
         return new CustomerResponse(customer);
-    }
-
-    private void validateAuthorizedUser(long id, Customer customer) {
-        if (!customer.getId().equals(id)) {
-            throw new ForbiddenAccessException();
-        }
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerResponse update(@PathVariable long id, @Valid @RequestBody CustomerUpdateRequest request,
         @AuthenticationPrincipal Customer customer) {
-        validateAuthorizedUser(id, customer);
+        authorizationValidator.validate(id, customer);
         customerService.update(id, request);
         Customer updatedCustomer = customerService.findById(id);
 
         return new CustomerResponse(updatedCustomer);
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id, @AuthenticationPrincipal Customer customer) {
-        validateAuthorizedUser(id, customer);
-        customerService.delete(id);
+    public void delete(@PathVariable long id, @AuthenticationPrincipal Customer customer,
+        @RequestBody CustomerDeleteRequest request) {
+        authorizationValidator.validate(id, customer);
+        customerService.delete(id, request.getPassword());
     }
 }

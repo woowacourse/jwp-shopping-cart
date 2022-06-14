@@ -29,7 +29,7 @@ public class CustomerDao {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Long findIdByUserName(String userName) {
         try {
             final String query = "SELECT id, email, username, password FROM customer WHERE username = :username";
             Map<String, String> params = Map.of("username", userName.toLowerCase(Locale.ENGLISH));
@@ -41,7 +41,7 @@ public class CustomerDao {
         }
     }
 
-    public Optional<Customer> findById(final Long id) {
+    public Optional<Customer> findById(long id) {
         try {
             final String query = "SELECT id, email, username, password FROM customer WHERE id = :id";
             Map<String, Long> params = Map.of("id", id);
@@ -89,7 +89,7 @@ public class CustomerDao {
         }
     }
 
-    public Long save(final Customer customer) {
+    public Long save(Customer customer) {
         return insertActor.executeAndReturnKey(new MapSqlParameterSource()
             .addValue("email", customer.getEmail())
             .addValue("username", customer.getUsername())
@@ -97,7 +97,7 @@ public class CustomerDao {
         ).longValue();
     }
 
-    public void update(Long id, String username) {
+    public void update(long id, String username) {
         String sql = "update customer set username = :username "
             + "where id = :id";
         jdbcTemplate.update(sql, new MapSqlParameterSource()
@@ -115,7 +115,7 @@ public class CustomerDao {
         ));
     }
 
-    public void delete(Long id) {
+    public void delete(long id) {
         String sql = "delete from customer where id = :id";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
 

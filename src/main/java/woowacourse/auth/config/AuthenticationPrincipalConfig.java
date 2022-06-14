@@ -34,7 +34,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor(jwtTokenProvider))
             .addPathPatterns("/api/customers/**")
-            .excludePathPatterns("/api/customers/*/orders/**", "/api/customers/*/carts/**");
+            .excludePathPatterns("/api/customers/", "/api/auth/login/");
     }
 
     @Bean

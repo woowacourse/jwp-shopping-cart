@@ -1,14 +1,10 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
-import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.*;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,117 +15,182 @@ import org.springframework.http.MediaType;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginTokenResponse;
+import woowacourse.shoppingcart.domain.order.OrderItem;
+import woowacourse.shoppingcart.dto.OrderResponse;
+import woowacourse.shoppingcart.dto.cart.CartItemRequest;
+import woowacourse.shoppingcart.dto.product.ProductRequest;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
 
-    private static final String USER = "puterism";
-    private Long cartId1;
-    private Long cartId2;
+    private static final Long CUSTOMER_ID = 1L;
+
+    private String token;
+    private Long productId1;
+    private Long productId2;
 
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
 
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg", 5);
+        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg", 5);
 
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        token = 로그인_요청_및_토큰발급(new LoginRequest("puterism@naver.com", "12349053145"));
+
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId1, 1);
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId2, 1);
     }
 
     @DisplayName("주문하기")
     @Test
-    void addOrder() {
-        List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
-            .map(cartId -> new OrderRequest(cartId, 10))
-            .collect(Collectors.toList());
+    void createOrder() {
+        //when
+        ExtractableResponse<Response> response = 주문하기_요청(token, CUSTOMER_ID);
 
-        ExtractableResponse<Response> response = 주문하기_요청(USER, orderRequests);
-
+        //then
         주문하기_성공함(response);
     }
 
-    @DisplayName("주문 내역 조회")
     @Test
-    void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
+    @DisplayName("주문 전체 내역 조회")
+    void findOrders() {
+        //given
+        주문하기_요청(token, CUSTOMER_ID);
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId1, 2);
+        장바구니_아이템_추가_요청(token, CUSTOMER_ID, productId2, 2);
+        주문하기_요청(token, CUSTOMER_ID);
 
-        ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
+        //when
+        ExtractableResponse<Response> response = 주문_내역_조회_요청(token, CUSTOMER_ID);
 
+        //then
         주문_조회_응답됨(response);
-        주문_내역_포함됨(response, orderId1, orderId2);
+        주문_내역_포함됨(response, List.of(productId1, productId2));
     }
 
-    @DisplayName("주문 단일 조회")
     @Test
-    void getOrder() {
-        Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
-            new OrderRequest(cartId1, 2),
-            new OrderRequest(cartId2, 4)
-        ));
+    @DisplayName("주문 단일 내역 조회")
+    void findOrder() {
+        //given
+        long orderId = ID_추출(주문하기_요청(token, CUSTOMER_ID));
 
-        ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
+        //when
+        ExtractableResponse<Response> response = 주문_내역_단일_조회_요청(token, CUSTOMER_ID, orderId);
 
+        //then
         주문_조회_응답됨(response);
-        주문_조회됨(response, orderId);
+        주문_내역_단일_포함됨(response, List.of(productId1, productId2));
     }
 
-    public static ExtractableResponse<Response> 주문하기_요청(String userName, List<OrderRequest> orderRequests) {
+    private String 로그인_요청_및_토큰발급(LoginRequest request) {
+        ExtractableResponse<Response> loginResponse = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(request)
+            .when().post("/api/auth/login")
+            .then().log().all()
+            .extract();
+
+        LoginTokenResponse loginTokenResponse = loginResponse.body().as(LoginTokenResponse.class);
+        return loginTokenResponse.getAccessToken();
+    }
+
+    public ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl, int quantity) {
+        ProductRequest productRequest = new ProductRequest(imageUrl, name, price, quantity);
+
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(orderRequests)
-            .when().post("/api/customers/{customerName}/orders", userName)
+            .body(productRequest)
+            .when().post("/api/products")
             .then().log().all()
             .extract();
     }
 
-    public static ExtractableResponse<Response> 주문_내역_조회_요청(String userName) {
+    public Long 상품_등록되어_있음(String name, int price, String imageUrl, int quantity) {
+        ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl, quantity);
+        return Long.parseLong(response.header("Location").split("/products/")[1]);
+    }
+
+    public ExtractableResponse<Response> 장바구니_아이템_추가_요청(String token, long customerId, Long productId,
+        int count) {
+        CartItemRequest request = new CartItemRequest(productId, count);
+
         return RestAssured
             .given().log().all()
+            .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/api/customers/{customerName}/orders", userName)
+            .body(request)
+            .when().post("/api/customers/{customerId}/carts", customerId)
             .then().log().all()
             .extract();
     }
 
-    public static ExtractableResponse<Response> 주문_단일_조회_요청(String userName, Long orderId) {
+    public ExtractableResponse<Response> 주문하기_요청(String token, long customerId) {
         return RestAssured
             .given().log().all()
+            .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
+            .when().post("/api/customers/{customerId}/orders", customerId)
             .then().log().all()
             .extract();
     }
 
-    public static void 주문하기_성공함(ExtractableResponse<Response> response) {
+    public void 주문하기_성공함(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 주문하기_요청_성공되어_있음(String userName, List<OrderRequest> orderRequests) {
-        ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
-        return Long.parseLong(response.header("Location").split("/orders/")[1]);
+    public ExtractableResponse<Response> 주문_내역_조회_요청(String token, long customerId) {
+        return RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + token)
+            .when().get("/api/customers/{customerId}/orders", customerId)
+            .then().log().all()
+            .extract();
     }
 
-    public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
+    public ExtractableResponse<Response> 주문_내역_단일_조회_요청(String token, long customerId, long orderId) {
+        return RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer " + token)
+            .when().get("/api/customers/{customerId}/orders/{orderId}", customerId, orderId)
+            .then().log().all()
+            .extract();
+    }
+
+    public void 주문_조회_응답됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-            .map(Orders::getId)
+    public void 주문_내역_포함됨(ExtractableResponse<Response> response, List<Long> productIds) {
+        List<List<Long>> result = response.jsonPath().getList(".", OrderResponse.class)
+            .stream().map(convertOrderResponseToProductIds())
             .collect(Collectors.toList());
-        assertThat(resultOrderIds).contains(orderIds);
+
+        assertThat(result).contains(productIds);
     }
 
-    private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-        Orders resultOrder = response.as(Orders.class);
-        assertThat(resultOrder.getId()).isEqualTo(orderId);
+    public void 주문_내역_단일_포함됨(ExtractableResponse<Response> response, List<Long> productIds) {
+        List<Long> result = response.jsonPath().getObject(".", OrderResponse.class).getOrderItems()
+            .stream().map(OrderItem::getProductId)
+            .collect(Collectors.toList());
+
+        assertThat(result).isEqualTo(productIds);
+    }
+
+    private Function<OrderResponse, List<Long>> convertOrderResponseToProductIds() {
+        return orderResponse ->
+            orderResponse.getOrderItems().stream().map(OrderItem::getProductId)
+                .collect(Collectors.toList());
+    }
+
+    private long ID_추출(ExtractableResponse<Response> response) {
+        String[] locations = response.header("Location").split("/");
+        return Long.parseLong(locations[locations.length - 1]);
     }
 }
