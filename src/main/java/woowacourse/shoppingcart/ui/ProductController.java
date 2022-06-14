@@ -1,14 +1,12 @@
 package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.auth.support.AuthorizationExtractor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.MemberArgument;
-import woowacourse.shoppingcart.dto.product.ProductsResponse;
 import woowacourse.shoppingcart.application.ProductService;
-
-import javax.servlet.http.HttpServletRequest;
+import woowacourse.shoppingcart.dto.product.ProductsResponse;
 
 @RestController
 @RequestMapping("/products")

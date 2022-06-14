@@ -26,8 +26,6 @@ public class CartController {
         return ResponseEntity.ok().body(cartsResponse);
     }
 
-
-
     @PostMapping
     public ResponseEntity<CartQuantityResponse> addCart(@AuthenticationPrincipal Long customerId, @RequestBody CartRequest cartRequest) {
         CartQuantityResponse cartResponse = cartService.addCart(customerId, cartRequest);

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql"})
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
 
