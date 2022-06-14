@@ -26,6 +26,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<Cart> findCartsByMemberId(final long memberId) {
         validateMember(memberId);
         return cartItemDao.findCartByMemberId(memberId);

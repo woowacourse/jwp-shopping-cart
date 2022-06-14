@@ -48,23 +48,25 @@ public class OrderService {
         return ordersId;
     }
 
+    @Transactional(readOnly = true)
     public Orders findOrderById(final long memberId, final Long orderId) {
         validateOrderIdByMemberName(memberId, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
 
-    private void validateOrderIdByMemberName(final long memberId, final Long orderId) {
-        if (!orderDao.isValidOrderId(memberId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
-        }
-    }
-
+    @Transactional(readOnly = true)
     public List<Orders> findOrdersByMemberId(final long memberId) {
         final List<Long> orderIds = orderDao.findOrderIdsByMemberId(memberId);
 
         return orderIds.stream()
                 .map(orderId -> findOrderResponseDtoByOrderId(orderId))
                 .collect(Collectors.toList());
+    }
+
+    private void validateOrderIdByMemberName(final long memberId, final Long orderId) {
+        if (!orderDao.isValidOrderId(memberId, orderId)) {
+            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
+        }
     }
 
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {

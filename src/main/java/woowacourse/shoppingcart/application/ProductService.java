@@ -17,6 +17,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<Product> findProducts() {
         return productDao.findProducts();
     }
@@ -25,6 +26,7 @@ public class ProductService {
         productDao.save(new Product(request.getName(), request.getPrice(), request.getImageUrl()));
     }
 
+    @Transactional(readOnly = true)
     public Product findProductById(final long productId) {
         return productDao.getById(productId);
     }
