@@ -16,10 +16,10 @@ import woowacourse.shoppingcart.exception.notfound.ProductNotFoundException;
 class ProductServiceTest {
 
     @InjectMocks
-    ProductService productService;
+    private ProductService productService;
 
     @Mock
-    ProductDao productDao;
+    private ProductDao productDao;
 
     @Test
     void findProductById() {

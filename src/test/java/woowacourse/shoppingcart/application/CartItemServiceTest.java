@@ -20,13 +20,13 @@ import woowacourse.shoppingcart.domain.Product;
 class CartItemServiceTest {
 
     @InjectMocks
-    CartService cartService;
+    private CartService cartService;
 
     @Mock
-    CartItemDao cartItemDao;
+    private CartItemDao cartItemDao;
 
     @Mock
-    ProductService productService;
+    private ProductService productService;
 
     @Test
     @DisplayName("장바구니에 상품 추가하는 기능")
