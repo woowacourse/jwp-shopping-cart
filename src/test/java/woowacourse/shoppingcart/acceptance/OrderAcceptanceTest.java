@@ -126,7 +126,7 @@ class OrderAcceptanceTest extends AcceptanceTest {
                 .body("message", equalTo("주문이 존재하지 않습니다."));
     }
 
-    private ValidatableResponse postOrder(List<OrderCreationRequest> request) {
+    private ValidatableResponse postOrder(final List<OrderCreationRequest> request) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -186,7 +186,8 @@ class OrderAcceptanceTest extends AcceptanceTest {
                 .body("orderDetails.quantity", contains(contains(1, 7), contains(4, 1)))
                 .body("orderDetails.price", contains(contains(540, 2100), contains(700, 1600)))
                 .body("orderDetails.name", contains(contains("오렌지", "딸기"), contains("포도", "사과")))
-                .body("orderDetails.imageUrl", contains(contains("orange.org", "strawberry.org"), contains("podo.do", "apple.co.kr")));
+                .body("orderDetails.imageUrl",
+                        contains(contains("orange.org", "strawberry.org"), contains("podo.do", "apple.co.kr")));
 
         cartResponse.statusCode(HttpStatus.OK.value())
                 .body("cartList", empty());

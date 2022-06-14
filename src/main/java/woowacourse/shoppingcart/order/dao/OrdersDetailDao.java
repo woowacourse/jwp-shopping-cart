@@ -33,7 +33,7 @@ public class OrdersDetailDao {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            final PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setLong(1, ordersId);
             preparedStatement.setLong(2, productId);
             preparedStatement.setLong(3, quantity);

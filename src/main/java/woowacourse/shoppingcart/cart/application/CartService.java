@@ -33,14 +33,15 @@ public class CartService {
         return cartItemDao.addCartItem(customer.getId(), productId);
     }
 
-    private void checkCartItemExist(Long productId, Customer customer) {
+    private void checkCartItemExist(final Long productId, final Customer customer) {
         final boolean existCartItem = cartItemDao.existCartItem(customer.getId(), productId);
         if (existCartItem) {
             throw new DuplicateCartItemException();
         }
     }
 
-    public CartItem changeQuantity(final Customer customer, final Long productId, final QuantityChangingRequest request) {
+    public CartItem changeQuantity(final Customer customer, final Long productId,
+                                   final QuantityChangingRequest request) {
         final CartItem cartItem = cartItemDao.findByProductAndCustomerId(productId, customer.getId());
         final CartItem updatedCartItem = cartItem.changeQuantity(request.getQuantity());
         cartItemDao.updateQuantity(updatedCartItem);

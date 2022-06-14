@@ -25,14 +25,14 @@ public class Cart {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Cart cart = (Cart) o;
+        final Cart cart = (Cart) o;
         return Objects.equals(values, cart.values);
     }
 
