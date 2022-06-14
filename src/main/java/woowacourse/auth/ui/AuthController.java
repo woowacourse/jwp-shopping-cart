@@ -29,6 +29,6 @@ public class AuthController {
         String token = authService.createToken(request);
         Customer customer = customerService.findByEmail(request.getEmail());
 
-        return new TokenResponse(token, validityInMilliseconds, new CustomerResponse(customer));
+        return TokenResponse.from(token, validityInMilliseconds, CustomerResponse.from(customer));
     }
 }

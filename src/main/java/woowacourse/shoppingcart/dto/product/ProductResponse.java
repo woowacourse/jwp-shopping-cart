@@ -1,8 +1,11 @@
 package woowacourse.shoppingcart.dto.product;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import woowacourse.shoppingcart.domain.Product;
 
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class ProductResponse {
 
@@ -15,11 +18,8 @@ public class ProductResponse {
     private ProductResponse() {
     }
 
-    public ProductResponse(Product product) {
-        this.productId = product.getId();
-        this.thumbnailUrl = product.getImageUrl();
-        this.name = product.getName();
-        this.price = product.getPrice();
-        this.quantity = product.getQuantity();
+    public static ProductResponse from(Product product) {
+        return new ProductResponse(product.getId(), product.getImageUrl(), product.getName(), product.getPrice(),
+                product.getQuantity());
     }
 }

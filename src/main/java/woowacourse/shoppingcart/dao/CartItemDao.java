@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.exception.notfound.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.NotExistProductException;
+import woowacourse.shoppingcart.exception.notfound.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
@@ -24,7 +24,7 @@ public class CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long addCartItem(long customerId, long productId, long count) {
+    public long addCartItem(long customerId, long productId, long count) {
         return insertActor.executeAndReturnKey(new MapSqlParameterSource()
                 .addValue("customer_id", customerId)
                 .addValue("product_id", productId)

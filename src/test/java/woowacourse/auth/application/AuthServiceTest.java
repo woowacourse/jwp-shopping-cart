@@ -34,8 +34,8 @@ class AuthServiceTest {
     @Test
     void createToken() {
         // given
-        customerService.save(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
-        TokenRequest request = new TokenRequest("philz@gmail.com", "123456789");
+        customerService.save(CustomerCreateRequest.from("philz@gmail.com", "swcho", "123456789"));
+        TokenRequest request = TokenRequest.from("philz@gmail.com", "123456789");
         String token = authService.createToken(request);
 
         // when
@@ -49,8 +49,8 @@ class AuthServiceTest {
     @Test
     void findCustomerByToken() {
         // given
-        Long savedId = customerService.save(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
-        TokenRequest request = new TokenRequest("philz@gmail.com", "123456789");
+        Long savedId = customerService.save(CustomerCreateRequest.from("philz@gmail.com", "swcho", "123456789"));
+        TokenRequest request = TokenRequest.from("philz@gmail.com", "123456789");
         String token = authService.createToken(request);
 
         // when

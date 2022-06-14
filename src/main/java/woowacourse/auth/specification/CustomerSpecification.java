@@ -8,6 +8,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.badrequest.InvalidFieldException;
+import woowacourse.shoppingcart.exception.notfound.InValidPassword;
 import woowacourse.shoppingcart.exception.notfound.InvalidCustomerException;
 
 @Component
@@ -33,9 +34,13 @@ public class CustomerSpecification {
         validateUsername(customer.getUsername());
     }
 
+    public void validateForDelete(long customerId, String encryptPassword) {
+        Customer customer = validateCustomerExistsAndGet(customerId);
+        validatePasswordMatches(customer, encryptPassword);
+    }
+
     public void validateUsernameDuplicate(String username) {
         boolean existCustomerBySameUsername = customerDao.findByUsername(username).isPresent();
-
 
         if (existCustomerBySameUsername) {
             throw new DuplicateUsernameException();
@@ -52,6 +57,18 @@ public class CustomerSpecification {
     public void validateCustomerExists(long id) {
         customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
+    }
+
+    public Customer validateCustomerExistsAndGet(long id) {
+        return customerDao.findById(id)
+                .orElseThrow(InvalidCustomerException::new);
+    }
+
+    public void validatePasswordMatches(Customer customer, String encryptPassword) {
+        boolean passwordMatches = customer.getPassword().equals(encryptPassword);
+        if (!passwordMatches) {
+            throw new InValidPassword();
+        }
     }
 
     private void validateUsername(String username) {

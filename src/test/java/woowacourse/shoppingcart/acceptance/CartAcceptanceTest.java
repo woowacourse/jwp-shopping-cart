@@ -191,9 +191,9 @@ public class CartAcceptanceTest extends AcceptanceTest {
     }
 
     private void 토큰_및_회원_ID_초기화() {
-        CustomerCreateRequest customerRequest = new CustomerCreateRequest("philz@gmail.com", "swcho", "1q2w3e4r!");
+        CustomerCreateRequest customerRequest = CustomerCreateRequest.from("philz@gmail.com", "swcho", "1q2w3e4r!");
         this.customerId = 회원가입_요청_및_ID_추출(customerRequest);
-        TokenRequest tokenRequest = new TokenRequest("philz@gmail.com", "1q2w3e4r!");
+        TokenRequest tokenRequest = TokenRequest.from("philz@gmail.com", "1q2w3e4r!");
         this.token = 로그인_요청_및_토큰발급(tokenRequest);
     }
 }

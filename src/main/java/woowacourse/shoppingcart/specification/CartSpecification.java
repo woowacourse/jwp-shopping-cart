@@ -4,10 +4,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.exception.notfound.AlreadyCartItemExistException;
-import woowacourse.shoppingcart.exception.notfound.OverQuantityException;
 
 @Component
 @RequiredArgsConstructor

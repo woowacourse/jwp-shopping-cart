@@ -78,8 +78,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     private String getToken() {
         회원가입_요청(
-                new CustomerCreateRequest("philz@gmail.com", "swcho", "1q2w3e4r!"));
-        String token = 로그인_요청_및_토큰발급(new TokenRequest("philz@gmail.com", "1q2w3e4r!"));
+                CustomerCreateRequest.from("philz@gmail.com", "swcho", "1q2w3e4r!"));
+        String token = 로그인_요청_및_토큰발급(TokenRequest.from("philz@gmail.com", "1q2w3e4r!"));
         return token;
     }
 }

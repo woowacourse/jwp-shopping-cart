@@ -26,8 +26,8 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         // email, password를 사용해 토큰을 발급받고
-        long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
-        TokenRequest tokenRequest = new TokenRequest("philz@gmail.com", "123456789");
+        long savedId = 회원가입_요청_및_ID_추출(CustomerCreateRequest.from("philz@gmail.com", "swcho", "123456789"));
+        TokenRequest tokenRequest = TokenRequest.from("philz@gmail.com", "123456789");
         String accessToken = 로그인_요청_및_토큰발급(tokenRequest);
 
         // when
@@ -47,7 +47,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBadBearerAuth() {
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면
-        TokenRequest tokenRequest = new TokenRequest("puterism@naver.com", "123456789");
+        TokenRequest tokenRequest = TokenRequest.from("puterism@naver.com", "123456789");
         ExtractableResponse<Response> loginResponse = 로그인_요청(tokenRequest);
         ErrorResponse errorResponse = loginResponse.as(ErrorResponse.class);
 

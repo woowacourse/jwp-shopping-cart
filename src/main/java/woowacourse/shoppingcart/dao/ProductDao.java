@@ -26,7 +26,7 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(final Product product) {
+    public long save(final Product product) {
         return insertActor.executeAndReturnKey(new MapSqlParameterSource()
                 .addValue("name", product.getName())
                 .addValue("price", product.getPrice())

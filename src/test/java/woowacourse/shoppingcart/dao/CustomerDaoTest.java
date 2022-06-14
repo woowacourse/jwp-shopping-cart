@@ -26,8 +26,8 @@ public class CustomerDaoTest extends DaoTest {
         Customer customer = new Customer("roma@naver.com", "roma", "12345678");
 
         // when
-        Long savedId = customerDao.save(customer);
-        Long expected = customerDao.findIdByUserName("roma");
+        long savedId = customerDao.save(customer);
+        long expected = customerDao.findIdByUserName("roma");
 
         // then
         assertThat(savedId).isEqualTo(expected);
@@ -40,7 +40,7 @@ public class CustomerDaoTest extends DaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final long customerId = customerDao.findIdByUserName(userName);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -53,7 +53,7 @@ public class CustomerDaoTest extends DaoTest {
         final String userName = "SUNhpark42";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final long customerId = customerDao.findIdByUserName(userName);
 
         // then
         assertThat(customerId).isEqualTo(3L);
@@ -110,7 +110,7 @@ public class CustomerDaoTest extends DaoTest {
         Customer customer = new Customer("roma@naver.com", "roma", "12345678");
 
         // when
-        Long savedId = customerDao.save(customer);
+        long savedId = customerDao.save(customer);
         customerDao.update(savedId, "philz");
         Customer result = customerDao.findById(savedId).orElse(null);
 
@@ -125,7 +125,7 @@ public class CustomerDaoTest extends DaoTest {
         Customer customer = new Customer("roma@naver.com", "roma", "12345678");
 
         // when
-        Long savedId = customerDao.save(customer);
+        long savedId = customerDao.save(customer);
         customerDao.deleteById(savedId, "12345678");
         Optional<Customer> result = customerDao.findById(savedId);
 

@@ -28,7 +28,7 @@ public class CustomerDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(final Customer customer) {
+    public long save(final Customer customer) {
         return insertActor.executeAndReturnKey(new MapSqlParameterSource()
                 .addValue("email", customer.getEmail())
                 .addValue("username", customer.getUsername())
@@ -72,7 +72,7 @@ public class CustomerDao {
         }
     }
 
-    public Long findIdByUserName(final String userName) {
+    public long findIdByUserName(final String userName) {
         try {
             final String query = "SELECT id, email, username, password FROM customer WHERE username = :username";
             Map<String, String> params = Map.of("username", userName.toLowerCase(Locale.ENGLISH));

@@ -36,7 +36,7 @@ public class ProductDaoTest extends DaoTest {
     @Test
     void save() {
         // given & when
-        final Long productId = productDao.save(TEST_PRODUCT);
+        final long productId = productDao.save(TEST_PRODUCT);
 
         // then
         assertThat(productId).isEqualTo(초기_데이터_수 + 1L);
@@ -46,7 +46,7 @@ public class ProductDaoTest extends DaoTest {
     @Test
     void findProductById() {
         // given
-        final Long productId = productDao.save(TEST_PRODUCT);
+        final long productId = productDao.save(TEST_PRODUCT);
         final Product expectedProduct = new Product(productId, name, price, imageUrl, quantity);
 
         // when
@@ -74,7 +74,7 @@ public class ProductDaoTest extends DaoTest {
     @Test
     void deleteProduct() {
         // given
-        final Long productId = productDao.save(TEST_PRODUCT);
+        final long productId = productDao.save(TEST_PRODUCT);
         final int beforeSize = productDao.findProducts().size();
 
         // when

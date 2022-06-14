@@ -16,7 +16,8 @@ public class ProductSpecification {
     public void validateForAddOrUpdate(long productId, long cartItemCount) {
         validateExistProduct(productId);
         Product findProduct = validateExistProductAndGet(productId);
-        validateOverQuantity(findProduct.getQuantity(), cartItemCount);;
+        validateOverQuantity(findProduct.getQuantity(), cartItemCount);
+        ;
     }
 
     private void validateExistProduct(long productId) {

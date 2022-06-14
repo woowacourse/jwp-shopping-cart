@@ -6,9 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class CustomerDeleteRequest {
 
     private String password;
+
+    public static CustomerDeleteRequest from(String password) {
+        return new CustomerDeleteRequest(password);
+    }
 }

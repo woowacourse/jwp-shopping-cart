@@ -7,8 +7,8 @@ import woowacourse.auth.specification.CustomerSpecification;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
-import woowacourse.shoppingcart.exception.notfound.InValidPassword;
 import woowacourse.shoppingcart.exception.notfound.InvalidCustomerException;
 import woowacourse.utils.CryptoUtils;
 
@@ -21,7 +21,7 @@ public class CustomerService {
     private final CustomerSpecification customerSpec;
 
     @Transactional
-    public Long save(CustomerCreateRequest request) {
+    public long save(CustomerCreateRequest request) {
         Customer customer = request.toEntity();
         customerSpec.validateForSave(customer);
         encryptPassword(request);
@@ -29,10 +29,10 @@ public class CustomerService {
         return customerDao.save(request.toEntity());
     }
 
-    @Transactional
-    public Customer findById(long id) {
-        return customerDao.findById(id)
+    public CustomerResponse findByIdForUpdateView(long id) {
+        Customer customer = customerDao.findById(id)
                 .orElseThrow(InvalidCustomerException::new);
+        return CustomerResponse.from(customer);
     }
 
     public Customer findByEmail(String email) {
@@ -52,27 +52,21 @@ public class CustomerService {
         }
         customerSpec.validateForUpdate(request.toEntity());
 
-
         customerDao.update(id, request.getUsername());
     }
 
     private boolean isSameOriginUsername(Long id, CustomerUpdateRequest request) {
-        Customer foundCustomer = findById(id);
+        Customer foundCustomer = customerDao.findById(id)
+                .orElseThrow(InvalidCustomerException::new);
         return foundCustomer.getUsername().equals(request.getUsername());
     }
 
     @Transactional
     public void delete(Long customerId, String password) {
-        customerSpec.validateCustomerExists(customerId);
-        String encryptPassword = encryptPassword(password);
-        validatePasswordMatches(customerId);
-        customerDao.deleteById(customerId, encryptPassword);
-    }
+        String encryptedPassword = encryptPassword(password);
+        customerSpec.validateForDelete(customerId, encryptedPassword);
 
-    private void validatePasswordMatches(Long customerId) {
-        customerDao
-                .findById(customerId)
-                .orElseThrow(() -> new InValidPassword());
+        customerDao.deleteById(customerId, encryptedPassword);
     }
 
     private String encryptPassword(String password) {

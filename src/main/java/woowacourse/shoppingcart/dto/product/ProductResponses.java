@@ -7,14 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import woowacourse.shoppingcart.domain.Product;
 
-@NoArgsConstructor(access = AccessLevel.NONE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class ProductResponses {
 
     public static List<ProductResponse> from(List<Product> products) {
         List<ProductResponse> responses = new ArrayList<>();
         for (Product product : products) {
-            ProductResponse response = new ProductResponse(product);
+            ProductResponse response = ProductResponse.from(product);
             responses.add(response);
         }
         return responses;

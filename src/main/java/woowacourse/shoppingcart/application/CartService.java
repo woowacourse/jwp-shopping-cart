@@ -1,18 +1,11 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.specification.CustomerSpecification;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.notfound.AlreadyCartItemExistException;
 import woowacourse.shoppingcart.exception.notfound.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotExistProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-import woowacourse.shoppingcart.exception.notfound.OverQuantityException;
 import woowacourse.shoppingcart.specification.CartSpecification;
 import woowacourse.shoppingcart.specification.ProductSpecification;
 
@@ -27,7 +20,7 @@ public class CartService {
     private final ProductSpecification productSpec;
     private final CartSpecification cartSpec;
 
-    public Long addCartItem(long customerId, long productId, long cartItemCount) {
+    public long addCartItem(long customerId, long productId, long cartItemCount) {
         customerSpec.validateCustomerExists(customerId);
         productSpec.validateForAddOrUpdate(productId, cartItemCount);
         cartSpec.validateForAdd(customerId, productId);

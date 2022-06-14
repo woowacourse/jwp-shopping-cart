@@ -35,12 +35,12 @@ public class CartItemDaoTest extends DaoTest {
     @Test
     void addCartItem() {
         // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
-        final Long count = 5L;
+        final long customerId = 1L;
+        final long productId = 1L;
+        final long count = 5L;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId, count);
+        final long cartId = cartItemDao.addCartItem(customerId, productId, count);
 
         // then
         assertThat(cartId).isEqualTo(3L);

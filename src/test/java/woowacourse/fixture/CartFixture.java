@@ -6,9 +6,8 @@ import static woowacourse.fixture.Fixture.get;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
+import woowacourse.shoppingcart.dto.cartitem.CartItemCreateRequest;
 
 public class CartFixture {
 
@@ -18,12 +17,11 @@ public class CartFixture {
     public static ExtractableResponse<Response> 장바구니_상품_추가_요청(String token,
                                                               long customerId,
                                                               long productId,
-                                                              long count) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("productId", productId);
-        requestBody.put("count", count); // 구매 수량
+                                                              long count // 구매 수량
+    ) {
+        CartItemCreateRequest body = CartItemCreateRequest.from(productId, count);
 
-        return Fixture.post("/api/customers/" + customerId + "/carts", token, requestBody);
+        return Fixture.post("/api/customers/" + customerId + "/carts", token, body);
     }
 
     public static ExtractableResponse<Response> 장바구니_상품_목록_조회_요청(String token, long customerId) {

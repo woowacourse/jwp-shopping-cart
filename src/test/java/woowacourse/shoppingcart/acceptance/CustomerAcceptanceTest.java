@@ -44,7 +44,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @Test
         void addCustomer() {
             ExtractableResponse<Response> response = 회원가입_요청(
-                    new CustomerCreateRequest("philz@gmail.com", "swcho", "1q2w3e4r!"));
+                    CustomerCreateRequest.from("philz@gmail.com", "swcho", "1q2w3e4r!"));
             long savedId = ID_추출(response);
 
             assertAll(
@@ -57,7 +57,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @Test
         void addCustomer_duplicated_email() {
             ExtractableResponse<Response> response = 회원가입_요청(
-                    new CustomerCreateRequest("puterism@naver.com", "roma", "12345678"));
+                    CustomerCreateRequest.from("puterism@naver.com", "roma", "12345678"));
 
             FieldErrorResponse fieldErrorResponse = response.as(FieldErrorResponse.class);
 
@@ -70,7 +70,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @Test
         void addCustomer_duplicated_username() {
             ExtractableResponse<Response> response = 회원가입_요청(
-                    new CustomerCreateRequest("philz@naver.com", "puterism", "12345678"));
+                    CustomerCreateRequest.from("philz@naver.com", "puterism", "12345678"));
 
             FieldErrorResponse fieldErrorResponse = response.as(FieldErrorResponse.class);
 
@@ -84,7 +84,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @MethodSource("invalid_usernames")
         void create_exception_parameter_name(String username, String errorMessage) {
             // given
-            CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest("philz@gmail.com", username,
+            CustomerCreateRequest customerCreateRequest = CustomerCreateRequest.from("philz@gmail.com", username,
                     "12345678");
 
             // when
@@ -112,7 +112,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @MethodSource("invalid_emails")
         void create_exception_parameter_email(String email, String errorMessage) {
             // given
-            CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(email, "philz", "12345678");
+            CustomerCreateRequest customerCreateRequest = CustomerCreateRequest.from(email, "philz", "12345678");
 
             // when
             ExtractableResponse<Response> response = 회원가입_요청(customerCreateRequest);
@@ -138,7 +138,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @MethodSource("invalid_passwords")
         void create_exception_parameter_password(String password, String errorMessage) {
             // given
-            CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest("philz@gmail.com", "philz",
+            CustomerCreateRequest customerCreateRequest = CustomerCreateRequest.from("philz@gmail.com", "philz",
                     password);
 
             // when
@@ -170,10 +170,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @Test
         void findCustomer() {
             ExtractableResponse<Response> createResponse = 회원가입_요청(
-                    new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+                    CustomerCreateRequest.from("roma@naver.com", "roma", "12345678"));
             long savedId = ID_추출(createResponse);
 
-            String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+            String token = 로그인_요청_및_토큰발급(TokenRequest.from("roma@naver.com", "12345678"));
             ExtractableResponse<Response> response = 회원조회_요청(token, savedId);
 
             CustomerResponse customerResponse = response.as(CustomerResponse.class);
@@ -188,10 +188,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @DisplayName("가입, 로그인 후 비밀번호가 다른 경우 401을 반환한다.")
         @Test
         void fail_login_when_wrong_password() {
-            회원가입_요청(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+            회원가입_요청(CustomerCreateRequest.from("roma@naver.com", "roma", "12345678"));
 
             String 틀린_비밀번호 = "wrong_password";
-            ExtractableResponse<Response> loginResponse = 로그인_요청(new TokenRequest("roma@naver.com", 틀린_비밀번호));
+            ExtractableResponse<Response> loginResponse = 로그인_요청(TokenRequest.from("roma@naver.com", 틀린_비밀번호));
             ErrorResponse errorResponse = loginResponse.as(ErrorResponse.class);
 
             assertAll(
@@ -205,10 +205,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         void findCustomer_otherId() {
             // given
             ExtractableResponse<Response> createResponse = 회원가입_요청(
-                    new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+                    CustomerCreateRequest.from("roma@naver.com", "roma", "12345678"));
             long savedId = ID_추출(createResponse);
             long 다른사람의_ID = savedId + 1L;
-            String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+            String token = 로그인_요청_및_토큰발급(TokenRequest.from("roma@naver.com", "12345678"));
 
             // when
             ExtractableResponse<Response> response = 회원조회_요청(token, 다른사람의_ID);
@@ -228,10 +228,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @DisplayName("성공하면 200을 반환한다")
         @Test
         void update() {
-            long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+            long savedId = 회원가입_요청_및_ID_추출(CustomerCreateRequest.from("roma@naver.com", "roma", "12345678"));
 
-            String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
-            ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("sojukang"));
+            String token = 로그인_요청_및_토큰발급(TokenRequest.from("roma@naver.com", "12345678"));
+            ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, CustomerUpdateRequest.from("sojukang"));
 
             CustomerResponse customerResponse = response.as(CustomerResponse.class);
             CustomerResponse expected = new CustomerResponse(savedId, "roma@naver.com", "sojukang");
@@ -245,10 +245,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @DisplayName("기존과 같은 username을 입력한 경우 200 OK를 응답한다.")
         @Test
         void update_same_origin_name() {
-            long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+            long savedId = 회원가입_요청_및_ID_추출(CustomerCreateRequest.from("roma@naver.com", "roma", "12345678"));
 
-            String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
-            ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("roma"));
+            String token = 로그인_요청_및_토큰발급(TokenRequest.from("roma@naver.com", "12345678"));
+            ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, CustomerUpdateRequest.from("roma"));
             CustomerResponse customerResponse = response.as(CustomerResponse.class);
             CustomerResponse expected = new CustomerResponse(savedId, "roma@naver.com", "roma");
 
@@ -259,10 +259,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @DisplayName("중복된 username으로 변경하려는 경우 400 응답을 반환한다.")
         @Test
         void update_duplicated_username() {
-            long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+            long savedId = 회원가입_요청_및_ID_추출(CustomerCreateRequest.from("roma@naver.com", "roma", "12345678"));
 
-            String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
-            ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, new CustomerUpdateRequest("yujo11"));
+            String token = 로그인_요청_및_토큰발급(TokenRequest.from("roma@naver.com", "12345678"));
+            ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, CustomerUpdateRequest.from("yujo11"));
 
             FieldErrorResponse fieldErrorResponse = response.as(FieldErrorResponse.class);
 
@@ -278,9 +278,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @MethodSource("invalid_usernames")
         void update_exception_parameter_username(String username, String errorMessage) {
             // given
-            long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
-            String token = 로그인_요청_및_토큰발급(new TokenRequest("philz@gmail.com", "123456789"));
-            CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(username);
+            long savedId = 회원가입_요청_및_ID_추출(CustomerCreateRequest.from("philz@gmail.com", "swcho", "123456789"));
+            String token = 로그인_요청_및_토큰발급(TokenRequest.from("philz@gmail.com", "123456789"));
+            CustomerUpdateRequest customerUpdateRequest = CustomerUpdateRequest.from(username);
 
             // when
             ExtractableResponse<Response> response = 회원정보수정_요청(token, savedId, customerUpdateRequest);
@@ -306,13 +306,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         void update_otherId() {
             // given
             ExtractableResponse<Response> createResponse = 회원가입_요청(
-                    new CustomerCreateRequest("roma@naver.com", "roma", "12345678"));
+                    CustomerCreateRequest.from("roma@naver.com", "roma", "12345678"));
             long savedId = ID_추출(createResponse);
             long 다른사람의_ID = savedId + 1L;
-            String token = 로그인_요청_및_토큰발급(new TokenRequest("roma@naver.com", "12345678"));
+            String token = 로그인_요청_및_토큰발급(TokenRequest.from("roma@naver.com", "12345678"));
 
             // when
-            CustomerUpdateRequest updateRequest = new CustomerUpdateRequest("philz");
+            CustomerUpdateRequest updateRequest = CustomerUpdateRequest.from("philz");
             ExtractableResponse<Response> response = 회원정보수정_요청(token, 다른사람의_ID, updateRequest);
             FieldErrorResponse fieldErrorResponse = response.as(FieldErrorResponse.class);
 
@@ -330,9 +330,9 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @DisplayName("정상적인 요청이라면 200을 반환한다.")
         @Test
         void delete() {
-            long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
-            String token = 로그인_요청_및_토큰발급(new TokenRequest("philz@gmail.com", "123456789"));
-            CustomerDeleteRequest requestBody = new CustomerDeleteRequest("123456789");
+            long savedId = 회원가입_요청_및_ID_추출(CustomerCreateRequest.from("philz@gmail.com", "swcho", "123456789"));
+            String token = 로그인_요청_및_토큰발급(TokenRequest.from("philz@gmail.com", "123456789"));
+            CustomerDeleteRequest requestBody = CustomerDeleteRequest.from("123456789");
 
             ExtractableResponse<Response> response = 회원탈퇴_요청(token, savedId, requestBody);
 
@@ -342,10 +342,10 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @DisplayName("비밀번호가 다른 경우 400을 반환한다.")
         @Test
         void delete_other_case() {
-            long savedId = 회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
-            String token = 로그인_요청_및_토큰발급(new TokenRequest("philz@gmail.com", "123456789"));
+            long savedId = 회원가입_요청_및_ID_추출(CustomerCreateRequest.from("philz@gmail.com", "swcho", "123456789"));
+            String token = 로그인_요청_및_토큰발급(TokenRequest.from("philz@gmail.com", "123456789"));
             String 다른_비밀번호 = "other_password";
-            CustomerDeleteRequest requestBody = new CustomerDeleteRequest(다른_비밀번호);
+            CustomerDeleteRequest requestBody = CustomerDeleteRequest.from(다른_비밀번호);
 
             ExtractableResponse<Response> response = 회원탈퇴_요청(token, savedId, requestBody);
             ErrorResponse errorResponse = response.as(ErrorResponse.class);
@@ -357,11 +357,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         @DisplayName("다른 사람의 정보를 삭제하면 403을 반환한다")
         @Test
         void delete_otherId() {
-            회원가입_요청_및_ID_추출(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
-            String token = 로그인_요청_및_토큰발급(new TokenRequest("philz@gmail.com", "123456789"));
+            회원가입_요청_및_ID_추출(CustomerCreateRequest.from("philz@gmail.com", "swcho", "123456789"));
+            String token = 로그인_요청_및_토큰발급(TokenRequest.from("philz@gmail.com", "123456789"));
             long 다른사람의_ID = 1;
             String 다른사람의_올바른_비밀번호 = "12349053145";
-            CustomerDeleteRequest requestBody = new CustomerDeleteRequest(다른사람의_올바른_비밀번호);
+            CustomerDeleteRequest requestBody = CustomerDeleteRequest.from(다른사람의_올바른_비밀번호);
 
             ExtractableResponse<Response> response = 회원탈퇴_요청(token, 다른사람의_ID, requestBody);
             ErrorResponse errorResponse = response.as(ErrorResponse.class);

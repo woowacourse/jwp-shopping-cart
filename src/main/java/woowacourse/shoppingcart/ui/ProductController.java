@@ -29,7 +29,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final Product product) {
+    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody Product product) {
         final Long productId = productService.addProduct(product);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -46,14 +46,14 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductResponse product(@PathVariable final Long productId) {
+    public ProductResponse product(@PathVariable Long productId) {
         Product product = productService.findProductById(productId);
-        return new ProductResponse(product);
+        return ProductResponse.from(product);
     }
 
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable final Long productId) {
+    public void delete(@PathVariable Long productId) {
         productService.deleteProductById(productId);
     }
 }

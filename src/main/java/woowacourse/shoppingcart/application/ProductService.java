@@ -15,14 +15,16 @@ public class ProductService {
 
     private final ProductDao productDao;
 
+    @Transactional(readOnly = true)
     public List<Product> findProducts() {
         return productDao.findProducts();
     }
 
-    public Long addProduct(final Product product) {
+    public long addProduct(final Product product) {
         return productDao.save(product);
     }
 
+    @Transactional(readOnly = true)
     public Product findProductById(final Long productId) {
         return productDao.findProductById(productId)
                 .orElseThrow(NotExistProductException::new);

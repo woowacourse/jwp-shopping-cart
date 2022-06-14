@@ -31,10 +31,8 @@ public class CartController {
     private final CartQueryDao cartQueryDao;
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(
-            @PathVariable final long customerId,
-            @RequestBody final CartItemCreateRequest requestBody
-    ) {
+    public ResponseEntity<Void> addCartItem(@PathVariable long customerId,
+                                            @RequestBody CartItemCreateRequest requestBody) {
         final Long cartId = cartService.addCartItem(customerId, requestBody.getProductId(), requestBody.getCount());
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -46,22 +44,22 @@ public class CartController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CartResponse> getCartItems(@PathVariable final long customerId) {
+    public List<CartResponse> getCartItems(@PathVariable long customerId) {
         return cartQueryDao.findAllCartByCustomerId(customerId);
     }
 
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
-    public void updateCartItem(@PathVariable final long customerId,
-                               @RequestParam final int productId,
-                               @RequestBody final CartItemUpdateRequest request) {
+    public void updateCartItem(@PathVariable long customerId,
+                               @RequestParam int productId,
+                               @RequestBody CartItemUpdateRequest request) {
         cartService.changeCartItemCount(customerId, productId, request.getCount());
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCartItem(@PathVariable final long customerId,
-                               @RequestParam final long productId) {
+    public void deleteCartItem(@PathVariable long customerId,
+                               @RequestParam long productId) {
         cartService.deleteCart(customerId, productId);
     }
 }

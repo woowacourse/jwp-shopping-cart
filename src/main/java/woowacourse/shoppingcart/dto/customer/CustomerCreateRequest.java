@@ -1,9 +1,6 @@
 package woowacourse.shoppingcart.dto.customer;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +9,7 @@ import lombok.Setter;
 import woowacourse.shoppingcart.domain.Customer;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Setter
 @Getter
 public class CustomerCreateRequest {
@@ -25,6 +22,10 @@ public class CustomerCreateRequest {
 
     @NotNull(message = "비밀번호는 8자 이상 20자 이하여야합니다.")
     private String password;
+
+    public static CustomerCreateRequest from(String email, String username, String password) {
+        return new CustomerCreateRequest(email, username, password);
+    }
 
     public Customer toEntity() {
         return new Customer(email, username, password);

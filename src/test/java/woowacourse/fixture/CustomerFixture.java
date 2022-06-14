@@ -34,14 +34,14 @@ public class CustomerFixture extends Fixture {
         return get(path, token);
     }
 
-    public static ExtractableResponse<Response> 회원정보수정_요청(String token, long id, CustomerUpdateRequest reuqestBody) {
+    public static ExtractableResponse<Response> 회원정보수정_요청(String token, long id, CustomerUpdateRequest requestBody) {
         String path = "/api/customers/" + id;
-        return put(path, token, reuqestBody);
+        return put(path, token, requestBody);
     }
 
-    public static ExtractableResponse<Response> 회원탈퇴_요청(String token, long id, CustomerDeleteRequest reuqestBody) {
+    public static ExtractableResponse<Response> 회원탈퇴_요청(String token, long id, CustomerDeleteRequest requestBody) {
         String path = "/api/customers/" + id;
-        return post(path, token, reuqestBody);
+        return post(path, token, requestBody);
     }
 
     public static long ID_추출(ExtractableResponse<Response> response) {

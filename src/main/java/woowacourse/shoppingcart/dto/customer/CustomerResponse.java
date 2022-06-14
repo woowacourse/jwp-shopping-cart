@@ -19,7 +19,7 @@ public class CustomerResponse {
     private String email;
     private String username;
 
-    public CustomerResponse(Customer customer) {
-        this(customer.getId(), customer.getEmail(), customer.getUsername());
+    public static CustomerResponse from(Customer customer) {
+        return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getUsername());
     }
 }

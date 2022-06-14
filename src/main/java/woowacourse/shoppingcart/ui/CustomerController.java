@@ -40,7 +40,7 @@ public class CustomerController {
     public CustomerResponse findCustomer(@PathVariable long id,
                                          @AuthenticationPrincipal Customer customer) {
         validateAuthorizedUser(customer, id);
-        return new CustomerResponse(customer);
+        return CustomerResponse.from(customer);
     }
 
     @PutMapping("/{id}")
@@ -50,9 +50,7 @@ public class CustomerController {
                                    @AuthenticationPrincipal Customer customer) {
         validateAuthorizedUser(customer, id);
         customerService.update(id, request);
-        Customer updatedCustomer = customerService.findById(id);
-
-        return new CustomerResponse(updatedCustomer);
+        return customerService.findByIdForUpdateView(id);
     }
 
     @PostMapping("/{id}")
