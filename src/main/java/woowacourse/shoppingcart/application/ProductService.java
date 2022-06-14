@@ -22,22 +22,20 @@ public class ProductService {
 
     private final ProductDao productDao;
     private final CartItemDao cartItemDao;
-    private final CustomerService customerService;
 
     public ProductService(final ProductDao productDao, final CustomerService customerService, final CartItemDao cartItemDao) {
         this.productDao = productDao;
         this.cartItemDao = cartItemDao;
-        this.customerService = customerService;
     }
 
     public ProductsResponse findProducts(final Long id) {
         if (id.equals(Customer.GUEST)) {
-            return new ProductsResponse(getProductsResponseWhoMember(new Products(productDao.getProducts()), new Carts(cartItemDao.getAllCartsBy(new CustomerId(id)))));
+            return new ProductsResponse(getProductsWithQuantityForMember(new Products(productDao.getProducts()), new Carts(cartItemDao.getAllCartsBy(new CustomerId(id)))));
         }
-        return new ProductsResponse(getProductsResponseWhoGuest(new Products(productDao.getProducts())));
+        return new ProductsResponse(getProductsWithQuantityForGuest(new Products(productDao.getProducts())));
     }
 
-    private List<ProductResponse> getProductsResponseWhoGuest(final Products products) {
+    private List<ProductResponse> getProductsWithQuantityForGuest(final Products products) {
         return products.getProducts().stream()
                 .map(product ->
                         new ProductResponse(
@@ -50,7 +48,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    private List<ProductResponse> getProductsResponseWhoMember(final Products products, final Carts carts) {
+    private List<ProductResponse> getProductsWithQuantityForMember(final Products products, final Carts carts) {
         return products.getProducts().stream()
                 .map(product ->
                         new ProductResponse(

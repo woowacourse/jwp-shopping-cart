@@ -27,7 +27,7 @@ public class CustomerService {
         return new CustomerResponse(savedCustomer.getId().getValue(), savedCustomer.getEmail().getValue(), savedCustomer.getName().getValue(), savedCustomer.getPhone().getValue(), savedCustomer.getAddress().getValue());
     }
 
-    public CustomerResponse findCustomerByToken(final Long id) {
+    public CustomerResponse findCustomerBy(final Long id) {
         final Customer customer = customerDao.findById(new CustomerId(id));
         return new CustomerResponse(customer.getId().getValue(), customer.getEmail().getValue(), customer.getName().getValue(), customer.getPhone().getValue(), customer.getAddress().getValue());
     }
