@@ -1,20 +1,25 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.entity;
 
-public class Product {
-    private final Long id;
+public class ProductEntity {
+
+    private final Long productId;
     private final String name;
-    private final Integer price;
+    private final int price;
     private final String imageUrl;
 
-    public Product(final Long id, final String name, final int price, final String imageUrl) {
-        this.id = id;
+    public ProductEntity(Long productId, String name, int price, String imageUrl) {
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(final String name, final int price, final String imageUrl) {
+    public ProductEntity(String name, int price, String imageUrl) {
         this(null, name, price, imageUrl);
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public String getName() {
@@ -27,9 +32,5 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public Long getId() {
-        return id;
     }
 }

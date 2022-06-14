@@ -10,9 +10,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.entity.CartItemEntity;
+import woowacourse.shoppingcart.entity.ProductEntity;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -21,18 +23,23 @@ import woowacourse.shoppingcart.domain.Product;
 public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
+    private final CustomerDao customerDao;
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
+    public CartItemDaoTest(JdbcTemplate jdbcTemplate,
+            NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
+        customerDao = new CustomerDao(namedParameterJdbcTemplate);
     }
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
+        productDao.save(new ProductEntity("banana", 1_000, "woowa1.com"));
+        productDao.save(new ProductEntity("apple", 2_000, "woowa2.com"));
 
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
         jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
@@ -47,7 +54,7 @@ public class CartItemDaoTest {
         final Long productId = 1L;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.addCartItem(new CartItemEntity(customerId, productId));
 
         // then
         assertThat(cartId).isEqualTo(3L);
@@ -65,20 +72,6 @@ public class CartItemDaoTest {
 
         // then
         assertThat(productsIds).containsExactly(1L, 2L);
-    }
-
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    @Test
-    void findIdsByCustomerId() {
-
-        // given
-        final Long customerId = 1L;
-
-        // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-
-        // then
-        assertThat(cartIds).containsExactly(1L, 2L);
     }
 
     @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")

@@ -1,16 +1,24 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import woowacourse.shoppingcart.domain.OrderResponse;
+import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.response.CartResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -143,5 +151,119 @@ public class AcceptanceTest {
                 .then()
                 .log().all()
                 .extract();
+    }
+
+    public ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("productId", productId);
+
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().post("/customers/cart")
+                .then().log().all()
+                .extract();
+    }
+
+    public ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/customers/cart")
+                .then().log().all()
+                .extract();
+    }
+
+    public ExtractableResponse<Response> 장바구니_삭제_요청(String accessToken, Long cartId) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/customers/cart/{cartId}", cartId)
+                .then().log().all()
+                .extract();
+    }
+
+    public void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isNotBlank();
+    }
+
+    public Long 장바구니_아이템_추가되어_있음(String userName, Long productId) {
+        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(userName, productId);
+        return Long.parseLong(response.header("Location").split("/cart/")[1]);
+    }
+
+    public void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    public void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
+        CartResponse cartResponse = response.jsonPath().getObject(".", CartResponse.class);
+        assertThat(cartResponse.getCart()).extracting("id").contains(productIds);
+    }
+
+    public void 장바구니_삭제됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    public ExtractableResponse<Response> 주문하기_요청(String accessToken, List<OrderRequest> orderRequests) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(orderRequests)
+                .header("Authorization", "Bearer " + accessToken)
+                .when().post("/customers/orders")
+                .then().log().all()
+                .extract();
+    }
+
+    public ExtractableResponse<Response> 주문_내역_조회_요청(String accessToken) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken)
+                .when().get("/customers/orders")
+                .then().log().all()
+                .extract();
+    }
+
+    public ExtractableResponse<Response> 주문_단일_조회_요청(String accessToken, Long orderId) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "Bearer " + accessToken)
+                .when().get("/customers/orders/{orderId}", orderId)
+                .then().log().all()
+                .extract();
+    }
+
+    public void 주문하기_성공함(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isNotBlank();
+    }
+
+    public Long 주문하기_요청_성공되어_있음(String userName, List<OrderRequest> orderRequests) {
+        ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
+        return Long.parseLong(response.header("Location").split("/orders/")[1]);
+    }
+
+    public void 주문_조회_응답됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    public void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
+        List<Long> resultOrderIds = response.jsonPath().getList(".", OrderResponse.class).stream()
+                .map(OrderResponse::getOrderId)
+                .collect(Collectors.toList());
+        assertThat(resultOrderIds).contains(orderIds);
+    }
+
+    public void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
+        OrderResponse resultOrder = response.as(OrderResponse.class);
+        assertThat(resultOrder.getOrderId()).isEqualTo(orderId);
     }
 }
