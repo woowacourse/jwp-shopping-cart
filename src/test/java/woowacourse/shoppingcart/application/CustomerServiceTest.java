@@ -26,7 +26,6 @@ class CustomerServiceTest {
     private static final String PASSWORD = "12345678a";
     private static final String ENCRYPT_PASSWORD = PasswordEncoder.encrypt(PASSWORD);
     private static final String NICKNAME = "토닉";
-    private static final String NOT_FOUND_EMAIL = "notFoundEmail@email.com";
 
     @Autowired
     private CustomerService customerService;

@@ -10,9 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.dto.cart.CartItemResponse;
-import woowacourse.shoppingcart.dto.cart.CartItemsResponse;
-import woowacourse.shoppingcart.dto.product.ProductRequest;
-import woowacourse.shoppingcart.dto.product.ProductResponse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,10 +43,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         회원가입_요청("email2@email.com", "12345678a", "nick");
         String otherToken = 토큰_요청("email2@email.com", "12345678a");
 
-        장바구니_아이템_추가_요청2(productId1, token);
-        장바구니_아이템_추가_요청2(productId2, token);
+        장바구니_아이템_추가_요청(productId1, token);
+        장바구니_아이템_추가_요청(productId2, token);
 
-        ExtractableResponse response = 장바구니_아이템_추가_요청2(productId2, otherToken);
+        ExtractableResponse response = 장바구니_아이템_추가_요청(productId2, otherToken);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -57,7 +54,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 추가 시 잘못된 토큰이면 401 반환")
     @Test
     void addCartItemWithUnauthorizedToken() {
-        ExtractableResponse response = 장바구니_아이템_추가_요청2(productId1, "invalidToken");
+        ExtractableResponse response = 장바구니_아이템_추가_요청(productId1, "invalidToken");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
@@ -81,7 +78,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("정상 토큰으로 장바구니 아이템 추가 시 204 반환")
     @Test
     void addCartItemWithValidToken() {
-        ExtractableResponse response = 장바구니_아이템_추가_요청2(productId1, token);
+        ExtractableResponse response = 장바구니_아이템_추가_요청(productId1, token);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -90,7 +87,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @Test
     void addNotExistedCartItem() {
         Long notExistId = 0L;
-        ExtractableResponse response = 장바구니_아이템_추가_요청2(notExistId, token);
+        ExtractableResponse response = 장바구니_아이템_추가_요청(notExistId, token);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
@@ -98,8 +95,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("중복된 상품을 장바구니에 담을 경우 400 반환")
     @Test
     void addDuplicateCartItem() {
-        장바구니_아이템_추가_요청2(productId1, token);
-        ExtractableResponse response = 장바구니_아이템_추가_요청2(productId1, token);
+        장바구니_아이템_추가_요청(productId1, token);
+        ExtractableResponse response = 장바구니_아이템_추가_요청(productId1, token);
 
         BAD_REQUEST_400_응답됨(response, CART_DUPLICATE_ERROR_CODE);
     }
@@ -107,10 +104,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("잘못된 토큰으로 장바구니 아이템 목록 조회할 경우 401 반환")
     @Test
     void getCartItemsWithInvalidToken() {
-        장바구니_아이템_추가_요청2(productId1, token);
-        장바구니_아이템_추가_요청2(productId2, token);
+        장바구니_아이템_추가_요청(productId1, token);
+        장바구니_아이템_추가_요청(productId2, token);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청2("invalidToken");
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청("invalidToken");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
@@ -118,8 +115,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("토큰 없이 장바구니 아이템 목록 조회할 경우 401 반환")
     @Test
     void getCartItemsWithoutToken() {
-        장바구니_아이템_추가_요청2(productId1, token);
-        장바구니_아이템_추가_요청2(productId2, token);
+        장바구니_아이템_추가_요청(productId1, token);
+        장바구니_아이템_추가_요청(productId2, token);
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -133,10 +130,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회 성공시 200 반환")
     @Test
     void getCartItemsWithValidToken() {
-        장바구니_아이템_추가_요청2(productId1, token);
-        장바구니_아이템_추가_요청2(productId2, token);
+        장바구니_아이템_추가_요청(productId1, token);
+        장바구니_아이템_추가_요청(productId2, token);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청2(token);
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token);
 
         장바구니_아이템_목록_응답됨(response);
         장바구니_아이템_목록_포함됨(response, productId1, productId2);
@@ -145,9 +142,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("잘못된 토큰으로 장바구니 아이템 삭제시 401 반환")
     @Test
     void deleteCartItemWithInvalidToken() {
-        장바구니_아이템_추가_요청2(productId1, token);
+        장바구니_아이템_추가_요청(productId1, token);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_삭제2("invalidToken", productId1);
+        ExtractableResponse<Response> response = 장바구니_아이템_삭제("invalidToken", productId1);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
@@ -157,7 +154,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     void deleteNotExistedProductItem() {
         Long notExistProductId = 0L;
 
-        ExtractableResponse<Response> response = 장바구니_아이템_삭제2(token, notExistProductId);
+        ExtractableResponse<Response> response = 장바구니_아이템_삭제(token, notExistProductId);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
@@ -165,9 +162,9 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제 정상 케이스인 경우 204 반환")
     @Test
     void deleteCartItem() {
-        장바구니_아이템_추가_요청2(productId1, token);
+        장바구니_아이템_추가_요청(productId1, token);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_삭제2(token, productId1);
+        ExtractableResponse<Response> response = 장바구니_아이템_삭제(token, productId1);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -175,10 +172,10 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니에 없는 물품을 삭제할 경우 400 반환")
     @Test
     void deleteCartItemNotExistedInCart() {
-        장바구니_아이템_추가_요청2(productId1, token);
+        장바구니_아이템_추가_요청(productId1, token);
 
-        장바구니_아이템_삭제2(token, productId1);
-        ExtractableResponse<Response> response = 장바구니_아이템_삭제2(token, productId1);
+        장바구니_아이템_삭제(token, productId1);
+        ExtractableResponse<Response> response = 장바구니_아이템_삭제(token, productId1);
 
         BAD_REQUEST_400_응답됨(response, CART_NOT_EXISTED_ERROR_CODE);
     }
@@ -186,7 +183,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("잘못된 토큰으로 장바구니 아이템 수정 요청시 401 반환")
     @Test
     void updateCartItemQuantityWithInvalidToken() {
-        장바구니_아이템_추가_요청2(productId1, token);
+        장바구니_아이템_추가_요청(productId1, token);
 
         ExtractableResponse<Response> response = 장바구니_아이템_수량_수정_요청("invalidToken", productId1,3);
 
@@ -212,7 +209,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("음수 범위의 수량으로 장바구니 아이템 수정 요청 시 400 반환")
     @Test
     void updateItemWithNegativeQuantity() {
-        장바구니_아이템_추가_요청2(productId1, token);
+        장바구니_아이템_추가_요청(productId1, token);
 
         ExtractableResponse<Response> response = 장바구니_아이템_수량_수정_요청(token, productId1,-3);
 
@@ -222,7 +219,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("정상적인 장바구니 아이템 수량 수정 요청시 200 반환")
     @Test
     void updateCartItemQuantity() {
-        장바구니_아이템_추가_요청2(productId1, token);
+        장바구니_아이템_추가_요청(productId1, token);
 
         ExtractableResponse<Response> response = 장바구니_아이템_수량_수정_요청(token, productId1,3);
 
@@ -234,11 +231,11 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("아이템 수량 수정 요청 후 아이템 목록 재요청시 수량 확인")
     @Test
     void updateCartItemQuantityAndCheck() {
-        장바구니_아이템_추가_요청2(productId1, token);
+        장바구니_아이템_추가_요청(productId1, token);
 
         장바구니_아이템_수량_수정_요청(token, productId1,3);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청2(token);
+        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(token);
 
         List<CartItemResponse> productList = response.jsonPath().getList("cartList", CartItemResponse.class);
 
@@ -253,7 +250,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         assertThat(response.jsonPath().getString("message")).isNotBlank();
     }
 
-    private ExtractableResponse<Response> 장바구니_아이템_삭제2(String token, Long productId1) {
+    private ExtractableResponse<Response> 장바구니_아이템_삭제(String token, Long productId1) {
         return RestAssured.given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .when().log().all()

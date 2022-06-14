@@ -93,7 +93,7 @@ public class AcceptanceTest {
         return response;
     }
 
-    protected ExtractableResponse 장바구니_아이템_추가_요청2(Long productId, String token) {
+    protected ExtractableResponse 장바구니_아이템_추가_요청(Long productId, String token) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("productId", productId);
 
@@ -106,12 +106,7 @@ public class AcceptanceTest {
                     .extract();
     }
 
-    public Long 장바구니_아이템_추가되어_있음(Long productId, String token) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청2(productId, token);
-        return Long.parseLong(response.header("Location").split("/cartItems/")[1]);
-    }
-
-    protected ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청2(String token) {
+    protected ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token) {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
