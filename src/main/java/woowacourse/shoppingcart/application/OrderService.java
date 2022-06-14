@@ -6,7 +6,7 @@ import woowacourse.shoppingcart.dao.*;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.Product;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -73,7 +73,7 @@ public class OrderService {
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
+            final Product product = productDao.findProductById(productQuantity.getProductId()).get();
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }

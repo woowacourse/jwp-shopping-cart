@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.acceptance.fixture.UserSimpleAssured.*;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -28,7 +29,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         String password = "12345678a";
         String nickname = "토닉";
 
-        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));;
+        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -37,10 +38,10 @@ public class UserAcceptanceTest extends AcceptanceTest {
     @ParameterizedTest
     @MethodSource("provideInvalidSignUpForm")
     void invalidSignUpFormatRequest(String email, String password, String nickname) {
-        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));;
+        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(INVALID_FORMAT_ERROR_CODE);
+        assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1000);
         assertThat(response.body().jsonPath().getString("message")).isNotBlank();
     }
 
@@ -63,10 +64,10 @@ public class UserAcceptanceTest extends AcceptanceTest {
         String nickname = "토닉";
         회원가입_요청(new SignUpRequest(email, password, nickname));
 
-        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));;
+        ExtractableResponse<Response> response = 회원가입_요청(new SignUpRequest(email, password, nickname));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(DUPLICATE_EMAIL_ERROR_CODE);
+        assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1001);
         assertThat(response.body().jsonPath().getString("message")).isNotBlank();
     }
 
@@ -108,7 +109,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(회원탈퇴_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
                 () -> assertThat(회원정보_응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(회원정보_응답.body().jsonPath().getInt("errorCode")).isEqualTo(INVALID_LOGIN_ERROR_CODE)
+                () -> assertThat(회원정보_응답.body().jsonPath().getInt("errorCode")).isEqualTo(1002)
         );
     }
 
@@ -137,7 +138,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(INVALID_FORMAT_ERROR_CODE)
+                () -> assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(1000)
         );
     }
 

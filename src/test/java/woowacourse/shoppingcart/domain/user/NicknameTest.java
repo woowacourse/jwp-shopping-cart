@@ -1,12 +1,11 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.domain.user;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.shoppingcart.domain.user.Nickname;
-import woowacourse.shoppingcart.exception.InvalidNicknameException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidNicknameException;
 
 public class NicknameTest {
 

@@ -2,6 +2,7 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.acceptance.fixture.UserSimpleAssured.*;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -29,7 +30,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(INVALID_FORMAT_ERROR_CODE),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(1000),
                 () -> assertThat(response.jsonPath().getString("message")).isNotBlank()
         );
     }
@@ -50,7 +51,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(INVALID_LOGIN_ERROR_CODE),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(1002),
                 () -> assertThat(response.jsonPath().getString("message")).isNotBlank()
         );
     }
@@ -67,7 +68,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(INVALID_LOGIN_ERROR_CODE),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(1002),
                 () -> assertThat(response.jsonPath().getString("message")).isNotBlank()
         );
     }

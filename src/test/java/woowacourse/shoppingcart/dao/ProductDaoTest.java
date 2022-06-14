@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.dao;
 
+import java.util.Optional;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,7 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.Product;
 
 import java.util.List;
 
@@ -22,8 +24,8 @@ public class ProductDaoTest {
 
     private final ProductDao productDao;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
+    public ProductDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+        this.productDao = new ProductDao(jdbcTemplate, dataSource);
     }
 
     @DisplayName("Product를 저장하면, id를 반환한다.")
@@ -36,7 +38,6 @@ public class ProductDaoTest {
 
         // when
         final Long productId = productDao.save(new Product(name, price, imageUrl));
-
         // then
         assertThat(productId).isEqualTo(1L);
     }
@@ -52,7 +53,7 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(productId).get();
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);

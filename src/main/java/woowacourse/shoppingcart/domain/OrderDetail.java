@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.domain.product.Product;
+
 public class OrderDetail {
     private Long productId;
     private int quantity;

@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.exception.InvalidLoginFormException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidLoginFormException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.UserService;
 import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.exception.InvalidUserException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidUserException;
 
 @SpringBootTest
 @Transactional
