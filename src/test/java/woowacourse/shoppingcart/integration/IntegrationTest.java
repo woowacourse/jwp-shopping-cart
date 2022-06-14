@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.cart.application.CartService;
 import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.customer.application.CustomerService;
 import woowacourse.shoppingcart.customer.dao.CustomerDao;
+import woowacourse.shoppingcart.order.application.OrderService;
 import woowacourse.shoppingcart.product.application.ProductService;
 
 @SpringBootTest
@@ -30,6 +31,9 @@ public abstract class IntegrationTest {
 
     @Autowired
     protected AuthService authService;
+
+    @Autowired
+    protected OrderService orderService;
 
     @Autowired
     protected CustomerDao customerDao;
