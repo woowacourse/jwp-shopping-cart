@@ -42,7 +42,7 @@ public class CartItemController {
 
     @PatchMapping
     public ResponseEntity<Void> updateQuantity(@AuthenticationPrincipal Customer customer,
-            @RequestBody final UpdateCartItemRequest request) {
+            @Valid @RequestBody final UpdateCartItemRequest request) {
         final Long cartItemId = request.getCartItemId();
         final int quantity = request.getQuantity();
         cartItemService.updateQuantity(customer, cartItemId, quantity);
