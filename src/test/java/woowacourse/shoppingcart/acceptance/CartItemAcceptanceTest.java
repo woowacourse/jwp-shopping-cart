@@ -17,12 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.acceptance.AuthAcceptanceFixture;
 import woowacourse.shoppingcart.domain.CartItem;
-import woowacourse.shoppingcart.dto.DeleteCartItemRequest;
-import woowacourse.shoppingcart.dto.UpdateCartItemRequest;
+import woowacourse.shoppingcart.dto.cart.DeleteCartItemRequest;
+import woowacourse.shoppingcart.dto.cart.UpdateCartItemRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartItemAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
 
     private String token;
     private Long productId1;
@@ -80,11 +79,6 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static Long 토큰으로_장바구니_아이템_추가되어_있음(String accessToken, Long productId) {
-        ExtractableResponse<Response> response = 토큰으로_장바구니_아이템_추가_요청(accessToken, productId);
-        return Long.parseLong(response.header("Location").split("/cartItems/")[1]);
-    }
-
     public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
@@ -125,8 +119,8 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 아이템 목록 조회")
     @Test
     void getCartItems() {
-        토큰으로_장바구니_아이템_추가되어_있음(token, productId1);
-        토큰으로_장바구니_아이템_추가되어_있음(token, productId2);
+        토큰으로_장바구니_아이템_추가_요청(token, productId1);
+        토큰으로_장바구니_아이템_추가_요청(token, productId2);
 
         ExtractableResponse<Response> response = 토큰으로_장바구니_아이템_목록_조회_요청(token);
 
@@ -137,11 +131,11 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제")
     @Test
     void deleteCartItem() {
-        Long cartId1 = 토큰으로_장바구니_아이템_추가되어_있음(token, productId1);
-        Long cartId2 = 토큰으로_장바구니_아이템_추가되어_있음(token, productId2);
+        토큰으로_장바구니_아이템_추가_요청(token, productId1);
+        토큰으로_장바구니_아이템_추가_요청(token, productId2);
 
         ExtractableResponse<Response> response
-                = 토큰으로_장바구니_삭제_요청(token, new DeleteCartItemRequest(List.of(cartId1, cartId2)));
+                = 토큰으로_장바구니_삭제_요청(token, new DeleteCartItemRequest(List.of(1L, 2L)));
 
         장바구니_삭제됨(response);
     }
@@ -150,7 +144,7 @@ public class CartItemAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 제품 갯수 수정")
     void updateCartItemQuantity() {
         // given
-        Long cartId1 = 토큰으로_장바구니_아이템_추가되어_있음(token, productId1);
+        토큰으로_장바구니_아이템_추가_요청(token, productId1);
 
         // when
         final ExtractableResponse<Response> response = 토큰으로_장바구니_갯수_수정_요청(token,

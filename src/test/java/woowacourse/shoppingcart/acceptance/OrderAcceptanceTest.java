@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.CartItemAcceptanceTest.토큰으로_장바구니_아이템_추가되어_있음;
+import static woowacourse.shoppingcart.acceptance.CartItemAcceptanceTest.토큰으로_장바구니_아이템_추가_요청;
 import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
 
 import io.restassured.RestAssured;
@@ -18,24 +18,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.acceptance.AuthAcceptanceFixture;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.order.OrderRequest;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "klay";
-    private Long cartId1;
-    private Long cartId2;
-    private String token;
 
-    public static ExtractableResponse<Response> 주문하기_요청(String userName, List<OrderRequest> orderRequests) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(orderRequests)
-                .when().post("/api/customers/{customerName}/orders", userName)
-                .then().log().all()
-                .extract();
-    }
+    private Long cartId1 = 1L;
+    private Long cartId2 = 2L;
+    private String token;
 
     public static ExtractableResponse<Response> 토큰으로_주문하기_요청(String accessToken, List<OrderRequest> orderRequests) {
         return RestAssured
@@ -96,8 +86,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
 
         token = AuthAcceptanceFixture.registerAndGetToken("klay", "klay@naver.com", "12345678");
-        cartId1 = 토큰으로_장바구니_아이템_추가되어_있음(token, productId1);
-        cartId2 = 토큰으로_장바구니_아이템_추가되어_있음(token, productId2);
+        토큰으로_장바구니_아이템_추가_요청(token, productId1);
+        토큰으로_장바구니_아이템_추가_요청(token, productId2);
     }
 
     @DisplayName("주문하기")
