@@ -42,7 +42,7 @@ public class CartService {
 
     private Long addCartItemQuantity(Long memberId, Product product, Integer quantity) {
         CartItem cartItem = findCartItem(memberId, product.getId());
-        cartItem.add(quantity);
+        cartItem.addQuantity(quantity);
         cartItemDao.updateQuantity(cartItem);
         return cartItem.getId();
     }

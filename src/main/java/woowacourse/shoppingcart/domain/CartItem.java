@@ -28,7 +28,7 @@ public class CartItem {
         product.validateStock(quantity);
     }
 
-    public void add(int quantity) {
+    public void addQuantity(int quantity) {
         validateQuantity(this.product, quantity);
         this.quantity += quantity;
     }

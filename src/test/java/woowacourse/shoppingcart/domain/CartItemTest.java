@@ -25,7 +25,7 @@ class CartItemTest {
         Product product = new Product("banana", 1_000, 10, "woowa1.com");
         CartItem cartItem = new CartItem(1L, product, 1);
 
-        cartItem.add(5);
+        cartItem.addQuantity(5);
 
         assertThat(cartItem.getQuantity()).isEqualTo(6);
     }
