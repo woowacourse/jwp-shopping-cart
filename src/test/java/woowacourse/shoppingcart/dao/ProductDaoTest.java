@@ -6,9 +6,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.domain.product.ProductId;
 
 import java.util.List;
 
@@ -16,78 +18,38 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:schema.sql")
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class ProductDaoTest {
 
     private final ProductDao productDao;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
+    public ProductDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
         this.productDao = new ProductDao(jdbcTemplate);
     }
 
-    @DisplayName("Product를 저장하면, id를 반환한다.")
-    @Test
-    void save() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
-        // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-
-        // then
-        assertThat(productId).isEqualTo(1L);
-    }
-
-    @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
-    @Test
-    void findProductById() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
-
-        // when
-        final Product product = productDao.findProductById(productId);
-
-        // then
-        assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
-    }
-
-    @DisplayName("상품 목록 조회")
+    @DisplayName("상품 목록 조회가 정상적으로 되는지 확인한다.")
     @Test
     void getProducts() {
+        final List<Product> products = productDao.getProducts();
+        final int result = products.size();
 
-        // given
-        final int size = 0;
-
-        // when
-        final List<Product> products = productDao.findProducts();
-
-        // then
-        assertThat(products).size().isEqualTo(size);
+        assertThat(result).isEqualTo(3);
     }
 
-    @DisplayName("싱품 삭제")
+    @DisplayName("상품이 존재하는 것을 확인한다.")
     @Test
-    void deleteProduct() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
+    void exists_true() {
+        final Boolean result = productDao.exists(new ProductId(1));
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final int beforeSize = productDao.findProducts().size();
+        assertThat(result).isTrue();
+    }
 
-        // when
-        productDao.delete(productId);
+    @DisplayName("상품이 존재하지 않는 것을 확인한다.")
+    @Test
+    void exists_false() {
+        final Boolean result = productDao.exists(new ProductId(4));
 
-        // then
-        final int afterSize = productDao.findProducts().size();
-        assertThat(beforeSize - 1).isEqualTo(afterSize);
+        assertThat(result).isFalse();
     }
 }

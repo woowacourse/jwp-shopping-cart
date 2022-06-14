@@ -7,11 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.web.WebAppConfiguration;
 import woowacourse.shoppingcart.domain.customer.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql"})
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CustomerDaoTest {
 
@@ -49,7 +47,7 @@ public class CustomerDaoTest {
 
         final Customer savedCustomer = customerDao.save(customer);
 
-        assertThat(savedCustomer.getId()).isEqualTo(new Id(1L));
+        assertThat(savedCustomer.getId()).isEqualTo(new CustomerId(1L));
     }
 
     @DisplayName("Customer 이름으로 Customer의 Id를 조회한다.")
@@ -57,9 +55,9 @@ public class CustomerDaoTest {
     void findIdByUserName() {
         customerDao = new CustomerDao(jdbcTemplate);
         customerDao.save(customer);
-        final Id id = customerDao.findIdByUserName(customer.getName());
+        final CustomerId customerId = customerDao.findIdByUserName(customer.getName());
 
-        assertThat(id).isEqualTo(new Id(1L));
+        assertThat(customerId).isEqualTo(new CustomerId(1L));
     }
 
     @DisplayName("Customer Email로 Customer를 조회한다.")
@@ -70,7 +68,7 @@ public class CustomerDaoTest {
 
         final Customer result = customerDao.findByEmail(customer.getEmail());
 
-        assertThat(result.getId()).isEqualTo(new Id(1L));
+        assertThat(result.getId()).isEqualTo(new CustomerId(1L));
         assertThat(result.getEmail()).isEqualTo(new Email(EMAIL));
         assertThat(result.getName()).isEqualTo(new Name(NAME));
         assertThat(result.getPhone()).isEqualTo(new Phone(PHONE));
@@ -83,10 +81,10 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
         customerDao.save(customer);
 
-        final Customer result = customerDao.findById(new Id(1L));
+        final Customer result = customerDao.findById(new CustomerId(1L));
 
         assertAll(
-                () -> assertThat(result.getId()).isEqualTo(new Id(1L)),
+                () -> assertThat(result.getId()).isEqualTo(new CustomerId(1L)),
                 () -> assertThat(result.getEmail()).isEqualTo(new Email(EMAIL)),
                 () -> assertThat(result.getName()).isEqualTo(new Name(NAME)),
                 () -> assertThat(result.getPhone()).isEqualTo(new Phone(PHONE)),
@@ -101,13 +99,13 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
         customerDao.save(customer);
 
-        Customer update = new Customer(new Id(1L), new Email(EMAIL), new Name("bunny"), new Phone("010-9999-9999"), new Address("Seoul City"), Password.of(PASSWORD));
+        Customer update = new Customer(new CustomerId(1L), new Email(EMAIL), new Name("bunny"), new Phone("010-9999-9999"), new Address("Seoul City"), Password.of(PASSWORD));
 
         customerDao.save(update);
-        Customer customer = customerDao.findById(new Id(1L));
+        Customer customer = customerDao.findById(new CustomerId(1L));
 
         assertAll(
-                () -> assertThat(customer.getId()).isEqualTo(new Id(1L)),
+                () -> assertThat(customer.getId()).isEqualTo(new CustomerId(1L)),
                 () -> assertThat(customer.getEmail()).isEqualTo(new Email(EMAIL)),
                 () -> assertThat(customer.getName()).isEqualTo(new Name("bunny")),
                 () -> assertThat(customer.getPhone()).isEqualTo(new Phone("010-9999-9999")),
@@ -121,7 +119,7 @@ public class CustomerDaoTest {
         customerDao = new CustomerDao(jdbcTemplate);
         customerDao.save(customer);
 
-        Customer update = new Customer(new Id(1L), new Email(EMAIL), new Name("bunny"), new Phone("010-9999-9999"), new Address("Seoul City"), Password.of(PASSWORD));
+        Customer update = new Customer(new CustomerId(1L), new Email(EMAIL), new Name("bunny"), new Phone("010-9999-9999"), new Address("Seoul City"), Password.of(PASSWORD));
         customerDao.save(update);
 
         Customer newCustomer = new Customer(new Email("new@naver.com"), new Name(NAME), new Phone(PHONE), new Address(ADDRESS), Password.of(PASSWORD));
@@ -139,7 +137,7 @@ public class CustomerDaoTest {
         customerDao.save(customer);
 
         assertDoesNotThrow(
-                () -> customerDao.delete(new Id(1L))
+                () -> customerDao.delete(new CustomerId(1L))
         );
     }
 

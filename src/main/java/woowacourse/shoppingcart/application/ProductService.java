@@ -2,33 +2,66 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.Carts;
+import woowacourse.shoppingcart.domain.Products;
+import woowacourse.shoppingcart.domain.cart.Quantity;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.CustomerId;
+import woowacourse.shoppingcart.domain.product.ProductId;
+import woowacourse.shoppingcart.dto.product.ProductResponse;
+import woowacourse.shoppingcart.dto.product.ProductsResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ProductService {
+
     private final ProductDao productDao;
+    private final CartDao cartDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(final ProductDao productDao, final CustomerService customerService, final CartDao cartDao) {
         this.productDao = productDao;
+        this.cartDao = cartDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    public ProductsResponse findProducts(final Long id) {
+        if (id.equals(Customer.GUEST)) {
+            return new ProductsResponse(getProductsWithQuantityForMember(new Products(productDao.getProducts()), new Carts(cartDao.getAllCartsBy(new CustomerId(id)))));
+        }
+        return new ProductsResponse(getProductsWithQuantityForGuest(new Products(productDao.getProducts())));
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    private List<ProductResponse> getProductsWithQuantityForGuest(final Products products) {
+        return products.getProducts().stream()
+                .map(product ->
+                        new ProductResponse(
+                                product.getId().getValue(),
+                                product.getName().getValue(),
+                                product.getPrice().getValue(),
+                                product.getThumbnail().getValue(),
+                                Quantity.GUEST_QUANTITY
+                        ))
+                .collect(Collectors.toList());
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    private List<ProductResponse> getProductsWithQuantityForMember(final Products products, final Carts carts) {
+        return products.getProducts().stream()
+                .map(product ->
+                        new ProductResponse(
+                                product.getId().getValue(),
+                                product.getName().getValue(),
+                                product.getPrice().getValue(),
+                                product.getThumbnail().getValue(),
+                                carts.findQuantity(product).getValue()
+                        ))
+                .collect(Collectors.toList());
     }
 
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+    public boolean exists(final ProductId id) {
+        return productDao.exists(id);
     }
 }

@@ -5,12 +5,12 @@ import java.util.Objects;
 public class Address {
     private final String address;
 
-    public Address(String address) {
+    public Address(final String address) {
         validateAddress(address);
         this.address = address;
     }
 
-    public static void validateAddress(String address) {
+    public static void validateAddress(final String address) {
         if (address.isBlank()) {
             throw new IllegalArgumentException("올바르지 않은 주소 형식입니다.");
         }

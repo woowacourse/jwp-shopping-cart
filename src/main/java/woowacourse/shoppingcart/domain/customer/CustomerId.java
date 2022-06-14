@@ -2,10 +2,10 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 
-public class Id {
+public class CustomerId {
     private final Long id;
 
-    public Id(Long id) {
+    public CustomerId(final Long id) {
         this.id = id;
     }
 
@@ -17,8 +17,8 @@ public class Id {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Id id1 = (Id) o;
-        return Objects.equals(id, id1.id);
+        CustomerId customerId1 = (CustomerId) o;
+        return Objects.equals(id, customerId1.id);
     }
 
     @Override

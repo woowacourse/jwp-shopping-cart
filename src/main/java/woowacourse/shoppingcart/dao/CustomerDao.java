@@ -35,13 +35,13 @@ public class CustomerDao {
         query.addValue("password", customer.getPassword().getValue());
         jdbcTemplate.update(sql, query, keyholder, new String[]{"id"});
         try {
-            return new Customer(new Id(Objects.requireNonNull(keyholder.getKey()).longValue()), customer);
+            return new Customer(new CustomerId(Objects.requireNonNull(keyholder.getKey()).longValue()), customer);
         } catch (NullPointerException e) {
             return customer;
         }
     }
 
-    public Id findIdByUserName(final Name name) {
+    public CustomerId findIdByUserName(final Name name) {
         try {
             final String sql = "SELECT id FROM customer WHERE name = :name";
             return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("name", name.getValue()), new IdMapper());
@@ -59,21 +59,21 @@ public class CustomerDao {
         }
     }
 
-    public Customer findById(Id id) {
+    public Customer findById(final CustomerId customerId) {
         final String sql = "select * from customer where id = :id";
         try {
-            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id.getValue()), new CustomerMapper());
+            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", customerId.getValue()), new CustomerMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCustomerException("존재하지 않는 아이디 입니다.");
         }
     }
 
-    public void delete(Id id) {
+    public void delete(final CustomerId customerId) {
         final String sql = "delete from customer where id = :id";
-        jdbcTemplate.update(sql, new MapSqlParameterSource("id", id.getValue()));
+        jdbcTemplate.update(sql, new MapSqlParameterSource("id", customerId.getValue()));
     }
 
-    public Boolean isDuplication(Email email) {
+    public Boolean isDuplication(final Email email) {
         final String sql = "select exists(select * from customer where email = :email)";
         return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("email", email.getValue()), Boolean.class);
     }
@@ -82,7 +82,7 @@ public class CustomerDao {
         @Override
         public Customer mapRow(final ResultSet rs, final int rowNum) throws SQLException {
             return new Customer(
-                    new Id(rs.getLong("id")),
+                    new CustomerId(rs.getLong("id")),
                     new Email(rs.getString("email")),
                     new Name(rs.getString("name")),
                     new Phone(rs.getString("phone")),
@@ -91,10 +91,10 @@ public class CustomerDao {
         }
     }
 
-    private static class IdMapper implements RowMapper<Id> {
+    private static class IdMapper implements RowMapper<CustomerId> {
         @Override
-        public Id mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Id(rs.getLong("id"));
+        public CustomerId mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new CustomerId(rs.getLong("id"));
         }
     }
 }

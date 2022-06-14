@@ -2,69 +2,89 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.domain.customer.Id;
-import woowacourse.shoppingcart.domain.customer.Name;
+import woowacourse.shoppingcart.dao.CartDao;
+import woowacourse.shoppingcart.domain.Carts;
+import woowacourse.shoppingcart.domain.cart.Quantity;
+import woowacourse.shoppingcart.domain.customer.CustomerId;
+import woowacourse.shoppingcart.domain.product.ProductId;
+import woowacourse.shoppingcart.dto.cart.*;
+import woowacourse.shoppingcart.exception.InvalidCartException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
-    private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
-    private final ProductDao productDao;
+    private final CartDao cartDao;
+    private final CustomerService customerService;
+    private final ProductService productService;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
-        this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
-        this.productDao = productDao;
+    public CartService(final CartDao cartDao, final CustomerService customerService, final ProductService productService) {
+        this.cartDao = cartDao;
+        this.customerService = customerService;
+        this.productService = productService;
     }
 
-    public List<Cart> findCartsByCustomerName(final Name customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public CartQuantityResponse addCart(final Long id, final CartRequest cartRequest) {
+        final CustomerId customerId = new CustomerId(id);
+        final ProductId productId = new ProductId(cartRequest.getProductId());
+        checkExistenceInAllProducts(productId);
+        checkExistenceInCart(customerId, productId);
+        cartDao.save(customerId, productId, new Quantity(cartRequest.getQuantity()));
+        return new CartQuantityResponse(customerId.getValue(), cartRequest.getQuantity());
+    }
 
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
+    public CartsResponse findCarts(final Long customerId) {
+        final Carts carts = new Carts(cartDao.getAllCartsBy(new CustomerId(customerId)));
+        return new CartsResponse(
+                carts.getCarts().stream()
+                        .map(cart -> new CartResponse(
+                                cart.getProduct().getId().getValue(),
+                                cart.getProduct().getName().getValue(),
+                                cart.getProduct().getPrice().getValue(),
+                                cart.getProduct().getThumbnail().getValue(),
+                                cart.getQuantity().getValue()))
+                        .collect(Collectors.toList()));
+    }
+
+    public void removeCarts(final Long id, final RemovedCartsRequest removedCartsRequest) {
+        final CustomerId customerId = new CustomerId(id);
+        final List<ProductId> productIds = removedCartsRequest.getProductIds().stream()
+                .map(ProductId::new)
+                .collect(Collectors.toList());
+        if (!productIds.stream()
+                .allMatch(productId -> cartDao.exists(customerId, productId))) {
+            throw new InvalidCartException();
         }
-        return carts;
+        cartDao.deleteCarts(customerId, productIds);
     }
 
-    private List<Long> findCartIdsByCustomerName(final Name customerName) {
-        final Id customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+    public void editCart(final Long id, final CartRequest cartRequest) {
+        final CustomerId customerId = new CustomerId(id);
+        final ProductId productId = new ProductId(cartRequest.getProductId());
+        checkExistenceInAllProducts(productId);
+        checkNoneExistenceInCart(customerId, productId);
+        cartDao.edit(customerId, productId, new Quantity(cartRequest.getQuantity()));
     }
 
-    public Long addCart(final Long productId, final Name customerName) {
-        final Id customerId = customerDao.findIdByUserName(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
+    private void checkExistenceInAllProducts(final ProductId productId) {
+        if (!productService.exists(productId)) {
             throw new InvalidProductException();
         }
     }
 
-    public void deleteCart(final Name customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    private void checkExistenceInCart(final CustomerId customerId, final ProductId productId) {
+        if (cartDao.exists(customerId, productId)) {
+            throw new InvalidCartException("이미 해당하는 상품이 장바구니에 있습니다.");
+        }
     }
 
-    private void validateCustomerCart(final Long cartId, final Name customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
+    private void checkNoneExistenceInCart(final CustomerId customerId, final ProductId productId) {
+        if (!cartDao.exists(customerId, productId)) {
+            throw new InvalidCartException("해당하는 상품이 장바구니에 없습니다.");
         }
-        throw new NotInCustomerCartItemException();
     }
 }

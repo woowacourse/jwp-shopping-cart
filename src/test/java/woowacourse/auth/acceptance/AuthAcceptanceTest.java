@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.auth.dto.TokenRequest;
@@ -15,6 +16,7 @@ import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원가입;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -32,23 +34,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 회원이 등록되어 있고
         // id, password를 사용해 토큰을 발급받고
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerRequest)
-                .when().post("/customers")
-                .then().log().all()
-                .extract();
+        회원가입(customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
-        String accessToken = RestAssured
-                .given().log().all()
-                .body(tokenRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/auth/login")
-                .then().log().all()
-                .extract().as(TokenResponse.class).getAccessToken();
+        String accessToken = 로그인(tokenRequest);
 
         // when
         // 발급 받은 토큰을 사용하여 내 정보 조회를 요청하면
@@ -77,13 +66,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerRequest)
-                .when().post("/customers")
-                .then().log().all()
-                .extract();
+        회원가입(customerRequest);
 
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면
@@ -109,13 +92,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // given
         // 회원이 등록되어 있고
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerRequest)
-                .when().post("/customers")
-                .then().log().all()
-                .extract();
+        회원가입(customerRequest);
 
         // when
         // 잘못된 id, password를 사용해 토큰을 요청하면
@@ -141,23 +118,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         // 유효하지 않은 토큰을 사용하여 내 정보 조회를 요청하면
         CustomerRequest customerRequest = new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS);
-        RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customerRequest)
-                .when().post("/customers")
-                .then().log().all()
-                .extract();
+        회원가입(customerRequest);
 
         TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD);
-        String accessToken = RestAssured
-                .given().log().all()
-                .body(tokenRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/auth/login")
-                .then().log().all()
-                .extract().as(TokenResponse.class).getAccessToken();
+        String accessToken = 로그인(tokenRequest);
 
         ExtractableResponse<Response> customerResponse = RestAssured
                 .given().log().all()
@@ -171,5 +135,16 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // 내 정보 조회 요청이 거부된다
         assertAll(() -> assertThat(customerResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(customerResponse.jsonPath().getString("message")).isEqualTo("유효하지 않은 토큰입니다."));
+    }
+
+    public static String 로그인(TokenRequest tokenRequest) {
+        return RestAssured
+                .given().log().all()
+                .body(tokenRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/auth/login")
+                .then().log().all()
+                .extract().as(TokenResponse.class).getAccessToken();
     }
 }

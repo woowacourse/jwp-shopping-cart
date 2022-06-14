@@ -8,12 +8,12 @@ public class Phone {
 
     private final String phone;
 
-    public Phone(String phone) {
+    public Phone(final String phone) {
         validatePhoneNumber(phone);
         this.phone = phone;
     }
 
-    public static void validatePhoneNumber(String phone) {
+    public static void validatePhoneNumber(final String phone) {
         if (phone.isBlank() || !phone.matches(PHONE_FORMAT)) {
             throw new IllegalArgumentException("올바르지 않은 전화번호 형식입니다.");
         }
