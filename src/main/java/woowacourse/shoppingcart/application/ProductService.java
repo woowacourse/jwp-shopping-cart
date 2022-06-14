@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.CartDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Carts;
 import woowacourse.shoppingcart.domain.Products;
@@ -21,16 +21,16 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductDao productDao;
-    private final CartItemDao cartItemDao;
+    private final CartDao cartDao;
 
-    public ProductService(final ProductDao productDao, final CustomerService customerService, final CartItemDao cartItemDao) {
+    public ProductService(final ProductDao productDao, final CustomerService customerService, final CartDao cartDao) {
         this.productDao = productDao;
-        this.cartItemDao = cartItemDao;
+        this.cartDao = cartDao;
     }
 
     public ProductsResponse findProducts(final Long id) {
         if (id.equals(Customer.GUEST)) {
-            return new ProductsResponse(getProductsWithQuantityForMember(new Products(productDao.getProducts()), new Carts(cartItemDao.getAllCartsBy(new CustomerId(id)))));
+            return new ProductsResponse(getProductsWithQuantityForMember(new Products(productDao.getProducts()), new Carts(cartDao.getAllCartsBy(new CustomerId(id)))));
         }
         return new ProductsResponse(getProductsWithQuantityForGuest(new Products(productDao.getProducts())));
     }

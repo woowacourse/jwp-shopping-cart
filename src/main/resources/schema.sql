@@ -2,7 +2,7 @@ drop table if exists orders_detail;
 
 drop table if exists orders;
 
-drop table if exists cart_item;
+drop table if exists cart;
 
 drop table if exists product;
 
@@ -28,7 +28,7 @@ create table product
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-create table cart_item
+create table cart
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,

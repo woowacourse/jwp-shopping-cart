@@ -2,14 +2,14 @@ package woowacourse.shoppingcart.dto.cart;
 
 import java.util.List;
 
-public class RemovedCartItemsRequest {
+public class RemovedCartsRequest {
 
     private List<Integer> productIds;
 
-    public RemovedCartItemsRequest() {
+    public RemovedCartsRequest() {
     }
 
-    public RemovedCartItemsRequest(List<Integer> productsIds) {
+    public RemovedCartsRequest(List<Integer> productsIds) {
         this.productIds = productsIds;
     }
 

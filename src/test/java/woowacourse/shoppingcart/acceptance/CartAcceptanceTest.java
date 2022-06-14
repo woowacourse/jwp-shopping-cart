@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.shoppingcart.dto.cart.CartItemRequest;
-import woowacourse.shoppingcart.dto.cart.RemovedCartItemsRequest;
+import woowacourse.shoppingcart.dto.cart.CartRequest;
+import woowacourse.shoppingcart.dto.cart.RemovedCartsRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerRequest;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
         // when
         // 장바구니에 물품을 추가하면
-        ExtractableResponse<Response> extract = 장바구니_상품_추가(token, new CartItemRequest(1, 3));
+        ExtractableResponse<Response> extract = 장바구니_상품_추가(token, new CartRequest(1, 3));
 
         // then
         // 정상적으로 상품이 추가된다.
@@ -51,12 +51,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
         // 로그인하여 토큰 발급과 장바구니에 물품이 추가되어 있고
         회원가입(new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS));
         String token = 로그인(new TokenRequest(EMAIL, PASSWORD));
-        장바구니_상품_추가(token, new CartItemRequest(1, 3));
-        장바구니_상품_추가(token, new CartItemRequest(2, 3));
+        장바구니_상품_추가(token, new CartRequest(1, 3));
+        장바구니_상품_추가(token, new CartRequest(2, 3));
 
         // when
         // 장바구니에 있는 물품을 삭제하면
-        RemovedCartItemsRequest request = new RemovedCartItemsRequest(List.of(1, 2));
+        RemovedCartsRequest request = new RemovedCartsRequest(List.of(1, 2));
         ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .auth().oauth2(token)
@@ -77,12 +77,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
         // 로그인하여 토큰 발급과 장바구니에 물품이 추가되어 있고
         회원가입(new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS));
         String token = 로그인(new TokenRequest(EMAIL, PASSWORD));
-        장바구니_상품_추가(token, new CartItemRequest(1, 3));
-        장바구니_상품_추가(token, new CartItemRequest(2, 3));
+        장바구니_상품_추가(token, new CartRequest(1, 3));
+        장바구니_상품_추가(token, new CartRequest(2, 3));
 
         // when
         // 장바구니에 있는 물품을 수정하면
-        CartItemRequest request = new CartItemRequest(1, 5);
+        CartRequest request = new CartRequest(1, 5);
         ExtractableResponse<Response> extract = RestAssured
                 .given().log().all()
                 .auth().oauth2(token)
@@ -103,8 +103,8 @@ public class CartAcceptanceTest extends AcceptanceTest {
         // 로그인하여 토큰 발급과 장바구니에 물품이 추가되어 있고
         회원가입(new CustomerRequest(EMAIL, PASSWORD, NAME, PHONE, ADDRESS));
         String token = 로그인(new TokenRequest(EMAIL, PASSWORD));
-        장바구니_상품_추가(token, new CartItemRequest(1, 3));
-        장바구니_상품_추가(token, new CartItemRequest(2, 3));
+        장바구니_상품_추가(token, new CartRequest(1, 3));
+        장바구니_상품_추가(token, new CartRequest(2, 3));
 
         // when
         // 장바구니에 있는 물품을 조회하면
@@ -117,7 +117,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
 
 
 
-    private ExtractableResponse<Response> 장바구니_상품_추가(String token, CartItemRequest request) {
+    private ExtractableResponse<Response> 장바구니_상품_추가(String token, CartRequest request) {
         return RestAssured
                 .given().log().all()
                 .auth().oauth2(token)

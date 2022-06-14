@@ -7,23 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.cart.Cart;
-import woowacourse.shoppingcart.domain.cart.CartId;
 import woowacourse.shoppingcart.domain.cart.Quantity;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.CustomerId;
-import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.product.*;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,23 +24,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CartItemDaoTest {
+public class CartDaoTest {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
-    private CartItemDao cartItemDao;
+    private CartDao cartDao;
 
     @BeforeEach
     void setUp() {
-        cartItemDao = new CartItemDao(jdbcTemplate);
+        cartDao = new CartDao(jdbcTemplate);
     }
 
     @DisplayName("장바구니에 저장되는 것을 확인한다.")
     @Test
     void save() {
         CustomerId customerId = new CustomerId(1L);
-        cartItemDao.save(customerId, new ProductId(1), new Quantity(5));
-        final String sql = "select product_id from cart_item where customer_id = :customerId";
+        cartDao.save(customerId, new ProductId(1), new Quantity(5));
+        final String sql = "select product_id from cart where customer_id = :customerId";
         final int result = jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("customerId", customerId.getValue()), Integer.class);
 
         assertThat(result).isEqualTo(1);
@@ -57,10 +50,10 @@ public class CartItemDaoTest {
     @Test
     void delete() {
         CustomerId customerId = new CustomerId(1L);
-        cartItemDao.save(customerId, new ProductId(1), new Quantity(3));
-        cartItemDao.save(customerId, new ProductId(2), new Quantity(5));
-        cartItemDao.deleteCartItems(customerId, List.of(new ProductId(1), new ProductId(2)));
-        final String sql = "select count(*) from cart_item where customer_id = :customerId";
+        cartDao.save(customerId, new ProductId(1), new Quantity(3));
+        cartDao.save(customerId, new ProductId(2), new Quantity(5));
+        cartDao.deleteCarts(customerId, List.of(new ProductId(1), new ProductId(2)));
+        final String sql = "select count(*) from cart where customer_id = :customerId";
         final int result = jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("customerId", 1L), Integer.class);
 
         assertThat(result).isEqualTo(0);
@@ -70,9 +63,9 @@ public class CartItemDaoTest {
     @Test
     void getAllCartsBy() {
         CustomerId customerId = new CustomerId(1L);
-        cartItemDao.save(customerId, new ProductId(1), new Quantity(3));
-        cartItemDao.save(customerId, new ProductId(2), new Quantity(5));
-        List<Cart> carts = cartItemDao.getAllCartsBy(customerId);
+        cartDao.save(customerId, new ProductId(1), new Quantity(3));
+        cartDao.save(customerId, new ProductId(2), new Quantity(5));
+        List<Cart> carts = cartDao.getAllCartsBy(customerId);
         final int result = carts.size();
 
         assertThat(result).isEqualTo(2);
@@ -82,8 +75,8 @@ public class CartItemDaoTest {
     @Test
     void exists_true() {
         CustomerId customerId = new CustomerId(1L);
-        cartItemDao.save(customerId, new ProductId(1), new Quantity(3));
-        final Boolean result = cartItemDao.exists(customerId, new ProductId(1));
+        cartDao.save(customerId, new ProductId(1), new Quantity(3));
+        final Boolean result = cartDao.exists(customerId, new ProductId(1));
 
         assertThat(result).isTrue();
     }
@@ -92,8 +85,8 @@ public class CartItemDaoTest {
     @Test
     void exists_false() {
         CustomerId customerId = new CustomerId(1L);
-        cartItemDao.save(customerId, new ProductId(1), new Quantity(3));
-        final Boolean result = cartItemDao.exists(customerId, new ProductId(2));
+        cartDao.save(customerId, new ProductId(1), new Quantity(3));
+        final Boolean result = cartDao.exists(customerId, new ProductId(2));
 
         assertThat(result).isFalse();
     }
@@ -103,9 +96,9 @@ public class CartItemDaoTest {
     void edit() {
         ProductId productId = new ProductId(1);
         CustomerId customerId = new CustomerId(1L);
-        cartItemDao.save(customerId, productId, new Quantity(5));
-        cartItemDao.edit(customerId, productId, new Quantity(3));
-        final String sql = "select quantity from cart_item where customer_id = :customerId and product_id = :productId";
+        cartDao.save(customerId, productId, new Quantity(5));
+        cartDao.edit(customerId, productId, new Quantity(3));
+        final String sql = "select quantity from cart where customer_id = :customerId and product_id = :productId";
         MapSqlParameterSource query = new MapSqlParameterSource("customerId", customerId.getValue());
         query.addValue("productId", productId.getValue());
         final int result = jdbcTemplate.queryForObject(sql, query, Integer.class);

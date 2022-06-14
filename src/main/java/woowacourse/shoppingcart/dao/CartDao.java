@@ -16,16 +16,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class CartItemDao {
+public class CartDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public CartItemDao(final NamedParameterJdbcTemplate jdbcTemplate) {
+    public CartDao(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public void save(final CustomerId customerId, final ProductId productId, final Quantity quantity) {
-        final String sql = "insert into cart_item(customer_id, product_id, quantity) values (:customerId, :productId, :quantity)";
+        final String sql = "insert into cart(customer_id, product_id, quantity) values (:customerId, :productId, :quantity)";
         final MapSqlParameterSource query = new MapSqlParameterSource();
         query.addValue("customerId", customerId.getValue());
         query.addValue("productId", productId.getValue());
@@ -33,11 +33,11 @@ public class CartItemDao {
         jdbcTemplate.update(sql, query);
     }
 
-    public void deleteCartItems(final CustomerId customerId, final List<ProductId> productIds) {
+    public void deleteCarts(final CustomerId customerId, final List<ProductId> productIds) {
         final List<Integer> ids = productIds.stream()
                 .map(ProductId::getValue)
                 .collect(Collectors.toList());
-        final String sql = "delete from cart_item where customer_id = :customerId and product_id in (:productIds)";
+        final String sql = "delete from cart where customer_id = :customerId and product_id in (:productIds)";
         final MapSqlParameterSource query = new MapSqlParameterSource();
         query.addValue("customerId", customerId.getValue());
         query.addValue("productIds", ids);
@@ -46,19 +46,19 @@ public class CartItemDao {
     }
 
     public List<Cart> getAllCartsBy(final CustomerId customerId) {
-        final String sql = "select c.id id, p.id productId, p.name name, p.price price, p.thumbnail thumbnail, c.quantity quantity from cart_item c inner join product p on p.id = c.product_id where c.customer_id = :customerId";
+        final String sql = "select c.id id, p.id productId, p.name name, p.price price, p.thumbnail thumbnail, c.quantity quantity from cart c inner join product p on p.id = c.product_id where c.customer_id = :customerId";
         return jdbcTemplate.query(sql, new MapSqlParameterSource("customerId", customerId.getValue()), new CartMapper());
     }
 
     public boolean exists(final CustomerId customerId, final ProductId productId) {
-        final String sql = "select exists(select customer_id, product_id from cart_item where customer_id = :customerId and product_id = :productId)";
+        final String sql = "select exists(select customer_id, product_id from cart where customer_id = :customerId and product_id = :productId)";
         final MapSqlParameterSource query = new MapSqlParameterSource("customerId", customerId.getValue());
         query.addValue("productId", productId.getValue());
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, query, Boolean.class));
     }
 
     public void edit(final CustomerId customerId, final ProductId productId, final Quantity quantity) {
-        final String sql = "update cart_item set quantity = :quantity where customer_id = :customerId and product_id = :productId";
+        final String sql = "update cart set quantity = :quantity where customer_id = :customerId and product_id = :productId";
         final MapSqlParameterSource query = new MapSqlParameterSource("customerId", customerId.getValue());
         query.addValue("productId", productId.getValue());
         query.addValue("quantity", quantity.getValue());
