@@ -58,9 +58,7 @@ public class CartService {
 
     public void deleteCart(final Long customerId, final ProductIdsRequest productIds) {
         checkExistById(customerId);
-        for (Long productId : productIds.getProductIds()) {
-            cartItemDao.deleteCartItem(customerId, productId);
-        }
+        cartItemDao.deleteCartItems(customerId, productIds.getProductIds());
     }
 
     public void updateCartQuantity(Long customerId, CartRequest cartRequest) {

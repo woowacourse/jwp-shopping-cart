@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
@@ -26,8 +27,8 @@ public class CartItemDaoTest {
     private final ProductDao productDao;
     private final CustomerDao customerDao;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        cartItemDao = new CartItemDao(jdbcTemplate);
+    public CartItemDaoTest(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, DataSource dataSource) {
+        cartItemDao = new CartItemDao(jdbcTemplate, namedParameterJdbcTemplate);
         customerDao = new CustomerDao(jdbcTemplate, dataSource);
         productDao = new ProductDao(jdbcTemplate);
     }
@@ -43,7 +44,6 @@ public class CartItemDaoTest {
     @DisplayName("카트에 아이템을 담는다.")
     @Test
     void addCartItem() {
-
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
@@ -55,6 +55,23 @@ public class CartItemDaoTest {
         // then
         List<Long> idsByCustomerId = cartItemDao.findIdsByCustomerId(customerId);
         assertThat(idsByCustomerId).isEqualTo(List.of(1L));
+    }
+
+    @DisplayName("카트에 여러 아이템을 담고 모두 삭제한다.")
+    @Test
+    void deleteCartItems() {
+        //given
+        Long customerId = 1L;
+        cartItemDao.addCartItem(new Cart(customerId, customerId, 5));
+        cartItemDao.addCartItem(new Cart(customerId, 2L, 5));
+        cartItemDao.addCartItem(new Cart(customerId, 3L, 5));
+
+        //when
+        cartItemDao.deleteCartItems(customerId, List.of(customerId, 2L, 3L));
+
+        //then
+        List<Long> idsByCustomerId = cartItemDao.findIdsByCustomerId(customerId);
+        assertThat(idsByCustomerId.size()).isEqualTo(0);
     }
 
 }
