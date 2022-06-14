@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.ui;
 
+import io.jsonwebtoken.SignatureException;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.BadRequestException;
 import woowacourse.auth.exception.NotFoundException;
 import woowacourse.auth.exception.UnauthorizedException;
+import woowacourse.shoppingcart.dto.ErrorDto;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
@@ -24,44 +26,50 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException(RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorDto> handleUnhandledException(RuntimeException e) {
+        e.printStackTrace();
+        return ResponseEntity.badRequest().body(new ErrorDto("서버 에러가 발생했습니다."));
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity handleUnauthorizedException(UnauthorizedException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    public ResponseEntity<ErrorDto> handleUnauthorizedException(UnauthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ErrorDto> handleSignatureException(SignatureException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(e.getMessage()));
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity handleNotFoundException(NotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    public ResponseEntity<ErrorDto> handleNotFoundException(NotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity handleBadRequestException(BadRequestException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorDto> handleBadRequestException(BadRequestException e) {
+        return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage()));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity handle() {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터 요청입니다.");
+    public ResponseEntity<ErrorDto> handle() {
+        return ResponseEntity.badRequest().body(new ErrorDto("존재하지 않는 데이터 요청입니다."));
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity handleInvalidRequest(final BindingResult bindingResult) {
+    public ResponseEntity<ErrorDto> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
-        return ResponseEntity.badRequest().body(mainError.getDefaultMessage());
+        return ResponseEntity.badRequest().body(new ErrorDto(mainError.getDefaultMessage()));
     }
 
     @ExceptionHandler({
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
-    public ResponseEntity handleInvalidRequest(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorDto> handleInvalidRequest(final RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage()));
     }
 
     @ExceptionHandler({
@@ -71,7 +79,7 @@ public class ControllerAdvice {
             InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
-    public ResponseEntity handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorDto> handleInvalidAccess(final RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage()));
     }
 }

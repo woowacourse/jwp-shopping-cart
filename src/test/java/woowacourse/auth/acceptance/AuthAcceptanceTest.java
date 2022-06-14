@@ -2,8 +2,6 @@ package woowacourse.auth.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.auth.support.AuthorizationExtractor.AUTHORIZATION;
-import static woowacourse.auth.support.AuthorizationExtractor.BEARER_TYPE;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -61,17 +59,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .body(request)
                 .when()
                 .post("/api/customers")
-                .then()
-                .log().all()
-                .extract();
-    }
-
-    private ExtractableResponse<Response> 회원_조회(String accessToken, Long customerId) {
-        return RestAssured.given()
-                .log().all()
-                .header(AUTHORIZATION, BEARER_TYPE + accessToken)
-                .when()
-                .get("/api/customers/" + customerId)
                 .then()
                 .log().all()
                 .extract();

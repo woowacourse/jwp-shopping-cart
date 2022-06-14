@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import woowacourse.auth.exception.BadRequestException;
 
 @DisplayName("Password 는")
 public class PasswordTest {
@@ -24,7 +25,7 @@ public class PasswordTest {
         @Test
         void invalidPassword() {
             assertThatThrownBy(() -> new Password("invalid"))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage(Password.INVALID_PASSWORD_FORMAT);
         }
     }

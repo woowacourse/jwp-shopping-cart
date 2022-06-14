@@ -3,11 +3,8 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static woowacourse.shoppingcart.dao.CustomerFixture.connieDto;
+import static woowacourse.shoppingcart.fixture.CustomerFixture.connieDto;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,14 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.BadRequestException;
 import woowacourse.auth.exception.NotFoundException;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.shoppingcart.application.dto.AddressResponse;
 import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
-import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.dto.AddressRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 
@@ -71,32 +65,6 @@ class CustomerServiceTest {
         }
     }
 
-    @DisplayName("로그인을 할 때")
-    @Nested
-    class SignInTest {
-
-        @Test
-        @DisplayName("로그인이 되면 토큰이 정상적으로 발급된다.")
-        void createAccessToken() throws JsonProcessingException {
-            코니_회원_가입();
-            final String email = "her0807@naver.com";
-            final TokenResponse response = customerService.signIn(new SignInDto(email, "password1!"));
-            final ObjectMapper mapper = new JsonMapper();
-            AddressResponse tokenPayloadDto = mapper.readValue(tokenProvider.getPayload(response.getAccessToken()),
-                    AddressResponse.class);
-            assertThat(tokenPayloadDto.getEmail()).isEqualTo(email);
-            assertThat(response.getCustomerId()).isNotNull();
-        }
-
-        @Test
-        @DisplayName("회원 가입을 하지 않은 유저면 에러가 발생한다.")
-        void noSignUpCustomer() {
-            final String email = "her0807@naver.com";
-            assertThatThrownBy(() -> customerService.signIn(new SignInDto(email, "password1!")))
-                    .isInstanceOf(NotFoundException.class)
-                    .hasMessage("가입하지 않은 유저입니다.");
-        }
-    }
 
     @DisplayName("회원 조회를 할 때")
     @Nested
@@ -161,7 +129,7 @@ class CustomerServiceTest {
                     new AddressRequest("d", "e", "54321"), true);
 
             assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("비밀번호는 8글자 이상 20글자 이하, 영문, 특수문자, 숫자 최소 1개씩 으로 이뤄져야합니다.");
         }
 
@@ -176,7 +144,7 @@ class CustomerServiceTest {
                     new AddressRequest("d", "e", "54321"), true);
 
             assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("이름은 최대 5글자, 한글로 이뤄져야합니다.");
         }
 
@@ -191,7 +159,7 @@ class CustomerServiceTest {
                     new AddressRequest("d", "e", "54321"), true);
 
             assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("올바르지 않은 생년월일입니다.");
         }
 
@@ -206,7 +174,7 @@ class CustomerServiceTest {
                     new AddressRequest("d", "e", "54321"), true);
 
             assertThatThrownBy(() -> customerService.updateCustomer(코니_id, modifiedCustomerDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage("핸드폰 양식의 전화번호를 입력해야합니다.");
         }
     }

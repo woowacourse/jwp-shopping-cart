@@ -6,15 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static woowacourse.auth.support.AuthorizationExtractor.AUTHORIZATION;
 import static woowacourse.auth.support.AuthorizationExtractor.BEARER_TYPE;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
@@ -25,14 +22,6 @@ import woowacourse.shoppingcart.dto.SignUpRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setup() {
-        objectMapper = new ObjectMapper();
-    }
 
     @DisplayName("회원가입")
     @Test
@@ -109,7 +98,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
             ExtractableResponse<Response> response = 회원_조회(
                     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
                     1L);
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         }
     }
 
@@ -134,7 +123,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .put("/api/customers/" + signInResponse.getCustomerId())
+                .put("/api/customers")
                 .then()
                 .log().all()
                 .extract();
@@ -168,7 +157,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .log().all()
                 .header(AUTHORIZATION, BEARER_TYPE + accessToken)
                 .when()
-                .delete("/api/customers/" + customerId)
+                .delete("/api/customers")
                 .then()
                 .log().all()
                 .extract();
@@ -205,12 +194,24 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    private TokenResponse 로그인_후_토큰_발급(TokenRequest request) {
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .post("/api/customer/authentication/sign-in")
+                .then().log().all()
+                .extract();
+        return response.body()
+                .jsonPath()
+                .getObject("", TokenResponse.class);
+    }
+
     private ExtractableResponse<Response> 회원_조회(String accessToken, Long customerId) {
         return RestAssured.given()
                 .log().all()
                 .header(AUTHORIZATION, BEARER_TYPE + accessToken)
                 .when()
-                .get("/api/customers/" + customerId)
+                .get("/api/customers")
                 .then()
                 .log().all()
                 .extract();
@@ -227,17 +228,5 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .post("/api/customer/authentication/sign-in")
                 .then().log().all()
                 .extract();
-    }
-
-    private TokenResponse 로그인_후_토큰_발급(TokenRequest request) {
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .post("/api/customer/authentication/sign-in")
-                .then().log().all()
-                .extract();
-        return response.body()
-                .jsonPath()
-                .getObject("", TokenResponse.class);
     }
 }

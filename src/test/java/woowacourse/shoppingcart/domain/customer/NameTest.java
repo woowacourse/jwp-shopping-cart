@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import woowacourse.auth.exception.BadRequestException;
 
 @DisplayName("Name 은")
 public class NameTest {
@@ -24,7 +25,7 @@ public class NameTest {
         @Test
         void invalidName() {
             assertThatThrownBy(() -> new Name("스컬수달토미"))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage(Name.INVALID_NAME_FORMAT);
         }
     }

@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.domain.customer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
+import woowacourse.auth.exception.BadRequestException;
 
 public class Password {
     private static final String REGULAR_EXPRESSION = "^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
@@ -18,7 +19,7 @@ public class Password {
 
     private void validatePassword(String rawPassword) {
         if (!compiledPattern.matcher(rawPassword).matches()) {
-            throw new IllegalArgumentException(INVALID_PASSWORD_FORMAT);
+            throw new BadRequestException(INVALID_PASSWORD_FORMAT);
         }
     }
 
@@ -28,7 +29,7 @@ public class Password {
             messageDigest.update(rawPassword.getBytes());
             return bytesToHex(messageDigest.digest());
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException();
+            throw new BadRequestException(e.getMessage());
         }
     }
 

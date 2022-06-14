@@ -6,8 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import woowacourse.shoppingcart.dao.CustomerFixture;
+import woowacourse.auth.exception.BadRequestException;
 import woowacourse.shoppingcart.domain.address.FullAddress;
+import woowacourse.shoppingcart.fixture.CustomerFixture;
 
 @DisplayName("Customer 는")
 class CustomerTest {
@@ -33,7 +34,7 @@ class CustomerTest {
                             new Contact("12345678910"),
                             new FullAddress("a", "b", "12345"), new Terms(true))
             )
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(BadRequestException.class)
                     .hasMessage(Password.INVALID_PASSWORD_FORMAT);
         }
     }
