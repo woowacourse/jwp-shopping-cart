@@ -96,10 +96,10 @@ class CartServiceTest {
     @Test
     void updateCartItemQuantity메서드는_장바구니_물품_개수를_변경한다() {
         final Long customerId = 1L;
-        final Long cartId = 1L;
+        final Long cartItemId = 1L;
         final int quantity = 10;
 
-        CartItemResponse cartItemResponse = cartService.updateCartItemQuantity(customerId, cartId,
+        CartItemResponse cartItemResponse = cartService.updateCartItemQuantity(customerId, cartItemId,
             quantity);
 
         assertThat(cartItemResponse.getQuantity()).isEqualTo(10);

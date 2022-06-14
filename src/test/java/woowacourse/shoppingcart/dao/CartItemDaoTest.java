@@ -76,10 +76,10 @@ class CartItemDaoTest {
     }
 
     @Test
-    void findProductIdById_메서드는_장바구니id로_상품_id를_반환한다() {
-        final Long cartId = 1L;
+    void findProductIdById_메서드는_장바구니상품_id로_상품_id를_반환한다() {
+        final Long cartItemId = 1L;
 
-        Long productId = cartItemDao.findProductIdById(cartId);
+        Long productId = cartItemDao.findProductIdById(cartItemId);
 
         assertThat(productId).isEqualTo(1L);
     }
@@ -88,10 +88,10 @@ class CartItemDaoTest {
     void deleteCartItem_메서드는_장바구니_id로_장바구니를_삭제한다() {
 
         // given
-        final Long cartId = 1L;
+        final Long cartItemId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteCartItem(cartItemId);
 
         // then
         final Long customerId = 25L;
@@ -102,9 +102,9 @@ class CartItemDaoTest {
 
     @Test
     void findByCartId메서드는_장바구니_id로_장바구니를_조회한다() {
-        final Long cartId = 1L;
+        final Long cartItemId = 1L;
 
-        CartItem cartItem = cartItemDao.findByCartId(cartId);
+        CartItem cartItem = cartItemDao.findByCartItemId(cartItemId);
 
         assertAll(() -> {
             assertThat(cartItem.getId()).isEqualTo(1L);
@@ -118,11 +118,11 @@ class CartItemDaoTest {
 
     @Test
     void updateCartItemQuantity메서드는_장바구니의_상품_개수를_업데이트한다() {
-        final Long cartId = 1L;
+        final Long cartItemId = 1L;
         final Long customerId = 1L;
 
-        cartItemDao.updateCartItemQuantity(customerId, cartId, 5);
+        cartItemDao.updateCartItemQuantity(customerId, cartItemId, 5);
 
-        assertThat(cartItemDao.findQuantityById(cartId)).isEqualTo(5);
+        assertThat(cartItemDao.findQuantityById(cartItemId)).isEqualTo(5);
     }
 }

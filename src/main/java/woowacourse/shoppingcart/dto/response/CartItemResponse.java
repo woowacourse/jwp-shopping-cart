@@ -17,9 +17,9 @@ public class CartItemResponse {
         this.product = product;
     }
 
-    public static CartItemResponse of(Long cartId, ProductResponse product, int productQuantity) {
+    public static CartItemResponse of(Long cartItemId, ProductResponse product, int productQuantity) {
         return new CartItemResponse(
-            cartId, productQuantity, product
+            cartItemId, productQuantity, product
         );
     }
 

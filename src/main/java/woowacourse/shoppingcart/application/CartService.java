@@ -38,22 +38,22 @@ public class CartService {
         return CartItemResponse.of(cartItemDao.addCartItem(customerId, product));
     }
 
-    public void deleteCartItem(final Long customerId, final Long cartId) {
-        validateCustomerCart(cartId, customerId);
-        cartItemDao.deleteCartItem(cartId);
+    public void deleteCartItem(final Long customerId, final Long cartItemId) {
+        validateCustomerCart(cartItemId, customerId);
+        cartItemDao.deleteCartItem(cartItemId);
     }
 
-    private void validateCustomerCart(final Long cartId, final Long customerId) {
+    private void validateCustomerCart(final Long cartItemId, final Long customerId) {
         Cart cart = cartItemDao.findCartByCustomerId(customerId);
-        CartItem cartItem = cartItemDao.findByCartId(cartId);
+        CartItem cartItem = cartItemDao.findByCartItemId(cartItemId);
         if (!cart.isContains(cartItem)) {
             throw new NotInCustomerCartItemException();
         }
     }
 
-    public CartItemResponse updateCartItemQuantity(Long customerId, Long cartId, int quantity) {
-        CartItem cartItem = cartItemDao.findByCartId(cartId);
-        cartItemDao.updateCartItemQuantity(customerId, cartId, quantity);
+    public CartItemResponse updateCartItemQuantity(Long customerId, Long cartItemId, int quantity) {
+        CartItem cartItem = cartItemDao.findByCartItemId(cartItemId);
+        cartItemDao.updateCartItemQuantity(customerId, cartItemId, quantity);
         cartItem.updateQuantity(quantity);
         return CartItemResponse.of(cartItem);
     }

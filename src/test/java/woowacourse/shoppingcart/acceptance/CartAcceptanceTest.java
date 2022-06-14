@@ -97,7 +97,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         장바구니_삭제됨(response);
     }
 
-    private ExtractableResponse<Response> 장바구니_개수_수정_요청(Long cartId, int quantity, String token) {
+    private ExtractableResponse<Response> 장바구니_개수_수정_요청(Long cartItemId, int quantity, String token) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("quantity", quantity);
 
@@ -106,7 +106,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().oauth2(token)
             .body(requestBody)
-            .when().put("/customers/carts/" + cartId)
+            .when().put("/customers/carts/" + cartItemId)
             .then().log().all()
             .extract();
     }
@@ -135,12 +135,12 @@ public class CartAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(Long cartId, String token) {
+    public static ExtractableResponse<Response> 장바구니_삭제_요청(Long cartItemId, String token) {
         return RestAssured
             .given().log().all()
             .auth().oauth2(token)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().delete("/customers/carts/{cartId}", cartId)
+            .when().delete("/customers/carts/{cartItemId}", cartItemId)
             .then().log().all()
             .extract();
     }

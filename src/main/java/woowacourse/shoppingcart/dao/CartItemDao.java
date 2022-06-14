@@ -45,9 +45,9 @@ public class CartItemDao {
         return namedParameterJdbcTemplate.queryForList(sql, parameters, Long.class);
     }
 
-    public Long findProductIdById(final Long cartId) {
+    public Long findProductIdById(final Long cartItemId) {
         final String sql = "SELECT product_id FROM cart_item WHERE id = :id";
-        MapSqlParameterSource parameters = new MapSqlParameterSource("id", cartId);
+        MapSqlParameterSource parameters = new MapSqlParameterSource("id", cartItemId);
         return namedParameterJdbcTemplate.queryForObject(sql, parameters, Long.class);
     }
 
@@ -70,10 +70,10 @@ public class CartItemDao {
         }
     }
 
-    public int findQuantityById(Long cartIds) {
+    public int findQuantityById(Long cartItemId) {
         try {
             final String sql = "SELECT quantity FROM cart_item WHERE id = :id";
-            MapSqlParameterSource parameters = new MapSqlParameterSource("id", cartIds);
+            MapSqlParameterSource parameters = new MapSqlParameterSource("id", cartItemId);
             return namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
@@ -81,11 +81,11 @@ public class CartItemDao {
 
     }
 
-    public void updateCartItemQuantity(Long customerId, Long cartId, int quantity) {
+    public void updateCartItemQuantity(Long customerId, Long cartItemId, int quantity) {
         try {
             final String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id AND customer_id = :customerId";
             MapSqlParameterSource parameters = new MapSqlParameterSource("quantity", quantity);
-            parameters.addValue("id", cartId);
+            parameters.addValue("id", cartItemId);
             parameters.addValue("customerId", customerId);
             namedParameterJdbcTemplate.update(sql, parameters);
         } catch (DataAccessException e) {
@@ -93,12 +93,12 @@ public class CartItemDao {
         }
     }
 
-    public CartItem findByCartId(Long cartId) {
+    public CartItem findByCartItemId(Long cartItemId) {
         final String sql =
             "SELECT ci.id, ci.product_id, p.name, p.price, p.image_url, ci.quantity\n"
                 + "FROM cart_item AS ci JOIN product AS p on ci.product_id = p.id WHERE ci.id = :id";
         try {
-            MapSqlParameterSource parameters = new MapSqlParameterSource("id", cartId);
+            MapSqlParameterSource parameters = new MapSqlParameterSource("id", cartItemId);
             return namedParameterJdbcTemplate.queryForObject(sql, parameters, CART_ITEM_ROW_MAPPER);
         } catch (DataAccessException e) {
             throw new InvalidCartItemException();

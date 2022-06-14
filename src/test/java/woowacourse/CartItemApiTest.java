@@ -71,14 +71,14 @@ class CartItemApiTest extends TestSupport {
     @Test
     void deleteCartItem_test() throws Exception {
         mockMvc.perform(
-                delete("/customers/carts/{cartId}", 1L)
+                delete("/customers/carts/{cartItemId}", 1L)
                     .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
             )
             .andExpect(status().isNoContent())
             .andDo(restDocs.document(
                     pathParameters(
-                        parameterWithName("cartId").description("cart id")
+                        parameterWithName("cartItemId").description("장바구니 물품 ID")
                     )
                 )
             );
@@ -87,7 +87,7 @@ class CartItemApiTest extends TestSupport {
     @Test
     void updateCartItemQuantity_test() throws Exception {
         mockMvc.perform(
-                put("/customers/carts/{cartId}", 1L)
+                put("/customers/carts/{cartItemId}", 1L)
                     .header("Authorization", "Bearer " + accessToken)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(readJson("/json/carts/carts-quantity-update.json"))
@@ -95,7 +95,7 @@ class CartItemApiTest extends TestSupport {
             .andExpect(status().isOk())
             .andDo(restDocs.document(
                 pathParameters(
-                    parameterWithName("cartId").description("cart id")
+                    parameterWithName("cartItemId").description("cart id")
                 ),
                 responseFields(
                     fieldWithPath("id").description("cart id"),
