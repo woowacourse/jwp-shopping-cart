@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.dto;
 
-import woowacourse.auth.dto.PhoneNumber;
 import woowacourse.shoppingcart.domain.Customer;
 
 public class CustomerResponse {
@@ -9,9 +8,9 @@ public class CustomerResponse {
     private final String account;
     private final String nickname;
     private final String address;
-    private final PhoneNumber phoneNumber;
+    private final PhoneNumberFormat phoneNumber;
 
-    public CustomerResponse(final long id, final String account, final String nickname, final String address, final PhoneNumber phoneNumber) {
+    public CustomerResponse(final long id, final String account, final String nickname, final String address, final PhoneNumberFormat phoneNumber) {
         this.id = id;
         this.account = account;
         this.nickname = nickname;
@@ -20,8 +19,9 @@ public class CustomerResponse {
     }
 
     public static CustomerResponse of(final Customer customer) {
-        final PhoneNumber phoneNumber = PhoneNumber.of(customer.getPhoneNumber());
-        return new CustomerResponse(customer.getId(), customer.getAccount().getValue(), customer.getNickname(), customer.getAddress(), phoneNumber);
+        final PhoneNumberFormat phoneNumberFormat = PhoneNumberFormat.of(customer.getPhoneNumber().getValue());
+        return new CustomerResponse(customer.getId(), customer.getAccount().getValue(),
+                customer.getNickname().getValue(), customer.getAddress().getValue(), phoneNumberFormat);
     }
 
     public long getId() {
@@ -40,7 +40,7 @@ public class CustomerResponse {
         return address;
     }
 
-    public PhoneNumber getPhoneNumber() {
+    public PhoneNumberFormat getPhoneNumber() {
         return phoneNumber;
     }
 }

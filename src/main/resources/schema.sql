@@ -25,9 +25,9 @@ alter table customer
 create table product
 (
     id        bigint       not null auto_increment,
-    name      varchar(255) not null,
+    name      varchar(50) not null,
     price     integer      not null,
-    image_url varchar(255),
+    image_url varchar(2000),
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 

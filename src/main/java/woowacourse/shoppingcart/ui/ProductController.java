@@ -1,18 +1,16 @@
 package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsResponse;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -22,23 +20,21 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> products() {
-        return ResponseEntity.ok(productService.findProducts());
+    public ProductsResponse products() {
+        return productService.findProducts();
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final Product product) {
-        final Long productId = productService.addProduct(product);
-        final URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/" + productId)
-                .build().toUri();
+    public ResponseEntity<Void> add(@RequestBody final ProductRequest product) {
+        final long productId = productService.addProduct(product);
+        final URI uri = UriCreator.withCurrentPath(String.format("/%d", productId));
+
         return ResponseEntity.created(uri).build();
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> product(@PathVariable final Long productId) {
-        return ResponseEntity.ok(productService.findProductById(productId));
+    public ProductResponse product(@PathVariable final Long productId) {
+        return productService.findProductById(productId);
     }
 
     @DeleteMapping("/{productId}")

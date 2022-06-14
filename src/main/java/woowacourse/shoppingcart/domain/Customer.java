@@ -1,67 +1,28 @@
 package woowacourse.shoppingcart.domain;
 
-public class Customer {
+import org.springframework.security.crypto.password.PasswordEncoder;
+import woowacourse.shoppingcart.exception.LoginFailException;
 
-    private static final int NICKNAME_MINIMUM_LENGTH = 2;
-    private static final int NICKNAME_MAXIMUM_LENGTH = 10;
-    private static final int ADDRESS_MAXIMUM_LENGTH = 255;
-    private static final int PHONE_NUMBER_LENGTH = 11;
+public class Customer {
 
     private final long id;
     private final Account account;
-    private final String nickname;
-    private final String password;
-    private final String address;
-    private final String phoneNumber;
+    private final Nickname nickname;
+    private final EncodedPassword password;
+    private final Address address;
+    private final PhoneNumber phoneNumber;
 
-    public Customer(final Account account, final String nickname, final String password, final String address, final String phoneNumber) {
+    public Customer(final Account account, final Nickname nickname, final EncodedPassword password, final Address address, final PhoneNumber phoneNumber) {
         this(0, account, nickname, password, address, phoneNumber);
     }
 
-    public Customer(final long id, final Account account, final String nickname, final String password, final String address, final String phoneNumber) {
-        validateNickname(nickname);
-        validatePassword(password);
-        validateAddress(address);
-        validatePhoneNumber(phoneNumber);
+    public Customer(final long id, final Account account, final Nickname nickname, final EncodedPassword password, final Address address, final PhoneNumber phoneNumber) {
         this.id = id;
         this.account = account;
         this.nickname = nickname;
         this.password = password;
         this.address = address;
         this.phoneNumber = phoneNumber;
-    }
-
-    private void validateNickname(String nickname) {
-        if (nickname == null || nickname.isBlank()) {
-            throw new IllegalArgumentException("닉네임은 비어있을 수 없습니다.");
-        }
-        if (nickname.length() < NICKNAME_MINIMUM_LENGTH || nickname.length() > NICKNAME_MAXIMUM_LENGTH) {
-            throw new IllegalArgumentException("닉네임 길이는 " + NICKNAME_MINIMUM_LENGTH + "~" + NICKNAME_MAXIMUM_LENGTH + "자 이어야 합니다.");
-        }
-    }
-
-    private void validatePassword(String password) {
-        if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("비밀번호는 비어있을 수 없습니다.");
-        }
-    }
-
-    private void validateAddress(String address) {
-        if (address == null || address.isBlank()) {
-            throw new IllegalArgumentException("주소는 비어있을 수 없습니다.");
-        }
-        if (address.length() > ADDRESS_MAXIMUM_LENGTH) {
-            throw new IllegalArgumentException("주소는 " + ADDRESS_MAXIMUM_LENGTH + "자를 초과할 수 없습니다.");
-        }
-    }
-
-    private void validatePhoneNumber(String phoneNumber) {
-        if (phoneNumber == null || phoneNumber.isBlank()) {
-            throw new IllegalArgumentException("핸드폰 번호는 비어있을 수 없습니다.");
-        }
-        if (phoneNumber.length() != PHONE_NUMBER_LENGTH) {
-            throw new IllegalArgumentException("핸드폰 번호 길이는 " + PHONE_NUMBER_LENGTH + "자 이어야 합니다.");
-        }
     }
 
     public long getId() {
@@ -72,20 +33,23 @@ public class Customer {
         return account;
     }
 
-    public String getNickname() {
+    public Nickname getNickname() {
         return nickname;
     }
 
-    public String getPassword() {
+    public EncodedPassword getPassword() {
         return password;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public String getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
 
+    public boolean checkPasswordNotMatch(PasswordEncoder passwordEncoder, String password) {
+        return this.password.isNotMatch(passwordEncoder, password);
+    }
 }

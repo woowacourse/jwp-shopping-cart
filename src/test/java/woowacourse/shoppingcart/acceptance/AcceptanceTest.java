@@ -25,7 +25,7 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    protected ExtractableResponse<Response> post(String uri, Object param) {
+    protected static ExtractableResponse<Response> post(String uri, Object param) {
         return RestAssured.given().log().all()
                 .body(param)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -35,7 +35,18 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    protected ExtractableResponse<Response> get(String uri) {
+    protected static ExtractableResponse<Response> post(String uri, String token, Object param) {
+        return RestAssured.given().log().all()
+                .body(param)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .header(new Header("Authorization", "BEARER " + token))
+                .post(uri)
+                .then().log().all()
+                .extract();
+    }
+
+    protected static ExtractableResponse<Response> get(String uri) {
         return RestAssured.given().log().all()
                 .when()
                 .get(uri)
@@ -43,16 +54,16 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    protected ExtractableResponse<Response> get(String uri, String header) {
+    protected static ExtractableResponse<Response> get(String uri, String token) {
         return RestAssured.given().log().all()
                 .when()
-                .header(new Header("Authorization", "BEARER " + header))
+                .header(new Header("Authorization", "BEARER " + token))
                 .get(uri)
                 .then().log().all()
                 .extract();
     }
 
-    protected ExtractableResponse<Response> put(String uri, Object param) {
+    protected static ExtractableResponse<Response> put(String uri, Object param) {
         return RestAssured.given().log().all()
                 .body(param)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -62,7 +73,7 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    public ExtractableResponse<Response> put(String uri, String token, Object param) {
+    public static ExtractableResponse<Response> put(String uri, String token, Object param) {
         return RestAssured.given().log().all()
                 .header(new Header("Authorization", "BEARER " + token))
                 .body(param)
@@ -73,15 +84,16 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    protected ExtractableResponse<Response> delete(String uri) {
+    protected static ExtractableResponse<Response> delete(String uri) {
         return RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
                 .when()
                 .delete(uri)
                 .then().log().all()
                 .extract();
     }
 
-    protected ExtractableResponse<Response> delete(String uri, Object param) {
+    protected static ExtractableResponse<Response> delete(String uri, Object param) {
         return RestAssured.given().log().all()
                 .body(param)
                 .contentType(ContentType.JSON)
@@ -91,7 +103,7 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    protected ExtractableResponse<Response> delete(String uri, String token, Object param) {
+    protected static ExtractableResponse<Response> delete(String uri, String token, Object param) {
         return RestAssured.given().log().all()
                 .header(new Header("Authorization", "BEARER " + token))
                 .body(param)

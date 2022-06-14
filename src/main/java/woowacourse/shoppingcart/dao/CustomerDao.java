@@ -6,9 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Account;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
+import woowacourse.shoppingcart.domain.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,16 +21,15 @@ public class CustomerDao {
             new Customer(
                     rs.getLong("id"),
                     new Account(rs.getString("account")),
-                    rs.getString("nickname"),
-                    rs.getString("password"),
-                    rs.getString("address"),
-                    rs.getString("phone_number")
+                    new Nickname(rs.getString("nickname")),
+                    new EncodedPassword(rs.getString("password")),
+                    new Address(rs.getString("address")),
+                    new PhoneNumber(rs.getString("phone_number"))
             );
 
     public CustomerDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
-
 
     public Customer save(final Customer customer) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
@@ -41,10 +38,10 @@ public class CustomerDao {
 
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("account", customer.getAccount().getValue());
-        parameters.put("nickname", customer.getNickname());
-        parameters.put("password", customer.getPassword());
-        parameters.put("address", customer.getAddress());
-        parameters.put("phone_number", customer.getPhoneNumber());
+        parameters.put("nickname", customer.getNickname().getValue());
+        parameters.put("password", customer.getPassword().getValue());
+        parameters.put("address", customer.getAddress().getValue());
+        parameters.put("phone_number", customer.getPhoneNumber().getValue());
 
         final Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
         return new Customer(number.longValue(), customer.getAccount(), customer.getNickname(), customer.getPassword(), customer.getAddress(), customer.getPhoneNumber());
@@ -52,19 +49,13 @@ public class CustomerDao {
 
     public Optional<Customer> findByAccount(final String account) {
         final String sql = "SELECT id, account, nickname, password, address, phone_number " +
-                "FROM CUSTOMER WHERE account=:account";
+                "FROM customer WHERE account=:account";
 
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("account", account);
 
         final List<Customer> query = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(parameters), customerRowMapper);
         return Optional.ofNullable(DataAccessUtils.singleResult(query));
-    }
-
-    public Long getIdByAccount(final String customerName) {
-        final Customer byAccount = findByAccount(customerName).orElseThrow(CustomerNotFoundException::new);
-
-        return byAccount.getId();
     }
 
     public Optional<Customer> findById(final long customerId) {

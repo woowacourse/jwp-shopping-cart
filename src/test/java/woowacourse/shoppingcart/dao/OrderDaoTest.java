@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -19,34 +19,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class OrderDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private final OrderDao orderDao;
 
-    public OrderDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.orderDao = new OrderDao(jdbcTemplate);
+    public OrderDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.orderDao = new OrderDao(namedParameterJdbcTemplate);
     }
 
-    @DisplayName("Order를 추가하는 기능")
+    @DisplayName("주문을 저장한다.")
     @Test
     void addOrders() {
         //given
-        final Long customerId = 1L;
+        final long customerId = 1L;
 
         //when
         final Long orderId = orderDao.addOrders(customerId);
 
         //then
-        assertThat(orderId).isNotNull();
+        assertThat(orderId).isEqualTo(1L);
     }
 
-    @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
+    @DisplayName("해당 회원의 주문 id들을 불러온다.")
     @Test
     void findOrderIdsByCustomerId() {
         //given
-        final Long customerId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+        final long customerId = 1L;
+        orderDao.addOrders(customerId);
+        orderDao.addOrders(customerId);
 
         //when
         final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);

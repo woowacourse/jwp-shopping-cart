@@ -1,25 +1,21 @@
 package woowacourse.shoppingcart.dto;
 
-import javax.validation.constraints.Min;
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class OrderRequest {
 
     @NotNull
-    private final Long cartId;
-    @Min(0)
-    private final int quantity;
+    private final List<OrderDetailRequest> order;
 
-    public OrderRequest(final Long cartId, final int quantity) {
-        this.cartId = cartId;
-        this.quantity = quantity;
+    @JsonCreator
+    public OrderRequest(List<OrderDetailRequest> order) {
+        this.order = order;
     }
 
-    public Long getCartId() {
-        return cartId;
-    }
-
-    public int getQuantity() {
-        return quantity;
+    public List<OrderDetailRequest> getOrder() {
+        return order;
     }
 }
