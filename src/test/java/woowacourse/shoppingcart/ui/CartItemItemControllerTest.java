@@ -15,8 +15,8 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.application.dto.CustomerSaveServiceRequest;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.AddCartItemRequest;
-import woowacourse.shoppingcart.dto.CartDto;
+import woowacourse.shoppingcart.dto.cart.AddCartItemRequest;
+import woowacourse.shoppingcart.dto.cart.CartDto;
 import woowacourse.shoppingcart.exception.notfound.NotFoundException;
 
 @SpringBootTest
@@ -40,7 +40,7 @@ class CartItemItemControllerTest {
         productService.addProduct(new Product("밥", 1000, "www.naver.com"));
 
         // when
-        final ResponseEntity<Void> response = cartItemController.addCartItem(1L, new AddCartItemRequest(1L));
+        final ResponseEntity<Void> response = cartItemController.enrollCartItem(1L, new AddCartItemRequest(1L));
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -53,7 +53,7 @@ class CartItemItemControllerTest {
         customerService.save(new CustomerSaveServiceRequest("klay", "email@gmail.com", "12345678"));
 
         // when, then
-        assertThatThrownBy(() -> cartItemController.addCartItem(1L, new AddCartItemRequest(1L)))
+        assertThatThrownBy(() -> cartItemController.enrollCartItem(1L, new AddCartItemRequest(1L)))
                 .isInstanceOf(NotFoundException.class);
     }
 
@@ -63,7 +63,7 @@ class CartItemItemControllerTest {
         // given
         customerService.save(new CustomerSaveServiceRequest("klay", "email@gmail.com", "12345678"));
         productService.addProduct(new Product("밥", 1000, "www.naver.com"));
-        cartItemController.addCartItem(1L, new AddCartItemRequest(1L));
+        cartItemController.enrollCartItem(1L, new AddCartItemRequest(1L));
 
         // when
         final ResponseEntity<List<CartDto>> cartItems = cartItemController.getCartItems(1L);

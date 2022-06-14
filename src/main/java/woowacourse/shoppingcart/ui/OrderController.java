@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.dto.OrdersResponse;
+import woowacourse.shoppingcart.dto.order.OrderRequest;
+import woowacourse.shoppingcart.dto.order.OrdersResponse;
 
 @Validated
 @RestController

@@ -12,11 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
-import woowacourse.shoppingcart.dto.CustomerDetailResponse;
-import woowacourse.shoppingcart.dto.CustomerPasswordUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerProfileUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDetailResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerPasswordUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerProfileUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {

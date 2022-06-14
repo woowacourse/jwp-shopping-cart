@@ -27,7 +27,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.OrderService;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.order.OrderRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc

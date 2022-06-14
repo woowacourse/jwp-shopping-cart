@@ -6,7 +6,7 @@ import io.restassured.response.Response;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 
 public class AuthAcceptanceFixture {
 

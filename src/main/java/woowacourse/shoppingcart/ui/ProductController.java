@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.PagedProductsDto;
+import woowacourse.shoppingcart.dto.product.PagedProductsDto;
 import woowacourse.shoppingcart.dto.Request;
 
 @RestController

@@ -11,11 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.exception.PasswordNotMatchException;
-import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
-import woowacourse.shoppingcart.dto.CustomerDetailResponse;
-import woowacourse.shoppingcart.dto.CustomerPasswordUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerProfileUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerDetailResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerPasswordUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerProfileUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 
 @SpringBootTest

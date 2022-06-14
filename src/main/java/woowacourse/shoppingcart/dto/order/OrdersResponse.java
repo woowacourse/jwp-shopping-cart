@@ -1,10 +1,11 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.order;
 
 import java.util.List;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 
 public class OrdersResponse {
+
     private final Long id;
     private final Long totalPrice;
     private final List<OrderDetail> orderDetails;

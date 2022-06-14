@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.order;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
