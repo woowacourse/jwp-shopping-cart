@@ -5,10 +5,10 @@ import javax.validation.constraints.Positive;
 
 public class CartRequest {
 
-    @NotNull
+    @NotNull(groups = {Request.id.class})
     private Long productId;
 
-    @Positive
+    @Positive(groups = {Request.allProperties.class})
     private int quantity;
 
     private CartRequest() {

@@ -4,22 +4,23 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.Request;
 
 public class ProductRequest {
 
-    @NotNull
+    @NotNull(groups = {Request.id.class})
     private Long id;
 
-    @NotBlank
+    @NotBlank(groups = {Request.allProperties.class})
     private String name;
 
-    @Positive
+    @Positive(groups = {Request.allProperties.class})
     private int price;
 
-    @NotBlank
+    @NotBlank(groups = {Request.allProperties.class})
     private String imageUrl;
 
-    @Positive
+    @Positive(groups = {Request.allProperties.class})
     private int stock;
 
     private ProductRequest() {
