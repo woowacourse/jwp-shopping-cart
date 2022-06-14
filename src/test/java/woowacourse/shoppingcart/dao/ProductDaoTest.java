@@ -66,7 +66,7 @@ public class ProductDaoTest {
         final int size = 5;
 
         // when
-        final List<Product> products = productDao.findProducts(0, 10);
+        final List<Product> products = productDao.findProducts(new PagingIndex(0, 10));
 
         // then
         assertThat(products).size().isEqualTo(size);
@@ -81,13 +81,13 @@ public class ProductDaoTest {
         final String imageUrl = "www.test.com";
 
         final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final int beforeSize = productDao.findProducts(0, 10).size();
+        final int beforeSize = productDao.findProducts(new PagingIndex(0, 10)).size();
 
         // when
         productDao.delete(productId);
 
         // then
-        final int afterSize = productDao.findProducts(0, 10).size();
+        final int afterSize = productDao.findProducts(new PagingIndex(0, 10)).size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
     }
 }

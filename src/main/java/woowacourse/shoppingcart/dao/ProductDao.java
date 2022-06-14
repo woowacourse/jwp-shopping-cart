@@ -61,11 +61,13 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(query, Integer.class);
     }
 
-    public List<Product> findProducts(final int startIndex, final int limit) {
+    public List<Product> findProducts(final PagingIndex pagingIndex) {
         final String query = "SELECT id, name, price, image_url FROM product LIMIT ?, ?";
         return jdbcTemplate.query(query,
-                (resultSet, rowNumber) ->
-                        rowMapperToProduct(resultSet.getLong("id"), resultSet), startIndex, limit);
+                (resultSet, rowNumber) -> rowMapperToProduct(resultSet.getLong("id"), resultSet),
+                pagingIndex.getStartIndex(),
+                pagingIndex.getLimit()
+        );
     }
 
     public int delete(final Long productId) {

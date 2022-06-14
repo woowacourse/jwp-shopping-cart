@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.ProductDetailServiceResponse;
 import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
 import woowacourse.shoppingcart.application.dto.ProductsServiceResponse;
+import woowacourse.shoppingcart.dao.PagingIndex;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
@@ -31,8 +32,7 @@ public class ProductService {
     }
 
     public ProductsServiceResponse findProducts(final int page, final int limit) {
-        final int startIndex = limit * (page - 1);
-        final List<Product> products = productDao.findProducts(startIndex, limit);
+        final List<Product> products = productDao.findProducts(PagingIndex.from(page, limit));
         final int productCount = productDao.countProducts();
         return ProductsServiceResponse.from(productCount, products);
     }
