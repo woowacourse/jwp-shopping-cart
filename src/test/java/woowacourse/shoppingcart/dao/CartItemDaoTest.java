@@ -11,12 +11,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
 import woowacourse.shoppingcart.dto.request.ProductRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiChracters")
 @JdbcTest
@@ -54,11 +56,15 @@ class CartItemDaoTest {
         final Long customerId = 1L;
         final Product product = new Product(4L, "banana", 1_000, "woowa1.com");
 
-        Cart cart = cartItemDao.addCartItem(customerId, product);
+        CartItem cartItem = cartItemDao.addCartItem(customerId, product);
 
-        assertThat(cart)
-            .extracting("id", "productId", "name", "price", "imageUrl", "quantity")
-            .containsExactly(5L, 4L, "banana", 1_000, "woowa1.com", 1);
+        assertAll(() -> {
+            assertThat(cartItem.getId()).isEqualTo(5L);
+            assertThat(cartItem.getQuantity()).isEqualTo(1);
+            assertThat(cartItem.getProduct())
+                .extracting("id", "name", "price", "imageUrl")
+                .containsExactly(4L, "banana", 1_000, "woowa1.com");
+        });
     }
 
     @Test
@@ -99,12 +105,16 @@ class CartItemDaoTest {
     void findByCartId메서드는_장바구니_id로_장바구니를_조회한다() {
         final Long cartId = 1L;
 
-        Cart cart = cartItemDao.findByCartId(cartId);
+        CartItem cartItem = cartItemDao.findByCartId(cartId);
 
-        assertThat(cart).extracting("id", "productId", "name", "price", "imageUrl", "quantity")
-            .containsExactly(1L, 1L, "[승팡] 칠레산 코호 냉동 연어필렛 trim D(껍질있음) 1.1~1.3kg", 24500,
-                "https://cdn-mart.baemin.com/sellergoods/main/92438f0e-0c4b-425e-b03b-999cee7cdca2.jpg",
-                5);
+        assertAll(() -> {
+            assertThat(cartItem.getId()).isEqualTo(1L);
+            assertThat(cartItem.getQuantity()).isEqualTo(5);
+            assertThat(cartItem.getProduct())
+                .extracting("id", "name", "price", "imageUrl")
+                .containsExactly(1L, "[승팡] 칠레산 코호 냉동 연어필렛 trim D(껍질있음) 1.1~1.3kg", 24_500,
+                    "https://cdn-mart.baemin.com/sellergoods/main/92438f0e-0c4b-425e-b03b-999cee7cdca2.jpg");
+        });
     }
 
     @Test

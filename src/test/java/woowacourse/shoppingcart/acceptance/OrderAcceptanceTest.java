@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.dto.request.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 
@@ -27,8 +27,8 @@ import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_�
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
-    private CartResponse cartResponse1;
-    private CartResponse cartResponse2;
+    private CartItemResponse cartItemResponse1;
+    private CartItemResponse cartItemResponse2;
     private static String token;
 
     @Override
@@ -42,14 +42,14 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         TokenResponse tokenResponse = 로그인_후_토큰_반환();
         token = tokenResponse.getAccessToken();
 
-        cartResponse1 = 장바구니_아이템_추가되어_있음(productId1, token);
-        cartResponse2 = 장바구니_아이템_추가되어_있음(productId2, token);
+        cartItemResponse1 = 장바구니_아이템_추가되어_있음(productId1, token);
+        cartItemResponse2 = 장바구니_아이템_추가되어_있음(productId2, token);
     }
 
     @DisplayName("주문하기")
     @Test
     void addOrder() {
-        List<OrderRequest> orderRequests = Stream.of(cartResponse1.getId(), cartResponse2.getId())
+        List<OrderRequest> orderRequests = Stream.of(cartItemResponse1.getId(), cartItemResponse2.getId())
                 .map(cartId -> new OrderRequest(cartId, 10))
                 .collect(Collectors.toList());
 
@@ -61,8 +61,10 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @DisplayName("주문 내역 조회")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(Collections.singletonList(new OrderRequest(cartResponse1.getId(), 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(Collections.singletonList(new OrderRequest(cartResponse2.getId(), 5)));
+        Long orderId1 = 주문하기_요청_성공되어_있음(Collections.singletonList(new OrderRequest(
+            cartItemResponse1.getId(), 2)));
+        Long orderId2 = 주문하기_요청_성공되어_있음(Collections.singletonList(new OrderRequest(
+            cartItemResponse2.getId(), 5)));
 
         ExtractableResponse<Response> response = 주문_내역_조회_요청();
 
@@ -74,8 +76,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
     @Test
     void getOrder() {
         Long orderId = 주문하기_요청_성공되어_있음(Arrays.asList(
-                new OrderRequest(cartResponse1.getId(), 2),
-                new OrderRequest(cartResponse2.getId(), 4)
+                new OrderRequest(cartItemResponse1.getId(), 2),
+                new OrderRequest(cartItemResponse2.getId(), 4)
         ));
 
         ExtractableResponse<Response> response = 주문_단일_조회_요청(orderId);

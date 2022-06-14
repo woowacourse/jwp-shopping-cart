@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import woowacourse.auth.support.AuthenticationPrincipal;
-import woowacourse.shoppingcart.dto.response.CartResponse;
+import woowacourse.shoppingcart.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.dto.request.LoginCustomer;
 import woowacourse.shoppingcart.dto.request.ProductIdRequest;
 import woowacourse.shoppingcart.dto.request.QuantityRequest;
@@ -13,6 +13,7 @@ import woowacourse.shoppingcart.dto.request.Request;
 import woowacourse.shoppingcart.application.CartService;
 
 import java.util.List;
+import woowacourse.shoppingcart.dto.response.CartResponse;
 
 @RestController
 @RequestMapping("/customers/carts")
@@ -24,15 +25,16 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartResponse>> getCartItems(@AuthenticationPrincipal LoginCustomer loginCustomer) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(loginCustomer.getId()));
+    public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+        final CartResponse cartResponse = cartService.findCartByCustomerId(loginCustomer.getId());
+        return ResponseEntity.ok().body(cartResponse.getCartItemResponses());
     }
 
     @PostMapping
-    public ResponseEntity<CartResponse> addCartItem(@Validated(Request.id.class) @RequestBody final ProductIdRequest productIdRequest,
+    public ResponseEntity<CartItemResponse> addCartItem(@Validated(Request.id.class) @RequestBody final ProductIdRequest productIdRequest,
                                       @AuthenticationPrincipal LoginCustomer loginCustomer) {
-        final CartResponse cartResponse = cartService.addCart(productIdRequest.getProductId(), loginCustomer.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartResponse);
+        final CartItemResponse cartItemResponse = cartService.addCart(productIdRequest.getProductId(), loginCustomer.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartItemResponse);
     }
 
     @DeleteMapping("/{cartId}")
@@ -43,11 +45,11 @@ public class CartItemController {
     }
 
     @PutMapping("/{cartId}")
-    public ResponseEntity<CartResponse> updateCartItemQuantity(
+    public ResponseEntity<CartItemResponse> updateCartItemQuantity(
         @AuthenticationPrincipal LoginCustomer loginCustomer,
         @PathVariable final Long cartId, @RequestBody QuantityRequest quantityRequest) {
-        CartResponse cartResponse = cartService.updateCardItemQuantity(loginCustomer.getId(), cartId, quantityRequest.getQuantity());
-        return ResponseEntity.ok().body(cartResponse);
+        CartItemResponse cartItemResponse = cartService.updateCardItemQuantity(loginCustomer.getId(), cartId, quantityRequest.getQuantity());
+        return ResponseEntity.ok().body(cartItemResponse);
     }
 
     @DeleteMapping

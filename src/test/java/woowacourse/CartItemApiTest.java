@@ -32,11 +32,11 @@ class CartItemApiTest extends TestSupport {
                     ),
                     responseFields(
                         fieldWithPath("[].id").description("cart id"),
-                        fieldWithPath("[].productId").description("product id"),
-                        fieldWithPath("[].name").description("product name"),
-                        fieldWithPath("[].price").description("product price"),
-                        fieldWithPath("[].imageUrl").description("product imageUrl"),
-                        fieldWithPath("[].quantity").description("product quantity")
+                        fieldWithPath("[].quantity").description("product quantity"),
+                        fieldWithPath("[].product.id").description("product id"),
+                        fieldWithPath("[].product.name").description("product name"),
+                        fieldWithPath("[].product.price").description("product price"),
+                        fieldWithPath("[].product.imageUrl").description("product imageUrl")
                     )
                 )
             );
@@ -58,10 +58,10 @@ class CartItemApiTest extends TestSupport {
                     ),
                     responseFields(
                         fieldWithPath("id").description("cart id"),
-                        fieldWithPath("productId").description("product id"),
-                        fieldWithPath("name").description("product name"),
-                        fieldWithPath("price").description("product price"),
-                        fieldWithPath("imageUrl").description("product imageUrl"),
+                        fieldWithPath("product.id").description("product id"),
+                        fieldWithPath("product.name").description("product name"),
+                        fieldWithPath("product.price").description("product price"),
+                        fieldWithPath("product.imageUrl").description("product imageUrl"),
                         fieldWithPath("quantity").description("product quantity")
                     )
                 )
@@ -99,10 +99,10 @@ class CartItemApiTest extends TestSupport {
                 ),
                 responseFields(
                     fieldWithPath("id").description("cart id"),
-                    fieldWithPath("productId").description("product id"),
-                    fieldWithPath("name").description("product name"),
-                    fieldWithPath("price").description("product price"),
-                    fieldWithPath("imageUrl").description("product imageUrl"),
+                    fieldWithPath("product.id").description("product id"),
+                    fieldWithPath("product.name").description("product name"),
+                    fieldWithPath("product.price").description("product price"),
+                    fieldWithPath("product.imageUrl").description("product imageUrl"),
                     fieldWithPath("quantity").description("product quantity")
                 )
             ));
