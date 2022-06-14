@@ -1,10 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static woowacourse.fixture.AuthFixture.findById;
-import static woowacourse.fixture.AuthFixture.updatePassword;
 import static woowacourse.fixture.AuthFixture.withdraw;
 import static woowacourse.fixture.CustomerFixture.login;
 
@@ -55,7 +52,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/customers/signUp")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("이미 존재하는 아이디입니다."));
+                .body("message", is("이미 가입된 이메일입니다."));
     }
 
     @DisplayName("중복된 닉네임으로 회원가입을 하면 예외가 발생한다.")
@@ -165,7 +162,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().post("/customers/login")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .body("message", is("존재하지 않는 회원입니다."));
+                .body("message", is("아아디 또는 비밀번호를 확인하여주세요."));
     }
 
     @DisplayName("비밀번호가 틀리면 로그인이 안된다.")
@@ -209,7 +206,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
-        withdraw(token);
+        withdraw(token, "1234asdf!");
 
         // when & then
         RestAssured
@@ -230,6 +227,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("nickname", "리버");
+        requestBody.put("password", "1234asdf!");
 
         // when & then
         RestAssured
@@ -248,10 +246,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
-        withdraw(token);
+        withdraw(token, "1234asdf!");
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("nickname", "리버");
+        requestBody.put("password", "1234asdf!");
 
         // when & than
         RestAssured
@@ -274,6 +273,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("nickname", "nickname");
+        requestBody.put("password", "1234asdf!");
 
         // when & than
         RestAssured
@@ -329,7 +329,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .when().patch("/auth/customers/profile/password")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("입력한 비밀번호가 올바르지 않습니다."));
+                .body("message", is("아아디 또는 비밀번호를 확인하여주세요."));
     }
 
     @DisplayName("수정하려는 비밀번호가 올바른 형식이 아닐 경우 비밀번호 변경이 안된다.")
@@ -363,9 +363,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         String token = firstResponse.body().jsonPath().getString("accessToken");
 
         // when & then
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("password", "1234asdf!");
+
         RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
                 .when().delete("/auth/customers/profile")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
@@ -377,15 +382,88 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
         String token = firstResponse.body().jsonPath().getString("accessToken");
-        withdraw(token);
+        withdraw(token, "1234asdf!");
 
         // when & then
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("password", "1234asdf!");
+
         RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
                 .when().delete("/auth/customers/profile")
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .body("message", is("존재하지 않는 회원입니다."));
+    }
+
+    @DisplayName("탈퇴를 요청할 경우 입력한 비밀번호가 실제 비밀번호와 일치하지 않으면 안된다.")
+    @Test
+    void deleteMeWithdrawalNotMatchPassword() {
+        // given
+        ExtractableResponse<Response> firstResponse = login("puterism@woowacourse.com", "1234asdf!");
+        String token = firstResponse.body().jsonPath().getString("accessToken");
+
+        // when & then
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("password", "1234asdwqwqf!");
+
+        RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestBody)
+                .when().delete("/auth/customers/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("아아디 또는 비밀번호를 확인하여주세요."));
+    }
+
+    @DisplayName("회원가입시 기존에 존재하는 아이디를 입력하면 안된다.")
+    @Test
+    void checkDuplicateUserId_exception() {
+        // when & then
+        RestAssured
+                .given().log().all()
+                .when().get("/customers/check?userId=puterism@woowacourse.com")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("이미 가입된 이메일입니다."));
+    }
+
+    @DisplayName("회원가입시 기존에 존재하는 닉네임을 입력하면 안된다.")
+    @Test
+    void checkDuplicateNickname_exception() {
+        // when & then
+        RestAssured
+                .given().log().all()
+                .when().get("/customers/check?nickname=nickname")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("이미 존재하는 닉네임입니다."));
+    }
+
+    @DisplayName("회원가입시 기존에 존재하지 않는 닉네임을 입력하면 상태코드 200을 반환한다.")
+    @Test
+    void checkDuplicateNickname() {
+        // when & then
+        RestAssured
+                .given().log().all()
+                .when().get("/customers/check?nickname=새로운이름")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("회원가입시 기존에 존재하지 않는 아이디를 입력하면 상태코드 200을 반환한다.")
+    @Test
+    void checkDuplicateUserId() {
+        // when & then
+        RestAssured
+                .given().log().all()
+                .when().get("/customers/check?userId=coobim@woowacourse.com")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 }

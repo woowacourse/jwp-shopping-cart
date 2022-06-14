@@ -5,13 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerLoginRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerLoginResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerPasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.dto.customer.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.duplicateddata.CustomerDuplicatedDataException;
 
 @Service
@@ -34,7 +35,7 @@ public class CustomerService {
 
     private void validateNotDuplicateUserId(final String userId) {
         if (customerDao.existCustomerByUserId(userId)) {
-            throw new CustomerDuplicatedDataException("이미 존재하는 아이디입니다.");
+            throw new CustomerDuplicatedDataException("이미 가입된 이메일입니다.");
         }
     }
 
@@ -61,6 +62,7 @@ public class CustomerService {
                               final CustomerUpdateProfileRequest customerUpdateProfileRequest) {
         validateNotDuplicateNickname(customerUpdateProfileRequest.getNickname());
         Customer customer = customerDao.findById(tokenRequest.getId());
+        customer.comparePasswordFrom(customerUpdateProfileRequest.getPassword());
         customerDao.update(customer.getId(), customerUpdateProfileRequest.getNickname());
     }
 
@@ -72,8 +74,22 @@ public class CustomerService {
         customerDao.updatePassword(customer.getId(), customerUpdatePasswordRequest.getNewPassword());
     }
 
-    public void withdraw(final TokenRequest tokenRequest) {
+    public void withdraw(final TokenRequest tokenRequest, final CustomerPasswordRequest customerPasswordRequest) {
         Customer customer = customerDao.findById(tokenRequest.getId());
+        customer.comparePasswordFrom(customerPasswordRequest.getPassword());
         customerDao.delete(customer.getId());
+    }
+
+    public void checkDuplicateUserId(final String userId) {
+        validateNotDuplicateUserId(userId);
+    }
+
+    public void checkDuplicateNickname(final String nickname) {
+        validateNotDuplicateNickname(nickname);
+    }
+
+    public void matchCustomerPassword(final TokenRequest tokenRequest, final CustomerPasswordRequest request) {
+        Customer customer = customerDao.findById(tokenRequest.getId());
+        customer.comparePasswordFrom(request.getPassword());
     }
 }

@@ -48,6 +48,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .when().get("/auth/customers/profile")
                 .then().log().all()
                 .statusCode(HttpStatus.FORBIDDEN.value())
-                .body("message", is("로그인을 해주세요."));
+                .body("message", is("권한이 없습니다."));
     }
 }
