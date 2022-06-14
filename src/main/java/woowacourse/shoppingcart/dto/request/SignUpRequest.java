@@ -21,7 +21,7 @@ public class SignUpRequest {
     @Size(min=1, max=10)
     private String nickname;
     @Min(value=0)
-    private Integer age;
+    private int age;
 
     public SignUpRequest() {
     }
@@ -45,7 +45,7 @@ public class SignUpRequest {
         return nickname;
     }
 
-    public Integer getAge() {
+    public int getAge() {
         return age;
     }
 

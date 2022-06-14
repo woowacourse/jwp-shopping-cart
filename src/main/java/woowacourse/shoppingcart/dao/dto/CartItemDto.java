@@ -3,12 +3,12 @@ package woowacourse.shoppingcart.dao.dto;
 public class CartItemDto {
 
     private Long productId;
-    private Integer quantity;
+    private int quantity;
 
     public CartItemDto() {
     }
 
-    public CartItemDto(Long productId, Integer quantity) {
+    public CartItemDto(Long productId, int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }
@@ -21,11 +21,11 @@ public class CartItemDto {
         this.productId = productId;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 }

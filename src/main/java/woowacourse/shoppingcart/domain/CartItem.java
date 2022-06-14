@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.domain;
 public class CartItem {
 
     private Product product;
-    private Integer quantity;
+    private int quantity;
 
     public CartItem() {
     }

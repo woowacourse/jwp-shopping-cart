@@ -7,10 +7,10 @@ import javax.validation.constraints.Size;
 public class UpdateMeRequest {
 
     @NotBlank
-    @Size(min=1, max=10)
+    @Size(min = 1, max = 10)
     private String nickname;
-    @Min(value=0)
-    private Integer age ;
+    @Min(value = 0)
+    private int age;
 
     public UpdateMeRequest() {
     }
