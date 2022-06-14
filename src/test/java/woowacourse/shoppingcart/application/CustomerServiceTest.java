@@ -79,14 +79,6 @@ class CustomerServiceTest {
                 .isInstanceOf(InvalidCustomerBadRequestException.class);
     }
 
-    @DisplayName("존재하지 않는 이메일로 탈퇴 시 예외 발생")
-    @Test
-    void deleteByNotExistEmail() {
-        Customer customer = new Customer(NOT_FOUND_EMAIL, "notFoundPwd!", "invalid");
-        assertThatThrownBy(() -> customerService.delete(customer))
-                .isInstanceOf(InvalidCustomerBadRequestException.class);
-    }
-
     @DisplayName("이메일로 회원 탈퇴")
     @Test
     void deleteByEmail() {
