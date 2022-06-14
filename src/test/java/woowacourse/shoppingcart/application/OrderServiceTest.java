@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.application;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -48,21 +49,23 @@ class OrderServiceTest {
         // given
         final String password = PasswordEncryptor.encrypt("12345678");
         final Customer customer = new Customer(1L, "썬", new Email("sun@gmail.com"), new EncodedPassword(password));
-        final OrderRequest orderRequest = new OrderRequest(1L, 10);
+        final OrderRequest orderRequest1 = new OrderRequest(1L, 10);
+        final OrderRequest orderRequest2 = new OrderRequest(2L, 5);
 
         // when
         when(customerDao.findById(any(Long.class)))
                 .thenReturn(Optional.of(customer));
-        when(orderDao.addOrders(any(Long.class)))
+        when(orderDao.addOrders(1L))
                 .thenReturn(1L);
-        when(cartItemDao.findProductIdById(any(Long.class)))
-                .thenReturn(1L);
-        when(ordersDetailDao.addOrdersDetail(any(Long.class), any(Long.class), any(Integer.class)))
-                .thenReturn(any(Long.class));
+        when(cartItemDao.findAllCartsByIds(List.of(1L, 2L)))
+                .thenReturn(List.of(
+                        new Cart(1L, 1L, "일", 1000, "urlOne", 10),
+                        new Cart(1L, 2L, "이", 1500, "urlTwo", 5)
+                ));
 
         // then
-        assertThatCode(() -> orderService.addOrder(customer.getId(), List.of(orderRequest)))
-                .doesNotThrowAnyException();
+        assertThat(orderService.addOrder(1L, List.of(orderRequest1, orderRequest2)))
+                .isEqualTo(1L);
     }
 
     @DisplayName("주문 추가 시 회원이 존재하지 않는다면 예외가 발생한다.")

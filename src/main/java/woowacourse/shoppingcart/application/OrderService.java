@@ -6,14 +6,17 @@ import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.dto.OrderResponse;
+import woowacourse.shoppingcart.entity.OrderDetailEntity;
 import woowacourse.shoppingcart.exception.CustomerNotFoundException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.OrderNotFoundException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,14 +40,28 @@ public class OrderService {
     public Long addOrder(final Long customerId, final List<OrderRequest> orderRequests) {
         validateCustomerExists(customerId);
         final Long ordersId = orderDao.addOrders(customerId);
-        for (final OrderRequest orderRequest : orderRequests) {
-            final Long cartId = orderRequest.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            ordersDetailDao.addOrdersDetail(ordersId, productId, orderRequest.getQuantity());
-            cartItemDao.deleteCartItem(cartId);
-        }
+        final List<Long> cartIds = orderRequests.stream()
+                .map(OrderRequest::getCartId)
+                .collect(Collectors.toList());
+
+
+        final List<Cart> carts = cartItemDao.findAllCartsByIds(cartIds);
+        final List<OrderDetailEntity> orderDetails = carts.stream()
+                .map(cart -> new OrderDetailEntity(ordersId, cart.getProductId(), findQuantityByIdFromRequest(cart.getId(), orderRequests)))
+                .collect(Collectors.toList());
+
+        ordersDetailDao.addAllOrderDetails(orderDetails);
+        cartItemDao.deleteAllById(cartIds);
 
         return ordersId;
+    }
+
+    private int findQuantityByIdFromRequest(final Long id, final List<OrderRequest> orderRequests) {
+        return orderRequests.stream()
+                .filter(request -> Objects.equals(request.getCartId(), id))
+                .findAny()
+                .map(OrderRequest::getQuantity)
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public OrderResponse findOrderById(final Long customerId, final Long orderId) {

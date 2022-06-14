@@ -143,4 +143,15 @@ public class CartItemDao {
 
         return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(sql, params, Boolean.class));
     }
+
+    public List<Cart> findAllCartsByIds(final List<Long> cartIds) {
+        final String sql = "SELECT CI.id, CI.product_id, P.name, P.price, P.image_url, CI.quantity " +
+                "FROM cart_item CI JOIN product P ON CI.product_id = P.id " +
+                "WHERE CI.id IN (:cartIds)";
+
+        final Map<String, Object> params = new HashMap<>();
+        params.put("cartIds", cartIds);
+
+        return namedParameterJdbcTemplate.query(sql, params, CartItemDao::rowMapper);
+    }
 }

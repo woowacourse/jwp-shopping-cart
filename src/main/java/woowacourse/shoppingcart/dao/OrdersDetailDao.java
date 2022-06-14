@@ -2,10 +2,12 @@ package woowacourse.shoppingcart.dao;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.entity.OrderDetailEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,5 +48,11 @@ public class OrdersDetailDao {
                 rs.getString("image_url"),
                 rs.getInt("quantity")
         ));
+    }
+
+    public void addAllOrderDetails(final List<OrderDetailEntity> orderDetails) {
+        final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) " +
+                "VALUES (:orderId, :productId, :quantity)";
+        namedParameterJdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(orderDetails));
     }
 }
