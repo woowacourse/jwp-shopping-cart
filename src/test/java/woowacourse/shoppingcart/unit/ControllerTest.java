@@ -17,6 +17,8 @@ import woowacourse.shoppingcart.cart.ui.CartItemController;
 import woowacourse.shoppingcart.customer.application.CustomerService;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.customer.ui.CustomerController;
+import woowacourse.shoppingcart.order.application.OrderService;
+import woowacourse.shoppingcart.order.ui.OrderController;
 import woowacourse.shoppingcart.product.application.ProductService;
 import woowacourse.shoppingcart.product.ui.ProductController;
 import woowacourse.shoppingcart.support.JwtTokenProvider;
@@ -25,7 +27,8 @@ import woowacourse.shoppingcart.support.JwtTokenProvider;
         AuthController.class,
         CustomerController.class,
         CartItemController.class,
-        ProductController.class
+        ProductController.class,
+        OrderController.class
 })
 @Import(HttpEncodingAutoConfiguration.class)
 @AutoConfigureRestDocs
@@ -44,6 +47,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ProductService productService;
+
+    @MockBean
+    protected OrderService orderService;
 
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;
