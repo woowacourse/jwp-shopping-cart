@@ -1,10 +1,11 @@
 package woowacourse.shoppingcart.dto.request;
 
 import java.util.List;
+import javax.validation.constraints.NotNull;
 
 public class AddOrderRequest {
 
-    private List<Long> productIds;
+    private List<@NotNull Long> productIds;
 
     public AddOrderRequest() {
     }
