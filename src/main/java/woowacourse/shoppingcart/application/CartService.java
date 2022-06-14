@@ -38,7 +38,7 @@ public class CartService {
         validateMember(memberId);
         validateProduct(productId);
 
-        long cartId = cartItemDao.findIdIfExistByMemberProductId(memberId, productId);
+        long cartId = cartItemDao.findIdIfExistByMemberIdAndProductId(memberId, productId);
 
         if (cartId > 0) {
             cartItemDao.plusQuantityById(cartId);

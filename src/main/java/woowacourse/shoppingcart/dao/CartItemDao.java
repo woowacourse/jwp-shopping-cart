@@ -42,7 +42,7 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, cartRowMapper, memberId);
     }
 
-    public long findIdIfExistByMemberProductId(final long memberId, final long productId) {
+    public long findIdIfExistByMemberIdAndProductId(final long memberId, final long productId) {
         try {
             final String sql = "SELECT id FROM cart_item WHERE member_id = ? AND product_id = ?";
             return jdbcTemplate.queryForObject(sql, Integer.class, memberId, productId);

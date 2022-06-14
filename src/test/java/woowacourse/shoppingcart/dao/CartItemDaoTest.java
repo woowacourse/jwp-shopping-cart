@@ -39,13 +39,13 @@ public class CartItemDaoTest {
     @DisplayName("해당 사용자가 이미 그 상품을 장바구니에 담았다면 장바구니 id를 반환한다.")
     @Test
     void findIdExistByMemberProductId() {
-        assertThat(cartItemDao.findIdIfExistByMemberProductId(1L, 1L)).isEqualTo(1L);
+        assertThat(cartItemDao.findIdIfExistByMemberIdAndProductId(1L, 1L)).isEqualTo(1L);
     }
 
     @DisplayName("해당 사용자가 그 상품을 장바구니에 담은적 없다면 장바구니 0을 반환한다.")
     @Test
     void findIdNotExistByMemberProductId() {
-        assertThat(cartItemDao.findIdIfExistByMemberProductId(1L, 5L)).isEqualTo(0L);
+        assertThat(cartItemDao.findIdIfExistByMemberIdAndProductId(1L, 5L)).isEqualTo(0L);
     }
 
     @DisplayName("현재수량에서 하나 더한다.")
