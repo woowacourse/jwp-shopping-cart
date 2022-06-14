@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 import woowacourse.shoppingcart.ui.product.ProductController;
 import woowacourse.shoppingcart.ui.product.dto.request.ProductRegisterRequest;
 import woowacourse.shoppingcart.ui.product.dto.response.ProductResponse;
@@ -66,7 +66,7 @@ class ProductControllerTest {
     void showProduct_invalidProductId_throwsException() {
         //when, then
         assertThatThrownBy(() -> productController.showProduct(3000L))
-                .isInstanceOf(InvalidProductException.class);
+                .isInstanceOf(NotFoundProductException.class);
     }
 
     @Test
@@ -87,6 +87,6 @@ class ProductControllerTest {
     void delete_invalidProductId_throwsException() {
         //when, then
         assertThatThrownBy(() -> productController.delete(3000L))
-                .isInstanceOf(InvalidProductException.class);
+                .isInstanceOf(NotFoundProductException.class);
     }
 }

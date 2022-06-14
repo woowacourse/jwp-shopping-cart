@@ -16,8 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotFoundCustomerCartItemException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 @ExtendWith(MockitoExtension.class)
 public class CartServiceTest {
@@ -52,7 +52,7 @@ public class CartServiceTest {
 
         //when, then
         assertThatThrownBy(() -> cartService.addCart(1L, 1L))
-                .isInstanceOf(InvalidProductException.class);
+                .isInstanceOf(NotFoundProductException.class);
     }
 
     @Test

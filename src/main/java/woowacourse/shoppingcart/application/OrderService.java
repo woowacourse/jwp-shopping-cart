@@ -14,8 +14,8 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotFoundOrderException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 import woowacourse.shoppingcart.ui.order.dto.request.OrderRequest;
 
 @Service
@@ -43,7 +43,7 @@ public class OrderService {
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
             final Long productId = cartItemDao.findProductIdById(cartId)
-                    .orElseThrow(InvalidProductException::new);
+                    .orElseThrow(NotFoundProductException::new);
             final int quantity = orderDetail.getQuantity();
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
@@ -62,7 +62,7 @@ public class OrderService {
 
     private void validateOrderIdByCustomerId(final Long customerId, final Long orderId) {
         if (!orderDao.isValidOrderId(customerId, orderId)) {
-            throw new InvalidOrderException();
+            throw new NotFoundOrderException();
         }
     }
 
@@ -78,7 +78,7 @@ public class OrderService {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
             final Product product = productDao.findProductById(orderDetail.getProductId())
-                    .orElseThrow(InvalidProductException::new);
+                    .orElseThrow(NotFoundProductException::new);
             final int quantity = orderDetail.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }

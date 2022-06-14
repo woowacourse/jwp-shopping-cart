@@ -14,14 +14,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.auth.exception.AuthorizationFailureException;
-import woowacourse.auth.exception.NoSuchEmailException;
-import woowacourse.auth.exception.PasswordNotMatchException;
-import woowacourse.shoppingcart.exception.DuplicatedEmailException;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotFoundCustomerCartItemException;
+import woowacourse.shoppingcart.exception.InvalidInputException;
+import woowacourse.shoppingcart.exception.NotFoundException;
 import woowacourse.shoppingcart.ui.error.dto.response.ErrorResponse;
 
 @RestControllerAdvice
@@ -38,7 +32,7 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse("존재하지 않는 데이터 요청입니다."));
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleInvalidRequest(final BindingResult bindingResult) {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final String errorMessage = fieldErrors.stream()
@@ -56,24 +50,14 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({
-            InvalidCustomerException.class,
-            InvalidCartItemException.class,
-            NoSuchEmailException.class,
-            PasswordNotMatchException.class,
-            DuplicatedEmailException.class
-    })
-    public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidInputException(final InvalidInputException e) {
+        return ResponseEntity.status(e.getHttpStatus()).body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            NotFoundCustomerCartItemException.class
-    })
-    public ResponseEntity<ErrorResponse> handleNotFountException(final RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFountException(final NotFoundException e) {
+        return ResponseEntity.status(e.getHttpStatus()).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(AuthorizationFailureException.class)

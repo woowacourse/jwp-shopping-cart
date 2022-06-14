@@ -17,7 +17,7 @@ import woowacourse.shoppingcart.application.dto.ProductDetailServiceResponse;
 import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
@@ -72,7 +72,7 @@ public class ProductServiceTest {
     void findProductById_invalidProductId_throwsException() {
         //when, then
         assertThatThrownBy(() -> productService.findProductById(300L))
-                .isInstanceOf(InvalidProductException.class);
+                .isInstanceOf(NotFoundProductException.class);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class ProductServiceTest {
     void deleteProductById_invalidProductId_throwsException() {
         //when, then
         assertThatThrownBy(() -> productService.deleteProductById(300L))
-                .isInstanceOf(InvalidProductException.class);
+                .isInstanceOf(NotFoundProductException.class);
     }
 
     private Long saveProduct() {

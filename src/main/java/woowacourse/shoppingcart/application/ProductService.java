@@ -8,7 +8,7 @@ import woowacourse.shoppingcart.application.dto.ProductSaveServiceRequest;
 import woowacourse.shoppingcart.application.dto.ProductsServiceResponse;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -26,7 +26,7 @@ public class ProductService {
 
     public ProductDetailServiceResponse findProductById(final Long productId) {
         final Product product = productDao.findProductById(productId)
-                .orElseThrow(InvalidProductException::new);
+                .orElseThrow(NotFoundProductException::new);
         return ProductDetailServiceResponse.from(product);
     }
 
@@ -40,7 +40,7 @@ public class ProductService {
     public void deleteProductById(final Long productId) {
         int effectedRowCount = productDao.delete(productId);
         if (effectedRowCount == 0) {
-            throw new InvalidProductException();
+            throw new NotFoundProductException();
         }
     }
 }

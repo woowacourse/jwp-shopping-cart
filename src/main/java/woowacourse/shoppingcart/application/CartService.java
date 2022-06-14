@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotFoundCustomerCartItemException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -22,7 +22,7 @@ public class CartService {
         try {
             return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
-            throw new InvalidProductException();
+            throw new NotFoundProductException();
         }
     }
 

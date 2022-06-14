@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.NotFoundCartItemException;
 
 @Repository
 public class CartItemDao {
@@ -84,7 +84,7 @@ public class CartItemDao {
 
         final int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
-            throw new InvalidCartItemException();
+            throw new NotFoundCartItemException();
         }
     }
 

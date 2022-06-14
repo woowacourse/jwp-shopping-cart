@@ -21,8 +21,8 @@ import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.NotFoundOrderException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 import woowacourse.shoppingcart.ui.order.dto.request.OrderRequest;
 
 @ExtendWith(MockitoExtension.class)
@@ -78,7 +78,7 @@ class OrderServiceTest {
 
         //when, then
         assertThatThrownBy(() -> orderService.addOrder(CUSTOMER_ID, List.of(orderRequest)))
-                .isInstanceOf(InvalidProductException.class);
+                .isInstanceOf(NotFoundProductException.class);
     }
 
     @Test
@@ -115,7 +115,7 @@ class OrderServiceTest {
 
         //when, then
         assertThatThrownBy(() -> orderService.findOrderById(CUSTOMER_ID, ORDER_ID))
-                .isInstanceOf(InvalidOrderException.class);
+                .isInstanceOf(NotFoundOrderException.class);
     }
 
     @Test
