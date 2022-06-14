@@ -60,9 +60,4 @@ public class ProductDao {
                                 resultSet.getString("image_url")
                         ));
     }
-
-    public void delete(final Long productId) {
-        final String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, productId);
-    }
 }

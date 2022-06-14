@@ -3,10 +3,13 @@ package woowacourse.shoppingcart.dao;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -20,10 +23,15 @@ public class CartItemDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
+    public List<Cart> findCartsByCustomerId(Long id) {
+        String sql =
+                "SELECT c.id, c.customer_id, p.id as product_id, p.name, p.price, p.image_url, c.quantity FROM cart_item c "
+                        + "LEFT JOIN product p "
+                        + "ON c.product_id = p.id "
+                        + "WHERE customer_id = :id";
+        SqlParameterSource parameter = new MapSqlParameterSource("id", id);
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+        return namedParameterJdbcTemplate.query(sql, parameter, joinRowMapper());
     }
 
     public Long findProductIdById(final Long cartId) {
@@ -33,11 +41,6 @@ public class CartItemDao {
         } catch (EmptyResultDataAccessException e) {
             throw new InvalidCartItemException();
         }
-    }
-
-    public Integer findQuantityById(Long cartId) {
-        final String sql = "SELECT quantity FROM cart_item WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, cartId);
     }
 
     public void addCartItem(Cart cart) {
@@ -59,10 +62,10 @@ public class CartItemDao {
     }
 
     public void deleteCartItems(final Long customerId, List<Long> productId) {
-        final String sql = "DELETE FROM cart_item WHERE customer_id = :CUSTOMER_ID AND product_id in (:PRODUCT_ID)";
+        final String sql = "DELETE FROM cart_item WHERE customer_id = :customer_id AND product_id in (:product_id)";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-        parameterSource.addValue("CUSTOMER_ID", customerId);
-        parameterSource.addValue("PRODUCT_ID", productId);
+        parameterSource.addValue("customer_id", customerId);
+        parameterSource.addValue("product_id", productId);
         int rowCount = namedParameterJdbcTemplate.update(sql, parameterSource);
         if (rowCount == 0) {
             throw new InvalidCartItemException();
@@ -75,5 +78,18 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    private RowMapper<Cart> joinRowMapper() {
+        return (rs, rowNum) -> {
+            final Long id = rs.getLong("id");
+            final Long customerId = rs.getLong("customer_id");
+            final Long productId = rs.getLong("product_id");
+            final String name = rs.getString("name");
+            final int price = rs.getInt("price");
+            final String imageUrl = rs.getString("image_url");
+            final int quantity = rs.getInt("quantity");
+            return new Cart(id, customerId, new Product(productId, name, price, imageUrl), quantity);
+        };
     }
 }

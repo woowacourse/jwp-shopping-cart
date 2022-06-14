@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductIdsRequest;
@@ -20,20 +18,17 @@ public class CartService {
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao) {
         this.cartItemDao = cartItemDao;
         this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
     public List<CartResponse> findCartProductsByCustomerId(final Long customerId) {
         checkExistById(customerId);
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        List<Cart> cartsByCustomerId = cartItemDao.findCartsByCustomerId(customerId);
 
-        return cartIds.stream()
-                .map(this::findProductRequestByCartId)
+        return cartsByCustomerId.stream().map(CartResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -43,17 +38,10 @@ public class CartService {
         }
     }
 
-    private CartResponse findProductRequestByCartId(Long cartId) {
-        Long productId = cartItemDao.findProductIdById(cartId);
-        Product product = productDao.findProductById(productId);
-        Integer quantity = cartItemDao.findQuantityById(cartId);
-        return new CartResponse(product, quantity);
-    }
-
     public void addCart(final Long customerId, final CartRequest cartRequest) {
         checkExistById(customerId);
         validateDuplicateCart(customerId, cartRequest.getProductId());
-        Cart cart = new Cart(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
+        Cart cart = Cart.of(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
         cartItemDao.addCartItem(cart);
     }
 
@@ -70,7 +58,7 @@ public class CartService {
 
     public void updateCartQuantity(Long customerId, CartRequest cartRequest) {
         checkExistById(customerId);
-        Cart cart = new Cart(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
+        Cart cart = Cart.of(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
         cartItemDao.updateQuantity(cart);
     }
 }
