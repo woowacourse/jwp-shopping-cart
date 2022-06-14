@@ -156,7 +156,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                     Arguments.of("1234", "비밀번호는 8자 이상 20자 이하여야합니다."),
                     Arguments.of("012345678901234567890", "비밀번호는 8자 이상 20자 이하여야합니다."),
                     Arguments.of("1234 45678", "비밀번호에는 공백이 들어가면 안됩니다."),
-                    Arguments.of(" ", "비밀번호는 8자 이상 20자 이하여야합니다.")
+                    Arguments.of(" ", "비밀번호에는 공백이 들어가면 안됩니다.")
             );
         }
     }

@@ -12,17 +12,20 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.auth.exception.LoginFailException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.dto.FieldErrorResponse;
+import woowacourse.shoppingcart.exception.badrequest.BadRequestException;
 import woowacourse.shoppingcart.exception.badrequest.DuplicateDomainException;
 import woowacourse.shoppingcart.exception.ForbiddenAccessException;
 import woowacourse.shoppingcart.exception.NotExistProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-import woowacourse.shoppingcart.exception.notfound.BadRequestException;
+import woowacourse.shoppingcart.exception.badrequest.InvalidFieldException;
+import woowacourse.shoppingcart.exception.notfound.NotFoundException;
 
 @RestControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
@@ -34,20 +37,26 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(woowacourse.shoppingcart.exception.badrequest.BadRequestException.class)
+    @ExceptionHandler(BadRequestException.class)
     public FieldErrorResponse handleDuplicateDomainException(DuplicateDomainException exception) {
         return new FieldErrorResponse(exception.getField(), exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ConstraintViolationException.class, BadRequestException.class})
+    @ExceptionHandler(InvalidFieldException.class)
+    public FieldErrorResponse handleInvalidFieldException(InvalidFieldException exception) {
+        return new FieldErrorResponse(exception.getField(), exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ConstraintViolationException.class, NotFoundException.class})
     public ErrorResponse handleInvalidRequest(final RuntimeException e) {
         return new ErrorResponse(e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({LoginFailException.class, InvalidTokenException.class})
-    public ErrorResponse handleUnAuthorizedException(RuntimeException ex) {
+    public ErrorResponse handleUnauthorizedException(RuntimeException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 

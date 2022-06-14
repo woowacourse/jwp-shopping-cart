@@ -15,7 +15,9 @@ public class CartFixture {
     private CartFixture() {
     }
 
-    public static ExtractableResponse<Response> 장바구니_상품_추가_요청(String token, long customerId, long productId,
+    public static ExtractableResponse<Response> 장바구니_상품_추가_요청(String token,
+                                                              long customerId,
+                                                              long productId,
                                                               long count) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("productId", productId);

@@ -69,7 +69,7 @@ public class ProductFixture {
         return Long.parseLong(response.header("Location").split("/products/")[1]);
     }
 
-    public static Long 상품_등록되어_있음2(String token, Product product) {
+    public static Long 상품_등록후_ID반환(String token, Product product) {
         String path = "/api/products";
         ExtractableResponse<Response> response = post(path, token, product);
         return Long.parseLong(response.header("Location").split("/products/")[1]);

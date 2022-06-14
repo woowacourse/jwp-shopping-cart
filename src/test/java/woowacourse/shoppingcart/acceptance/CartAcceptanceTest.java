@@ -169,9 +169,10 @@ public class CartAcceptanceTest extends AcceptanceTest {
     @DisplayName("장바구니 삭제 : 정상")
     @Test
     void deleteCartItem() {
-        장바구니_상품_추가_요청후_ID_반환(token, customerId, productId1, 2);
+        long productId = 8; // 1이 아닌 값을 넣어야 cart_id 가 아닌 product_id에 대해 테스트를 할 수 있다
+        장바구니_상품_추가_요청(token, customerId, productId, 2);
 
-        ExtractableResponse<Response> response = 장바구니_상품_삭제_요청(token, customerId, productId1);
+        ExtractableResponse<Response> response = 장바구니_상품_삭제_요청(token, customerId, productId);
 
         장바구니_삭제_검증(response);
     }

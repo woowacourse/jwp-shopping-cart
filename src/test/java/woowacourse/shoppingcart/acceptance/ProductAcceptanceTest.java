@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.acceptance;
 import static woowacourse.fixture.CustomerFixture.로그인_요청_및_토큰발급;
 import static woowacourse.fixture.CustomerFixture.회원가입_요청;
 import static woowacourse.fixture.ProductFixture.상품_등록_요청;
-import static woowacourse.fixture.ProductFixture.상품_등록되어_있음2;
+import static woowacourse.fixture.ProductFixture.상품_등록후_ID반환;
 import static woowacourse.fixture.ProductFixture.상품_목록_검증;
 import static woowacourse.fixture.ProductFixture.상품_목록_조회_요청;
 import static woowacourse.fixture.ProductFixture.상품_삭제_검증;
@@ -42,8 +42,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         Product product1 = new Product("치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
         Product product2 = new Product("맥주", 20_000, "http://example.com/beer.jpg", 30_000);
-        Long productId1 = 상품_등록되어_있음2(token, product1);
-        Long productId2 = 상품_등록되어_있음2(token, product2);
+        Long productId1 = 상품_등록후_ID반환(token, product1);
+        Long productId2 = 상품_등록후_ID반환(token, product2);
 
         ExtractableResponse<Response> response = 상품_목록_조회_요청();
 
@@ -56,7 +56,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         String token = getToken();
 
         Product product = new Product("치킨", 10_000, "http://example.com/chicken.jpg", 20_000L);
-        Long productId = 상품_등록되어_있음2(token, product);
+        Long productId = 상품_등록후_ID반환(token, product);
 
         ExtractableResponse<Response> response = 상품_조회_요청(productId);
 
@@ -69,7 +69,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         String token = getToken();
 
         Product product = new Product("치킨", 10_000, "http://example.com/chicken.jpg", 20_000);
-        Long productId = 상품_등록되어_있음2(token, product);
+        Long productId = 상품_등록후_ID반환(token, product);
 
         ExtractableResponse<Response> response = 상품_삭제_요청(token, productId);
 

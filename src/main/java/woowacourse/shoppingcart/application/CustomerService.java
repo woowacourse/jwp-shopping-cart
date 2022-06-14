@@ -22,8 +22,8 @@ public class CustomerService {
 
     @Transactional
     public Long save(CustomerCreateRequest request) {
-        customerSpec.validateUsernameDuplicate(request.getUsername());
-        customerSpec.validateEmailDuplicate(request.getEmail());
+        Customer customer = request.toEntity();
+        customerSpec.validateForSave(customer);
         encryptPassword(request);
 
         return customerDao.save(request.toEntity());
@@ -50,7 +50,8 @@ public class CustomerService {
         if (isSameOriginUsername(id, request)) {
             return;
         }
-        customerSpec.validateUsernameDuplicate(request.getUsername());
+        customerSpec.validateForUpdate(request.toEntity());
+
 
         customerDao.update(id, request.getUsername());
     }

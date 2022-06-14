@@ -89,7 +89,6 @@ public class CartService {
     }
 
     private List<Long> findCartIdsByCustomerId(final long customerId) {
-        customerSpec.validateCustomerExists(customerId);
         return cartItemDao.findProductIdsByCustomerId(customerId);
     }
 }
