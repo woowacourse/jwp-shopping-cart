@@ -55,7 +55,7 @@ class OrderServiceTest {
         //given
         final OrderRequest orderRequest = new OrderRequest(CART_ID, QUANTITY);
 
-        when(orderDao.addOrders(CUSTOMER_ID))
+        when(orderDao.saveOrders(CUSTOMER_ID))
                 .thenReturn(ORDER_ID);
         when(cartItemDao.findProductIdById(CART_ID))
                 .thenReturn(Optional.of(PRODUCT_ID));
@@ -71,7 +71,7 @@ class OrderServiceTest {
         //given
         final OrderRequest orderRequest = new OrderRequest(CART_ID, QUANTITY);
 
-        when(orderDao.addOrders(CUSTOMER_ID))
+        when(orderDao.saveOrders(CUSTOMER_ID))
                 .thenReturn(ORDER_ID);
         when(cartItemDao.findProductIdById(CART_ID))
                 .thenReturn(Optional.empty());

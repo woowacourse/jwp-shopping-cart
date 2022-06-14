@@ -35,7 +35,7 @@ public class OrderService {
     }
 
     public Long addOrder(final Long customerId, final List<OrderRequest> orderDetailRequests) {
-        final Long ordersId = orderDao.addOrders(customerId);
+        final Long ordersId = orderDao.saveOrders(customerId);
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
@@ -43,7 +43,7 @@ public class OrderService {
                     .orElseThrow(NotFoundProductException::new);
             final int quantity = orderDetail.getQuantity();
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
+            ordersDetailDao.save(ordersId, productId, quantity);
             cartItemDao.deleteCartItem(cartId);
         }
 

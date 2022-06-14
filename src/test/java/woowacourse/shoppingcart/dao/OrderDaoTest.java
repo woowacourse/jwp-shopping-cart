@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,10 +11,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -29,12 +28,12 @@ class OrderDaoTest {
 
     @DisplayName("Order를 추가하는 기능")
     @Test
-    void addOrders() {
+    void saveOrders() {
         //given
         final Long customerId = 1L;
 
         //when
-        final Long orderId = orderDao.addOrders(customerId);
+        final Long orderId = orderDao.saveOrders(customerId);
 
         //then
         assertThat(orderId).isNotNull();

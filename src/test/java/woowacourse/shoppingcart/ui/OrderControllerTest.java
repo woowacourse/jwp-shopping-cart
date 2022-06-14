@@ -48,7 +48,7 @@ public class OrderControllerTest {
 
     @DisplayName("CREATED와 Location을 반환한다.")
     @Test
-    void addOrder() throws Exception {
+    void save() throws Exception {
         // given
         final Long cartId = 1L;
         final int quantity = 5;

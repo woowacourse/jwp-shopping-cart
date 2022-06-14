@@ -30,10 +30,10 @@ public class CartServiceTest {
 
     @Test
     @DisplayName("장바구니에 상품을 담다.")
-    void addCart() {
+    void save() {
         //given
         final long expected = 1L;
-        when(cartItemDao.addCartItem(any(Long.class), any(Long.class)))
+        when(cartItemDao.save(any(Long.class), any(Long.class)))
                 .thenReturn(expected);
 
         //when
@@ -45,9 +45,9 @@ public class CartServiceTest {
 
     @Test
     @DisplayName("장바구니에 상품을 담믈 때 고객이나 상품이 존재하지 않을 경우 예외를 던진다.")
-    void addCart_invalidCustomerOrProduct_throwsException() {
+    void save_invalidCustomerOrProduct_throwsException() {
         //given
-        when(cartItemDao.addCartItem(any(Long.class), any(Long.class)))
+        when(cartItemDao.save(any(Long.class), any(Long.class)))
                 .thenThrow(DataIntegrityViolationException.class);
 
         //when, then
@@ -100,7 +100,7 @@ public class CartServiceTest {
 
     @Test
     @DisplayName("고객 id 에 해당하는 장바구니에서 상품 id 들에 해당하는 상품을 삭제한다.")
-    void deleteCart() {
+    void delete() {
         //given
         final long customerId = 1L;
         when(cartItemDao.findIdsByCustomerId(customerId))
@@ -108,13 +108,13 @@ public class CartServiceTest {
         final List<Long> cartItemIds = List.of(1L, 2L);
 
         //when, then
-        assertThatCode(() -> cartService.deleteCart(customerId, cartItemIds))
+        assertThatCode(() -> cartService.delete(customerId, cartItemIds))
                 .doesNotThrowAnyException();
     }
 
     @Test
     @DisplayName("장바구니 상품 삭제시 존재하지 않는 상품일 경우 예외를 던진다.")
-    void deleteCart_invalidProduct_throwsException() {
+    void delete_invalidProduct_throwsException() {
         //given
         final long customerId = 1L;
         when(cartItemDao.findIdsByCustomerId(customerId))
@@ -122,7 +122,7 @@ public class CartServiceTest {
         final List<Long> cartItemIds = List.of(5L, 6L);
 
         //when, then
-        assertThatThrownBy(() -> cartService.deleteCart(customerId, cartItemIds))
+        assertThatThrownBy(() -> cartService.delete(customerId, cartItemIds))
                 .isInstanceOf(NotFoundCustomerCartItemException.class);
     }
 }

@@ -22,7 +22,7 @@ public class CartItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
+    public Long save(final Long customerId, final Long productId) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 

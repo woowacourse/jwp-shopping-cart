@@ -35,7 +35,7 @@ public class ProductServiceTest {
 
     @Test
     @DisplayName("상품을 추가한다.")
-    void addProduct() {
+    void save() {
         //given
         final ProductSaveServiceRequest productRequest = new ProductSaveServiceRequest(PRODUCT_NAME, PRODUCT_PRICE,
                 PRODUCT_IMAGE_URL);
@@ -43,7 +43,7 @@ public class ProductServiceTest {
                 .thenReturn(PRODUCT_ID);
 
         //when
-        final Long actual = productService.addProduct(productRequest);
+        final Long actual = productService.save(productRequest);
 
         //then
         assertThat(actual).isEqualTo(PRODUCT_ID);
@@ -102,6 +102,6 @@ public class ProductServiceTest {
         when(productDao.save(any(Product.class)))
                 .thenReturn(PRODUCT_ID);
 
-        return productService.addProduct(productRequest);
+        return productService.save(productRequest);
     }
 }

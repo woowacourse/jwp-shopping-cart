@@ -61,7 +61,7 @@ public class ProductDaoTest {
 
     @DisplayName("상품 목록 조회")
     @Test
-    void getProducts() {
+    void findProducts() {
         // given
         final int size = 5;
 
@@ -74,7 +74,7 @@ public class ProductDaoTest {
 
     @DisplayName("싱품 삭제")
     @Test
-    void deleteProduct() {
+    void delete() {
         // given
         final String name = "초콜렛";
         final int price = 1_000;

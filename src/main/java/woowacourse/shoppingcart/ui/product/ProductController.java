@@ -30,20 +30,20 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> register(
+    public ResponseEntity<Void> save(
             @Validated(Request.allProperties.class) @RequestBody final ProductRegisterRequest request) {
-        final Long productId = productService.addProduct(request.toServiceDto());
+        final Long productId = productService.save(request.toServiceDto());
         return ResponseEntity.created(URI.create("/api/products/" + productId)).build();
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponse> showProduct(@PathVariable final Long productId) {
+    public ResponseEntity<ProductResponse> findProduct(@PathVariable final Long productId) {
         final ProductDetailServiceResponse serviceResponse = productService.findProductById(productId);
         return ResponseEntity.ok(ProductResponse.from(serviceResponse));
     }
 
     @GetMapping
-    public ResponseEntity<ProductsResponse> showProducts(@RequestParam final int page,
+    public ResponseEntity<ProductsResponse> findProducts(@RequestParam final int page,
                                                          @RequestParam(required = false, defaultValue = "10") final int limit) {
         final ProductsServiceResponse serviceResponse = productService.findProducts(page, limit);
         return ResponseEntity.ok(ProductsResponse.from(serviceResponse));

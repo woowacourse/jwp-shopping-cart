@@ -11,13 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.exception.PasswordNotMatchException;
+import woowacourse.shoppingcart.exception.DuplicatedEmailException;
+import woowacourse.shoppingcart.ui.customer.CustomerController;
 import woowacourse.shoppingcart.ui.customer.dto.request.CustomerDeleteRequest;
-import woowacourse.shoppingcart.ui.customer.dto.response.CustomerDetailResponse;
 import woowacourse.shoppingcart.ui.customer.dto.request.CustomerPasswordUpdateRequest;
 import woowacourse.shoppingcart.ui.customer.dto.request.CustomerProfileUpdateRequest;
 import woowacourse.shoppingcart.ui.customer.dto.request.CustomerRegisterRequest;
-import woowacourse.shoppingcart.exception.DuplicatedEmailException;
-import woowacourse.shoppingcart.ui.customer.CustomerController;
+import woowacourse.shoppingcart.ui.customer.dto.response.CustomerDetailResponse;
 
 @SpringBootTest
 @Sql("classpath:customerData.sql")
@@ -32,12 +32,12 @@ class CustomerControllerTest {
 
     @DisplayName("회원가입을 한다.")
     @Test
-    void register() {
+    void save() {
         // given 이름, 이메일, 비밀번호를 입력하고
         final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
 
         // when 회원 등록을 요청하면
-        final ResponseEntity<Void> response = customerController.register(request);
+        final ResponseEntity<Void> response = customerController.save(request);
 
         // then 회원이 성공적으로 등록된다.
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -45,25 +45,25 @@ class CustomerControllerTest {
 
     @DisplayName("회원가입시 동일한 이메일이 존재하는 경우 예외가 발생한다.")
     @Test
-    void register_withDuplicatedEmail_throwsException() {
+    void save_withDuplicatedEmail_throwsException() {
         // given
         final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
-        customerController.register(request);
+        customerController.save(request);
 
         // when, then
-        assertThatThrownBy(() -> customerController.register(request))
+        assertThatThrownBy(() -> customerController.save(request))
                 .isInstanceOf(DuplicatedEmailException.class);
     }
 
     @Test
     @DisplayName("id를 통해 회원을 조회한다.")
-    void showMyDetail() {
+    void findMyDetail() {
         // given
         final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
-        customerController.register(request);
+        customerController.save(request);
 
         // when
-        final ResponseEntity<CustomerDetailResponse> customerDetailResponse = customerController.showMyDetail(1L);
+        final ResponseEntity<CustomerDetailResponse> customerDetailResponse = customerController.findMyDetail(1L);
         final CustomerDetailResponse actual = customerDetailResponse.getBody();
 
         // then
@@ -76,7 +76,7 @@ class CustomerControllerTest {
     void delete() {
         // given
         final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
-        customerController.register(request);
+        customerController.save(request);
 
         final CustomerDeleteRequest customerDeleteRequest = new CustomerDeleteRequest(PASSWORD);
 
@@ -93,7 +93,7 @@ class CustomerControllerTest {
     void delete_passwordNotMatch_throwsException() {
         // given
         final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
-        customerController.register(request);
+        customerController.save(request);
 
         final CustomerDeleteRequest customerDeleteRequest = new CustomerDeleteRequest("1111111111");
 
@@ -107,7 +107,7 @@ class CustomerControllerTest {
     void updateProfile() {
         // given
         final CustomerRegisterRequest registerRequest = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
-        customerController.register(registerRequest);
+        customerController.save(registerRequest);
 
         final CustomerProfileUpdateRequest request = new CustomerProfileUpdateRequest("포비");
 
@@ -123,7 +123,7 @@ class CustomerControllerTest {
     void updatePassword() {
         // given
         final CustomerRegisterRequest registerRequest = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
-        customerController.register(registerRequest);
+        customerController.save(registerRequest);
 
         final CustomerPasswordUpdateRequest request = new CustomerPasswordUpdateRequest(PASSWORD, "newpassword123");
 
@@ -139,7 +139,7 @@ class CustomerControllerTest {
     void updatePassword_passwordNotMatch_throwsException() {
         // given
         final CustomerRegisterRequest registerRequest = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
-        customerController.register(registerRequest);
+        customerController.save(registerRequest);
 
         final CustomerPasswordUpdateRequest request = new CustomerPasswordUpdateRequest("wrongpassword12ffd3",
                 "newpassword123");

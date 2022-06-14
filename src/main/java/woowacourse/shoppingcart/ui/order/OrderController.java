@@ -29,8 +29,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final Long customerId,
-                                         @RequestBody @Valid final List<OrderRequest> orderDetails) {
+    public ResponseEntity<Void> save(@AuthenticationPrincipal final Long customerId,
+                                     @RequestBody @Valid final List<OrderRequest> orderDetails) {
         final Long orderId = orderService.addOrder(customerId, orderDetails);
         return ResponseEntity.created(
                 URI.create("/api/orders/" + orderId)).build();

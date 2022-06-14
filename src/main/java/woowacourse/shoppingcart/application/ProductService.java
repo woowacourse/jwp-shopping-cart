@@ -20,7 +20,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public Long addProduct(final ProductSaveServiceRequest productRequest) {
+    public Long save(final ProductSaveServiceRequest productRequest) {
         return productDao.save(productRequest.toEntity());
     }
 

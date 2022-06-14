@@ -30,13 +30,13 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("상품을 등록한다.")
-    void register() {
+    void save() {
         //given
         final ProductRegisterRequest productRequest = new ProductRegisterRequest("치즈돈까스~", 7_000,
                 "www.naver.com/dongas.png");
 
         //when
-        final ResponseEntity<Void> actual = productController.register(productRequest);
+        final ResponseEntity<Void> actual = productController.save(productRequest);
 
         //then
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -44,14 +44,14 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("상품에 대한 정보를 조회한다.")
-    void showProduct() {
+    void findProduct() {
         //given
         final ProductRegisterRequest productRequest = new ProductRegisterRequest(PRODUCT_NAME, PRODUCT_PRICE,
                 PRODUCT_IMAGE_URL);
-        productController.register(productRequest);
+        productController.save(productRequest);
 
         //when
-        final ResponseEntity<ProductResponse> actual = productController.showProduct(1L);
+        final ResponseEntity<ProductResponse> actual = productController.findProduct(1L);
 
         //then
         assertAll(
@@ -63,9 +63,9 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("상품 조회시 상품이 존재하지 않는 경우 예외를 던진다.")
-    void showProduct_invalidProductId_throwsException() {
+    void findProduct_invalidProductId_throwsException() {
         //when, then
-        assertThatThrownBy(() -> productController.showProduct(3000L))
+        assertThatThrownBy(() -> productController.findProduct(3000L))
                 .isInstanceOf(NotFoundProductException.class);
     }
 
@@ -75,7 +75,7 @@ class ProductControllerTest {
         //given
         final ProductRegisterRequest productRequest = new ProductRegisterRequest(PRODUCT_NAME, PRODUCT_PRICE,
                 PRODUCT_IMAGE_URL);
-        productController.register(productRequest);
+        productController.save(productRequest);
 
         //when, then
         assertThatCode(() -> productController.delete(1L))

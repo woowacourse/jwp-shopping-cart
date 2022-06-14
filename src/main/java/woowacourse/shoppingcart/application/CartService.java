@@ -20,7 +20,7 @@ public class CartService {
 
     public Long addCart(final Long productId, final Long customerId) {
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.save(customerId, productId);
         } catch (Exception e) {
             throw new NotFoundProductException();
         }
@@ -42,7 +42,7 @@ public class CartService {
         }
     }
 
-    public void deleteCart(final Long customerId, final List<Long> cartItemIds) {
+    public void delete(final Long customerId, final List<Long> cartItemIds) {
         validateCustomerCarts(customerId, cartItemIds);
         cartItemDao.deleteCartItems(cartItemIds);
     }

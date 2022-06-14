@@ -46,13 +46,13 @@ public class CartItemDaoTest {
 
     @Test
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
-    void addCartItem() {
+    void save() {
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        final Long cartId = cartItemDao.save(customerId, productId);
 
         // then
         assertThat(cartId).isEqualTo(3L);

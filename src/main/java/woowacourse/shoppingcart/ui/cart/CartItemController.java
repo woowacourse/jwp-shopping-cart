@@ -33,8 +33,8 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@AuthenticationPrincipal final Long customerId,
-                                            @Validated(Request.id.class) @RequestBody final CartItemRegisterRequest cartItemRequest) {
+    public ResponseEntity<Void> save(@AuthenticationPrincipal final Long customerId,
+                                     @Validated(Request.id.class) @RequestBody final CartItemRegisterRequest cartItemRequest) {
         final Long cartId = cartService.addCart(cartItemRequest.getProductId(), customerId);
         final URI responseLocation = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -45,7 +45,7 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal final Long customerId) {
+    public ResponseEntity<List<CartItemResponse>> findCartItems(@AuthenticationPrincipal final Long customerId) {
         final List<Cart> carts = cartService.findCartsByCustomerId(customerId);
         final List<CartItemResponse> cartItemResponses = carts.stream()
                 .map(CartItemResponse::from)
@@ -63,9 +63,9 @@ public class CartItemController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal final Long customerId,
-                                               @RequestBody final CartDeleteRequest cartDeleteRequest) {
-        cartService.deleteCart(customerId, cartDeleteRequest.getCartIds());
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal final Long customerId,
+                                       @RequestBody final CartDeleteRequest cartDeleteRequest) {
+        cartService.delete(customerId, cartDeleteRequest.getCartIds());
         return ResponseEntity.noContent().build();
     }
 }
