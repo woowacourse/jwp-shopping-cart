@@ -11,8 +11,11 @@ import org.junit.jupiter.api.Test;
 import woowacourse.shoppingcart.cart.domain.CartItem;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.integration.IntegrationTest;
+import woowacourse.shoppingcart.order.domain.OrderDetail;
+import woowacourse.shoppingcart.order.domain.Orders;
 import woowacourse.shoppingcart.order.dto.OrderCreationRequest;
 import woowacourse.shoppingcart.order.exception.notfound.NotFoundCartItemException;
+import woowacourse.shoppingcart.order.exception.notfound.NotFoundOrderException;
 import woowacourse.shoppingcart.product.domain.Product;
 
 class OrderServiceIntegrationTest extends IntegrationTest {
@@ -68,5 +71,43 @@ class OrderServiceIntegrationTest extends IntegrationTest {
         // when, then
         assertThatThrownBy(() -> orderService.addOrder(requests, customer))
                 .isInstanceOf(NotFoundCartItemException.class);
+    }
+
+    @Test
+    @DisplayName("Order의 Id에 해당하는 Order를 조회한다.")
+    void findOrderById() {
+        // given
+        cartItemDao.addCartItem(customer.getId(), 1L);
+        cartItemDao.addCartItem(customer.getId(), 2L);
+        cartItemDao.addCartItem(customer.getId(), 3L);
+
+        final List<OrderCreationRequest> requests = List.of(
+                new OrderCreationRequest(1L),
+                new OrderCreationRequest(3L)
+        );
+        final Long orderId = orderService.addOrder(requests, customer);
+
+        // when
+        final Orders orders = orderService.findOrderById(customer, orderId);
+        final List<Long> actualProductIds = orders.getOrderDetails()
+                .stream()
+                .map(OrderDetail::getProductId)
+                .collect(Collectors.toList());
+        final List<Integer> actualQuantities = orders.getOrderDetails()
+                .stream()
+                .map(OrderDetail::getQuantity)
+                .collect(Collectors.toList());
+
+        // then
+        assertThat(actualProductIds).containsExactly(1L, 3L);
+        assertThat(actualQuantities).containsExactly(1, 1);
+    }
+
+    @Test
+    @DisplayName("Order의 Id에 해당하는 Order가 존재하지 않으면 예외를 던진다.")
+    void findOrderById_notExistOrder_exceptionThrown() {
+        // when, then
+        assertThatThrownBy(() -> orderService.findOrderById(customer, 999L))
+                .isInstanceOf(NotFoundOrderException.class);
     }
 }
