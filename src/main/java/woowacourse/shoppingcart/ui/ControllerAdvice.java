@@ -11,12 +11,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.shoppingcart.dto.ShoppingCartErrorResponse;
+import woowacourse.shoppingcart.dto.response.ShoppingCartErrorResponse;
 import woowacourse.shoppingcart.exception.AuthorizationException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidEmailException;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.InvalidUsernameException;
@@ -27,7 +26,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleUnhandledException() {
-        return ResponseEntity.badRequest().body(ShoppingCartErrorResponse.from("Unhandled Exception"));
+        return ResponseEntity.internalServerError().body(ShoppingCartErrorResponse.from("Unhandled Exception"));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
@@ -58,7 +57,6 @@ public class ControllerAdvice {
             InvalidCustomerException.class,
             InvalidCartItemException.class,
             InvalidProductException.class,
-            InvalidOrderException.class,
             NotInCustomerCartItemException.class,
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {

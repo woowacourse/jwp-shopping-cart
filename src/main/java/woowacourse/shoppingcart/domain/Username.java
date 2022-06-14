@@ -8,9 +8,16 @@ public class Username {
     private final String value;
 
     public Username(String value) {
+        validateNull(value);
         validateSpace(value);
         validateLength(value);
         this.value = value;
+    }
+
+    private void validateNull(String value) {
+        if (value == null) {
+            throw new InvalidUsernameException();
+        }
     }
 
     private void validateSpace(String value) {

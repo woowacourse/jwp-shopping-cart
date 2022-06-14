@@ -8,11 +8,11 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.domain.Username;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.SignUpResponse;
-import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.request.DeleteCustomerRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.SignUpResponse;
 import woowacourse.shoppingcart.exception.DuplicateEmailException;
 import woowacourse.shoppingcart.exception.DuplicateUsernameException;
 import woowacourse.shoppingcart.exception.InvalidPasswordException;
@@ -41,18 +41,6 @@ public class CustomerService {
         return SignUpResponse.from(foundCustomer);
     }
 
-    private void validateDuplicateUsername(String username) {
-        if (customerDao.existByUsername(new Username(username))) {
-            throw new DuplicateUsernameException();
-        }
-    }
-
-    private void validateDuplicateEmail(String email) {
-        if (customerDao.existByEmail(new Email(email))) {
-            throw new DuplicateEmailException();
-        }
-    }
-
     public CustomerResponse findCustomer(String username) {
         Customer customer = customerDao.findByUsername(new Username(username));
         return CustomerResponse.from(customer);
@@ -71,6 +59,18 @@ public class CustomerService {
         Customer customer = customerDao.findByUsername(new Username(username));
         validatePassword(deleteCustomerRequest.getPassword(), customer.getPassword().getValue());
         customerDao.deleteByUsername(new Username(username));
+    }
+
+    private void validateDuplicateUsername(String username) {
+        if (customerDao.existByUsername(new Username(username))) {
+            throw new DuplicateUsernameException();
+        }
+    }
+
+    private void validateDuplicateEmail(String email) {
+        if (customerDao.existByEmail(new Email(email))) {
+            throw new DuplicateEmailException();
+        }
     }
 
     private void validatePassword(String rawPassword, String encodedPassword) {

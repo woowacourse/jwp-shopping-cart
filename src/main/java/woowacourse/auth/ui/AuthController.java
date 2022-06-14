@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
+import woowacourse.auth.support.AuthenticationPrincipal;
 
 @RestController
 public class AuthController {
@@ -21,6 +22,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<SignInResponse> signIn(@RequestBody @Valid SignInRequest signInRequest) {
         SignInResponse signInResponse = authService.signIn(signInRequest);
+        return ResponseEntity.ok(signInResponse);
+    }
+
+    @PostMapping("/token/refresh")
+    public ResponseEntity<SignInResponse> reIssueToken(@AuthenticationPrincipal String usernameByToken) {
+        SignInResponse signInResponse = authService.reIssueToken(usernameByToken);
         return ResponseEntity.ok(signInResponse);
     }
 }

@@ -6,6 +6,8 @@ import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원�
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원조회;
 import static woowacourse.shoppingcart.acceptance.CustomerAcceptanceTest.회원탈퇴;
 
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -14,8 +16,8 @@ import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
-import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
-import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.DeleteCustomerRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
 @DisplayName("인증 관련 기능")
 public class AuthAcceptanceTest extends AcceptanceTest {
@@ -109,5 +111,36 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    @DisplayName("새로운 토큰을 발급할 수 있다.")
+    void reIssueToken() {
+        // given
+        SignUpRequest signUpRequest = new SignUpRequest("rennon", "rennon@woowa.com", "123456");
+        회원가입(signUpRequest);
+
+        SignInRequest signInRequest = new SignInRequest("rennon@woowa.com", "123456");
+        String token = 로그인(signInRequest)
+                .as(SignInResponse.class)
+                .getToken();
+
+        // when
+        String newToken = 토큰_재발급(token)
+                .as(SignInResponse.class)
+                .getToken();
+
+        // then
+        assertThat(newToken).isNotNull();
+    }
+
+    private ExtractableResponse<Response> 토큰_재발급(String token) {
+        return RestAssured
+                .given().log().all()
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().post("/token/refresh")
+                .then().log().all()
+                .extract();
     }
 }

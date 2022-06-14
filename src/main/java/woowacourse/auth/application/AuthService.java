@@ -35,6 +35,13 @@ public class AuthService {
         return SignInResponse.from(customer, token);
     }
 
+    public SignInResponse reIssueToken(String username) {
+        Customer customer = customerDao.findByUsername(new Username(username));
+        String token = jwtTokenProvider.createToken(customer.getUsername().getValue());
+
+        return SignInResponse.from(customer, token);
+    }
+
     private void validatePassword(String rawPassword, String encodedPassword) {
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
             throw new InvalidPasswordException();

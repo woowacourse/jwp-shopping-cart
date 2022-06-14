@@ -1,45 +1,38 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+
 public class Cart {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final List<CartItem> value;
 
-    public Cart() {
+    public Cart(List<CartItem> value) {
+        this.value = value;
     }
 
-    public Cart(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    public List<CartItem> getValue() {
+        return Collections.unmodifiableList(value);
     }
 
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl) {
-        this.id = id;
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public void validateCart(List<Long> cartItemIdsWithRequest) {
+        List<Long> cartItemIds = getCartItemIds();
+        if (!cartItemIds.containsAll(cartItemIdsWithRequest)) {
+            throw new InvalidCartItemException();
+        }
     }
 
-    public Long getId() {
-        return id;
+    public List<CartItem> getExistingCartItem(List<Long> cartItemIds) {
+        return value.stream()
+                .filter(it -> cartItemIds.contains(it.getId()))
+                .collect(Collectors.toList());
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+    public List<Long> getCartItemIds() {
+        return value.stream()
+                .map(CartItem::getId)
+                .collect(Collectors.toList());
     }
 }

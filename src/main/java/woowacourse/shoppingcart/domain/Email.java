@@ -12,9 +12,16 @@ public class Email {
     private final String value;
 
     public Email(String value) {
+        validateNull(value);
         validateForm(value);
         validateLength(value);
         this.value = value;
+    }
+
+    private void validateNull(String value) {
+        if (value == null) {
+            throw new InvalidEmailException();
+        }
     }
 
     private void validateForm(String value) {

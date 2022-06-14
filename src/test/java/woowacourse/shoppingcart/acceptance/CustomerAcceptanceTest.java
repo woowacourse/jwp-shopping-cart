@@ -12,9 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.SignInRequest;
 import woowacourse.auth.dto.SignInResponse;
-import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.UpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.request.DeleteCustomerRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -169,8 +169,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     public static ExtractableResponse<Response> 회원조회(String token) {
         return RestAssured
                 .given().log().all()
-                .contentType(ContentType.JSON)
                 .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/users/me")
                 .then().log().all()

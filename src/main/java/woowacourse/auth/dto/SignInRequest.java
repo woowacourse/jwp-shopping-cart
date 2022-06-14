@@ -1,20 +1,16 @@
 package woowacourse.auth.dto;
 
-import javax.validation.constraints.Pattern;
-import org.hibernate.validator.constraints.Length;
-import woowacourse.auth.support.PasswordCheck;
+import javax.validation.constraints.NotBlank;
 
 public class SignInRequest {
 
-    @Pattern(regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")
-    @Length(max = 64)
+    @NotBlank
     private String email;
 
-    @PasswordCheck
-    @Length(min = 6)
+    @NotBlank
     private String password;
 
-    public SignInRequest() {
+    private SignInRequest() {
     }
 
     public SignInRequest(String email, String password) {

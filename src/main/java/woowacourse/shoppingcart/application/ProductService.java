@@ -5,29 +5,54 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.request.ProductRequest;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
+import woowacourse.shoppingcart.dto.response.ProductResponses;
+import woowacourse.shoppingcart.exception.InvalidPageException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class ProductService {
+    private static final int MINIMUM_NUMBER_OF_PAGE = 1;
+
     private final ProductDao productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    @Transactional
+    public Long addProduct(ProductRequest productRequest) {
+        Product product = productDao.save(productRequest.toProduct());
+        return product.getId();
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    public ProductResponses findProducts(int size, int page) {
+        validateSizeOfPage(size);
+        validatePage(page);
+        List<Product> products = productDao.findProducts(size, size * (page - 1));
+        return ProductResponses.from(products);
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public ProductResponse findProductById(Long productId) {
+        Product product = productDao.findProductById(productId);
+        return ProductResponse.from(product);
     }
 
-    public void deleteProductById(final Long productId) {
+    @Transactional
+    public void deleteProductById(Long productId) {
         productDao.delete(productId);
+    }
+
+    private void validateSizeOfPage(int size) {
+        if (size < 0) {
+            throw new InvalidPageException();
+        }
+    }
+
+    private void validatePage(int page) {
+        if (page < MINIMUM_NUMBER_OF_PAGE) {
+            throw new InvalidPageException();
+        }
     }
 }

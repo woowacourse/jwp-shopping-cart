@@ -1,4 +1,4 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.response;
 
 import woowacourse.shoppingcart.domain.Customer;
 
@@ -7,7 +7,7 @@ public class SignUpResponse {
     private final String username;
     private final String email;
 
-    public SignUpResponse(String username, String email) {
+    private SignUpResponse(String username, String email) {
         this.username = username;
         this.email = email;
     }

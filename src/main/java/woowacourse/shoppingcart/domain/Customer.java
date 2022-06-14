@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.exception.InvalidEmailException;
+
 public class Customer {
 
     private final Long id;
@@ -8,10 +10,17 @@ public class Customer {
     private final Password password;
 
     public Customer(Long id, Username username, Email email, Password password) {
+        validateNull(username, email, password);
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    private void validateNull(Username username, Email email, Password password) {
+        if (username == null || email == null || password == null) {
+            throw new InvalidEmailException();
+        }
     }
 
     public Customer(Username username, Email email, Password password) {

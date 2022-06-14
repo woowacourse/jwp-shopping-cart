@@ -1,26 +1,20 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.request;
 
-import javax.validation.constraints.Pattern;
-import org.hibernate.validator.constraints.Length;
-import woowacourse.auth.support.PasswordCheck;
-import woowacourse.auth.support.UsernameCheck;
+import javax.validation.constraints.NotBlank;
 import woowacourse.shoppingcart.domain.Customer;
 
 public class SignUpRequest {
 
-    @UsernameCheck
-    @Length(max = 32)
+    @NotBlank
     private String username;
 
-    @Pattern(regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")
-    @Length(max = 64)
+    @NotBlank
     private String email;
 
-    @PasswordCheck
-    @Length(min = 6)
+    @NotBlank
     private String password;
 
-    public SignUpRequest() {
+    private SignUpRequest() {
     }
 
     public SignUpRequest(String username, String email, String password) {

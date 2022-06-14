@@ -1,15 +1,13 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.request;
 
-import org.hibernate.validator.constraints.Length;
-import woowacourse.auth.support.PasswordCheck;
+import javax.validation.constraints.NotBlank;
 
 public class DeleteCustomerRequest {
 
-    @PasswordCheck
-    @Length(min = 6)
+    @NotBlank
     private String password;
 
-    public DeleteCustomerRequest() {
+    private DeleteCustomerRequest() {
     }
 
     public DeleteCustomerRequest(String password) {
