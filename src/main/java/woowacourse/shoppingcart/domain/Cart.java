@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.domain;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 public class Cart {
 
@@ -16,9 +17,16 @@ public class Cart {
         return Collections.unmodifiableList(value);
     }
 
-    public List<CartItem> getExistingCartItem(List<Long> cartIds) {
+    public void validateCart(List<Long> cartItemIdsWithRequest) {
+        List<Long> cartItemIds = getCartItemIds();
+        if (!cartItemIds.containsAll(cartItemIdsWithRequest)) {
+            throw new InvalidCartItemException();
+        }
+    }
+
+    public List<CartItem> getExistingCartItem(List<Long> cartItemIds) {
         return value.stream()
-                .filter(it -> cartIds.contains(it.getId()))
+                .filter(it -> cartItemIds.contains(it.getId()))
                 .collect(Collectors.toList());
     }
 

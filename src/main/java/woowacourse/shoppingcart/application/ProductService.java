@@ -34,6 +34,16 @@ public class ProductService {
         return ProductResponses.from(products);
     }
 
+    public ProductResponse findProductById(Long productId) {
+        Product product = productDao.findProductById(productId);
+        return ProductResponse.from(product);
+    }
+
+    @Transactional
+    public void deleteProductById(Long productId) {
+        productDao.delete(productId);
+    }
+
     private void validateSizeOfPage(int size) {
         if (size < 0) {
             throw new InvalidPageException();
@@ -44,15 +54,5 @@ public class ProductService {
         if (page < MINIMUM_NUMBER_OF_PAGE) {
             throw new InvalidPageException();
         }
-    }
-
-    public ProductResponse findProductById(Long productId) {
-        Product product = productDao.findProductById(productId);
-        return ProductResponse.from(product);
-    }
-
-    @Transactional
-    public void deleteProductById(Long productId) {
-        productDao.delete(productId);
     }
 }

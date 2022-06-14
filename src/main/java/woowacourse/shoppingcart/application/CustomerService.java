@@ -41,18 +41,6 @@ public class CustomerService {
         return SignUpResponse.from(foundCustomer);
     }
 
-    private void validateDuplicateUsername(String username) {
-        if (customerDao.existByUsername(new Username(username))) {
-            throw new DuplicateUsernameException();
-        }
-    }
-
-    private void validateDuplicateEmail(String email) {
-        if (customerDao.existByEmail(new Email(email))) {
-            throw new DuplicateEmailException();
-        }
-    }
-
     public CustomerResponse findCustomer(String username) {
         Customer customer = customerDao.findByUsername(new Username(username));
         return CustomerResponse.from(customer);
@@ -71,6 +59,18 @@ public class CustomerService {
         Customer customer = customerDao.findByUsername(new Username(username));
         validatePassword(deleteCustomerRequest.getPassword(), customer.getPassword().getValue());
         customerDao.deleteByUsername(new Username(username));
+    }
+
+    private void validateDuplicateUsername(String username) {
+        if (customerDao.existByUsername(new Username(username))) {
+            throw new DuplicateUsernameException();
+        }
+    }
+
+    private void validateDuplicateEmail(String email) {
+        if (customerDao.existByEmail(new Email(email))) {
+            throw new DuplicateEmailException();
+        }
     }
 
     private void validatePassword(String rawPassword, String encodedPassword) {
