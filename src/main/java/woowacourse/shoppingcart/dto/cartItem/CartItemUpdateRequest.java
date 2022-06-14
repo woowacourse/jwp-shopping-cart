@@ -1,8 +1,11 @@
 package woowacourse.shoppingcart.dto.cartItem;
 
+import javax.validation.constraints.NotNull;
+
 public class CartItemUpdateRequest {
 
-    private int quantity;
+    @NotNull
+    private Integer quantity;
 
     public CartItemUpdateRequest() {
     }

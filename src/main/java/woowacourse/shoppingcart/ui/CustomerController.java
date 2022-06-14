@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerResponse> registerCustomer(
-            @RequestBody final CustomerRegisterRequest customerRegisterRequest) {
+            @Valid @RequestBody final CustomerRegisterRequest customerRegisterRequest) {
         final Long customerId = customerService.registerCustomer(customerRegisterRequest);
         final CustomerResponse customerResponse = customerService.findById(customerId);
 
@@ -45,7 +46,7 @@ public class CustomerController {
     @PatchMapping("/profile")
     public ResponseEntity<CustomerUpdateResponse> updateCustomerNickname(
             @AuthenticationPrincipal final Long id,
-            @RequestBody final CustomerUpdateRequest customerUpdateRequest) {
+            @Valid @RequestBody final CustomerUpdateRequest customerUpdateRequest) {
         final CustomerUpdateResponse customerUpdateResponse = customerService.updateCustomerNickName(id,
                 customerUpdateRequest);
         return ResponseEntity.ok(customerUpdateResponse);
@@ -54,7 +55,7 @@ public class CustomerController {
     @PatchMapping("/password")
     public ResponseEntity<Void> updateCustomerPassword(
             @AuthenticationPrincipal final Long id,
-            @RequestBody final CustomerUpdateRequest customerUpdateRequest) {
+            @Valid @RequestBody final CustomerUpdateRequest customerUpdateRequest) {
         customerService.updateCustomerPassword(id, customerUpdateRequest);
         return ResponseEntity.noContent().build();
     }
@@ -62,7 +63,7 @@ public class CustomerController {
     @DeleteMapping
     public ResponseEntity<Void> removeCustomer(
             @AuthenticationPrincipal final Long id,
-            @RequestBody final CustomerRemoveRequest customerRemoveRequest) {
+            @Valid @RequestBody final CustomerRemoveRequest customerRemoveRequest) {
         customerService.removeCustomer(id, customerRemoveRequest);
         return ResponseEntity.noContent().build();
     }

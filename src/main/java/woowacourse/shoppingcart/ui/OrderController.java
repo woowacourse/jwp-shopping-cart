@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderResponse> addOrder(@AuthenticationPrincipal final Long customerId,
-                                                  @RequestBody final OrderRequest orderRequest) {
+                                                  @Valid @RequestBody final OrderRequest orderRequest) {
         OrderResponse orderResponse = orderService.addOrder(customerId, orderRequest);
         return ResponseEntity.created(URI.create("/orders/" + orderResponse.getId())).body(orderResponse);
     }
