@@ -18,6 +18,8 @@ import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.customer.DuplicateCustomerBadRequestException;
 import woowacourse.shoppingcart.exception.customer.InvalidCustomerBadRequestException;
 
+import java.util.Optional;
+
 @SpringBootTest
 @Transactional
 class CustomerServiceTest {
@@ -42,7 +44,7 @@ class CustomerServiceTest {
     @DisplayName("정상적으로 회원 등록")
     @Test
     void addCustomer() {
-        Customer customer = customerService.findByEmail(EMAIL);
+        Customer customer = customerDao.findByEmail(EMAIL).get();
         assertAll(
                 () -> assertThat(customer.getEmail()).isEqualTo(EMAIL),
                 () -> assertThat(customer.getPassword()).isEqualTo(ENCRYPT_PASSWORD),
@@ -62,7 +64,7 @@ class CustomerServiceTest {
     @DisplayName("email로 회원 조회")
     @Test
     void findByEmail() {
-        Customer customer = customerService.findByEmail(EMAIL);
+        Customer customer = customerDao.findByEmail(EMAIL).get();
 
         assertAll(
                 () -> assertThat(customer.getEmail()).isEqualTo(EMAIL),
@@ -70,10 +72,10 @@ class CustomerServiceTest {
                 () -> assertThat(customer.getPassword()).isEqualTo(ENCRYPT_PASSWORD));
     }
 
-    @DisplayName("가입하지 않은 email로 회원 조회 시 예외 발생")
+    @DisplayName("가입하지 않은 id로 회원 조회 시 예외 발생")
     @Test
     void notFoundCustomerByEmailThrowException() {
-        assertThatThrownBy(() -> customerService.findByEmail(NOT_FOUND_EMAIL))
+        assertThatThrownBy(() -> customerService.findById(0L))
                 .isInstanceOf(InvalidCustomerBadRequestException.class);
     }
 
@@ -106,7 +108,7 @@ class CustomerServiceTest {
         String newNickname = "토닉2";
         String newPassword = "newPassword1";
         customerService.updateCustomer(EMAIL, new CustomerUpdateRequest(newNickname, newPassword));
-        Customer customer = customerService.findByEmail(EMAIL);
+        Customer customer = customerDao.findByEmail(EMAIL).get();
 
         assertThat(customer.getPassword()).isEqualTo(PasswordEncoder.encrypt(newPassword));
         assertThat(customer.getNickname()).isEqualTo(newNickname);

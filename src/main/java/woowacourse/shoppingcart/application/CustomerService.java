@@ -33,7 +33,7 @@ public class CustomerService {
                 .orElseThrow(InvalidCustomerBadRequestException::new);
     }
 
-    public Customer findByEmail(String email) {
+    private Customer findByEmail(String email) {
         return customerDao.findByEmail(email)
                 .orElseThrow(InvalidCustomerBadRequestException::new);
     }
