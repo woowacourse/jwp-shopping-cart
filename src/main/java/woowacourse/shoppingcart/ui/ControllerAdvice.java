@@ -20,12 +20,12 @@ import java.util.List;
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException() {
+    public ResponseEntity<ErrorResponse> handleUnhandledException(final RuntimeException e) {
         return ResponseEntity.internalServerError().body(new ErrorResponse("Unhandled Exception"));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<ErrorResponse> handle() {
+    public ResponseEntity<ErrorResponse> handle(final EmptyResultDataAccessException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("존재하지 않는 데이터 요청입니다."));
     }
 
@@ -57,12 +57,12 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<ErrorResponse> handleUnAuthorizedAccess(final RuntimeException e) {
+    public ResponseEntity<ErrorResponse> handleUnAuthorizedAccess(final AuthorizationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("인증되지 않은 사용자입니다."));
     }
 
     @ExceptionHandler(DuplicateNameException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicatedName(final RuntimeException e) {
+    public ResponseEntity<ErrorResponse> handleDuplicatedName(final DuplicateNameException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 }
