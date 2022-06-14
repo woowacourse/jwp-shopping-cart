@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.TestFixture.product1;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.TestFixture;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.nobodyexception.NotFoundProductException;
 
@@ -32,13 +34,11 @@ public class ProductDaoTest {
     @Test
     void findProductById_exist_productReturned() {
         // given
-        Product expect = new Product(1L, "product1", 1000, "url1");
-
         // when
         final Product product = productDao.findProductById(1L);
 
         // then
-        assertThat(product).isEqualTo(expect);
+        assertThat(product).isEqualTo(product1);
     }
 
     @DisplayName("존재하지 않은 productId를 상품을 찾으면, 예외를 발생시킨다.")

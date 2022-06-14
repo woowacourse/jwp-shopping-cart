@@ -87,9 +87,6 @@ public class CartItemDaoTest {
 
         // when
         List<Cart> carts = cartItemDao.getCartsByCustomerId(customerId);
-        for (Cart cart : carts) {
-            System.out.println(cart);
-        }
 
         // then
         assertThat(carts.size()).isEqualTo(2);

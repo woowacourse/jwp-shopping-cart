@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
+import static woowacourse.TestFixture.customer;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.cart.Cart;
-import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CartUpdationRequest;
 import woowacourse.shoppingcart.exception.bodyexception.DuplicatedProductInCartException;
 import woowacourse.shoppingcart.exception.bodyexception.NotExistProductInCartException;
@@ -37,8 +37,6 @@ public class CartServiceTest {
     @Test
     void addCart_success_void() {
         // given
-        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
-
         Long productId = 1L;
         Product product = new Product(productId, "product1", 1000, "imageUrl1");
 
@@ -56,8 +54,6 @@ public class CartServiceTest {
     @Test
     void addCart_notExistProduct_exceptionThrown() {
         // given
-        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
-
         Long notExistProductId = 21L;
 
         given(productService.findProductById(notExistProductId))
@@ -72,8 +68,6 @@ public class CartServiceTest {
     @Test
     void addCart_duplicatedProduct_exceptionThrown() {
         // given
-        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
-
         given(cartItemDao.existProduct(1L, 1L))
                 .willThrow(new DuplicatedProductInCartException());
 
@@ -87,7 +81,6 @@ public class CartServiceTest {
     @Test
     void getCarts_existProducts_return() {
         // given
-        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
         List<Long> productIds = List.of(1L, 2L, 3L);
 
         Product product1 = new Product(1L, "product1", 1000, "url1");
@@ -114,7 +107,6 @@ public class CartServiceTest {
         // given
         Long productId = 1L;
         Product product1 = new Product(productId, "product1", 1000, "url1");
-        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
 
         Long cartId = 1L;
         CartUpdationRequest request = new CartUpdationRequest(5);
@@ -140,7 +132,6 @@ public class CartServiceTest {
     @Test
     void updateProductInCart_notExist_exceptionThrown() {
         //given
-        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
         CartUpdationRequest request = new CartUpdationRequest(4);
         Product product = new Product(1L, "product9", 9000, "url9");
 
@@ -158,7 +149,6 @@ public class CartServiceTest {
     @Test
     void deleteProductInCart_success_void() {
         // given
-        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
         Product product1 = new Product(1L, "product1", 1000, "url1");
 
         given(productService.findProductById(1L))
@@ -175,8 +165,6 @@ public class CartServiceTest {
     @Test
     void deleteProductInCart_notExist_exceptionThrown() {
         //given
-        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
-
         Product product = new Product(9L, "product9", 9000, "url9");
 
         given(productService.findProductById(9L))

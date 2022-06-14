@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
+import static woowacourse.TestFixture.product1;
+import static woowacourse.TestFixture.product2;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -28,9 +30,6 @@ public class ProductServiceTest {
     @DisplayName("전체 Product들을 조회한다.")
     void findProducts_right_productsReturned() {
         // given
-        Product product1 = new Product(1L, "product1", 1000, "url1");
-        Product product2 = new Product(2L, "product1", 2000, "url2");
-
         given(productDao.findProducts())
                 .willReturn(List.of(product1, product2));
 
@@ -45,7 +44,6 @@ public class ProductServiceTest {
     @DisplayName("존재하는 Product 1개를 조회한다.")
     void findProduct_exist_returnProduct() {
         // given
-        Product product1 = new Product(1L, "product1", 1000, "url1");
         given(productDao.findProductById(1L))
                 .willReturn(product1);
 
