@@ -48,7 +48,7 @@ public class CartItemController {
         List<Cart> carts = cartService.getCarts(customer);
 
         List<CartResponse> cartResponses = carts.stream()
-                .map(CartResponse::new)
+                .map(CartResponse::from)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new CartsResponse(cartResponses));
@@ -61,7 +61,7 @@ public class CartItemController {
         Customer customer = customerService.getByEmail(email);
         Cart cart = cartService.updateProductInCart(customer, request, productId);
 
-        return ResponseEntity.ok(new CartResponse(cart));
+        return ResponseEntity.ok(CartResponse.from(cart));
     }
 
     @DeleteMapping("/{productId}")

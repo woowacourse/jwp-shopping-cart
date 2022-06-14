@@ -9,7 +9,7 @@ public class CartResponse {
     private final String imageUrl;
     private final int quantity;
 
-    public CartResponse(Long id, String name, int price, String imageUrl, int quantity) {
+    private CartResponse(Long id, String name, int price, String imageUrl, int quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -17,8 +17,8 @@ public class CartResponse {
         this.quantity = quantity;
     }
 
-    public CartResponse(Cart cart) {
-        this(cart.getId(), cart.getName(), cart.getPrice(), cart.getImageUrl(), cart.getQuantity());
+    public static CartResponse from(Cart cart) {
+        return new CartResponse(cart.getId(), cart.getName(), cart.getPrice(), cart.getImageUrl(), cart.getQuantity());
     }
 
     public Long getId() {
