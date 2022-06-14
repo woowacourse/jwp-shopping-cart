@@ -7,12 +7,10 @@ import woowacourse.shoppingcart.dto.OrdersRequest;
 public class Orders {
 
     private final long customerId;
-    private final long orderId;
     private final List<Order> orders;
 
     public Orders(long customerId, long orderId, OrdersRequest orders) {
         this.customerId = customerId;
-        this.orderId = orderId;
         this.orders = orders.getOrder().stream()
                 .map(order -> new Order(orderId, order.getId(), order.getQuantity()))
                 .collect(Collectors.toList());
@@ -20,10 +18,6 @@ public class Orders {
 
     public long getCustomerId() {
         return customerId;
-    }
-
-    public long getOrderId() {
-        return orderId;
     }
 
     public List<Order> getOrders() {

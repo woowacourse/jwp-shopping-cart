@@ -58,7 +58,7 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.jsonPath().getInt("totalCost")).isEqualTo(40_000),
                 () -> {
                     List<OrderDetailResponse> orderDetailResponse = response.jsonPath()
-                            .getList("order", OrderDetailResponse.class);
+                            .getList("orderDetails", OrderDetailResponse.class);
                     assertAll(
                             () -> assertThat(orderDetailResponse.size()).isEqualTo(2),
                             () -> assertThat(orderDetailResponse.get(0).getCost()).isEqualTo(10_000)
@@ -81,8 +81,8 @@ public class OrderAcceptanceTest extends AcceptanceTest {
                     List<OrderResponse> ordersResponse = response.jsonPath().getList("orders", OrderResponse.class);
                     assertAll(
                             () -> assertThat(ordersResponse.size()).isEqualTo(2),
-                            () -> assertThat(ordersResponse.get(0).getOrder().size()).isEqualTo(2),
-                            () -> assertThat(ordersResponse.get(1).getOrder().size()).isEqualTo(1)
+                            () -> assertThat(ordersResponse.get(0).getOrderDetails().size()).isEqualTo(2),
+                            () -> assertThat(ordersResponse.get(1).getOrderDetails().size()).isEqualTo(1)
                     );
                 }
         );

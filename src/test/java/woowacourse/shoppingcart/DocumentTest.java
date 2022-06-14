@@ -14,7 +14,7 @@ import woowacourse.auth.support.RequestTokenContext;
 
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(uriHost = "13.125.246.196")
-public class RestDocsTokenProvider {
+public class DocumentTest {
 
     @Autowired
     protected MockMvc mockMvc;

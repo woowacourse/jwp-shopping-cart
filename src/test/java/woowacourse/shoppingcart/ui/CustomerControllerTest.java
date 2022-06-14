@@ -18,13 +18,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import woowacourse.shoppingcart.RestDocsTokenProvider;
+import woowacourse.shoppingcart.DocumentTest;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.PhoneNumberFormat;
 
 @WebMvcTest(CustomerController.class)
-class CustomerControllerTest extends RestDocsTokenProvider {
+class CustomerControllerTest extends DocumentTest {
 
     @MockBean
     private CustomerService customerService;

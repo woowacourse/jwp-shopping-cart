@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
-import woowacourse.shoppingcart.domain.order.Order;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.domain.order.Quantity;
 import woowacourse.shoppingcart.domain.product.ImageUrl;
@@ -79,7 +78,7 @@ class OrderServiceTest {
                 () -> assertThat(orderResponse.getOrderId()).isEqualTo(101),
                 () -> assertThat(orderResponse.getTotalCost()).isEqualTo(2000),
                 () -> {
-                    OrderDetailResponse orderDetailResponse = orderResponse.getOrder().get(0);
+                    OrderDetailResponse orderDetailResponse = orderResponse.getOrderDetails().get(0);
                     assertAll(
                             () -> assertThat(orderDetailResponse.getCost()).isEqualTo(2000),
                             () -> assertThat(orderDetailResponse.getId()).isEqualTo(1),
