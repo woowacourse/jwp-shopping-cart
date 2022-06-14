@@ -43,7 +43,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> findOrders(@AuthenticationPrincipal Long customerId) {
-        List<OrderResponse> orders = orderService.findOrdersByCustomerName(customerId);
+        List<OrderResponse> orders = orderService.findOrdersByCustomerId(customerId);
         return ResponseEntity.ok(orders);
     }
 }

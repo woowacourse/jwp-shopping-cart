@@ -136,7 +136,7 @@ public class OrderControllerTest {
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
-        when(orderService.findOrdersByCustomerName(customerId))
+        when(orderService.findOrdersByCustomerId(customerId))
                 .thenReturn(expected);
 
         // when // then

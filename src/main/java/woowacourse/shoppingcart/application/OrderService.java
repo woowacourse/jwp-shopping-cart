@@ -74,7 +74,7 @@ public class OrderService {
         }
     }
 
-    public List<OrderResponse> findOrdersByCustomerName(Long customerId) {
+    public List<OrderResponse> findOrdersByCustomerId(Long customerId) {
         Customer customer = getCustomer(customerId);
         List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customer.getId());
 
