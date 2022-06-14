@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.cart.CartItemCreateRequest;
+import woowacourse.shoppingcart.dto.cart.CartItemDto;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -24,6 +25,15 @@ public class CartItemDao {
         final String sql = "SELECT id, product_id, customer_id, count FROM cart_item WHERE customer_id = ?";
 
         return jdbcTemplate.query(sql, rowMapper(), customerId);
+    }
+
+    public List<CartItemDto> findCartItemDetailsByCustomerId(Long customerId) {
+        final String sql = "SELECT c.product_id, p.name, p.price, p.image_url, p.quantity, c.count "
+                + "FROM cart_item AS c "
+                + "JOIN product AS p ON c.product_id = p.id "
+                + "WHERE customer_id = ?";
+
+        return jdbcTemplate.query(sql, rowMapperWithProduct(), customerId);
     }
 
     public Long addCartItem(final Long customerId, final CartItemCreateRequest cartItemCreateRequest) {
@@ -65,6 +75,17 @@ public class CartItemDao {
                 rs.getLong("id"),
                 rs.getLong("customer_id"),
                 rs.getLong("product_id"),
+                rs.getInt("count")
+        ));
+    }
+
+    private RowMapper<CartItemDto> rowMapperWithProduct() {
+        return ((rs, rowNum) -> new CartItemDto(
+                rs.getLong("product_id"),
+                rs.getString("name"),
+                rs.getInt("price"),
+                rs.getString("image_url"),
+                rs.getInt("quantity"),
                 rs.getInt("count")
         ));
     }

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,6 +14,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.dto.cart.CartItemCreateRequest;
+import woowacourse.shoppingcart.dto.cart.CartItemDto;
 import woowacourse.shoppingcart.dto.product.ProductCreateRequest;
 
 @JdbcTest
@@ -33,25 +33,21 @@ public class CartItemDaoTest {
         productDao = new ProductDao(jdbcTemplate);
     }
 
-    @BeforeEach
-    void setUp() {
-        productDao.save(new ProductCreateRequest("banana", 1_000, "woowa1.com", 10));
-        productDao.save(new ProductCreateRequest("apple", 2_000, "woowa2.com", 10));
-        productDao.save(new ProductCreateRequest("tomato", 2_000, "woowa2.com", 10));
-
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, 1L, 3);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, 2L, 4);
-    }
-
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다.")
     @Test
     void addCartItem() {
         // given
+        Long bananaId = productDao.save(new ProductCreateRequest("banana", 1_000, "woowa1.com", 10));
+        Long appleId = productDao.save(new ProductCreateRequest("apple", 2_000, "woowa2.com", 10));
+        Long tomatoId = productDao.save(new ProductCreateRequest("tomato", 2_000, "woowa2.com", 10));
+
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, bananaId, 3);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, appleId, 4);
+
         final Long customerId = 1L;
-        final Long productId = 3L;
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, new CartItemCreateRequest(productId, 2));
+        final Long cartId = cartItemDao.addCartItem(customerId, new CartItemCreateRequest(tomatoId, 2));
 
         // then
         assertThat(cartId).isEqualTo(3L);
@@ -61,6 +57,12 @@ public class CartItemDaoTest {
     @Test
     void findCartItemsByCustomerId() {
         // given
+        Long bananaId = productDao.save(new ProductCreateRequest("banana", 1_000, "woowa1.com", 10));
+        Long appleId = productDao.save(new ProductCreateRequest("apple", 2_000, "woowa2.com", 10));
+
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, bananaId, 3);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, appleId, 4);
+
         final Long customerId = 1L;
 
         // when
@@ -70,9 +72,43 @@ public class CartItemDaoTest {
         assertAll(
                 () -> assertThat(cartItems).hasSize(2),
                 () -> assertThat(cartItems.get(0).getCount()).isEqualTo(3),
-                () -> assertThat(cartItems.get(0).getProductId()).isEqualTo(1L),
+                () -> assertThat(cartItems.get(0).getProductId()).isEqualTo(bananaId),
                 () -> assertThat(cartItems.get(1).getCount()).isEqualTo(4),
-                () -> assertThat(cartItems.get(1).getProductId()).isEqualTo(2L)
+                () -> assertThat(cartItems.get(1).getProductId()).isEqualTo(appleId)
+        );
+    }
+
+    @DisplayName("Customer Id를 넣으면 해당 장바구니 디테일한 목록을 가져온다.")
+    @Test
+    void findCartItemDetailsByCustomerId() {
+        // given
+        Long bananaId = productDao.save(new ProductCreateRequest("banana", 1_000, "woowa1.com", 10));
+        Long appleId = productDao.save(new ProductCreateRequest("apple", 2_000, "woowa2.com", 10));
+
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, bananaId, 3);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, appleId, 4);
+
+        final Long customerId = 1L;
+
+        // when
+        List<CartItemDto> cartItems = cartItemDao.findCartItemDetailsByCustomerId(customerId);
+
+        // then
+        assertAll(
+                () -> assertThat(cartItems).hasSize(2),
+                () -> assertThat(cartItems.get(0).getProductId()).isEqualTo(bananaId),
+                () -> assertThat(cartItems.get(0).getName()).isEqualTo("banana"),
+                () -> assertThat(cartItems.get(0).getPrice()).isEqualTo(1_000),
+                () -> assertThat(cartItems.get(0).getThumbnailUrl()).isEqualTo("woowa1.com"),
+                () -> assertThat(cartItems.get(0).getQuantity()).isEqualTo(10),
+                () -> assertThat(cartItems.get(0).getCount()).isEqualTo(3),
+
+                () -> assertThat(cartItems.get(1).getProductId()).isEqualTo(appleId),
+                () -> assertThat(cartItems.get(1).getName()).isEqualTo("apple"),
+                () -> assertThat(cartItems.get(1).getPrice()).isEqualTo(2_000),
+                () -> assertThat(cartItems.get(1).getThumbnailUrl()).isEqualTo("woowa2.com"),
+                () -> assertThat(cartItems.get(1).getQuantity()).isEqualTo(10),
+                () -> assertThat(cartItems.get(1).getCount()).isEqualTo(4)
         );
     }
 
@@ -80,16 +116,21 @@ public class CartItemDaoTest {
     @Test
     void updateCount() {
         // given
+        Long bananaId = productDao.save(new ProductCreateRequest("banana", 1_000, "woowa1.com", 10));
+        Long appleId = productDao.save(new ProductCreateRequest("apple", 2_000, "woowa2.com", 10));
+
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, bananaId, 3);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, appleId, 4);
+
         final Long customerId = 1L;
-        final Long productId = 2L;
 
         // when
-        cartItemDao.updateCount(customerId, productId, 1);
+        cartItemDao.updateCount(customerId, appleId, 1);
         List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
 
         // then
         Integer resultCount = cartItems.stream()
-                .filter(cartItem -> cartItem.getProductId().equals(productId))
+                .filter(cartItem -> cartItem.getProductId().equals(appleId))
                 .map(CartItem::getCount)
                 .findFirst().get();
 
@@ -100,11 +141,16 @@ public class CartItemDaoTest {
     @Test
     void deleteCartItemByCustomerIdAndProductId() {
         // given
+        Long bananaId = productDao.save(new ProductCreateRequest("banana", 1_000, "woowa1.com", 10));
+        Long appleId = productDao.save(new ProductCreateRequest("apple", 2_000, "woowa2.com", 10));
+
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, bananaId, 3);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, appleId, 4);
+
         final Long customerId = 1L;
-        final Long productId = 1L;
 
         // when
-        cartItemDao.deleteCartItemByCustomerIdAndProductId(customerId, productId);
+        cartItemDao.deleteCartItemByCustomerIdAndProductId(customerId, bananaId);
 
         // then
         List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
@@ -115,12 +161,17 @@ public class CartItemDaoTest {
     @Test
     void existsIdByCustomerIdAndProductId() {
         // given
+        Long bananaId = productDao.save(new ProductCreateRequest("banana", 1_000, "woowa1.com", 10));
+        Long appleId = productDao.save(new ProductCreateRequest("apple", 2_000, "woowa2.com", 10));
+
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, bananaId, 3);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, count) VALUES(?, ?, ?)", 1L, appleId, 4);
+
         final Long customerId = 1L;
-        final Long productId = 1L;
 
         // when then
         assertAll(
-                () -> assertThat(cartItemDao.existIdByCustomerIdAndProductId(customerId, productId)).isTrue(),
+                () -> assertThat(cartItemDao.existIdByCustomerIdAndProductId(customerId, bananaId)).isTrue(),
                 () -> assertThat(cartItemDao.existIdByCustomerIdAndProductId(customerId, 300L)).isFalse()
         );
     }

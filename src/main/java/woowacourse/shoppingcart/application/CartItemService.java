@@ -29,11 +29,7 @@ public class CartItemService {
     }
 
     public List<CartItemDto> findCartsByCustomerId(final Long customerId) {
-        List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
-
-        return cartItems.stream()
-                .map(item -> new CartItemDto(productDao.getProductById(item.getProductId()), item.getCount()))
-                .collect(Collectors.toList());
+        return cartItemDao.findCartItemDetailsByCustomerId(customerId);
     }
 
     public Long addCartItem(final Long customerId, final CartItemCreateRequest request) {
