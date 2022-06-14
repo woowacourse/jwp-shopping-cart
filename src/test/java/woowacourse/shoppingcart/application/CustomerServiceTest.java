@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
+import static woowacourse.TestFixture.customer;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -14,10 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CustomerCreationRequest;
 import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
-import woowacourse.shoppingcart.exception.DuplicateEmailException;
+import woowacourse.shoppingcart.exception.bodyexception.DuplicateEmailException;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -104,7 +105,6 @@ class CustomerServiceTest {
         // given
         String email = "kun@email.com";
         String password = "qwerasdf321";
-        Customer customer = new Customer(1L, "kun", email, password);
 
         CustomerUpdationRequest request = new CustomerUpdationRequest("rick", "qwerasdf123");
 
@@ -117,8 +117,6 @@ class CustomerServiceTest {
     @DisplayName("Customer를 삭제한다.")
     void delete_customer_void() {
         // given
-        Customer customer = new Customer(1L, "kun", "kun@email.com", "qwerasdf123");
-
         given(customerDao.findByEmail(customer.getEmail()))
                 .willThrow(new IllegalArgumentException("이메일이 존재하지 않습니다."));
 

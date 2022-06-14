@@ -10,7 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
-import woowacourse.shoppingcart.exception.ShoppingCartException;
+import woowacourse.shoppingcart.exception.bodyexception.BodyToReturnException;
+import woowacourse.shoppingcart.exception.nobodyexception.NotBodyToReturnException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -24,16 +25,22 @@ public class ControllerAdvice {
         final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         final FieldError mainError = fieldErrors.get(0);
 
-        return ResponseEntity.badRequest().body(new ErrorResponse("1000", mainError.getDefaultMessage()));
+        String defaultMessage = mainError.getDefaultMessage();
+        String[] messages = defaultMessage.split(":");
+
+        return ResponseEntity.badRequest().body(new ErrorResponse(messages[0], messages[1]));
     }
 
-    @ExceptionHandler({
-            ShoppingCartException.class
-    })
-    public ResponseEntity<ErrorResponse> handleInvalidAccess(final ShoppingCartException exception) {
+    @ExceptionHandler({BodyToReturnException.class})
+    public ResponseEntity<ErrorResponse> handleInvalidAccess(final BodyToReturnException exception) {
         return ResponseEntity
                 .status(exception.getHttpStatus())
                 .body(exception.toErrorResponse());
+    }
+
+    @ExceptionHandler({NotBodyToReturnException.class})
+    public ResponseEntity<ErrorResponse> handleInvalidAccess(final NotBodyToReturnException exception) {
+        return ResponseEntity.status(exception.getHttpStatus()).build();
     }
 
     @ExceptionHandler(Exception.class)

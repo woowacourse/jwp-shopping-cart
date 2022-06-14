@@ -1,15 +1,13 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
-import java.util.Locale;
 import java.util.Objects;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @Repository
 public class CustomerDao {
@@ -39,15 +37,6 @@ public class CustomerDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
-
-    public Long findInByNickname(final String nickname) {
-        try {
-            final String query = "SELECT id FROM customer WHERE nickname = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, nickname.toLowerCase(Locale.ROOT));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
     }
 
     public boolean existEmail(String email) {

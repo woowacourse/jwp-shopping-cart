@@ -5,7 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import woowacourse.shoppingcart.exception.IllegalEmailException;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.exception.bodyexception.ValidateException;
 
 public class EmailTest {
 
@@ -15,6 +16,7 @@ public class EmailTest {
     void new_wrongForm_exceptionThrown(String value) {
         // when, then
         assertThatThrownBy(() -> new Email(value))
-                .isInstanceOf(IllegalEmailException.class);
+                .isInstanceOf(ValidateException.class)
+                .hasMessage("이메일 양식이 잘못 되었습니다.");
     }
 }

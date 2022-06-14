@@ -6,13 +6,13 @@ import javax.validation.constraints.Pattern;
 
 public class CustomerCreationRequest {
 
-    @Email(message = "이메일 양식이 잘못 되었습니다.")
+    @Email(message = "1000:이메일 양식이 잘못 되었습니다.")
     private String email;
 
-    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,20}", message = "비밀번호 양식이 잘못 되었습니다.")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,20}", message = "1000:비밀번호 양식이 잘못 되었습니다.")
     private String password;
 
-    @Pattern(regexp = "[a-zA-Z0-9가-힣]{2,8}", message = "닉네임 양식이 잘못 되었습니다.")
+    @Pattern(regexp = "[a-zA-Z0-9가-힣]{2,8}", message = "1000:닉네임 양식이 잘못 되었습니다.")
     private String nickname;
 
     private CustomerCreationRequest() {

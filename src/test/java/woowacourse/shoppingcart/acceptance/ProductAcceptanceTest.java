@@ -1,129 +1,67 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Disabled;
+import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Product;
 
-@Disabled
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest {
-    public static ExtractableResponse<Response> 상품_등록_요청(String name, int price, String imageUrl) {
-        Product productRequest = new Product(name, price, imageUrl);
 
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when().post("/api/products")
-                .then().log().all()
-                .extract();
+    @DisplayName("상품을 전체 조회할 때,")
+    @Nested
+    class Describe_상품전체조회 {
+        @DisplayName("상품이 10개 등록되어 있다면")
+        @Nested
+        class Context_상품10개등록 extends AcceptanceTest {
+            @Test
+            @DisplayName("상품 10개에 대한 정보들과 상태코드 200을 반환받는다.")
+            void it_return_10_products() {
+                // then
+                ValidatableResponse response = RestAssured
+                        .given().log().all()
+                        .when().get("/products")
+                        .then().log().all();
+
+                response.statusCode(HttpStatus.OK.value());
+            }
+        }
     }
 
-    public static ExtractableResponse<Response> 상품_목록_조회_요청() {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products")
-                .then().log().all()
-                .extract();
-    }
+    @DisplayName("상품 1개를 상세 조회할 때,")
+    @Nested
+    class Describe_상품상세조회 {
+        @DisplayName("ID가 1인 상품을 조회하면")
+        @Nested
+        class Context_Product_id_1 extends AcceptanceTest {
+            @Test
+            @DisplayName("ID가 1인 상품에 대한 정보와 상태코드 200을 반환받는다.")
+                // then
+            void it_return_productId_1() {
+                ValidatableResponse response = RestAssured
+                        .given().log().all()
+                        .when().get("/products/1")
+                        .then().log().all();
 
-    public static ExtractableResponse<Response> 상품_조회_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
-    }
+                response.statusCode(HttpStatus.OK.value());
+            }
+        }
 
-    public static ExtractableResponse<Response> 상품_삭제_요청(Long productId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/products/{productId}", productId)
-                .then().log().all()
-                .extract();
-    }
+        @DisplayName("존재하지 않는 ID인 상품을 조회하면")
+        @Nested
+        class Context_notExist_Product extends AcceptanceTest {
+            @Test
+            @DisplayName("NOT FOUND 상태코드를 반환받는다.")
+            void it_return_notFound() {
+                ValidatableResponse response = RestAssured
+                        .given().log().all()
+                        .when().get("/products/30")
+                        .then().log().all();
 
-    public static void 상품_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static Long 상품_등록되어_있음(String name, int price, String imageUrl) {
-        ExtractableResponse<Response> response = 상품_등록_요청(name, price, imageUrl);
-        return Long.parseLong(response.header("Location").split("/products/")[1]);
-    }
-
-    public static void 조회_응답됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
-                .map(Product::getId)
-                .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productId1, productId2);
-    }
-
-    public static void 상품_조회됨(ExtractableResponse<Response> response, Long productId) {
-        Product resultProduct = response.as(Product.class);
-        assertThat(resultProduct.getId()).isEqualTo(productId);
-    }
-
-    public static void 상품_삭제됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    @DisplayName("상품을 추가한다")
-    @Test
-    void addProduct() {
-        ExtractableResponse<Response> response = 상품_등록_요청("치킨", 10_000, "http://example.com/chicken.jpg");
-
-        상품_추가됨(response);
-    }
-
-    @DisplayName("상품 목록을 조회한다")
-    @Test
-    void getProducts() {
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-
-        ExtractableResponse<Response> response = 상품_목록_조회_요청();
-
-        조회_응답됨(response);
-        상품_목록_포함됨(productId1, productId2, response);
-    }
-
-    @DisplayName("상품을 조회한다")
-    @Test
-    void getProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-
-        ExtractableResponse<Response> response = 상품_조회_요청(productId);
-
-        조회_응답됨(response);
-        상품_조회됨(response, productId);
-    }
-
-    @DisplayName("상품을 삭제한다")
-    @Test
-    void deleteProduct() {
-        Long productId = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-
-        ExtractableResponse<Response> response = 상품_삭제_요청(productId);
-
-        상품_삭제됨(response);
+                response.statusCode(HttpStatus.NOT_FOUND.value());
+            }
+        }
     }
 }

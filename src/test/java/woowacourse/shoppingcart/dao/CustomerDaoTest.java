@@ -11,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -23,34 +23,6 @@ public class CustomerDaoTest {
 
     public CustomerDaoTest(JdbcTemplate jdbcTemplate) {
         customerDao = new CustomerDao(jdbcTemplate);
-    }
-
-    @DisplayName("nickname을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByNickNameTest() {
-
-        // given
-        final String nickname = "puterism";
-
-        // when
-        final Long customerId = customerDao.findInByNickname(nickname);
-
-        // then
-        assertThat(customerId).isEqualTo(1L);
-    }
-
-    @DisplayName("대소문자를 구별하지 않고 nickname을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
-        // given
-        final String userName = "gwangyeol-iM";
-
-        // when
-        final Long customerId = customerDao.findInByNickname(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(16L);
     }
 
     @DisplayName("이메일이 존재하지 않으면 false를 반환한다.")

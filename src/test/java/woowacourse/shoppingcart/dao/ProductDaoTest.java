@@ -1,6 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static woowacourse.TestFixture.product1;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -11,11 +13,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.TestFixture;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.nobodyexception.NotFoundProductException;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:schema.sql")
+@Sql(value = {"/schema.sql", "/data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class ProductDaoTest {
 
@@ -25,68 +29,36 @@ public class ProductDaoTest {
         this.productDao = new ProductDao(jdbcTemplate);
     }
 
-    @DisplayName("Product를 저장하면, id를 반환한다.")
-    @Test
-    void save() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
-        // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-
-        // then
-        assertThat(productId).isEqualTo(1L);
-    }
 
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
     @Test
-    void findProductById() {
+    void findProductById_exist_productReturned() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
-
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(1L);
 
         // then
-        assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
+        assertThat(product).isEqualTo(product1);
+    }
+
+    @DisplayName("존재하지 않은 productId를 상품을 찾으면, 예외를 발생시킨다.")
+    @Test
+    void findProductById_notExist_exceptionThrown() {
+        // when, then
+
+        assertThatThrownBy(() -> productDao.findProductById(30L))
+                .isInstanceOf(NotFoundProductException.class);
     }
 
     @DisplayName("상품 목록 조회")
     @Test
-    void getProducts() {
-
+    void findProducts() {
         // given
-        final int size = 0;
 
         // when
-        final List<Product> products = productDao.findProducts();
+        List<Product> products = productDao.findProducts();
 
         // then
-        assertThat(products).size().isEqualTo(size);
-    }
-
-    @DisplayName("싱품 삭제")
-    @Test
-    void deleteProduct() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final int beforeSize = productDao.findProducts().size();
-
-        // when
-        productDao.delete(productId);
-
-        // then
-        final int afterSize = productDao.findProducts().size();
-        assertThat(beforeSize - 1).isEqualTo(afterSize);
+        assertThat(products.size()).isEqualTo(20);
     }
 }

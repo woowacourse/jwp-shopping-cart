@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidLoginException;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.exception.bodyexception.InvalidLoginException;
 
 @Service
 public class AuthService {

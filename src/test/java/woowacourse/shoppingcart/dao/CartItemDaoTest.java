@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.domain.cart.Cart;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -31,17 +31,13 @@ public class CartItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
-
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 1L, 3);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)", 1L, 2L, 5);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
     @Test
     void addCartItem() {
-
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
@@ -53,48 +49,46 @@ public class CartItemDaoTest {
         assertThat(cartId).isEqualTo(3L);
     }
 
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @DisplayName("장바구니에 상품이 존재하는지 확인한다.")
     @Test
-    void findProductIdsByCustomerId() {
-
+    void existProduct_exist_true() {
         // given
-        final Long customerId = 1L;
+        Long productId = 1L;
+        Long customerId = 1L;
 
         // when
-        final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        boolean isExist = cartItemDao.existProduct(customerId, productId);
 
         // then
-        assertThat(productsIds).containsExactly(1L, 2L);
+        assertThat(isExist).isTrue();
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("장바구니의 상품에 대한 수량을 변경한다.")
     @Test
-    void findIdsByCustomerId() {
-
+    void updateCartItem() {
         // given
-        final Long customerId = 1L;
+        Long customerId = 1L;
+        int quantity = 5;
+        Long productId = 1L;
 
         // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        cartItemDao.updateCartItem(customerId, quantity, productId);
 
         // then
-        assertThat(cartIds).containsExactly(1L, 2L);
+        Cart cart = cartItemDao.findCartByProductCustomer(customerId, productId);
+        assertThat(cart.getQuantity()).isEqualTo(quantity);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("cartId를 조회하여 Cart 객체들을 반환한다.")
     @Test
-    void deleteCartItem() {
-
+    void findCart() {
         // given
-        final Long cartId = 1L;
+        Long customerId = 1L;
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        List<Cart> carts = cartItemDao.getCartsByCustomerId(customerId);
 
         // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-
-        assertThat(productIds).containsExactly(2L);
+        assertThat(carts.size()).isEqualTo(2);
     }
 }

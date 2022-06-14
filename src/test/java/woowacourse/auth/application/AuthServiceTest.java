@@ -19,8 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidLoginException;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.exception.bodyexception.InvalidLoginException;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {

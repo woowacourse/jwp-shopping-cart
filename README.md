@@ -189,9 +189,251 @@ Authorization : accessToken
     401 UNAUTHORIZED
     ```
 
+## 2단계 장바구니 API 명세서
+## 장바구니
+
+### 장바구니 상품 목록 조회
+
+- 요청
+
+```json
+GET /users/me/carts
+
+Authorization: accessToken
+```
+
+- 응답
+  - 정상 케이스
+
+    ```json
+    200 OK
+    
+    {
+       "cartList": [{
+          "id": "1L",
+          "name": "치약",
+          "price": "1200",
+          "imageUrl": "image url",
+          "quantity": "3"
+       }]
+    }
+    ```
+
+  - 인가가 잘못 됐을 때
+
+    ```json
+    401 UNAUTHORIZED
+    ```
+
+
+### 장바구니 상품 추가
+
+- 요청
+
+```json
+POST /users/me/carts
+Authorization: accessToken
+
+{
+   "productId": "1L"
+}
+```
+
+- 응답
+  - 정상 케이스
+
+    ```json
+    204 NO CONTENT
+    ```
+
+  - 인가가 잘못 됐을 때
+
+    ```json
+    401 UNAUTHORIZED
+    ```
+
+  - 중복된 상품을 장바구니에 담을 경우
+
+    ```json
+    400 BAD REQUEST
+    
+    {
+    	"errorCode" : "1101",
+    	"message" : "중복된 물품입니다."
+    }
+    ```
+
+  - 존재하지 않는 상품을 장바구니에 담을 경우
+
+    ```json
+    404 NOT FOUND
+    ```
+
+
+### 장바구니 상품 수정
+
+- 요청
+
+```json
+PUT /users/me/carts/{productId}
+Authorization: accessToken
+
+{
+    "quantity": "3"
+}
+```
+
+- 응답
+  - 정상 케이스
+
+    ```json
+    200 OK
+    
+    {
+    	"id": "1L",
+      "name": "치약",
+      "price": "1200",
+      "imageUrl": "image url",
+    	"quantity": "3"
+    }
+    ```
+
+  - 인가가 잘못됐을 때
+
+    ```json
+    401 UNAUTHORIZATION
+    ```
+
+  - 잘못된 수량의 양식인 경우 (수량은 양수만 허용)
+
+    ```json
+    400 BAD REQUEST
+    
+    {
+    	"errorCode" : "1100",
+    	"message" : "잘못된 형식입니다."
+    ```
+
+  - 장바구니에 없는 상품을 수정할 경우
+
+    ```json
+    400 BAD REQUEST
+    
+    {
+    	"errorCode" : "1102",
+    	"message" : "장바구니에 상품이 존재하지 않습니다."
+    }
+    ```
+
+  - 없는 상품인 경우
+
+    ```jsx
+    404 NOT FOUND
+    ```
+
+
+### 장바구니 상품 삭제
+
+- 요청
+
+```java
+DELETE /users/me/carts/{productId}
+Authorization: accessToken
+```
+
+- 응답
+  - 정상 케이스
+
+    ```json
+    204 NO CONTENT
+    ```
+
+  - 인가가 잘못됐을 때
+
+    ```json
+    401 UNAUTHORIZATION
+    ```
+
+  - 장바구니에 없는 상품을 삭제할 경우
+
+    ```json
+    400 BAD REQUEST
+    
+    {
+    	"errorCode" : "1102",
+    	"message" : "장바구니에 상품이 존재하지 않습니다."
+    }
+    ```
+
+  - 없는 상품인 경우
+
+## 상품
+
+### 상품 목록 조회
+
+- 요청
+
+```json
+GET /products
+```
+
+- 응답
+
+```json
+200 OK
+
+{
+   productList: [{
+      "id": "1L",
+      "name": "치약",
+      "price": "1200",
+      "imageUrl": "image url"
+   }]
+}
+```
+
+### 상품 상세 조회
+
+- 요청
+
+```json
+GET /products/{productId}
+```
+
+- 응답
+  - 정상 케이스
+
+    ```json
+    200 OK
+    
+    {
+       "id": "1L",
+       "name": "치약",
+       "price": "1200",
+       "imageUrl": "image url"
+    }
+    ```
+
+  - 상품이 없는 경우
+
+    - 상품이 없는 경우
+    ```json
+      404 NOT FOUND
+    ```
 
 ### 에러 코드
 
+> 1000번대 - BAD_REQUEST(400)
+>
+
+> 1000번대 - 유저 관련
+>
 - 1000 : 회원정보 양식이 잘못됐을 때
 - 1001 : 이메일이 중복일 때
 - 1002 : 존재하지 않는 아이디 또는 잘못된 비밀번호로 로그인 시도
+
+> 1100번대 - 장바구니 관련
+>
+- 1100 : 장바구니 수량 수정 양식이 잘못됐을 때
+- 1101 : 장바구니 중복 등록
+- 1102 : 장바구니에 상품이 없는 경우
