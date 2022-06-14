@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.ui;
 
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.dto.Request;
 
 @RestController
 @RequestMapping("/customers")
@@ -29,7 +31,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerResponse> addCustomer(
-            @RequestBody CustomerRequest customerRequest) {
+            @Validated(Request.allProperties.class) @RequestBody CustomerRequest customerRequest) {
         CustomerResponse customerResponse = customerService.addCustomer(customerRequest);
         return ResponseEntity.created(URI.create("/customers/me")).body(customerResponse);
     }
@@ -44,7 +46,7 @@ public class CustomerController {
     @PutMapping("/me")
     public ResponseEntity<CustomerResponse> updateMe(
             @AuthenticationPrincipal LoginCustomer loginCustomer,
-            @RequestBody CustomerUpdateRequest customerUpdateRequest) {
+            @Validated(Request.allProperties.class) @RequestBody CustomerUpdateRequest customerUpdateRequest) {
         CustomerResponse customerResponse = customerService.updateCustomer(customerUpdateRequest,
                 loginCustomer.toCustomer());
         return ResponseEntity.ok().body(customerResponse);
@@ -52,7 +54,7 @@ public class CustomerController {
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal LoginCustomer loginCustomer,
-            @RequestBody CustomerPasswordRequest customerPasswordRequest) {
+            @Validated(Request.allProperties.class) @RequestBody CustomerPasswordRequest customerPasswordRequest) {
         customerService.deleteCustomer(loginCustomer.toCustomer(), customerPasswordRequest);
         return ResponseEntity.noContent().build();
     }

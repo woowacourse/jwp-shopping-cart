@@ -21,6 +21,7 @@ import woowacourse.shoppingcart.dto.OrdersResponse;
 @RestController
 @RequestMapping("/customers/orders")
 public class OrderController {
+
     private final OrderService orderService;
 
     public OrderController(final OrderService orderService) {
@@ -29,7 +30,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal final LoginCustomer loginCustomer,
-            @RequestBody @Valid final List<OrderRequest> orderDetails) {
+            @Valid @RequestBody final List<OrderRequest> orderDetails) {
         final Long orderId = orderService.addOrder(orderDetails, loginCustomer.getUsername());
         return ResponseEntity.created(
                 URI.create("/customers/orders/" + orderId)).build();

@@ -1,7 +1,10 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class CartProductRequest {
 
+    @NotNull(groups = Request.id.class)
     private Long productId;
 
     public CartProductRequest() {

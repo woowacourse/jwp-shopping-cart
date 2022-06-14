@@ -1,8 +1,12 @@
 package woowacourse.shoppingcart.dto;
 
+import javax.validation.constraints.NotEmpty;
+
 public class LoginRequest {
 
+    @NotEmpty(groups = Request.allProperties.class)
     private String loginId;
+    @NotEmpty(groups = Request.allProperties.class)
     private String password;
 
     public LoginRequest() {

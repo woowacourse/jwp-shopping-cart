@@ -26,7 +26,8 @@ public class CartResponse {
     }
 
     public static CartResponse of(Cart cart) {
-        return new CartResponse(cart.getId(), cart.getProductId(), cart.getName(), cart.getPrice(), cart.getImageUrl(), cart.getQuantity());
+        return new CartResponse(cart.getId(), cart.getProductId(), cart.getName(), cart.getPrice(), cart.getImageUrl(),
+                cart.getQuantity());
     }
 
     public static List<CartResponse> toCartResponses(List<Cart> carts) {

@@ -36,9 +36,11 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<CartResponse> addCartItem(@Validated(Request.id.class) @RequestBody final CartProductRequest cartProductRequest,
+    public ResponseEntity<CartResponse> addCartItem(
+            @Validated(Request.id.class) @RequestBody final CartProductRequest cartProductRequest,
             @AuthenticationPrincipal final LoginCustomer loginCustomer) {
-        final CartResponse cartResponse = cartService.addCart(cartProductRequest.getProductId(), loginCustomer.getUsername());
+        final CartResponse cartResponse = cartService.addCart(cartProductRequest.getProductId(),
+                loginCustomer.getUsername());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cartResponse);
     }
@@ -57,7 +59,8 @@ public class CartItemController {
     }
 
     @PutMapping("/{cartId}")
-    public ResponseEntity<CartResponse> updateCartItem(@PathVariable final Long cartId, @RequestBody final CartQuantityRequest cartQuantityRequest) {
+    public ResponseEntity<CartResponse> updateCartItem(@PathVariable final Long cartId,
+            @Validated(Request.allProperties.class) @RequestBody final CartQuantityRequest cartQuantityRequest) {
         CartResponse cartResponse = cartService.updateCart(cartId, cartQuantityRequest.getQuantity());
         return ResponseEntity.ok(cartResponse);
     }
