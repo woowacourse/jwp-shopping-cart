@@ -9,7 +9,8 @@ import woowacourse.shoppingcart.domain.customer.Name;
 import woowacourse.shoppingcart.domain.customer.Terms;
 import woowacourse.shoppingcart.domain.customer.password.PasswordFactory;
 import woowacourse.shoppingcart.domain.customer.password.PasswordType;
-import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.request.AddressRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
 public class CustomerDto {
 
@@ -39,7 +40,8 @@ public class CustomerDto {
     public static CustomerDto fromCustomerRequest(final SignUpRequest request) {
         return new CustomerDto(request.getEmail(), request.getPassword(), request.getProfileImageUrl(),
                 request.getName(), request.getGender(), request.getBirthday(), request.getContact(),
-                AddressDto.fromAddressRequest(request.getFullAddress()), request.isTerms());
+                AddressDto.fromAddressRequest(new AddressRequest(request.getAddress(), request.getDetailAddress(), request.getZonecode())),
+                request.isTerms());
     }
 
     public static Customer toCustomer(final CustomerDto request) {

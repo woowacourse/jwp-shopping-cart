@@ -1,6 +1,7 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.response;
 
 import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
 
 public class CustomerResponse {
 
@@ -11,7 +12,9 @@ public class CustomerResponse {
     private String gender;
     private String birthday;
     private String contact;
-    private AddressResponse fullAddress;
+    private String address;
+    private String detailAddress;
+    private String zonecode;
     private boolean terms;
 
     public CustomerResponse() {
@@ -26,7 +29,9 @@ public class CustomerResponse {
         this.gender = gender;
         this.birthday = birthday;
         this.contact = contact;
-        this.fullAddress = new AddressResponse(address, detailAddress, zoneCode);
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.zonecode = zoneCode;
         this.terms = true;
     }
 
@@ -41,39 +46,6 @@ public class CustomerResponse {
         return new CustomerResponse(customer.getId(), customer.getEmail(), customer.getProfileImageUrl(),
                 customer.getName(), customer.getGender(), customer.getBirthday(), customer.getContact(),
                 customer.getAddress(), customer.getDetailAddress(), customer.getZoneCode());
-    }
-
-    public static class AddressResponse {
-
-        private String address;
-        private String detailAddress;
-        private String zoneCode;
-
-        public AddressResponse() {
-        }
-
-        public AddressResponse(String address, String detailAddress, String zoneCode) {
-            this.address = address;
-            this.detailAddress = detailAddress;
-            this.zoneCode = zoneCode;
-        }
-
-        public static AddressResponse fromAddressRequest(final CustomerRequest.AddressRequest addressRequest) {
-            return new AddressResponse(addressRequest.getAddress(), addressRequest.getDetailAddress(),
-                    addressRequest.getZoneCode());
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public String getDetailAddress() {
-            return detailAddress;
-        }
-
-        public String getZoneCode() {
-            return zoneCode;
-        }
     }
 
     public Long getId() {
@@ -104,8 +76,16 @@ public class CustomerResponse {
         return contact;
     }
 
-    public AddressResponse getFullAddress() {
-        return fullAddress;
+    public String getAddress() {
+        return address;
+    }
+
+    public String getDetailAddress() {
+        return detailAddress;
+    }
+
+    public String getZonecode() {
+        return zonecode;
     }
 
     public boolean isTerms() {

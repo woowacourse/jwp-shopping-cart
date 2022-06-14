@@ -1,13 +1,13 @@
 package woowacourse.auth.dto;
 
-public class EmailDto {
+public class EmailAuthentication {
 
     private String email;
 
-    public EmailDto() {
+    public EmailAuthentication() {
     }
 
-    public EmailDto(String email) {
+    public EmailAuthentication(String email) {
         this.email = email;
     }
 

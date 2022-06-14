@@ -1,5 +1,6 @@
 package woowacourse.shoppingcart.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -19,6 +20,15 @@ public class CustomerRepository {
 
     public Long createCustomer(final Customer customer) {
         return customerDao.createCustomer(customer);
+    }
+
+    public boolean checkEmailDuplication(final Email email) {
+        try {
+            customerDao.findEmail(email);
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 
     public Password findPasswordByEmail(final Email email) {

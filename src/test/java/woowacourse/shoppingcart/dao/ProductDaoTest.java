@@ -3,12 +3,15 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import javax.sql.DataSource;
+import javax.xml.crypto.Data;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
@@ -20,9 +23,15 @@ import woowacourse.shoppingcart.domain.Product;
 public class ProductDaoTest {
 
     private final ProductDao productDao;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
+    private final DataSource dataSource;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
+    public ProductDaoTest(final JdbcTemplate jdbcTemplate,
+                          final NamedParameterJdbcTemplate namedJdbcTemplate,
+                          final DataSource dataSource) {
+        this.namedJdbcTemplate = namedJdbcTemplate;
+        this.dataSource = dataSource;
+        this.productDao = new ProductDao(namedJdbcTemplate, dataSource);
     }
 
     @DisplayName("Product를 저장하면, id를 반환한다.")
@@ -32,9 +41,11 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
+        final String description = "description";
+        final int stock = 1;
 
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, imageUrl, description, stock));
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -47,8 +58,10 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        final String description = "description";
+        final int stock = 1;
+        final Long productId = productDao.save(new Product(name, price, imageUrl, description, stock));
+        final Product expectedProduct = new Product(productId, name, price, imageUrl, description, stock);
 
         // when
         final Product product = productDao.findProductById(productId);
@@ -78,8 +91,10 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
+        final String description = "description";
+        final int stock = 1;
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, imageUrl, description, stock));
         final int beforeSize = productDao.findProducts().size();
 
         // when

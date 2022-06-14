@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,9 +12,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -21,25 +26,34 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 class OrdersDetailDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
+    private SimpleJdbcInsert simpleInsert;
+    private DataSource dataSource;
     private final OrdersDetailDao ordersDetailDao;
     private long ordersId;
     private long productId;
     private long customerId;
+    private final ProductDao productDao;
+    private final OrderDao orderDao;
 
-    public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
+    public OrdersDetailDaoTest(final JdbcTemplate jdbcTemplate,
+                               final NamedParameterJdbcTemplate namedJdbcTemplate,
+                               final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
+        this.namedJdbcTemplate = namedJdbcTemplate;
+        this.simpleInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("orders_detail")
+                .usingGeneratedKeyColumns("id");
+        this.ordersDetailDao = new OrdersDetailDao(namedJdbcTemplate, dataSource);
+        this.productDao = new ProductDao(namedJdbcTemplate, dataSource);
+        this.orderDao = new OrderDao(namedJdbcTemplate, dataSource);
     }
 
     @BeforeEach
     void setUp() {
         customerId = 1L;
-        jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
-        ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
-
-        jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
-                , "name", 1000, "imageUrl");
-        productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+        ordersId = orderDao.addOrders(customerId);
+        productId = productDao.save(new Product("name", 1000, "imageUrl", "description", 1));
     }
 
     @DisplayName("OrderDatail을 추가하는 기능")
@@ -62,9 +76,11 @@ class OrdersDetailDaoTest {
         //given
         final int insertCount = 3;
         for (int i = 0; i < insertCount; i++) {
-            jdbcTemplate
-                    .update("INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)",
-                            ordersId, productId, 3);
+            simpleInsert.execute(Map.ofEntries(
+                    Map.entry("orders_id", ordersId),
+                    Map.entry("product_id", productId),
+                    Map.entry("quantity", 3)
+            ));
         }
 
         //when

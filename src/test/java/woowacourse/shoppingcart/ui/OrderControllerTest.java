@@ -23,9 +23,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.application.dto.EmailDto;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.response.OrdersResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -53,7 +55,7 @@ public class OrderControllerTest {
                 Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
-        when(orderService.addOrder(any(), eq(customerName)))
+        when(orderService.addOrder(any(), eq(new EmailDto("example@example.com"))))
                 .thenReturn(expectedOrderId);
 
         // when // then
@@ -75,10 +77,10 @@ public class OrderControllerTest {
         // given
         final String customerName = "pobi";
         final Long orderId = 1L;
-        final Orders expected = new Orders(orderId,
+        final OrdersResponse expected = OrdersResponse.of(orderId,
                 Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
 
-        when(orderService.findOrderById(customerName, orderId))
+        when(orderService.findOrderById(new EmailDto("example@example.com"), orderId))
                 .thenReturn(expected);
 
         // when // then
@@ -98,14 +100,14 @@ public class OrderControllerTest {
     void findOrders() throws Exception {
         // given
         final String customerName = "pobi";
-        final List<Orders> expected = Arrays.asList(
-                new Orders(1L, Collections.singletonList(
+        final List<OrdersResponse> expected = Arrays.asList(
+                OrdersResponse.of(1L, Collections.singletonList(
                         new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
-                new Orders(2L, Collections.singletonList(
+                OrdersResponse.of(2L, Collections.singletonList(
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
-        when(orderService.findOrdersByCustomerName(customerName))
+        when(orderService.findOrdersByCustomerName(new EmailDto("example@example.com")))
                 .thenReturn(expected);
 
         // when // then

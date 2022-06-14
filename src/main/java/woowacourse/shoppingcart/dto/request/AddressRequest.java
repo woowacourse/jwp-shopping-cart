@@ -1,10 +1,10 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.request;
 
 public class AddressRequest {
 
     private String address;
     private String detailAddress;
-    private String zoneCode;
+    private String zonecode;
 
     public AddressRequest() {
     }
@@ -12,7 +12,7 @@ public class AddressRequest {
     public AddressRequest(String address, String detailAddress, String zoneCode) {
         this.address = address;
         this.detailAddress = detailAddress;
-        this.zoneCode = zoneCode;
+        this.zonecode = zoneCode;
     }
 
     public String getAddress() {
@@ -23,7 +23,7 @@ public class AddressRequest {
         return detailAddress;
     }
 
-    public String getZoneCode() {
-        return zoneCode;
+    public String getZonecode() {
+        return zonecode;
     }
 }

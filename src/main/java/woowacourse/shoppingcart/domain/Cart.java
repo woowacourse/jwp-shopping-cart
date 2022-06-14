@@ -2,44 +2,57 @@ package woowacourse.shoppingcart.domain;
 
 public class Cart {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private Long cartItemId;
+    private Product product;
+    private int quantity;
 
     public Cart() {
     }
 
-    public Cart(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    public Cart(final Long id, final Product product, final int quantity) {
+        this.cartItemId = id;
+        this.product = product;
+        this.quantity = quantity;
     }
 
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl) {
-        this.id = id;
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl,
+                final String description, final int stock) {
+        this(id, new Product(productId, name, price, imageUrl, description, stock), 0);
     }
 
-    public Long getId() {
-        return id;
+    public Long getCartItemId() {
+        return cartItemId;
     }
 
     public Long getProductId() {
-        return productId;
+        return product.getId();
     }
 
     public String getName() {
-        return name;
+        return product.getName();
     }
 
     public int getPrice() {
-        return price;
+        return product.getPrice();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return product.getImageUrl();
+    }
+
+    public String getDescription() {
+        return product.getDescription();
+    }
+
+    public int getStock() {
+        return product.getStock();
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }

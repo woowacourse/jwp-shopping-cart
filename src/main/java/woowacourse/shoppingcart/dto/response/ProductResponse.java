@@ -1,6 +1,8 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.dto.response;
 
-public class Product {
+import woowacourse.shoppingcart.domain.Product;
+
+public class ProductResponse {
 
     private Long id;
     private String name;
@@ -9,11 +11,11 @@ public class Product {
     private String description;
     private int stock;
 
-    public Product() {
+    public ProductResponse() {
     }
 
-    public Product(final Long id, final String name, final int price, final String imageUrl,
-                   final String description, final int stock) {
+    public ProductResponse(final Long id, final String name, final int price, final String imageUrl,
+                           final String description, final int stock) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -22,9 +24,9 @@ public class Product {
         this.stock = stock;
     }
 
-    public Product(final String name, final int price, final String imageUrl, final String description,
-                   final int stock) {
-        this(null, name, price, imageUrl, description, stock);
+    public static ProductResponse from(final Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(),
+                product.getDescription(), product.getStock());
     }
 
     public String getName() {

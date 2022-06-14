@@ -1,4 +1,6 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.request;
+
+import woowacourse.shoppingcart.dto.request.AddressRequest;
 
 public class ModifiedCustomerRequest {
 

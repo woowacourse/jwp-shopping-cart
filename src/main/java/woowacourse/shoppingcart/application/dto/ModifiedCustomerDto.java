@@ -9,8 +9,8 @@ import woowacourse.shoppingcart.domain.customer.Gender;
 import woowacourse.shoppingcart.domain.customer.Name;
 import woowacourse.shoppingcart.domain.customer.password.PasswordFactory;
 import woowacourse.shoppingcart.domain.customer.password.PasswordType;
-import woowacourse.shoppingcart.dto.AddressRequest;
-import woowacourse.shoppingcart.dto.ModifiedCustomerRequest;
+import woowacourse.shoppingcart.dto.request.AddressRequest;
+import woowacourse.shoppingcart.dto.request.ModifiedCustomerRequest;
 
 public class ModifiedCustomerDto {
 
@@ -51,7 +51,7 @@ public class ModifiedCustomerDto {
                 new Birthday(modifiedCustomerDto.getBirthday()), new Contact(modifiedCustomerDto.getContact()),
                 new FullAddress(modifiedCustomerDto.getAddress().getAddress(),
                         modifiedCustomerDto.getAddress().getDetailAddress(),
-                        modifiedCustomerDto.getAddress().getZoneCode()));
+                        modifiedCustomerDto.getAddress().getZonecode()));
     }
 
     public String getEmail() {

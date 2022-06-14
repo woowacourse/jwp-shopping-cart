@@ -1,40 +1,41 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import java.util.Map;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.OrderDetail;
 
 @Repository
 public class OrdersDetailDao {
-    private final JdbcTemplate jdbcTemplate;
 
-    public OrdersDetailDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
+    private final SimpleJdbcInsert simpleInsert;
+
+    public OrdersDetailDao(final NamedParameterJdbcTemplate namedJdbcTemplate,
+                           final DataSource dataSource) {
+        this.namedJdbcTemplate = namedJdbcTemplate;
+        simpleInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("orders_detail")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Long addOrdersDetail(final Long ordersId, final Long productId, final int quantity) {
-        final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, ordersId);
-            preparedStatement.setLong(2, productId);
-            preparedStatement.setLong(3, quantity);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return simpleInsert.executeAndReturnKey(Map.ofEntries(
+                Map.entry("orders_id", ordersId),
+                Map.entry("product_id", productId),
+                Map.entry("quantity", quantity)
+        )).longValue();
     }
 
     public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-                rs.getLong("product_id"),
-                rs.getInt("quantity")
-        ), orderId);
+        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = :orderId";
+        final SqlParameterSource params = new MapSqlParameterSource(Map.of("orderId", orderId));
+        return namedJdbcTemplate.query(sql, params, (resultSet, rowNum) ->
+                new OrderDetail(resultSet.getLong("product_id"), resultSet.getInt("quantity")));
     }
 }

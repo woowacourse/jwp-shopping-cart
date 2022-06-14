@@ -17,25 +17,37 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.request.OrderRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
     private static final String USER = "puterism";
     private Long cartId1;
     private Long cartId2;
+    TokenResponse response;
+    private String token;
 
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
+        회원_가입(
+                회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
+                        "희봉", "male", "1998-08-07", "12345678910", "address", "detailAddress", "12345", true
+                ));
 
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        response =
+                로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
+        token = "Bearer " + response.getAccessToken();
+        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg",  "description", 1);
+        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg",  "description", 1);
 
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1, token);
+        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2, token);
     }
 
     @DisplayName("주문하기")
@@ -129,4 +141,41 @@ public class OrderAcceptanceTest extends AcceptanceTest {
         Orders resultOrder = response.as(Orders.class);
         assertThat(resultOrder.getId()).isEqualTo(orderId);
     }
+
+    private SignUpRequest 회원_정보(String email, String password, String profileImageUrl, String name, String gender,
+                                String birthday, String contact, String address, String detailAddress,
+                                String zoneCode,
+                                boolean terms) {
+        return new SignUpRequest(email, password, profileImageUrl, name, gender, birthday, contact, address,
+                detailAddress, zoneCode, terms);
+    }
+
+    private ExtractableResponse<Response> 회원_가입(SignUpRequest request) {
+        return RestAssured.given()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/api/customers")
+                .then()
+                .log().all()
+                .extract();
+    }
+
+    private TokenResponse 로그인_후_토큰_발급(TokenRequest request) {
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .post("/api/customer/authentication/sign-in")
+                .then().log().all()
+                .extract();
+        return response.body()
+                .jsonPath()
+                .getObject("", TokenResponse.class);
+    }
+
+    private TokenRequest 로그인_정보(final String email, final String password) {
+        return new TokenRequest(email, password);
+    }
+
 }

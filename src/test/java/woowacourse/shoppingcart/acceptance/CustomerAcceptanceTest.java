@@ -19,9 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.ModifiedCustomerRequest;
-import woowacourse.shoppingcart.dto.SignUpRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.ModifiedCustomerRequest;
+import woowacourse.shoppingcart.dto.request.SignUpRequest;
+import woowacourse.shoppingcart.dto.response.DuplicateEmailResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -44,21 +45,27 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertEquals(response.response().statusCode(), HttpStatus.CREATED.value());
     }
 
-    @DisplayName("로그인")
+
+    @DisplayName("회원가입시 이메일 중복 여부를 검사한다.")
     @Test
-    void signIn() {
+    void isDuplicatedEmail() {
         회원_가입(회원_정보("example@example.com", "example123!", "http://gravatar.com/avatar/1?d=identicon",
                 "희봉", "male", "1998-08-07", "12345678910",
                 "address", "detailAddress", "12345", true));
+        ExtractableResponse<Response> response = RestAssured.given()
+                .log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/validation?email=example@example.com")
+                .then()
+                .log().all()
+                .extract();
 
-        TokenResponse response =
-                로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
-
-        assertAll(
-                () -> assertThat(response.getAccessToken()).isNotNull(),
-                () -> assertThat(response.getCustomerId()).isNotNull()
-        );
-
+        boolean isDuplicated = response.body()
+                .jsonPath()
+                .getObject("", DuplicateEmailResponse.class)
+                .getIsDuplicated();
+        assertThat(isDuplicated).isTrue();
     }
 
     @DisplayName("내 정보를 조회하려할 때")
@@ -76,7 +83,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                     로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
 
             ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken(),
-                    signInResponse.getCustomerId());
+                    signInResponse.getUserId());
             final CustomerResponse customerResponse = response.body()
                     .jsonPath()
                     .getObject("", CustomerResponse.class);
@@ -118,13 +125,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .put("/api/customers/" + signInResponse.getCustomerId())
+                .put("/api/customers/" + signInResponse.getUserId())
                 .then()
                 .log().all()
                 .extract();
 
         ExtractableResponse<Response> updatedCustomerInformation = 회원_조회(signInResponse.getAccessToken(),
-                signInResponse.getCustomerId());
+                signInResponse.getUserId());
         final CustomerResponse customerResponse = updatedCustomerInformation.body()
                 .jsonPath()
                 .getObject("", CustomerResponse.class);
@@ -142,8 +149,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         TokenResponse signInResponse =
                 로그인_후_토큰_발급(로그인_정보("example@example.com", "example123!"));
-        회원_탈퇴(signInResponse.getAccessToken(), signInResponse.getCustomerId());
-        ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken(), signInResponse.getCustomerId());
+        회원_탈퇴(signInResponse.getAccessToken(), signInResponse.getUserId());
+        ExtractableResponse<Response> response = 회원_조회(signInResponse.getAccessToken(), signInResponse.getUserId());
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 

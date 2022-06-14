@@ -1,64 +1,54 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.application.dto.CartDto;
+import woowacourse.shoppingcart.application.dto.EmailDto;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.domain.customer.Email;
+import woowacourse.shoppingcart.dto.response.CartResponse;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.repository.CartRepository;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
-    private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
-    private final ProductDao productDao;
+    private final CartRepository cartRepository;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
-        this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
-        this.productDao = productDao;
+    public CartService(final CartRepository cartRepository) {
+        this.cartRepository = cartRepository;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
+    public List<CartResponse> findCartsByCustomerEmail(final EmailDto emailDto) {
+        final List<Cart> carts = cartRepository.findCartsByCustomerName(new Email(emailDto.getEmail()));
+        return carts.stream()
+                .map(CartResponse::from)
+                .collect(Collectors.toList());
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+    public Long addCart(final CartDto cartDto, final EmailDto emailDto) {
+        final Email email = new Email(emailDto.getEmail());
+        return cartRepository.addCart(cartDto.getProductId(), cartDto.getQuantity(), email);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
+    public void deleteCart(final EmailDto emailDto, final Long cartId) {
+        validateCustomerCart(cartId, emailDto);
+        cartRepository.deleteCart(cartId);
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    public boolean hasProduct(final EmailDto emailDto, final Long productId) {
+        return cartRepository.hasProduct(new Email(emailDto.getEmail()), productId);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public void updateQuantity(final EmailDto emailDto, final CartDto cartDto) {
+        cartRepository.updateQuantity(new Email(emailDto.getEmail()), cartDto.getProductId(), cartDto.getQuantity());
+    }
+
+    private void validateCustomerCart(final Long cartId, final EmailDto emailDto) {
+        final List<Long> cartIds = cartRepository.findCartIdsByCustomerEmail(new Email(emailDto.getEmail()));
         if (cartIds.contains(cartId)) {
             return;
         }

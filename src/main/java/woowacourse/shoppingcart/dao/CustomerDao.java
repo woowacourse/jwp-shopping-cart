@@ -1,10 +1,8 @@
 package woowacourse.shoppingcart.dao;
 
-import java.util.Locale;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,12 +23,10 @@ import woowacourse.shoppingcart.exception.InvalidCustomerException;
 @Component
 public class CustomerDao {
 
-    private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleInsert;
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
     public CustomerDao(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleInsert = new SimpleJdbcInsert(dataSource).withTableName("customer")
                 .usingGeneratedKeyColumns("id");
         this.namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -70,14 +66,22 @@ public class CustomerDao {
     }
 
     public String findPasswordByEmail(final Email email) {
-        final String query = "SELECT password FROM customer WHERE email = ?";
-        return jdbcTemplate.queryForObject(query, String.class, email.getValue());
+        final String query = "SELECT password FROM customer WHERE email = :email";
+        final SqlParameterSource params = new MapSqlParameterSource(Map.of("email", email.getValue()));
+        return namedJdbcTemplate.queryForObject(query, params, String.class);
     }
 
-    public Long findIdByUserName(final String userName) {
+    public Email findEmail(final Email email) {
+        final String query = "SELECT email FROM customer WHERE email=:email";
+        final SqlParameterSource params = new MapSqlParameterSource(Map.of("email", email.getValue()));
+        return namedJdbcTemplate.queryForObject(query, params, Email.class);
+    }
+
+    public Long findIdByUserEmail(final Email email) {
         try {
-            final String query = "SELECT id FROM customer WHERE name = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
+            final String query = "SELECT id FROM customer WHERE email = :email";
+            final SqlParameterSource params = new MapSqlParameterSource(Map.of("email", email.getValue()));
+            return namedJdbcTemplate.queryForObject(query, params, Long.class);
         } catch (final EmptyResultDataAccessException e) {
             throw new InvalidCustomerException();
         }

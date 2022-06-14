@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.dto.AddressResponse;
@@ -21,7 +22,7 @@ import woowacourse.shoppingcart.application.dto.CustomerDto;
 import woowacourse.shoppingcart.application.dto.ModifiedCustomerDto;
 import woowacourse.shoppingcart.application.dto.SignInDto;
 import woowacourse.shoppingcart.dao.CustomerFixture;
-import woowacourse.shoppingcart.dto.AddressRequest;
+import woowacourse.shoppingcart.dto.request.AddressRequest;
 
 @SpringBootTest
 @DisplayName("CustomerService 는")
@@ -29,6 +30,9 @@ class CustomerServiceTest {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private AuthService authService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -73,12 +77,12 @@ class CustomerServiceTest {
     void createAccessToken() throws JsonProcessingException {
         signUpCustomer();
         final String email = "her0807@naver.com";
-        final TokenResponse response = customerService.signIn(new SignInDto(email, "password1!"));
+        final TokenResponse response = authService.signIn(new SignInDto(email, "password1!"));
         final ObjectMapper mapper = new JsonMapper();
         AddressResponse tokenPayloadDto = mapper.readValue(tokenProvider.getPayload(response.getAccessToken()),
                 AddressResponse.class);
         assertThat(tokenPayloadDto.getEmail()).isEqualTo(email);
-        assertThat(response.getCustomerId()).isNotNull();
+        assertThat(response.getUserId()).isNotNull();
     }
 
     private Long signUpCustomer() {
