@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.application.dto.OrderDetailServiceResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
@@ -25,15 +24,13 @@ public class OrderService {
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
     private final ProductDao productDao;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+                        final CartItemDao cartItemDao, final ProductDao productDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
         this.productDao = productDao;
     }
 
