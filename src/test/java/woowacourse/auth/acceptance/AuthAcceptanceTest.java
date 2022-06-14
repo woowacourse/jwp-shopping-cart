@@ -85,21 +85,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(response.getMessage()).isEqualTo("유효하지 않거나 만료된 토큰입니다.");
     }
 
-    @DisplayName("Bearer Auth 토큰이 없는 경우 예외를 발생시킨다.")
-    @Test
-    void myInfoWithEmptyBearerAuth() {
-        // when
-        ExceptionResponse response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/customers/me")
-                .then().log().all()
-                .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .extract().as(ExceptionResponse.class);
-        // then
-        assertThat(response.getMessage()).isEqualTo("유효하지 않거나 만료된 토큰입니다.");
-    }
-
     @DisplayName("Bearer Auth 토큰이 없는 경우")
     @Test
     void myInfoWithEmptyBearerAuthWhenTokenEmpty() {

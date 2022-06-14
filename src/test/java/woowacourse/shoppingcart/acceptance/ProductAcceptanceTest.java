@@ -23,7 +23,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         List<ProductResponse> productResponses = response.jsonPath().getList(".", ProductResponse.class);
 
         //then
-        assertThat(productResponses.size()).isEqualTo(12);
+        assertThat(productResponses.size()).isEqualTo(24);
         int i = 0;
         for (Products product : Products.values()) {
             assertThat(product.getProduct()).extracting("name", "price", "imageUrl")

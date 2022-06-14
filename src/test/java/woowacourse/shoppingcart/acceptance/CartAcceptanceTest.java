@@ -20,7 +20,7 @@ import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.ProductIdsRequest;
 
 @DisplayName("장바구니 관련 기능")
-@Sql(scripts = "classpath:product-data.sql")
+@Sql(scripts = "classpath:schema.sql")
 public class CartAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("장바구니 아이템 1개 추가 후, 장바구니 아이템 목록 조회")
