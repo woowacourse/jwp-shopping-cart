@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
+import woowacourse.shoppingcart.domain.order.Order;
 import woowacourse.shoppingcart.domain.order.OrderDetail;
 import woowacourse.shoppingcart.domain.order.Orders;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
@@ -32,10 +33,16 @@ public class OrderService {
 
     public Long addOrder(final long customerId, final OrdersRequest orderDetailRequests) {
         Long createdOrdersId = orderDao.addOrders(customerId);
-        Orders orders = new Orders(customerId, createdOrdersId, orderDetailRequests);
+        Orders orders = new Orders(customerId, createdOrdersId, toOrders(orderDetailRequests, createdOrdersId));
         ordersDetailDao.addAllOrdersDetails(orders.getOrders());
         cartItemDao.deleteAllCartItems(customerId, orders.getProductIds());
         return createdOrdersId;
+    }
+
+    private List<Order> toOrders(OrdersRequest orderDetailRequests, Long createdOrdersId) {
+        return orderDetailRequests.getOrder().stream()
+                .map(order -> new Order(createdOrdersId, order.getId(), order.getQuantity()))
+                .collect(Collectors.toList());
     }
 
     public OrdersResponse findOrdersByCustomerId(final long customerId) {
