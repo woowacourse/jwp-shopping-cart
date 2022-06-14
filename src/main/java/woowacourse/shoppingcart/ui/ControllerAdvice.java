@@ -1,5 +1,7 @@
 package woowacourse.shoppingcart.ui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ControllerAdvice {
+
+    private static final Logger log = LoggerFactory.getLogger(ProductController.class);
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<ErrorResponse> handle() {
@@ -55,12 +59,13 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(ClientRuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidAccess(final RuntimeException e) {
+    public ResponseEntity<ErrorResponse> handleInvalidAccess(final ClientRuntimeException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleServerException() {
+    public ResponseEntity<ErrorResponse> handleServerException(final Exception e) {
+        log.error("exception ", e);
         return ResponseEntity.internalServerError().body(new ErrorResponse("서버에 오류가 발생했습니다."));
     }
 }

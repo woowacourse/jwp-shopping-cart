@@ -1,12 +1,14 @@
 package woowacourse.shoppingcart.ui;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.shoppingcart.application.ProductService;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.shoppingcart.dto.PageRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductSaveRequest;
+import woowacourse.shoppingcart.dto.ProductsResponse;
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -20,14 +22,9 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Product>> products() {
-        return ResponseEntity.ok(productService.findProducts());
-    }
-
     @PostMapping
-    public ResponseEntity<Void> add(@Validated(Request.allProperties.class) @RequestBody final Product product) {
-        final Long productId = productService.addProduct(product);
+    public ResponseEntity<Long> add(@RequestBody @Valid final ProductSaveRequest request) {
+        final Long productId = productService.addProduct(request);
         final URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/" + productId)
@@ -35,14 +32,26 @@ public class ProductController {
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<Product> product(@PathVariable final Long productId) {
-        return ResponseEntity.ok(productService.findProductById(productId));
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getOne(@PathVariable final Long id) {
+        final ProductResponse response = productService.findById(id);
+
+        return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long productId) {
-        productService.deleteProductById(productId);
+    @GetMapping
+    public ResponseEntity<ProductsResponse> getAllByPage(
+            @RequestParam(value = "page", defaultValue = "1") final Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") final Integer size) {
+        final PageRequest pageRequest = new PageRequest(page, size);
+        final List<ProductResponse> responses = productService.findAllByPage(pageRequest);
+
+        return ResponseEntity.ok(ProductsResponse.from(responses));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
+        productService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

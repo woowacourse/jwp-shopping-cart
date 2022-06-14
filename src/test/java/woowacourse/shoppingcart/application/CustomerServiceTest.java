@@ -11,11 +11,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import woowacourse.auth.exception.PasswordNotMatchException;
-import woowacourse.shoppingcart.application.dto.*;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.EncodedPassword;
+import woowacourse.shoppingcart.domain.PlainPassword;
+import woowacourse.shoppingcart.dto.*;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
 import java.util.Optional;
 
@@ -25,6 +26,8 @@ class CustomerServiceTest {
     private static final String NAME = "라라";
     private static final String EMAIL = "lala.seeun@gmail.com";
     private static final String PASSWORD = "tpdmstpdms11";
+    private static final PlainPassword PLAIN_PASSWORD = new PlainPassword(PASSWORD);
+    private static final EncodedPassword ENCODED_PASSWORD = new EncodedPassword(PLAIN_PASSWORD.encode());
 
     @InjectMocks
     private CustomerService customerService;
@@ -36,16 +39,16 @@ class CustomerServiceTest {
     @DisplayName("회원을 등록한다.")
     void save() {
         // given
-        final CustomerSaveServiceRequest customerSaveServiceRequest = new CustomerSaveServiceRequest(NAME, EMAIL,
-                PASSWORD);
-        final Customer customer = new Customer(1L, customerSaveServiceRequest.getName(),
-                new Email(customerSaveServiceRequest.getEmail()),
-                Password.fromRawValue(customerSaveServiceRequest.getPassword()));
+        final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
+        final Customer customer = new Customer(1L, request.getName(),
+                new Email(request.getEmail()),
+                ENCODED_PASSWORD);
+
         when(customerDao.save(any(Customer.class)))
                 .thenReturn(customer);
 
         // when, then
-        assertThatCode(() -> customerService.save(customerSaveServiceRequest))
+        assertThatCode(() -> customerService.save(request))
                 .doesNotThrowAnyException();
     }
 
@@ -53,13 +56,12 @@ class CustomerServiceTest {
     @DisplayName("중복된 이메일로 회원 등록 시 예외가 발생한다.")
     void save_duplicatedEmail_throwsException() {
         // given
-        final CustomerSaveServiceRequest customerSaveServiceRequest = new CustomerSaveServiceRequest(NAME, EMAIL,
-                PASSWORD);
+        final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
         when(customerDao.existsByEmail(any(Customer.class)))
                 .thenReturn(true);
 
         // when, then
-        assertThatThrownBy(() -> customerService.save(customerSaveServiceRequest))
+        assertThatThrownBy(() -> customerService.save(request))
                 .isInstanceOf(DuplicatedEmailException.class);
     }
 
@@ -68,35 +70,33 @@ class CustomerServiceTest {
     void findById() {
         // given
         final long id = 1L;
-        final CustomerSaveServiceRequest customerSaveServiceRequest = new CustomerSaveServiceRequest(NAME, EMAIL,
-                PASSWORD);
-        final Customer customer = new Customer(id, customerSaveServiceRequest.getName(),
-                new Email(customerSaveServiceRequest.getEmail()),
-                Password.fromRawValue(customerSaveServiceRequest.getPassword()));
+        final CustomerRegisterRequest request = new CustomerRegisterRequest(NAME, EMAIL, PASSWORD);
+        final Customer customer = new Customer(id, request.getName(),
+                new Email(request.getEmail()),
+                ENCODED_PASSWORD);
         when(customerDao.findById(any(Long.class)))
                 .thenReturn(Optional.of(customer));
 
         // when
-        CustomerDetailServiceResponse actual = customerService.findById(id);
+        CustomerDetailResponse actual = customerService.findById(id);
 
         // then
         assertThat(actual).usingRecursiveComparison()
-                .isEqualTo(new CustomerDetailServiceResponse(NAME, EMAIL));
+                .isEqualTo(new CustomerDetailResponse(NAME, EMAIL));
     }
 
     @Test
     @DisplayName("회원을 삭제한다.")
     void delete() {
         // given
-        final CustomerDeleteServiceRequest request
-                = new CustomerDeleteServiceRequest(1L, PASSWORD);
+        final CustomerDeleteRequest request = new CustomerDeleteRequest(PASSWORD);
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
+                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), ENCODED_PASSWORD)));
         when(customerDao.deleteById(1L))
                 .thenReturn(1);
 
         // when
-        assertThatCode(() -> customerService.delete(request))
+        assertThatCode(() -> customerService.delete(1L, request))
                 .doesNotThrowAnyException();
     }
 
@@ -104,13 +104,13 @@ class CustomerServiceTest {
     @DisplayName("회원 삭제시 비밀번호가 일치하지 않을 경우 예외가 발생한다.")
     void delete_passwordNotMatch_throwsException() {
         // given
-        final CustomerDeleteServiceRequest request
-                = new CustomerDeleteServiceRequest(1L, "1111111111");
+        final CustomerDeleteRequest request
+                = new CustomerDeleteRequest("1111111111");
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
+                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), ENCODED_PASSWORD)));
 
         // when, then
-        assertThatThrownBy(() -> customerService.delete(request))
+        assertThatThrownBy(() -> customerService.delete(1L, request))
                 .isInstanceOf(PasswordNotMatchException.class);
     }
 
@@ -119,13 +119,13 @@ class CustomerServiceTest {
     void updateName() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
+                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), ENCODED_PASSWORD)));
         when(customerDao.updateById(any(Customer.class)))
                 .thenReturn(1);
 
         // when, then
-        final CustomerProfileUpdateServiceRequest request = new CustomerProfileUpdateServiceRequest(1L, "클레이");
-        assertThatCode(() -> customerService.updateName(request))
+        final CustomerProfileUpdateRequest request = new CustomerProfileUpdateRequest("클레이");
+        assertThatCode(() -> customerService.updateName(1L, request))
                 .doesNotThrowAnyException();
     }
 
@@ -134,14 +134,13 @@ class CustomerServiceTest {
     void updatePassword() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
+                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), ENCODED_PASSWORD)));
         when(customerDao.updateById(any(Customer.class)))
                 .thenReturn(1);
 
         // when, then
-        final CustomerPasswordUpdateServiceRequest request = new CustomerPasswordUpdateServiceRequest(1L, PASSWORD,
-                "newpassword123");
-        assertThatCode(() -> customerService.updatePassword(request))
+        final CustomerPasswordUpdateRequest request = new CustomerPasswordUpdateRequest(PASSWORD, "newpassword123");
+        assertThatCode(() -> customerService.updatePassword(1L, request))
                 .doesNotThrowAnyException();
     }
 
@@ -150,14 +149,14 @@ class CustomerServiceTest {
     void updatePassword_passwordNotMatch_throwsException() {
         // given
         when(customerDao.findById(1L))
-                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), Password.fromRawValue(PASSWORD))));
+                .thenReturn(Optional.of(new Customer(1L, NAME, new Email(EMAIL), ENCODED_PASSWORD)));
 
         // when
-        final CustomerPasswordUpdateServiceRequest request = new CustomerPasswordUpdateServiceRequest(1L,
-                "wrongoldpassword", "newpassword123");
+        final CustomerPasswordUpdateRequest request =
+                new CustomerPasswordUpdateRequest("wrongoldpassword", "newpassword123");
 
         // then
-        assertThatThrownBy(() -> customerService.updatePassword(request))
+        assertThatThrownBy(() -> customerService.updatePassword(1L, request))
                 .isInstanceOf(PasswordNotMatchException.class);
     }
 }

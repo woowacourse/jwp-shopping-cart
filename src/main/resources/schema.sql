@@ -11,7 +11,7 @@ drop table if exists customer;
 create table customer
 (
     id       bigint       not null auto_increment,
-    name varchar(255) not null,
+    name     varchar(255) not null,
     email    varchar(255),
     password varchar(255),
     primary key (id)
@@ -34,6 +34,7 @@ create table cart_item
     id          bigint not null auto_increment,
     customer_id bigint not null,
     product_id  bigint not null,
+    quantity    integer not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 

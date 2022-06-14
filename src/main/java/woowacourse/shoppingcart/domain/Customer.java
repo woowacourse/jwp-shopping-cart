@@ -7,16 +7,16 @@ public class Customer {
     private final Long id;
     private String name;
     private final Email email;
-    private Password password;
+    private EncodedPassword password;
 
-    public Customer(final Long id, final String name, final Email email, final Password password) {
+    public Customer(final Long id, final String name, final Email email, final EncodedPassword password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public Customer(final String name, final Email email, final Password password) {
+    public Customer(final String name, final Email email, final EncodedPassword password) {
         this(null, name, email, password);
     }
 
@@ -25,7 +25,7 @@ public class Customer {
         return this;
     }
 
-    public Customer updatePassword(final Password newPassword) {
+    public Customer updatePassword(final EncodedPassword newPassword) {
         this.password = newPassword;
         return this;
     }
@@ -48,7 +48,7 @@ public class Customer {
         return email;
     }
 
-    public Password getPassword() {
+    public EncodedPassword getPassword() {
         return password;
     }
 }

@@ -7,7 +7,7 @@ public class TokenResponse {
     private TokenResponse() {
     }
 
-    public TokenResponse(String accessToken) {
+    public TokenResponse(final String accessToken) {
         this.accessToken = accessToken;
     }
 

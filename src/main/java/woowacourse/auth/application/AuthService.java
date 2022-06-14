@@ -1,7 +1,8 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.auth.application.dto.LoginServiceRequest;
+import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.exception.NoSuchEmailException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
@@ -9,6 +10,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
 
 @Service
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final CustomerDao customerDao;
@@ -19,10 +21,10 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public String certify(final LoginServiceRequest loginServiceRequest) {
-        final Customer customer = customerDao.findByEmail(new Email(loginServiceRequest.getEmail()))
+    public String certify(final TokenRequest tokenRequest) {
+        final Customer customer = customerDao.findByEmail(new Email(tokenRequest.getEmail()))
                 .orElseThrow(NoSuchEmailException::new);
-        customer.checkPasswordMatch(loginServiceRequest.getPassword());
+        customer.checkPasswordMatch(tokenRequest.getPassword());
         return jwtTokenProvider.createToken(String.valueOf(customer.getId()));
     }
 }

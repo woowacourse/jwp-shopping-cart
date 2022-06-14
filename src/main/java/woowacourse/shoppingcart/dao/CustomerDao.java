@@ -9,7 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
-import woowacourse.shoppingcart.domain.Password;
+import woowacourse.shoppingcart.domain.EncodedPassword;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -28,7 +28,7 @@ public class CustomerDao {
                 rs.getLong("id"),
                 rs.getString("name"),
                 new Email(rs.getString("email")),
-                Password.fromHashedValue(rs.getString("password"))
+                new EncodedPassword(rs.getString("password"))
         );
     }
 
@@ -43,6 +43,14 @@ public class CustomerDao {
         namedJdbcTemplate.update(sql, new MapSqlParameterSource(params), keyHolder);
         final long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return new Customer(id, customer.getName(), customer.getEmail(), customer.getPassword());
+    }
+
+    public boolean existsById(final Long id) {
+        final String sql = "SELECT EXISTS (SELECT * FROM customer WHERE id = :id)";
+        final MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id);
+
+        return Boolean.TRUE.equals(namedJdbcTemplate.queryForObject(sql, params, Boolean.class));
     }
 
     public boolean existsByEmail(final Customer customer) {

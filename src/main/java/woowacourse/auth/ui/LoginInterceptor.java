@@ -22,7 +22,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(final HttpServletRequest request,
                              final HttpServletResponse response,
                              final Object handler) {
-        if (isExclude(request.getMethod())) {
+        if (isExclude(request.getMethod(), request.getServletPath())) {
             return true;
         }
 
@@ -34,7 +34,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private boolean isExclude(final String method) {
-        return HttpMethod.POST.name().equals(method) || HttpMethod.OPTIONS.name().equals(method);
+    private boolean isExclude(final String method, final String uri) {
+        return uri.equals("/api/customer") && HttpMethod.POST.name().equals(method)
+                || HttpMethod.OPTIONS.name().equals(method);
     }
 }
