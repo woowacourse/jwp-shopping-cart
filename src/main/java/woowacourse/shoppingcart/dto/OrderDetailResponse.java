@@ -1,5 +1,8 @@
 package woowacourse.shoppingcart.dto;
 
+import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.Product;
+
 public class OrderDetailResponse {
 
     private Long productId;
@@ -17,6 +20,12 @@ public class OrderDetailResponse {
         this.quantity = quantity;
         this.price = price;
         this.image = image;
+    }
+
+    public static OrderDetailResponse from(OrderDetail orderDetail) {
+        Product product = orderDetail.getProduct();
+        return new OrderDetailResponse(product.getId(), product.getName(), orderDetail.getQuantity(),
+                product.getPrice(), product.getImage());
     }
 
     public Long getProductId() {

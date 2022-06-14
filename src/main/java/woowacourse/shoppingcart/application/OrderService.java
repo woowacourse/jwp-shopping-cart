@@ -6,13 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.exception.InvalidAccessException;
 import woowacourse.exception.InvalidOrderException;
-import woowacourse.exception.InvalidProductException;
 import woowacourse.exception.InvalidTokenException;
 import woowacourse.exception.NotInCustomerCartItemException;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.OrderRequest;
@@ -92,19 +90,10 @@ public class OrderService {
         final List<OrderDetailResponse> ordersDetailResponses = new ArrayList<>();
         List<OrderDetail> ordersDetails = ordersDetailDao.findOrdersDetailsByOrderId(order.getId());
         for (final OrderDetail orderDetail : ordersDetails) {
-            final Product product = productDao.findProductById(orderDetail.getProductId())
-                    .orElseThrow(InvalidProductException::new);
-            ordersDetailResponses.add(new OrderDetailResponse(product.getId(), product.getName(),
-                    orderDetail.getQuantity(), product.getPrice(), product.getImage()));
+            ordersDetailResponses.add(OrderDetailResponse.from(orderDetail));
         }
 
-        return new OrderResponse(order.getId(), ordersDetailResponses, calculateTotalPrice(ordersDetailResponses),
+        return new OrderResponse(order.getId(), ordersDetailResponses, order.calculateTotalPrice(),
                 order.getDate());
-    }
-
-    private int calculateTotalPrice(List<OrderDetailResponse> ordersDetailResponses) {
-        return ordersDetailResponses.stream()
-                .mapToInt(ordersDetailResponse -> ordersDetailResponse.getQuantity() * ordersDetailResponse.getPrice())
-                .sum();
     }
 }

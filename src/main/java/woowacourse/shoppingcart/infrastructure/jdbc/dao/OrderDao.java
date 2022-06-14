@@ -17,20 +17,16 @@ import woowacourse.shoppingcart.domain.Orders;
 @Repository
 public class OrderDao {
 
-    private static final RowMapper<Orders> ROW_MAPPER =
-            (resultSet, rowNum) -> new Orders(
-                    resultSet.getLong("id"),
-                    resultSet.getTimestamp("order_date").toLocalDateTime()
-            );
-
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final OrdersDetailDao ordersDetailDao;
 
-    public OrderDao(final DataSource dataSource) {
+    public OrderDao(final DataSource dataSource, final OrdersDetailDao ordersDetailDao) {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("orders")
                 .usingGeneratedKeyColumns("id");
+        this.ordersDetailDao = ordersDetailDao;
     }
 
     public Long addOrder(final Long customerId) {
@@ -46,7 +42,7 @@ public class OrderDao {
         try {
             final String query = "SELECT id, order_date FROM orders WHERE id = (:id)";
             final SqlParameterSource parameters = new MapSqlParameterSource("id", id);
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, parameters, ROW_MAPPER));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, parameters, getOrdersRowMapper()));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -58,5 +54,13 @@ public class OrderDao {
         final SqlParameterSource parameters = new MapSqlParameterSource("customerId", customerId)
                 .addValue("orderId", orderId);
         return jdbcTemplate.queryForObject(sql, parameters, Boolean.class);
+    }
+
+    private RowMapper<Orders> getOrdersRowMapper() {
+        return (resultSet, rowNum) -> new Orders(
+                resultSet.getLong("id"),
+                ordersDetailDao.findOrdersDetailsByOrderId(resultSet.getLong("id")),
+                resultSet.getTimestamp("order_date").toLocalDateTime()
+        );
     }
 }
