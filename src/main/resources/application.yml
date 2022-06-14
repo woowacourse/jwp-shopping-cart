@@ -1,13 +1,13 @@
 spring:
-  sql.init.mode: never
+  sql.init.mode: always
   datasource:
-    url: ${DB_URL}
-    username: ${ID}
-    password: ${PASSWORD}
-    driver-class-name: ${DRIVER_CLASS_NAME}
-
+    url: 'jdbc:h2:~/testDB;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE'
+    username: 'sa'
+    h2:
+      console:
+        enabled: true
 security:
   jwt:
     token:
-      secret-key: ${SECRET_KEY}
-      expire-length: ${EXPIRE_LENGTH}
+      secret-key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJzdWIiOiIiLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9ih1aovtQShabQ7l0cINw4k1fagApg3qLWiB8Kt59Lno'
+      expire-length: '3600000'
