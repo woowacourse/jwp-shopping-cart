@@ -10,10 +10,10 @@ import static woowacourse.ShoppingCartFixture.잉_회원생성요청;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.exception.CustomerNotFoundException;
-import woowacourse.exception.EmailDuplicateException;
-import woowacourse.exception.PasswordIncorrectException;
-import woowacourse.exception.TokenInvalidException;
+import woowacourse.exception.badrequest.EmailDuplicateException;
+import woowacourse.exception.notfound.CustomerNotFoundException;
+import woowacourse.exception.unauthorized.PasswordIncorrectException;
+import woowacourse.exception.unauthorized.TokenInvalidException;
 import woowacourse.shoppingcart.service.dto.CustomerCreateServiceRequest;
 import woowacourse.shoppingcart.service.dto.CustomerDeleteServiceRequest;
 import woowacourse.shoppingcart.service.dto.CustomerUpdatePasswordServiceRequest;
@@ -109,7 +109,7 @@ public class CustomerControllerTest extends ControllerTest {
         when(customerService.getById(101L)).thenThrow(new CustomerNotFoundException());
 
         // when then
-        mockMvc.perform(getWithToken("/api/customer", token)).andDo(print()).andExpect(status().isBadRequest());
+        mockMvc.perform(getWithToken("/api/customer", token)).andDo(print()).andExpect(status().isNotFound());
     }
 
     @DisplayName("회원 이름 변경 시도 시, 이름이 비어있으면 400을 응답한다")
@@ -121,7 +121,7 @@ public class CustomerControllerTest extends ControllerTest {
         // when then
         mockMvc.perform(updateWithToken("/api/customer/profile", TOKEN, params))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @DisplayName("비밀번호 변경 시도 시, 새로운 비밀번호 길이가 8자 미만인 경우 400을 응답한다")
@@ -133,7 +133,7 @@ public class CustomerControllerTest extends ControllerTest {
 
         // when then
         mockMvc.perform(updateWithToken("/api/customer/password", TOKEN, customerUpdatePasswordRequest)).andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @DisplayName("비밀번호 변경 시도 시, 기존 비밀번호 길이가 8자 미만인 경우 400을 응답한다")
@@ -145,7 +145,7 @@ public class CustomerControllerTest extends ControllerTest {
 
         // when then
         mockMvc.perform(updateWithToken("/api/customer/password", TOKEN, customerUpdatePasswordRequest)).andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @DisplayName("비밀번호 변경 시도 시, 기존 비밀번호가 일치하지 않는 경우 400을 응답한다")
@@ -161,7 +161,7 @@ public class CustomerControllerTest extends ControllerTest {
         // when then
         mockMvc.perform(updateWithToken("/api/customer/password", TOKEN, customerUpdatePasswordServiceRequest))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @DisplayName("비밀번호 변경 시도 시, 새 비밀번호가 비어있는 경우 400을 응답한다")
@@ -173,7 +173,7 @@ public class CustomerControllerTest extends ControllerTest {
 
         // when then
         mockMvc.perform(updateWithToken("/api/customer/password", TOKEN, invalidPasswordUpdateRequest)).andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @DisplayName("비밀번호 변경 시도 시, 이전 비밀번호가 비어있는 경우 400을 응답한다")
@@ -185,7 +185,7 @@ public class CustomerControllerTest extends ControllerTest {
 
         // when then
         mockMvc.perform(updateWithToken("/api/customer/password", TOKEN, invalidPasswordUpdateRequest)).andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @DisplayName("회원 탈퇴 시도 시 입력한 비밀번호가 일치하지 않는 경우 400을 응답한다")
@@ -200,7 +200,7 @@ public class CustomerControllerTest extends ControllerTest {
 
         // when then
         mockMvc.perform(deleteWithToken("/api/customer", TOKEN, params)).andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @DisplayName("회원 탈퇴 시도 시 입력한 비밀번호가 8자 미만일 경우 400을 응답한다")
@@ -211,7 +211,7 @@ public class CustomerControllerTest extends ControllerTest {
 
         // when then
         mockMvc.perform(deleteWithToken("/api/customer", TOKEN, params)).andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @DisplayName("회원 탈퇴 시도 시 비밀번호가 비어있는 경우 400을 응답한다")

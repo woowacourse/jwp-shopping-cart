@@ -1,11 +1,14 @@
 package woowacourse.shoppingcart.ui.dto.response;
 
 public class OrderDetailResponse {
-    private final long productId;
-    private final long quantity;
-    private final long price;
-    private final String name;
-    private final String imageUrl;
+    private long productId;
+    private long quantity;
+    private long price;
+    private String name;
+    private String imageUrl;
+
+    public OrderDetailResponse() {
+    }
 
     public OrderDetailResponse(final long productId, final long quantity, final long price, final String name,
                                final String imageUrl) {
