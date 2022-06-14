@@ -26,3 +26,29 @@ include::{snippets}/add-order-contains-all/http-response.adoc[]
 ===== HTTP Response
 
 include::{snippets}/add-order-not-contains/http-response.adoc[]
+
+[[resources-order-find-order]]
+=== 주문 단건 조회
+
+[[resources-order-find-order-success]]
+==== 성공
+
+===== HTTP Request
+
+include::{snippets}/find-order/http-request.adoc[]
+
+===== Request path variables
+
+include::{snippets}/find-order/path-parameters.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/find-order/http-response.adoc[]
+
+[[resources-order-find-order-not-exist]]
+==== 실패 - 존재하지 않는 주문
+
+===== HTTP Response
+
+include::{snippets}/find-order-not-exist-order/http-response.adoc[]
+
