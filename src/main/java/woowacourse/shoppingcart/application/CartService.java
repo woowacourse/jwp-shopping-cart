@@ -45,7 +45,6 @@ public class CartService {
         }
 
         cartItemDao.add(memberId, productId, 1);
-
     }
 
     public void updateCartItem(long memberId, long cartId, PutCartItemRequest request) {

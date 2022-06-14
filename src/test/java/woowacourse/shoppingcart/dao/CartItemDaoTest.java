@@ -57,7 +57,7 @@ public class CartItemDaoTest {
 
         int resultQuantity = jdbcTemplate.queryForObject("SELECT quantity FROM cart_item WHERE id = 1", Integer.class);
 
-        assertThat(resultQuantity).isEqualTo(originalQuantity+1);
+        assertThat(resultQuantity).isEqualTo(originalQuantity + 1);
     }
 
     @DisplayName("장바구니에 새로운 상품을 추가한다.")
@@ -86,6 +86,5 @@ public class CartItemDaoTest {
         boolean result = jdbcTemplate.queryForObject("SELECT EXISTS (SELECT * FROM cart_item WHERE id = 1)", Boolean.class);
         assertThat(result).isFalse();
     }
-
 
 }
