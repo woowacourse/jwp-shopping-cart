@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Product;
 
@@ -24,10 +25,8 @@ public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
     private final CustomerDao customerDao;
-    private final JdbcTemplate jdbcTemplate;
 
     public CartItemDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.jdbcTemplate = jdbcTemplate;
         cartItemDao = new CartItemDao(jdbcTemplate);
         customerDao = new CustomerDao(jdbcTemplate, dataSource);
         productDao = new ProductDao(jdbcTemplate);
@@ -41,31 +40,21 @@ public class CartItemDaoTest {
         customerDao.save(new Customer("email", "Pw12345!", "name", "010-1234-5678", "address"));
     }
 
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("카트에 아이템을 담는다.")
     @Test
     void addCartItem() {
 
         // given
         final Long customerId = 1L;
         final Long productId = 1L;
+        Cart cart = new Cart(customerId, productId, 5);
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId, 5);
+        cartItemDao.addCartItem(cart);
 
         // then
-        assertThat(cartId).isEqualTo(1L);
+        List<Long> idsByCustomerId = cartItemDao.findIdsByCustomerId(customerId);
+        assertThat(idsByCustomerId).isEqualTo(List.of(1L));
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
-    @Test
-    void deleteCartItem() {
-
-        // given
-        final Long cartId = 1L;
-
-        // when
-
-        // then
-
-    }
 }

@@ -1,13 +1,10 @@
 package woowacourse.shoppingcart.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
@@ -38,27 +35,9 @@ public class CartItemDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, cartId);
     }
 
-    public Optional<Integer> findQuantityByProductIdAndCustomerId(Long customerId, Long productId) {
-        final String sql = "SELECT quantity FROM cart_item WHERE customer_id = ? AND product_id = ?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class, customerId, productId));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    public Long addCartItem(final Long customerId, final Long productId, Integer quantity) {
+    public void addCartItem(Cart cart) {
         final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            preparedStatement.setInt(3, quantity);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        jdbcTemplate.update(sql, cart.getCustomerId(), cart.getProductId(), cart.getQuantity());
     }
 
     public void deleteCartItem(final Long customerId, Long productId) {
@@ -69,9 +48,9 @@ public class CartItemDao {
         }
     }
 
-    public void updateQuantity(Long customerId, Long productId, Integer quantity) {
+    public void updateQuantity(Cart cart) {
         final String sql = "UPDATE cart_item SET quantity = ? WHERE customer_id = ? AND product_id = ?";
-        final int rowCount = jdbcTemplate.update(sql, quantity, customerId, productId);
+        final int rowCount = jdbcTemplate.update(sql, cart.getQuantity(), cart.getCustomerId(), cart.getProductId());
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }

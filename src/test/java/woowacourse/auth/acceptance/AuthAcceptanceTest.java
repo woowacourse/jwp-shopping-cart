@@ -102,7 +102,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("Bearer Auth 토큰이 없는 경우")
     @Test
-    void myInfoWithEmptyBearerAuth() {
+    void myInfoWithEmptyBearerAuthWhenTokenEmpty() {
         // when
         String accessToken = "";
         ExceptionResponse response = RestAssured.given().log().all()

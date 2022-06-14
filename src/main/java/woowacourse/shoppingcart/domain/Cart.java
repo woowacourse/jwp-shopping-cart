@@ -2,44 +2,44 @@ package woowacourse.shoppingcart.domain;
 
 public class Cart {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private static final int POSITIVE_DIGIT_STANDARD = 0;
 
-    public Cart() {
+    private final Long id;
+    private final Long customerId;
+    private final Long productId;
+    private final Integer quantity;
+
+    public Cart(Long customerId, Long productId, Integer quantity) {
+        this(null, customerId, productId, quantity);
     }
 
-    public Cart(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-    }
-
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl) {
+    public Cart(Long id, Long customerId, Long productId, Integer quantity) {
+        validateQuantity(quantity);
         this.id = id;
+        this.customerId = customerId;
         this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+    }
+
+    private void validateQuantity(Integer quantity) {
+        if (quantity <= POSITIVE_DIGIT_STANDARD) {
+            throw new IllegalArgumentException("올바르지 않은 상품 수량 형식입니다.");
+        }
     }
 
     public Long getId() {
         return id;
     }
 
+    public Long getCustomerId() {
+        return customerId;
+    }
+
     public Long getProductId() {
         return productId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+    public Integer getQuantity() {
+        return quantity;
     }
 }

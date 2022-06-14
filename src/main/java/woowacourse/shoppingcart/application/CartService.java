@@ -7,18 +7,16 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.CartRequest;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.dto.ProductIdsRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
-
-    private static final int POSITIVE_DIGIT_STANDARD = 0;
 
     private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
@@ -52,20 +50,10 @@ public class CartService {
         return new CartResponse(product, quantity);
     }
 
-    public Long addCart(final Long customerId, final CartRequest cartRequest) {
+    public void addCart(final Long customerId, final CartRequest cartRequest) {
         checkExistById(customerId);
-        validateQuantity(cartRequest.getQuantity());
-        try {
-            return cartItemDao.addCartItem(customerId, cartRequest.getId(), cartRequest.getQuantity());
-        } catch (Exception e) {
-            throw new InvalidProductException();
-        }
-    }
-
-    private void validateQuantity(Integer quantity) {
-        if (quantity <= POSITIVE_DIGIT_STANDARD) {
-            throw new IllegalArgumentException("올바르지 않은 상품 수량 형식입니다.");
-        }
+        Cart cart = new Cart(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
+        cartItemDao.addCartItem(cart);
     }
 
     public void deleteCart(final Long customerId, final ProductIdsRequest productIds) {
@@ -77,7 +65,7 @@ public class CartService {
 
     public void updateCartQuantity(Long customerId, CartRequest cartRequest) {
         checkExistById(customerId);
-        validateQuantity(cartRequest.getQuantity());
-        cartItemDao.updateQuantity(customerId, cartRequest.getId(), cartRequest.getQuantity());
+        Cart cart = new Cart(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
+        cartItemDao.updateQuantity(cart);
     }
 }
