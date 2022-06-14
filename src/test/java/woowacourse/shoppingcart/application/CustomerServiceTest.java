@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -11,16 +12,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import javax.sql.DataSource;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
-import woowacourse.shoppingcart.dto.CustomerRemoveRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateResponse;
-import woowacourse.shoppingcart.exception.DuplicatedCustomerEmailException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.WrongPasswordException;
+import woowacourse.exception.DuplicatedCustomerEmailException;
+import woowacourse.exception.InvalidTokenException;
+import woowacourse.exception.WrongPasswordException;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRemoveRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.CustomerDao;
 
 @JdbcTest
@@ -82,8 +80,10 @@ class CustomerServiceTest {
 
         final String newNickname = "Guest123";
         final String newPassword = "qwer1234!@#$";
-        final CustomerUpdateResponse actual = customerService.updateCustomer(customerId,
+        customerService.updateCustomerNickName(customerId,
                 new CustomerUpdateRequest(newNickname, CUSTOMER_PASSWORD, newPassword));
+
+        CustomerResponse actual = customerService.findById(customerId);
 
         assertThat(actual.getNickname()).isEqualTo(newNickname);
     }
@@ -97,8 +97,8 @@ class CustomerServiceTest {
         final String newNickname = "Guest123123";
         final String newPassword = "anotherqwer1234!@#$";
 
-        assertThatThrownBy(() ->customerService.updateCustomer(customerId,
-                new CustomerUpdateRequest(newNickname, newPassword, newPassword)))
+        assertThatThrownBy(() -> customerService.updateCustomerPassword(
+                customerId, new CustomerUpdateRequest(newNickname, newPassword, newPassword)))
                 .isInstanceOf(WrongPasswordException.class);
     }
 
@@ -110,7 +110,7 @@ class CustomerServiceTest {
 
         customerService.removeCustomer(customerId, new CustomerRemoveRequest(CUSTOMER_PASSWORD));
 
-        assertThatThrownBy(() ->customerService.findById(customerId))
-                .isInstanceOf(InvalidCustomerException.class);
+        assertThatThrownBy(() -> customerService.findById(customerId))
+                .isInstanceOf(InvalidTokenException.class);
     }
 }

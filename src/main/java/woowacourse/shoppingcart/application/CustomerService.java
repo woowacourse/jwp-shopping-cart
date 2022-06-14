@@ -2,16 +2,15 @@ package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import woowacourse.exception.DuplicatedCustomerEmailException;
+import woowacourse.exception.InvalidTokenException;
+import woowacourse.exception.WrongPasswordException;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
-import woowacourse.shoppingcart.dto.CustomerRemoveRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateResponse;
-import woowacourse.shoppingcart.exception.DuplicatedCustomerEmailException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
-import woowacourse.shoppingcart.exception.WrongPasswordException;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRemoveRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateResponse;
 import woowacourse.shoppingcart.infrastructure.jdbc.dao.CustomerDao;
 
 @Service
@@ -26,9 +25,7 @@ public class CustomerService {
 
     @Transactional
     public Long registerCustomer(final CustomerRegisterRequest customerRegisterRequest) {
-        if (customerDao.existsByEmail(customerRegisterRequest.getEmail())) {
-            throw new DuplicatedCustomerEmailException();
-        }
+        validateDuplicatedEmail(customerRegisterRequest);
 
         final Customer customer = new Customer(customerRegisterRequest.getEmail(),
                 customerRegisterRequest.getNickname(),
@@ -41,18 +38,22 @@ public class CustomerService {
         return new CustomerResponse(customer.getEmail(), customer.getNickname());
     }
 
-    private Customer getById(final Long customerId) {
-        return customerDao.findById(customerId)
-                .orElseThrow(InvalidCustomerException::new);
+    @Transactional
+    public CustomerUpdateResponse updateCustomerNickName(final Long customerId,
+                                                         final CustomerUpdateRequest customerUpdateRequest) {
+        final Customer customer = getById(customerId);
+        customer.updateNickname(customerUpdateRequest.getNickname());
+        customerDao.update(customer);
+        return new CustomerUpdateResponse(customer.getNickname());
     }
 
     @Transactional
-    public CustomerUpdateResponse updateCustomer(final Long customerId,
-                                                 final CustomerUpdateRequest customerUpdateRequest) {
+    public void updateCustomerPassword(final Long customerId,
+                                       final CustomerUpdateRequest customerUpdateRequest) {
         final Customer customer = getById(customerId);
         validatePassword(customer, customerUpdateRequest.getPassword());
-        customer.update(customerUpdateRequest.getNickname(), customerUpdateRequest.getNewPassword());
-        return new CustomerUpdateResponse(customer.getNickname());
+        customer.updatePassword(customerUpdateRequest.getNewPassword());
+        customerDao.update(customer);
     }
 
     @Transactional
@@ -61,6 +62,17 @@ public class CustomerService {
         final Customer customer = getById(customerId);
         validatePassword(customer, customerRemoveRequest.getPassword());
         customerDao.deleteById(customerId);
+    }
+
+    private void validateDuplicatedEmail(CustomerRegisterRequest customerRegisterRequest) {
+        if (customerDao.existsByEmail(customerRegisterRequest.getEmail())) {
+            throw new DuplicatedCustomerEmailException();
+        }
+    }
+
+    private Customer getById(final Long customerId) {
+        return customerDao.findById(customerId)
+                .orElseThrow(InvalidTokenException::new);
     }
 
     private void validatePassword(final Customer customer, final String password) {

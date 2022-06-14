@@ -1,10 +1,9 @@
 package woowacourse.shoppingcart.acceptance;
 
-import org.springframework.http.MediaType;
-
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.springframework.http.MediaType;
 
 public class RequestHandler {
 
@@ -47,8 +46,9 @@ public class RequestHandler {
                 .extract();
     }
 
-    public static <T> ExtractableResponse<Response> putRequest(String url, T requestBody) {
+    public static <T> ExtractableResponse<Response> putRequest(String url, T requestBody, String accessToken) {
         return RestAssured.given().log().all()
+                .auth().oauth2(accessToken)
                 .body(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)

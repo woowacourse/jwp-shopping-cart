@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.infrastructure.jdbc.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
-
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -11,8 +11,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-
-import javax.sql.DataSource;
 import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest
@@ -96,14 +94,13 @@ class CustomerDaoTest {
 
         final String newNickname = "Guest1234";
         final String newPassword = "qwer1234!@#$";
-        customer.update(newNickname, newPassword);
+        customer.updateNickname(newNickname);
 
         customerDao.update(customer);
 
         Optional<Customer> actual = customerDao.findById(customer.getId());
 
         assertThat(actual).isPresent();
-        assertThat(actual.get()).extracting("nickname", "password")
-                .containsExactly(newNickname, newPassword);
+        assertThat(actual.get().getNickname()).isEqualTo(newNickname);
     }
 }

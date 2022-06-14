@@ -22,8 +22,11 @@ public class Customer {
         this(null, email, nickname, password);
     }
 
-    public void update(final String nickname, final String password) {
+    public void updateNickname(final String nickname) {
         this.nickname = new Nickname(nickname);
+    }
+
+    public void updatePassword(final String password) {
         this.password = new Password(password);
     }
 

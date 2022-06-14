@@ -1,122 +1,88 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static org.assertj.core.api.Assertions.tuple;
+import static woowacourse.shoppingcart.acceptance.RequestHandler.deleteRequest;
+import static woowacourse.shoppingcart.acceptance.RequestHandler.getRequest;
+import static woowacourse.shoppingcart.acceptance.RequestHandler.postRequest;
+import static woowacourse.shoppingcart.acceptance.RequestHandler.putRequest;
 
-import java.util.HashMap;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.dto.cartItem.CartItemDeleteRequest;
+import woowacourse.shoppingcart.dto.cartItem.CartItemResponse;
+import woowacourse.shoppingcart.dto.cartItem.CartItemUpdateRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRegisterRequest;
 
 @DisplayName("장바구니 관련 기능")
 public class CartAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
-    private Long productId1;
-    private Long productId2;
 
-    @Override
+    private static final String CUSTOMER_EMAIL = "guest@woowa.com";
+    private static final String CUSTOMER_NAME = "guest";
+    private static final String CUSTOMER_PASSWORD = "qwer1234!@#$";
+
+    private String token;
+
     @BeforeEach
-    public void setUp() {
-        super.setUp();
+    void init() {
+        postRequest("/customers", new CustomerRegisterRequest(
+                CUSTOMER_EMAIL, CUSTOMER_NAME, CUSTOMER_PASSWORD));
 
-        productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
+        final ExtractableResponse<Response> response = postRequest("/auth/login",
+                new TokenRequest(CUSTOMER_EMAIL, CUSTOMER_PASSWORD));
+        final TokenResponse tokenResponse = response.jsonPath().getObject(".", TokenResponse.class);
+        token = tokenResponse.getAccessToken();
     }
 
-    @DisplayName("장바구니 아이템 추가")
-    @Test
-    void addCartItem() {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(USER, productId1);
-
-        장바구니_아이템_추가됨(response);
-    }
-
-    @DisplayName("장바구니 아이템 목록 조회")
+    @DisplayName("해당 고객의 CartItem 목록을 조회한다.")
     @Test
     void getCartItems() {
-        장바구니_아이템_추가되어_있음(USER, productId1);
-        장바구니_아이템_추가되어_있음(USER, productId2);
+        putRequest("/cart/products/1", new CartItemUpdateRequest(3), token);
+        putRequest("/cart/products/2", new CartItemUpdateRequest(5), token);
+        ExtractableResponse<Response> response = getRequest("/cart", token);
 
-        ExtractableResponse<Response> response = 장바구니_아이템_목록_조회_요청(USER);
-
-        장바구니_아이템_목록_응답됨(response);
-        장바구니_아이템_목록_포함됨(response, productId1, productId2);
-    }
-
-    @DisplayName("장바구니 삭제")
-    @Test
-    void deleteCartItem() {
-        Long cartId = 장바구니_아이템_추가되어_있음(USER, productId1);
-
-        ExtractableResponse<Response> response = 장바구니_삭제_요청(USER, cartId);
-
-        장바구니_삭제됨(response);
-    }
-
-    public static ExtractableResponse<Response> 장바구니_아이템_추가_요청(String nickname, Long productId) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", productId);
-
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestBody)
-                .when().post("/api/customers/{customerName}/carts", nickname)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String nickname) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/carts", nickname)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 장바구니_삭제_요청(String nickname, Long cartId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/api/customers/{customerName}/carts/{cartId}", nickname, cartId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static void 장바구니_아이템_추가됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static Long 장바구니_아이템_추가되어_있음(String nickname, Long productId) {
-        ExtractableResponse<Response> response = 장바구니_아이템_추가_요청(nickname, productId);
-        return Long.parseLong(response.header("Location").split("/carts/")[1]);
-    }
-
-    public static void 장바구니_아이템_목록_응답됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        List<CartItemResponse> cartItemResponses = response.jsonPath().get(".");
+        assertThat(cartItemResponses).hasSize(2)
+                .extracting("productId", "name", "price", "quantity")
+                .containsExactly(tuple(1, "우유", 3000, 3), tuple(2, "바나나", 3000, 5));
     }
 
-    public static void 장바구니_아이템_목록_포함됨(ExtractableResponse<Response> response, Long... productIds) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Cart.class).stream()
-                .map(Cart::getProductId)
-                .collect(Collectors.toList());
-        assertThat(resultProductIds).contains(productIds);
+    @DisplayName("해당 고객의 장바구니에 CartItem을 추가한다.")
+    @Test
+    void createCartItem() {
+        ExtractableResponse<Response> response = putRequest("/cart/products/1",
+                new CartItemUpdateRequest(3), token);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        CartItemResponse cartItemResponses = response.jsonPath().getObject(".", CartItemResponse.class);
+        assertThat(cartItemResponses)
+                .extracting("productId", "name", "price", "quantity")
+                .containsExactly(1L, "우유", 3000, 3);
     }
 
-    public static void 장바구니_삭제됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    @DisplayName("해당 고객의 장바구니에 속한 CartItem을 삭제한다.")
+    @Test
+    void deleteCartItems() {
+        putRequest("/cart/products/1", new CartItemUpdateRequest(3), token);
+        putRequest("/cart/products/2", new CartItemUpdateRequest(5), token);
+        ExtractableResponse<Response> response = getRequest("/cart", token);
+        List<CartItemResponse> cartItemResponses = response.jsonPath().get(".");
+        assertThat(cartItemResponses).hasSize(2);
+
+        ExtractableResponse<Response> deleteResponse = deleteRequest("/cart",
+                new CartItemDeleteRequest(List.of(1L, 2L)), token);
+
+        assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        ExtractableResponse<Response> afterDeleteResponse = getRequest("/cart", token);
+        List<CartItemResponse> deleteCartItemResponses = afterDeleteResponse.jsonPath().get(".");
+        assertThat(deleteCartItemResponses).hasSize(0);
     }
 }

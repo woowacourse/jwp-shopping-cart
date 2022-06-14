@@ -1,64 +1,98 @@
 package woowacourse.shoppingcart.infrastructure.jdbc.dao;
 
-import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
-
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import java.util.Map;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Product;
 
 @Repository
 public class CartItemDao {
-    private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private static final RowMapper<CartItem> ROW_MAPPER =
+            (resultSet, rowNum) -> new CartItem(
+                    resultSet.getLong("id"),
+                    resultSet.getLong("customer_id"),
+                    toProduct(resultSet),
+                    resultSet.getInt("quantity")
+            );
+
+    private static Product toProduct(ResultSet resultSet) throws SQLException {
+        return new Product(resultSet.getLong("product_id"),
+                resultSet.getString("name"),
+                resultSet.getInt("price"),
+                resultSet.getString("image_url"));
     }
 
-    public List<Long> findProductIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public CartItemDao(final DataSource dataSource) {
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+    public Long save(final CartItem cartItem) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", cartItem.getId());
+        params.put("customer_id", cartItem.getCustomerId());
+        params.put("product_id", cartItem.getProduct().getId());
+        params.put("quantity", cartItem.getQuantity());
+        return jdbcInsert.executeAndReturnKey(params)
+                .longValue();
     }
 
-    public Long findProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
+    public List<CartItem> findByCustomerId(final Long customerId) {
+        final String sql = "SELECT c.id, c.customer_id, c.quantity, "
+                + "c.product_id, p.name, p.price, p.image_url FROM cart_item c "
+                + "JOIN product p ON c.product_id = p.id where c.customer_id = (:id)";
+
+        final SqlParameterSource parameters = new MapSqlParameterSource("id", customerId);
+        return jdbcTemplate.query(sql, parameters, ROW_MAPPER);
+    }
+
+    public void deleteCartItemsByCustomerId(long customerId, List<Long> productIds) {
+        final String sql = "DELETE FROM cart_item where customer_id = (:customerId) and product_id = (:productId)";
+
+        Map<String, Object>[] batchInputs = new HashMap[productIds.size()];
+        int count = 0;
+        for (long productId : productIds) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("customerId", customerId);
+            map.put("productId", productId);
+            batchInputs[count++] = map;
         }
+        jdbcTemplate.batchUpdate(sql, batchInputs);
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+    public void update(Long customerId, Long productId, int quantity) {
+        final String sql = "UPDATE cart_item SET quantity=(:quantity) WHERE customer_id = (:customerId) and "
+                + "product_id = (:productId)";
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        final SqlParameterSource parameters = new MapSqlParameterSource("quantity", quantity)
+                .addValue("customerId", customerId)
+                .addValue("productId", productId);
+        jdbcTemplate.update(sql, parameters);
     }
 
-    public void deleteCartItem(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
+    public boolean existProduct(long customerId, long productId) {
+        final String sql = "SELECT EXISTS("
+                + "SELECT * FROM cart_item WHERE customer_id = (:customerId) AND product_id = (:productId))";
 
-        final int rowCount = jdbcTemplate.update(sql, id);
-        if (rowCount == 0) {
-            throw new InvalidCartItemException();
-        }
+        final SqlParameterSource parameters = new MapSqlParameterSource("customerId", customerId)
+                .addValue("productId", productId);
+        return jdbcTemplate.queryForObject(sql, parameters, Boolean.class);
     }
 }

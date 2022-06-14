@@ -1,11 +1,5 @@
 package woowacourse.auth.support;
 
-import java.security.Key;
-import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -13,8 +7,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.util.Date;
 import javax.annotation.PostConstruct;
-import woowacourse.auth.exception.InvalidTokenException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import woowacourse.exception.InvalidTokenException;
 
 @Component
 public class JwtTokenProvider {
