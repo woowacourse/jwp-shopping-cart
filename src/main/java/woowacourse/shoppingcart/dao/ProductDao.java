@@ -39,7 +39,7 @@ public class ProductDao {
         simpleJdbcInsert.execute(namedParameterSource);
     }
 
-    public Product findById(final long productId) {
+    public Product getById(final long productId) {
         try {
             final String query = "SELECT id, name, price, image_url FROM product WHERE id = ?";
             return jdbcTemplate.queryForObject(query, rowMapper, productId);

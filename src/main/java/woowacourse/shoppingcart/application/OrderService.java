@@ -41,7 +41,7 @@ public class OrderService {
 
         for (final OrderRequest orderDetail : orderDetailRequests) {
             final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
+            final Long productId = cartItemDao.getProductIdById(cartId);
             final int quantity = orderDetail.getQuantity();
 
             ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
@@ -82,6 +82,6 @@ public class OrderService {
     }
 
     private Product findProductById(long id) {
-        return productDao.findById(id);
+        return productDao.getById(id);
     }
 }

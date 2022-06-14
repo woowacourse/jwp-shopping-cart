@@ -45,7 +45,7 @@ public class ProductDaoTest {
     @DisplayName("id로 상품을 찾아 반환한다.")
     @Test
     void findById() {
-        Product product = productDao.findById(1L);
+        Product product = productDao.getById(1L);
         assertThat(product.getName()).isEqualTo("캐스터네츠 커스텀캣타워H_가드형");
     }
 
@@ -53,7 +53,7 @@ public class ProductDaoTest {
     @Test
     void findByNotExistId() {
         assertThatThrownBy(
-                () -> productDao.findById(99L)
+                () -> productDao.getById(99L)
         ).isInstanceOf(ProductNotFoundException.class)
                 .hasMessageContaining("존재하지 않는 상품입니다.");
     }

@@ -67,7 +67,7 @@ public class CartService {
     }
 
     private void validateProduct(final long productId) {
-        productDao.findById(productId);
+        productDao.getById(productId);
     }
 
     private void validateMemberCart(final long memberId, final long cartId) {
