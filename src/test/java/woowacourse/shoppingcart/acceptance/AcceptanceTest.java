@@ -34,7 +34,7 @@ public class AcceptanceTest {
         RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/members/email-check?email=" + email)
+                .when().get("/api/members/email-check?email=" + email)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
