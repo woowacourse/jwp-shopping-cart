@@ -41,7 +41,7 @@ class CartItemControllerTest {
         @Test
         void negativeProductId() throws Exception {
             AddCartItemRequest request = new AddCartItemRequest(-1);
-            testPostBadRequest("/api/members/me/carts", request, "상품번호는 양의 정수만 허용합니다.");
+            assertBadRequestFromPost("/api/members/me/carts", request, "상품번호는 양의 정수만 허용합니다.");
         }
     }
 
@@ -53,11 +53,11 @@ class CartItemControllerTest {
         @Test
         void negativeQuantity() throws Exception {
             PutCartItemRequest request = new PutCartItemRequest(-1);
-            testPutBadRequest("/api/members/me/carts/1", request, "수량은 양의 정수만 허용합니다.");
+            assertBadRequestFromPut("/api/members/me/carts/1", request, "수량은 양의 정수만 허용합니다.");
         }
     }
 
-    void testPostBadRequest(String uri, Object request, String errorMessage) throws Exception {
+    void assertBadRequestFromPost(String uri, Object request, String errorMessage) throws Exception {
         String token = jwtTokenProvider.createToken("1");
 
         mockMvc.perform(post(uri)
@@ -68,7 +68,7 @@ class CartItemControllerTest {
                 .andExpect(jsonPath("$.message", containsString(errorMessage)));
     }
 
-    void testPutBadRequest(String uri, Object request, String errorMessage) throws Exception {
+    void assertBadRequestFromPut(String uri, Object request, String errorMessage) throws Exception {
         String token = jwtTokenProvider.createToken("1");
 
         mockMvc.perform(put(uri)

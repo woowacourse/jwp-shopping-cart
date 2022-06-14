@@ -32,14 +32,14 @@ public class ProductControllerTest {
     @NullAndEmptySource
     void addWithNullName(String name) throws Exception {
         AddProductRequest request = new AddProductRequest(name, 1000, "이미지주소");
-        testPostBadRequest(request, "이름은 빈 값일 수 없습니다.");
+        assertBadRequestFromPost(request, "이름은 빈 값일 수 없습니다.");
     }
 
     @DisplayName("상품추가 - 금액은 양의 정수만 허용한다.")
     @Test
     void addWithNegative() throws Exception{
         AddProductRequest request = new AddProductRequest("이름",-1000,"이미지주소");
-        testPostBadRequest(request,"금액은 양의 정수만 허용합니다.");
+        assertBadRequestFromPost(request,"금액은 양의 정수만 허용합니다.");
     }
 
     @DisplayName("상품추가 - 이미지 주소에 빈값은 허용하지 않는다.")
@@ -47,10 +47,10 @@ public class ProductControllerTest {
     @NullAndEmptySource
     void addWithNullImageUrl(String imageUrl) throws Exception {
         AddProductRequest request = new AddProductRequest("이름", 1000, imageUrl);
-        testPostBadRequest(request, "이미지 주소는 빈 값일 수 없습니다.");
+        assertBadRequestFromPost(request, "이미지 주소는 빈 값일 수 없습니다.");
     }
 
-    void testPostBadRequest(Object request, String errorMessage) throws Exception {
+    void assertBadRequestFromPost(Object request, String errorMessage) throws Exception {
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
