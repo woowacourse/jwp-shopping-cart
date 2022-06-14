@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import woowacourse.shoppingcart.dto.ErrorResponse;
+import woowacourse.shoppingcart.dto.ExistCartErrorResponse;
 import woowacourse.shoppingcart.exception.*;
 
 import javax.validation.ConstraintViolationException;
@@ -30,9 +31,7 @@ public class ControllerAdvice {
             InvalidArgumentRequestException.class,
             InvalidCustomerException.class,
             InvalidCartItemException.class,
-            InvalidProductException.class,
             InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
     })
@@ -41,10 +40,27 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
+    @ExceptionHandler({
+            ExistCartItemException.class
+    })
+    public ResponseEntity<ExistCartErrorResponse> handleAddDuplicateCartItem(final RuntimeException e) {
+        ExistCartErrorResponse errorResponse = new ExistCartErrorResponse(e.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleUnauthorizedRequest(final AuthorizationException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler({
+            InvalidProductException.class,
+            NotInCustomerCartItemException.class,
+    })
+    public ResponseEntity<ErrorResponse> handleNotFoundRequest(final RuntimeException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(RuntimeException.class)

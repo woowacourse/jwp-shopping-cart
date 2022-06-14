@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:schema.sql")
+@Sql(scripts = {"classpath:test_schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class ProductDaoTest {
 
@@ -26,7 +27,7 @@ public class ProductDaoTest {
         this.productDao = new ProductDao(jdbcTemplate);
     }
 
-    @DisplayName("Product를 저장하면, id를 반환한다.")
+    @DisplayName("상품을 저장하면, id를 반환한다.")
     @Test
     void save() {
         // given
@@ -52,16 +53,16 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(productId)
+                .orElseThrow(() -> new InvalidProductException("존재하지 않는 상품입니다."));
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
     }
 
-    @DisplayName("상품 목록 조회")
+    @DisplayName("상품 목록을 조회한다.")
     @Test
     void getProducts() {
-
         // given
         final int size = 0;
 
@@ -72,14 +73,13 @@ public class ProductDaoTest {
         assertThat(products).size().isEqualTo(size);
     }
 
-    @DisplayName("싱품 삭제")
+    @DisplayName("싱품을 삭제한다.")
     @Test
     void deleteProduct() {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
-
         final Long productId = productDao.save(new Product(name, price, imageUrl));
         final int beforeSize = productDao.findProducts().size();
 

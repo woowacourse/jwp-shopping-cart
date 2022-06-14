@@ -51,47 +51,7 @@
 ---
 
 # 기능 목록
-
-- 회원 가입 `POST /customers` → `201 CREATED`
-- 아이디 중복 확인 `GET /customers/username/duplication` -> `200 OK`
-  - `{unique}`
-- 로그인 `POST /login` → `200 OK`
-    - 아이디와 비밀번호 확인
-        - [예외] 아이디나 비밀번호가 잘못 입력되면 `400 Bad Request`
-    - 토큰 발급 `JwtTokenProvider`
-    - body를 통해 발급된 토큰 응답 `TokenResponse`
-- 내 정보 조회 `GET /customers/me` → `200 OK`
-    - 해당하는 회원 정보 body로 응답
-        - `{id, username, nickname, age}`
-    - [예외] 로그인 되지 않은 상태로 접근하면 `401 Unauthorized`
-- 내 정보 수정 `PUT /customers/me` → `200 OK`
-    - 수정할 회원 정보 reqeust body
-        - `{id, username, nickname, age, password}`
-    - 비밀번호 일치 여부 확인 후 DB의 정보 update
-    - [예외] 로그인 되지 않은 상태로 접근하면 `401 Unauthorized`
-    - [예외] password가 기존 password와 일치하지 않을 시 `400 Bad Request`
-- 패스워드 수정 `PUT /customers/me/password` → `200 OK`
-    - 수정할 비밀번호 request body
-        - `{oldPassword, newPassword}`
-    - 비밀번호 일치 여부 확인 후 DB 정보 update
-    - [예외] 로그인 되지 않은 상태로 접근하면 `401 Unauthorized`
-    - [예외] oldPassword가 기존 password와 일치하지 않을 시 `400 Bad Request`
-- 회원 탈퇴 `DELETE /customers/me` → `204 OK`
-    - 해당하는 회원 정보 DB에서 삭제
-    - [예외] 로그인 되지 않은 상태로 접근하면 `401 Unauthorized`
-
-### 입력값 예외처리 `400 Bad Request`
-
-- username
-    - [예외] 공백
-    - [예외] 4자 미만이거나 20자 초과
-- nickname
-    - [예외] 공백
-    - [예외] 10자 초과
-- password
-    - [예외] 공백
-    - [예외] 8글자 미만 20글자 초과
-    - [예외] 영문 / 숫자 / `!@#$%^*`특수문자를 제외한 글자 포함
-    - [예외] 공백 포함
-- age
-    - [예외] 음수
+- swagger 문서: http://localhost:8080/swagger-ui/
+- Application 실행
+- `schema.sql` 상품에 대한 샘플 데이터 포함. 배포 시마다 데이터가 롤백되지 않도록 `drop table if exists` 삭제
+- `test_db.sql` 테스트용 db_상품에 대한 샘플 데이터 없음. `drop table if exists` 문법 포함

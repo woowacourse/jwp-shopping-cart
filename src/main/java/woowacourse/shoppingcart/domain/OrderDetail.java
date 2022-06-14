@@ -16,7 +16,7 @@ public class OrderDetail {
     }
 
     public OrderDetail(final Product product, final int quantity) {
-        this(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), quantity);
+        this(product.getId(), product.getPrice(), product.getName(), product.getThumbnail(), quantity);
     }
 
     public OrderDetail(final Long productId, final int price, final String name,

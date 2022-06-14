@@ -1,45 +1,39 @@
 package woowacourse.shoppingcart.domain;
 
+import woowacourse.shoppingcart.exception.ExistCartItemException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cart {
+    private final List<CartItem> cartItems;
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
-
-    public Cart() {
+    public Cart(List<CartItem> cartItems) {
+        this.cartItems = new ArrayList<>(cartItems);
     }
 
-    public Cart(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    public void add(CartItem cartItem) {
+        if (cartItems.contains(cartItem)) {
+            throw new ExistCartItemException();
+        }
+        cartItems.add(cartItem);
     }
 
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl) {
-        this.id = id;
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public void add(Product product) {
+        validateDuplicateProduct(product);
+        final CartItem cartItem = new CartItem(product, 1);
+        add(cartItem);
     }
 
-    public Long getId() {
-        return id;
+    private void validateDuplicateProduct(Product product) {
+        final boolean isDuplicateProduct = cartItems.stream()
+                .anyMatch(it -> it.getProduct().equals(product));
+        if (isDuplicateProduct) {
+            throw new ExistCartItemException();
+        }
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+    public List<CartItem> getCartItems() {
+        return cartItems;
     }
 }
