@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.dao;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -16,10 +15,8 @@ import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
 import woowacourse.shoppingcart.dto.request.ProductRequest;
-import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("NonAsciiChracters")
 @JdbcTest
@@ -113,8 +110,9 @@ class CartItemDaoTest {
     @Test
     void updateCartItemQuantity메서드는_장바구니의_상품_개수를_업데이트한다() {
         final Long cartId = 1L;
+        final Long customerId = 1L;
 
-        cartItemDao.updateCartItemQuantity(cartId, 5);
+        cartItemDao.updateCartItemQuantity(customerId, cartId, 5);
 
         assertThat(cartItemDao.findQuantityById(cartId)).isEqualTo(5);
     }

@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.dao;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -80,11 +79,12 @@ public class CartItemDao {
 
     }
 
-    public void updateCartItemQuantity(Long cartId, int quantity) {
+    public void updateCartItemQuantity(Long customerId, Long cartId, int quantity) {
         try {
-            final String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id";
+            final String sql = "UPDATE cart_item SET quantity = :quantity WHERE id = :id AND customer_id = :customerId";
             MapSqlParameterSource parameters = new MapSqlParameterSource("quantity", quantity);
             parameters.addValue("id", cartId);
+            parameters.addValue("customerId", customerId);
             namedParameterJdbcTemplate.update(sql, parameters);
         } catch (DataAccessException e) {
             throw new InvalidCartItemException();

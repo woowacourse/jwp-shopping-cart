@@ -70,9 +70,9 @@ public class CartService {
         throw new NotInCustomerCartItemException();
     }
 
-    public CartResponse updateCardItemQuantity(Long cartId, int quantity) {
+    public CartResponse updateCardItemQuantity(Long customerId, Long cartId, int quantity) {
         Cart cart = cartItemDao.findByCartId(cartId);
-        cartItemDao.updateCartItemQuantity(cartId, quantity);
+        cartItemDao.updateCartItemQuantity(customerId, cartId, quantity);
         cart.updateQuantity(quantity);
         return CartResponse.of(cart);
     }
