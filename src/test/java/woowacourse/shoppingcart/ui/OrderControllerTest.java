@@ -25,9 +25,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.OrderService;
-import woowacourse.shoppingcart.application.dto.OrderDetailServiceResponse;
+import woowacourse.shoppingcart.application.dto.OrderDetailsServiceResponse;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.ui.order.dto.request.OrderRequest;
 
 @SpringBootTest
@@ -82,7 +81,7 @@ public class OrderControllerTest {
         // given
         final Long customerId = 1L;
         final Long orderId = 1L;
-        final OrderDetailServiceResponse expected = new OrderDetailServiceResponse(1000, orderId,
+        final OrderDetailsServiceResponse expected = new OrderDetailsServiceResponse(1000, orderId,
                 Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
         final String token = jwtTokenProvider.createToken(String.valueOf(customerId));
 
@@ -109,10 +108,10 @@ public class OrderControllerTest {
     void findOrders() throws Exception {
         // given
         final Long customerId = 1L;
-        final List<Orders> expected = Arrays.asList(
-                new Orders(1L, Collections.singletonList(
+        final List<OrderDetailsServiceResponse> expected = Arrays.asList(
+                new OrderDetailsServiceResponse(1_000, 1L, Collections.singletonList(
                         new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
-                new Orders(2L, Collections.singletonList(
+                new OrderDetailsServiceResponse(2_000, 2L, Collections.singletonList(
                         new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 

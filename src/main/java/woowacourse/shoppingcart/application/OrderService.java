@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.application.dto.OrderDetailServiceResponse;
+import woowacourse.shoppingcart.application.dto.OrderDetailsServiceResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.NotFoundOrderException;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
@@ -50,11 +49,9 @@ public class OrderService {
         return ordersId;
     }
 
-    public OrderDetailServiceResponse findOrderById(final Long customerId, final Long orderId) {
+    public OrderDetailsServiceResponse findOrderById(final Long customerId, final Long orderId) {
         validateOrderIdByCustomerId(customerId, orderId);
-        final Orders orders = findOrderResponseDtoByOrderId(orderId);
-        final int totalPrice = orders.calculateTotalPrice();
-        return OrderDetailServiceResponse.from(orders, totalPrice);
+        return findOrderResponseDtoByOrderId(orderId);
     }
 
     private void validateOrderIdByCustomerId(final Long customerId, final Long orderId) {
@@ -63,7 +60,7 @@ public class OrderService {
         }
     }
 
-    public List<Orders> findOrdersByCustomerId(final Long customerId) {
+    public List<OrderDetailsServiceResponse> findOrdersByCustomerId(final Long customerId) {
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
@@ -71,7 +68,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
+    private OrderDetailsServiceResponse findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail orderDetail : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
             final Product product = productDao.findProductById(orderDetail.getProductId())
@@ -80,6 +77,9 @@ public class OrderService {
             ordersDetails.add(new OrderDetail(product, quantity));
         }
 
-        return new Orders(orderId, ordersDetails);
+        final int totalPrice = ordersDetails.stream()
+                .mapToInt(OrderDetail::getPrice)
+                .sum();
+        return OrderDetailsServiceResponse.from(orderId, ordersDetails, totalPrice);
     }
 }

@@ -18,10 +18,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.application.dto.OrderDetailServiceResponse;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.ui.customer.dto.request.CustomerRegisterRequest;
 import woowacourse.shoppingcart.ui.order.dto.request.OrderRequest;
+import woowacourse.shoppingcart.ui.order.dto.response.OrderDetailsResponse;
 
 @DisplayName("주문 관련 기능")
 class OrderAcceptanceTest extends AcceptanceTest {
@@ -158,13 +157,13 @@ class OrderAcceptanceTest extends AcceptanceTest {
     }
 
     private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-        OrderDetailServiceResponse resultOrder = response.as(OrderDetailServiceResponse.class);
+        OrderDetailsResponse resultOrder = response.as(OrderDetailsResponse.class);
         assertThat(resultOrder.getId()).isEqualTo(orderId);
     }
 
     public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-                .map(Orders::getId)
+        List<Long> resultOrderIds = response.jsonPath().getList(".", OrderDetailsResponse.class).stream()
+                .map(OrderDetailsResponse::getId)
                 .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
     }

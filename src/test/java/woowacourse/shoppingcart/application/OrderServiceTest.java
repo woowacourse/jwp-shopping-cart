@@ -13,13 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import woowacourse.shoppingcart.application.dto.OrderDetailServiceResponse;
+import woowacourse.shoppingcart.application.dto.OrderDetailsServiceResponse;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.OrderDao;
 import woowacourse.shoppingcart.dao.OrdersDetailDao;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.NotFoundOrderException;
 import woowacourse.shoppingcart.exception.NotFoundProductException;
@@ -98,7 +97,7 @@ class OrderServiceTest {
                 .thenReturn(Optional.of(new Product(PRODUCT_ID, name, price, imageUrl)));
 
         //when
-        final OrderDetailServiceResponse actual = orderService.findOrderById(CUSTOMER_ID, ORDER_ID);
+        final OrderDetailsServiceResponse actual = orderService.findOrderById(CUSTOMER_ID, ORDER_ID);
 
         //then
         assertThat(actual.getId()).isEqualTo(ORDER_ID);
@@ -133,7 +132,7 @@ class OrderServiceTest {
                 .thenReturn(Optional.of(new Product(PRODUCT_ID, name, price, imageUrl)));
 
         //when
-        final List<Orders> actual = orderService.findOrdersByCustomerId(CUSTOMER_ID);
+        final List<OrderDetailsServiceResponse> actual = orderService.findOrdersByCustomerId(CUSTOMER_ID);
 
         //then
         assertThat(actual.size()).isOne();
