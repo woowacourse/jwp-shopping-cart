@@ -57,7 +57,7 @@ public class CartService {
         return CartResponse.of(cartItemDao.addCartItem(customerId, product));
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
+    public void deleteCartItem(final String customerName, final Long cartId) {
         validateCustomerCart(cartId, customerName);
         cartItemDao.deleteCartItem(cartId);
     }
@@ -77,7 +77,7 @@ public class CartService {
         return CartResponse.of(cart);
     }
 
-    public void deleteAllCart(String customerName) {
+    public void deleteCart(String customerName) {
         Long customerId = customerDao.findIdByUserName(customerName);
         cartItemDao.deleteCart(customerId);
     }
