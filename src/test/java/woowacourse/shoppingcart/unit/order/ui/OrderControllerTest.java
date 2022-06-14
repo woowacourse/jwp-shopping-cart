@@ -35,6 +35,8 @@ import woowacourse.shoppingcart.unit.ControllerTest;
 
 class OrderControllerTest extends ControllerTest {
 
+    private static final String REQUEST_URL = "/users/me/orders";
+
     @Test
     @DisplayName("장바구니에 담긴 상품을 주문한다.")
     void addOrder_containsAll_201() throws Exception {
@@ -56,7 +58,7 @@ class OrderControllerTest extends ControllerTest {
 
         // when
         final ResultActions perform = mockMvc.perform(
-                post("/users/me/orders")
+                post(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
@@ -100,7 +102,7 @@ class OrderControllerTest extends ControllerTest {
 
         // when
         final ResultActions perform = mockMvc.perform(
-                post("/users/me/orders")
+                post(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
@@ -215,6 +217,56 @@ class OrderControllerTest extends ControllerTest {
                 responseFields(
                         fieldWithPath("errorCode").description("에러 코드"),
                         fieldWithPath("message").description("에러 메시지")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("모든 주문 목록을 조회한다.")
+    void findOrders() throws Exception {
+        // given
+        final String accessToken = "fake-toke";
+        final Customer customer = new Customer(1L, "rick", "rick@gmail.com", HASH);
+        getLoginCustomerByToken(accessToken, customer);
+
+        final List<OrderDetail> firstOrderDetails = List.of(
+                new OrderDetail(1L, 340, "망고망고", "man.go", 2),
+                new OrderDetail(4L, 1200, "오렌지", "orange.org", 7)
+        );
+        final List<OrderDetail> secondOrderDetails = List.of(
+                new OrderDetail(2L, 2700, "복숭아", "pea.ch", 3)
+        );
+        final List<Orders> orders = List.of(
+                new Orders(2L, firstOrderDetails),
+                new Orders(6L, secondOrderDetails)
+        );
+        given(orderService.findAllOrders(customer))
+                .willReturn(orders);
+
+        // when
+        final ResultActions perform = mockMvc.perform(
+                get(REQUEST_URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .accept(MediaType.ALL)
+        ).andDo(print());
+
+        // then
+        perform.andExpect(status().isOk());
+
+        // docs
+        perform.andDo(document("find-orders",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                responseFields(
+                        fieldWithPath("[].id").description("주문 ID"),
+                        fieldWithPath("[].orderDetails[].productId").description("상품 ID"),
+                        fieldWithPath("[].orderDetails[].quantity").description("상품 수량"),
+                        fieldWithPath("[].orderDetails[].price").description("상품 가격"),
+                        fieldWithPath("[].orderDetails[].name").description("상품 이름"),
+                        fieldWithPath("[].orderDetails[].imageUrl").description("상품 사진 URL")
                 )
         ));
     }

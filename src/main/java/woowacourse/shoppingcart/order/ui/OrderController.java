@@ -43,8 +43,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
+    public ResponseEntity<List<Orders>> findOrders(@Login final Customer customer) {
+        final List<Orders> orders = orderService.findAllOrders(customer);
         return ResponseEntity.ok(orders);
     }
 }
