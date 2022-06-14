@@ -169,9 +169,7 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    public ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String userName) {
-        String accessToken = 회원_가입_후_토큰_발급("hoho", "Abc1234!");
-
+    public ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String accessToken) {
         return RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
@@ -181,9 +179,7 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    public ExtractableResponse<Response> 장바구니_삭제_요청(String userName, Long cartId) {
-        String accessToken = 회원_가입_후_토큰_발급("hoho", "Abc1234!");
-
+    public ExtractableResponse<Response> 장바구니_삭제_요청(String accessToken, Long cartId) {
         return RestAssured
                 .given().log().all()
                 .header("Authorization", "Bearer " + accessToken)
@@ -216,30 +212,33 @@ public class AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    public ExtractableResponse<Response> 주문하기_요청(String userName, List<OrderRequest> orderRequests) {
+    public ExtractableResponse<Response> 주문하기_요청(String accessToken, List<OrderRequest> orderRequests) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(orderRequests)
-                .when().post("/api/customers/{customerName}/orders", userName)
+                .header("Authorization", "Bearer " + accessToken)
+                .when().post("/customers/orders")
                 .then().log().all()
                 .extract();
     }
 
-    public ExtractableResponse<Response> 주문_내역_조회_요청(String userName) {
+    public ExtractableResponse<Response> 주문_내역_조회_요청(String accessToken) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders", userName)
+                .header("Authorization", "Bearer " + accessToken)
+                .when().get("/customers/orders")
                 .then().log().all()
                 .extract();
     }
 
-    public ExtractableResponse<Response> 주문_단일_조회_요청(String userName, Long orderId) {
+    public ExtractableResponse<Response> 주문_단일_조회_요청(String accessToken, Long orderId) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
+                .header("Authorization", "Bearer " + accessToken)
+                .when().get("/customers/orders/{orderId}", orderId)
                 .then().log().all()
                 .extract();
     }
@@ -260,13 +259,13 @@ public class AcceptanceTest {
 
     public void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
         List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-                .map(Orders::getId)
+                .map(Orders::getOrderId)
                 .collect(Collectors.toList());
         assertThat(resultOrderIds).contains(orderIds);
     }
 
     public void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
         Orders resultOrder = response.as(Orders.class);
-        assertThat(resultOrder.getId()).isEqualTo(orderId);
+        assertThat(resultOrder.getOrderId()).isEqualTo(orderId);
     }
 }

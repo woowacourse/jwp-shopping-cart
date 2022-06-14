@@ -4,19 +4,19 @@ import java.util.List;
 
 public class Orders {
 
-    private final Long id;
-    private final List<OrderDetail> orderDetails;
+    private final Long orderId;
+    private final List<OrderDetail> order;
 
-    public Orders(final Long id, final List<OrderDetail> orderDetails) {
-        this.id = id;
-        this.orderDetails = orderDetails;
+    public Orders(final Long orderId, final List<OrderDetail> order) {
+        this.orderId = orderId;
+        this.order = order;
     }
 
-    public Long getId() {
-        return id;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public List<OrderDetail> getOrderDetails() {
-        return orderDetails;
+    public List<OrderDetail> getOrder() {
+        return order;
     }
 }
