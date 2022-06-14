@@ -1,14 +1,10 @@
-drop table if exists orders_detail;
+drop table if exists customer cascade;
+drop table if exists product cascade;
+drop table if exists orders cascade;
+drop table if exists cart cascade;
+drop table if exists orders_detail cascade;
 
-drop table if exists orders;
-
-drop table if exists cart_item;
-
-drop table if exists product;
-
-drop table if exists customer;
-
-create table customer
+create table IF NOT EXISTS customer
 (
     id bigint auto_increment not null,
     email varchar(255) not null unique,
@@ -17,55 +13,44 @@ create table customer
     primary key(id)
 );
 
-create table product
+create table  IF NOT EXISTS product
 (
     id        bigint       not null auto_increment,
     name      varchar(255) not null,
     price     integer      not null,
-    image_url varchar(255),
+    image varchar(255),
     primary key (id)
 );
 
-create table cart_item
+create table  IF NOT EXISTS cart
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,
     product_id  bigint not null,
+    quantity   integer not null,
+
     primary key (id)
+--    foreign key (customer_id) references customer(id),
+--    foreign key (product_id) references product(id)
 );
 
-alter table cart_item
-    add constraint fk_cart_item_to_customer
-        foreign key (customer_id) references customer (id);
-
-alter table cart_item
-    add constraint fk_cart_item_to_product
-        foreign key (product_id) references product (id);
-
-create table orders
+create table  IF NOT EXISTS orders
 (
     id          bigint not null auto_increment,
     customer_id bigint not null,
-    primary key (id)
+
+    primary key (id),
+    foreign key (customer_id) references customer(id)
 );
 
-alter table orders
-    add constraint fk_orders_to_customer
-        foreign key (customer_id) references customer (id);
-
-create table orders_detail
+create table IF NOT EXISTS orders_detail
 (
     id         bigint  not null auto_increment,
     orders_id  bigint  not null,
     product_id bigint  not null,
     quantity   integer not null,
-    primary key (id)
+
+    primary key (id),
+    foreign key (orders_id) references orders(id),
+    foreign key (product_id) references product(id)
 );
-
-alter table orders_detail
-    add constraint fk_orders_detail_to_orders
-        foreign key (orders_id) references orders (id);
-
-alter table orders_detail
-    add constraint fk_orders_detail_to_product
-        foreign key (product_id) references product (id);

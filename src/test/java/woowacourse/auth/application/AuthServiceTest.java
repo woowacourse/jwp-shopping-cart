@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
-import static woowacourse.auth.utils.Fixture.email;
-import static woowacourse.auth.utils.Fixture.nickname;
-import static woowacourse.auth.utils.Fixture.password;
+import static woowacourse.utils.Fixture.email;
+import static woowacourse.utils.Fixture.nickname;
+import static woowacourse.utils.Fixture.password;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,12 +14,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;
 import woowacourse.auth.exception.InvalidAuthException;
 import woowacourse.auth.exception.InvalidCustomerException;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -36,7 +37,7 @@ class AuthServiceTest {
     void login() {
         // given
         given(customerService.findByEmail(email))
-                .willReturn(new Customer(1L, email, password, nickname));
+                .willReturn(new Customer(1L, email, nickname, password));
         given(tokenProvider.createToken(email))
                 .willReturn("access-token");
 
@@ -67,7 +68,7 @@ class AuthServiceTest {
     void loginFailByPassword() {
         // given
         given(customerService.findByEmail(email))
-                .willReturn(new Customer(1L, email, password, nickname));
+                .willReturn(new Customer(1L, email, nickname, password));
 
         // when
         assertThatThrownBy(() -> authService.login(new TokenRequest(email, "a1234!!!")))

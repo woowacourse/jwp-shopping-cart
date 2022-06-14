@@ -1,5 +1,8 @@
 package woowacourse.auth.ui.config;
 
+import static org.springframework.web.cors.CorsUtils.isPreFlightRequest;
+
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -16,31 +19,25 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(
-            HttpServletRequest request, HttpServletResponse response, Object handler) {
-
-        if (isPreflight(request) || isSignUpRequest(request)) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (isPreFlightRequest(request) || isSignUpRequest(request)) {
             return true;
         }
 
         String token = AuthorizationExtractor.extract(request);
-        if (isUnauthorizedRequest(token)) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return false;
+        if (isAuthorizedRequest(token)) {
+            return true;
         }
-        return true;
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        return false;
     }
 
     private boolean isSignUpRequest(HttpServletRequest request) {
-        return request.getRequestURI().contains("/customer")
+        return request.getRequestURI().contains("/customers")
                 && request.getMethod().equalsIgnoreCase("post");
     }
 
-    private boolean isUnauthorizedRequest(String nickname) {
-        return nickname == null || !tokenProvider.validateToken(nickname);
-    }
-
-    private boolean isPreflight(HttpServletRequest request) {
-        return request.getMethod().equals("OPTIONS");
+    private boolean isAuthorizedRequest(String token) {
+        return tokenProvider.validateToken(token) && !Objects.isNull(token);
     }
 }

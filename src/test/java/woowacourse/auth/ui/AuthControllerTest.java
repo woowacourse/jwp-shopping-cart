@@ -2,10 +2,10 @@ package woowacourse.auth.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.auth.utils.Fixture.email;
-import static woowacourse.auth.utils.Fixture.nickname;
-import static woowacourse.auth.utils.Fixture.password;
-import static woowacourse.auth.utils.Fixture.tokenRequest;
+import static woowacourse.utils.Fixture.email;
+import static woowacourse.utils.Fixture.nickname;
+import static woowacourse.utils.Fixture.signupRequest;
+import static woowacourse.utils.Fixture.tokenRequest;
 import static woowacourse.utils.RestAssuredUtils.login;
 
 import io.restassured.response.ExtractableResponse;
@@ -14,9 +14,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.application.CustomerService;
-import woowacourse.auth.dto.customer.SignupRequest;
 import woowacourse.auth.dto.token.TokenRequest;
+import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.utils.AcceptanceTest;
 
 public class AuthControllerTest extends AcceptanceTest {
@@ -28,7 +27,7 @@ public class AuthControllerTest extends AcceptanceTest {
     @Test
     void login_success() {
         // given
-        customerService.signUp(new SignupRequest(email, password, nickname));
+        customerService.signUp(signupRequest);
 
         // when
         ExtractableResponse<Response> response = login("/auth/login", tokenRequest);
@@ -45,7 +44,7 @@ public class AuthControllerTest extends AcceptanceTest {
     @Test
     void loginFail() {
         // given
-        customerService.signUp(new SignupRequest(email, password, nickname));
+        customerService.signUp(signupRequest);
 
         // when
         ExtractableResponse<Response> response = login("/auth/login", new TokenRequest(email, "a12232134!"));
