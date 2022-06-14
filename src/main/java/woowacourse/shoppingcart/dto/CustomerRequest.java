@@ -13,7 +13,7 @@ public class CustomerRequest {
     @NotEmpty(groups = Request.allProperties.class)
     private String password;
 
-    public CustomerRequest() {
+    private CustomerRequest() {
     }
 
     public CustomerRequest(String loginId, String name, String password) {

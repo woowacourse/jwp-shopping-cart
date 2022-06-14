@@ -7,7 +7,7 @@ public class CartProductRequest {
     @NotNull(groups = Request.id.class)
     private Long productId;
 
-    public CartProductRequest() {
+    private CartProductRequest() {
     }
 
     public CartProductRequest(Long productId) {

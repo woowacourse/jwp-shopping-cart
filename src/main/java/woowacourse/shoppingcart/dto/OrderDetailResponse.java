@@ -13,7 +13,7 @@ public class OrderDetailResponse {
     private String name;
     private String imageUrl;
 
-    public OrderDetailResponse() {
+    private OrderDetailResponse() {
     }
 
     public OrderDetailResponse(final Long productId, final int quantity) {

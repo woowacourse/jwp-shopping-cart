@@ -7,7 +7,7 @@ public class CartQuantityRequest {
     @Min(value = 0, groups = {Request.allProperties.class})
     private int quantity;
 
-    public CartQuantityRequest() {
+    private CartQuantityRequest() {
     }
 
     public CartQuantityRequest(int quantity) {

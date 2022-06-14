@@ -13,7 +13,7 @@ public class CartResponse {
     private String imageUrl;
     private int quantity;
 
-    public CartResponse() {
+    private CartResponse() {
     }
 
     public CartResponse(Long id, Long productId, String name, int price, String imageUrl, int quantity) {

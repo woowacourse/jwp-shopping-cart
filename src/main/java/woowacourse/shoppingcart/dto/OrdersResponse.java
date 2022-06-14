@@ -8,7 +8,7 @@ public class OrdersResponse {
     private Long id;
     private List<OrderDetailResponse> orderDetailResponses;
 
-    public OrdersResponse() {
+    private OrdersResponse() {
     }
 
     public OrdersResponse(Long id, List<OrderDetailResponse> orderDetailResponses) {

@@ -9,7 +9,7 @@ public class LoginRequest {
     @NotEmpty(groups = Request.allProperties.class)
     private String password;
 
-    public LoginRequest() {
+    private LoginRequest() {
     }
 
     public LoginRequest(String loginId, String password) {

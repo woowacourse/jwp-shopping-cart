@@ -10,7 +10,7 @@ public class CustomerUpdateRequest {
     @NotEmpty(groups = Request.allProperties.class)
     private String password;
 
-    public CustomerUpdateRequest() {
+    private CustomerUpdateRequest() {
     }
 
     public CustomerUpdateRequest(String name, String password) {

@@ -15,7 +15,7 @@ public class Product {
     @NotNull(groups = Request.allProperties.class)
     private String imageUrl;
 
-    public Product() {
+    private Product() {
     }
 
     public Product(final Long id, final String name, final int price, final String imageUrl) {

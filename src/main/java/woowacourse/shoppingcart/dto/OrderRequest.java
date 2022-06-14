@@ -10,7 +10,7 @@ public class OrderRequest {
     @Min(value = 0, groups = Request.allProperties.class)
     private int quantity;
 
-    public OrderRequest() {
+    private OrderRequest() {
     }
 
     public OrderRequest(final Long cartId, final int quantity) {

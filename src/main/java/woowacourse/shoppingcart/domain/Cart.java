@@ -9,11 +9,7 @@ public class Cart {
     private String imageUrl;
     private int quantity;
 
-    public Cart() {
-    }
-
-    public Cart(final Long id, final Product product, final int quantity) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
+    private Cart() {
     }
 
     public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl, final int quantity) {
