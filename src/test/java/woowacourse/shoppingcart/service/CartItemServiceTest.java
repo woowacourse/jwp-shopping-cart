@@ -9,11 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.CartItemIds;
@@ -32,11 +28,12 @@ public class CartItemServiceTest {
     private Long productId;
 
     @Autowired
-    public CartItemServiceTest(final JdbcTemplate jdbcTemplate) {
-        this.customerService = new CustomerService(new CustomerDao(jdbcTemplate));
-        this.cartItemService = new CartItemService(new CartItemDao(jdbcTemplate),
-                new ProductService(new ProductDao(jdbcTemplate)));
-        this.productService = new ProductService(new ProductDao(jdbcTemplate));
+    public CartItemServiceTest(final CustomerService customerService,
+            final CartItemService cartItemService,
+            final ProductService productService) {
+        this.customerService = customerService;
+        this.cartItemService = cartItemService;
+        this.productService = productService;
     }
 
     @BeforeEach

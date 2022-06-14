@@ -8,13 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.OrderDao;
-import woowacourse.shoppingcart.dao.OrdersDetailDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.dto.ImageDto;
@@ -36,13 +30,12 @@ public class OrderServiceTest {
     private Long cartItemId;
 
     @Autowired
-    public OrderServiceTest(final JdbcTemplate jdbcTemplate) {
-        this.customerService = new CustomerService(new CustomerDao(jdbcTemplate));
-        this.cartItemService = new CartItemService(new CartItemDao(jdbcTemplate),
-                new ProductService(new ProductDao(jdbcTemplate)));
-        this.productService = new ProductService(new ProductDao(jdbcTemplate));
-        this.orderService = new OrderService(new OrderDao(jdbcTemplate), new OrdersDetailDao(jdbcTemplate),
-                productService, customerService, cartItemService);
+    public OrderServiceTest(final  CustomerService customerService, final CartItemService cartItemService,
+            final ProductService productService, final OrderService orderService) {
+        this.customerService = customerService;
+        this.cartItemService = cartItemService;
+        this.productService = productService;
+        this.orderService = orderService;
     }
 
     @BeforeEach

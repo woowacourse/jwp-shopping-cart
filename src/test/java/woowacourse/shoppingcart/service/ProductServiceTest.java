@@ -8,9 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.ImageDto;
 import woowacourse.shoppingcart.dto.ProductRequest;
@@ -22,8 +20,8 @@ public class ProductServiceTest {
     private ProductService productService;
 
     @Autowired
-    public ProductServiceTest(final JdbcTemplate jdbcTemplate) {
-        this.productService = new ProductService(new ProductDao(jdbcTemplate));
+    public ProductServiceTest(final ProductService productService) {
+        this.productService = productService;
     }
 
     @DisplayName("상품을 추가한다.")

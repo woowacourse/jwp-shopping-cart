@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.LoginException;
@@ -29,9 +28,9 @@ public class CustomerServiceTest {
     private CustomerDao customerDao;
 
     @Autowired
-    public CustomerServiceTest(final JdbcTemplate jdbcTemplate) {
-        this.customerDao = new CustomerDao(jdbcTemplate);
-        this.customerService = new CustomerService(customerDao);
+    public CustomerServiceTest(final CustomerDao customerDao, final CustomerService customerService) {
+        this.customerDao = customerDao;
+        this.customerService = customerService;
     }
 
     @DisplayName("회원가입")
