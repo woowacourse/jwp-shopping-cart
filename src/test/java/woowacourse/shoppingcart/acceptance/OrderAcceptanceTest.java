@@ -1,133 +1,147 @@
 package woowacourse.shoppingcart.acceptance;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
+import static org.assertj.core.api.Assertions.*;
+import static woowacourse.auth.acceptance.AuthAcceptanceTest.*;
+import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.*;
+import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.*;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
+import io.restassured.http.Header;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.shoppingcart.dto.CartItemRequest;
+import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import woowacourse.shoppingcart.dto.OrderResponse;
+import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ThumbnailImageDto;
 
 @DisplayName("주문 관련 기능")
 public class OrderAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
-    private Long cartId1;
-    private Long cartId2;
+
+    private Long productId1;
+    private Long productId2;
+    private Header header;
 
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
-
-        Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
+        ProductRequest productRequest1 = new ProductRequest("치킨", 10_000, 10,
+            new ThumbnailImageDto("http://example.com/chicken.jpg", "이미지입니다."));
+        ProductRequest productRequest2 = new ProductRequest("맥주", 20_000, 10,
+            new ThumbnailImageDto("http://example.com/beer.jpg", "이미지입니다."));
+        productId1 = getAddedProductId(productRequest1);
+        productId2 = getAddedProductId(productRequest2);
+        header = getTokenHeader();
     }
 
-    @DisplayName("주문하기")
+    @DisplayName("장바구니에서 선택 주문하기")
     @Test
     void addOrder() {
-        List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
-                .map(cartId -> new OrderRequest(cartId, 10))
-                .collect(Collectors.toList());
+        // given
+        CartItemRequest cartItemRequest1 = new CartItemRequest(productId1, 10);
+        CartItemRequest cartItemRequest2 = new CartItemRequest(productId2, 10);
+        CartItemResponse cartItemResponse1 = extractCartItem(
+            AcceptanceFixture.post(cartItemRequest1, "/api/mycarts", header));
+        AcceptanceFixture.post(cartItemRequest2, "/api/mycarts", header);
 
-        ExtractableResponse<Response> response = 주문하기_요청(USER, orderRequests);
+        // when
+        OrderRequest orderRequest = new OrderRequest(List.of(cartItemResponse1.getId()));
+        ExtractableResponse<Response> addOrderResponse = AcceptanceFixture.post(orderRequest, "/api/myorders", header);
 
-        주문하기_성공함(response);
+        // then
+        assertThat(addOrderResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(addOrderResponse.header("Location")).isEqualTo("/api/myorders/1");
     }
 
-    @DisplayName("주문 내역 조회")
+    @DisplayName("주문 목록을 가져온다.")
     @Test
     void getOrders() {
-        Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-        Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
+        // given
+        CartItemRequest cartItemRequest1 = new CartItemRequest(productId1, 10);
+        CartItemRequest cartItemRequest2 = new CartItemRequest(productId2, 10);
+        CartItemResponse cartItemResponse1 = extractCartItem(
+            AcceptanceFixture.post(cartItemRequest1, "/api/mycarts", header));
+        CartItemResponse cartItemResponse2 = extractCartItem(
+            AcceptanceFixture.post(cartItemRequest2, "/api/mycarts", header));
 
-        ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
+        // when
+        OrderRequest orderRequest = new OrderRequest(
+            List.of(cartItemResponse1.getId(), cartItemResponse2.getId()));
+        AcceptanceFixture.post(orderRequest, "/api/myorders", header);
 
-        주문_조회_응답됨(response);
-        주문_내역_포함됨(response, orderId1, orderId2);
+        // then
+        ExtractableResponse<Response> response = AcceptanceFixture.get("/api/myorders", header);
+        List<OrderResponse> orders = response.jsonPath().getList(".", OrderResponse.class);
+        assertThat(orders.size()).isEqualTo(1);
+        assertThat(orders.get(0).getOrderedProducts().size()).isEqualTo(2);
     }
 
-    @DisplayName("주문 단일 조회")
+    @DisplayName("주문 수량이 재고보다 많을 경우 7001번 에러를 반환한다.")
     @Test
-    void getOrder() {
-        Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
-                new OrderRequest(cartId1, 2),
-                new OrderRequest(cartId2, 4)
-        ));
+    void addOrderOutOfStock() {
+        // given
+        CartItemRequest cartItemRequest = new CartItemRequest(productId1, 11);
+        CartItemResponse cartItemResponse = extractCartItem(
+            AcceptanceFixture.post(cartItemRequest, "/api/mycarts", header));
 
-        ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
+        // when
+        OrderRequest orderRequest = new OrderRequest(
+            List.of(cartItemResponse.getId()));
+        ExtractableResponse<Response> orderResponse = AcceptanceFixture.post(orderRequest, "/api/myorders", header);
 
-        주문_조회_응답됨(response);
-        주문_조회됨(response, orderId);
+        // then
+        assertThat(orderResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(extractErrorCode(orderResponse)).isEqualTo(7001);
     }
 
-    public static ExtractableResponse<Response> 주문하기_요청(String userName, List<OrderRequest> orderRequests) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(orderRequests)
-                .when().post("/api/customers/{customerName}/orders", userName)
-                .then().log().all()
-                .extract();
+    @DisplayName("주문 후에 재고가 차감이 되는 지 확인한다.")
+    @Test
+    void reduceStock() {
+        // given
+        CartItemRequest cartItemRequest1 = new CartItemRequest(productId1, 8);
+        CartItemRequest cartItemRequest2 = new CartItemRequest(productId2, 10);
+        CartItemResponse cartItemResponse1 = extractCartItem(
+            AcceptanceFixture.post(cartItemRequest1, "/api/mycarts", header));
+        CartItemResponse cartItemResponse2 = extractCartItem(
+            AcceptanceFixture.post(cartItemRequest2, "/api/mycarts", header));
+
+        // when
+        OrderRequest orderRequest = new OrderRequest(
+            List.of(cartItemResponse1.getId()));
+        AcceptanceFixture.post(orderRequest, "/api/myorders", header);
+
+        // then
+        ProductResponse productResponse = AcceptanceFixture.get("/api/products/" + productId1)
+            .jsonPath()
+            .getObject(".", ProductResponse.class);
+        assertThat(productResponse.getStockQuantity()).isEqualTo(2);
     }
 
-    public static ExtractableResponse<Response> 주문_내역_조회_요청(String userName) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders", userName)
-                .then().log().all()
-                .extract();
+    private Header getTokenHeader() {
+        final CustomerRequest customerRequest =
+            new CustomerRequest("email@email.com", "password1!", "dwoo");
+        AcceptanceFixture.post(customerRequest, "/api/customers");
+
+        final TokenRequest tokenRequest = new TokenRequest(customerRequest.getEmail(), customerRequest.getPassword());
+        final ExtractableResponse<Response> loginResponse = AcceptanceFixture.post(tokenRequest, "/api/auth/login");
+
+        final String accessToken = extractAccessToken(loginResponse);
+
+        return new Header("Authorization", BEARER + accessToken);
     }
 
-    public static ExtractableResponse<Response> 주문_단일_조회_요청(String userName, Long orderId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static void 주문하기_성공함(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static Long 주문하기_요청_성공되어_있음(String userName, List<OrderRequest> orderRequests) {
-        ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
-        return Long.parseLong(response.header("Location").split("/orders/")[1]);
-    }
-
-    public static void 주문_조회_응답됨(ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 주문_내역_포함됨(ExtractableResponse<Response> response, Long... orderIds) {
-        List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-                .map(Orders::getId)
-                .collect(Collectors.toList());
-        assertThat(resultOrderIds).contains(orderIds);
-    }
-
-    private void 주문_조회됨(ExtractableResponse<Response> response, Long orderId) {
-        Orders resultOrder = response.as(Orders.class);
-        assertThat(resultOrder.getId()).isEqualTo(orderId);
+    private int extractErrorCode(ExtractableResponse<Response> response) {
+        return response.jsonPath().getInt("errorCode");
     }
 }

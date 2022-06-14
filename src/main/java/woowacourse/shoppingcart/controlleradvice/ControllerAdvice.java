@@ -19,12 +19,17 @@ import woowacourse.auth.exception.InvalidLoginException;
 import woowacourse.auth.exception.InvalidTokenException;
 import woowacourse.shoppingcart.dto.ErrorResponse;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
+import woowacourse.shoppingcart.exception.DuplicateProductInCartException;
 import woowacourse.shoppingcart.exception.IncorrectPasswordException;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
+import woowacourse.shoppingcart.exception.InvalidPriceException;
 import woowacourse.shoppingcart.exception.InvalidProductException;
+import woowacourse.shoppingcart.exception.InvalidQuantityException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.NotMyCartItemException;
+import woowacourse.shoppingcart.exception.OutOfStockException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -66,13 +71,48 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handle(InvalidCustomerException e) {
-        return ResponseEntity.badRequest().body("존재하지 않는 유저입니다.");
+    public ResponseEntity<ErrorResponse> handle(InvalidCustomerException e) {
+        return ResponseEntity.status(NOT_FOUND).body(ErrorResponse.NOT_EXIST_CUSTOMER);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handle(IncorrectPasswordException e) {
         return ResponseEntity.status(UNAUTHORIZED).body(ErrorResponse.INCORRECT_PASSWORD);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final DuplicateProductInCartException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.ALREADY_EXIST_IN_CART);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final InvalidQuantityException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.INVALID_QUANTITY);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final InvalidPriceException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.INVALID_PRICE);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final InvalidProductException e) {
+        return ResponseEntity.status(NOT_FOUND).body(ErrorResponse.NOT_EXIST_PRODUCT);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final InvalidCartItemException e) {
+        return ResponseEntity.status(NOT_FOUND).body(ErrorResponse.NOT_EXIST_CART_ITEM);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final NotMyCartItemException e) {
+        return ResponseEntity.status(NOT_FOUND).body(ErrorResponse.NOT_MY_CART_ITEM);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handle(final OutOfStockException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.OUT_OF_STOCK);
     }
 
     @ExceptionHandler
@@ -94,8 +134,6 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-        InvalidCartItemException.class,
-        InvalidProductException.class,
         InvalidOrderException.class,
         NotInCustomerCartItemException.class,
     })

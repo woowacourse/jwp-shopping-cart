@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.*;
+
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,11 +12,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.shoppingcart.domain.Quantity;
+import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.domain.product.ProductStock;
+import woowacourse.shoppingcart.domain.product.vo.ThumbnailImage;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -32,13 +36,13 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        final ThumbnailImage thumbnailImage = new ThumbnailImage("www.test.com", "이미지");
 
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final ProductStock product = productDao.save(new Product(name, price, thumbnailImage), 10);
 
         // then
-        assertThat(productId).isEqualTo(1L);
+        assertThat(product.getId()).isEqualTo(1L);
     }
 
     @DisplayName("productID를 상품을 찾으면, product를 반환한다.")
@@ -47,12 +51,12 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        final ThumbnailImage thumbnailImage = new ThumbnailImage("www.test.com", "이미지");
+        final ProductStock savedProduct = productDao.save(new Product(name, price, thumbnailImage), 10);
+        final Product expectedProduct = new Product(savedProduct.getId(), name, price, thumbnailImage);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(savedProduct.getId());
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -78,16 +82,33 @@ public class ProductDaoTest {
         // given
         final String name = "초콜렛";
         final int price = 1_000;
-        final String imageUrl = "www.test.com";
+        final ThumbnailImage thumbnailImage = new ThumbnailImage("www.test.com", "이미지");
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final ProductStock savedProduct = productDao.save(new Product(name, price, thumbnailImage), 10);
         final int beforeSize = productDao.findProducts().size();
 
         // when
-        productDao.delete(productId);
+        productDao.delete(savedProduct.getId());
 
         // then
         final int afterSize = productDao.findProducts().size();
         assertThat(beforeSize - 1).isEqualTo(afterSize);
+    }
+
+    @DisplayName("주문이 성공될 시 기존 재고에서 주문 수량 뺸 값을 저장한다.")
+    @Test
+    void updateStock() {
+        // given & when
+        final String name = "초콜렛";
+        final int price = 1_000;
+        final ThumbnailImage thumbnailImage = new ThumbnailImage("www.test.com", "이미지");
+
+        // when
+        final ProductStock product = productDao.save(new Product(name, price, thumbnailImage), 10);
+        productDao.update(new ProductStock(product.getProduct(), new Quantity(2)));
+
+        // then
+        ProductStock productStock = productDao.findProductStockById(product.getId());
+        assertThat(productStock.getStockQuantity()).isEqualTo(2);
     }
 }

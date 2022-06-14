@@ -1,83 +1,77 @@
 package woowacourse.shoppingcart.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.*;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.dao.ProductDao;
+import woowacourse.shoppingcart.domain.Quantity;
+import woowacourse.shoppingcart.domain.cart.CartItem;
+import woowacourse.shoppingcart.domain.cart.CartItemRepository;
+import woowacourse.shoppingcart.domain.cart.CartItems;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.domain.order.OrderRepository;
+import woowacourse.shoppingcart.domain.order.Orders;
+import woowacourse.shoppingcart.domain.product.ProductStock;
+import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrderResponse;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class OrderService {
 
-    private final OrderDao orderDao;
-    private final OrdersDetailDao ordersDetailDao;
-    private final CartItemDao cartItemDao;
     private final CustomerDao customerDao;
     private final ProductDao productDao;
+    private final OrderRepository orderRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
-        this.orderDao = orderDao;
-        this.ordersDetailDao = ordersDetailDao;
-        this.cartItemDao = cartItemDao;
+    public OrderService(CustomerDao customerDao, ProductDao productDao,
+        OrderRepository orderRepository,
+        CartItemRepository cartItemRepository) {
         this.customerDao = customerDao;
         this.productDao = productDao;
+        this.orderRepository = orderRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
+    public long addOrder(String email, OrderRequest orderRequest) {
+        long customerId = findCustomerIdByEmail(email);
+        List<Long> cartItemIds = orderRequest.getCartItemIds();
+        List<OrderDetail> orderDetails = new ArrayList<>();
 
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
+        CartItems cartItems = cartItemRepository.findCartItemsByCustomer(customerId);
+        for (Long cartItemId : cartItemIds) {
+            CartItem cartItem = cartItemRepository.findById(cartItemId);
+            ProductStock productStock = productDao.findProductStockById(cartItem.getProductId());
 
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
+            cartItems.checkContain(cartItem);
+            cartItem.checkEnoughStockToOrder(productStock);
+
+            productDao.update(productStock.reduce(cartItem));
+
+            cartItemRepository.delete(cartItem);
+            orderDetails.add(new OrderDetail(cartItem.getProduct(), new Quantity(cartItem.getQuantity())));
         }
 
-        return ordersId;
+        return orderRepository.add(customerId, new Orders(orderDetails));
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+    @Transactional(readOnly = true)
+    public List<OrderResponse> findOrdersByCustomer(String email) {
+        long customerId = findCustomerIdByEmail(email);
+        return orderRepository.findOrders(customerId).stream()
+            .map(OrderResponse::from)
+            .collect(Collectors.toList());
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
-        }
-    }
-
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
-
-        return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
-                .collect(Collectors.toList());
-    }
-
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
-            final int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
-        }
-
-        return new Orders(orderId, ordersDetails);
+    // TODO: 중복 제거 뺼 방법 고려
+    private long findCustomerIdByEmail(String email) {
+        Customer customer = customerDao.findByEmail(email);
+        return customer.getId();
     }
 }
