@@ -45,6 +45,11 @@ public class CartItemDao {
         jdbcTemplate.update(sql, cart.getCustomerId(), cart.getProductId(), cart.getQuantity());
     }
 
+    public boolean existByCustomerIdAndProductId(Long customerId, Long productId) {
+        final String query = "SELECT EXISTS (SELECT * FROM cart_item WHERE customer_id = ? AND product_id = ?)";
+        return jdbcTemplate.queryForObject(query, Boolean.class, customerId, productId);
+    }
+
     public void deleteCartItem(final Long customerId, Long productId) {
         final String sql = "DELETE FROM cart_item WHERE customer_id = ? AND product_id = ?";
         final int rowCount = jdbcTemplate.update(sql, customerId, productId);

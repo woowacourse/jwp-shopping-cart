@@ -65,6 +65,18 @@ class CartServiceTest {
                 .hasMessageContaining("올바르지 않은 상품 수량 형식입니다.");
     }
 
+    @DisplayName("customer가 동일한 상품을 담았을 경우 예외가 발생한다.")
+    @Test
+    void checkDuplicationCart() {
+        saveCustomer();
+        CartRequest savingCartItem = new CartRequest(1L, 5);
+        cartService.addCart(1L, savingCartItem);
+
+        assertThatThrownBy(() -> cartService.addCart(1L, savingCartItem))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("동일한 회원이 동일한 상품을 담았습니다.");
+    }
+
 
     void saveCustomer() {
         CustomerRequest customer =

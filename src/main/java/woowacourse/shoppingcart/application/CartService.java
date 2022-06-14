@@ -52,8 +52,15 @@ public class CartService {
 
     public void addCart(final Long customerId, final CartRequest cartRequest) {
         checkExistById(customerId);
+        validateDuplicateCart(customerId, cartRequest.getProductId());
         Cart cart = new Cart(customerId, cartRequest.getProductId(), cartRequest.getQuantity());
         cartItemDao.addCartItem(cart);
+    }
+
+    private void validateDuplicateCart(Long customerId, Long productId) {
+        if (cartItemDao.existByCustomerIdAndProductId(customerId, productId)) {
+            throw new IllegalArgumentException("동일한 회원이 동일한 상품을 담았습니다.");
+        }
     }
 
     public void deleteCart(final Long customerId, final ProductIdsRequest productIds) {
