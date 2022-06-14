@@ -31,7 +31,7 @@ public class CartItemDaoTest {
     @DisplayName("사용자별 장바구니 목록을 조회한다.")
     @Test
     void findProductIdsByMemberId() {
-        List<Cart> carts = cartItemDao.findCartByMemberId(1L);
+        List<Cart> carts = cartItemDao.findCartsByMemberId(1L);
 
         assertThat(carts.size()).isEqualTo(2);
     }

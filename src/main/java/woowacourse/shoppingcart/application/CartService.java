@@ -29,7 +29,7 @@ public class CartService {
     @Transactional(readOnly = true)
     public List<Cart> findCartsByMemberId(final long memberId) {
         validateMember(memberId);
-        return cartItemDao.findCartByMemberId(memberId);
+        return cartItemDao.findCartsByMemberId(memberId);
     }
 
     public void addCartItem(final long memberId, final AddCartItemRequest request) {

@@ -34,7 +34,7 @@ public class CartItemDao {
                     resultSet.getInt("cart_item.quantity")
             );
 
-    public List<Cart> findCartByMemberId(final long memberId) {
+    public List<Cart> findCartsByMemberId(final long memberId) {
         final String sql = "SELECT cart_item.id, product.id, cart_item.quantity, product.name, product.price , product.image_url " +
                 "FROM cart_item INNER JOIN product ON cart_item.product_id = product.id " +
                 "WHERE cart_item.member_id = ?";
