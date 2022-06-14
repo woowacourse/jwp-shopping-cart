@@ -1,41 +1,40 @@
 package woowacourse.shoppingcart.dao;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrderDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public OrderDao(final JdbcTemplate jdbcTemplate) {
+    public OrderDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("ORDERS")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public Long addOrders(final Long customerId) {
-        final String sql = "INSERT INTO orders (customer_id) VALUES (?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Long save(Long customerId) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("customer_id", customerId);
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
     public List<Long> findOrderIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM orders WHERE customer_id = ? ";
+        final String sql = "SELECT id FROM ORDERS WHERE customer_id = ? ";
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
+    public boolean existByCustomerIdAndOrderId(final Long customerId, final Long orderId) {
+        final String query = "SELECT EXISTS(SELECT id FROM ORDERS WHERE customer_id = ? AND id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
     }
 }

@@ -2,21 +2,28 @@ package woowacourse.shoppingcart.acceptance;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static woowacourse.auth.acceptance.AuthAcceptanceTest.로그인_후_토큰_획득;
 
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
+import woowacourse.shoppingcart.dto.EmailRequest;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
 
     private final CustomerRequest customer = new CustomerRequest(
             "email", "Pw123456!", "name", "010-1234-5678", "address");
-    private final TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
+    private final LoginRequest loginRequest = new LoginRequest("email", "Pw123456!");
+
+    public static void 회원_추가되어_있음() {
+        CustomerRequest customer = new CustomerRequest(
+                "email", "Pw123456!", "user", "010-1234-5678", "address");
+        requestHttpPost("", customer, "/customers");
+    }
 
     @DisplayName("회원가입")
     @Test
@@ -27,6 +34,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.CREATED.value());
         response.body(
+                "id", equalTo(1),
                 "email", equalTo("email"),
                 "name", equalTo("name"),
                 "phone", equalTo("010-1234-5678"),
@@ -42,7 +50,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         requestHttpPost("", customer, "/customers");
 
         // when
-        ValidatableResponse response = requestHttpGet("", "/customers/email?email=email@naver.com");
+        ValidatableResponse response = requestHttpPost("", new EmailRequest("email@naver.com"),
+                "/customers/email/validate");
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value());
@@ -53,10 +62,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateMe() {
         // given
-        requestHttpPost("", customer, "/customers");
-
-        String accessToken = requestHttpPost("", tokenRequest, "/auth/login")
-                .extract().as(TokenResponse.class).getAccessToken();
+        회원_추가되어_있음();
+        String accessToken = 로그인_후_토큰_획득();
 
         //when
         CustomerRequest newCustomer = new CustomerRequest(
@@ -67,6 +74,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ValidatableResponse response = requestHttpGet(accessToken, "/customers");
         response.statusCode(HttpStatus.OK.value());
         response.body(
+                "id", equalTo(1),
                 "email", equalTo("email"),
                 "name", equalTo("judy"),
                 "phone", equalTo("010-1111-2222"),
@@ -77,10 +85,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteMe() {
         // given
-        requestHttpPost("", customer, "/customers");
-
-        String accessToken = requestHttpPost("", tokenRequest, "/auth/login")
-                .extract().as(TokenResponse.class).getAccessToken();
+        회원_추가되어_있음();
+        String accessToken = 로그인_후_토큰_획득();
 
         //when
         requestHttpDelete(accessToken, "/customers").statusCode(HttpStatus.NO_CONTENT.value());

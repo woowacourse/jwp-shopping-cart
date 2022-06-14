@@ -6,15 +6,18 @@ import woowacourse.shoppingcart.domain.Customer;
 public class CustomerRequest {
 
     @NotBlank
-    private final String email;
+    private String email;
     @NotBlank
-    private final String password;
+    private String password;
     @NotBlank
-    private final String name;
+    private String name;
     @NotBlank
-    private final String phone;
+    private String phone;
     @NotBlank
-    private final String address;
+    private String address;
+
+    public CustomerRequest() {
+    }
 
     public CustomerRequest(String email, String password, String name, String phone, String address) {
         this.email = email;

@@ -4,21 +4,37 @@ import woowacourse.shoppingcart.domain.Customer;
 
 public class CustomerResponse {
 
-    private final String email;
-    private final String name;
-    private final String phone;
-    private final String address;
+    private Long id;
 
-    public CustomerResponse(String email, String name, String phone, String address) {
+    private String email;
+
+    private String name;
+    private String phone;
+    private String address;
+
+    public CustomerResponse() {
+    }
+
+    public CustomerResponse(Long id, String email, String name, String phone, String address) {
+        this.id = id;
         this.email = email;
         this.name = name;
         this.phone = phone;
         this.address = address;
     }
 
-    public static CustomerResponse from(Customer customer) {
-        return new CustomerResponse(customer.getEmail(), customer.getName(), customer.getPhone(),
-                customer.getAddress());
+    public static CustomerResponse of(Long id, Customer customer) {
+        return new CustomerResponse(
+                id, customer.getEmail(), customer.getName(), customer.getPhone(), customer.getAddress());
+    }
+
+    public static CustomerResponse of(Customer customer) {
+        return new CustomerResponse(
+                customer.getId(), customer.getEmail(), customer.getName(), customer.getPhone(), customer.getAddress());
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {

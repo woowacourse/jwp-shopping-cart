@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.CustomerNameResponse;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
@@ -27,15 +28,15 @@ public class CustomerService {
     public CustomerResponse save(CustomerRequest customerRequest) {
         validateEmailDuplication(customerRequest.getEmail());
         Customer customer = customerRequest.createCustomer();
-        customerDao.save(customer);
-        return CustomerResponse.from(customer);
+        Long id = customerDao.save(customer);
+        return CustomerResponse.of(id, customer);
     }
 
     @Transactional(readOnly = true)
     public CustomerResponse find(Long customerId) {
         checkExistById(customerId);
         Customer customer = customerDao.findById(customerId);
-        return CustomerResponse.from(customer);
+        return CustomerResponse.of(customer);
     }
 
     private void checkExistById(Long customerId) {
@@ -53,5 +54,9 @@ public class CustomerService {
     public void delete(Long customerId) {
         checkExistById(customerId);
         customerDao.deleteById(customerId);
+    }
+
+    public CustomerNameResponse findCustomerName(Long customerId) { // TODO : test
+        return new CustomerNameResponse(customerDao.findNameById(customerId));
     }
 }

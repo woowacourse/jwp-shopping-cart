@@ -10,11 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.LoginRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
@@ -37,8 +36,8 @@ class AuthServiceTest {
     @DisplayName("email과 password를 이용하여 일치하는 customer의 id를 찾는다.")
     @Test
     void loginCustomer() {
-        TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
-        Long customerId = authService.loginCustomer(tokenRequest);
+        LoginRequest loginRequest = new LoginRequest("email", "Pw123456!");
+        Long customerId = authService.loginCustomer(loginRequest);
 
         assertThat(customerId).isEqualTo(1L);
     }
@@ -46,8 +45,8 @@ class AuthServiceTest {
     @DisplayName("email과 password를 이용하여 일치하는 customer가 없는 경우 예외를 발생시킨다.")
     @Test
     void notExistsCustomerException() {
-        TokenRequest tokenRequest = new TokenRequest("email", "Pw123456~~");
-        assertThatThrownBy(() -> authService.loginCustomer(tokenRequest))
+        LoginRequest loginRequest = new LoginRequest("email", "Pw123456~~");
+        assertThatThrownBy(() -> authService.loginCustomer(loginRequest))
                 .isInstanceOf(InvalidCustomerException.class)
                 .hasMessageContaining("Email 또는 Password가 일치하지 않습니다.");
     }
@@ -55,8 +54,8 @@ class AuthServiceTest {
     @DisplayName("customer id를 이용하여 token을 발급한다.")
     @Test
     void createToken() {
-        TokenRequest tokenRequest = new TokenRequest("email", "Pw123456!");
-        Long customerId = authService.loginCustomer(tokenRequest);
+        LoginRequest loginRequest = new LoginRequest("email", "Pw123456!");
+        Long customerId = authService.loginCustomer(loginRequest);
 
         TokenResponse accessToken = authService.createToken(customerId);
 

@@ -9,6 +9,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.auth.support.User;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -24,11 +25,15 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     }
 
     @Override
-    public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+    public User resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                 NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String token = AuthorizationExtractor.extract(webRequest.getNativeRequest(HttpServletRequest.class));
-        jwtTokenProvider.validateToken(token);
 
-        return Long.valueOf(jwtTokenProvider.getPayload(token));
+        if (token == null || token.isEmpty()) {
+            return new User(User.NON_MEMBER);
+        }
+
+        jwtTokenProvider.validateToken(token);
+        return new User(Long.valueOf(jwtTokenProvider.getPayload(token)), User.MEMBER);
     }
 }

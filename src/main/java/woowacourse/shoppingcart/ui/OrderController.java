@@ -1,19 +1,26 @@
 package woowacourse.shoppingcart.ui;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.application.OrderService;
-
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import woowacourse.auth.support.MemberOnly;
+import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.dto.OrderResponse;
 
 @Validated
 @RestController
-@RequestMapping("/api/customers/{customerName}/orders")
+@RequestMapping("/customers/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -22,23 +29,22 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOrder(@PathVariable final String customerName,
-                                   @RequestBody @Valid final List<OrderRequest> orderDetails) {
-        final Long orderId = orderService.addOrder(orderDetails, customerName);
+    public ResponseEntity<Void> addOrder(@MemberOnly Long customerId,
+                                         @RequestBody @Valid final OrderRequest orderRequest) {
+        final Long orderId = orderService.addOrder(customerId, orderRequest);
         return ResponseEntity.created(
-                URI.create("/api/" + customerName + "/orders/" + orderId)).build();
+                URI.create("/customers/orders/" + orderId)).build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@PathVariable final String customerName,
-                                            @PathVariable final Long orderId) {
-        final Orders order = orderService.findOrderById(customerName, orderId);
-        return ResponseEntity.ok(order);
+    @ResponseStatus(HttpStatus.OK)
+    public OrderResponse findOrder(@MemberOnly Long customerId, @PathVariable Long orderId) {
+        return orderService.findOrderById(customerId, orderId);
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@PathVariable final String customerName) {
-        final List<Orders> orders = orderService.findOrdersByCustomerName(customerName);
-        return ResponseEntity.ok(orders);
+    @ResponseStatus(HttpStatus.OK)
+    public List<OrderResponse> findOrders(@MemberOnly Long customerId) {
+        return orderService.findOrdersByCustomerId(customerId);
     }
 }

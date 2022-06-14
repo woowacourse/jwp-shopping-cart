@@ -3,7 +3,6 @@ package woowacourse.shoppingcart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.sql.DataSource;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,36 +48,6 @@ public class CustomerDaoTest {
                 "email", Password.from("Pw123456!").getPassword()).get();
 
         assertThat(responseId).isEqualTo(customerId);
-    }
-
-    @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    @Disabled
-    void findIdByUserNameTest() {
-
-        // given
-        final String userName = "puterism";
-
-        // when
-        final Long customerId = customerDao.findIdByName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(1L);
-    }
-
-    @DisplayName("대소문자를 구별하지 않고 username을 통해 아이디를 찾으면, id를 반환한다.")
-    @Test
-    @Disabled
-    void findIdByUserNameTestIgnoreUpperLowerCase() {
-
-        // given
-        final String userName = "gwangyeol-iM";
-
-        // when
-        final Long customerId = customerDao.findIdByName(userName);
-
-        // then
-        assertThat(customerId).isEqualTo(16L);
     }
 
     @DisplayName("email이 존재하는지 확인한다.")
