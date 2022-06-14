@@ -2,6 +2,7 @@ package woowacourse.shoppingcart.order.ui;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.order.application.OrderService;
 import woowacourse.shoppingcart.order.domain.Orders;
 import woowacourse.shoppingcart.order.dto.OrderCreationRequest;
+import woowacourse.shoppingcart.order.dto.OrderResponse;
 import woowacourse.shoppingcart.support.Login;
 
 @RestController
@@ -36,15 +38,19 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> findOrder(@Login final Customer customer,
-                                            @PathVariable final Long orderId) {
+    public ResponseEntity<OrderResponse> findOrder(@Login final Customer customer,
+                                                   @PathVariable final Long orderId) {
         final Orders order = orderService.findOrderById(customer, orderId);
-        return ResponseEntity.ok(order);
+        final OrderResponse response = OrderResponse.from(order);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<Orders>> findOrders(@Login final Customer customer) {
-        final List<Orders> orders = orderService.findAllOrders(customer);
-        return ResponseEntity.ok(orders);
+    public ResponseEntity<List<OrderResponse>> findOrders(@Login final Customer customer) {
+        final List<OrderResponse> response = orderService.findAllOrders(customer)
+                .stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 }

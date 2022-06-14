@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.unit.order.ui;
 
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -156,7 +157,8 @@ class OrderControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$..product.id", contains(1, 4)))
+                .andExpect(jsonPath("id", equalTo(orderId.intValue())))
+                .andExpect(jsonPath("$.orderDetails[*].id", contains(1, 4)))
                 .andExpect(jsonPath("$..price", contains(340, 1200)))
                 .andExpect(jsonPath("$..name", contains("망고망고", "오렌지")))
                 .andExpect(jsonPath("$..imageUrl", contains("man.go", "orange.org")))
@@ -174,11 +176,11 @@ class OrderControllerTest extends ControllerTest {
                 ),
                 responseFields(
                         fieldWithPath("id").description("주문 ID"),
-                        fieldWithPath("orderDetails[].product.id").description("상품 ID"),
+                        fieldWithPath("orderDetails[].id").description("상품 ID"),
                         fieldWithPath("orderDetails[].quantity").description("상품 수량"),
-                        fieldWithPath("orderDetails[].product.price").description("상품 가격"),
-                        fieldWithPath("orderDetails[].product.name").description("상품 이름"),
-                        fieldWithPath("orderDetails[].product.imageUrl").description("상품 사진 URL")
+                        fieldWithPath("orderDetails[].price").description("상품 가격"),
+                        fieldWithPath("orderDetails[].name").description("상품 이름"),
+                        fieldWithPath("orderDetails[].imageUrl").description("상품 사진 URL")
                 )
         ));
     }
@@ -263,11 +265,11 @@ class OrderControllerTest extends ControllerTest {
                 ),
                 responseFields(
                         fieldWithPath("[].id").description("주문 ID"),
-                        fieldWithPath("[].orderDetails[].product.id").description("상품 ID"),
+                        fieldWithPath("[].orderDetails[].id").description("상품 ID"),
                         fieldWithPath("[].orderDetails[].quantity").description("상품 수량"),
-                        fieldWithPath("[].orderDetails[].product.price").description("상품 가격"),
-                        fieldWithPath("[].orderDetails[].product.name").description("상품 이름"),
-                        fieldWithPath("[].orderDetails[].product.imageUrl").description("상품 사진 URL")
+                        fieldWithPath("[].orderDetails[].price").description("상품 가격"),
+                        fieldWithPath("[].orderDetails[].name").description("상품 이름"),
+                        fieldWithPath("[].orderDetails[].imageUrl").description("상품 사진 URL")
                 )
         ));
     }
