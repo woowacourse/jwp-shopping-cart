@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -80,17 +80,18 @@ public class CustomerDao {
         }
     }
 
-    public boolean update(Customer customer) {
+    public boolean update(final Customer customer) {
         final String query = "UPDATE customer SET address = ?, phone_number = ? WHERE id = ?";
-        return isUpdated(jdbcTemplate.update(query, customer.getAddress(), customer.getPhoneNumber(), customer.getId()));
+        return isUpdated(
+                jdbcTemplate.update(query, customer.getAddress(), customer.getPhoneNumber(), customer.getId()));
     }
 
-    private boolean isUpdated(int updatedCount) {
+    private boolean isUpdated(final int updatedCount) {
         return updatedCount > 0;
     }
 
-    public boolean deleteById(Long id) {
-        final String query = "DELETE FROM customer WHERE id = ?";
-        return isUpdated(jdbcTemplate.update(query, id));
+    public boolean deleteByName(final String name) {
+        final String query = "DELETE FROM customer WHERE name = ?";
+        return isUpdated(jdbcTemplate.update(query, name));
     }
 }

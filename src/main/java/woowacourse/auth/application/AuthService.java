@@ -6,7 +6,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.exception.AuthenticationFailureException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @Service
 public class AuthService {
@@ -22,17 +22,9 @@ public class AuthService {
     public TokenResponse createToken(TokenRequest tokenRequest) {
         Customer customer = customerDao.findByName(tokenRequest.getName())
                 .orElseThrow(AuthenticationFailureException::new);
-        if (!customer.isPasswordMatch(tokenRequest.getPassword())) {
-            throw new AuthenticationFailureException();
+        if (customer.isPasswordMatch(tokenRequest.getPassword())) {
+            return new TokenResponse(tokenProvider.createToken(customer.getName()));
         }
-        return new TokenResponse(tokenProvider.createToken(customer.getName()));
-    }
-
-    public boolean isValid(String token) {
-        return tokenProvider.validateToken(token);
-    }
-
-    public String getPayload(String token) {
-        return tokenProvider.getPayload(token);
+        throw new AuthenticationFailureException();
     }
 }

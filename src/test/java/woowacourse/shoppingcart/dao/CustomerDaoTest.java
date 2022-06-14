@@ -11,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -86,8 +86,12 @@ public class CustomerDaoTest {
     @DisplayName("회원을 탈퇴한다.")
     @Test
     void deleteCustomer() {
-        customerDao.deleteById(1L);
+        final String username = "chleeslow";
+        final Customer customer = new Customer(username, "1234abc!@", "woote@email.com", "선릉역", "010-9999-1111");
+        final Long savedId = customerDao.save(customer).orElseThrow();
 
-        assertThat(customerDao.findById(1L)).isEmpty();
+        customerDao.deleteByName(username);
+
+        assertThat(customerDao.findById(savedId)).isEmpty();
     }
 }

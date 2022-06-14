@@ -24,7 +24,8 @@ create table product
     id        bigint       not null auto_increment,
     name      varchar(255) not null,
     price     integer      not null,
-    image_url varchar(255),
+    image_url varchar(350) not null,
+    description varchar(255),
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -33,6 +34,7 @@ create table cart_item
     id          bigint not null auto_increment,
     customer_id bigint not null,
     product_id  bigint not null,
+    quantity    bigint not null,
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 

@@ -63,7 +63,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         CustomerAcceptanceFixture.saveCustomer();
 
         // when
-        String invalidToken = "Bearer aaaaaa.bbbbbb.ccccc";
+        String invalidToken = "Cearer aaaaaa.bbbbbb.ccccc";
         ExtractableResponse<Response> authResponse =
                 SimpleRestAssured.get("/api/customers/me", new Header("Authorization", invalidToken));
 

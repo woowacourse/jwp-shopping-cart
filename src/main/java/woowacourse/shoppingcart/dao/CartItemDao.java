@@ -7,15 +7,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import woowacourse.shoppingcart.domain.cart.CartItem;
+import woowacourse.shoppingcart.domain.cart.Quantity;
 import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 @Repository
 public class CartItemDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ProductDao productDao;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
+    public CartItemDao(JdbcTemplate jdbcTemplate, ProductDao productDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.productDao = productDao;
     }
 
     public List<Long> findProductIdsByCustomerId(final Long customerId) {
@@ -39,14 +43,15 @@ public class CartItemDao {
         }
     }
 
-    public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
+    public Long addCartItem(final Long customerId, final Long productId, final int quantity) {
+        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setLong(1, customerId);
             preparedStatement.setLong(2, productId);
+            preparedStatement.setInt(3, quantity);
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -59,5 +64,25 @@ public class CartItemDao {
         if (rowCount == 0) {
             throw new InvalidCartItemException();
         }
+    }
+
+    public List<CartItem> findCartItemsByCustomerId(final Long customerId) {
+        final String sql = "SELECT id, product_id, quantity FROM cart_item WHERE customer_id = ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new CartItem(
+                rs.getLong("id"),
+                productDao.findProductById(rs.getLong("product_id")),
+                new Quantity(rs.getInt("quantity"))
+        ), customerId);
+    }
+
+
+    public boolean updateCartItem(final CartItem updatedCartItem) {
+        final String sql = "UPDATE cart_item SET quantity = ? WHERE id = ?";
+        return isUpdated(updatedCartItem, sql);
+    }
+
+    private boolean isUpdated(CartItem updatingCartItem, String sql) {
+        return jdbcTemplate.update(sql, updatingCartItem.getQuantity(), updatingCartItem.getId()) > 0;
     }
 }
