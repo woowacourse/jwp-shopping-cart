@@ -1,13 +1,13 @@
 package woowacourse.shoppingcart.domain;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class Orders {
 
     private final Long id;
-    private final Date date;
+    private final LocalDateTime date;
 
-    public Orders(Long id, Date date) {
+    public Orders(Long id, LocalDateTime date) {
         this.id = id;
         this.date = date;
     }
@@ -16,7 +16,7 @@ public class Orders {
         return id;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 }

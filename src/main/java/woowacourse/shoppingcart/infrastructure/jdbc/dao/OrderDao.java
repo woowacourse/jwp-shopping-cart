@@ -20,9 +20,9 @@ public class OrderDao {
     private static final RowMapper<Orders> ROW_MAPPER =
             (resultSet, rowNum) -> new Orders(
                     resultSet.getLong("id"),
-                    resultSet.getDate("order_date")
+                    resultSet.getTimestamp("order_date").toLocalDateTime()
             );
-    
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 

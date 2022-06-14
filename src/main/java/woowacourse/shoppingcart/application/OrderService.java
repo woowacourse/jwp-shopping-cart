@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.exception.InvalidAccessException;
 import woowacourse.exception.InvalidOrderException;
 import woowacourse.exception.InvalidProductException;
@@ -44,7 +43,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse addOrder(final Long customerId, final OrderRequest orderRequest) {
+    public OrderResponse addOrder(final long customerId, final OrderRequest orderRequest) {
         Customer customer = getByCustomerId(customerId);
         final Long orderId = orderDao.addOrder(customerId);
         List<CartItem> cartItems = cartItemDao.findByCustomerId(customerId);
@@ -58,30 +57,30 @@ public class OrderService {
         return findOrderById(customerId, orderId);
     }
 
-    public OrderResponse findOrderById(@AuthenticationPrincipal Long customerId, final Long orderId) {
+    public OrderResponse findOrderById(final long customerId, final long orderId) {
         validateOrderIdByCustomerId(customerId, orderId);
         Orders order = getByOrderId(orderId);
         return findOrderResponse(order);
     }
 
-    private Orders getByOrderId(Long orderId) {
+    private Orders getByOrderId(long orderId) {
         return orderDao.findById(orderId)
                 .orElseThrow(InvalidOrderException::new);
     }
 
-    private CartItem findCartItem(List<CartItem> cartItems, Long productId) {
+    private CartItem findCartItem(List<CartItem> cartItems, long productId) {
         return cartItems.stream()
                 .filter(cartItem -> cartItem.getProduct().getId().equals(productId))
                 .findFirst()
                 .orElseThrow(NotInCustomerCartItemException::new);
     }
 
-    private Customer getByCustomerId(Long customerId) {
+    private Customer getByCustomerId(long customerId) {
         return customerDao.findById(customerId)
                 .orElseThrow(InvalidTokenException::new);
     }
 
-    private void validateOrderIdByCustomerId(final Long customerId, final Long orderId) {
+    private void validateOrderIdByCustomerId(final long customerId, final long orderId) {
         Customer customer = getByCustomerId(customerId);
 
         if (!orderDao.isValidOrderId(customer.getId(), orderId)) {

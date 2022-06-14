@@ -1,6 +1,6 @@
 package woowacourse.shoppingcart.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderResponse {
@@ -8,13 +8,13 @@ public class OrderResponse {
     private Long id;
     private List<OrderDetailResponse> orderDetails;
     private int totalPrice;
-    private Date orderDate;
+    private LocalDateTime orderDate;
 
     public OrderResponse() {
     }
 
     public OrderResponse(Long id, List<OrderDetailResponse> orderDetails, int totalPrice,
-                         Date orderDate) {
+                         LocalDateTime orderDate) {
         this.id = id;
         this.orderDetails = orderDetails;
         this.totalPrice = totalPrice;
@@ -33,7 +33,7 @@ public class OrderResponse {
         return totalPrice;
     }
 
-    public Date getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 }
