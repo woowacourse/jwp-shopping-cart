@@ -98,4 +98,15 @@ public abstract class AcceptanceTest {
                 .put("/users/me/cartItems/{productId}", productId)
                 .then().log().all();
     }
+
+    protected ValidatableResponse getCart() {
+        return RestAssured
+                .given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("users/me/cartItems")
+                .then().log().all();
+    }
 }

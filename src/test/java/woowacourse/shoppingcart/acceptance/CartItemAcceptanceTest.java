@@ -94,15 +94,4 @@ class CartItemAcceptanceTest extends AcceptanceTest {
         cartResponse.statusCode(HttpStatus.OK.value())
                 .body("cartList", hasSize(0));
     }
-
-    private ValidatableResponse getCart() {
-        return RestAssured
-                .given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get(REQUEST_URL)
-                .then().log().all();
-    }
 }

@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.acceptance;
 
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 
 import io.restassured.RestAssured;
@@ -134,5 +135,60 @@ class OrderAcceptanceTest extends AcceptanceTest {
                 .when()
                 .post(REQUEST_URL)
                 .then().log().all();
+    }
+
+    @Test
+    @DisplayName("Customer의 모든 주문 목록을 조회한다.")
+    void findOrders() {
+        // given
+        postCartItem(new CartItemAdditionRequest(2L));
+        putCartItemQuantity(2L, new QuantityChangingRequest(4));
+
+        postCartItem(new CartItemAdditionRequest(5L));
+
+        postCartItem(new CartItemAdditionRequest(4L));
+        putCartItemQuantity(4L, new QuantityChangingRequest(7));
+
+        postCartItem(new CartItemAdditionRequest(1L));
+
+        final List<OrderCreationRequest> firstOrderRequest = List.of(
+                new OrderCreationRequest(5L),
+                new OrderCreationRequest(4L)
+        );
+        final String firstOrderId = postOrder(firstOrderRequest)
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split(REQUEST_URL + "/")[1];
+
+        final List<OrderCreationRequest> secondOrderRequest = List.of(
+                new OrderCreationRequest(2L),
+                new OrderCreationRequest(1L)
+        );
+        final String secondOrderId = postOrder(secondOrderRequest)
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split(REQUEST_URL + "/")[1];
+
+        // when
+        final ValidatableResponse response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
+                .when()
+                .get(REQUEST_URL)
+                .then().log().all();
+
+        final ValidatableResponse cartResponse = getCart();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("id", contains(Integer.parseInt(firstOrderId), Integer.parseInt(secondOrderId)))
+                .body("orderDetails.productId", contains(contains(5, 4), contains(2, 1)))
+                .body("orderDetails.quantity", contains(contains(1, 7), contains(4, 1)))
+                .body("orderDetails.price", contains(contains(540, 2100), contains(700, 1600)))
+                .body("orderDetails.name", contains(contains("오렌지", "딸기"), contains("포도", "사과")))
+                .body("orderDetails.imageUrl", contains(contains("orange.org", "strawberry.org"), contains("podo.do", "apple.co.kr")));
+
+        cartResponse.statusCode(HttpStatus.OK.value())
+                .body("cartList", empty());
     }
 }
