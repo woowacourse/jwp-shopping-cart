@@ -22,7 +22,7 @@ public class CustomerService {
     }
 
     public Customer register(String email, String password, String username) {
-        if (customerDao.existsByEmail(email)) {
+        if (customerDao.isExist(email)) {
             throw new JoinException("이미 존재하는 이메일입니다.", ErrorResponse.DUPLICATED_EMAIL);
         }
         final Long newId = customerDao.save(new Customer(Email.of(email), Password.ofWithEncryption(password), Username.of(username)));

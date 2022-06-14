@@ -57,7 +57,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrdersDto> findOrders(final Customer customer) {
         List<OrdersDto> result = new LinkedList<>();
-        List<Long> orderIds = orderDao.findByCustomerId(customer.getId());
+        List<Long> orderIds = orderDao.findOrderIds(customer.getId());
         for (Long orderId : orderIds) {
             List<OrderDetail> orderDetails = getOrderDetails(orderId);
             result.add(OrdersDto.of(orderId, orderDetails));
@@ -74,7 +74,7 @@ public class OrderService {
     }
 
     private void validateExistOrder(Customer customer, Long orderId) {
-        final boolean result = orderDao.isValidOrderId(customer.getId(), orderId);
+        final boolean result = orderDao.isExist(customer.getId(), orderId);
         if (!result) {
             throw new NotExistException("주문 번호가 없습니다.", ErrorResponse.NOT_EXIST_ORDER);
         }

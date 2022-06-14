@@ -48,7 +48,7 @@ class OrderDaoTest {
         final Long orderId2 = orderDao.addOrders(customerId);
 
         //when
-        List<Long> orderIds = orderDao.findByCustomerId(customerId);
+        List<Long> orderIds = orderDao.findOrderIds(customerId);
 
         //then
         assertThat(orderIds).containsExactly(orderId1, orderId2);
@@ -62,7 +62,7 @@ class OrderDaoTest {
         final Long orderId = orderDao.addOrders(customerId);
 
         //when
-        boolean actual = orderDao.isValidOrderId(customerId, orderId + 1);
+        boolean actual = orderDao.isExist(customerId, orderId + 1);
 
         //then
         assertThat(actual).isFalse();

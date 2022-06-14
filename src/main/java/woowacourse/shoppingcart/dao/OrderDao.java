@@ -25,13 +25,13 @@ public class OrderDao {
         return simpleJdbcInsertInOrders.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public List<Long> findByCustomerId(final Long customerId) {
+    public List<Long> findOrderIds(final Long customerId) {
         final String query = "SELECT id FROM orders WHERE customer_id = ?";
 
         return jdbcTemplate.query(query, ((rs, rowNum) -> rs.getLong("id")), customerId);
     }
 
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
+    public boolean isExist(final Long customerId, final Long orderId) {
         final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
         return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
     }
