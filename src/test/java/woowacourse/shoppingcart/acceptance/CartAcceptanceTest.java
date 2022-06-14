@@ -51,6 +51,7 @@ public class CartAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = addCartItemApi("", 1L, 5);
 
         //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         assertThat(response.as(ExceptionResponse.class).getMessage()).isEqualTo("토큰 정보가 없습니다.");
     }
 
