@@ -48,14 +48,14 @@ public class OrderService {
             cartItemService.deleteById(cartItemId);
 
             Product product = cartItem.getProduct();
-            productService.reduceQuantity(product.getId(), product.getStockQuantity() - cartItem.getQuantity());
+            productService.updateQuantity(product.getId(), product.getStockQuantity() - cartItem.getQuantity());
         }
 
         return ordersId;
     }
 
     @Transactional(readOnly = true)
-    public List<OrdersDto> findOrdersByCustomer(final Customer customer) {
+    public List<OrdersDto> findOrders(final Customer customer) {
         List<OrdersDto> result = new LinkedList<>();
         List<Long> orderIds = orderDao.findByCustomerId(customer.getId());
         for (Long orderId : orderIds) {
@@ -67,7 +67,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrdersDto findOrderByCustomerAndOrderId(Customer customer, Long orderId) {
+    public OrdersDto findOrderDetails(Customer customer, Long orderId) {
         validateExistOrder(customer, orderId);
         List<OrderDetail> orderDetails = getOrderDetails(orderId);
         return OrdersDto.of(orderId, orderDetails);
@@ -84,7 +84,7 @@ public class OrderService {
         List<OrderDetail> orderDetails = new LinkedList<>();
         List<OrderDetailEntity> entities = ordersDetailDao.findByOrderId(orderId);
         for (OrderDetailEntity entity : entities) {
-            Product product = productService.findProductById(entity.getProduct_id());
+            Product product = productService.findById(entity.getProduct_id());
             OrderDetail orderDetail = new OrderDetail(entity.getId(), product,
                     entity.getQuantity());
             orderDetails.add(orderDetail);

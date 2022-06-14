@@ -38,21 +38,21 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> product(@PathVariable final Long productId) {
-        final Product product = productService.findProductById(productId);
+        final Product product = productService.findById(productId);
         return ResponseEntity.ok().body(ProductResponse.of(product));
     }
 
     @PostMapping
     public ResponseEntity<ProductResponse> add(@Valid @RequestBody final ProductRequest request) {
         final Long productId = productService.addProduct(request);
-        final Product product = productService.findProductById(productId);
+        final Product product = productService.findById(productId);
         return ResponseEntity.created(URI.create("/api/products/" + productId))
                 .body(ProductResponse.of(product));
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> delete(@PathVariable final Long productId) {
-        productService.deleteProductById(productId);
+        productService.deleteById(productId);
         return ResponseEntity.noContent().build();
     }
 }

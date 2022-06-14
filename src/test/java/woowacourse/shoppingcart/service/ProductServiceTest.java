@@ -37,7 +37,7 @@ public class ProductServiceTest {
         Long productId = productService.addProduct(request);
 
         // then
-        Product product = productService.findProductById(productId);
+        Product product = productService.findById(productId);
 
         assertAll(
                 () -> assertThat(product.getName()).isEqualTo("치킨"),
@@ -80,7 +80,7 @@ public class ProductServiceTest {
         Long productId = productService.addProduct(request);
 
         // when
-        Product product = productService.findProductById(productId);
+        Product product = productService.findById(productId);
 
         // then
         assertAll(
@@ -99,7 +99,7 @@ public class ProductServiceTest {
         Long productId = productService.addProduct(request);
 
         // when
-        productService.deleteProductById(productId);
+        productService.deleteById(productId);
 
         // then
         List<Product> products = productService.findProducts();

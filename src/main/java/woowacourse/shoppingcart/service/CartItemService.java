@@ -41,7 +41,7 @@ public class CartItemService {
         return toCartItem(cartItemEntity);
     }
 
-    public List<CartItem> findCartItemsByCustomer(final Customer customer) {
+    public List<CartItem> findCartItems(final Customer customer) {
         List<CartItemEntity> cartItemEntities = cartItemDao.findCartItemsByCustomerId(customer.getId());
         return cartItemEntities.stream()
                 .map(this::toCartItem)
@@ -74,7 +74,7 @@ public class CartItemService {
     }
 
     private CartItem toCartItem(CartItemEntity entity) {
-        Product product = productService.findProductById(entity.getProductId());
+        Product product = productService.findById(entity.getProductId());
         return new CartItem(entity.getId(), product, entity.getQuantity());
     }
 }

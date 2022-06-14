@@ -51,7 +51,7 @@ public class ProductDao {
         return simpleJdbcInsertInImage.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public Product findProductById(final Long productId) {
+    public Product findById(final Long productId) {
         try {
             final String query = "SELECT product.id, product.name, product.price, product.stock_quantity,"
                     + " image_url, image_alt"
@@ -76,7 +76,7 @@ public class ProductDao {
         jdbcTemplate.update(query, Map.of("productId", productId));
     }
 
-    public void reduceQuantity(final Long productId, final int quantity) {
+    public void updateQuantity(final Long productId, final int quantity) {
         final String sql = "UPDATE product SET stock_quantity = :quantity WHERE id = :productId";
         jdbcTemplate.update(sql, Map.of("quantity", quantity, "productId", productId));
     }

@@ -60,12 +60,12 @@ public class OrderServiceTest {
         Long orderId = orderService.addOrder(customer, List.of(cartItemId));
 
         // then
-        OrdersDto ordersDto = orderService.findOrderByCustomerAndOrderId(customer, orderId);
+        OrdersDto ordersDto = orderService.findOrderDetails(customer, orderId);
         List<OrderedProduct> orderedProducts = ordersDto.getOrderedProducts();
         assertThat(orderId).isEqualTo(ordersDto.getId());
         assertThat(orderedProducts.get(0).getName()).isEqualTo("치킨");
 
-        Product product = productService.findProductById(productId);
+        Product product = productService.findById(productId);
         assertThat(product.getStockQuantity()).isEqualTo(19);
     }
 
@@ -84,7 +84,7 @@ public class OrderServiceTest {
         Long orderId = orderService.addOrder(customer, List.of(cartItemId, cartItemId1, cartItemId2));
 
         // then
-        OrdersDto ordersDto = orderService.findOrderByCustomerAndOrderId(customer, orderId);
+        OrdersDto ordersDto = orderService.findOrderDetails(customer, orderId);
         List<OrderedProduct> orderedProducts = ordersDto.getOrderedProducts();
         assertThat(orderedProducts).hasSize(3);
     }

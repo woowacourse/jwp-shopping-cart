@@ -36,14 +36,14 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<OrdersDto>> findOrders(@AuthenticationPrincipal Customer customer) {
-        final List<OrdersDto> orders = orderService.findOrdersByCustomer(customer);
+        final List<OrdersDto> orders = orderService.findOrders(customer);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrdersDto> findOrder(@AuthenticationPrincipal Customer customer,
             @PathVariable final Long orderId) {
-        final OrdersDto ordersDto = orderService.findOrderByCustomerAndOrderId(customer, orderId);
+        final OrdersDto ordersDto = orderService.findOrderDetails(customer, orderId);
         return ResponseEntity.ok(ordersDto);
     }
 }

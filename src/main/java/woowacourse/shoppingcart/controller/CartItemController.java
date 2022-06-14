@@ -52,7 +52,7 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<List<CartItemDto>> getCartItems(@AuthenticationPrincipal Customer customer) {
-        final List<CartItem> cartItems = cartItemService.findCartItemsByCustomer(customer);
+        final List<CartItem> cartItems = cartItemService.findCartItems(customer);
         return ResponseEntity.ok().body(CartItemDto.of(cartItems));
     }
 

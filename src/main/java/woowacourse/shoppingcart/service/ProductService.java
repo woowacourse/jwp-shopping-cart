@@ -30,15 +30,15 @@ public class ProductService {
         return productDao.findProducts();
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    public Product findById(final Long productId) {
+        return productDao.findById(productId);
     }
 
-    public void deleteProductById(final Long productId) {
+    public void deleteById(final Long productId) {
         productDao.deleteById(productId);
     }
 
-    public void reduceQuantity(final Long productId, final int quantity) {
-        productDao.reduceQuantity(productId, quantity);
+    public void updateQuantity(final Long productId, final int quantity) {
+        productDao.updateQuantity(productId, quantity);
     }
 }

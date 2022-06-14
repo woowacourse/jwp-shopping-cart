@@ -51,7 +51,7 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, stockQuantity, image);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findById(productId);
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);

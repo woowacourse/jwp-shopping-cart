@@ -100,7 +100,7 @@ public class CartItemServiceTest {
         Long cartItemId3 = cartItemService.addCart(customer, productId2);
 
         // when
-        List<CartItem> cartItems = cartItemService.findCartItemsByCustomer(customer);
+        List<CartItem> cartItems = cartItemService.findCartItems(customer);
 
         // then
         List<Long> cartItemIds = cartItems.stream()
@@ -125,7 +125,7 @@ public class CartItemServiceTest {
         cartItemService.deleteCartItems(customer, new CartItemIds(List.of(cartItemId1)));
 
         // then
-        List<CartItem> cartItems = cartItemService.findCartItemsByCustomer(customer);
+        List<CartItem> cartItems = cartItemService.findCartItems(customer);
         List<Long> cartItemIds = cartItems.stream()
                 .map(CartItem::getId)
                 .collect(Collectors.toList());
