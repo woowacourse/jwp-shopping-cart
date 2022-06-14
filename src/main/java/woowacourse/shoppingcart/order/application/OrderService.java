@@ -6,10 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.cart.application.CartService;
-import woowacourse.shoppingcart.cart.dao.CartItemDao;
 import woowacourse.shoppingcart.cart.domain.Cart;
 import woowacourse.shoppingcart.cart.domain.CartItem;
-import woowacourse.shoppingcart.customer.dao.CustomerDao;
 import woowacourse.shoppingcart.customer.domain.Customer;
 import woowacourse.shoppingcart.order.dao.OrderDao;
 import woowacourse.shoppingcart.order.dao.OrdersDetailDao;
@@ -26,18 +24,13 @@ public class OrderService {
 
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
-    private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
     private final ProductDao productDao;
     private final CartService cartService;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao,
                         final ProductDao productDao, final CartService cartService) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
-        this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
         this.productDao = productDao;
         this.cartService = cartService;
     }
@@ -51,7 +44,7 @@ public class OrderService {
             final CartItem cartItem = cart.getItemById(productId);
 
             ordersDetailDao.addOrdersDetail(orderId, cartItem.getProduct().getId(), cartItem.getQuantity());
-            cartItemDao.deleteCartItem(cartItem.getId());
+            cartService.deleteCartBy(customer, productId);
         }
 
         return orderId;
