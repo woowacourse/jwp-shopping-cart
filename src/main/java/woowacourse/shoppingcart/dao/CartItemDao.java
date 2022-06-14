@@ -103,7 +103,6 @@ public class CartItemDao {
         } catch (DataAccessException e) {
             throw new InvalidCartItemException();
         }
-
     }
 
     public void deleteCart(Long customerId) {

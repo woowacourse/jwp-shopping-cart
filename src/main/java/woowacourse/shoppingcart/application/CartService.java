@@ -9,12 +9,8 @@ import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.dto.response.CartItemResponse;
 import woowacourse.shoppingcart.dto.response.CartResponse;
-import woowacourse.shoppingcart.dto.response.ProductResponse;
 import woowacourse.shoppingcart.exception.DuplicateCartItemByProduct;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -31,10 +27,6 @@ public class CartService {
     public CartResponse findCartByCustomerId(final Long customerId) {
         final Cart cart = cartItemDao.findCartByCustomerId(customerId);
         return CartResponse.of(cart);
-    }
-
-    private List<Long> findCartIdsByCustomerId(final Long customerId) {
-        return cartItemDao.findIdsByCustomerId(customerId);
     }
 
     public CartItemResponse addCart(final Long productId, final Long customerId) {
