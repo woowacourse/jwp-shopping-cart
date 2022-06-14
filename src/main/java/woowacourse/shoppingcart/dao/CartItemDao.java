@@ -111,7 +111,7 @@ public class CartItemDao {
         return namedParameterJdbcTemplate.queryForObject(sql, parameter, CART_ROW_MAPPER);
     }
 
-    public List<Cart> findCartsByIds(List<Long> cartIds) {
+    public List<Cart> findCartsByCustomerId(Long customerId) {
         final String sql = "SELECT cart_item.id, "
                 + "cart_item.product_id, "
                 + "product.name, "
@@ -120,9 +120,9 @@ public class CartItemDao {
                 + "cart_item.quantity "
                 + "FROM cart_item "
                 + "JOIN product ON cart_item.product_id = product.id "
-                + "WHERE cart_item.id IN (:cartIds)";
+                + "WHERE cart_item.customer_id = :customerId";
 
-        MapSqlParameterSource parameter = new MapSqlParameterSource("cartIds", cartIds);
+        MapSqlParameterSource parameter = new MapSqlParameterSource("customerId", customerId);
 
         return namedParameterJdbcTemplate.query(sql, parameter, CART_ROW_MAPPER);
     }

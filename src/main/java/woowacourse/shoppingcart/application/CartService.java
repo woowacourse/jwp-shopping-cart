@@ -1,11 +1,11 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Cart;
 import woowacourse.shoppingcart.dto.CartResponse;
 import woowacourse.shoppingcart.exception.DuplicatedCartProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
@@ -23,12 +23,10 @@ public class CartService {
     }
 
     public List<CartResponse> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.size() == 0) {
-            return CartResponse.toCartResponses(new ArrayList<>());
-        }
+        final Long customerId = customerDao.findIdByUserName(customerName);
+        final List<Cart> carts  = cartItemDao.findCartsByCustomerId(customerId);
 
-        return CartResponse.toCartResponses(cartItemDao.findCartsByIds(cartIds));
+        return CartResponse.toCartResponses(carts);
     }
 
     private List<Long> findCartIdsByCustomerName(final String customerName) {
