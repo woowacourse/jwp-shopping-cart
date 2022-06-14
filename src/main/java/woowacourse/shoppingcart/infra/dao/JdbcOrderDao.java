@@ -19,19 +19,22 @@ import woowacourse.shoppingcart.infra.dao.entity.ProductEntity;
 @Component
 public class JdbcOrderDao implements OrderDao {
     private static final String FIND_ORDER_BY_ORDER_ID_SQL =
-            "SELECT o.id AS order_id, od.id AS order_detail_id, "
-                    + "c.id AS cart_id, c.customer_id, "
-                    + "p.id AS product_id, p.name AS product_name, p.price AS product_price, p.image_url AS product_image_url, "
-                    + "c.quantity "
-                    + "FROM cart_item c JOIN product p ON c.product_id = p.id "
-                    + "JOIN orders o ON c.customer_id = o.customer_id "
-                    + "JOIN orders_detail od ON o.id = od.orders_id AND od.product_id = p.id";
+            "SELECT o.id AS order_id, "
+                    + "od.id AS order_detail_id, "
+                    + "o.customer_id AS customer_id, "
+                    + "p.id AS product_id, "
+                    + "p.name AS product_name, "
+                    + "p.price AS product_price, "
+                    + "p.image_url AS product_image_url, "
+                    + "od.quantity AS quantity "
+                    + "FROM orders o "
+                    + "JOIN orders_detail od ON (od.orders_id = o.id) "
+                    + "JOIN product p ON (p.id = od.product_id) ";
 
     private static final RowMapper<OrderEntity> ORDER_ENTITY_ROW_MAPPER =
             (rs, rowNum) -> new OrderEntity(
                     rs.getLong("order_id"),
                     rs.getLong("order_detail_id"),
-                    rs.getLong("cart_id"),
                     rs.getLong("customer_id"),
                     getProductEntity(rs),
                     rs.getInt("quantity")
@@ -89,18 +92,22 @@ public class JdbcOrderDao implements OrderDao {
         final String sql = FIND_ORDER_BY_ORDER_ID_SQL + " WHERE o.id = ?";
 
         try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, ORDER_ENTITY_ROW_MAPPER, orderId));
+            return Optional.of(
+                    jdbcTemplate.query(sql, ORDER_ENTITY_ROW_MAPPER, orderId)
+            );
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public Optional<List<OrderEntity>> findAll() {
-        final String sql = FIND_ORDER_BY_ORDER_ID_SQL;
+    public Optional<List<OrderEntity>> findOrdersByCustomerId(final long customerId) {
+        final String sql = FIND_ORDER_BY_ORDER_ID_SQL + " WHERE o.customer_id = ?";
 
         try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, ORDER_ENTITY_ROW_MAPPER));
+            return Optional.of(
+                    jdbcTemplate.query(sql, ORDER_ENTITY_ROW_MAPPER, customerId)
+            );
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

@@ -10,9 +10,9 @@ public interface OrderDao {
 
     Optional<List<OrderEntity>> findOrderById(long orderId);
 
-    Optional<List<OrderEntity>> findAll();
+    Optional<List<OrderEntity>> findOrdersByCustomerId(long customerId);
 
-    List<Long> findOrderIdsByCustomerId(final Long customerId);
+    List<Long> findOrderIdsByCustomerId(Long customerId);
 
-    boolean isValidOrderId(final Long customerId, final Long orderId);
+    boolean isValidOrderId(Long customerId, Long orderId);
 }
