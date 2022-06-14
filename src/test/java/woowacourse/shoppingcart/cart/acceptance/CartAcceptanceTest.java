@@ -47,7 +47,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = 장바구니담기(productId, new CartPutRequest(quantity), accessToken);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        final CartItemResponse cartItemResponse =extractResponse(response, CartItemResponse.class);
+        final CartItemResponse cartItemResponse = extractResponse(response, CartItemResponse.class);
         assertAll(
                 () -> assertThat(cartItemResponse.getProductId()).isEqualTo(productId),
                 () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(quantity)
@@ -72,7 +72,7 @@ class CartAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = 장바구니담기(productId, new CartPutRequest(quantity), accessToken);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        final CartItemResponse cartItemResponse =extractResponse(response, CartItemResponse.class);
+        final CartItemResponse cartItemResponse = extractResponse(response, CartItemResponse.class);
         assertAll(
                 () -> assertThat(cartItemResponse.getProductId()).isEqualTo(productId),
                 () -> assertThat(cartItemResponse.getQuantity()).isEqualTo(quantity)
@@ -115,7 +115,8 @@ class CartAcceptanceTest extends AcceptanceTest {
     void deleteCartItem() {
         장바구니담기(1, new CartPutRequest(3L), accessToken);
 
-        final ExtractableResponse<Response> response = 장바구니삭제(new CartDeleteRequest(1L), accessToken);
+        final ExtractableResponse<Response> response = 장바구니삭제(new CartDeleteRequest(List.of(1L)), accessToken);
+
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
