@@ -46,22 +46,29 @@ class CartItemServiceTest {
     @DisplayName("장바구니에 존재하는 상품 조회하는 기능")
     void getCartItems() {
         // given
+
         when(cartItemDao.findIdsByCustomerId(1L))
                 .thenReturn(List.of(1L, 2L));
         when(cartItemDao.findProductIdById(1L))
                 .thenReturn(1L);
         when(cartItemDao.findProductIdById(2L))
                 .thenReturn(2L);
+
+        final Product rice = new Product(1L, "밥", 1000, "www.naver.com");
+        final Product bread = new Product(2L, "빵", 1000, "www.naver.com");
         when(productService.findProductById(1L))
-                .thenReturn(new Product(1L, "밥", 1000, "www.naver.com"));
+                .thenReturn(rice);
         when(productService.findProductById(2L))
-                .thenReturn(new Product(2L, "빵", 1000, "www.naver.com"));
+                .thenReturn(bread);
+
+        List<CartItem> expected = List.of(new CartItem(1L, rice), new CartItem(2L, bread));
 
         // when
         final List<CartItem> cartItems = cartService.findCartItemsByCustomerId(1L);
 
         // then
-        assertThat(cartItems).hasSize(2);
+        assertThat(cartItems).usingRecursiveComparison()
+                .isEqualTo(expected);
     }
 
     @Test
