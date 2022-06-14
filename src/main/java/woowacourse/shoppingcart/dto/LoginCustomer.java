@@ -8,7 +8,7 @@ public class LoginCustomer {
     private String username;
     private String password;
 
-    public LoginCustomer() {
+    private LoginCustomer() {
     }
 
     public LoginCustomer(Customer customer) {

@@ -4,12 +4,14 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class OrderRequest {
-    @NotNull
+
+    @NotNull(groups = Request.id.class)
     private Long cartId;
-    @Min(0)
+    @Min(value = 0, groups = Request.allProperties.class)
     private int quantity;
 
-    public OrderRequest() {}
+    private OrderRequest() {
+    }
 
     public OrderRequest(final Long cartId, final int quantity) {
         this.cartId = cartId;

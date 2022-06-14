@@ -1,8 +1,10 @@
-package woowacourse.shoppingcart.domain;
+package woowacourse.shoppingcart.dto;
 
-import woowacourse.shoppingcart.exception.InvalidCartProductException;
+import java.util.List;
+import java.util.stream.Collectors;
+import woowacourse.shoppingcart.domain.Cart;
 
-public class Cart {
+public class CartResponse {
 
     private Long id;
     private Long productId;
@@ -11,11 +13,10 @@ public class Cart {
     private String imageUrl;
     private int quantity;
 
-    private Cart() {
+    private CartResponse() {
     }
 
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl, final int quantity) {
-        validateQuantity(quantity);
+    public CartResponse(Long id, Long productId, String name, int price, String imageUrl, int quantity) {
         this.id = id;
         this.productId = productId;
         this.name = name;
@@ -24,10 +25,15 @@ public class Cart {
         this.quantity = quantity;
     }
 
-    private void validateQuantity(int quantity) {
-        if (quantity < 1) {
-            throw new InvalidCartProductException();
-        }
+    public static CartResponse of(Cart cart) {
+        return new CartResponse(cart.getId(), cart.getProductId(), cart.getName(), cart.getPrice(), cart.getImageUrl(),
+                cart.getQuantity());
+    }
+
+    public static List<CartResponse> toCartResponses(List<Cart> carts) {
+        return carts.stream()
+                .map(CartResponse::of)
+                .collect(Collectors.toList());
     }
 
     public Long getId() {

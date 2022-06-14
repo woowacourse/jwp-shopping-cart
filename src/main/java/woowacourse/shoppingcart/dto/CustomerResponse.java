@@ -7,7 +7,8 @@ public class CustomerResponse {
     private String loginId;
     private String name;
 
-    public CustomerResponse() {}
+    private CustomerResponse() {
+    }
 
     public CustomerResponse(String loginId, String name) {
         this.loginId = loginId;

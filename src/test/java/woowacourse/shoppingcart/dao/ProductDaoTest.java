@@ -1,18 +1,17 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -22,8 +21,8 @@ public class ProductDaoTest {
 
     private final ProductDao productDao;
 
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
+    public ProductDaoTest(DataSource dataSource) {
+        this.productDao = new ProductDao(dataSource);
     }
 
     @DisplayName("Product를 저장하면, id를 반환한다.")
@@ -61,7 +60,6 @@ public class ProductDaoTest {
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {
-
         // given
         final int size = 0;
 

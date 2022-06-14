@@ -50,4 +50,9 @@ public class AuthService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
+
+    public boolean validateCustomer(String token) {
+        String payload = jwtTokenProvider.getPayload(token);
+        return customerDao.existByLoginId(payload);
+    }
 }

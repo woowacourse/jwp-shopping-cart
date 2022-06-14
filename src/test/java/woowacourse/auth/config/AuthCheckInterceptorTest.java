@@ -21,7 +21,7 @@ public class AuthCheckInterceptorTest {
     @Test
     void authCheckInterceptor_test() throws Exception {
         mockMvc.perform(get("/customers/me")
-                        .header("Authorization", "Bearer " + "invalidToken"))
+                        .header("Authorization", "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsb2dpbklkIiwiaWF0IjoxNjU1MTkzNjk2LCJleHAiOjE2NTUxOTcyOTZ9.b7iqjwiFpmKg1U5e2N81yftkDNTGg-1oDDqyirF8CEinvalid"))
                 .andExpect(status().isUnauthorized());
     }
 }

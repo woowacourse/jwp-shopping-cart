@@ -7,6 +7,7 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 import woowacourse.shoppingcart.dto.OrderRequest;
 import woowacourse.shoppingcart.domain.Orders;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.OrdersResponse;
 import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class OrderService {
         return ordersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
+    public OrdersResponse findOrderById(final String customerName, final Long orderId) {
         validateOrderIdByCustomerName(customerName, orderId);
         return findOrderResponseDtoByOrderId(orderId);
     }
@@ -61,23 +62,24 @@ public class OrderService {
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
+    public List<OrdersResponse> findOrdersByCustomerName(final String customerName) {
         final Long customerId = customerDao.findIdByUserName(customerName);
         final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
 
         return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
+                .map(this::findOrderResponseDtoByOrderId)
                 .collect(Collectors.toList());
     }
 
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
+    private OrdersResponse findOrderResponseDtoByOrderId(final Long orderId) {
         final List<OrderDetail> ordersDetails = new ArrayList<>();
         for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
             final Product product = productDao.findProductById(productQuantity.getProductId());
             final int quantity = productQuantity.getQuantity();
             ordersDetails.add(new OrderDetail(product, quantity));
         }
+        Orders orders = new Orders(orderId, ordersDetails);
 
-        return new Orders(orderId, ordersDetails);
+        return OrdersResponse.of(orders);
     }
 }
