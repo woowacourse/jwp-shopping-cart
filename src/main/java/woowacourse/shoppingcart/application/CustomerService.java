@@ -11,6 +11,7 @@ import woowacourse.shoppingcart.dto.response.CustomerResponse;
 import woowacourse.shoppingcart.dto.request.CustomerUpdateRequest;
 import woowacourse.shoppingcart.dto.request.LoginCustomer;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.util.HashTool;
 
 @Service
@@ -49,6 +50,8 @@ public class CustomerService {
     @Transactional
     public void deleteCustomer(CustomerPasswordRequest customerPasswordRequest, LoginCustomer loginCustomer) {
         authService.checkPassword(loginCustomer.toCustomer(), customerPasswordRequest.getPassword());
-        customerDao.delete(customerDao.findIdByUserName(loginCustomer.getUsername()));
+        if (!customerDao.delete(loginCustomer.getId())) {
+            throw new InvalidCustomerException();
+        }
     }
 }

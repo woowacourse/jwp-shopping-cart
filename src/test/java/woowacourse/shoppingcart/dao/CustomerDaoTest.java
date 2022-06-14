@@ -144,10 +144,18 @@ class CustomerDaoTest {
         }
     }
 
-    @Test
-    void delete메서드는_고객을_삭제한다() {
-        assertThatCode(() -> customerDao.delete(1L))
-            .doesNotThrowAnyException();
-    }
+    @DisplayName("delete메서드는_고객을_삭제한다")
+    @Nested
+    class Delete {
 
+        @Test
+        void 존재하는_유저를_삭제하는_경우_true() {
+            assertThat(customerDao.delete(1L)).isTrue();
+        }
+
+        @Test
+        void 존재하지_않는_유저를_삭제하는_경우_false() {
+            assertThat(customerDao.delete(9999L)).isFalse();
+        }
+    }
 }

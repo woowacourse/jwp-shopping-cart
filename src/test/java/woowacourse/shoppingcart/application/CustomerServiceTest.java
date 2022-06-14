@@ -24,7 +24,7 @@ import woowacourse.shoppingcart.util.HashTool;
 @SuppressWarnings("NonAsciiChracters")
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:schema.sql")
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 class CustomerServiceTest {
 
     @Autowired
@@ -105,7 +105,7 @@ class CustomerServiceTest {
         void 존재하지_않는_회원일_경우_예외발생() {
             CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest(
                 "12345678aA!");
-            LoginCustomer loginCustomer = new LoginCustomer(26L, "angie@gmail.com", "angel", HashTool.hashing("12345678aA!"));
+            LoginCustomer loginCustomer = new LoginCustomer(9999L, "angie@gmail.com", "angel", HashTool.hashing("12345678aA!"));
 
             assertThatThrownBy(() -> customerService.deleteCustomer(customerPasswordRequest, loginCustomer))
                 .isInstanceOf(InvalidCustomerException.class);

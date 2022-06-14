@@ -78,10 +78,10 @@ public class CustomerDao {
         }
     }
 
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         final String query = "DELETE FROM customer WHERE id = :id";
         MapSqlParameterSource parameter = new MapSqlParameterSource("id", id);
 
-        namedParameterJdbcTemplate.update(query, parameter);
+        return namedParameterJdbcTemplate.update(query, parameter) != 0;
     }
 }
