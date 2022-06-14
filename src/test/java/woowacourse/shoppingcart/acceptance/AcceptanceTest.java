@@ -153,9 +153,7 @@ public class AcceptanceTest {
                 .extract();
     }
 
-    public ExtractableResponse<Response> 장바구니_아이템_추가_요청(String userName, Long productId) {
-        String accessToken = 회원_가입_후_토큰_발급("hoho", "Abc1234!");
-
+    public ExtractableResponse<Response> 장바구니_아이템_추가_요청(String accessToken, Long productId) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("productId", productId);
 
