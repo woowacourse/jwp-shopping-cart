@@ -2,7 +2,7 @@ CREATE TABLE customer
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT,
     nickname VARCHAR(8)   NOT NULL,
-    email    VARCHAR(255) NOT NULL UNIQUE,
+    email    VARCHAR(255) NOT NULL,
     password VARCHAR(60)  NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
@@ -36,30 +36,32 @@ ALTER TABLE cart_item
     ADD CONSTRAINT fk_cart_item_to_product
         FOREIGN KEY (product_id) REFERENCES product (id);
 
-create table orders
+CREATE TABLE orders
 (
-    id          bigint not null auto_increment,
-    customer_id bigint not null,
-    primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+    id          BIGINT NOT NULL AUTO_INCREMENT,
+    customer_id BIGINT NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
-alter table orders
-    add constraint fk_orders_to_customer
-        foreign key (customer_id) references customer (id);
+ALTER TABLE orders
+    ADD CONSTRAINT fk_orders_to_customer
+        FOREIGN KEY (customer_id) REFERENCES customer (id);
 
-create table orders_detail
+CREATE TABLE orders_detail
 (
-    id         bigint  not null auto_increment,
-    orders_id  bigint  not null,
-    product_id bigint  not null,
-    quantity   integer not null,
-    primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+    id         BIGINT  NOT NULL AUTO_INCREMENT,
+    orders_id  BIGINT  NOT NULL,
+    product_id BIGINT  NOT NULL,
+    quantity   INTEGER NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
-alter table orders_detail
-    add constraint fk_orders_detail_to_orders
-        foreign key (orders_id) references orders (id);
+ALTER TABLE orders_detail
+    ADD CONSTRAINT fk_orders_detail_to_orders
+        FOREIGN KEY (orders_id) REFERENCES orders (id);
 
-alter table orders_detail
-    add constraint fk_orders_detail_to_product
-        foreign key (product_id) references product (id);
+ALTER TABLE orders_detail
+    ADD CONSTRAINT fk_orders_detail_to_product
+        FOREIGN KEY (product_id) REFERENCES product (id);
