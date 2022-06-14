@@ -11,6 +11,8 @@ import woowacourse.auth.support.AuthenticationPrincipal;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private static final String ACCESS_TOKEN_PAYLOAD = "payload";
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
@@ -20,7 +22,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                 NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        String payload = (String) Objects.requireNonNull(httpServletRequest).getAttribute("payload");
+        String payload = (String) Objects.requireNonNull(httpServletRequest).getAttribute(ACCESS_TOKEN_PAYLOAD);
         return Long.valueOf(payload);
     }
 }

@@ -10,6 +10,8 @@ import woowacourse.shoppingcart.exception.InvalidTokenException;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
+    private static final String ACCESS_TOKEN_PAYLOAD = "payload";
+
     private final JwtTokenProvider jwtTokenProvider;
 
     public AuthenticationInterceptor(JwtTokenProvider jwtTokenProvider) {
@@ -26,7 +28,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         validateToken(token);
 
         String payload = jwtTokenProvider.getPayload(token);
-        request.setAttribute("payload", payload);
+        request.setAttribute(ACCESS_TOKEN_PAYLOAD, payload);
         return true;
     }
 
