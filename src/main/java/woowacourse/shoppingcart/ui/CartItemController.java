@@ -25,20 +25,20 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<List<CartResponse>> getCartItems(@AuthenticationPrincipal LoginCustomer loginCustomer) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(loginCustomer.getUsername()));
+        return ResponseEntity.ok().body(cartService.findCartsByCustomerId(loginCustomer.getId()));
     }
 
     @PostMapping
     public ResponseEntity<CartResponse> addCartItem(@Validated(Request.id.class) @RequestBody final ProductIdRequest productIdRequest,
                                       @AuthenticationPrincipal LoginCustomer loginCustomer) {
-        final CartResponse cartResponse = cartService.addCart(productIdRequest.getProductId(), loginCustomer.getUsername());
+        final CartResponse cartResponse = cartService.addCart(productIdRequest.getProductId(), loginCustomer.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(cartResponse);
     }
 
     @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal LoginCustomer loginCustomer,
                                          @PathVariable final Long cartId) {
-        cartService.deleteCartItem(loginCustomer.getUsername(), cartId);
+        cartService.deleteCartItem(loginCustomer.getId(), cartId);
         return ResponseEntity.noContent().build();
     }
 
@@ -52,7 +52,7 @@ public class CartItemController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteCart(@AuthenticationPrincipal LoginCustomer loginCustomer) {
-        cartService.deleteCart(loginCustomer.getUsername());
+        cartService.deleteCart(loginCustomer.getId());
         return ResponseEntity.noContent().build();
     }
 

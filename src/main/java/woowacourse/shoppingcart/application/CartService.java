@@ -19,17 +19,15 @@ import java.util.List;
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
         this.productDao = productDao;
     }
 
-    public List<CartResponse> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public List<CartResponse> findCartsByCustomerId(final Long customerId) {
+        final List<Long> cartIds = findCartIdsByCustomerId(customerId);
 
         final List<CartResponse> carts = new ArrayList<>();
         for (final Long cartId : cartIds) {
@@ -41,14 +39,11 @@ public class CartService {
         return carts;
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-
+    private List<Long> findCartIdsByCustomerId(final Long customerId) {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
-    public CartResponse addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public CartResponse addCart(final Long productId, final Long customerId) {
         if (cartItemDao.existByProduct(customerId, productId)) {
             throw new DuplicateCartItemByProduct();
         }
@@ -57,13 +52,13 @@ public class CartService {
         return CartResponse.of(cartItemDao.addCartItem(customerId, product));
     }
 
-    public void deleteCartItem(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
+    public void deleteCartItem(final Long customerId, final Long cartId) {
+        validateCustomerCart(cartId, customerId);
         cartItemDao.deleteCartItem(cartId);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    private void validateCustomerCart(final Long cartId, final Long customerId) {
+        final List<Long> cartIds = findCartIdsByCustomerId(customerId);
         if (cartIds.contains(cartId)) {
             return;
         }
@@ -77,8 +72,7 @@ public class CartService {
         return CartResponse.of(cart);
     }
 
-    public void deleteCart(String customerName) {
-        Long customerId = customerDao.findIdByUserName(customerName);
+    public void deleteCart(Long customerId) {
         cartItemDao.deleteCart(customerId);
     }
 }
