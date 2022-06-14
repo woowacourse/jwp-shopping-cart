@@ -101,11 +101,11 @@ class OrderAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("id", equalTo(Integer.parseInt(orderId)))
-                .body("orderDetails.productId", contains(2, 5, 4))
+                .body("orderDetails.product.id", contains(2, 5, 4))
                 .body("orderDetails.quantity", contains(4, 1, 7))
-                .body("orderDetails.price", contains(700, 540, 2100))
-                .body("orderDetails.name", contains("포도", "오렌지", "딸기"))
-                .body("orderDetails.imageUrl", contains("podo.do", "orange.org", "strawberry.org"));
+                .body("orderDetails.product.price", contains(700, 540, 2100))
+                .body("orderDetails.product.name", contains("포도", "오렌지", "딸기"))
+                .body("orderDetails.product.imageUrl", contains("podo.do", "orange.org", "strawberry.org"));
     }
 
     @Test
@@ -182,11 +182,11 @@ class OrderAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("id", contains(Integer.parseInt(firstOrderId), Integer.parseInt(secondOrderId)))
-                .body("orderDetails.productId", contains(contains(5, 4), contains(2, 1)))
+                .body("orderDetails.product.id", contains(contains(5, 4), contains(2, 1)))
                 .body("orderDetails.quantity", contains(contains(1, 7), contains(4, 1)))
-                .body("orderDetails.price", contains(contains(540, 2100), contains(700, 1600)))
-                .body("orderDetails.name", contains(contains("오렌지", "딸기"), contains("포도", "사과")))
-                .body("orderDetails.imageUrl", contains(contains("orange.org", "strawberry.org"), contains("podo.do", "apple.co.kr")));
+                .body("orderDetails.product.price", contains(contains(540, 2100), contains(700, 1600)))
+                .body("orderDetails.product.name", contains(contains("오렌지", "딸기"), contains("포도", "사과")))
+                .body("orderDetails.product.imageUrl", contains(contains("orange.org", "strawberry.org"), contains("podo.do", "apple.co.kr")));
 
         cartResponse.statusCode(HttpStatus.OK.value())
                 .body("cartList", empty());

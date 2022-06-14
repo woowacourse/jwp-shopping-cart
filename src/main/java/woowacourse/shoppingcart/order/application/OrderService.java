@@ -1,6 +1,5 @@
 package woowacourse.shoppingcart.order.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -15,8 +14,6 @@ import woowacourse.shoppingcart.order.domain.OrderDetail;
 import woowacourse.shoppingcart.order.domain.Orders;
 import woowacourse.shoppingcart.order.dto.OrderCreationRequest;
 import woowacourse.shoppingcart.order.exception.notfound.NotFoundOrderException;
-import woowacourse.shoppingcart.product.dao.ProductDao;
-import woowacourse.shoppingcart.product.domain.Product;
 
 @Service
 @Transactional
@@ -24,14 +21,12 @@ public class OrderService {
 
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
-    private final ProductDao productDao;
     private final CartService cartService;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final ProductDao productDao, final CartService cartService) {
+                        final CartService cartService) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
-        this.productDao = productDao;
         this.cartService = cartService;
     }
 
@@ -62,14 +57,8 @@ public class OrderService {
     }
 
     private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
-            final int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
-        }
-
-        return new Orders(orderId, ordersDetails);
+        final List<OrderDetail> orderDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId);
+        return new Orders(orderId, orderDetails);
     }
 
     public List<Orders> findAllOrders(final Customer customer) {

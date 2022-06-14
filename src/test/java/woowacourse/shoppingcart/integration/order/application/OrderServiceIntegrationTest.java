@@ -91,7 +91,8 @@ class OrderServiceIntegrationTest extends IntegrationTest {
         final Orders orders = orderService.findOrderById(customer, orderId);
         final List<Long> actualProductIds = orders.getOrderDetails()
                 .stream()
-                .map(OrderDetail::getProductId)
+                .map(OrderDetail::getProduct)
+                .map(Product::getId)
                 .collect(Collectors.toList());
         final List<Integer> actualQuantities = orders.getOrderDetails()
                 .stream()

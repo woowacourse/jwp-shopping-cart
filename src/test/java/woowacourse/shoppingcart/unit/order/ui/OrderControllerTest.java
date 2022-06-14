@@ -31,6 +31,7 @@ import woowacourse.shoppingcart.order.domain.Orders;
 import woowacourse.shoppingcart.order.dto.OrderCreationRequest;
 import woowacourse.shoppingcart.order.exception.notfound.NotFoundCartItemException;
 import woowacourse.shoppingcart.order.exception.notfound.NotFoundOrderException;
+import woowacourse.shoppingcart.product.domain.Product;
 import woowacourse.shoppingcart.unit.ControllerTest;
 
 class OrderControllerTest extends ControllerTest {
@@ -138,8 +139,8 @@ class OrderControllerTest extends ControllerTest {
         getLoginCustomerByToken(accessToken, customer);
 
         final List<OrderDetail> orderDetails = List.of(
-                new OrderDetail(1L, 340, "망고망고", "man.go", 2),
-                new OrderDetail(4L, 1200, "오렌지", "orange.org", 7)
+                new OrderDetail(new Product(1L, "망고망고", 340, "man.go"), 2),
+                new OrderDetail(new Product(4L, "오렌지", 1200, "orange.org"), 7)
         );
         final Orders orders = new Orders(2L, orderDetails);
         final Long orderId = 2L;
@@ -155,7 +156,7 @@ class OrderControllerTest extends ControllerTest {
 
         // then
         perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$..productId", contains(1, 4)))
+                .andExpect(jsonPath("$..product.id", contains(1, 4)))
                 .andExpect(jsonPath("$..price", contains(340, 1200)))
                 .andExpect(jsonPath("$..name", contains("망고망고", "오렌지")))
                 .andExpect(jsonPath("$..imageUrl", contains("man.go", "orange.org")))
@@ -173,11 +174,11 @@ class OrderControllerTest extends ControllerTest {
                 ),
                 responseFields(
                         fieldWithPath("id").description("주문 ID"),
-                        fieldWithPath("orderDetails[].productId").description("상품 ID"),
+                        fieldWithPath("orderDetails[].product.id").description("상품 ID"),
                         fieldWithPath("orderDetails[].quantity").description("상품 수량"),
-                        fieldWithPath("orderDetails[].price").description("상품 가격"),
-                        fieldWithPath("orderDetails[].name").description("상품 이름"),
-                        fieldWithPath("orderDetails[].imageUrl").description("상품 사진 URL")
+                        fieldWithPath("orderDetails[].product.price").description("상품 가격"),
+                        fieldWithPath("orderDetails[].product.name").description("상품 이름"),
+                        fieldWithPath("orderDetails[].product.imageUrl").description("상품 사진 URL")
                 )
         ));
     }
@@ -230,11 +231,11 @@ class OrderControllerTest extends ControllerTest {
         getLoginCustomerByToken(accessToken, customer);
 
         final List<OrderDetail> firstOrderDetails = List.of(
-                new OrderDetail(1L, 340, "망고망고", "man.go", 2),
-                new OrderDetail(4L, 1200, "오렌지", "orange.org", 7)
+                new OrderDetail(new Product(1L, "망고망고", 340, "man.go"), 2),
+                new OrderDetail(new Product(4L, "오렌지", 1200, "orange.org"), 7)
         );
         final List<OrderDetail> secondOrderDetails = List.of(
-                new OrderDetail(2L, 2700, "복숭아", "pea.ch", 3)
+                new OrderDetail(new Product(2L, "복숭아", 2700, "pea.ch"), 3)
         );
         final List<Orders> orders = List.of(
                 new Orders(2L, firstOrderDetails),
@@ -262,11 +263,11 @@ class OrderControllerTest extends ControllerTest {
                 ),
                 responseFields(
                         fieldWithPath("[].id").description("주문 ID"),
-                        fieldWithPath("[].orderDetails[].productId").description("상품 ID"),
+                        fieldWithPath("[].orderDetails[].product.id").description("상품 ID"),
                         fieldWithPath("[].orderDetails[].quantity").description("상품 수량"),
-                        fieldWithPath("[].orderDetails[].price").description("상품 가격"),
-                        fieldWithPath("[].orderDetails[].name").description("상품 이름"),
-                        fieldWithPath("[].orderDetails[].imageUrl").description("상품 사진 URL")
+                        fieldWithPath("[].orderDetails[].product.price").description("상품 가격"),
+                        fieldWithPath("[].orderDetails[].product.name").description("상품 이름"),
+                        fieldWithPath("[].orderDetails[].product.imageUrl").description("상품 사진 URL")
                 )
         ));
     }
