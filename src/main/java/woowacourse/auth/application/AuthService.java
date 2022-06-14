@@ -22,12 +22,12 @@ public class AuthService {
     }
 
     public TokenResponse login(TokenRequest tokenRequest) {
-        Customer customer = customerDao.findByLoginId(tokenRequest.getEmail());
+        Customer customer = customerDao.findByLoginId(tokenRequest.getLoginId());
         if (!customer.isSamePassword(tokenRequest.getPassword())) {
             throw new InvalidCustomerException();
         }
-        String token = tokenProvider.createToken(tokenRequest.getEmail());
-        return new TokenResponse(token);
+        String token = tokenProvider.createToken(tokenRequest.getLoginId());
+        return new TokenResponse(token, customer.getName());
     }
 
     public LoginCustomer getCustomerByToken(String token) {
