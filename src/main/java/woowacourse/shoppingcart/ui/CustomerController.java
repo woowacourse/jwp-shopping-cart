@@ -23,7 +23,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<Void> addCustomer(@RequestBody @Valid CustomerSignUpRequest customerSignUpRequest) {
-        customerService.registerCustomer(customerSignUpRequest);
+        customerService.register(customerSignUpRequest);
         return ResponseEntity.noContent().build();
     }
 
@@ -35,14 +35,14 @@ public class CustomerController {
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteCustomer(@AuthenticationPrincipal Customer customer) {
-        customerService.deleteByEmail(customer.getEmail());
+        customerService.delete(customer);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/me")
     public ResponseEntity<Void> updateCustomer(@AuthenticationPrincipal Customer customer,
                                                @RequestBody @Valid CustomerUpdateRequest customerUpdateRequest) {
-        customerService.updateCustomer(customer.getEmail(), customerUpdateRequest);
+        customerService.update(customer, customerUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 }

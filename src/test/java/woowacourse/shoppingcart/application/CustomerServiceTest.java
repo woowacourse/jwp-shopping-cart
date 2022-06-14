@@ -18,8 +18,6 @@ import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
 import woowacourse.shoppingcart.exception.customer.DuplicateCustomerBadRequestException;
 import woowacourse.shoppingcart.exception.customer.InvalidCustomerBadRequestException;
 
-import java.util.Optional;
-
 @SpringBootTest
 @Transactional
 class CustomerServiceTest {
@@ -38,7 +36,7 @@ class CustomerServiceTest {
     @BeforeEach
     void setUp() {
         CustomerSignUpRequest request = new CustomerSignUpRequest(EMAIL, PASSWORD, NICKNAME);
-        customerService.registerCustomer(request);
+        customerService.register(request);
     }
 
     @DisplayName("정상적으로 회원 등록")
@@ -57,7 +55,7 @@ class CustomerServiceTest {
     @Test
     void duplicatedEmailCustomer() {
         CustomerSignUpRequest request = new CustomerSignUpRequest(EMAIL, PASSWORD, NICKNAME);
-        assertThatThrownBy(() -> customerService.registerCustomer(request))
+        assertThatThrownBy(() -> customerService.register(request))
                 .isInstanceOf(DuplicateCustomerBadRequestException.class);
     }
 
@@ -82,14 +80,16 @@ class CustomerServiceTest {
     @DisplayName("존재하지 않는 이메일로 탈퇴 시 예외 발생")
     @Test
     void deleteByNotExistEmail() {
-        assertThatThrownBy(() -> customerService.deleteByEmail(NOT_FOUND_EMAIL))
+        Customer customer = new Customer(NOT_FOUND_EMAIL, "notFoundPwd!", "invalid");
+        assertThatThrownBy(() -> customerService.delete(customer))
                 .isInstanceOf(InvalidCustomerBadRequestException.class);
     }
 
     @DisplayName("이메일로 회원 탈퇴")
     @Test
     void deleteByEmail() {
-        customerService.deleteByEmail(EMAIL);
+        Customer customer = new Customer(EMAIL, PASSWORD, NICKNAME);
+        customerService.delete(customer);
 
         assertThat(customerDao.existByEmail(EMAIL)).isFalse();
     }
@@ -97,7 +97,8 @@ class CustomerServiceTest {
     @DisplayName("존재하지 않는 이메일로 수정 시 예외 발생")
     @Test
     void updateByNotExistEmail() {
-        assertThatThrownBy(() -> customerService.updateCustomer(NOT_FOUND_EMAIL,
+        Customer notFoundCustomer = new Customer(NOT_FOUND_EMAIL, "invalidPwd1", "invalid");
+        assertThatThrownBy(() -> customerService.update(notFoundCustomer,
                 new CustomerUpdateRequest(NICKNAME, PASSWORD)))
                 .isInstanceOf(InvalidCustomerBadRequestException.class);
     }
@@ -105,9 +106,10 @@ class CustomerServiceTest {
     @DisplayName("정상적인 회원 정보 수정")
     @Test
     void updateCustomer() {
+        Customer validCustomer = new Customer(EMAIL, PASSWORD, NICKNAME);
         String newNickname = "토닉2";
         String newPassword = "newPassword1";
-        customerService.updateCustomer(EMAIL, new CustomerUpdateRequest(newNickname, newPassword));
+        customerService.update(validCustomer, new CustomerUpdateRequest(newNickname, newPassword));
         Customer customer = customerDao.findByEmail(EMAIL).get();
 
         assertThat(customer.getPassword()).isEqualTo(PasswordEncoder.encrypt(newPassword));

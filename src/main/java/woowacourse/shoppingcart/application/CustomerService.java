@@ -18,7 +18,7 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public Long registerCustomer(CustomerSignUpRequest request) {
+    public Long register(CustomerSignUpRequest request) {
         if (customerDao.existByEmail(request.getEmail())) {
             throw new DuplicateCustomerBadRequestException();
         }
@@ -33,20 +33,15 @@ public class CustomerService {
                 .orElseThrow(InvalidCustomerBadRequestException::new);
     }
 
-    private Customer findByEmail(String email) {
-        return customerDao.findByEmail(email)
-                .orElseThrow(InvalidCustomerBadRequestException::new);
-    }
-
-    public void deleteByEmail(String email) {
+    public void delete(Customer customer) {
+        String email = customer.getEmail();
         if (!customerDao.existByEmail(email)) {
             throw new InvalidCustomerBadRequestException();
         }
         customerDao.deleteByEmail(email);
     }
 
-    public void updateCustomer(String email, CustomerUpdateRequest request) {
-        Customer customer = findByEmail(email);
+    public void update(Customer customer, CustomerUpdateRequest request) {
         String encryptPassword = PasswordEncoder.encrypt(request.getPassword());
         customerDao.update(
                 new Customer(
