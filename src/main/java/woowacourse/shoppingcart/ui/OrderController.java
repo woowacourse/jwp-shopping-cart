@@ -40,7 +40,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> findAll(@LoginMemberPrincipal LoginMember loginMember) {
-        final List<Order> orders = orderService.findAll();
+        final List<Order> orders = orderService.findOrdersByCustomerId(loginMember.getId());
 
         return ResponseEntity.ok(toOrderResponses(orders));
     }

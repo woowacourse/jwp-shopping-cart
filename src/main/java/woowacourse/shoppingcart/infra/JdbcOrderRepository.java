@@ -45,8 +45,8 @@ public class JdbcOrderRepository implements OrderRepository {
     }
 
     @Override
-    public List<Order> findAll() {
-        final Optional<List<OrderEntity>> optionalOrderEntities = orderDao.findAll();
+    public List<Order> findOrdersByCustomerId(final long customerId) {
+        final Optional<List<OrderEntity>> optionalOrderEntities = orderDao.findOrdersByCustomerId(customerId);
         if (optionalOrderEntities.isEmpty()) {
             return Collections.emptyList();
         }
@@ -63,8 +63,7 @@ public class JdbcOrderRepository implements OrderRepository {
     }
 
     private Cart toCart(final OrderEntity entity) {
-        return new Cart(entity.getCartId(), entity.getCustomerId(), toProduct(entity.getProductEntity()),
-                entity.getQuantity());
+        return new Cart(entity.getCustomerId(), toProduct(entity.getProductEntity()), entity.getQuantity());
     }
 
     private List<CartEntity> toCartEntities(final List<Cart> orderingCarts) {
