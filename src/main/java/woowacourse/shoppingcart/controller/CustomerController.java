@@ -50,8 +50,8 @@ public class CustomerController {
                                                       @RequestBody final UpdateCustomerDto updateCustomerDto,
                                                       @AuthenticationPrincipal final LoginCustomer loginCustomer) {
         checkAuthorization(id, loginCustomer.getEmail());
-        final CustomerDto customerDto = customerService.updateCustomer(id, updateCustomerDto);
 
+        final CustomerDto customerDto = customerService.updateCustomer(id, updateCustomerDto);
         return ResponseEntity.ok(customerDto);
     }
 
@@ -60,8 +60,8 @@ public class CustomerController {
                                                @RequestBody final DeleteCustomerDto deleteCustomerDto,
                                                @AuthenticationPrincipal final LoginCustomer loginCustomer) {
         checkAuthorization(id, loginCustomer.getEmail());
-        customerService.deleteCustomer(id, deleteCustomerDto);
 
+        customerService.deleteCustomer(id, deleteCustomerDto);
         return ResponseEntity.noContent().build();
     }
 

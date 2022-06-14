@@ -1,67 +1,85 @@
 package woowacourse.shoppingcart.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.dto.AddCartItemRequestDto;
+import woowacourse.shoppingcart.dto.CartItemResponseDto;
+import woowacourse.shoppingcart.dto.UpdateCartItemCountItemRequest;
+import woowacourse.shoppingcart.exception.DuplicateCartItemException;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
+import woowacourse.shoppingcart.exception.OverQuantityException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(final CartItemDao cartItemDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
         this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    public Long addCartItem(final AddCartItemRequestDto addCartItemRequestDto, final Long customerId) {
+        checkDuplicateProduct(customerId, addCartItemRequestDto.getProductId());
+        compareCountAndQuantity(addCartItemRequestDto.getCount(), addCartItemRequestDto.getProductId());
+        checkExistProductId(addCartItemRequestDto.getProductId());
 
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
+        return cartItemDao.addCartItem(
+                customerId,
+                addCartItemRequestDto.getProductId(),
+                addCartItemRequestDto.getCount());
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findByUsername(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findByUsername(customerName);
-        try {
-            return cartItemDao.addCartItem(customerId, productId);
-        } catch (final Exception e) {
-            throw new InvalidProductException();
+    private void checkExistProductId(final Long productId) {
+        if (productDao.findProductById(productId).isEmpty()) {
+            throw new NotFoundProductException();
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    private void compareCountAndQuantity(final Integer count, final Long productId) {
+        final Product product = productDao.findProductById(productId)
+                .orElseThrow(NotFoundProductException::new);
+        if (product.isOverCount(count)) {
+            throw new OverQuantityException();
+        }
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
+    private void checkDuplicateProduct(final Long customerId, final Long productId) {
+        cartItemDao.findCartItemByCustomerIdAndProductId(customerId, productId)
+                .ifPresent(cartItem -> {
+                    throw new DuplicateCartItemException();
+                });
+    }
+
+    public List<CartItemResponseDto> findCartsByCustomerId(final Long customerId) {
+        final List<CartItem> cartItems = cartItemDao.findCartItemsByCustomerId(customerId);
+
+        return cartItems.stream()
+                .map(cartItem -> new CartItemResponseDto(
+                        cartItem.getProductId(),
+                        cartItem.getImageUrl(),
+                        cartItem.getName(),
+                        cartItem.getPrice(),
+                        cartItem.getQuantity(),
+                        cartItem.getCount())
+                ).collect(Collectors.toList());
+    }
+
+    public void deleteCart(final Long customerId, final Long productId) {
+        cartItemDao.deleteCartItem(customerId, productId);
+    }
+
+    public void updateCart(final Long customerId, final Long productId,
+                           final UpdateCartItemCountItemRequest updateCartItemCountItemRequest) {
+        compareCountAndQuantity(updateCartItemCountItemRequest.getCount(), productId);
+        cartItemDao.updateCartItem(customerId, productId, updateCartItemCountItemRequest.getCount());
     }
 }

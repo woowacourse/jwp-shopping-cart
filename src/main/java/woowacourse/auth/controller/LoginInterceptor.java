@@ -1,4 +1,4 @@
-package woowacourse.auth.ui;
+package woowacourse.auth.controller;
 
 import java.util.List;
 import java.util.Objects;

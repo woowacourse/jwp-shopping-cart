@@ -12,6 +12,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.SignInResponseDto;
@@ -33,6 +35,74 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.header(HttpHeaders.LOCATION)).isNotBlank(),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
         );
+    }
+
+    @DisplayName("이미 가입된 이메일로 회원가입을 요청한다.")
+    @Test
+    void addCustomer_duplicateEmail() {
+        createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
+        final ExtractableResponse<Response> response = createCustomer(
+                new SignUpDto(TEST_EMAIL, TEST_PASSWORD, "테스트2"));
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("이메일 형식이 아닌 형태로 회원가입을 요청시 400을 반환한다.")
+    @Test
+    void addCustomer_blankEmail() {
+        final ExtractableResponse<Response> response = createCustomer(
+                new SignUpDto("test@te st.com", TEST_PASSWORD, TEST_USERNAME));
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("비밀번호의 길이가 8자 미만이거나 20자 초과일 경우 400을 반환한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"1234567", "testtesttesttesttestt"})
+    void addCustomer_invalidLengthPassword(final String password) {
+        final ExtractableResponse<Response> response = createCustomer(
+                new SignUpDto(TEST_EMAIL, password, TEST_USERNAME));
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("비밀번호가 공백으로만 이루어졌을 경우 400을 반환한다.")
+    @Test
+    void addCustomer_blankPassword() {
+        final ExtractableResponse<Response> response = createCustomer(
+                new SignUpDto(TEST_EMAIL, "        ", TEST_USERNAME));
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("이미 가입된 닉네임으로 회원가입을 요청한다.")
+    @Test
+    void addCustomer_duplicateUsername() {
+        createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
+        final ExtractableResponse<Response> response = createCustomer(
+                new SignUpDto("test2@test.com", TEST_PASSWORD, TEST_USERNAME));
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("공백이 있는 닉네임으로 회원가입을 요청한다.")
+    @Test
+    void addCustomer_blankUsername() {
+        createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
+        final ExtractableResponse<Response> response = createCustomer(
+                new SignUpDto("test2@test.com", TEST_PASSWORD, "  te st"));
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("10글자 이상의 닉네임으로 회원가입을 요청한다.")
+    @Test
+    void addCustomer_tooLongUsername() {
+        createCustomer(new SignUpDto(TEST_EMAIL, TEST_PASSWORD, TEST_USERNAME));
+        final ExtractableResponse<Response> response = createCustomer(
+                new SignUpDto("test2@test.com", TEST_PASSWORD, "testtesttes"));
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("내 정보 조회")

@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.dao;
 import java.sql.PreparedStatement;
 import java.util.Locale;
 import java.util.Optional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Repository
@@ -28,22 +30,26 @@ public class CustomerDao {
     }
 
     public Long save(final Customer customer) {
-        final String query = "INSERT INTO CUSTOMER(email, password, username) values(?, ?, ?)";
+        final String query = "INSERT INTO customer(email, password, username) values(?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, customer.getEmail());
-            preparedStatement.setString(2, customer.getPassword());
-            preparedStatement.setString(3, customer.getUsername());
-            return preparedStatement;
-        }, keyHolder);
+        try {
+            jdbcTemplate.update(connection -> {
+                final PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
+                preparedStatement.setString(1, customer.getEmail());
+                preparedStatement.setString(2, customer.getPassword());
+                preparedStatement.setString(3, customer.getUsername());
+                return preparedStatement;
+            }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+            return keyHolder.getKey().longValue();
+        } catch (final DataIntegrityViolationException e) {
+            throw new DuplicateCustomerException("이미 가입된 닉네임입니다.");
+        }
     }
 
     public Optional<Customer> findById(final Long createdMemberId) {
-        final String query = "SELECT id, email, password, username FROM CUSTOMER WHERE id = ?";
+        final String query = "SELECT id, email, password, username FROM customer WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, memberRowMapper, createdMemberId));
         } catch (final EmptyResultDataAccessException e) {
@@ -70,7 +76,7 @@ public class CustomerDao {
     }
 
     public void update(final Customer customer) {
-        final String query = "UPDATE CUSTOMER SET username = ? WHERE id = ?";
+        final String query = "UPDATE customer SET username = ? WHERE id = ?";
 
         final int changedRowCount = jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -83,7 +89,7 @@ public class CustomerDao {
     }
 
     public void deleteById(final Long id) {
-        final String query = "DELETE FROM CUSTOMER WHERE id = ?";
+        final String query = "DELETE FROM customer WHERE id = ?";
 
         final int deletedRowCount = jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement = connection.prepareStatement(query);

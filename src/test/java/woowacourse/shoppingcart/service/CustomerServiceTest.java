@@ -13,23 +13,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.support.PasswordEncoder;
 import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.dto.DeleteCustomerDto;
 import woowacourse.shoppingcart.dto.SignUpDto;
 import woowacourse.shoppingcart.dto.UpdateCustomerDto;
-import woowacourse.shoppingcart.exception.DuplicateNameException;
+import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Sql(scripts = {"classpath:test.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class CustomerServiceTest {
     @Autowired
     private CustomerService customerService;
     @MockBean
     private PasswordEncoder passwordEncoder;
-
 
     @Test
     @DisplayName("회원을 가입시킨다.")
@@ -72,7 +71,7 @@ class CustomerServiceTest {
         final UpdateCustomerDto changeForm = new UpdateCustomerDto(duplicateName);
 
         assertThatThrownBy(() -> customerService.updateCustomer(createdCustomerId, changeForm))
-                .isInstanceOf(DuplicateNameException.class)
+                .isInstanceOf(DuplicateCustomerException.class)
                 .hasMessageContaining("수정하려는 이름이 이미 존재합니다.");
     }
 

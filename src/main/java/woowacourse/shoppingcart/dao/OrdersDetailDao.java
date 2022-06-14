@@ -1,40 +1,57 @@
 package woowacourse.shoppingcart.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.domain.OrdersDetail;
+import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.NotFoundProductException;
 
 @Repository
 public class OrdersDetailDao {
+
     private final JdbcTemplate jdbcTemplate;
+    private final ProductDao productDao;
+    private final RowMapper<OrdersDetail> ordersDetailRowMapper = (rs, rowNum) -> new OrdersDetail(
+            rs.getLong("id"),
+            findProduct(rs.getLong("product_id")),
+            rs.getInt("count")
+    );
 
-    public OrdersDetailDao(final JdbcTemplate jdbcTemplate) {
+    public OrdersDetailDao(final JdbcTemplate jdbcTemplate, final ProductDao productDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.productDao = productDao;
     }
 
-    public Long addOrdersDetail(final Long ordersId, final Long productId, final int quantity) {
-        final String sql = "INSERT INTO orders_detail (orders_id, product_id, quantity) VALUES (?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+    public int saveAll(final List<OrdersDetail> ordersDetails, final Long ordersId) {
+        final String sql = "INSERT INTO orders_detail(product_id, count, orders_id) values(?, ?, ?)";
+        return jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(final PreparedStatement ps, final int i) throws SQLException {
+                ps.setLong(1, ordersDetails.get(i).getProductId());
+                ps.setInt(2, ordersDetails.get(i).getCount());
+                ps.setLong(3, ordersId);
+            }
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, ordersId);
-            preparedStatement.setLong(2, productId);
-            preparedStatement.setLong(3, quantity);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+            @Override
+            public int getBatchSize() {
+                return ordersDetails.size();
+            }
+        }).length;
     }
 
-    public List<OrderDetail> findOrdersDetailsByOrderId(final Long orderId) {
-        final String sql = "SELECT product_id, quantity FROM orders_detail WHERE orders_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new OrderDetail(
-                rs.getLong("product_id"),
-                rs.getInt("quantity")
-        ), orderId);
+    public List<OrdersDetail> findDetails(final Long ordersId) {
+        final String sql = "SELECT id, product_id, count, orders_id FROM orders_detail WHERE orders_id = ?";
+
+        return jdbcTemplate.query(sql, ordersDetailRowMapper, ordersId);
+    }
+
+    private Product findProduct(final Long productId) {
+        return productDao.findProductById(productId)
+                .orElseThrow(NotFoundProductException::new);
     }
 }

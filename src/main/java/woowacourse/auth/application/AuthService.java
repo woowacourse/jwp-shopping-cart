@@ -9,6 +9,8 @@ import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerDto;
 import woowacourse.shoppingcart.exception.AuthorizationFailException;
+import woowacourse.shoppingcart.exception.ForbiddenException;
+import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
 public class AuthService {
@@ -48,6 +50,14 @@ public class AuthService {
     private void checkPassword(final SignInRequestDto signInDto, final Customer customer) {
         if (!passwordEncoder.matches(signInDto.getPassword(), customer.getPassword())) {
             throw new AuthorizationFailException("id 또는 비밀번호가 틀렸습니다.");
+        }
+    }
+
+    public void checkAuthorization(final Long id, final String email) {
+        final Customer customer = customerDao.findByEmail(email)
+                .orElseThrow(InvalidCustomerException::new);
+        if (!customer.getId().equals(id)) {
+            throw new ForbiddenException();
         }
     }
 }
