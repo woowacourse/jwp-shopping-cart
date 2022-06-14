@@ -1,6 +1,7 @@
 package woowacourse.shoppingcart.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.exception.AuthException;
 import woowacourse.exception.JoinException;
 import woowacourse.exception.dto.ErrorResponse;
@@ -9,9 +10,9 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.customer.Username;
-import woowacourse.shoppingcart.dto.CustomerResponse;
 
 @Service
+@Transactional
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -21,11 +22,10 @@ public class CustomerService {
     }
 
     public Customer register(String email, String password, String username) {
-        if (customerDao.existsByEmail(email)) {
+        if (customerDao.isExist(email)) {
             throw new JoinException("이미 존재하는 이메일입니다.", ErrorResponse.DUPLICATED_EMAIL);
         }
         final Long newId = customerDao.save(new Customer(Email.of(email), Password.ofWithEncryption(password), Username.of(username)));
-
         return new Customer(newId, Email.of(email), Password.ofWithEncryption(password), Username.of(username));
     }
 
@@ -37,10 +37,9 @@ public class CustomerService {
         customerDao.updatePassword(customer.getId(), encryptedPassword.getValue());
     }
 
-    public CustomerResponse changeGeneralInfo(Customer customer, String username) {
+    public Customer changeGeneralInfo(Customer customer, String username) {
         customerDao.updateGeneralInfo(customer.getId(), username);
-        final Customer updatedCustomer = customerDao.findByEmail(customer.getEmail().getValue());
-        return new CustomerResponse(updatedCustomer.getEmail().getValue(), updatedCustomer.getUsername().getValue());
+        return customerDao.findByEmail(customer.getEmail().getValue());
     }
 
     public void delete(Customer customer, String password) {

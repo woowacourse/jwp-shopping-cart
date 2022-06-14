@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import woowacourse.auth.dto.LoginRequest;
+import woowacourse.exception.dto.ErrorResponse;
 import woowacourse.shoppingcart.dto.ChangeGeneralInfoRequest;
 import woowacourse.shoppingcart.dto.ChangePasswordRequest;
 import woowacourse.shoppingcart.dto.CustomerRequest;
@@ -30,8 +31,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void addCustomer() {
         // when
-        final CustomerRequest customerRequest = new CustomerRequest("test@gmail.com", "password0!",
-                "루나");
+        final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
         final ExtractableResponse<Response> response = postMethodRequest(customerRequest,
                 "/api/customers");
 
@@ -39,6 +39,25 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
                 () -> assertThat(response.header("location")).isEqualTo("/login")
+        );
+    }
+
+    @DisplayName("회원가입 시 이메일이 이미 존재할 경우 에러를 발생한다.")
+    @Test
+    void checkDuplicatedEmail() {
+        // given
+        final CustomerRequest customerRequest = new CustomerRequest(email, password, username);
+        postMethodRequest(customerRequest, "/api/customers");
+
+        // when
+        final ExtractableResponse<Response> response = postMethodRequest(customerRequest,
+                "/api/customers");
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(ErrorResponse.DUPLICATED_EMAIL.getErrorCode()),
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo(ErrorResponse.DUPLICATED_EMAIL.getMessage())
         );
     }
 

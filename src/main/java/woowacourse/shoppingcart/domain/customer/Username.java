@@ -2,7 +2,7 @@ package woowacourse.shoppingcart.domain.customer;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
-import woowacourse.exception.InputFormatException;
+import woowacourse.shoppingcart.exception.InputFormatException;
 import woowacourse.exception.dto.ErrorResponse;
 
 public class Username {
@@ -15,7 +15,9 @@ public class Username {
     }
 
     public static Username of(String username) {
-        return new Username(username);
+        final String removedBlackUsername = trim(username);
+        validateUsername(removedBlackUsername);
+        return new Username(removedBlackUsername);
     }
 
     public String getValue() {
@@ -26,6 +28,10 @@ public class Username {
         if (!PATTERN.matcher(username).matches()) {
             throw new InputFormatException("닉네임 규약이 맞지 않습니다", ErrorResponse.INVALID_USERNAME);
         }
+    }
+
+    private static String trim(String username) {
+        return username.trim();
     }
 
     @Override

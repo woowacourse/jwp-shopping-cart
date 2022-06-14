@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import woowacourse.exception.InputFormatException;
+import woowacourse.shoppingcart.exception.InputFormatException;
 import woowacourse.exception.dto.ErrorResponse;
 
 public class Password {

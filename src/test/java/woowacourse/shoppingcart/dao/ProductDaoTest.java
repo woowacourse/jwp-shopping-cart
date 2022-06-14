@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.Image;
 import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
@@ -19,22 +20,24 @@ import woowacourse.shoppingcart.domain.Product;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class ProductDaoTest {
 
+    private final String name = "초콜렛";
+    private final int price = 1_000;
+    private final int stockQuantity = 10;
+    private final String imageUrl = "www.test.com";
+    private final String imageAlt = "ImageAlt";
+    private final Image image = new Image(imageUrl, imageAlt);
+
     private final ProductDao productDao;
 
     public ProductDaoTest(JdbcTemplate jdbcTemplate) {
         this.productDao = new ProductDao(jdbcTemplate);
     }
 
-    @DisplayName("Product를 저장하면, id를 반환한다.")
+    @DisplayName("product를 저장하면, id를 반환한다.")
     @Test
     void save() {
-        // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, stockQuantity, image));
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -44,14 +47,11 @@ public class ProductDaoTest {
     @Test
     void findProductById() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
-        final Product expectedProduct = new Product(productId, name, price, imageUrl);
+        final Long productId = productDao.save(new Product(name, price, stockQuantity, image));
+        final Product expectedProduct = new Product(productId, name, price, stockQuantity, image);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findById(productId);
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);
@@ -60,7 +60,6 @@ public class ProductDaoTest {
     @DisplayName("상품 목록 조회")
     @Test
     void getProducts() {
-
         // given
         final int size = 0;
 
@@ -75,15 +74,11 @@ public class ProductDaoTest {
     @Test
     void deleteProduct() {
         // given
-        final String name = "초콜렛";
-        final int price = 1_000;
-        final String imageUrl = "www.test.com";
-
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new Product(name, price, stockQuantity, image));
         final int beforeSize = productDao.findProducts().size();
 
         // when
-        productDao.delete(productId);
+        productDao.deleteById(productId);
 
         // then
         final int afterSize = productDao.findProducts().size();

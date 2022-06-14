@@ -26,7 +26,7 @@ class OrderDaoTest {
         this.orderDao = new OrderDao(jdbcTemplate);
     }
 
-    @DisplayName("Order를 추가하는 기능")
+    @DisplayName("주문을 추가하는 기능")
     @Test
     void addOrders() {
         //given
@@ -39,19 +39,32 @@ class OrderDaoTest {
         assertThat(orderId).isNotNull();
     }
 
-    @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
+    @DisplayName("고객 id로 모든 주문 id를 가져오는 기능")
     @Test
-    void findOrderIdsByCustomerId() {
+    void findByCustomerId() {
         //given
         final Long customerId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+        final Long orderId1 = orderDao.addOrders(customerId);
+        final Long orderId2 = orderDao.addOrders(customerId);
 
         //when
-        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
+        List<Long> orderIds = orderDao.findOrderIds(customerId);
 
         //then
-        assertThat(orderIdsByCustomerId).hasSize(2);
+        assertThat(orderIds).containsExactly(orderId1, orderId2);
     }
 
+    @DisplayName("고객 장바구니에 없는 아이템일 경우 false를 출력하는 기능")
+    @Test
+    void isValidOrderId() {
+        //given
+        final Long customerId = 1L;
+        final Long orderId = orderDao.addOrders(customerId);
+
+        //when
+        boolean actual = orderDao.isExist(customerId, orderId + 1);
+
+        //then
+        assertThat(actual).isFalse();
+    }
 }

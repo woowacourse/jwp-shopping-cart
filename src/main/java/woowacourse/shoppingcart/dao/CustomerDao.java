@@ -13,7 +13,7 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
 import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.customer.Username;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.NotExistException;
 
 @Repository
 public class CustomerDao {
@@ -29,7 +29,7 @@ public class CustomerDao {
             final String query = "SELECT id FROM customer WHERE username = ?";
             return jdbcTemplate.queryForObject(query, Long.class, userName.toLowerCase(Locale.ROOT));
         } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
+            throw new NotExistException("고객을 찾을 수 없습니다.", ErrorResponse.NOT_EXIST_CUSTOMER);
         }
     }
 
@@ -73,7 +73,7 @@ public class CustomerDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public boolean existsByEmail(String email) {
+    public boolean isExist(String email) {
         final String sql = "SELECT exists(SELECT * FROM customer WHERE email = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, email);
     }

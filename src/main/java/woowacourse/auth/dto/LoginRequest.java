@@ -1,7 +1,10 @@
 package woowacourse.auth.dto;
 
+import javax.validation.constraints.Email;
+
 public class LoginRequest {
 
+    @Email(message = "4001", regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")
     private String email;
     private String password;
 

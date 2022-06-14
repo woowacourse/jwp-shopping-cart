@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import woowacourse.exception.JoinException;
 import woowacourse.exception.LoginException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
@@ -23,10 +24,14 @@ public class CustomerServiceTest {
     private final String email = "test@gmail.com";
     private final String password = "password0!";
     private final String username = "루나";
-    @Autowired
     private CustomerService customerService;
-    @Autowired
     private CustomerDao customerDao;
+
+    @Autowired
+    public CustomerServiceTest(final CustomerDao customerDao, final CustomerService customerService) {
+        this.customerDao = customerDao;
+        this.customerService = customerService;
+    }
 
     @DisplayName("회원가입")
     @Test
@@ -39,6 +44,17 @@ public class CustomerServiceTest {
                 () -> assertThat(customer.getEmail()).isEqualTo(Email.of(email)),
                 () -> assertThat(customer.getUsername()).isEqualTo(Username.of(username))
         );
+    }
+
+    @DisplayName("회원가입 시 이메일이 이미 존재할 경우 에러를 발생한다.")
+    @Test
+    void checkDuplicatedEmail() {
+        // given
+        customerService.register(email, password, username);
+
+        // when and then
+        assertThatThrownBy(() -> customerService.register(email, "password1!", "aki"))
+                .isInstanceOf(JoinException.class);
     }
 
     @DisplayName("비밀번호 수정")
