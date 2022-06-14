@@ -10,7 +10,7 @@ import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
+import woowacourse.shoppingcart.dto.response.MeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
@@ -37,9 +37,9 @@ public class CustomerService {
     }
 
     @Transactional(readOnly = true)
-    public GetMeResponse getMe(Long id) {
+    public MeResponse getMe(Long id) {
         Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
-        return new GetMeResponse(customer);
+        return new MeResponse(customer);
     }
 
     public UniqueUsernameResponse checkUniqueUsername(String username) {

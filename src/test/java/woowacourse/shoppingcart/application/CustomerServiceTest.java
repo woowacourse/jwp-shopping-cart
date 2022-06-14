@@ -13,7 +13,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
+import woowacourse.shoppingcart.dto.response.MeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
@@ -47,7 +47,7 @@ class CustomerServiceTest {
     @DisplayName("내 정보를 불러온다.")
     @Test
     void getMeTest_success() {
-        GetMeResponse response = customerService.getMe(식별자);
+        MeResponse response = customerService.getMe(식별자);
 
         assertThat(response.getUsername()).isEqualTo(유효한_아이디);
         assertThat(response.getNickname()).isEqualTo(닉네임);
@@ -87,7 +87,7 @@ class CustomerServiceTest {
         UpdateMeRequest request = new UpdateMeRequest("변경된_닉네임", 변경된_나이);
 
         customerService.updateMe(식별자, request);
-        GetMeResponse me = customerService.getMe(식별자);
+        MeResponse me = customerService.getMe(식별자);
 
         assertThat(me.getNickname()).isEqualTo(변경된_닉네임);
         assertThat(me.getAge()).isEqualTo(변경된_나이);

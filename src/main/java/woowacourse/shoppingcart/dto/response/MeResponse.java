@@ -3,22 +3,22 @@ package woowacourse.shoppingcart.dto.response;
 import java.util.Objects;
 import woowacourse.shoppingcart.domain.Customer;
 
-public class GetMeResponse {
+public class MeResponse {
 
     private String username;
     private String nickname;
     private int age ;
 
-    public GetMeResponse() {
+    public MeResponse() {
     }
 
-    public GetMeResponse(String username, String nickname, int age) {
+    public MeResponse(String username, String nickname, int age) {
         this.username = username;
         this.nickname = nickname;
         this.age = age;
     }
 
-    public GetMeResponse(Customer customer) {
+    public MeResponse(Customer customer) {
         this(customer.getUsername().getValue(), customer.getNickname().getValue(), customer.getAge().getValue());
     }
 
@@ -54,7 +54,7 @@ public class GetMeResponse {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GetMeResponse that = (GetMeResponse) o;
+        MeResponse that = (MeResponse) o;
         return age == that.age
                 && Objects.equals(username, that.username)
                 && Objects.equals(nickname, that.nickname);

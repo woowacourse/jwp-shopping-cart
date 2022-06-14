@@ -3,14 +3,14 @@ package woowacourse.shoppingcart.dto.response;
 import java.util.List;
 import woowacourse.shoppingcart.domain.Product;
 
-public class GetProductResponse {
+public class ProductResponse {
 
     private List<Product> products;
 
-    public GetProductResponse() {
+    public ProductResponse() {
     }
 
-    public GetProductResponse(List<Product> products) {
+    public ProductResponse(List<Product> products) {
         this.products = products;
     }
 

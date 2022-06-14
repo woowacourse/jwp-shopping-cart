@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.response.GetProductResponse;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
 
 @DisplayName("상품 관련 기능")
 public class ProductAcceptanceTest extends AcceptanceTest2 {
@@ -125,7 +125,7 @@ public class ProductAcceptanceTest extends AcceptanceTest2 {
     }
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        GetProductResponse responseDto = response.jsonPath().getObject(".", GetProductResponse.class);
+        ProductResponse responseDto = response.jsonPath().getObject(".", ProductResponse.class);
         List<Long> resultProductIds = responseDto.getProducts()
                 .stream()
                 .map(Product::getId)

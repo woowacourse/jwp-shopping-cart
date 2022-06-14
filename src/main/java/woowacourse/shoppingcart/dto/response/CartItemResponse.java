@@ -1,16 +1,16 @@
 package woowacourse.shoppingcart.dto.response;
 
-public class GetCartItemResponse {
+public class CartItemResponse {
 
     private Long id;
     private String name;
     private int price;
     private String thumbnail;
 
-    public GetCartItemResponse() {
+    public CartItemResponse() {
     }
 
-    public GetCartItemResponse(Long id, String name, int price, String thumbnail) {
+    public CartItemResponse(Long id, String name, int price, String thumbnail) {
         this.id = id;
         this.name = name;
         this.price = price;

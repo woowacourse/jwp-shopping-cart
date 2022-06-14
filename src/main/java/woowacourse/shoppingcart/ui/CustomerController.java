@@ -15,7 +15,7 @@ import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
+import woowacourse.shoppingcart.dto.response.MeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 
 @RestController
@@ -36,8 +36,8 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<GetMeResponse> getMe(@AuthenticationPrincipal Long id) {
-        GetMeResponse currentCustomer = customerService.getMe(id);
+    public ResponseEntity<MeResponse> getMe(@AuthenticationPrincipal Long id) {
+        MeResponse currentCustomer = customerService.getMe(id);
         return ResponseEntity.ok(currentCustomer);
     }
 

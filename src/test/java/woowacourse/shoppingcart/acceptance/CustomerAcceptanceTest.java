@@ -15,7 +15,7 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
+import woowacourse.shoppingcart.dto.response.MeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -46,8 +46,8 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
             String 유효한_토큰 = 로그인_성공_시_토큰_반환(유효한_로그인_요청);
 
             ExtractableResponse<Response> response = 내_정보_조회_요청(유효한_토큰);
-            GetMeResponse actualBody = response.body().jsonPath().getObject(".", GetMeResponse.class);
-            GetMeResponse expectedBody = new GetMeResponse("유효한_아이디", "닉네임", 15);
+            MeResponse actualBody = response.body().jsonPath().getObject(".", MeResponse.class);
+            MeResponse expectedBody = new MeResponse("유효한_아이디", "닉네임", 15);
 
             assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             assertThat(actualBody).isEqualTo(expectedBody);
