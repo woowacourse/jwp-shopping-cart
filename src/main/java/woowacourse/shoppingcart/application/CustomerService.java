@@ -1,13 +1,13 @@
 package woowacourse.shoppingcart.application;
 
 import org.springframework.stereotype.Service;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.auth.support.PasswordEncoder;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.exception.DuplicateCustomerException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
+import woowacourse.shoppingcart.exception.customer.DuplicateCustomerBadRequestException;
+import woowacourse.shoppingcart.exception.customer.InvalidCustomerBadRequestException;
 
 @Service
 public class CustomerService {
@@ -18,9 +18,14 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public Long registerCustomer(SignUpRequest request) {
+    public Customer findById(Long id) {
+        return customerDao.findById(id)
+                .orElseThrow(InvalidCustomerBadRequestException::new);
+    }
+
+    public Long register(CustomerSignUpRequest request) {
         if (customerDao.existByEmail(request.getEmail())) {
-            throw new DuplicateCustomerException();
+            throw new DuplicateCustomerBadRequestException();
         }
         String encryptPassword = PasswordEncoder.encrypt(request.getPassword());
         Customer customer = customerDao.save(
@@ -28,22 +33,15 @@ public class CustomerService {
         return customer.getId();
     }
 
-    public Customer findByEmail(String email) {
-        return customerDao.findByEmail(email)
-                .orElseThrow(InvalidCustomerException::new);
-    }
-
-    public void deleteByEmail(String email) {
-        if (!customerDao.existByEmail(email)) {
-            throw new InvalidCustomerException();
-        }
+    public void delete(Customer customer) {
+        String email = customer.getEmail();
         customerDao.deleteByEmail(email);
     }
 
-    public void updateCustomer(String email, CustomerUpdateRequest request) {
-        Customer customer = findByEmail(email);
+    public void update(Customer customer, CustomerUpdateRequest request) {
         String encryptPassword = PasswordEncoder.encrypt(request.getPassword());
-        customerDao.update(new Customer(customer.getId(), customer.getEmail(), encryptPassword,
-                request.getNickname()));
+        customerDao.update(
+                new Customer(
+                        customer.getId(), customer.getEmail(), encryptPassword, request.getNickname()));
     }
 }

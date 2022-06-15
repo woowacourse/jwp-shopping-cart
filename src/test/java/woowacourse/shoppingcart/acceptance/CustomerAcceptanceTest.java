@@ -37,7 +37,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원가입_요청(email, password, nickname);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(INVALID_FORMAT_ERROR_CODE);
+        assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(CUSTOMER_INVALID_FORMAT_ERROR_CODE);
         assertThat(response.body().jsonPath().getString("message")).isNotBlank();
     }
 
@@ -63,7 +63,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = 회원가입_요청(email, password, nickname);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(DUPLICATE_EMAIL_ERROR_CODE);
+        assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(CUSTOMER_DUPLICATE_EMAIL_ERROR_CODE);
         assertThat(response.body().jsonPath().getString("message")).isNotBlank();
     }
 
@@ -105,7 +105,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(회원탈퇴_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
                 () -> assertThat(회원정보_응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(회원정보_응답.body().jsonPath().getInt("errorCode")).isEqualTo(INVALID_LOGIN_ERROR_CODE)
+                () -> assertThat(회원정보_응답.body().jsonPath().getInt("errorCode")).isEqualTo(CUSTOMER_INVALID_LOGIN_ERROR_CODE)
         );
     }
 
@@ -134,7 +134,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(INVALID_FORMAT_ERROR_CODE)
+                () -> assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(CUSTOMER_INVALID_FORMAT_ERROR_CODE)
         );
     }
 

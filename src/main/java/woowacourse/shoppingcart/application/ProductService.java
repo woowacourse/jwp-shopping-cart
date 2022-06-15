@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.product.ProductRequest;
+import woowacourse.shoppingcart.exception.product.ShoppingCartNotFoundProductException;
 
 import java.util.List;
 
@@ -20,12 +22,14 @@ public class ProductService {
         return productDao.findProducts();
     }
 
-    public Long addProduct(final Product product) {
+    public Long addProduct(final ProductRequest productRequest) {
+        Product product = productRequest.toEntity();
         return productDao.save(product);
     }
 
     public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+        return productDao.findProductById(productId)
+                .orElseThrow(ShoppingCartNotFoundProductException::new);
     }
 
     public void deleteProductById(final Long productId) {

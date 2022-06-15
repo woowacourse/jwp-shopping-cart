@@ -14,8 +14,8 @@ import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.exception.InvalidLoginFormException;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
+import woowacourse.shoppingcart.exception.customer.InvalidCustomerBadRequestException;
 
 @SpringBootTest
 @Transactional
@@ -36,8 +36,8 @@ public class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        SignUpRequest signUpRequest = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
-        customerService.registerCustomer(signUpRequest);
+        CustomerSignUpRequest customerSignUpRequest = new CustomerSignUpRequest(EMAIL, PASSWORD, NICKNAME);
+        customerService.register(customerSignUpRequest);
     }
 
     @DisplayName("존재하지 않는 로그인 정보일 경우에 예외를 발생")
@@ -46,7 +46,7 @@ public class AuthServiceTest {
         String notFoundEmail = "notFoundEmail@email.com";
         assertThatThrownBy(() ->
                 authService.createToken(new TokenRequest(notFoundEmail, PASSWORD))
-        ).isInstanceOf(InvalidCustomerException.class);
+        ).isInstanceOf(InvalidCustomerBadRequestException.class);
     }
 
     @DisplayName("존재하는 로그인 정보일 경우 토큰 반환")
@@ -56,8 +56,7 @@ public class AuthServiceTest {
         String token = authService.createToken(tokenRequest);
         Assertions.assertAll(
                 () -> assertThat(token).isNotBlank(),
-                () -> assertThat(jwtTokenProvider.validateToken(token)).isTrue(),
-                () -> assertThat(jwtTokenProvider.getPayload(token)).isEqualTo(EMAIL)
+                () -> assertThat(jwtTokenProvider.validateToken(token)).isTrue()
         );
     }
 

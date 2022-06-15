@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.auth.support.PasswordEncoder;
-import woowacourse.shoppingcart.dto.SignUpRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.exception.DuplicateCustomerException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.dto.customer.CustomerSignUpRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerUpdateRequest;
+import woowacourse.shoppingcart.exception.customer.DuplicateCustomerBadRequestException;
+import woowacourse.shoppingcart.exception.customer.InvalidCustomerBadRequestException;
 
 @SpringBootTest
 @Transactional
@@ -26,23 +26,24 @@ class CustomerServiceTest {
     private static final String PASSWORD = "12345678a";
     private static final String ENCRYPT_PASSWORD = PasswordEncoder.encrypt(PASSWORD);
     private static final String NICKNAME = "토닉";
-    private static final String NOT_FOUND_EMAIL = "notFoundEmail@email.com";
 
     @Autowired
     private CustomerService customerService;
     @Autowired
     private CustomerDao customerDao;
 
+    private Long customerId;
+
     @BeforeEach
     void setUp() {
-        SignUpRequest request = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
-        customerService.registerCustomer(request);
+        CustomerSignUpRequest request = new CustomerSignUpRequest(EMAIL, PASSWORD, NICKNAME);
+        customerId = customerService.register(request);
     }
 
     @DisplayName("정상적으로 회원 등록")
     @Test
     void addCustomer() {
-        Customer customer = customerService.findByEmail(EMAIL);
+        Customer customer = customerDao.findByEmail(EMAIL).get();
         assertAll(
                 () -> assertThat(customer.getEmail()).isEqualTo(EMAIL),
                 () -> assertThat(customer.getPassword()).isEqualTo(ENCRYPT_PASSWORD),
@@ -54,15 +55,15 @@ class CustomerServiceTest {
     @DisplayName("중복된 email로 회원 등록")
     @Test
     void duplicatedEmailCustomer() {
-        SignUpRequest request = new SignUpRequest(EMAIL, PASSWORD, NICKNAME);
-        assertThatThrownBy(() -> customerService.registerCustomer(request))
-                .isInstanceOf(DuplicateCustomerException.class);
+        CustomerSignUpRequest request = new CustomerSignUpRequest(EMAIL, PASSWORD, NICKNAME);
+        assertThatThrownBy(() -> customerService.register(request))
+                .isInstanceOf(DuplicateCustomerBadRequestException.class);
     }
 
     @DisplayName("email로 회원 조회")
     @Test
     void findByEmail() {
-        Customer customer = customerService.findByEmail(EMAIL);
+        Customer customer = customerDao.findByEmail(EMAIL).get();
 
         assertAll(
                 () -> assertThat(customer.getEmail()).isEqualTo(EMAIL),
@@ -70,45 +71,33 @@ class CustomerServiceTest {
                 () -> assertThat(customer.getPassword()).isEqualTo(ENCRYPT_PASSWORD));
     }
 
-    @DisplayName("가입하지 않은 email로 회원 조회 시 예외 발생")
+    @DisplayName("가입하지 않은 id로 회원 조회 시 예외 발생")
     @Test
     void notFoundCustomerByEmailThrowException() {
-        assertThatThrownBy(() -> customerService.findByEmail(NOT_FOUND_EMAIL))
-                .isInstanceOf(InvalidCustomerException.class);
-    }
-
-    @DisplayName("존재하지 않는 이메일로 탈퇴 시 예외 발생")
-    @Test
-    void deleteByNotExistEmail() {
-        assertThatThrownBy(() -> customerService.deleteByEmail(NOT_FOUND_EMAIL))
-                .isInstanceOf(InvalidCustomerException.class);
+        assertThatThrownBy(() -> customerService.findById(0L))
+                .isInstanceOf(InvalidCustomerBadRequestException.class);
     }
 
     @DisplayName("이메일로 회원 탈퇴")
     @Test
     void deleteByEmail() {
-        customerService.deleteByEmail(EMAIL);
+        Customer customer = new Customer(EMAIL, PASSWORD, NICKNAME);
+        customerService.delete(customer);
 
         assertThat(customerDao.existByEmail(EMAIL)).isFalse();
-    }
-
-    @DisplayName("존재하지 않는 이메일로 수정 시 예외 발생")
-    @Test
-    void updateByNotExistEmail() {
-        assertThatThrownBy(() -> customerService.updateCustomer(NOT_FOUND_EMAIL,
-                new CustomerUpdateRequest(NICKNAME, PASSWORD)))
-                .isInstanceOf(InvalidCustomerException.class);
     }
 
     @DisplayName("정상적인 회원 정보 수정")
     @Test
     void updateCustomer() {
+        Customer customer = customerService.findById(customerId);
         String newNickname = "토닉2";
         String newPassword = "newPassword1";
-        customerService.updateCustomer(EMAIL, new CustomerUpdateRequest(newNickname, newPassword));
-        Customer customer = customerService.findByEmail(EMAIL);
+        customerService.update(customer, new CustomerUpdateRequest(newNickname, newPassword));
 
-        assertThat(customer.getPassword()).isEqualTo(PasswordEncoder.encrypt(newPassword));
-        assertThat(customer.getNickname()).isEqualTo(newNickname);
+        Customer resultCustomer = customerDao.findByEmail(EMAIL).get();
+
+        assertThat(resultCustomer.getPassword()).isEqualTo(PasswordEncoder.encrypt(newPassword));
+        assertThat(resultCustomer.getNickname()).isEqualTo(newNickname);
     }
 }

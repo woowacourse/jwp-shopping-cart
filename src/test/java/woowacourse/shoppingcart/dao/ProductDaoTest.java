@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.exception.product.InvalidProductBadRequestException;
 
 import java.util.List;
 
@@ -52,7 +53,8 @@ public class ProductDaoTest {
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
-        final Product product = productDao.findProductById(productId);
+        final Product product = productDao.findProductById(productId)
+                .orElseThrow(InvalidProductBadRequestException::new);
 
         // then
         assertThat(product).usingRecursiveComparison().isEqualTo(expectedProduct);

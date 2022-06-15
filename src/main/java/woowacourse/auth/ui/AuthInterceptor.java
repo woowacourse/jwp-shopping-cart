@@ -1,13 +1,14 @@
 package woowacourse.auth.ui;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.exception.UnauthorizedException;
 import woowacourse.auth.support.AuthorizationExtractor;
 import woowacourse.auth.support.JwtTokenProvider;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
@@ -20,6 +21,10 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+            return true;
+        }
+
         String token = AuthorizationExtractor.extract(request);
 
         if (!jwtTokenProvider.validateToken(token)) {

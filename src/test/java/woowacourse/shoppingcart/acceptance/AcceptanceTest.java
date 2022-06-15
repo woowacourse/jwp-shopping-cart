@@ -3,6 +3,8 @@ package woowacourse.shoppingcart.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+
+import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,9 +19,11 @@ import org.springframework.test.context.jdbc.Sql;
 @ActiveProfiles("test")
 public class AcceptanceTest {
 
-    protected static final int INVALID_FORMAT_ERROR_CODE = 1000;
-    protected static final int DUPLICATE_EMAIL_ERROR_CODE = 1001;
-    protected static final int INVALID_LOGIN_ERROR_CODE = 1002;
+    protected static final int CUSTOMER_INVALID_FORMAT_ERROR_CODE = 1000;
+    protected static final int CUSTOMER_DUPLICATE_EMAIL_ERROR_CODE = 1001;
+    protected static final int CUSTOMER_INVALID_LOGIN_ERROR_CODE = 1002;
+    protected static final int CART_DUPLICATE_ERROR_CODE = 1101;
+    protected static final int CART_NOT_EXISTED_ERROR_CODE = 1102;
 
     @LocalServerPort
     int port;
@@ -86,6 +90,29 @@ public class AcceptanceTest {
                 .body(body)
                 .put("/users/me")
                 .then().log().all().extract();
+        return response;
+    }
+
+    protected ExtractableResponse 장바구니_아이템_추가_요청(Long productId, String token) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("productId", productId);
+
+        return RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .body(requestBody)
+                    .when().post("/users/me/carts")
+                    .then().log().all()
+                    .extract();
+    }
+
+    protected ExtractableResponse<Response> 장바구니_아이템_목록_조회_요청(String token) {
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .when().get("/users/me/carts")
+                .then().log().all()
+                .extract();
         return response;
     }
 }

@@ -1,8 +1,9 @@
 package woowacourse.auth.support;
 
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import woowacourse.auth.exception.UnauthorizedException;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class AuthorizationExtractor {
     public static String BEARER_TYPE = "Bearer";

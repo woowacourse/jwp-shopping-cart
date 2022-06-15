@@ -27,7 +27,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(INVALID_FORMAT_ERROR_CODE),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(CUSTOMER_INVALID_FORMAT_ERROR_CODE),
                 () -> assertThat(response.jsonPath().getString("message")).isNotBlank()
         );
     }
@@ -48,7 +48,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(INVALID_LOGIN_ERROR_CODE),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(CUSTOMER_INVALID_LOGIN_ERROR_CODE),
                 () -> assertThat(response.jsonPath().getString("message")).isNotBlank()
         );
     }
@@ -65,7 +65,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(INVALID_LOGIN_ERROR_CODE),
+                () -> assertThat(response.jsonPath().getInt("errorCode")).isEqualTo(CUSTOMER_INVALID_LOGIN_ERROR_CODE),
                 () -> assertThat(response.jsonPath().getString("message")).isNotBlank()
         );
     }
