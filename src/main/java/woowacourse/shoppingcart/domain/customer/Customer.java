@@ -1,13 +1,15 @@
 package woowacourse.shoppingcart.domain.customer;
 
+import woowacourse.shoppingcart.domain.Id;
+
 public class Customer {
 
-    private final Long id;
+    private final Id id;
     private final UserName userName;
     private final Password password;
 
     public Customer(final UserName userName, final Password password) {
-        this.id = null;
+        this.id = new Id(null);
         this.userName = userName;
         this.password = password;
     }
@@ -17,13 +19,13 @@ public class Customer {
     }
 
     public Customer(final Long id, final String userName, final String password) {
-        this.id = id;
+        this.id = new Id(id);
         this.userName = new UserName(userName);
         this.password = new Password(password);
     }
 
     public Long getId() {
-        return id;
+        return id.getValue();
     }
 
     public String getUserName() {

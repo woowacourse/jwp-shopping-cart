@@ -9,7 +9,7 @@ public class EditCustomerRequest {
     @NotBlank(message = "비밀번호를 입력해주세요😉")
     private String password;
 
-    public EditCustomerRequest() {
+    private EditCustomerRequest() {
     }
 
     public EditCustomerRequest(final String userName, final String password) {

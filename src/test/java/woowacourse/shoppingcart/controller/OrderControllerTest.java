@@ -1,6 +1,18 @@
 package woowacourse.shoppingcart.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,22 +21,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.request.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
+import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.domain.customer.UserName;
+import woowacourse.shoppingcart.dto.request.CreateOrderDetailRequest;
+import woowacourse.shoppingcart.dto.response.OrderDetailResponse;
+import woowacourse.shoppingcart.dto.response.OrderResponse;
 import woowacourse.shoppingcart.service.OrderService;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -35,6 +37,9 @@ public class OrderControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @MockBean
     private OrderService orderService;
@@ -47,20 +52,24 @@ public class OrderControllerTest {
         final int quantity = 5;
         final Long cartId2 = 1L;
         final int quantity2 = 5;
-        final String customerName = "pobi";
-        final List<OrderRequest> requestDtos =
-                Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
+        final String customerName = "ellie";
+        final List<CreateOrderDetailRequest> requests =
+                Arrays.asList(new CreateOrderDetailRequest(cartId, quantity),
+                        new CreateOrderDetailRequest(cartId2, quantity2));
 
         final Long expectedOrderId = 1L;
-        when(orderService.addOrder(any(), eq(customerName)))
+        when(orderService.addOrder(any(), any(UserName.class)))
                 .thenReturn(expectedOrderId);
 
+        String accessToken = jwtTokenProvider.createToken(customerName);
+
         // when // then
-        mockMvc.perform(post("/api/customers/" + customerName + "/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(objectMapper.writeValueAsString(requestDtos))
-        ).andDo(print())
+        mockMvc.perform(post("/api/customers/me/orders")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(objectMapper.writeValueAsString(requests))
+                ).andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location",
@@ -70,19 +79,21 @@ public class OrderControllerTest {
     @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
     @Test
     void findOrder() throws Exception {
-
         // given
-        final String customerName = "pobi";
+        final String customerName = "ellie";
         final Long orderId = 1L;
-        final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
+        final OrderResponse expected = new OrderResponse(orderId,
+                Collections.singletonList(new OrderDetailResponse(2L, 1_000, "banana", "imageUrl", 2)));
 
-        when(orderService.findOrderById(customerName, orderId))
+        when(orderService.findOrderById(new UserName(customerName), orderId))
                 .thenReturn(expected);
 
+        String accessToken = jwtTokenProvider.createToken(customerName);
+
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
-        ).andDo(print())
+        mockMvc.perform(get("/api/customers/me/orders/" + orderId)
+                        .header("Authorization", "Bearer " + accessToken)
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
                 .andExpect(jsonPath("orderDetails[0].productId").value(2L))
@@ -96,20 +107,23 @@ public class OrderControllerTest {
     @Test
     void findOrders() throws Exception {
         // given
-        final String customerName = "pobi";
-        final List<Orders> expected = Arrays.asList(
-                new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
-                new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
+        final String customerName = "ellie";
+        final List<OrderResponse> expected = Arrays.asList(
+                new OrderResponse(1L, Collections.singletonList(
+                        new OrderDetailResponse(1L, 1_000, "banana", "imageUrl", 2))),
+                new OrderResponse(2L, Collections.singletonList(
+                        new OrderDetailResponse(2L, 2_000, "apple", "imageUrl2", 4)))
         );
 
-        when(orderService.findOrdersByCustomerName(customerName))
+        when(orderService.findOrdersByCustomerName(new UserName(customerName)))
                 .thenReturn(expected);
 
+        String accessToken = jwtTokenProvider.createToken(customerName);
+
         // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
-        ).andDo(print())
+        mockMvc.perform(get("/api/customers/me/orders/")
+                        .header("Authorization", "Bearer " + accessToken)
+                ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))

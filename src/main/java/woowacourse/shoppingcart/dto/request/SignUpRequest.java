@@ -9,7 +9,7 @@ public class SignUpRequest {
     @NotBlank(message = "비밀번호를 입력해주세요😉")
     private String password;
 
-    public SignUpRequest() {
+    private SignUpRequest() {
     }
 
     public SignUpRequest(final String userName, final String password) {

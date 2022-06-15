@@ -14,10 +14,32 @@
 
 ### 리팩토링
 
-- [X] 회원 이름, 비밀번호 제약 변경
-  - 8-16자 , 소문자, 대문자, 숫자, 특수문자(!, @, #, $, %, ^, &, *, -, _), 전부 다 하나 이상!!
-- [X] 회원 이름 중복 검사 기능 추가
-- [X] DTO 필드의 회원 이름을 userName으로 통일
+- [X] POST /api/customers/duplication를 GET /api/customers/exists?userName=ellie로 변경
+
+<br>
+
+## 🛠 2단계 기능 목록
+
+- [X] 장바구니, 주문 요청 URL에서 {customerName} 제거
+    - Access Token을 사용해 사용자 정보를 확인할 수 있도록 한다.
+- [X] 장바구니, 주문 관리 Controller에서 DTO 사용하도록 변경
+- [X] CartItem에 quantity 추가
+    - quantity는 1~99개로 제한한다.
+- [X] CartItem의 quantity 변경 API 추가
+    - PATCH /api/customers/me/carts
+- [X] Product 전체 목록 조회 시 cartId, cartQuantity도 보내도록 변경
+    - 토큰의 존재 여부에 따라 다르게 동작하게 해야한다.
+
+### 리팩토링
+
+- [X] 이미 장바구니에 존재하는 상품을 또 장바구니에 담는 경우, 하나로 합치도록 변경
+- [X] Product 단거 조회 시에도 cartId, quantity도 보내도록 변경
+    - 마찬가지로 토큰의 존재 여부에 따라 다르게 동작하게 해야한다.
+- [X] auth/controller 레이어에서 AuthService를 사용하도록 변경
+- [X] Interceptor에서 Resolver로 UserName을 넘겨주도록 변경
+- [X] 프론트엔드,백엔드와 협의 후 통일해야하는 부분 변경
+- [X] id, quantity를 VO로 만들기
+- [ ] 벨리데이션에 대한 컨트롤러 예외 테스트 추가
 
 <br>
 
@@ -25,14 +47,40 @@
 
 ### 회원 기능 API 명세
 
-| Method | Url               | Description |
-|--------|-------------------|-------------|
-| POST   | /api/customers    | 회원 가입       |
-| GET    | /api/customers/me | 내 정보 조회     |
-| PUT    | /api/customers/me | 내 정보 수정     |
-| DELETE | /api/customers/me | 회원 탈퇴       |
-| POST   | /api/login        | 로그인         |
-| POST   |/api/customers/duplication | 회원 이름 중복 검사 |
+| Method | Url                   | Description |
+|--------|-----------------------|-------------|
+| POST   | /api/customers        | 회원 가입       |
+| GET    | /api/customers/me     | 내 정보 조회     |
+| PUT    | /api/customers/me     | 내 정보 수정     |
+| DELETE | /api/customers/me     | 회원 탈퇴       |
+| POST   | /api/login            | 로그인         |
+| GET    | /api/customers/exists | 회원 이름 중복 검사 |
+
+### 상품 기능 API 명세
+
+| Method | Url                        | Description |
+|--------|----------------------------|-------------|
+| POST   | /api/products              | 상품 추가       |
+| GET    | /api/products            | 상품 목록 조회    |
+| GET    | /api/products/{productId}          | 상품 정보 조회    |
+| DELETE | /api/products/{productId}          | 상품 삭제       |
+
+### 장바구니 기능 API 명세
+
+| Method | Url                              | Description    |
+|--------|----------------------------------|----------------|
+| POST   | /api/customers/me/carts          | 장바구니에 제품 추가    |
+| GET    | /api/customers/me/carts          | 장바구니 제품 목록 조회  |
+| DELETE | /api/customers/me/carts/{cartId} | 장바구니의 제품 삭제    |
+| PATCH  | /api/customers/me/carts/{cartId} | 장바구니의 제품 수량 변경 |
+
+### 주문 기능 API 명세
+
+| Method | Url                                       | Description    |
+|--------|-------------------------------------------|----------------|
+| POST   | /api/customers/me/orders                   | 주문 추가          |
+| GET    | /api/customers/me/orders                   | 주문 목록 조회       |
+| GET    | /api/customers/me/orders/{orderId}        | 주문 정보 조회       |
 
 <br>
 
@@ -78,6 +126,43 @@
 - '이름, 비밀번호 제약'에 대해 이야기 나눴다.
     - 이름은 소문자, 숫자, 언더바(_)만 사용한다.
     - 비밀번호는 8자 이상
+
+</details>
+
+<details>
+<summary>2022.06.03</summary>
+
+> 프론트 : `코이`, `티거` / 백 : `엘리`, `판다`, `라쿤`, `기론`, `티키`
+
+### 2단계 진행 관련 회의
+
+- 백엔드와의 연결
+    - 연결 이슈 발생💥 → 해결😋
+    - DTO에서 회원 이름 변수명 통일해야함!! (userName)
+- 회원 이름, 비밀번호 제약 다시 회의
+    - 이름 : 5-20자, 소문자, 숫자, 언더바
+    - 비밀번호 : 8-16자 , 소문자, 대문자, 숫자, 특수문자(!, @, #, $, %, ^, &, *, -, _), 전부 다 하나 이상!!
+- 2단계 기능 및 API 명세 회의
+    - CartItem에 quantity 추가, 수량 변경 API 추가
+        - patch : /api/customers/me/carts/
+    - Products를 보낼 때 장바구니에 담겨있는 수량, 담겨있는 카트 ID(default : 0)를 보낸다.
+        - 토큰이 있는지, 없는지에 따라 로직이 달라진다.
+    - 장바구니에 물품 수량은 1~99개로 제한한다.
+- 에러 형식
+    - DTO 사용해서 에러 메시지 보냄(message)
+
+</details>
+
+<details>
+<summary>2022.06.08</summary>
+
+> 코이, 티거, 엘리, 판다, 라쿤, 티키, 기론
+
+- 상품 조회 시 cartId, quantity에 대한 회의
+- 중복 검사 시 URL을 어떻게 할지, 응답을 어떻게 할지
+    - get, DTO 사용, 필드 이름은 isDuplicate
+- quantity 필드는 모두 quantity로!!
+- cartId는 null로!!
 
 </details>
 

@@ -14,9 +14,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
-import woowacourse.auth.service.LoginService;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginResponse;
+import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.support.Encryptor;
@@ -31,7 +31,7 @@ public class LoginControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private LoginService authService;
+    private AuthService authService;
 
     @MockBean
     private JwtTokenProvider jwtTokenProvider;
@@ -45,11 +45,11 @@ public class LoginControllerTest {
     @Test
     void 로그인() throws Exception {
         // given
-        TokenRequest request = new TokenRequest("ellie", "12345678");
+        LoginRequest request = new LoginRequest("ellie", "12345678");
         String requestContent = objectMapper.writeValueAsString(request);
 
         // mocking
-        given(authService.login(any(TokenRequest.class))).willReturn(new TokenResponse("fake_token"));
+        given(authService.login(any(LoginRequest.class))).willReturn(new LoginResponse("fake_token"));
 
         // when
         ResultActions response = mockMvc.perform(post("/api/login")

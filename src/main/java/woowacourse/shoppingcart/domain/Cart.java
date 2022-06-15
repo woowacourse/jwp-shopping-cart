@@ -1,45 +1,19 @@
 package woowacourse.shoppingcart.domain;
 
+import java.util.List;
+import java.util.Optional;
+
 public class Cart {
 
-    private Long id;
-    private Long productId;
-    private String name;
-    private int price;
-    private String imageUrl;
+    private final List<CartItem> value;
 
-    public Cart() {
+    public Cart(final List<CartItem> cartItems) {
+        this.value = cartItems;
     }
 
-    public Cart(final Long id, final Product product) {
-        this(id, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-    }
-
-    public Cart(final Long id, final Long productId, final String name, final int price, final String imageUrl) {
-        this.id = id;
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
+    public Optional<CartItem> findByProductId(final Long productId) {
+        return value.stream()
+                .filter(v -> v.hasSameProductId(productId))
+                .findFirst();
     }
 }

@@ -7,11 +7,10 @@ import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Password;
 import woowacourse.shoppingcart.domain.customer.PlainPassword;
 import woowacourse.shoppingcart.domain.customer.UserName;
-import woowacourse.shoppingcart.dto.request.CheckDuplicationRequest;
 import woowacourse.shoppingcart.dto.request.EditCustomerRequest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.response.CheckDuplicationResponse;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.ExistsCustomerResponse;
 import woowacourse.shoppingcart.exception.duplicate.DuplicateCustomerException;
 import woowacourse.shoppingcart.support.Encryptor;
 
@@ -51,7 +50,7 @@ public class CustomerService {
     }
 
     @Transactional(readOnly = true)
-    public CheckDuplicationResponse checkDuplicationByName(final CheckDuplicationRequest request) {
-        return new CheckDuplicationResponse(customerDao.existsByName(new UserName(request.getUserName())));
+    public ExistsCustomerResponse existsByName(final String userName) {
+        return new ExistsCustomerResponse(customerDao.existsByName(new UserName(userName)));
     }
 }

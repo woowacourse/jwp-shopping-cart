@@ -11,10 +11,10 @@ public class AuthorizationExtractor {
     public static final String ACCESS_TOKEN_TYPE = AuthorizationExtractor.class.getSimpleName() + ".ACCESS_TOKEN_TYPE";
 
     /*
-        Input : Authorization: Bearer ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f
-        Output : ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f
+        Input : Authorization: Bearer <토큰값>
+        Output : <토큰값>
      */
-    public static String extract(final HttpServletRequest request) {
+    public static String extractOrThrow(final HttpServletRequest request) {
         final Enumeration<String> headers = request.getHeaders(AUTHORIZATION);
         while (headers.hasMoreElements()) {
             final String value = headers.nextElement();

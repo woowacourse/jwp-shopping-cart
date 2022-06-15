@@ -9,8 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.dto.TokenResponse;
+import woowacourse.auth.dto.LoginRequest;
+import woowacourse.auth.dto.LoginResponse;
 import woowacourse.shoppingcart.acceptance.AcceptanceTest;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.response.CustomerResponse;
@@ -32,11 +32,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         String accessToken = RestAssured
                 .given().log().all()
-                .body(new TokenRequest("ellie", "Ellie1234!"))
+                .body(new LoginRequest("ellie", "Ellie1234!"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
-                .then().log().all().extract().as(TokenResponse.class).getAccessToken();
+                .then().log().all().extract().as(LoginResponse.class).getAccessToken();
 
         // then
         CustomerResponse response = RestAssured
@@ -64,7 +64,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         // when
         ExtractableResponse<Response> tokenResponse = RestAssured
                 .given().log().all()
-                .body(new TokenRequest("ellie", "Ellie1234@"))
+                .body(new LoginRequest("ellie", "Ellie1234@"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")

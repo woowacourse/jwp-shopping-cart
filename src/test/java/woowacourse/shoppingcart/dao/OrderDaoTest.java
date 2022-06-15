@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -55,4 +56,20 @@ class OrderDaoTest {
         assertThat(orderIdsByCustomerId).hasSize(2);
     }
 
+    @DisplayName("사용자 ID와 주문 ID로 해당 주문 아이디가 유효한지 확인한다.")
+    @Test
+    void isValidOrderId() {
+        // given
+        final Long orderId = orderDao.addOrders(1L);
+
+        // when
+        final boolean isExists = orderDao.isValidOrderId(1L, orderId);
+        final boolean isNotExists = orderDao.isValidOrderId(1L, 10L);
+
+        // then
+        assertAll(
+                () -> assertThat(isExists).isTrue(),
+                () -> assertThat(isNotExists).isFalse()
+        );
+    }
 }

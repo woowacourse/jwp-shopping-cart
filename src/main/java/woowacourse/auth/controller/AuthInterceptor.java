@@ -4,35 +4,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import woowacourse.auth.exception.AuthorizationException;
+import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.auth.support.JwtTokenProvider;
 
 public class AuthInterceptor implements HandlerInterceptor {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthService authService;
 
-    public AuthInterceptor(final JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthInterceptor(final AuthService authService) {
+        this.authService = authService;
     }
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
+                             final Object handler) {
         if (isPreflight(request)) {
             return true;
         }
-        validateToken(request);
+        final String token = getAndValidateToken(request);
+        request.setAttribute("userName", authService.getUserNameFormToken(token));
         return true;
     }
 
-    public boolean isPreflight(final HttpServletRequest request) {
+    private boolean isPreflight(final HttpServletRequest request) {
         return request.getMethod().equals(HttpMethod.OPTIONS.toString());
     }
 
-    public void validateToken(final HttpServletRequest request) {
-        final String token = AuthorizationExtractor.extract(request);
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new AuthorizationException("유효하지 않은 토큰입니다😤");
-        }
+    private String getAndValidateToken(final HttpServletRequest request) {
+        final String token = AuthorizationExtractor.extractOrThrow(request);
+        authService.validateToken(token);
+        return token;
     }
 }
