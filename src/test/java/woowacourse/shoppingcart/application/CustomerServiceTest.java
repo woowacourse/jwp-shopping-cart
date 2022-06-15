@@ -83,7 +83,7 @@ class CustomerServiceTest {
                 .thenReturn(Optional.of(customer));
 
         // when
-        CustomerDetailServiceResponse actual = customerService.findById(id);
+        final CustomerDetailServiceResponse actual = customerService.findById(id);
 
         // then
         assertThat(actual).usingRecursiveComparison()

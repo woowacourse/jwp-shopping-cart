@@ -12,7 +12,7 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Email;
 import woowacourse.shoppingcart.domain.Password;
 import woowacourse.shoppingcart.exception.DuplicatedEmailException;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.NotFoundCustomerException;
 
 @Service
 public class CustomerService {
@@ -47,7 +47,7 @@ public class CustomerService {
 
     private Customer findCustomerById(final Long id) {
         return customerDao.findById(id)
-                .orElseThrow(InvalidCustomerException::new);
+                .orElseThrow(NotFoundCustomerException::new);
     }
 
     public void updateName(final CustomerProfileUpdateServiceRequest request) {

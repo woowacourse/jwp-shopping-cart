@@ -12,11 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerDeleteRequest;
-import woowacourse.shoppingcart.dto.CustomerDetailResponse;
-import woowacourse.shoppingcart.dto.CustomerPasswordUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerProfileUpdateRequest;
-import woowacourse.shoppingcart.dto.CustomerRegisterRequest;
+import woowacourse.shoppingcart.ui.customer.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.ui.customer.dto.request.CustomerPasswordUpdateRequest;
+import woowacourse.shoppingcart.ui.customer.dto.request.CustomerProfileUpdateRequest;
+import woowacourse.shoppingcart.ui.customer.dto.request.CustomerRegisterRequest;
+import woowacourse.shoppingcart.ui.customer.dto.response.CustomerDetailResponse;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -25,11 +25,17 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     private static final String EMAIL = "djwhy5510@naver.com";
     private static final String PASSWORD = "1234567891";
 
+    public static String 로그인_토큰_발급() {
+        return requestPostWithBody("/api/login", new TokenRequest(EMAIL, PASSWORD))
+                .as(TokenResponse.class)
+                .getAccessToken();
+    }
+
     @DisplayName("회원가입")
     @Test
     void register() {
         // given, when 이름, 이메일, 비밀번호를 입력하고 회원 등록을 요청하면
-        ExtractableResponse<Response> response = requestPostWithBody("/api/customer",
+        final ExtractableResponse<Response> response = requestPostWithBody("/api/customer",
                 new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
 
         // then 회원이 성공적으로 등록된다.
@@ -41,7 +47,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void showMyDetail() {
         // given 회원가입 후 로그인하여 토큰을 발급받고
         requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
-        final String accessToken = loginAndGetToken();
+        final String accessToken = 로그인_토큰_발급();
 
         // when 내 정보를 조회하면
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -64,7 +70,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void updateMyDetail() {
         // given 회원가입 후 로그인하여 토큰을 발급받고
         requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
-        final String accessToken = loginAndGetToken();
+        final String accessToken = 로그인_토큰_발급();
 
         // when 회원 정보를 수정하면
         final ExtractableResponse<Response> response = requestPutWithTokenAndBody("/api/customer/profile",
@@ -79,7 +85,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void updatePassword() {
         // given 회원가입 후 로그인하여 토큰을 발급받고
         requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
-        final String accessToken = loginAndGetToken();
+        final String accessToken = 로그인_토큰_발급();
 
         // when 비밀번호를 수정하면
         final ExtractableResponse<Response> response = requestPutWithTokenAndBody("/api/customer/password",
@@ -94,7 +100,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     void deleteMe() {
         // given 회원가입 후 로그인하여 토큰을 발급받고
         requestPostWithBody("/api/customer", new CustomerRegisterRequest(NAME, EMAIL, PASSWORD));
-        final String accessToken = loginAndGetToken();
+        final String accessToken = 로그인_토큰_발급();
 
         // when 비밀번호를 입력하고 회원 탈퇴를 하면
         final ExtractableResponse<Response> response = requestDeleteWithTokenAndBody("/api/customer",
@@ -102,11 +108,5 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then 성공적으로 회원 탈퇴가 된다.
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    private String loginAndGetToken() {
-        return requestPostWithBody("/api/login", new TokenRequest(EMAIL, PASSWORD))
-                .as(TokenResponse.class)
-                .getAccessToken();
     }
 }

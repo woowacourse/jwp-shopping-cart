@@ -1,0 +1,13 @@
+spring:
+  sql.init.mode: never
+  datasource:
+    url: ${DB_URL}
+    username: ${ID}
+    password: ${PASSWORD}
+    driver-class-name: ${DRIVER_CLASS_NAME}
+
+security:
+  jwt:
+    token:
+      secret-key: ${SECRET_KEY}
+      expire-length: ${EXPIRE_LENGTH}
