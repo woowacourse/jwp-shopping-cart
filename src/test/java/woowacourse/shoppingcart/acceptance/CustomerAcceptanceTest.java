@@ -1,5 +1,9 @@
 package woowacourse.shoppingcart.acceptance;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static woowacourse.auth.acceptance.AcceptanceTestFixture.에덴;
+
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,16 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
-import woowacourse.auth.dto.*;
+import woowacourse.auth.dto.TokenRequest;
+import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
 import woowacourse.shoppingcart.dto.PhoneNumberFormat;
 import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static woowacourse.auth.acceptance.AcceptanceTestFixture.에덴;
 
 @DisplayName("회원 관련 기능")
 public class CustomerAcceptanceTest extends AcceptanceTest {
@@ -31,7 +32,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 정보 조회에 성공한다.")
     void getCustomer() {
         // given
-        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final ExtractableResponse<Response> tokenResponse = post("/signin",
+                new TokenRequest("leo0842", "Password123!"));
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
@@ -78,7 +80,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("존재하지 않은 회원 id로 회원 정보 조회 시 상태코드 400을 반환한다.")
     void customerNotExistWhenGetCustomer() {
         // given
-        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final ExtractableResponse<Response> tokenResponse = post("/signin",
+                new TokenRequest("leo0842", "Password123!"));
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         delete("/customers", token.getAccessToken(), new DeleteCustomerRequest("Password123!"));
@@ -96,11 +99,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 정보 수정에 성공한다.")
     void updateCustomer() {
         // given
-        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final ExtractableResponse<Response> tokenResponse = post("/signin",
+                new TokenRequest("leo0842", "Password123!"));
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumberFormat("010", "1234", "1234"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네",
+                new PhoneNumberFormat("010", "1234", "1234"));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 
         // then
@@ -113,7 +118,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // given
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumberFormat("010", "1234", "1234"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네",
+                new PhoneNumberFormat("010", "1234", "1234"));
         final ExtractableResponse<Response> response = put("/customers", updateCustomerRequest);
 
         // then
@@ -131,7 +137,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final String invalidToken = jwtTokenProvider.createToken("fake");
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네", new PhoneNumberFormat("010", "1234", "1234"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "코린네",
+                new PhoneNumberFormat("010", "1234", "1234"));
         final ExtractableResponse<Response> response = put("/customers", invalidToken, updateCustomerRequest);
 
         // then
@@ -146,11 +153,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 수정 시 닉네임 길이가 2~10자를 벗어나면 400 상태코드를 반환한다.")
     void invalidNicknameLengthWhenUpdateCustomer(String nickName) {
         // given
-        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final ExtractableResponse<Response> tokenResponse = post("/signin",
+                new TokenRequest("leo0842", "Password123!"));
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest(nickName, "address", new PhoneNumberFormat("010", "1234", "5678"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest(nickName, "address",
+                new PhoneNumberFormat("010", "1234", "5678"));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 
         // then
@@ -164,12 +173,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원수정 시 주소의 길이가 255자를 초과하면 상태코드 400을 반환한다.")
     void invalidAddressLengthWhenUpdateCustomer() {
         // given
-        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final ExtractableResponse<Response> tokenResponse = post("/signin",
+                new TokenRequest("leo0842", "Password123!"));
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
         String address = "a".repeat(256);
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", address, new PhoneNumberFormat("010", "1234", "5678"));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", address,
+                new PhoneNumberFormat("010", "1234", "5678"));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 
         // then
@@ -180,16 +191,19 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"01,1234,1234", "0101,1234,1234", "010,123,1234", "010,12345,1234", "010,1234,123", "010,1234,12345"})
+    @CsvSource(value = {"01,1234,1234", "0101,1234,1234", "010,123,1234", "010,12345,1234", "010,1234,123",
+            "010,1234,12345"})
     @DisplayName("회원수정 시 휴대폰 번호의 각각 길이가 3, 4, 4자가 아니면 상태코드 400을 반환한다.")
     void invalidPhoneNumberLengthWhenUpdateCustomer(String start, String middle, String end) {
         // given
-        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final ExtractableResponse<Response> tokenResponse = post("/signin",
+                new TokenRequest("leo0842", "Password123!"));
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
-        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "address", new PhoneNumberFormat(start, middle, end
-        ));
+        final UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest("corinne", "address",
+                new PhoneNumberFormat(start, middle, end
+                ));
         final ExtractableResponse<Response> response = put("/customers", token.getAccessToken(), updateCustomerRequest);
 
         // then
@@ -203,12 +217,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 탈퇴에 성공한다.")
     void deleteCustomer() {
         // given
-        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final ExtractableResponse<Response> tokenResponse = post("/signin",
+                new TokenRequest("leo0842", "Password123!"));
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
         final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("Password123!");
-        final ExtractableResponse<Response> response = delete("/customers", token.getAccessToken(), deleteCustomerRequest);
+        final ExtractableResponse<Response> response = delete("/customers", token.getAccessToken(),
+                deleteCustomerRequest);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
@@ -218,12 +234,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원 탈퇴 시 비밀번호가 올바르지 않으면 상태코드 400을 반환한다.")
     void wrongPasswordWhenDeleteCustomer() {
         // given
-        final ExtractableResponse<Response> tokenResponse = post("/signin", new TokenRequest("leo0842", "Password123!"));
+        final ExtractableResponse<Response> tokenResponse = post("/signin",
+                new TokenRequest("leo0842", "Password123!"));
         final TokenResponse token = tokenResponse.jsonPath().getObject(".", TokenResponse.class);
 
         // when
         final DeleteCustomerRequest deleteCustomerRequest = new DeleteCustomerRequest("password123!");
-        final ExtractableResponse<Response> response = delete("/customers", token.getAccessToken(), deleteCustomerRequest);
+        final ExtractableResponse<Response> response = delete("/customers", token.getAccessToken(),
+                deleteCustomerRequest);
 
         // then
         assertAll(

@@ -1,14 +1,21 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
+import woowacourse.shoppingcart.domain.product.ImageUrl;
+import woowacourse.shoppingcart.domain.product.Name;
+import woowacourse.shoppingcart.domain.product.Price;
+import woowacourse.shoppingcart.domain.product.Product;
+import woowacourse.shoppingcart.dto.ProductRequest;
+import woowacourse.shoppingcart.dto.ProductResponse;
+import woowacourse.shoppingcart.dto.ProductsResponse;
+import woowacourse.shoppingcart.exception.InvalidProductException;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class ProductService {
     private final ProductDao productDao;
 
@@ -16,19 +23,39 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findProducts() {
-        return productDao.findProducts();
+    @Transactional(readOnly = true)
+    public ProductsResponse findProducts() {
+        return new ProductsResponse(
+                toProductResponses(productDao.findProducts()));
     }
 
-    public Long addProduct(final Product product) {
-        return productDao.save(product);
+    public ProductResponse addProduct(final ProductRequest productRequest) {
+        final Product product = toProduct(productRequest);
+        final Product savedProduct = productDao.save(product);
+        return ProductResponse.of(savedProduct);
     }
 
-    public Product findProductById(final Long productId) {
-        return productDao.findProductById(productId);
+    @Transactional(readOnly = true)
+    public ProductResponse findProductById(final Long productId) {
+        Product product = productDao.findProductById(productId).orElseThrow(InvalidProductException::new);
+        return ProductResponse.of(product);
     }
 
-    public void deleteProductById(final Long productId) {
-        productDao.delete(productId);
+    public int deleteProductById(final long productId) {
+        return productDao.delete(productId);
+    }
+
+    private List<ProductResponse> toProductResponses(List<Product> products) {
+        return products.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    private Product toProduct(ProductRequest productRequest) {
+        return new Product(
+                new Name(productRequest.getName()),
+                new Price(productRequest.getPrice()),
+                new ImageUrl(productRequest.getImageUrl())
+        );
     }
 }

@@ -35,6 +35,17 @@ public class AcceptanceTest {
                 .extract();
     }
 
+    protected ExtractableResponse<Response> post(String uri, String token, Object param) {
+        return RestAssured.given().log().all()
+                .header(new Header("Authorization", "BEARER " + token))
+                .body(param)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post(uri)
+                .then().log().all()
+                .extract();
+    }
+
     protected ExtractableResponse<Response> get(String uri) {
         return RestAssured.given().log().all()
                 .when()

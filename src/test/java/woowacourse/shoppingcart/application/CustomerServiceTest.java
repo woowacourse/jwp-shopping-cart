@@ -1,32 +1,31 @@
 package woowacourse.shoppingcart.application;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import woowacourse.shoppingcart.domain.Account;
-import woowacourse.shoppingcart.domain.Address;
-import woowacourse.shoppingcart.domain.Nickname;
-import woowacourse.shoppingcart.domain.PhoneNumber;
-import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
-import woowacourse.shoppingcart.dto.PhoneNumberFormat;
-import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.SignupRequest;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
-import woowacourse.shoppingcart.exception.DuplicatedAccountException;
-import woowacourse.shoppingcart.exception.WrongPasswordException;
-
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.customer.Account;
+import woowacourse.shoppingcart.domain.customer.Address;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Nickname;
+import woowacourse.shoppingcart.domain.customer.PhoneNumber;
+import woowacourse.shoppingcart.dto.CustomerResponse;
+import woowacourse.shoppingcart.dto.DeleteCustomerRequest;
+import woowacourse.shoppingcart.dto.PhoneNumberFormat;
+import woowacourse.shoppingcart.dto.SignupRequest;
+import woowacourse.shoppingcart.dto.UpdateCustomerRequest;
+import woowacourse.shoppingcart.exception.CustomerNotFoundException;
+import woowacourse.shoppingcart.exception.DuplicatedAccountException;
+import woowacourse.shoppingcart.exception.WrongPasswordException;
 
 class CustomerServiceTest {
 
@@ -59,7 +58,8 @@ class CustomerServiceTest {
         given(customerDao.save(any(Customer.class))).willReturn(customer);
 
         // when
-        final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네", new PhoneNumberFormat("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네",
+                new PhoneNumberFormat("010", "1234", "5678"));
         final CustomerResponse customerResponse = customerService.create(signupRequest);
 
         // then
@@ -73,7 +73,8 @@ class CustomerServiceTest {
         given(customerDao.findByAccount(any(String.class))).willReturn(Optional.of(customer));
 
         // when
-        final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네", new PhoneNumberFormat("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("hamcheeseburger", "corinne", "password123", "코린네",
+                new PhoneNumberFormat("010", "1234", "5678"));
 
         // then
         assertThatThrownBy(() -> customerService.create(signupRequest))
@@ -122,13 +123,15 @@ class CustomerServiceTest {
     @DisplayName("id와 변경할 회원 정보로 회원 정보를 수정한다.")
     void updateCustomer() {
         // given
+        given(customerDao.findById(any(Long.class))).willReturn(Optional.of(customer));
         given(customerDao.update(any(Long.class),
                 any(String.class),
                 any(String.class),
                 any(String.class))).willReturn(1);
 
         // when
-        final int affectedRows = customerService.update(1L, new UpdateCustomerRequest("hamcheeseburger", "코린네", new PhoneNumberFormat("010", "1234", "1234")));
+        final int affectedRows = customerService.update(1L,
+                new UpdateCustomerRequest("hamcheese", "코린네", new PhoneNumberFormat("010", "1234", "1234")));
 
         // then
         assertThat(affectedRows).isEqualTo(1);

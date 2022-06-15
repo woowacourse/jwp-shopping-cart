@@ -1,0 +1,78 @@
+= 나위스 천모 스테파니 API 명세
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+== 계정
+
+=== 회원 가입
+include::{snippets}/customer-create/request-fields.adoc[]
+include::{snippets}/customer-create/http-request.adoc[]
+include::{snippets}/customer-create/http-response.adoc[]
+
+=== 로그인
+include::{snippets}/customer-signin/request-fields.adoc[]
+include::{snippets}/customer-signin/http-request.adoc[]
+
+include::{snippets}/customer-signin/response-fields.adoc[]
+include::{snippets}/customer-signin/http-response.adoc[]
+
+== 회원
+include::{snippets}/customer-get/request-headers.adoc[]
+
+=== 회원 조회
+include::{snippets}/customer-get/http-request.adoc[]
+
+include::{snippets}/customer-get/response-fields.adoc[]
+include::{snippets}/customer-get/http-response.adoc[]
+
+=== 회원 수정
+include::{snippets}/customer-update/request-fields.adoc[]
+include::{snippets}/customer-update/http-request.adoc[]
+
+include::{snippets}/customer-update/http-response.adoc[]
+
+=== 회원 탈퇴
+include::{snippets}/customer-delete/request-fields.adoc[]
+include::{snippets}/customer-delete/http-request.adoc[]
+
+include::{snippets}/customer-delete/http-response.adoc[]
+
+== 상품
+
+=== 상품 조회
+include::{snippets}/products-get/http-request.adoc[]
+
+include::{snippets}/products-get/response-fields.adoc[]
+include::{snippets}/products-get/http-response.adoc[]
+
+=== 상품 단건 조회
+include::{snippets}/product-get/path-parameters.adoc[]
+include::{snippets}/product-get/http-request.adoc[]
+
+include::{snippets}/product-get/response-fields.adoc[]
+include::{snippets}/product-get/http-response.adoc[]
+
+== 장바구니
+include::{snippets}/customer-cart-create/request-headers.adoc[]
+
+=== 장바구니 생성
+include::{snippets}/customer-cart-create/request-fields.adoc[]
+include::{snippets}/customer-cart-create/http-request.adoc[]
+
+include::{snippets}/customer-cart-create/http-response.adoc[]
+
+=== 장바구니 조회
+include::{snippets}/customer-cart-get/http-request.adoc[]
+
+include::{snippets}/customer-cart-get/response-fields.adoc[]
+include::{snippets}/customer-cart-get/http-response.adoc[]
+
+=== 장바구니 삭제
+include::{snippets}/customer-cart-delete/request-fields.adoc[]
+include::{snippets}/customer-cart-delete/http-request.adoc[]
+
+include::{snippets}/customer-cart-delete/http-response.adoc[]

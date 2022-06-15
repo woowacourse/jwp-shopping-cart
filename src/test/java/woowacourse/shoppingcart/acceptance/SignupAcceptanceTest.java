@@ -54,7 +54,8 @@ public class SignupAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입 시 아이디 길이가 4~15자를 벗어나면 400 상태코드를 반환한다.")
     void invalidAccountLength(String account) {
         // given
-        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumberFormat("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address",
+                new PhoneNumberFormat("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -71,11 +72,13 @@ public class SignupAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입 시 아이디가 대문자이면 소문자로 변경하고 특수문자가 들어가면 제거한다.")
     void changeAccountPattern(String account, String expectedAccount) {
         // given
-        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumberFormat("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address",
+                new PhoneNumberFormat("010", "1234", "5678"));
         post("/signup", signupRequest);
 
         // when
-        final SignupRequest duplicatedAccountSignupRequest = new SignupRequest(expectedAccount, "eden", "Password123!", "address", new PhoneNumberFormat("010", "1234", "5678"));
+        final SignupRequest duplicatedAccountSignupRequest = new SignupRequest(expectedAccount, "eden", "Password123!",
+                "address", new PhoneNumberFormat("010", "1234", "5678"));
         final ExtractableResponse<Response> response = post("/signup", duplicatedAccountSignupRequest);
 
         // then
@@ -90,7 +93,8 @@ public class SignupAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입 시 아이디에 한글이 포함되면 400 상태코드를 반환한다.")
     void notAcceptedKoreanAccount(String account) {
         // given
-        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address", new PhoneNumberFormat("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest(account, "eden", "Password123!", "address",
+                new PhoneNumberFormat("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -107,7 +111,8 @@ public class SignupAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입 시 닉네임 길이가 2~10자를 벗어나면 400 상태코드를 반환한다.")
     void invalidNicknameLength(String nickName) {
         // given
-        final SignupRequest signupRequest = new SignupRequest("account", nickName, "Password123!", "address", new PhoneNumberFormat("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("account", nickName, "Password123!", "address",
+                new PhoneNumberFormat("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -124,7 +129,8 @@ public class SignupAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입 시 비밀번호 길이가 8~20자를 벗어나면 400 상태코드를 반환한다.")
     void invalidPasswordLength(String password) {
         // given
-        final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address", new PhoneNumberFormat("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address",
+                new PhoneNumberFormat("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -141,7 +147,8 @@ public class SignupAcceptanceTest extends AcceptanceTest {
     @DisplayName("회원가입 시 비밀번호가 영어 대문자, 소문자, 숫자 중 2종류 이상을 조합하지 않았다면 상태코드 400을 반환한다.")
     void invalidPasswordPattern(String password) {
         // given
-        final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address", new PhoneNumberFormat("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", password, "address",
+                new PhoneNumberFormat("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -149,7 +156,8 @@ public class SignupAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("비밀번호는 대소문자, 숫자, 특수문자가 반드시 1개 이상 포함되어야 합니다.")
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo(
+                        "비밀번호는 대소문자, 숫자, 특수문자가 반드시 1개 이상 포함되어야 합니다.")
         );
     }
 
@@ -158,7 +166,8 @@ public class SignupAcceptanceTest extends AcceptanceTest {
     void invalidAddressLength() {
         // given
         String address = "a".repeat(256);
-        final SignupRequest signupRequest = new SignupRequest("account", "nickname", "Password123!", address, new PhoneNumberFormat("010", "1234", "5678"));
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", "Password123!", address,
+                new PhoneNumberFormat("010", "1234", "5678"));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);
@@ -171,11 +180,13 @@ public class SignupAcceptanceTest extends AcceptanceTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"01,1234,1234", "0101,1234,1234", "010,123,1234", "010,12345,1234", "010,1234,123", "010,1234,12345"})
+    @CsvSource(value = {"01,1234,1234", "0101,1234,1234", "010,123,1234", "010,12345,1234", "010,1234,123",
+            "010,1234,12345"})
     @DisplayName("회원가입 시 휴대폰 번호의 각각 길이가 3, 4, 4자가 아니면 상태코드 400을 반환한다.")
     void invalidPhoneNumberLength(String start, String middle, String end) {
         // given
-        final SignupRequest signupRequest = new SignupRequest("account", "nickname", "Password123!", "address", new PhoneNumberFormat(start, middle, end));
+        final SignupRequest signupRequest = new SignupRequest("account", "nickname", "Password123!", "address",
+                new PhoneNumberFormat(start, middle, end));
 
         // when
         final ExtractableResponse<Response> response = post("/signup", signupRequest);

@@ -1,5 +1,11 @@
 package woowacourse.auth.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.MockitoAnnotations.openMocks;
+
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -8,19 +14,12 @@ import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.FakePasswordEncoder;
 import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.domain.Account;
-import woowacourse.shoppingcart.domain.Address;
-import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.domain.Nickname;
-import woowacourse.shoppingcart.domain.PhoneNumber;
+import woowacourse.shoppingcart.domain.customer.Account;
+import woowacourse.shoppingcart.domain.customer.Address;
+import woowacourse.shoppingcart.domain.customer.Customer;
+import woowacourse.shoppingcart.domain.customer.Nickname;
+import woowacourse.shoppingcart.domain.customer.PhoneNumber;
 import woowacourse.shoppingcart.exception.LoginFailException;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 class AuthServiceTest {
 

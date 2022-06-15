@@ -1,17 +1,20 @@
 package woowacourse.shoppingcart.application;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import woowacourse.shoppingcart.dao.*;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import woowacourse.shoppingcart.dao.CartItemDao;
+import woowacourse.shoppingcart.dao.OrderDao;
+import woowacourse.shoppingcart.dao.OrdersDetailDao;
+import woowacourse.shoppingcart.domain.order.Order;
+import woowacourse.shoppingcart.domain.order.OrderDetail;
+import woowacourse.shoppingcart.domain.order.Orders;
+import woowacourse.shoppingcart.dto.OrderDetailResponse;
+import woowacourse.shoppingcart.dto.OrderResponse;
+import woowacourse.shoppingcart.dto.OrdersRequest;
+import woowacourse.shoppingcart.dto.OrdersResponse;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -20,64 +23,60 @@ public class OrderService {
     private final OrderDao orderDao;
     private final OrdersDetailDao ordersDetailDao;
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
     public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+                        final CartItemDao cartItemDao) {
         this.orderDao = orderDao;
         this.ordersDetailDao = ordersDetailDao;
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.getIdByAccount(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
-
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
-
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
-        }
-
-        return ordersId;
+    public Long addOrder(final long customerId, final OrdersRequest orderDetailRequests) {
+        Long createdOrdersId = orderDao.addOrders(customerId);
+        Orders orders = new Orders(customerId, createdOrdersId, toOrders(orderDetailRequests, createdOrdersId));
+        ordersDetailDao.addAllOrdersDetails(orders.getOrders());
+        cartItemDao.deleteAllCartItems(customerId, orders.getProductIds());
+        return createdOrdersId;
     }
 
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
+    private List<Order> toOrders(OrdersRequest orderDetailRequests, Long createdOrdersId) {
+        return orderDetailRequests.getOrder().stream()
+                .map(order -> new Order(createdOrdersId, order.getId(), order.getQuantity()))
+                .collect(Collectors.toList());
     }
 
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.getIdByAccount(customerName);
+    public OrdersResponse findOrdersByCustomerId(final long customerId) {
+        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
+        return new OrdersResponse(orderIds.stream()
+                .map(this::toOrderResponse)
+                .collect(Collectors.toList()));
+    }
 
+    public OrderResponse findOrderById(final long customerId, final Long orderId) {
+        validateOrderIdByCustomerId(customerId, orderId);
+        return toOrderResponse(orderId);
+    }
+
+    private void validateOrderIdByCustomerId(final long customerId, final Long orderId) {
         if (!orderDao.isValidOrderId(customerId, orderId)) {
             throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
         }
     }
 
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.getIdByAccount(customerName);
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
-
-        return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
-                .collect(Collectors.toList());
+    private OrderResponse toOrderResponse(Long orderId) {
+        List<OrderDetail> ordersDetails = ordersDetailDao.findOrdersDetailsByOrderId(orderId);
+        return new OrderResponse(orderId,
+                ordersDetails.stream()
+                        .map(this::toOrderDetailResponse)
+                        .collect(Collectors.toList()));
     }
 
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
-            final int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
-        }
-
-        return new Orders(orderId, ordersDetails);
+    private OrderDetailResponse toOrderDetailResponse(OrderDetail orderDetail) {
+        return new OrderDetailResponse(
+                orderDetail.getProductId(),
+                orderDetail.getName(),
+                orderDetail.cost(),
+                orderDetail.getQuantity(),
+                orderDetail.getImageUrl());
     }
 }
