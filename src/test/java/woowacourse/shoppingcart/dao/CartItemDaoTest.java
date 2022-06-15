@@ -1,6 +1,9 @@
 package woowacourse.shoppingcart.dao;
 
-import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,94 +11,124 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Member;
 import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
+    private final MemberDao memberDao;
 
     public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
         cartItemDao = new CartItemDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
+        memberDao = new MemberDao(jdbcTemplate);
     }
 
-    @BeforeEach
-    void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
-
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
-    }
-
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("새로운 장바구니 상품을 저장한다.")
     @Test
-    void addCartItem() {
+    void save() {
+        Long memberId = memberDao.save(new Member("abc@woowahan.com", "1q2w3e4r!", "우테코"));
+        Product product = new Product("banana", 1_000, 10, "woowa1.com");
+        Long productId = productDao.save(product);
+        CartItem cartItem = new CartItem(memberId, getPersistProduct(productId, product), 1);
 
-        // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
+        Long cartItemId = cartItemDao.save(cartItem);
 
-        // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
-
-        // then
-        assertThat(cartId).isEqualTo(3L);
+        assertThat(cartItemId).isNotNull();
     }
 
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @DisplayName("회원의 장바구니에 저장된 상품 리스트를 조회한다.")
     @Test
-    void findProductIdsByCustomerId() {
+    void findByMemberId() {
+        Long memberId = memberDao.save(new Member("abc@woowahan.com", "1q2w3e4r!", "우테코"));
+        Product product = new Product("banana", 1_000, 10, "woowa1.com");
+        Long productId = productDao.save(product);
+        Product persistProduct = getPersistProduct(productId, product);
+        CartItem cartItem = new CartItem(memberId, persistProduct, 1);
+        Long cartItemId = cartItemDao.save(cartItem);
 
-        // given
-        final Long customerId = 1L;
+        Product product2 = new Product("apple", 2_000, 10, "woowa2.com");
+        Long product2Id = productDao.save(product2);
+        Product persistProduct2 = getPersistProduct(product2Id, product2);
+        CartItem cartItem2 = new CartItem(memberId, persistProduct2, 2);
+        Long cartItem2Id = cartItemDao.save(cartItem2);
 
-        // when
-        final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        List<CartItem> cartItems = cartItemDao.findByMemberId(memberId);
+        CartItem persist = new CartItem(cartItemId, memberId, getPersistProduct(productId, product), 1);
+        CartItem persist2 = new CartItem(cartItem2Id, memberId, getPersistProduct(product2Id, product2), 2);
 
-        // then
-        assertThat(productsIds).containsExactly(1L, 2L);
+        assertThat(cartItems).containsOnly(persist, persist2);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("회원의 장바구니에 저장된 특정 상품을 조회한다.")
     @Test
-    void findIdsByCustomerId() {
+    void findByMemberIdAndProductId() {
+        Long memberId = memberDao.save(new Member("abc@woowahan.com", "1q2w3e4r!", "우테코"));
+        Product product = new Product("banana", 1_000, 10, "woowa1.com");
+        Long productId = productDao.save(product);
+        Product persistProduct = getPersistProduct(productId, product);
+        CartItem cartItem = new CartItem(memberId, persistProduct, 1);
+        Long cartItemId = cartItemDao.save(cartItem);
 
-        // given
-        final Long customerId = 1L;
+        CartItem persist = cartItemDao.findByMemberIdAndProductId(memberId, productId)
+                .orElseGet(() -> fail(""));
+        CartItem expected = new CartItem(cartItemId, memberId, persistProduct, 1);
 
-        // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-
-        // then
-        assertThat(cartIds).containsExactly(1L, 2L);
+        assertThat(persist).isEqualTo(expected);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("회원의 장바구니에 상품이 저장되어 있는지 확인한다.")
     @Test
-    void deleteCartItem() {
+    void exists() {
+        Long memberId = memberDao.save(new Member("abc@woowahan.com", "1q2w3e4r!", "우테코"));
+        Product product = new Product("banana", 1_000, 10, "woowa1.com");
+        Long productId = productDao.save(product);
+        CartItem cartItem = new CartItem(memberId, getPersistProduct(productId, product), 1);
+        cartItemDao.save(cartItem);
 
-        // given
-        final Long cartId = 1L;
+        boolean actual = cartItemDao.exists(memberId, productId);
 
-        // when
-        cartItemDao.deleteCartItem(cartId);
+        assertThat(actual).isTrue();
+    }
 
-        // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
+    @DisplayName("장바구니에 저장된 상품 개수를 변경한다.")
+    @Test
+    void updateQuantity() {
+        Long memberId = memberDao.save(new Member("abc@woowahan.com", "1q2w3e4r!", "우테코"));
+        Product product = new Product("banana", 1_000, 10, "woowa1.com");
+        Long productId = productDao.save(product);
+        CartItem cartItem = new CartItem(memberId, getPersistProduct(productId, product), 1);
+        cartItemDao.save(cartItem);
 
-        assertThat(productIds).containsExactly(2L);
+        cartItem.replaceQuantity(2);
+        cartItemDao.updateQuantity(cartItem);
+        CartItem persistCartItem = cartItemDao.findByMemberIdAndProductId(memberId, productId)
+                .orElseGet(() -> fail(""));
+
+        assertThat(persistCartItem.getQuantity()).isEqualTo(2);
+    }
+
+    @DisplayName("장바구니에 저장된 상품을 제거한다.")
+    @Test
+    void delete() {
+        Long memberId = memberDao.save(new Member("abc@woowahan.com", "1q2w3e4r!", "우테코"));
+        Product product = new Product("banana", 1_000, 1, "woowa1.com");
+        Long productId = productDao.save(product);
+        CartItem cartItem = new CartItem(memberId, getPersistProduct(productId, product), 1);
+        cartItemDao.save(cartItem);
+
+        cartItemDao.deleteByMemberIdAndProductId(memberId, productId);
+        boolean exists = cartItemDao.exists(memberId, productId);
+
+        assertThat(exists).isFalse();
+    }
+
+    private Product getPersistProduct(Long productId, Product product) {
+        return new Product(productId, product.getName(), product.getPrice(), product.getStock(), product.getImageUrl());
     }
 }
