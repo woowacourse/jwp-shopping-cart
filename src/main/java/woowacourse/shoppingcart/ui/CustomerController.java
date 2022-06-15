@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
+import woowacourse.shoppingcart.dto.response.MeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 
 @RestController
@@ -36,8 +36,8 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<GetMeResponse> getMe(@AuthenticationPrincipal Long id) {
-        GetMeResponse currentCustomer = customerService.getMe(id);
+    public ResponseEntity<MeResponse> getMe(@AuthenticationPrincipal Long id) {
+        MeResponse currentCustomer = customerService.getMe(id);
         return ResponseEntity.ok(currentCustomer);
     }
 
@@ -61,9 +61,9 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/username/duplication")
-    public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(@RequestBody UniqueUsernameRequest request) {
-        UniqueUsernameResponse response = customerService.checkUniqueUsername(request);
+    @GetMapping("/username/uniqueness")
+    public ResponseEntity<UniqueUsernameResponse> checkUniqueUsername(@RequestParam String username) {
+        UniqueUsernameResponse response = customerService.checkUniqueUsername(username);
         return ResponseEntity.ok(response);
     }
 }

@@ -54,10 +54,6 @@ public class Customer {
         return new Customer(id, username, password, nickname, age);
     }
 
-    public Customer updateUsername(Username username) {
-        return new Customer(id, username, password, nickname, age);
-    }
-
     public Customer updatePassword(Password password) {
         return new Customer(id, username, password, nickname, age);
     }

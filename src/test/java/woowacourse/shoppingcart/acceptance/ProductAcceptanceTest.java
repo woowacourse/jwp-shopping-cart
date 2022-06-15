@@ -12,9 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.response.ProductResponse;
 
 @DisplayName("상품 관련 기능")
-public class ProductAcceptanceTest extends AcceptanceTest {
+public class ProductAcceptanceTest extends AcceptanceTest2 {
     @DisplayName("상품을 추가한다")
     @Test
     void addProduct() {
@@ -44,6 +45,20 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         조회_응답됨(response);
         상품_조회됨(response, productId);
+    }
+
+    @DisplayName("상품이 존재하지 않아 조회에 실패하면 404 status code를 던진다.")
+    @Test
+    void getProduct_fail() {
+        Long 존재하지_않는_상품_아이디 = 1L;
+
+        ExtractableResponse<Response> response = 상품_조회_요청(존재하지_않는_상품_아이디);
+
+        상품_조회_실패_응답됨(response);
+    }
+
+    private void 상품_조회_실패_응답됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @DisplayName("상품을 삭제한다")
@@ -110,7 +125,9 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static void 상품_목록_포함됨(Long productId1, Long productId2, ExtractableResponse<Response> response) {
-        List<Long> resultProductIds = response.jsonPath().getList(".", Product.class).stream()
+        ProductResponse responseDto = response.jsonPath().getObject(".", ProductResponse.class);
+        List<Long> resultProductIds = responseDto.getProducts()
+                .stream()
                 .map(Product::getId)
                 .collect(Collectors.toList());
         assertThat(resultProductIds).contains(productId1, productId2);

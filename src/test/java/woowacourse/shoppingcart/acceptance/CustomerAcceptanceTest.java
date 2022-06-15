@@ -12,11 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.response.MeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -47,8 +46,8 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
             String 유효한_토큰 = 로그인_성공_시_토큰_반환(유효한_로그인_요청);
 
             ExtractableResponse<Response> response = 내_정보_조회_요청(유효한_토큰);
-            GetMeResponse actualBody = response.body().jsonPath().getObject(".", GetMeResponse.class);
-            GetMeResponse expectedBody = new GetMeResponse("유효한_아이디", "닉네임", 15);
+            MeResponse actualBody = response.body().jsonPath().getObject(".", MeResponse.class);
+            MeResponse expectedBody = new MeResponse("유효한_아이디", "닉네임", 15);
 
             assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             assertThat(actualBody).isEqualTo(expectedBody);
@@ -71,7 +70,7 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
         void 로그인된_경우_200() {
             회원가입_요청(유효한_회원가입_요청);
             String 유효한_토큰 = 로그인_성공_시_토큰_반환(유효한_로그인_요청);
-            UpdateMeRequest 수정된_고객 = new UpdateMeRequest("새로운_아이디", "새로운_닉네임", 20);
+            UpdateMeRequest 수정된_고객 = new UpdateMeRequest("새로운_닉네임", 20);
 
             ExtractableResponse<Response> response = 내_정보_수정_요청(수정된_고객, 유효한_토큰);
 
@@ -166,7 +165,7 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
 
         @Test
         void 존재하지_않는_아이디인_경우_참_200() {
-            UniqueUsernameRequest 존재하지_않는_아이디 = new UniqueUsernameRequest("존재하지_않는_아이디");
+            String 존재하지_않는_아이디 = "존재하지_않는_아이디";
 
             ExtractableResponse<Response> response = 아이디_중복_조회_요청(존재하지_않는_아이디);
             UniqueUsernameResponse actualBody = response.body().jsonPath().getObject(".", UniqueUsernameResponse.class);
@@ -179,7 +178,7 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
         @Test
         void 이미_존재하는_아이디인_경우_거짓_200() {
             회원가입_요청(유효한_회원가입_요청);
-            UniqueUsernameRequest 이미_저장된_아이디 = new UniqueUsernameRequest(유효한_아이디);
+            String 이미_저장된_아이디 = 유효한_아이디;
 
             ExtractableResponse<Response> response = 아이디_중복_조회_요청(이미_저장된_아이디);
             UniqueUsernameResponse actualBody = response.body().jsonPath().getObject(".", UniqueUsernameResponse.class);
@@ -189,11 +188,10 @@ class CustomerAcceptanceTest extends AcceptanceTest2 {
             assertThat(actualBody).isEqualTo(expectedBody);
         }
 
-        private ExtractableResponse<Response> 아이디_중복_조회_요청(UniqueUsernameRequest json) {
+        private ExtractableResponse<Response> 아이디_중복_조회_요청(String username) {
             return RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(json)
-                    .when().get("/customers/username/duplication")
+                    .when().get("/customers/username/uniqueness?username=" + username)
                     .then().log().all()
                     .extract();
         }

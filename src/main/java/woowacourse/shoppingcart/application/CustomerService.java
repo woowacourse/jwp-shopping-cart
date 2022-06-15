@@ -7,12 +7,10 @@ import woowacourse.shoppingcart.domain.Age;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.domain.Nickname;
 import woowacourse.shoppingcart.domain.Password;
-import woowacourse.shoppingcart.domain.Username;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
+import woowacourse.shoppingcart.dto.response.MeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
@@ -39,23 +37,21 @@ public class CustomerService {
     }
 
     @Transactional(readOnly = true)
-    public GetMeResponse getMe(Long id) {
+    public MeResponse getMe(Long id) {
         Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
-        return new GetMeResponse(customer);
+        return new MeResponse(customer);
     }
 
-    public UniqueUsernameResponse checkUniqueUsername(UniqueUsernameRequest request) {
-        boolean isUnique = customerDao.findByUserName(request.getUsername()).isEmpty();
+    public UniqueUsernameResponse checkUniqueUsername(String username) {
+        boolean isUnique = customerDao.findByUserName(username).isEmpty();
         return new UniqueUsernameResponse(isUnique);
     }
 
     @Transactional
     public void updateMe(Long id, UpdateMeRequest request) {
         Customer customer = customerDao.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 고객입니다."));
-        customer = customer.updateUsername(new Username(request.getUsername()))
-                .updateNickname(new Nickname(request.getNickname()))
+        customer = customer.updateNickname(new Nickname(request.getNickname()))
                 .updateAge(new Age(request.getAge()));
-        checkDuplicateCondition(customer);
         customerDao.update(customer);
     }
 

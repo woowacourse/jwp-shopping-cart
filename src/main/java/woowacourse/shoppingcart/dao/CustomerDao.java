@@ -67,11 +67,6 @@ public class CustomerDao {
                 + "VALUES(:username, :password, :nickname, :age)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource params = new ExtendedSqlParameterSource(customer);
-        /*MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("username", customer.getUsername().getValue());
-        params.addValue("password", customer.getPassword().getValue());
-        params.addValue("nickname", customer.getNickname().getValue());
-        params.addValue("age", customer.getAge().getValue());*/
 
         jdbcTemplate.update(sql, params, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -83,19 +78,11 @@ public class CustomerDao {
                 + "WHERE id = :id";
         SqlParameterSource params = new ExtendedSqlParameterSource(customer);
 
-        /*MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", customer.getId());
-        params.addValue("username", customer.getUsername().getValue());
-        params.addValue("password", customer.getPassword().getValue());
-        params.addValue("nickname", customer.getNickname().getValue());
-        params.addValue("age", customer.getAge().getValue());*/
-
         jdbcTemplate.update(sql, params);
     }
 
     public void delete(Customer customer) {
         final String sql = "DELETE FROM customer WHERE id = :id";
-//        SqlParameterSource params = new BeanPropertySqlParameterSource(customer);
         SqlParameterSource params = new MapSqlParameterSource("id", customer.getId());
 
         jdbcTemplate.update(sql, params);

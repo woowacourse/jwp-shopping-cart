@@ -7,25 +7,17 @@ import javax.validation.constraints.Size;
 public class UpdateMeRequest {
 
     @NotBlank
-    @Size(min=4, max=20)
-    private String username;
-    @NotBlank
-    @Size(min=1, max=10)
+    @Size(min = 1, max = 10)
     private String nickname;
-    @Min(value=0)
-    private Integer age ;
+    @Min(value = 0)
+    private int age;
 
     public UpdateMeRequest() {
     }
 
-    public UpdateMeRequest(String username, String nickname, int age) {
-        this.username = username;
+    public UpdateMeRequest(String nickname, int age) {
         this.nickname = nickname;
         this.age = age;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public String getNickname() {
@@ -34,10 +26,6 @@ public class UpdateMeRequest {
 
     public int getAge() {
         return age;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public void setNickname(String nickname) {

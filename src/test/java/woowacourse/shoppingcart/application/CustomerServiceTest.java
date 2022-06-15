@@ -11,10 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import woowacourse.shoppingcart.dto.request.SignUpRequest;
-import woowacourse.shoppingcart.dto.request.UniqueUsernameRequest;
 import woowacourse.shoppingcart.dto.request.UpdateMeRequest;
 import woowacourse.shoppingcart.dto.request.UpdatePasswordRequest;
-import woowacourse.shoppingcart.dto.response.GetMeResponse;
+import woowacourse.shoppingcart.dto.response.MeResponse;
 import woowacourse.shoppingcart.dto.response.UniqueUsernameResponse;
 import woowacourse.shoppingcart.exception.NotFoundException;
 
@@ -48,7 +47,7 @@ class CustomerServiceTest {
     @DisplayName("내 정보를 불러온다.")
     @Test
     void getMeTest_success() {
-        GetMeResponse response = customerService.getMe(식별자);
+        MeResponse response = customerService.getMe(식별자);
 
         assertThat(response.getUsername()).isEqualTo(유효한_아이디);
         assertThat(response.getNickname()).isEqualTo(닉네임);
@@ -65,50 +64,33 @@ class CustomerServiceTest {
     @DisplayName("유저네임이 유일하면 true를 반환한다.")
     @Test
     void uniqueUsername_true() {
-        UniqueUsernameRequest request = new UniqueUsernameRequest("유일한_유저네임");
+        String 유일한_유저네임 = "유일한_유저네임";
 
-        UniqueUsernameResponse response = customerService.checkUniqueUsername(request);
+        UniqueUsernameResponse response = customerService.checkUniqueUsername(유일한_유저네임);
 
-        assertThat(response.getUnique()).isTrue();
+        assertThat(response.getIsUnique()).isTrue();
     }
 
     @DisplayName("유저네임이 존재하면 false를 반환한다.")
     @Test
     void uniqueUsername_false() {
-        UniqueUsernameRequest request = new UniqueUsernameRequest(유효한_아이디);
+        UniqueUsernameResponse response = customerService.checkUniqueUsername(유효한_아이디);
 
-        UniqueUsernameResponse response = customerService.checkUniqueUsername(request);
-
-        assertThat(response.getUnique()).isFalse();
+        assertThat(response.getIsUnique()).isFalse();
     }
 
     @DisplayName("내 정보를 업데이트한다.")
     @Test
     void updateMe_success() {
-        String 변경된_유저네임 = "변경된_유저네임";
         String 변경된_닉네임 = "변경된_닉네임";
         int 변경된_나이 = 20;
-        UpdateMeRequest request = new UpdateMeRequest("변경된_유저네임", "변경된_닉네임", 변경된_나이);
+        UpdateMeRequest request = new UpdateMeRequest("변경된_닉네임", 변경된_나이);
 
         customerService.updateMe(식별자, request);
-        GetMeResponse me = customerService.getMe(식별자);
+        MeResponse me = customerService.getMe(식별자);
 
-        assertThat(me.getUsername()).isEqualTo(변경된_유저네임);
         assertThat(me.getNickname()).isEqualTo(변경된_닉네임);
         assertThat(me.getAge()).isEqualTo(변경된_나이);
-    }
-
-    @DisplayName("이미 존재하는 유저네임으로 정보를 업데이트 하면 예외가 발생한다..")
-    @Test
-    void updateMe_fail() {
-        String 새로운_아이디 = "새로운_아이디";
-        SignUpRequest 회원가입요청 = new SignUpRequest(새로운_아이디, 유효한_비밀번호, 닉네임, 나이);
-        customerService.signUp(회원가입요청);
-
-        UpdateMeRequest request = new UpdateMeRequest(새로운_아이디, 닉네임, 나이);
-
-        assertThatThrownBy(() -> customerService.updateMe(식별자, request))
-                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("비밀번호 수정 성공")

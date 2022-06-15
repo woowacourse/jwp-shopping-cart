@@ -4,21 +4,21 @@ import java.util.Objects;
 
 public class UniqueUsernameResponse {
 
-    private boolean unique;
+    private boolean isUnique;
 
     public UniqueUsernameResponse() {
     }
 
-    public UniqueUsernameResponse(boolean unique) {
-        this.unique = unique;
+    public UniqueUsernameResponse(boolean isUnique) {
+        this.isUnique = isUnique;
     }
 
-    public boolean getUnique() {
-        return unique;
+    public boolean getIsUnique() {
+        return isUnique;
     }
 
-    public void setUnique(boolean unique) {
-        this.unique = unique;
+    public void setIsUnique(boolean isUnique) {
+        this.isUnique = isUnique;
     }
 
     @Override
@@ -30,16 +30,16 @@ public class UniqueUsernameResponse {
             return false;
         }
         UniqueUsernameResponse that = (UniqueUsernameResponse) o;
-        return unique == that.unique;
+        return isUnique == that.isUnique;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(unique);
+        return Objects.hash(isUnique);
     }
 
     @Override
     public String toString() {
-        return "UniqueUsernameResponse{" + "unique=" + unique + '}';
+        return "UniqueUsernameResponse{" + "isUnique=" + isUnique + '}';
     }
 }

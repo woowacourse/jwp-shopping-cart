@@ -9,7 +9,7 @@ public class Product {
     @NotNull(groups = Request.allProperties.class)
     private String name;
     @NotNull(groups = Request.allProperties.class)
-    private Integer price;
+    private int price;
     @NotNull(groups = Request.allProperties.class)
     private String thumbnail;
 
