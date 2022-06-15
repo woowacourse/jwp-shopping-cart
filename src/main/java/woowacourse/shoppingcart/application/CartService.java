@@ -1,17 +1,13 @@
 package woowacourse.shoppingcart.application;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import woowacourse.auth.specification.CustomerSpecification;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidProductException;
-import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
+import woowacourse.shoppingcart.exception.notfound.InvalidProductException;
+import woowacourse.shoppingcart.specification.CartSpecification;
+import woowacourse.shoppingcart.specification.ProductSpecification;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -19,45 +15,34 @@ import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
-    private final ProductDao productDao;
+    private final CustomerSpecification customerSpec;
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    private final ProductSpecification productSpec;
+    private final CartSpecification cartSpec;
 
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
-    }
+    public long addCartItem(long customerId, long productId, long cartItemCount) {
+        customerSpec.validateCustomerExists(customerId);
+        productSpec.validateForAddOrUpdate(productId, cartItemCount);
+        cartSpec.validateForAdd(customerId, productId);
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
-    }
-
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return cartItemDao.addCartItem(customerId, productId, cartItemCount);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
-        cartItemDao.deleteCartItem(cartId);
+    public void changeCartItemCount(long customerId, int productId, long cartItemCount) {
+        customerSpec.validateCustomerExists(customerId);
+        productSpec.validateForAddOrUpdate(productId, cartItemCount);
+
+        cartItemDao.updateCartItemDao(customerId, productId, cartItemCount);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
-        }
-        throw new NotInCustomerCartItemException();
+    public void deleteCart(final long customerId, final Long productId) {
+        customerSpec.validateCustomerExists(customerId);
+        cartSpec.validateCustomerHasCart(customerId, productId);
+
+        cartItemDao.deleteCartItemByProductId(productId);
     }
 }

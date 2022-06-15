@@ -14,8 +14,9 @@ public class Product {
     private String name;
     private Integer price;
     private String imageUrl;
+    private Long quantity;
 
-    public Product(final String name, final int price, final String imageUrl) {
-        this(null, name, price, imageUrl);
+    public Product(final String name, final int price, final String imageUrl, final long quantity) {
+        this(null, name, price, imageUrl, quantity);
     }
 }

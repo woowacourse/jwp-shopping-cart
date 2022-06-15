@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
-import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.customer.CustomerCreateRequest;
+import woowacourse.utils.JwtTokenProvider;
 
 @SpringBootTest
-@Sql({"/clear-all-tables.sql", "/generate-data.sql"})
+@Sql({"/clear-all-tables.sql", "/data.sql"})
 class AuthServiceTest {
 
     @Autowired
@@ -34,8 +34,8 @@ class AuthServiceTest {
     @Test
     void createToken() {
         // given
-        customerService.save(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
-        TokenRequest request = new TokenRequest("philz@gmail.com", "123456789");
+        customerService.save(CustomerCreateRequest.from("philz@gmail.com", "swcho", "123456789"));
+        TokenRequest request = TokenRequest.from("philz@gmail.com", "123456789");
         String token = authService.createToken(request);
 
         // when
@@ -49,8 +49,8 @@ class AuthServiceTest {
     @Test
     void findCustomerByToken() {
         // given
-        Long savedId = customerService.save(new CustomerCreateRequest("philz@gmail.com", "swcho", "123456789"));
-        TokenRequest request = new TokenRequest("philz@gmail.com", "123456789");
+        Long savedId = customerService.save(CustomerCreateRequest.from("philz@gmail.com", "swcho", "123456789"));
+        TokenRequest request = TokenRequest.from("philz@gmail.com", "123456789");
         String token = authService.createToken(request);
 
         // when

@@ -6,19 +6,11 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
+import woowacourse.global.DaoTest;
 import woowacourse.shoppingcart.domain.Customer;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CustomerDaoTest {
+public class CustomerDaoTest extends DaoTest {
 
     private final CustomerDao customerDao;
 
@@ -34,8 +26,8 @@ public class CustomerDaoTest {
         Customer customer = new Customer("roma@naver.com", "roma", "12345678");
 
         // when
-        Long savedId = customerDao.save(customer);
-        Long expected = customerDao.findIdByUserName("roma");
+        long savedId = customerDao.save(customer);
+        long expected = customerDao.findIdByUserName("roma");
 
         // then
         assertThat(savedId).isEqualTo(expected);
@@ -48,7 +40,7 @@ public class CustomerDaoTest {
         final String userName = "puterism";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final long customerId = customerDao.findIdByUserName(userName);
 
         // then
         assertThat(customerId).isEqualTo(1L);
@@ -61,7 +53,7 @@ public class CustomerDaoTest {
         final String userName = "SUNhpark42";
 
         // when
-        final Long customerId = customerDao.findIdByUserName(userName);
+        final long customerId = customerDao.findIdByUserName(userName);
 
         // then
         assertThat(customerId).isEqualTo(3L);
@@ -74,7 +66,8 @@ public class CustomerDaoTest {
         Customer customer = customerDao.findById(1L).orElse(null);
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism",
+                "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
 
         assertThat(customer).usingRecursiveComparison()
                 .isEqualTo(expected);
@@ -87,7 +80,8 @@ public class CustomerDaoTest {
         Customer customer = customerDao.findByEmail("puterism@naver.com").orElse(null);
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism",
+                "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
 
         assertThat(customer).usingRecursiveComparison()
                 .isEqualTo(expected);
@@ -97,10 +91,12 @@ public class CustomerDaoTest {
     @Test
     void findByEmailAndPassword() {
         // when
-        Customer customer = customerDao.findByEmailAndPassword("puterism@naver.com", "12349053145").orElse(null);
+        Customer customer = customerDao.findByEmailAndPassword("puterism@naver.com",
+                "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5").orElse(null);
 
         // then
-        Customer expected = new Customer(1L, "puterism@naver.com", "puterism", "12349053145");
+        Customer expected = new Customer(1L, "puterism@naver.com", "puterism",
+                "e3ca6327a41d28aa4b31f9901c799fcd047eb31773f7fcc9bd33f2795745dde5");
 
         assertThat(customer).usingRecursiveComparison()
                 .isEqualTo(expected);
@@ -114,7 +110,7 @@ public class CustomerDaoTest {
         Customer customer = new Customer("roma@naver.com", "roma", "12345678");
 
         // when
-        Long savedId = customerDao.save(customer);
+        long savedId = customerDao.save(customer);
         customerDao.update(savedId, "philz");
         Customer result = customerDao.findById(savedId).orElse(null);
 
@@ -129,8 +125,8 @@ public class CustomerDaoTest {
         Customer customer = new Customer("roma@naver.com", "roma", "12345678");
 
         // when
-        Long savedId = customerDao.save(customer);
-        customerDao.deleteById(savedId);
+        long savedId = customerDao.save(customer);
+        customerDao.deleteById(savedId, "12345678");
         Optional<Customer> result = customerDao.findById(savedId);
 
         // then

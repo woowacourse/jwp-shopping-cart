@@ -11,12 +11,13 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.exception.InvalidCustomerException;
+import woowacourse.shoppingcart.exception.notfound.InValidPassword;
+import woowacourse.shoppingcart.exception.notfound.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
-
     private final NamedParameterJdbcTemplate jdbcTemplate;
+
     private final SimpleJdbcInsert insertActor;
 
     public CustomerDao(DataSource dataSource,
@@ -27,34 +28,18 @@ public class CustomerDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long findIdByUserName(final String userName) {
-        try {
-            final String query = "SELECT id, email, username, password FROM customer WHERE username = :username";
-            Map<String, String> params = Map.of("username", userName.toLowerCase(Locale.ENGLISH));
-            Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
-
-            return customer.getId();
-        } catch (final EmptyResultDataAccessException e) {
-            throw new InvalidCustomerException();
-        }
+    public long save(final Customer customer) {
+        return insertActor.executeAndReturnKey(new MapSqlParameterSource()
+                .addValue("email", customer.getEmail())
+                .addValue("username", customer.getUsername())
+                .addValue("password", customer.getPassword())
+        ).longValue();
     }
 
     public Optional<Customer> findById(final Long id) {
         try {
             final String query = "SELECT id, email, username, password FROM customer WHERE id = :id";
             Map<String, Long> params = Map.of("id", id);
-            Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
-
-            return Optional.ofNullable(customer);
-        } catch (final EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    public Optional<Customer> findByEmail(String email) {
-        try {
-            final String query = "SELECT id, email, username, password FROM customer WHERE email = :email";
-            Map<String, String> params = Map.of("email", email);
             Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
 
             return Optional.ofNullable(customer);
@@ -75,10 +60,10 @@ public class CustomerDao {
         }
     }
 
-    public Optional<Customer> findByEmailAndPassword(String email, String password) {
+    public Optional<Customer> findByEmail(String email) {
         try {
-            final String query = "SELECT id, email, username, password FROM customer WHERE email = :email and password = :password";
-            Map<String, String> params = Map.of("email", email, "password", password);
+            final String query = "SELECT id, email, username, password FROM customer WHERE email = :email";
+            Map<String, String> params = Map.of("email", email);
             Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
 
             return Optional.ofNullable(customer);
@@ -87,12 +72,28 @@ public class CustomerDao {
         }
     }
 
-    public Long save(final Customer customer) {
-        return insertActor.executeAndReturnKey(new MapSqlParameterSource()
-                .addValue("email", customer.getEmail())
-                .addValue("username", customer.getUsername())
-                .addValue("password", customer.getPassword())
-        ).longValue();
+    public long findIdByUserName(final String userName) {
+        try {
+            final String query = "SELECT id, email, username, password FROM customer WHERE username = :username";
+            Map<String, String> params = Map.of("username", userName.toLowerCase(Locale.ENGLISH));
+            Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
+
+            return customer.getId();
+        } catch (final EmptyResultDataAccessException e) {
+            throw new InvalidCustomerException();
+        }
+    }
+
+    public Optional<Customer> findByEmailAndPassword(String email, String password) {
+        try {
+            final String query = "SELECT * FROM customer WHERE email = :email and password = :password";
+            Map<String, String> params = Map.of("email", email, "password", password);
+            Customer customer = jdbcTemplate.queryForObject(query, params, rowMapper());
+
+            return Optional.ofNullable(customer);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void update(Long id, String username) {
@@ -104,19 +105,25 @@ public class CustomerDao {
         );
     }
 
+    public void deleteById(Long id, String password) {
+        String sql = "delete from customer where id = :id and password = :password";
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("id", id)
+                .addValue("password", password);
+
+        int updatedRow = jdbcTemplate.update(sql, namedParameters);
+
+        if (updatedRow == 0) {
+            throw new InValidPassword();
+        }
+    }
+
     private RowMapper<Customer> rowMapper() {
-        return ((rs, rowNum) -> new Customer(
+        return (rs, rowNum) -> new Customer(
                 rs.getLong("id"),
                 rs.getString("email"),
                 rs.getString("username"),
                 rs.getString("password")
-        ));
-    }
-
-    public void deleteById(Long id) {
-        String sql = "delete from customer where id = :id";
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
-
-        jdbcTemplate.update(sql, namedParameters);
+        );
     }
 }

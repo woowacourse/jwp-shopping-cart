@@ -3,7 +3,7 @@ package woowacourse.shoppingcart.exception;
 public class NotInCustomerCartItemException extends RuntimeException {
 
     public NotInCustomerCartItemException() {
-        this("장바구니 아이템이 없습니다.");
+        this("존재하지 않는 상품 ID입니다.");
     }
 
     public NotInCustomerCartItemException(final String msg) {

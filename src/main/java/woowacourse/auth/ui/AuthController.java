@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
+import woowacourse.shoppingcart.application.CustomerService;
+import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -16,6 +19,7 @@ import woowacourse.auth.dto.TokenResponse;
 public class AuthController {
 
     private final AuthService authService;
+    private final CustomerService customerService;
 
     @Value("${security.jwt.token.expire-length}")
     private long validityInMilliseconds;
@@ -23,7 +27,8 @@ public class AuthController {
     @PostMapping("/login")
     public TokenResponse login(@RequestBody TokenRequest request) {
         String token = authService.createToken(request);
+        Customer customer = customerService.findByEmail(request.getEmail());
 
-        return new TokenResponse(token, validityInMilliseconds);
+        return TokenResponse.from(token, validityInMilliseconds, CustomerResponse.from(customer));
     }
 }
