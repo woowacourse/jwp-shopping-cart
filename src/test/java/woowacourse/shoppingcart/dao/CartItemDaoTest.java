@@ -1,101 +1,116 @@
 package woowacourse.shoppingcart.dao;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javax.sql.DataSource;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.test.context.TestConstructor;
+
+import woowacourse.auth.dao.CustomerDao;
+import woowacourse.auth.domain.Customer;
+import woowacourse.shoppingcart.ProductInsertUtil;
+import woowacourse.shoppingcart.domain.CartItem;
+import woowacourse.shoppingcart.domain.Product;
 
 @JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class CartItemDaoTest {
-    private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
+    private Long customerId;
+    private Product product;
+
+    private final CartItemDao cartItemDao;
+    private final ProductInsertUtil productInsertUtil;
+    private final CustomerDao customerDao;
+
+    public CartItemDaoTest(DataSource dataSource) {
+        cartItemDao = new CartItemDao(dataSource, new ProductDao(dataSource));
+        productInsertUtil = new ProductInsertUtil(dataSource);
+        customerDao = new CustomerDao(dataSource);
     }
 
     @BeforeEach
-    void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
-
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+    void init() {
+        customerId = customerDao.save(Customer.builder()
+            .nickname("does")
+            .email("asd@gmail.com")
+            .password("1asd!")
+            .build())
+            .getId();
+        Long productId = productInsertUtil.insert("banana", 1_000, "https://www.woowa1.com");
+        product = new Product(productId, "banana", 1_000, "https://woowa1.com");
     }
 
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다.")
     @Test
     void addCartItem() {
-
         // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
+        CartItem cartItem = new CartItem(product, 2);
 
         // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
+        CartItem saved = cartItemDao.save(customerId, cartItem);
 
         // then
-        assertThat(cartId).isEqualTo(3L);
+        assertThat(saved.getId()).isNotNull();
     }
 
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @DisplayName("customer id로 cartItem을 조회한다.")
     @Test
-    void findProductIdsByCustomerId() {
-
+    void getItems() {
         // given
-        final Long customerId = 1L;
+        cartItemDao.save(customerId, new CartItem(product, 3));
+
+        Long productId2 = productInsertUtil.insert("apple", 1000, "https://woowa1.com");
+        Product product2 = new Product(productId2, "apple", 1000, "https://woowa1.com");
+        cartItemDao.save(customerId, new CartItem(product2, 2));
 
         // when
-        final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
+        List<CartItem> items = cartItemDao.findByCustomerId(customerId);
 
         // then
-        assertThat(productsIds).containsExactly(1L, 2L);
+        assertThat(items.size()).isEqualTo(2);
+        assertThat(items)
+            .map(CartItem::getName)
+            .containsOnly("banana", "apple");
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("cartItem 정보를 수정한다.")
     @Test
-    void findIdsByCustomerId() {
-
+    void update() {
         // given
-        final Long customerId = 1L;
+        CartItem item = cartItemDao.save(customerId, new CartItem(product, 3));
 
         // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
+        cartItemDao.update(new CartItem(item.getId(), product, 10));
 
         // then
-        assertThat(cartIds).containsExactly(1L, 2L);
+        CartItem updated = cartItemDao.findByCustomerId(customerId).get(0);
+        assertThat(updated.getId()).isEqualTo(item.getId());
+        assertThat(updated.getQuantity()).isEqualTo(10);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("id 리스트를 받아 해당하는 item을 전부 삭제한다.")
     @Test
-    void deleteCartItem() {
-
+    void deleteAll() {
         // given
-        final Long cartId = 1L;
+        Long cartItemId1 = cartItemDao.save(customerId, new CartItem(product, 3))
+            .getId();
+
+        Long productId2 = productInsertUtil.insert("apple", 1000, "https://woowa1.com");
+        Product product2 = new Product(productId2, "apple", 1000, "https://woowa1.com");
+        Long cartItemId2 = cartItemDao.save(customerId, new CartItem(product2, 2))
+            .getId();
 
         // when
-        cartItemDao.deleteCartItem(cartId);
+        cartItemDao.deleteAll(List.of(cartItemId1, cartItemId2));
 
         // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-
-        assertThat(productIds).containsExactly(2L);
+        assertThat(cartItemDao.findByCustomerId(customerId)).isEmpty();
     }
 }

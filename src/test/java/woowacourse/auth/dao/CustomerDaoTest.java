@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 
 import woowacourse.auth.domain.Customer;
+import woowacourse.auth.domain.Password;
 
 @JdbcTest
 class CustomerDaoTest {
@@ -32,11 +33,16 @@ class CustomerDaoTest {
 		customerDao = new CustomerDao(dataSource);
 	}
 
-	@DisplayName("Member를 저장한다.")
+	@DisplayName("customer를 저장한다.")
 	@Test
 	void save() {
 		// given
-		Customer customer = new Customer(email, password, nickname);
+		Customer customer = Customer.builder()
+			.email(email)
+			.password(password)
+			.nickname(nickname)
+			.encryptPassword(Password::getValue)
+			.build();
 
 		// when
 		Customer saved = customerDao.save(customer);
@@ -49,7 +55,12 @@ class CustomerDaoTest {
 	@Test
 	void existByName() {
 		// given
-		Customer customer = new Customer(email, password, nickname);
+		Customer customer = Customer.builder()
+			.email(email)
+			.password(password)
+			.nickname(nickname)
+			.encryptPassword(Password::getValue)
+			.build();
 		customerDao.save(customer);
 
 		// when
@@ -63,7 +74,12 @@ class CustomerDaoTest {
 	@Test
 	void existByNameFalse() {
 		// given
-		Customer customer = new Customer(email, password, nickname);
+		Customer customer = Customer.builder()
+			.email(email)
+			.password(password)
+			.nickname(nickname)
+			.encryptPassword(Password::getValue)
+			.build();
 
 		// when
 		boolean result = customerDao.existByEmail(customer.getEmail());
@@ -76,7 +92,12 @@ class CustomerDaoTest {
 	@Test
 	void findByEmail() {
 		// given
-		Customer customer = new Customer(email, password, nickname);
+		Customer customer = Customer.builder()
+			.email(email)
+			.password(password)
+			.nickname(nickname)
+			.encryptPassword(Password::getValue)
+			.build();
 		customerDao.save(customer);
 
 		// when
@@ -102,7 +123,12 @@ class CustomerDaoTest {
 	@DisplayName("회원을 삭제한다")
 	@Test
 	void delete() {
-		Customer save = customerDao.save(new Customer(email, password, nickname));
+		Customer save = customerDao.save(Customer.builder()
+			.email(email)
+			.password(password)
+			.nickname(nickname)
+			.encryptPassword(Password::getValue)
+			.build());
 		customerDao.delete(save.getId());
 
 		assertThat(customerDao.findByEmail(save.getEmail()))
@@ -113,10 +139,21 @@ class CustomerDaoTest {
 	@Test
 	void update() {
 		// given
-		Customer save = customerDao.save(new Customer(email, password, nickname));
+		Customer save = customerDao.save(Customer.builder()
+			.email(email)
+			.password(password)
+			.nickname(nickname)
+			.encryptPassword(Password::getValue)
+			.build());
 
 		// when
-		customerDao.update(new Customer(save.getId(), save.getEmail(), "b1234!", "thor"));
+		customerDao.update(Customer.builder()
+			.id(save.getId())
+			.email(save.getEmail())
+			.password("b1234!")
+			.nickname("thor")
+			.encryptPassword(Password::getValue)
+			.build());
 
 		// then
 		Optional<Customer> update = customerDao.findByEmail(save.getEmail());
@@ -137,7 +174,13 @@ class CustomerDaoTest {
 	void updateException() {
 		// when
 		assertThatThrownBy(() -> customerDao.update(
-			new Customer(0L, "123@gmail.com", "b1234!", "thor")))
+			Customer.builder()
+				.id(0L)
+				.email("email@gmail.com")
+				.password("b1234!")
+				.nickname("thor")
+				.encryptPassword(Password::getValue)
+				.build()))
 			.isInstanceOf(NoSuchElementException.class);
 	}
 }

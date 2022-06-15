@@ -18,9 +18,10 @@ import lombok.RequiredArgsConstructor;
 import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.domain.Customer;
 import woowacourse.auth.dto.customer.CustomerDeleteRequest;
+import woowacourse.auth.dto.customer.CustomerProfileRequest;
 import woowacourse.auth.dto.customer.CustomerRequest;
 import woowacourse.auth.dto.customer.CustomerResponse;
-import woowacourse.auth.dto.customer.CustomerUpdateRequest;
+import woowacourse.auth.dto.customer.CustomerPasswordRequest;
 import woowacourse.auth.dto.customer.CustomerUpdateResponse;
 import woowacourse.auth.support.Login;
 
@@ -52,10 +53,17 @@ public class CustomerController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PatchMapping
-	public ResponseEntity<CustomerUpdateResponse> update(@Login Customer customer,
-		@RequestBody @Valid CustomerUpdateRequest request) {
-		Customer updatedCustomer = customerService.update(customer, request);
+	@PatchMapping("/password")
+	public ResponseEntity<Void> updatePassword(@Login Customer customer,
+		@RequestBody @Valid CustomerPasswordRequest request) {
+		customerService.updatePassword(customer, request);
+		return ResponseEntity.noContent().build();
+	}
+
+	@PatchMapping("/profile")
+	public ResponseEntity<CustomerUpdateResponse> updateProfile(@Login Customer customer,
+		@RequestBody @Valid CustomerProfileRequest request) {
+		Customer updatedCustomer = customerService.updateProfile(customer, request);
 		return ResponseEntity.ok(new CustomerUpdateResponse(updatedCustomer.getNickname()));
 	}
 

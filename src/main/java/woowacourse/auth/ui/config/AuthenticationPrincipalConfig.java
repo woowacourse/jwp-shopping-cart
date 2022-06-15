@@ -2,8 +2,6 @@ package woowacourse.auth.ui.config;
 
 import lombok.RequiredArgsConstructor;
 import woowacourse.auth.application.AuthService;
-import woowacourse.auth.application.CustomerService;
-import woowacourse.auth.support.JwtTokenProvider;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,10 +20,10 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor())
-            .excludePathPatterns(
-                "/auth/login",
-                "/api/products/**",
-                "/api/customers/**"
+            .addPathPatterns(
+                "/customers/**",
+                "/cart/**",
+                "/orders/**"
             );
     }
 

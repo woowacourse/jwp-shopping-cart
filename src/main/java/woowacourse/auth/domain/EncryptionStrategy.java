@@ -1,6 +1,4 @@
-package woowacourse.auth.support;
-
-import woowacourse.auth.domain.Password;
+package woowacourse.auth.domain;
 
 @FunctionalInterface
 public interface EncryptionStrategy {

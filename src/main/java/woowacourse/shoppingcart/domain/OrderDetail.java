@@ -1,50 +1,46 @@
 package woowacourse.shoppingcart.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public class OrderDetail {
-    private Long productId;
-    private int quantity;
-    private int price;
-    private String name;
-    private String imageUrl;
 
-    public OrderDetail() {
+    private Product product;
+    private Quantity quantity;
+
+    public OrderDetail(CartItem cartItem) {
+        this(cartItem.getProduct(), cartItem.getQuantity());
     }
 
-    public OrderDetail(final Long productId, final int quantity) {
-        this.productId = productId;
-        this.quantity = quantity;
+    public OrderDetail(Product product, int quantity) {
+        this.product = product;
+        this.quantity = new Quantity(quantity);
     }
 
-    public OrderDetail(final Product product, final int quantity) {
-        this(product.getId(), product.getPrice(), product.getName(), product.getImageUrl(), quantity);
-    }
 
-    public OrderDetail(final Long productId, final int price, final String name,
-                       final String imageUrl, final int quantity) {
-        this.productId = productId;
-        this.price = price;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.quantity = quantity;
+    public int calculatePrice() {
+        return product.multiplyPrice(quantity.getValue());
     }
 
     public Long getProductId() {
-        return productId;
-    }
-
-    public int getPrice() {
-        return price;
+        return product.getId();
     }
 
     public String getName() {
-        return name;
+        return product.getName();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return product.getImageUrl();
+    }
+
+    public int getPrice() {
+        return product.getPrice();
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantity.getValue();
     }
 }

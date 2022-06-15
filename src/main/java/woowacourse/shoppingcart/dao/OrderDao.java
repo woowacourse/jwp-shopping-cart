@@ -1,41 +1,57 @@
 package woowacourse.shoppingcart.dao;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.util.List;
+import woowacourse.exception.ErrorCode;
+import woowacourse.exception.InvalidOrderException;
+import woowacourse.shoppingcart.domain.Orders;
 
 @Repository
 public class OrderDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final OrderDetailDao orderDetailDao;
 
-    public OrderDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public OrderDao(DataSource dataSource, OrderDetailDao orderDetailDao) {
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+            .withTableName("orders")
+            .usingGeneratedKeyColumns("id");
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        this.orderDetailDao = orderDetailDao;
     }
 
-    public Long addOrders(final Long customerId) {
-        final String sql = "INSERT INTO orders (customer_id) VALUES (?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+    public Orders save(Orders orders) {
+        long orderId = jdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(orders))
+            .longValue();
+        orderDetailDao.saveAll(orderId, orders.getOrderDetails());
+        return orders.createWithId(orderId);
     }
 
-    public List<Long> findOrderIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM orders WHERE customer_id = ? ";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
+    public Orders findById(Long id) {
+        String sql = "select * from orders where id = :id";
+        try {
+            return jdbcTemplate.queryForObject(sql, Map.of("id", id), getOrdersRowMapper(id));
+        } catch (EmptyResultDataAccessException exception) {
+            throw new InvalidOrderException(ErrorCode.NOT_EXIST_ORDER, "존재하지 않는 주문입니다.");
+        }
     }
 
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
+    private RowMapper<Orders> getOrdersRowMapper(Long id) {
+        return (rs, rowNum) -> new Orders(
+            rs.getLong("id"),
+            rs.getLong("customer_id"),
+            orderDetailDao.findByOrderId(id),
+            rs.getString("order_date")
+        );
     }
 }

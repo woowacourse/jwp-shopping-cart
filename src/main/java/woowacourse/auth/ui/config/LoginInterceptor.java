@@ -3,6 +3,7 @@ package woowacourse.auth.ui.config;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 	public boolean preHandle(
 		HttpServletRequest request, HttpServletResponse response, Object handler) {
 
+		if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+			return true;
+		}
+
 		if (isSignUpRequest(request)) {
 			return true;
 		}
@@ -30,6 +35,6 @@ public class LoginInterceptor implements HandlerInterceptor {
 
 	private boolean isSignUpRequest(HttpServletRequest request) {
 		return request.getRequestURI().contains("/customer")
-			&& request.getMethod().equalsIgnoreCase("post");
+			&& HttpMethod.POST.matches(request.getMethod());
 	}
 }

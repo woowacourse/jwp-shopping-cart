@@ -14,10 +14,11 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.exception.InvalidCustomerException;
+import woowacourse.exception.InvalidCustomerException;
 
 @Repository
 public class CustomerDao {
+
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 	private final SimpleJdbcInsert jdbcInsert;
 
@@ -31,21 +32,17 @@ public class CustomerDao {
 	public Customer save(Customer customer) {
 		long id = jdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(customer))
 			.longValue();
-		return new Customer(id, customer.getEmail(), customer.getPassword(), customer.getNickname());
+		return Customer.builder()
+			.id(id)
+			.email(customer.getEmail())
+			.nickname(customer.getNickname())
+			.password(customer.getPassword())
+			.build();
 	}
 
 	public Boolean existByEmail(String email) {
 		String sql = "select exists (select * from customer where email = :email)";
 		return jdbcTemplate.queryForObject(sql, Map.of("email", email), Boolean.class);
-	}
-
-	public Long findIdByUserName(String nickname) {
-		try {
-			final String query = "SELECT id FROM customer WHERE nickname = :nickname";
-			return jdbcTemplate.queryForObject(query, Map.of("nickname", nickname), Long.class);
-		} catch (final EmptyResultDataAccessException e) {
-			throw new InvalidCustomerException();
-		}
 	}
 
 	public Optional<Customer> findByEmail(String email) {
@@ -60,15 +57,16 @@ public class CustomerDao {
 	}
 
 	private RowMapper<Customer> getCustomerMapper() {
-		return (rs, rowNum) -> new Customer(
-			rs.getLong("id"),
-			rs.getString("email"),
-			rs.getString("password"),
-			rs.getString("nickname"));
+		return (rs, rowNum) -> Customer.builder()
+			.id(rs.getLong("id"))
+			.email(rs.getString("email"))
+			.nickname(rs.getString("nickname"))
+			.password(rs.getString("password"))
+			.build();
 	}
 
 	public void delete(Long id) {
-		String sql = "DELETE FROM customer WHERE id = :id";
+		String sql = "delete from customer where id = :id";
 		jdbcTemplate.update(sql, Map.of("id", id));
 	}
 

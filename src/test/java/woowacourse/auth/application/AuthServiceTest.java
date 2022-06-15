@@ -12,12 +12,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import woowacourse.auth.domain.Customer;
-import woowacourse.auth.support.EncryptionStrategy;
+import woowacourse.auth.domain.EncryptionStrategy;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;
-import woowacourse.auth.exception.InvalidAuthException;
-import woowacourse.auth.exception.InvalidCustomerException;
+import woowacourse.exception.InvalidAuthException;
+import woowacourse.exception.InvalidCustomerException;
 import woowacourse.auth.support.JwtTokenProvider;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,7 +41,12 @@ class AuthServiceTest {
 	void login() {
 		// given
 		given(customerService.findByEmail(email))
-			.willReturn(new Customer(1L, email, password, nickname));
+			.willReturn(Customer.builder()
+				.id(1L)
+				.email(email)
+				.nickname(nickname)
+				.password(password)
+				.build());
 		given(tokenProvider.createToken(email))
 			.willReturn("access-token");
 		given(encryptionStrategy.encode(new Password(password)))
@@ -79,7 +84,12 @@ class AuthServiceTest {
 	void loginFailByPassword() {
 		// given
 		given(customerService.findByEmail(email))
-			.willReturn(new Customer(1L, email, password, nickname));
+			.willReturn(Customer.builder()
+				.id(1L)
+				.email(email)
+				.nickname(nickname)
+				.password(password)
+				.build());
 
 		// when
 		assertAll(
@@ -99,7 +109,12 @@ class AuthServiceTest {
 		given(tokenProvider.getPayload(token))
 			.willReturn(email);
 		given(customerService.findByEmail(email))
-			.willReturn(new Customer(1L, email, password, nickname));
+			.willReturn(Customer.builder()
+				.id(1L)
+				.email(email)
+				.nickname(nickname)
+				.password(password)
+				.build());
 
 		// when
 		Customer customer = authService.findCustomerByToken(token);

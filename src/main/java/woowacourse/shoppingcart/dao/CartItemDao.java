@@ -1,63 +1,87 @@
 package woowacourse.shoppingcart.dao;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import static org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils.*;
 
-import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import woowacourse.shoppingcart.domain.CartItem;
 
 @Repository
 public class CartItemDao {
-    private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+	private final SimpleJdbcInsert jdbcInsert;
+	private final NamedParameterJdbcTemplate jdbcTemplate;
+	private final ProductDao productDao;
 
-    public List<Long> findProductIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT product_id FROM cart_item WHERE customer_id = ?";
+	public CartItemDao(DataSource dataSource, ProductDao productDao) {
+		this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+			.withTableName("cart_item")
+			.usingGeneratedKeyColumns("id");
+		this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		this.productDao = productDao;
+	}
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("product_id"), customerId);
-    }
+	public CartItem save(Long customerId, CartItem cartItem) {
+		long cartItemId = jdbcInsert.executeAndReturnKey(
+				new BeanPropertySqlParameterSource(new CartItemDto(
+					customerId,
+					cartItem.getProductId(),
+					cartItem.getQuantity())))
+			.longValue();
+		return cartItem.createWithId(cartItemId);
+	}
 
-    public List<Long> findIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM cart_item WHERE customer_id = ?";
+	public List<CartItem> findByCustomerId(Long customerId) {
+		String sql = "select * from cart_item where customer_id = :customerId";
+		return jdbcTemplate.query(sql,
+			Map.of("customerId", customerId),
+			getCartItemMapper()
+		);
+	}
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
-    }
+	private RowMapper<CartItem> getCartItemMapper() {
+		return (rs, rowNum) -> new CartItem(
+			rs.getLong("id"),
+			productDao.findById(rs.getLong("product_id")),
+			rs.getInt("quantity")
+		);
+	}
 
-    public Long findProductIdById(final Long cartId) {
-        try {
-            final String sql = "SELECT product_id FROM cart_item WHERE id = ?";
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("product_id"), cartId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new InvalidCartItemException();
-        }
-    }
+	public void update(CartItem cartItem) {
+		String sql = "update cart_item set "
+			+ "quantity = :quantity";
+		if (jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(cartItem)) == 0) {
+			throw new NoSuchElementException("수정하려는 장바구니 상품이 없습니다.");
+		}
+	}
 
-    public Long addCartItem(final Long customerId, final Long productId) {
-        final String sql = "INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+	public void deleteAll(List<Long> cartItemIds) {
+		String sql = "delete from cart_item where id = :id";
+		jdbcTemplate.batchUpdate(sql, createBatch(cartItemIds.stream()
+			.map(id -> Map.of("id", id))
+			.collect(Collectors.toList()))
+		);
+	}
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            preparedStatement.setLong(2, productId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
-    }
-
-    public void deleteCartItem(final Long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
-
-        final int rowCount = jdbcTemplate.update(sql, id);
-        if (rowCount == 0) {
-            throw new InvalidCartItemException();
-        }
-    }
+	@RequiredArgsConstructor
+	@Getter
+	private static class CartItemDto {
+		private final Long customerId;
+		private final Long productId;
+		private final Integer quantity;
+	}
 }

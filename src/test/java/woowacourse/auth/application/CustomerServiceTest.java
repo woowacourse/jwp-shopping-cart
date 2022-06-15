@@ -7,10 +7,10 @@ import static org.mockito.BDDMockito.*;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -19,10 +19,10 @@ import woowacourse.auth.domain.Customer;
 import woowacourse.auth.domain.Password;
 import woowacourse.auth.dto.customer.CustomerDeleteRequest;
 import woowacourse.auth.dto.customer.CustomerRequest;
-import woowacourse.auth.dto.customer.CustomerUpdateRequest;
-import woowacourse.auth.exception.InvalidAuthException;
-import woowacourse.auth.exception.InvalidCustomerException;
-import woowacourse.auth.support.EncryptionStrategy;
+import woowacourse.auth.dto.customer.CustomerPasswordRequest;
+import woowacourse.exception.InvalidAuthException;
+import woowacourse.exception.InvalidCustomerException;
+import woowacourse.auth.domain.EncryptionStrategy;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -33,21 +33,29 @@ class CustomerServiceTest {
 
 	@Mock
 	private CustomerDao customerDao;
-	@Mock
 	private EncryptionStrategy encryptionStrategy;
-	@InjectMocks
 	private CustomerService customerService;
+
+	@BeforeEach
+	void init() {
+		encryptionStrategy = Password::getValue;
+		customerService = new CustomerService(customerDao, Password::getValue);
+	}
 
 	@DisplayName("회원 정보를 저장한다.")
 	@Test
 	void sighUp() {
 		// given
 		CustomerRequest request = new CustomerRequest(email, password, nickname);
-		Customer customer = new Customer(1L, email, password, nickname);
+		Customer customer = Customer.builder()
+			.id(1L)
+			.email(email)
+			.nickname(nickname)
+			.password(password)
+			.encryptPassword(encryptionStrategy)
+			.build();
 		given(customerDao.save(any(Customer.class)))
 			.willReturn(customer);
-		given(encryptionStrategy.encode(new Password(password)))
-			.willReturn("ASEFASEGAERAETG");
 
 		// when
 		Customer saved = customerService.signUp(request);
@@ -79,7 +87,13 @@ class CustomerServiceTest {
 	@Test
 	void findByEmail() {
 		// given
-		Customer customer = new Customer(1L, email, password, nickname);
+		Customer customer = Customer.builder()
+			.id(1L)
+			.email(email)
+			.nickname(nickname)
+			.password(password)
+			.encryptPassword(encryptionStrategy)
+			.build();
 		given(customerDao.findByEmail(email))
 			.willReturn(Optional.of(customer));
 
@@ -102,22 +116,26 @@ class CustomerServiceTest {
 			.isInstanceOf(InvalidCustomerException.class);
 	}
 
-	@DisplayName("회원 정보를 수정한다.")
+	@DisplayName("회원 비밀번호를 수정한다.")
 	@Test
 	void updateCustomer() {
 		// given
-		CustomerUpdateRequest request = new CustomerUpdateRequest(
-			"thor", password, "b1234!");
-		Customer customer = new Customer(1L, email, password, nickname);
-		given(encryptionStrategy.encode(new Password(password)))
-			.willReturn(password);
+		CustomerPasswordRequest request = new CustomerPasswordRequest(password, "b1234!");
+		Customer customer = Customer.builder()
+			.id(1L)
+			.email(email)
+			.nickname(nickname)
+			.password(password)
+			.encryptPassword(encryptionStrategy)
+			.build();
 
 		// when
-		Customer update = customerService.update(customer, request);
+		Customer update = customerService.updatePassword(customer, request);
 
 		// then
 		assertAll(
-			() -> assertThat(update.getNickname()).isEqualTo("thor"),
+			() -> assertThat(update.getNickname()).isEqualTo(nickname),
+			() -> assertThat(update.isInvalidPassword(customer.getPassword())).isTrue(),
 			() -> verify(customerDao).update(customer)
 		);
 	}
@@ -126,13 +144,18 @@ class CustomerServiceTest {
 	@Test
 	void updateCustomerPasswordFail() {
 		// given
-		CustomerUpdateRequest request = new CustomerUpdateRequest(
-			"thor", "a1234!", "b1234!");
-		Customer customer = new Customer(1L, email, "a123456!", "b1234!");
+		CustomerPasswordRequest request = new CustomerPasswordRequest("a1234!", "b1234!");
+		Customer customer = Customer.builder()
+			.id(1L)
+			.email(email)
+			.nickname("nickname")
+			.password("a123456!")
+			.encryptPassword(encryptionStrategy)
+			.build();
 
 		// when
 		assertAll(
-			() -> assertThatThrownBy(() -> customerService.update(customer, request))
+			() -> assertThatThrownBy(() -> customerService.updatePassword(customer, request))
 				.isInstanceOf(InvalidAuthException.class),
 			() -> verify(customerDao, never()).update(any())
 		);
@@ -142,16 +165,20 @@ class CustomerServiceTest {
 	@Test
 	void signOutSuccess() {
 		// given
-		Customer customer = new Customer(1L, email, password, nickname);
+		Customer customer = Customer.builder()
+			.id(1L)
+			.email(email)
+			.nickname(nickname)
+			.password(password)
+			.encryptPassword(encryptionStrategy)
+			.build();
 		CustomerDeleteRequest request = new CustomerDeleteRequest(password);
-		given(encryptionStrategy.encode(new Password(password)))
-			.willReturn(password);
 
 		// when
 		customerService.delete(customer, request);
 
 		// then
-		verify(encryptionStrategy).encode(new Password(password));
+		verify(customerDao).delete(1L);
 	}
 
 	@DisplayName("비밀번호가 다르면 회원 탈퇴를 못한다.")
@@ -159,16 +186,20 @@ class CustomerServiceTest {
 	void signOutFail() {
 		// given
 		String misMatchPassword = "b1234!";
-		Customer customer = new Customer(1L, email, password, nickname);
+		Customer customer = Customer.builder()
+			.id(1L)
+			.email(email)
+			.nickname(nickname)
+			.password(password)
+			.encryptPassword(encryptionStrategy)
+			.build();
 		CustomerDeleteRequest request = new CustomerDeleteRequest(misMatchPassword);
-		given(encryptionStrategy.encode(new Password(misMatchPassword)))
-			.willReturn(misMatchPassword);
 
 		// when
 		assertThatThrownBy(() -> customerService.delete(customer, request))
 			.isInstanceOf(InvalidAuthException.class);
 
 		// then
-		verify(encryptionStrategy).encode(new Password(misMatchPassword));
+		verify(customerDao, never()).delete(1L);
 	}
 }

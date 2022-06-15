@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import woowacourse.auth.application.AuthService;
+import woowacourse.auth.dto.ExceptionResponse;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;
+import woowacourse.exception.BusinessException;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,10 +27,5 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<TokenResponse> login(@RequestBody @Valid TokenRequest tokenRequest) {
 		return ResponseEntity.ok(authService.login(tokenRequest));
-	}
-
-	@ExceptionHandler
-	public ResponseEntity<String> loginExceptionHandler(RuntimeException exception) {
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
 	}
 }

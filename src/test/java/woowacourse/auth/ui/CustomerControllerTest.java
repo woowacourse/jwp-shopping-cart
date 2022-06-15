@@ -14,14 +14,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import woowacourse.auth.application.AuthService;
 import woowacourse.auth.application.CustomerService;
 import woowacourse.auth.dto.customer.CustomerDeleteRequest;
+import woowacourse.auth.dto.customer.CustomerPasswordRequest;
 import woowacourse.auth.dto.customer.CustomerRequest;
 import woowacourse.auth.dto.customer.CustomerResponse;
-import woowacourse.auth.dto.customer.CustomerUpdateRequest;
-import woowacourse.auth.dto.customer.CustomerUpdateResponse;
 import woowacourse.auth.dto.token.TokenRequest;
 import woowacourse.auth.dto.token.TokenResponse;
 
-class CustomerControllerTest extends ControllerTest{
+class CustomerControllerTest extends ControllerTest {
 
 	@Autowired
 	private CustomerService customerService;
@@ -165,7 +164,7 @@ class CustomerControllerTest extends ControllerTest{
 		result.andExpect(status().isUnauthorized());
 	}
 
-	@DisplayName("토큰이 있을 때 회원정보 수정을 하면 200 반환")
+	@DisplayName("토큰이 있을 때 비밀번호 수정을 하면 204 반환")
 	@Test
 	void updateCustomer() throws Exception {
 		// given
@@ -173,32 +172,52 @@ class CustomerControllerTest extends ControllerTest{
 		TokenResponse tokenResponse = authService.login(new TokenRequest(email, password));
 
 		// when
-		CustomerUpdateRequest request = new CustomerUpdateRequest(
-			"thor", "a1234!", "b1234!"
-		);
-		CustomerUpdateResponse response = new CustomerUpdateResponse("thor");
+		CustomerPasswordRequest request = new CustomerPasswordRequest("a1234!", "b1234!");
 
-		ResultActions result = mockMvc.perform(patch("/customers")
+		ResultActions result = mockMvc.perform(patch("/customers/password")
 			.contentType(MediaType.APPLICATION_JSON)
 			.header("Authorization", "Bearer " + tokenResponse.getAccessToken())
 			.content(objectMapper.writeValueAsString(request)));
 
 		// then
-		result.andExpect(content().json(objectMapper.writeValueAsString(response)))
-			.andExpect(status().isOk());
+		result.andExpect(status().isNoContent());
 	}
 
-	@DisplayName("토큰이 없을 때 회원 정보 수정을 하면 401 반환")
+	@DisplayName("변경한 비밀번호로 다시 한 번 변경을 하면 204 반환")
+	@Test
+	void updateCustomerTwice() throws Exception {
+		// given
+		customerService.signUp(new CustomerRequest(email, password, nickname));
+		TokenResponse tokenResponse = authService.login(new TokenRequest(email, password));
+
+		CustomerPasswordRequest request1 = new CustomerPasswordRequest("a1234!", "b1234!");
+
+		mockMvc.perform(patch("/customers/password")
+			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+			.content(objectMapper.writeValueAsString(request1)));
+
+		// when
+		CustomerPasswordRequest request2 = new CustomerPasswordRequest("b1234!", "c1234!!");
+
+		ResultActions result = mockMvc.perform(patch("/customers/password")
+			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+			.content(objectMapper.writeValueAsString(request2)));
+
+		// then
+		result.andExpect(status().isNoContent());
+	}
+
+	@DisplayName("토큰이 없을 때 비밀번호 수정을 하면 401 반환")
 	@Test
 	void updateCustomerNotToken() throws Exception {
 		// given
 		customerService.signUp(new CustomerRequest(email, password, nickname));
 
 		// when
-		CustomerUpdateRequest request = new CustomerUpdateRequest(
-			"thor", "a1234!", "b1234!"
-		);
-		ResultActions result = mockMvc.perform(patch("/customers")
+		CustomerPasswordRequest request = new CustomerPasswordRequest("a1234!", "b1234!");
+		ResultActions result = mockMvc.perform(patch("/customers/password")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));
 
@@ -214,10 +233,8 @@ class CustomerControllerTest extends ControllerTest{
 		TokenResponse tokenResponse = authService.login(new TokenRequest(email, password));
 
 		// when
-		CustomerUpdateRequest request = new CustomerUpdateRequest(
-			"thor", "a1234567!", "b1234!"
-		);
-		ResultActions result = mockMvc.perform(patch("/customers")
+		CustomerPasswordRequest request = new CustomerPasswordRequest("a1234567!", "b1234!");
+		ResultActions result = mockMvc.perform(patch("/customers/password")
 			.header("Authorization", "Bearer " + tokenResponse.getAccessToken())
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(request)));

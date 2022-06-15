@@ -3,83 +3,38 @@ package woowacourse.shoppingcart.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import woowacourse.auth.dao.CustomerDao;
+import lombok.RequiredArgsConstructor;
+import woowacourse.exception.ErrorCode;
+import woowacourse.exception.InvalidOrderException;
 import woowacourse.shoppingcart.dao.*;
-import woowacourse.shoppingcart.domain.OrderDetail;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.domain.CartItem;
 import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.exception.InvalidOrderException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class OrderService {
 
-    private final OrderDao orderDao;
-    private final OrdersDetailDao ordersDetailDao;
-    private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
-    private final ProductDao productDao;
+	private final OrderDao orderDao;
+    private final CartService cartService;
 
-    public OrderService(final OrderDao orderDao, final OrdersDetailDao ordersDetailDao,
-                        final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
-        this.orderDao = orderDao;
-        this.ordersDetailDao = ordersDetailDao;
-        this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
-        this.productDao = productDao;
+    public Orders order(Long customerId, List<Long> productIds) {
+        List<CartItem> cartItems = cartService.findItemsByProductIdsInCart(customerId, productIds);
+        cartService.deleteItems(customerId, productIds);
+        return orderDao.save(new Orders(customerId, cartItems));
     }
 
-    public Long addOrder(final List<OrderRequest> orderDetailRequests, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        final Long ordersId = orderDao.addOrders(customerId);
+	public Orders findOne(Long orderId, Long customerId) {
+		Orders order = orderDao.findById(orderId);
+		validateOrderOfCustomer(customerId, order);
+		return order;
+	}
 
-        for (final OrderRequest orderDetail : orderDetailRequests) {
-            final Long cartId = orderDetail.getCartId();
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final int quantity = orderDetail.getQuantity();
-
-            ordersDetailDao.addOrdersDetail(ordersId, productId, quantity);
-            cartItemDao.deleteCartItem(cartId);
-        }
-
-        return ordersId;
-    }
-
-    public Orders findOrderById(final String customerName, final Long orderId) {
-        validateOrderIdByCustomerName(customerName, orderId);
-        return findOrderResponseDtoByOrderId(orderId);
-    }
-
-    private void validateOrderIdByCustomerName(final String customerName, final Long orderId) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-
-        if (!orderDao.isValidOrderId(customerId, orderId)) {
-            throw new InvalidOrderException("유저에게는 해당 order_id가 없습니다.");
-        }
-    }
-
-    public List<Orders> findOrdersByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        final List<Long> orderIds = orderDao.findOrderIdsByCustomerId(customerId);
-
-        return orderIds.stream()
-                .map(orderId -> findOrderResponseDtoByOrderId(orderId))
-                .collect(Collectors.toList());
-    }
-
-    private Orders findOrderResponseDtoByOrderId(final Long orderId) {
-        final List<OrderDetail> ordersDetails = new ArrayList<>();
-        for (final OrderDetail productQuantity : ordersDetailDao.findOrdersDetailsByOrderId(orderId)) {
-            final Product product = productDao.findProductById(productQuantity.getProductId());
-            final int quantity = productQuantity.getQuantity();
-            ordersDetails.add(new OrderDetail(product, quantity));
-        }
-
-        return new Orders(orderId, ordersDetails);
-    }
+	private void validateOrderOfCustomer(Long customerId, Orders order) {
+		if (!order.isSameCustomerId(customerId)) {
+			throw new InvalidOrderException(ErrorCode.AUTH, "인증이 필요한 접근입니다.");
+		}
+	}
 }

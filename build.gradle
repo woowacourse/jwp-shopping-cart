@@ -23,6 +23,7 @@ dependencies {
 
     runtimeOnly 'com.h2database:h2'
     testRuntimeOnly 'com.h2database:h2'
+    implementation 'mysql:mysql-connector-java'
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'

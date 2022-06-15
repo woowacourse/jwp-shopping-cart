@@ -11,6 +11,10 @@ public class EncryptedPassword {
 
 	private final String value;
 
+	public EncryptedPassword(Password password, EncryptionStrategy strategy) {
+		this.value = strategy.encode(password);
+	}
+
 	public boolean isSame(String value) {
 		return this.value.equals(value);
 	}

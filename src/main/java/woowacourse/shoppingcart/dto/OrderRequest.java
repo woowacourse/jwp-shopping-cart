@@ -1,7 +1,7 @@
 package woowacourse.shoppingcart.dto;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class OrderRequest {
+
     @NotNull
     private Long cartId;
-    @Min(0)
+    @Positive
     private int quantity;
 }

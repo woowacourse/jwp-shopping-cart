@@ -1,27 +1,62 @@
-insert into customer (email, password, nickname)
-values ('a@gmailcom', '!puterism', 'puterism'),
-       ('b@gmailcom', '!tanney102', 'tanney102'),
-       ('c@gmailcom', '!jho2301', 'jho2301'),
-       ('d@gmailcom', '!365kim', '365kim'),
-       ('e@gmailcom', '!dudtjr913', 'dudtjr913'),
-       ('f@gmailcom', '!jum0', 'jum0'),
-       ('g@gmailcom', '!hyuuunjukim', 'hyuuunjukim'),
-       ('h@gmailcom', '!zereight', 'zereight'),
-       ('j@gmailcom', '!devhyun637', 'devhyun637'),
-       ('k@gmailcom', '!swon3210', 'swon3210'),
-       ('l@gmailcom', '!bigsaigon333', 'bigsaigon333'),
-       ('m@gmailcom', '!yungo1846', 'yungo1846'),
-       ('n@gmailcom', '!zigsong', 'zigsong'),
-       ('o@gmailcom', '!iborymagic', 'iborymagic'),
-       ('p@gmailcom', '!0307kwon', '0307kwon'),
-       ('q@gmailcom', '!gwangyeolim', 'gwangyeolim'),
-       ('r@gmailcom', '!shinsehantan', 'shinsehantan'),
-       ('t@gmailcom', '!ddongule', 'ddongule'),
-       ('u@gmailcom', '!seojihwan', 'seojihwan'),
-       ('v@gmailcom', '!0imbean0', '0imbean0'),
-       ('w@gmailcom', '!sunyoungkwon', 'sunyoungkwon'),
-       ('s@gmailcom', '!hchayan', 'hchayan'),
-       ('y@gmailcom', '!2sooy', '2sooy'),
-       ('z@gmailcom', '!yujo11', 'yujo11'),
-       ('ab@gmailcom', '!sunhpark42', 'sunhpark42')
+insert into product (image_url, name, price) values
+(
+    'https://cdn-mart.baemin.com/sellergoods/bulk/20200831-203011/14867-main-01.jpg',
+    '우유(300ml)',
+    30000
+),
+(
+    'https://cdn-mart.baemin.com/sellergoods/main/e355e6d4-ec5a-49d0-94cf-879fb24a3ac8.png',
+    '사과(100g)',
+    50000
+),
+(
+    'https://cdn-mart.baemin.com/sellergoods/bulk/20220303-114029/23657-main-01.jpg',
+    '포도주스(500ml)',
+    40000
+),
+(
+    'https://cdn-mart.baemin.com/sellergoods/main/90f5a31a-3b35-4b5e-8918-fe3083740176.jpg',
+    '햄버거(300g)',
+    50000
+),
+(
+    'https://cdn-mart.baemin.com/sellergoods/main/d8e13ee1-7271-4b38-8adb-6498260b4f8a.jpg',
+    '동그랑땡(1kg)',
+    60000
+),
+(
+    'https://cdn-mart.baemin.com/sellergoods/main/7a48f6bc-761e-4a51-8337-7677097aec09.jpg',
+    '냉동육(2kg)',
+    100000
+),
+(
+    'https://cdn-mart.baemin.com/sellergoods/main/0fd75127-a964-4bd8-b620-125b0b721ae0.jpg',
+    '생연어(300g)',
+    70000
+),
+(
+    'https://cdn-mart.baemin.com/sellergoods/main/154bd485-c0c6-4ccb-9c2b-f9ec232b18d0.jpg',
+    '새우(300g)',
+    90000
+),
+(
+    'https://cdn-mart.baemin.com/sellergoods/bulk/20211210-155432/18633-main-01.jpg',
+    '베이컨(1kg)',
+    70000
+),
+(
+    'https://cdn-mart.baemin.com/sellergoods/main/aab933ad-69bb-41f5-9fe9-ad821f77baef.jpg',
+    '식빵(990g)',
+    90000
+),
+(
+    'https://cdn-mart.baemin.com/sellergoods/main/0452091a-1181-4c26-8d77-7eaaf9510a17.jpg',
+    '칵테일 새우(1kg)',
+    70000
+),
+(
+    'https://cdn-mart.baemin.com/sellergoods/main/c7e706b8-b23a-4f87-9c1b-b4f27967ece4.jpg',
+    '양념감자(990g)',
+    90000
+)
 ;

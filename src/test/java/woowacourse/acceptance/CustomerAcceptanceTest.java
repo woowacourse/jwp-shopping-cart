@@ -1,4 +1,4 @@
-package woowacourse.auth.acceptance;
+package woowacourse.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -82,7 +82,7 @@ public class CustomerAcceptanceTest {
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 	}
 
-	@DisplayName("회원 정보를 수정한다.")
+	@DisplayName("비밀번호를 수정한다.")
 	@Test
 	void updateCustomer() {
 		// given
@@ -91,9 +91,22 @@ public class CustomerAcceptanceTest {
 		String token = loginResponse.jsonPath().getString("accessToken");
 
 		// when
-		ExtractableResponse<Response> response = RestUtils.update(
-			token, "thor", password, "b1234!"
-		);
+		ExtractableResponse<Response> response = RestUtils.updatePassword(token, password, "b1234!");
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+	}
+
+	@DisplayName("닉네임을 수정한다.")
+	@Test
+	void updateCustomerProfile() {
+		// given
+		RestUtils.signUp(email, password, nickname);
+		ExtractableResponse<Response> loginResponse = RestUtils.login(email, password);
+		String token = loginResponse.jsonPath().getString("accessToken");
+
+		// when
+		ExtractableResponse<Response> response = RestUtils.updateProfile(token, "thor");
 
 		// then
 		assertAll(

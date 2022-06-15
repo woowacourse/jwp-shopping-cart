@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import woowacourse.auth.support.EncryptionStrategy;
 import woowacourse.auth.support.MessageDigestEncryption;
 
 class EncryptionStrategyTest {
