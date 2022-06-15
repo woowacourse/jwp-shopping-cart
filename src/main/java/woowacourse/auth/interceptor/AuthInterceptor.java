@@ -6,36 +6,38 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import woowacourse.auth.support.AuthorizationExtractor;
-import woowacourse.exception.auth.UnauthorizedException;
+import woowacourse.exception.unauthorization.UnauthorizedException;
 
 public class AuthInterceptor implements HandlerInterceptor {
 
+    private static final String POST_METHOD = HttpMethod.POST.name();
+    private static final String SIGN_UP_URI = "/api/customer";
     public static final String TOKEN = "token";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
 
-        if (validateRequestIsSignUp(request)) {
+        if (request.getMethod().equals("OPTIONS")) {
+            return true;
+        }
+
+        if (isSignUpWithNoToken(request)) {
             return true;
         }
 
         final String token = AuthorizationExtractor.extract(request);
-        validateTokenIsNull(token);
+        if (Objects.isNull(token) || token.isBlank()) {
+            throw new UnauthorizedException();
+        }
         request.setAttribute(TOKEN, token);
         return true;
     }
 
-    private boolean validateRequestIsSignUp(HttpServletRequest request) {
+    private boolean isSignUpWithNoToken(HttpServletRequest request) {
         final String requestURI = request.getRequestURI();
         final String requestMethod = request.getMethod();
-        final String postMethod = HttpMethod.POST.name();
-        return (requestURI.equals("/api/customer")) && (requestMethod.equals(postMethod));
+        return (requestURI.equals(SIGN_UP_URI)) && (requestMethod.equals(POST_METHOD));
     }
 
-    private void validateTokenIsNull(String token) {
-        if (Objects.isNull(token) || token.isBlank()) {
-            throw new UnauthorizedException();
-        }
-    }
 }

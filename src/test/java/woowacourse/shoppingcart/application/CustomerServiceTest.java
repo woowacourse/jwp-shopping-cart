@@ -3,37 +3,32 @@ package woowacourse.shoppingcart.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static woowacourse.ShoppingCartFixture.잉_회원생성요청;
 import static woowacourse.ShoppingCartFixture.잉_회원탈퇴요청;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.exception.auth.EmailDuplicateException;
-import woowacourse.exception.auth.PasswordIncorrectException;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
-import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
+import woowacourse.exception.badRequest.EmailDuplicateException;
+import woowacourse.exception.unauthorization.PasswordIncorrectException;
+import woowacourse.exception.notFound.CustomerNotFoundException;
+import woowacourse.shoppingcart.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUpdateProfileRequest;
 
-@JdbcTest
+@SpringBootTest
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Sql("/truncate.sql")
 class CustomerServiceTest {
 
-    public final CustomerService customerService;
-
-    public CustomerServiceTest(JdbcTemplate jdbcTemplate) {
-        this.customerService = new CustomerService(new CustomerDao(jdbcTemplate));
-    }
+    @Autowired
+    public CustomerService customerService;
 
     @DisplayName("회원가입을 할 수 있다.")
     @Test

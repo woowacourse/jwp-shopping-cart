@@ -13,7 +13,6 @@ FROM product;
 DELETE
 FROM customer;
 
-
 ALTER TABLE orders_detail
     ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE orders

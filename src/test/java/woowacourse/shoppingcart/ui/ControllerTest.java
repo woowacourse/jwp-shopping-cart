@@ -24,6 +24,8 @@ public class ControllerTest {
 
     private static final String AUTHORIZATION = "authorization";
 
+    protected static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MjcsImlhdCI6MTY1NDA2NjczOCwiZXhwIjoxNjU0MDcwMzM4fQ.AvAJuT4YmyL-hAU2WrukGMT1Tt3k-J92DED9rGyDl38";
+
     @Autowired
     protected MockMvc mockMvc;
 
@@ -49,6 +51,15 @@ public class ControllerTest {
     protected MockHttpServletRequestBuilder postWithBody(String url, Object body)
             throws JsonProcessingException {
         return post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(body));
+    }
+
+    protected MockHttpServletRequestBuilder postWithToken(String url, String token, Object body)
+            throws JsonProcessingException {
+        return post(url)
+                .header(AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(body));

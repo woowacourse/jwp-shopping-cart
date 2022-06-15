@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -19,7 +18,6 @@ import woowacourse.shoppingcart.domain.Product;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@Disabled
 public class CartItemDaoTest {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
@@ -36,8 +34,8 @@ public class CartItemDaoTest {
         productDao.save(new Product("banana", 1_000, "woowa1.com"));
         productDao.save(new Product("apple", 2_000, "woowa2.com"));
 
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, quantity, product_id) VALUES(?, ?, ?)", 1L, 1, 1L);
+        jdbcTemplate.update("INSERT INTO cart_item(customer_id, quantity, product_id) VALUES(?, ?, ?)", 1L, 1, 2L);
     }
 
     @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")

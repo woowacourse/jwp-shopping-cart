@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -19,7 +18,6 @@ import woowacourse.shoppingcart.domain.OrderDetail;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@Disabled
 class OrdersDetailDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
@@ -38,10 +36,14 @@ class OrdersDetailDaoTest {
         customerId = 1L;
         jdbcTemplate.update("INSERT INTO orders (customer_id) VALUES (?)", customerId);
         ordersId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+//        ordersId = jdbcTemplate.queryForObject("select id from orders where customer_id = ?", Long.class, customerId);
 
         jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)"
                 , "name", 1000, "imageUrl");
         productId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+//        productId = jdbcTemplate
+//                .queryForObject("select id from product where name = ?, price = ?, image_url = ?", Long.class, "name",
+//                        1000, "imageUrl");
     }
 
     @DisplayName("OrderDatail을 추가하는 기능")

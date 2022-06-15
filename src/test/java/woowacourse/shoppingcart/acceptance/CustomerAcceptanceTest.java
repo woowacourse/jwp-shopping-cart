@@ -16,12 +16,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerResponse;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
-import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
+import woowacourse.shoppingcart.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUpdateProfileRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.response.ExceptionResponse;
 
 @DisplayName("회원 관련 기능")
 @Sql("/truncate.sql")
@@ -49,7 +49,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // when
         final String token = getToken(잉_로그인요청);
-        final ExtractableResponse<Response> 회원조회응답 = get(CUSTOMER_URI, token);
+        final ExtractableResponse<Response> 회원조회응답 = getWithToken(CUSTOMER_URI, token);
         final CustomerResponse 회원응답 = 회원조회응답.as(CustomerResponse.class);
 
         // then
@@ -71,7 +71,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // when
         final String token = getToken(잉_로그인요청);
         final ExtractableResponse<Response> 회원수정응답 = put(CUSTOMER_URI + "/profile", 회원수정요청, token);
-        final CustomerResponse 회원조회응답 = get(CUSTOMER_URI, token).as(CustomerResponse.class);
+        final CustomerResponse 회원조회응답 = getWithToken(CUSTOMER_URI, token).as(CustomerResponse.class);
 
         // then
         assertAll(
@@ -98,7 +98,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(회원수정응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(비밀번호수정실패응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(비밀번호수정실패응답.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value()),
                 () -> assertThat(비밀번호수정실패.getMessage()).contains("비밀번호가 일치하지 않습니다.")
         );
     }
@@ -113,12 +113,12 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         //when
         final String token = getToken(잉_로그인요청);
-        final ExtractableResponse<Response> 회원탈퇴응답 = delete(CUSTOMER_URI, 회원탈퇴요청, token);
+        final ExtractableResponse<Response> 회원탈퇴응답 = deleteWithToken(CUSTOMER_URI, 회원탈퇴요청, token);
 
         //then
         assertAll(
                 () -> assertThat(회원탈퇴응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThatCode(() -> get(CUSTOMER_URI, token).as(ExceptionResponse.class))
+                () -> assertThatCode(() -> getWithToken(CUSTOMER_URI, token).as(ExceptionResponse.class))
                         .doesNotThrowAnyException()
         );
     }

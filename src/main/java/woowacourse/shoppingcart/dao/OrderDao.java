@@ -1,12 +1,13 @@
 package woowacourse.shoppingcart.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.util.List;
 
 @Repository
 public class OrderDao {
@@ -34,8 +35,14 @@ public class OrderDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
     }
 
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
+    public Optional<Long> findOrderIdsByCustomerIdAndOrderId(final Long customerId, final Long orderId) {
+        final String query = "SELECT id FROM orders WHERE customer_id = ? AND id = ?";
+
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getLong("id"), customerId, orderId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

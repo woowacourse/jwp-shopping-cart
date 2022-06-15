@@ -10,16 +10,15 @@ import static woowacourse.ShoppingCartFixture.잉_회원생성요청;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import woowacourse.exception.auth.EmailDuplicateException;
-import woowacourse.exception.auth.PasswordIncorrectException;
-import woowacourse.exception.auth.TokenInvalidException;
-import woowacourse.shoppingcart.exception.CustomerNotFoundException;
-import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerRequest;
-import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
+import woowacourse.exception.badRequest.EmailDuplicateException;
+import woowacourse.exception.unauthorization.PasswordIncorrectException;
+import woowacourse.exception.unauthorization.TokenInvalidException;
+import woowacourse.exception.notFound.CustomerNotFoundException;
+import woowacourse.shoppingcart.dto.request.CustomerDeleteRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.CustomerUpdatePasswordRequest;
 
 public class CustomerControllerTest extends ControllerTest {
-    private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MjcsImlhdCI6MTY1NDA2NjczOCwiZXhwIjoxNjU0MDcwMzM4fQ.AvAJuT4YmyL-hAU2WrukGMT1Tt3k-J92DED9rGyDl38";
 
     @DisplayName("회원 생성 시도 시, 입력한 이메일이 이미 존재할 경우 400을 응답한다")
     @Test
@@ -103,7 +102,9 @@ public class CustomerControllerTest extends ControllerTest {
         when(customerService.findById(101L)).thenThrow(new CustomerNotFoundException());
 
         // when then
-        mockMvc.perform(getWithToken("/api/customer", token)).andDo(print()).andExpect(status().isBadRequest());
+        mockMvc.perform(getWithToken("/api/customer", token))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @DisplayName("회원 이름 변경 시도 시, 이름이 비어있으면 400을 응답한다")

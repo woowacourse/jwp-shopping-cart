@@ -1,35 +1,34 @@
 package woowacourse.auth.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.auth.support.JwtTokenProvider;
-import woowacourse.exception.auth.LoginFailureException;
-import woowacourse.shoppingcart.application.CustomerService;
-import woowacourse.shoppingcart.application.PasswordEncoderAdapter;
+import woowacourse.exception.unauthorization.LoginFailureException;
+import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
 
 @Service
+@Transactional
 public class AuthService {
-    private final CustomerService customerService;
+    private final CustomerDao customerDao;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(CustomerService customerService, JwtTokenProvider jwtTokenProvider) {
-        this.customerService = customerService;
+    public AuthService(CustomerDao customerDao, JwtTokenProvider jwtTokenProvider) {
+        this.customerDao = customerDao;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Transactional(readOnly = true)
     public TokenResponse getToken(TokenRequest tokenRequest) {
-        final Customer customer = customerService.getIdByEmail(tokenRequest.getEmail());
-        validatePassword(tokenRequest, customer);
+        final Customer customer = customerDao.findByEmail(tokenRequest.getEmail())
+                .orElseThrow(LoginFailureException::new);
 
-        final String accessToken = jwtTokenProvider.createToken(customer.getId());
-        return new TokenResponse(accessToken);
-    }
-
-    private void validatePassword(TokenRequest tokenRequest, Customer customer) {
-        if (!customer.validatePassword(tokenRequest.getPassword(), new PasswordEncoderAdapter())) {
+        if (!customer.isCorrectPassword(tokenRequest.getPassword())) {
             throw new LoginFailureException();
         }
+        final String accessToken = jwtTokenProvider.createToken(customer.getId());
+        return new TokenResponse(accessToken);
     }
 }
