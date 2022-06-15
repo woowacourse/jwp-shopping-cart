@@ -3,9 +3,9 @@ package woowacourse.shoppingcart.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import woowacourse.exception.CustomerNotFoundException;
-import woowacourse.exception.EmailDuplicateException;
-import woowacourse.exception.PasswordIncorrectException;
+import woowacourse.exception.badrequest.EmailDuplicateException;
+import woowacourse.exception.notfound.CustomerNotFoundException;
+import woowacourse.exception.unauthorized.PasswordIncorrectException;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.infra.CustomerRepository;
 import woowacourse.shoppingcart.service.dto.CustomerCreateServiceRequest;
@@ -43,19 +43,19 @@ public class SpringCustomerService implements CustomerService {
     }
 
     @Override
-    public Customer findById(Long id) {
+    public Customer getById(Long id) {
         return customerRepository.findById(id)
                 .orElseThrow(CustomerNotFoundException::new);
     }
 
     @Override
-    public Customer findByEmail(String email) {
+    public Customer getByEmail(String email) {
         return customerRepository.findByEmail(email)
                 .orElseThrow(CustomerNotFoundException::new);
     }
 
     @Override
-    public Customer findByName(String name) {
+    public Customer getByName(String name) {
         return customerRepository.findByName(name)
                 .orElseThrow(CustomerNotFoundException::new);
     }

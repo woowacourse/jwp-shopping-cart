@@ -12,6 +12,14 @@ repositories {
     mavenCentral()
 }
 
+tasks.named("bootJar") {
+    mainClass = 'woowacourse.Application'
+}
+
+springBoot {
+    mainClass = 'woowacourse.Application'
+}
+
 dependencies {
     implementation 'mysql:mysql-connector-java:8.0.28'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
@@ -25,7 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    testImplementation 'com.h2database:h2'
+    implementation 'com.h2database:h2'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

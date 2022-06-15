@@ -1,40 +1,18 @@
 package woowacourse.shoppingcart.infra.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
+import woowacourse.shoppingcart.infra.dao.entity.CartEntity;
+import woowacourse.shoppingcart.infra.dao.entity.OrderEntity;
 
-@Repository
-public class OrderDao {
+public interface OrderDao {
+    long save(List<CartEntity> cartEntities);
 
-    private final JdbcTemplate jdbcTemplate;
+    Optional<List<OrderEntity>> findOrderById(long orderId);
 
-    public OrderDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    Optional<List<OrderEntity>> findOrdersByCustomerId(long customerId);
 
-    public Long addOrders(final Long customerId) {
-        final String sql = "INSERT INTO orders (customer_id) VALUES (?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+    List<Long> findOrderIdsByCustomerId(Long customerId);
 
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setLong(1, customerId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
-    }
-
-    public List<Long> findOrderIdsByCustomerId(final Long customerId) {
-        final String sql = "SELECT id FROM orders WHERE customer_id = ? ";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), customerId);
-    }
-
-    public boolean isValidOrderId(final Long customerId, final Long orderId) {
-        final String query = "SELECT EXISTS(SELECT * FROM orders WHERE customer_id = ? AND id = ?)";
-        return jdbcTemplate.queryForObject(query, Boolean.class, customerId, orderId);
-    }
+    boolean isValidOrderId(Long customerId, Long orderId);
 }

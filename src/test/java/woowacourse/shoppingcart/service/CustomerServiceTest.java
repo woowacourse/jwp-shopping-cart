@@ -7,14 +7,16 @@ import static woowacourse.ShoppingCartFixture.잉_회원탈퇴요청;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.exception.CustomerNotFoundException;
-import woowacourse.exception.PasswordIncorrectException;
+import woowacourse.exception.notfound.CustomerNotFoundException;
+import woowacourse.exception.unauthorized.PasswordIncorrectException;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.infra.JdbcCustomerRepository;
 import woowacourse.shoppingcart.infra.dao.JdbcCustomerDao;
@@ -22,9 +24,10 @@ import woowacourse.shoppingcart.ui.dto.request.CustomerDeleteRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdatePasswordRequest;
 import woowacourse.shoppingcart.ui.dto.request.CustomerUpdateProfileRequest;
 
-@JdbcTest
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Sql("/truncate.sql")
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+@JdbcTest
 class CustomerServiceTest {
     public final SpringCustomerService customerService;
 
@@ -43,7 +46,7 @@ class CustomerServiceTest {
 
         // when
         customerService.updateProfile(1L, 잉_이름변경요청.toServiceRequest());
-        final Customer 수정된_잉 = customerService.findById(1L);
+        final Customer 수정된_잉 = customerService.getById(1L);
 
         // then
         assertThat(수정된_잉.getName()).isEqualTo(잉_이름변경요청.getName());
@@ -98,7 +101,7 @@ class CustomerServiceTest {
 
         // when then
         customerService.delete(id, 잉회원탈퇴요청.toServiceRequest());
-        assertThatThrownBy(() -> customerService.findById(id))
+        assertThatThrownBy(() -> customerService.getById(id))
                 .isInstanceOf(CustomerNotFoundException.class);
     }
 

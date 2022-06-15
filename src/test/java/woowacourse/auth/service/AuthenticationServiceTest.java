@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.ui.dto.TokenRequest;
-import woowacourse.exception.LoginFailureException;
+import woowacourse.exception.unauthorized.LoginFailureException;
 
 @SpringBootTest
 @Sql({"/truncate.sql", "/auth.sql"})

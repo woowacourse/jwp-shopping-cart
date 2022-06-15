@@ -1,81 +1,60 @@
 package woowacourse.config;
 
-import java.util.List;
-import javax.validation.ConstraintViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import woowacourse.exception.CustomerNotFoundException;
-import woowacourse.exception.EmailDuplicateException;
-import woowacourse.exception.InvalidCartItemException;
-import woowacourse.exception.InvalidCustomerException;
-import woowacourse.exception.InvalidOrderException;
-import woowacourse.exception.InvalidProductException;
-import woowacourse.exception.LoginFailureException;
-import woowacourse.exception.NotInCustomerCartItemException;
-import woowacourse.exception.PasswordIncorrectException;
-import woowacourse.exception.TokenInvalidException;
+import woowacourse.exception.BadRequestException;
+import woowacourse.exception.NotFoundException;
 import woowacourse.exception.UnauthorizedException;
 import woowacourse.shoppingcart.ui.dto.response.ExceptionResponse;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-    @ExceptionHandler({LoginFailureException.class, EmailDuplicateException.class, PasswordIncorrectException.class,
-            CustomerNotFoundException.class})
-    public ResponseEntity<ExceptionResponse> handleLoginFailureException(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
-    }
+    private final Logger logger = LoggerFactory.getLogger(ControllerAdvice.class);
 
-    @ExceptionHandler(TokenInvalidException.class)
-    public ResponseEntity<ExceptionResponse> handleTokenInvalidException(TokenInvalidException e) {
-        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ExceptionResponse> badRequest(BadRequestException e) {
+        logger.error(e.toString());
+        return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ExceptionResponse> handleUnauthorizedException(UnauthorizedException e) {
+    public ResponseEntity<ExceptionResponse> unauthorized(UnauthorizedException e) {
+        logger.error(e.toString());
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler({NotFoundException.class})
+    public ResponseEntity<ExceptionResponse> notFound(NotFoundException e) {
+        logger.error(e.toString());
+        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ExceptionResponse> handleUnhandledException(RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ExceptionResponse("서버 내부 오류가 발생하였습니다."));
+    public ResponseEntity<ExceptionResponse> runtime(RuntimeException e) {
+        logger.error(e.toString());
+        return ResponseEntity.badRequest().body(new ExceptionResponse("확인되지 않은 오류가 발생했어요.. 잠시 후에 다시 시도해주시겠어요? 🥲"));
     }
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<ExceptionResponse> handle() {
-        return ResponseEntity.badRequest().body(new ExceptionResponse("존재하지 않는 데이터 요청입니다."));
+    @ExceptionHandler({BindException.class})
+    public ResponseEntity<ExceptionResponse> requestValidationException(BindException e) {
+        logger.error(e.toString());
+        final String errorMessage = parseErrorMessage(e);
+
+        return new ResponseEntity<>(new ExceptionResponse(errorMessage), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<ExceptionResponse> handleInvalidRequest(final BindingResult bindingResult) {
-        final List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        final FieldError mainError = fieldErrors.get(0);
-
-        return ResponseEntity.badRequest().body(new ExceptionResponse(mainError.getDefaultMessage()));
-    }
-
-    @ExceptionHandler({
-            HttpMessageNotReadableException.class,
-            ConstraintViolationException.class,
-    })
-    public ResponseEntity<ExceptionResponse> handleInvalidRequest(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
-    }
-
-    @ExceptionHandler({
-            InvalidCustomerException.class,
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            NotInCustomerCartItemException.class,
-    })
-    public ResponseEntity<ExceptionResponse> handleInvalidAccess(final RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ExceptionResponse(e.getMessage()));
+    private String parseErrorMessage(BindException e) {
+        return e.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(error -> ((FieldError) error).getField() + " : " + error.getDefaultMessage())
+                .collect(Collectors.joining(System.lineSeparator()));
     }
 }

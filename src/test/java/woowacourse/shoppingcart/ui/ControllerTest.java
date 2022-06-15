@@ -16,26 +16,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import woowacourse.auth.service.AuthService;
 import woowacourse.auth.support.JwtTokenProvider;
+import woowacourse.shoppingcart.service.OrderService;
 import woowacourse.shoppingcart.service.SpringCustomerService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ControllerTest {
-
     private static final String AUTHORIZATION = "authorization";
 
     @Autowired
     protected MockMvc mockMvc;
-
     @Autowired
     protected ObjectMapper objectMapper;
-
     @MockBean
     protected SpringCustomerService customerService;
-
     @MockBean
     protected AuthService authService;
-
+    @MockBean
+    protected OrderService orderService;
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;
 
@@ -49,6 +47,15 @@ public class ControllerTest {
     protected MockHttpServletRequestBuilder postWithBody(String url, Object body)
             throws JsonProcessingException {
         return post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(body));
+    }
+
+    protected MockHttpServletRequestBuilder postWithTokenAndBody(String url, String accessToken, Object body)
+            throws JsonProcessingException {
+        return post(url)
+                .header(AUTHORIZATION, "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(objectMapper.writeValueAsString(body));

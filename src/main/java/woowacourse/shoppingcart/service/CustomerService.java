@@ -9,11 +9,11 @@ import woowacourse.shoppingcart.service.dto.CustomerUpdateProfileServiceRequest;
 public interface CustomerService {
     Customer create(CustomerCreateServiceRequest customerRequest);
 
-    Customer findById(Long id);
+    Customer getById(Long id);
 
-    Customer findByEmail(String email);
+    Customer getByEmail(String email);
 
-    Customer findByName(String name);
+    Customer getByName(String name);
 
     Customer updateProfile(Long id, CustomerUpdateProfileServiceRequest customerUpdateProfileRequest);
 

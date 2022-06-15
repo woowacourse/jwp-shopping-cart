@@ -2,7 +2,6 @@ package woowacourse.shoppingcart.infra;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -16,9 +15,8 @@ import woowacourse.shoppingcart.infra.dao.JdbcCustomerDao;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql({"/truncate.sql", "/auth.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@Disabled
 public class CustomerDaoTest {
 
     private final CustomerDao customerDao;
@@ -30,9 +28,8 @@ public class CustomerDaoTest {
     @DisplayName("username을 통해 아이디를 찾으면, id를 반환한다.")
     @Test
     void findIdByUserNameTest() {
-
         // given
-        final String userName = "puterism";
+        final String userName = "잉";
 
         // when
         final Long customerId = customerDao.findByName(userName).orElseThrow().getId();
@@ -46,12 +43,12 @@ public class CustomerDaoTest {
     void findIdByUserNameTestIgnoreUpperLowerCase() {
 
         // given
-        final String userName = "gwangyeol-iM";
+        final String userName = "잉";
 
         // when
         final Long customerId = customerDao.findByName(userName).orElseThrow().getId();
 
         // then
-        assertThat(customerId).isEqualTo(16L);
+        assertThat(customerId).isEqualTo(1L);
     }
 }

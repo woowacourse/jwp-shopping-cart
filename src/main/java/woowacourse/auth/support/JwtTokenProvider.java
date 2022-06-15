@@ -13,7 +13,7 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import woowacourse.auth.domain.TokenProvider;
-import woowacourse.exception.TokenInvalidException;
+import woowacourse.exception.unauthorized.TokenInvalidException;
 
 @Component
 public class JwtTokenProvider implements TokenProvider {
@@ -45,9 +45,8 @@ public class JwtTokenProvider implements TokenProvider {
         try {
             final Claims body = extractBody(token);
 
-            return body.keySet()
+            return body.entrySet()
                     .stream()
-                    .map(key -> Map.entry(key, body.get(key)))
                     .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
         } catch (JwtException | IllegalArgumentException e) {
             throw new TokenInvalidException();

@@ -1,6 +1,8 @@
-package woowacourse.exception;
+package woowacourse.exception.notfound;
 
-public class CustomerNotFoundException extends IllegalArgumentException {
+import woowacourse.exception.NotFoundException;
+
+public class CustomerNotFoundException extends NotFoundException {
     private static final String DEFAULT_MESSAGE = "요청하신 회원을 찾을 수 없습니다";
 
     public CustomerNotFoundException() {

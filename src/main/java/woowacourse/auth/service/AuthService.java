@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import woowacourse.auth.domain.TokenProvider;
 import woowacourse.auth.ui.dto.TokenRequest;
-import woowacourse.exception.LoginFailureException;
+import woowacourse.exception.unauthorized.LoginFailureException;
 import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.service.SpringCustomerService;
 
@@ -24,7 +24,7 @@ public class AuthService implements AuthenticationService {
 
     @Override
     public String getToken(TokenRequest tokenRequest) {
-        final Customer customer = customerService.findByEmail(tokenRequest.getEmail());
+        final Customer customer = customerService.getByEmail(tokenRequest.getEmail());
         validatePassword(tokenRequest, customer);
 
         return tokenProvider.createToken(Map.of("id", customer.getId()));
