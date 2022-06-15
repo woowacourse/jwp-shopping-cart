@@ -6,9 +6,9 @@ import woowacourse.auth.exception.AuthException;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.customer.Customer;
 import woowacourse.shoppingcart.domain.customer.Email;
-import woowacourse.shoppingcart.dto.CustomerProfileRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerProfileRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @Service
@@ -17,7 +17,7 @@ public class CustomerService {
 
     private final CustomerDao customerDao;
 
-    public CustomerService(final CustomerDao customerDao) {
+    public CustomerService(CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
 
@@ -34,11 +34,12 @@ public class CustomerService {
         return customer;
     }
 
-    public void checkPassword(final String emailValue, final PasswordRequest passwordRequest) {
+    public boolean checkPassword(final String emailValue, final PasswordRequest passwordRequest) {
         Email email = new Email(emailValue);
         validateExists(email);
         customerDao.findByEmailAndPassword(email, passwordRequest.toPassword())
                 .orElseThrow(() -> new InvalidCustomerException("비밀번호가 일치하지 않습니다."));
+        return true;
     }
 
     public Customer findByEmail(final String emailValue) {

@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.application.CustomerService;
 import woowacourse.shoppingcart.domain.customer.Customer;
-import woowacourse.shoppingcart.dto.CustomerProfileRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.EmailUniqueCheckResponse;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerProfileRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.EmailUniqueCheckResponse;
+import woowacourse.shoppingcart.dto.customer.PasswordCheckResponse;
+import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 
 @Controller
 @RequestMapping("/api/members")
@@ -30,7 +31,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/check-email")
+    @GetMapping("/email-check")
     public ResponseEntity<EmailUniqueCheckResponse> checkDuplicateEmail(@RequestParam final String email) {
         final EmailUniqueCheckResponse emailDuplicateCheckResponse =
                 new EmailUniqueCheckResponse(customerService.isDistinctEmail(email));
@@ -45,10 +46,10 @@ public class CustomerController {
     }
 
     @PostMapping("/password-check")
-    public ResponseEntity<Void> checkPassword(@AuthenticationPrincipal final String email,
+    public ResponseEntity<PasswordCheckResponse> checkPassword(@AuthenticationPrincipal final String email,
                                               @RequestBody @Valid final PasswordRequest passwordRequest) {
-        customerService.checkPassword(email, passwordRequest);
-        return ResponseEntity.noContent().build();
+        boolean checkPassword = customerService.checkPassword(email, passwordRequest);
+        return ResponseEntity.ok().body(new PasswordCheckResponse(String.valueOf(checkPassword)));
     }
 
     @GetMapping("/me")

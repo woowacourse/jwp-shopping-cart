@@ -6,12 +6,13 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
@@ -29,13 +30,13 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    private ExtractableResponse<Response> 이메일_중복_체크(final String email) {
-        return RestAssured
+    private void 이메일_중복_체크(final String email) {
+        RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/members/email-check?email=" + email)
+                .when().get("/api/members/email-check?email=" + email)
                 .then().log().all()
-                .extract();
+                .statusCode(HttpStatus.OK.value());
     }
 
     protected ExtractableResponse<Response> 회원가입(final CustomerRequest customerRequest) {
@@ -56,7 +57,7 @@ public class AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/login")
                 .then().log().all()
-                .extract().as(TokenResponse.class).getAccessToken();
+                .extract().as(TokenResponse.class).getToken();
     }
 
     private ExtractableResponse<Response> 비밀번호_확인(final String accessToken, final PasswordRequest passwordRequest) {

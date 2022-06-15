@@ -13,23 +13,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.CustomerProfileRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.EmailUniqueCheckResponse;
-import woowacourse.shoppingcart.dto.PasswordRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerProfileRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerRequest;
+import woowacourse.shoppingcart.dto.customer.CustomerResponse;
+import woowacourse.shoppingcart.dto.customer.EmailUniqueCheckResponse;
+import woowacourse.shoppingcart.dto.customer.PasswordCheckResponse;
+import woowacourse.shoppingcart.dto.customer.PasswordRequest;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
 @SpringBootTest
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql", "classpath:products.sql"})
 class CustomerControllerTest {
 
     private final CustomerController customerController;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public CustomerControllerTest(final CustomerController customerController) {
+    public CustomerControllerTest(final CustomerController customerController, final JdbcTemplate jdbcTemplate) {
         this.customerController = customerController;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @DisplayName("이메일이 중복되는지 확인한다.")
@@ -87,9 +91,10 @@ class CustomerControllerTest {
     void checkPassword() {
         final PasswordRequest passwordRequest = new PasswordRequest("password123!");
 
-        final ResponseEntity<Void> response = customerController.checkPassword("email@email.com", passwordRequest);
+        final ResponseEntity<PasswordCheckResponse> response = customerController.checkPassword("email@email.com",
+                passwordRequest);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @DisplayName("비밀번호를 확인에 실패한다.")
@@ -161,6 +166,10 @@ class CustomerControllerTest {
     @DisplayName("탈퇴한다.")
     @Test
     void delete() {
+        final String sql = "INSERT INTO cart_item(customer_id, product_id, quantity) VALUES(?, ?, ?)";
+
+        jdbcTemplate.update(sql, 1L, 1L, 10);
+
         final ResponseEntity<Void> response = customerController.delete("email@email.com");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
