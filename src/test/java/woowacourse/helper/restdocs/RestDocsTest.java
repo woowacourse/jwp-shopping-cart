@@ -14,12 +14,21 @@ import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.auth.ui.AuthController;
 import woowacourse.member.application.MemberService;
 import woowacourse.member.ui.MemberController;
+import woowacourse.shoppingcart.application.CartService;
+import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.application.ProductService;
+import woowacourse.shoppingcart.ui.CartItemController;
+import woowacourse.shoppingcart.ui.OrderController;
+import woowacourse.shoppingcart.ui.ProductController;
 
 @AutoConfigureRestDocs
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @WebMvcTest({
         MemberController.class,
-        AuthController.class
+        AuthController.class,
+        CartItemController.class,
+        OrderController.class,
+        ProductController.class
 })
 public abstract class RestDocsTest {
 
@@ -34,6 +43,15 @@ public abstract class RestDocsTest {
 
     @MockBean
     protected AuthService authService;
+
+    @MockBean
+    protected ProductService productService;
+
+    @MockBean
+    protected OrderService orderService;
+
+    @MockBean
+    protected CartService cartService;
 
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;

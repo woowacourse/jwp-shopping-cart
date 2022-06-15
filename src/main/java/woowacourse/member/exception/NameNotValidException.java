@@ -1,5 +1,7 @@
 package woowacourse.member.exception;
 
+import woowacourse.exception.BadRequestException;
+
 public class NameNotValidException extends BadRequestException {
 
     public NameNotValidException() {

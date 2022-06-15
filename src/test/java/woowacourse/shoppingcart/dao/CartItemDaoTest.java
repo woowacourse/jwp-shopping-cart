@@ -1,101 +1,148 @@
 package woowacourse.shoppingcart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.helper.fixture.MemberFixture.EMAIL;
+import static woowacourse.helper.fixture.MemberFixture.NAME;
+import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
+import static woowacourse.helper.fixture.MemberFixture.createMember;
+import static woowacourse.helper.fixture.ProductFixture.createProduct;
+
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.Product;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import woowacourse.member.dao.MemberDao;
+import woowacourse.shoppingcart.domain.Cart;
 
 @JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql("classpath:schema.sql")
 public class CartItemDaoTest {
-    private final CartItemDao cartItemDao;
-    private final ProductDao productDao;
-    private final JdbcTemplate jdbcTemplate;
 
-    public CartItemDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        cartItemDao = new CartItemDao(jdbcTemplate);
-        productDao = new ProductDao(jdbcTemplate);
-    }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private CartItemDao cartItemDao;
+    private ProductDao productDao;
+    private MemberDao memberDao;
 
     @BeforeEach
     void setUp() {
-        productDao.save(new Product("banana", 1_000, "woowa1.com"));
-        productDao.save(new Product("apple", 2_000, "woowa2.com"));
-
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 1L);
-        jdbcTemplate.update("INSERT INTO cart_item(customer_id, product_id) VALUES(?, ?)", 1L, 2L);
+        cartItemDao = new CartItemDao(jdbcTemplate);
+        productDao = new ProductDao(jdbcTemplate);
+        memberDao = new MemberDao(jdbcTemplate);
     }
 
-    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다. ")
+    @DisplayName("멤버 아이디로 카트들을 가져온다.")
+    @Test
+    void findCartsByMemberId() {
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long productId = productDao.save(createProduct("banana", 1_000, "woowa1.com"));
+        Long productId2 = productDao.save(createProduct("apple", 2_000, "woowa2.com"));
+
+        cartItemDao.addCartItem(memberId, productId);
+        cartItemDao.addCartItem(memberId, productId2);
+
+        assertThat(
+                cartItemDao.findCartsByMemberId(memberId).stream()
+                        .map(Cart::getName)
+                        .collect(Collectors.toList())
+        ).containsExactly("banana", "apple");
+    }
+
+    @DisplayName("카드 아이디로 카트를 가져온다.")
+    @Test
+    void findCartById() {
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long productId = productDao.save(createProduct("banana", 1_000, "woowa1.com"));
+
+        Long cartId = cartItemDao.addCartItem(memberId, productId);
+
+        assertThat(cartItemDao.findCartById(cartId).getName()).isEqualTo("banana");
+    }
+
+    @DisplayName("멤버 아이디를 넣으면, 해당 장바구니 아이디들을 가져온다.")
+    @Test
+    void findIdsByMemberId() {
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long productId = productDao.save(createProduct("banana", 1_000, "woowa1.com"));
+
+        cartItemDao.addCartItem(memberId, productId);
+
+        final List<Long> cartIds = cartItemDao.findIdsByMemberId(1L);
+        assertThat(cartIds).containsExactly(1L);
+    }
+
+    @DisplayName("멤버 아이디와 상품 아이디로 장바구니 아이디를 찾는다.")
+    @Test
+    void findIdByMemberIdAndProductId() {
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long productId = productDao.save(createProduct("banana", 1_000, "woowa1.com"));
+
+        Long cartId = cartItemDao.addCartItem(memberId, productId);
+
+        assertThat(cartItemDao.findIdByMemberIdAndProductId(memberId, productId)).isEqualTo(cartId);
+    }
+
+    @DisplayName("카트 상품이 이미 존재하는지 확인한다.")
+    @Test
+    void isValidCartItem() {
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long productId = productDao.save(createProduct("banana", 1_000, "woowa1.com"));
+
+        cartItemDao.addCartItem(memberId, productId);
+
+        assertThat(cartItemDao.isValidCartItem(memberId, productId)).isTrue();
+    }
+
+    @DisplayName("카트에 아이템을 담으면, 담긴 카트 아이디를 반환한다.")
     @Test
     void addCartItem() {
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long productId = productDao.save(createProduct("banana", 1_000, "woowa1.com"));
 
-        // given
-        final Long customerId = 1L;
-        final Long productId = 1L;
-
-        // when
-        final Long cartId = cartItemDao.addCartItem(customerId, productId);
-
-        // then
-        assertThat(cartId).isEqualTo(3L);
+        assertThat(cartItemDao.addCartItem(memberId, productId)).isEqualTo(1L);
     }
 
-    @DisplayName("커스터머 아이디를 넣으면, 해당 커스터머가 구매한 상품의 아이디 목록을 가져온다.")
+    @DisplayName("카트 물품 수량을 하나 추가한다.")
     @Test
-    void findProductIdsByCustomerId() {
+    void addQuantityCartItem() {
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long productId = productDao.save(createProduct("banana", 1_000, "woowa1.com"));
 
-        // given
-        final Long customerId = 1L;
+        Long cartId = cartItemDao.addCartItem(memberId, productId);
+        cartItemDao.addQuantityCartItem(memberId, productId);
 
-        // when
-        final List<Long> productsIds = cartItemDao.findProductIdsByCustomerId(customerId);
-
-        // then
-        assertThat(productsIds).containsExactly(1L, 2L);
+        assertThat(cartItemDao.findCartById(cartId).getQuantity()).isEqualTo(2);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("카트 물품 수량을 업데이트 한다.")
     @Test
-    void findIdsByCustomerId() {
+    void updateCartItemQuantity() {
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long productId = productDao.save(createProduct("banana", 1_000, "woowa1.com"));
 
-        // given
-        final Long customerId = 1L;
+        Long cartId = cartItemDao.addCartItem(memberId, productId);
+        cartItemDao.updateCartItemQuantity(cartId, 5);
 
-        // when
-        final List<Long> cartIds = cartItemDao.findIdsByCustomerId(customerId);
-
-        // then
-        assertThat(cartIds).containsExactly(1L, 2L);
+        assertThat(cartItemDao.findCartById(cartId).getQuantity()).isEqualTo(5);
     }
 
-    @DisplayName("Customer Id를 넣으면, 해당 장바구니 Id들을 가져온다.")
+    @DisplayName("카트 물품을 삭제한다.")
     @Test
     void deleteCartItem() {
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long productId = productDao.save(createProduct("banana", 1_000, "woowa1.com"));
 
-        // given
-        final Long cartId = 1L;
-
-        // when
+        Long cartId = cartItemDao.addCartItem(memberId, productId);
         cartItemDao.deleteCartItem(cartId);
 
-        // then
-        final Long customerId = 1L;
-        final List<Long> productIds = cartItemDao.findProductIdsByCustomerId(customerId);
-
-        assertThat(productIds).containsExactly(2L);
+        assertThat(cartItemDao.isValidCartItem(memberId, productId)).isFalse();
     }
 }

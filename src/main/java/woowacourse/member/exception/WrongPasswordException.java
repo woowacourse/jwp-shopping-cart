@@ -1,5 +1,7 @@
 package woowacourse.member.exception;
 
+import woowacourse.exception.BadRequestException;
+
 public class WrongPasswordException extends BadRequestException {
 
     public WrongPasswordException() {

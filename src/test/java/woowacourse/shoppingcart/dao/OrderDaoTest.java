@@ -1,58 +1,66 @@
 package woowacourse.shoppingcart.dao;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.jdbc.Sql;
+import static org.assertj.core.api.Assertions.assertThat;
+import static woowacourse.helper.fixture.MemberFixture.EMAIL;
+import static woowacourse.helper.fixture.MemberFixture.NAME;
+import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
+import static woowacourse.helper.fixture.MemberFixture.createMember;
 
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+import woowacourse.member.dao.MemberDao;
 
 @JdbcTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql("classpath:schema.sql")
 class OrderDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final OrderDao orderDao;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    public OrderDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.orderDao = new OrderDao(jdbcTemplate);
+    private OrderDao orderDao;
+    private MemberDao memberDao;
+
+    @BeforeEach
+    void setUp() {
+        orderDao = new OrderDao(jdbcTemplate);
+        memberDao = new MemberDao(jdbcTemplate);
     }
 
     @DisplayName("Order를 추가하는 기능")
     @Test
     void addOrders() {
-        //given
-        final Long customerId = 1L;
+        Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
 
-        //when
-        final Long orderId = orderDao.addOrders(customerId);
+        final Long orderId = orderDao.addOrders(id);
 
-        //then
         assertThat(orderId).isNotNull();
     }
 
-    @DisplayName("CustomerId 집합을 이용하여 OrderId 집합을 얻는 기능")
+    @DisplayName("MemberId 집합을 이용하여 OrderId 집합을 얻는 기능")
     @Test
-    void findOrderIdsByCustomerId() {
-        //given
-        final Long customerId = 1L;
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
-        jdbcTemplate.update("INSERT INTO ORDERS (customer_id) VALUES (?)", customerId);
+    void findOrderIdsByMemberId() {
+        Long id = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        orderDao.addOrders(id);
 
-        //when
-        final List<Long> orderIdsByCustomerId = orderDao.findOrderIdsByCustomerId(customerId);
+        final List<Long> orderIdsByMemberId = orderDao.findOrderIdsByMemberId(id);
 
-        //then
-        assertThat(orderIdsByCustomerId).hasSize(2);
+        assertThat(orderIdsByMemberId).hasSize(1);
     }
 
+    @DisplayName("존재하는 OrderId 인지 체크한다.")
+    @Test
+    void isValidOrderId() {
+        Long memberId = memberDao.save(createMember(EMAIL, PASSWORD, NAME));
+        Long orderId = orderDao.addOrders(memberId);
+
+        assertThat(orderDao.isValidOrderId(memberId, orderId)).isTrue();
+    }
 }

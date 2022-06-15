@@ -7,13 +7,13 @@ import static woowacourse.helper.fixture.MemberFixture.PASSWORD;
 import static woowacourse.helper.fixture.MemberFixture.createMember;
 
 import java.util.Optional;
-import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import woowacourse.member.domain.Member;
 import woowacourse.member.infrastructure.SHA256PasswordEncoder;
 
@@ -22,13 +22,13 @@ import woowacourse.member.infrastructure.SHA256PasswordEncoder;
 public class MemberDaoTest {
 
     @Autowired
-    private DataSource dataSource;
+    private JdbcTemplate jdbcTemplate;
 
     private MemberDao memberDao;
 
     @BeforeEach
     void setUp() {
-        memberDao = new MemberDao(dataSource);
+        memberDao = new MemberDao(jdbcTemplate);
     }
 
     @DisplayName("회원을 저장한다.")

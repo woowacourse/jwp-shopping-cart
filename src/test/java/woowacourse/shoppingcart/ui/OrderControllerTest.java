@@ -1,128 +1,169 @@
 package woowacourse.shoppingcart.ui;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
+import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static woowacourse.helper.fixture.MemberFixture.BEARER;
+import static woowacourse.helper.fixture.MemberFixture.TOKEN;
+import static woowacourse.helper.fixture.ProductFixture.IMAGE;
+import static woowacourse.helper.fixture.ProductFixture.NAME;
+import static woowacourse.helper.fixture.ProductFixture.PRICE;
+import static woowacourse.helper.fixture.ProductFixture.createProductWithId;
+import static woowacourse.helper.restdocs.RestDocsUtils.getRequestPreprocessor;
+import static woowacourse.helper.restdocs.RestDocsUtils.getResponsePreprocessor;
+
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import woowacourse.shoppingcart.domain.OrderDetail;
+import org.springframework.test.web.servlet.ResultActions;
+import woowacourse.auth.exception.WrongTokenException;
+import woowacourse.helper.fixture.OrderFixture;
+import woowacourse.helper.restdocs.RestDocsTest;
+import woowacourse.shoppingcart.dto.OrderDetailResponse;
 import woowacourse.shoppingcart.dto.OrderRequest;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.application.OrderService;
+import woowacourse.shoppingcart.dto.OrdersResponse;
+import woowacourse.shoppingcart.exception.InvalidCartItemException;
+import woowacourse.shoppingcart.exception.InvalidOrderException;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+@DisplayName("주문 컨트롤러 단위테스트")
+public class OrderControllerTest extends RestDocsTest {
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@SpringBootTest
-@AutoConfigureMockMvc
-public class OrderControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private OrderService orderService;
-
-    @DisplayName("CREATED와 Location을 반환한다.")
+    @DisplayName("주문 등록에 성공한다.")
     @Test
-    void addOrder() throws Exception {
-        // given
-        final Long cartId = 1L;
-        final int quantity = 5;
-        final Long cartId2 = 1L;
-        final int quantity2 = 5;
-        final String customerName = "pobi";
-        final List<OrderRequest> requestDtos =
-                Arrays.asList(new OrderRequest(cartId, quantity), new OrderRequest(cartId2, quantity2));
+    void register() throws Exception {
+        OrderRequest request = new OrderRequest(1L);
+        given(orderService.addOrder(anyList(), anyLong())).willReturn(1L);
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
 
-        final Long expectedOrderId = 1L;
-        when(orderService.addOrder(any(), eq(customerName)))
-                .thenReturn(expectedOrderId);
+        ResultActions resultActions = mockMvc.perform(post("/api/members/me/orders")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(List.of(request))))
+                .andExpect(status().isCreated());
 
-        // when // then
-        mockMvc.perform(post("/api/customers/" + customerName + "/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(objectMapper.writeValueAsString(requestDtos))
-        ).andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"))
-                .andExpect(header().string("Location",
-                        "/api/" + customerName + "/orders/" + expectedOrderId));
+        //docs
+        resultActions.andDo(document("order-register",
+                getRequestPreprocessor(),
+                getResponsePreprocessor(),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("토큰")
+                ),
+                requestFields(
+                        fieldWithPath("[].cartId").type(NUMBER).description("id")
+                )));
     }
 
-    @DisplayName("사용자 이름과 주문 ID를 통해 단일 주문 내역을 조회하면, 단일 주문 내역을 받는다.")
+    @DisplayName("주문 등록에 실패한다.")
     @Test
-    void findOrder() throws Exception {
+    void failedRegister() throws Exception {
+        OrderRequest request = new OrderRequest(1L);
 
-        // given
-        final String customerName = "pobi";
-        final Long orderId = 1L;
-        final Orders expected = new Orders(orderId,
-                Collections.singletonList(new OrderDetail(2L, 1_000, "banana", "imageUrl", 2)));
+        doThrow(InvalidCartItemException.class).when(orderService).addOrder(anyList(), anyLong());
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
 
-        when(orderService.findOrderById(customerName, orderId))
-                .thenReturn(expected);
-
-        // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/" + orderId)
-        ).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(orderId))
-                .andExpect(jsonPath("orderDetails[0].productId").value(2L))
-                .andExpect(jsonPath("orderDetails[0].price").value(1_000))
-                .andExpect(jsonPath("orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("orderDetails[0].imageUrl").value("imageUrl"))
-                .andExpect(jsonPath("orderDetails[0].quantity").value(2));
+        mockMvc.perform(post("/api/members/me/orders")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(List.of(request))))
+                .andExpect(status().isBadRequest());
     }
 
-    @DisplayName("사용자 이름을 통해 주문 내역 목록을 조회하면, 주문 내역 목록을 받는다.")
+    @DisplayName("주문을 조회한다.")
     @Test
-    void findOrders() throws Exception {
-        // given
-        final String customerName = "pobi";
-        final List<Orders> expected = Arrays.asList(
-                new Orders(1L, Collections.singletonList(
-                        new OrderDetail(1L, 1_000, "banana", "imageUrl", 2))),
-                new Orders(2L, Collections.singletonList(
-                        new OrderDetail(2L, 2_000, "apple", "imageUrl2", 4)))
+    void getOrder() throws Exception {
+        OrderDetailResponse orderDetailResponse = OrderDetailResponse.from(
+                OrderFixture.createProduct(createProductWithId(1L, NAME, PRICE, IMAGE), 5)
         );
+        OrdersResponse ordersResponse = new OrdersResponse(1L, List.of(orderDetailResponse));
+        given(orderService.findOrderById(anyLong(), anyLong())).willReturn(ordersResponse);
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
 
-        when(orderService.findOrdersByCustomerName(customerName))
-                .thenReturn(expected);
-
-        // when // then
-        mockMvc.perform(get("/api/customers/" + customerName + "/orders/")
-        ).andDo(print())
+        ResultActions resultActions = mockMvc.perform(get("/api/members/me/orders/1")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].orderDetails[0].productId").value(1L))
-                .andExpect(jsonPath("$[0].orderDetails[0].price").value(1_000))
-                .andExpect(jsonPath("$[0].orderDetails[0].name").value("banana"))
-                .andExpect(jsonPath("$[0].orderDetails[0].imageUrl").value("imageUrl"))
-                .andExpect(jsonPath("$[0].orderDetails[0].quantity").value(2))
+                .andExpect(content().string(objectMapper.writeValueAsString(ordersResponse)));
 
-                .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].orderDetails[0].productId").value(2L))
-                .andExpect(jsonPath("$[1].orderDetails[0].price").value(2_000))
-                .andExpect(jsonPath("$[1].orderDetails[0].name").value("apple"))
-                .andExpect(jsonPath("$[1].orderDetails[0].imageUrl").value("imageUrl2"))
-                .andExpect(jsonPath("$[1].orderDetails[0].quantity").value(4));
+        //docs
+        resultActions.andDo(document("order-get",
+                getRequestPreprocessor(),
+                getResponsePreprocessor(),
+                responseFields(
+                        fieldWithPath("orderId").type(NUMBER).description("id"),
+                        subsectionWithPath("orderDetails").type(ARRAY).description("상세")
+                )));
+    }
+
+    @DisplayName("주문을 조회에 실패한다.")
+    @Test
+    void failedGetOrder() throws Exception {
+        doThrow(InvalidOrderException.class).when(orderService).findOrderById(anyLong(), anyLong());
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        mockMvc.perform(get("/api/members/me/orders/1")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("주문 목록을 조회한다.")
+    @Test
+    void getOrders() throws Exception {
+        OrderDetailResponse orderDetailResponse = OrderDetailResponse.from(
+                OrderFixture.createProduct(createProductWithId(1L, NAME, PRICE, IMAGE), 5)
+        );
+        OrdersResponse ordersResponse = new OrdersResponse(1L, List.of(orderDetailResponse));
+        given(orderService.findOrdersByMemberId(anyLong())).willReturn(List.of(ordersResponse));
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(true);
+
+        ResultActions resultActions = mockMvc.perform(get("/api/members/me/orders")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(List.of(ordersResponse))));
+
+        //docs
+        resultActions.andDo(document("order-list-get",
+                getRequestPreprocessor(),
+                getResponsePreprocessor(),
+                responseFields(
+                        fieldWithPath("[].orderId").type(NUMBER).description("id"),
+                        subsectionWithPath("[].orderDetails").type(ARRAY).description("상세")
+                )));
+    }
+
+    @DisplayName("주문목록을 조회에 실패한다.")
+    @Test
+    void failedGetOrders() throws Exception {
+        doThrow(WrongTokenException.class).when(orderService).findOrdersByMemberId(anyLong());
+        given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+        given(jwtTokenProvider.validateToken(anyString())).willReturn(false);
+
+        mockMvc.perform(get("/api/members/me/orders")
+                        .header(HttpHeaders.AUTHORIZATION, BEARER + TOKEN)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }

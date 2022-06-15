@@ -1,65 +1,67 @@
 package woowacourse.shoppingcart.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import woowacourse.shoppingcart.dao.CartItemDao;
-import woowacourse.shoppingcart.dao.CustomerDao;
-import woowacourse.shoppingcart.dao.ProductDao;
 import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.CartItemResponse;
+import woowacourse.shoppingcart.dto.UpdateQuantityRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class CartService {
 
     private final CartItemDao cartItemDao;
-    private final CustomerDao customerDao;
-    private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final CustomerDao customerDao, final ProductDao productDao) {
+    public CartService(CartItemDao cartItemDao) {
         this.cartItemDao = cartItemDao;
-        this.customerDao = customerDao;
-        this.productDao = productDao;
     }
 
-    public List<Cart> findCartsByCustomerName(final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
+    @Transactional(readOnly = true)
+    public List<CartItemResponse> findCartsByMemberId(final Long memberId) {
+        final List<Cart> carts = cartItemDao.findCartsByMemberId(memberId);
+        return carts.stream()
+                .map(CartItemResponse::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
-    private List<Long> findCartIdsByCustomerName(final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
-        return cartItemDao.findIdsByCustomerId(customerId);
+    @Transactional(readOnly = true)
+    private List<Long> findCartIdsByMemberId(final Long memberId) {
+        return cartItemDao.findIdsByMemberId(memberId);
     }
 
-    public Long addCart(final Long productId, final String customerName) {
-        final Long customerId = customerDao.findIdByUserName(customerName);
+    public Long addCart(final Long productId, final Long memberId) {
         try {
-            return cartItemDao.addCartItem(customerId, productId);
+            return addCartItemAndReturnId(productId, memberId);
         } catch (Exception e) {
             throw new InvalidProductException();
         }
     }
 
-    public void deleteCart(final String customerName, final Long cartId) {
-        validateCustomerCart(cartId, customerName);
+    private Long addCartItemAndReturnId(Long productId, Long memberId) {
+        if (cartItemDao.isValidCartItem(memberId, productId)) {
+            cartItemDao.addQuantityCartItem(memberId, productId);
+            return cartItemDao.findIdByMemberIdAndProductId(memberId, productId);
+        }
+        return cartItemDao.addCartItem(memberId, productId);
+    }
+
+    public void updateCartItemQuantity(final Long cartId, final UpdateQuantityRequest updateQuantityRequest) {
+        cartItemDao.updateCartItemQuantity(cartId, updateQuantityRequest.getQuantity());
+    }
+
+    public void deleteCart(final Long memberId, final Long cartId) {
+        validateMemberCart(cartId, memberId);
         cartItemDao.deleteCartItem(cartId);
     }
 
-    private void validateCustomerCart(final Long cartId, final String customerName) {
-        final List<Long> cartIds = findCartIdsByCustomerName(customerName);
+    @Transactional(readOnly = true)
+    private void validateMemberCart(final Long cartId, final Long memberId) {
+        final List<Long> cartIds = findCartIdsByMemberId(memberId);
         if (cartIds.contains(cartId)) {
             return;
         }

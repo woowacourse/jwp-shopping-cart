@@ -53,3 +53,80 @@ include::{snippets}/member-delete/http-request.adoc[]
 === response
 include::{snippets}/member-delete/http-response.adoc[]
 
+= Product api
+
+== product register
+=== request
+include::{snippets}/product-register/http-request.adoc[]
+=== response
+include::{snippets}/product-register/http-response.adoc[]
+
+== product get
+=== request
+include::{snippets}/product-get/http-request.adoc[]
+=== response
+include::{snippets}/product-get/http-response.adoc[]
+
+== product list get
+=== request
+include::{snippets}/product-list-get/http-request.adoc[]
+=== response
+include::{snippets}/product-list-get/http-response.adoc[]
+
+== product delete
+=== request
+include::{snippets}/product-delete/http-request.adoc[]
+=== response
+include::{snippets}/product-delete/http-response.adoc[]
+
+= Cart api
+
+== cart register
+=== request
+include::{snippets}/cart-register/http-request.adoc[]
+=== response
+include::{snippets}/cart-register/http-response.adoc[]
+
+== cart quantity update
+=== request
+include::{snippets}/cart-quantity-update/http-request.adoc[]
+=== response
+include::{snippets}/cart-quantity-update/http-response.adoc[]
+
+== cart list
+=== request
+include::{snippets}/cart-list-get/http-request.adoc[]
+=== response
+include::{snippets}/cart-list-get/http-response.adoc[]
+
+== cart delete
+=== request
+include::{snippets}/cart-delete/http-request.adoc[]
+=== response
+include::{snippets}/cart-delete/http-response.adoc[]
+
+= Order api
+
+== order register
+=== request
+include::{snippets}/order-register/http-request.adoc[]
+=== response
+include::{snippets}/order-register/http-response.adoc[]
+
+== order list
+=== request
+include::{snippets}/order-list-get/http-request.adoc[]
+=== response
+include::{snippets}/order-list-get/http-response.adoc[]
+
+== order get
+=== request
+include::{snippets}/order-get/http-request.adoc[]
+=== response
+include::{snippets}/order-get/http-response.adoc[]
+
+== order list
+=== request
+include::{snippets}/order-list-get/http-request.adoc[]
+=== response
+include::{snippets}/order-list-get/http-response.adoc[]
