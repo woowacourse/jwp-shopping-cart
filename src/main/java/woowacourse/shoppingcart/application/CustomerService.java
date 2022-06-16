@@ -7,25 +7,22 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.dto.CustomerRequest;
 import woowacourse.shoppingcart.dto.CustomerResponse;
 import woowacourse.shoppingcart.exception.DuplicateNameException;
-import woowacourse.shoppingcart.support.Encryptor;
 
 @Service
 @Transactional
 public class CustomerService {
     private final CustomerDao customerDao;
-    private final Encryptor encryptor;
 
-    public CustomerService(final CustomerDao customerDao, final Encryptor encryptor) {
+    public CustomerService(final CustomerDao customerDao) {
         this.customerDao = customerDao;
-        this.encryptor = encryptor;
     }
 
     public void addCustomer(final CustomerRequest customerRequest) {
-        if (customerDao.existsByName(customerRequest.getName())) {
+        if (customerDao.existsByName(customerRequest.getUserName())) {
             throw new DuplicateNameException();
         }
-        String encryptedPassword = encryptor.encrypt(customerRequest.getPassword());
-        customerDao.save(customerRequest.getName(), encryptedPassword);
+
+        customerDao.save(Customer.of(customerRequest.getUserName(), customerRequest.getPassword()));
     }
 
     public void deleteCustomer(final String userName) {
@@ -39,8 +36,7 @@ public class CustomerService {
     }
 
     public void editCustomer(final String userName, final CustomerRequest editRequest) {
-        String encryptedPassword = encryptor.encrypt(editRequest.getPassword());
-        customerDao.updateByName(userName, encryptedPassword);
+        customerDao.updateCustomer(Customer.of(userName, editRequest.getPassword()));
     }
 
     @Transactional(readOnly = true)

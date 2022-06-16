@@ -15,6 +15,6 @@ public class LoginCustomer {
     }
 
     public boolean isUnauthorized() {
-        return userName != null;
+        return userName == null;
     }
 }

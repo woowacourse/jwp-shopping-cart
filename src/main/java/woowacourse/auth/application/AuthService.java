@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.support.JwtTokenProvider;
 import woowacourse.shoppingcart.dao.CustomerDao;
+import woowacourse.shoppingcart.domain.Customer;
+
 import woowacourse.shoppingcart.support.Encryptor;
 
 
@@ -12,12 +14,10 @@ import woowacourse.shoppingcart.support.Encryptor;
 @Transactional
 public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
-    private final Encryptor encryptor;
     private final CustomerDao customerDao;
 
-    public AuthService(JwtTokenProvider jwtTokenProvider, Encryptor encryptor, CustomerDao customerDao) {
+    public AuthService(JwtTokenProvider jwtTokenProvider, CustomerDao customerDao) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.encryptor = encryptor;
         this.customerDao = customerDao;
     }
 
@@ -27,8 +27,8 @@ public class AuthService {
     }
 
     private void validateNameAndPassword(final String name, final String password) {
-        String encryptedPassword = encryptor.encrypt(password);
-        if (customerDao.existsIdByNameAndPassword(name, encryptedPassword)) {
+        if (customerDao.existsCustomer(Customer.of(name, password))) {
+
             return;
         }
         throw new AuthorizationException("로그인에 실패했습니다.");

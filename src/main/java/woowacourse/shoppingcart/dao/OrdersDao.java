@@ -9,11 +9,11 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class OrderDao {
+public class OrdersDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public OrderDao(final JdbcTemplate jdbcTemplate) {
+    public OrdersDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

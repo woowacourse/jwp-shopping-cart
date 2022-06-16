@@ -3,6 +3,7 @@ package woowacourse.shoppingcart.ui;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import woowacourse.auth.domain.LoginCustomer;
 import woowacourse.auth.support.AuthenticationPrincipal;
 import woowacourse.shoppingcart.dto.OrderRequest;
@@ -27,8 +28,9 @@ public class OrderController {
     public ResponseEntity<Void> addOrder(@AuthenticationPrincipal LoginCustomer loginCustomer,
                                          @RequestBody @Valid final List<OrderRequest> orderDetails) {
         final Long orderId = orderService.addOrder(loginCustomer.getUserName(), orderDetails);
+
         return ResponseEntity.created(
-                URI.create("/api/me/orders/" + orderId)).build();
+                URI.create("/api/customers/me/orders/"+orderId)).build();
     }
 
     @GetMapping("/{orderId}")

@@ -2,16 +2,16 @@ package woowacourse.shoppingcart.dto;
 
 public class CustomerResponse {
 
-    private String name;
+    private String userName;
 
     private CustomerResponse() {
     }
 
-    public CustomerResponse(final String name) {
-        this.name = name;
+    public CustomerResponse(final String userName) {
+        this.userName = userName;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 }

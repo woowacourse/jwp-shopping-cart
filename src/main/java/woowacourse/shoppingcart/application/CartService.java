@@ -10,8 +10,8 @@ import woowacourse.shoppingcart.domain.Product;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 import woowacourse.shoppingcart.exception.NotInCustomerCartItemException;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -30,13 +30,9 @@ public class CartService {
     public List<Cart> findCarts(final String userName) {
         final List<Long> cartIds = findCartIdsByCustomerName(userName);
 
-        final List<Cart> carts = new ArrayList<>();
-        for (final Long cartId : cartIds) {
-            final Long productId = cartItemDao.findProductIdById(cartId);
-            final Product product = productDao.findProductById(productId);
-            carts.add(new Cart(cartId, product));
-        }
-        return carts;
+        return cartIds.stream()
+                .map(this::assembleCartWithId)
+                .collect(Collectors.toList());
     }
 
     private List<Long> findCartIdsByCustomerName(final String userName) {
@@ -44,8 +40,20 @@ public class CartService {
         return cartItemDao.findIdsByCustomerId(customerId);
     }
 
+    private Cart assembleCartWithId(Long cartId) {
+        final Long productId = cartItemDao.findProductIdById(cartId);
+        final int quantity = cartItemDao.findQuantityByCartId(cartId);
+        final Product product = productDao.findProductById(productId);
+        return new Cart(cartId, product, quantity);
+    }
+
     public Long addCart(final String userName, final Long productId) {
         final Long customerId = customerDao.findIdByUserName(userName);
+
+        if(cartItemDao.existByCustomerIdAndProductId(customerId, productId)){
+            return cartItemDao.findIdByCustomerIdAndProductId(customerId, productId);
+        }
+
         try {
             return cartItemDao.addCartItem(customerId, productId);
         } catch (Exception e) {
@@ -60,10 +68,9 @@ public class CartService {
 
     private void validateCustomerCart(final Long cartId, final String customerName) {
         final List<Long> cartIds = findCartIdsByCustomerName(customerName);
-        if (cartIds.contains(cartId)) {
-            return;
+        if (!cartIds.contains(cartId)) {
+            throw new NotInCustomerCartItemException();
         }
-        throw new NotInCustomerCartItemException();
     }
 
     public void updateQuantity(Long cartId, int quantity) {

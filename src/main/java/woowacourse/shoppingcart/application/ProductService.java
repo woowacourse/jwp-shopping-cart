@@ -50,20 +50,22 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductResponse findProductById(final LoginCustomer loginCustomer, final Long productId) {
         Product product = productDao.findProductById(productId);
-        Long userId = customerDao.findIdByUserName(loginCustomer.getUserName());
-
-        if (loginCustomer.isUnauthorized() || !cartItemDao.existByCustomerIdAndProductId(userId, productId)) {
+        if(loginCustomer.isUnauthorized()){
             return ProductResponse.of(product);
         }
 
+        Long userId = customerDao.findIdByUserName(loginCustomer.getUserName());
         return assembleProductResponse(userId, productId);
     }
 
-    private ProductResponse assembleProductResponse(Long customerId, Long productId) {
+    private ProductResponse assembleProductResponse(Long userId, Long productId) {
         Product product = productDao.findProductById(productId);
-        Long cartId = cartItemDao.findIdByCustomerIdAndProductId(customerId, productId);
-        int cartQuantity = cartItemDao.findQuantityById(customerId);
+        if(!cartItemDao.existByCustomerIdAndProductId(userId, productId)){
+            return ProductResponse.of(product);
+        }
 
+        Long cartId = cartItemDao.findIdByCustomerIdAndProductId(userId, productId);
+        int cartQuantity = cartItemDao.findQuantityById(userId);
         return ProductResponse.of(product, cartId, cartQuantity);
     }
 

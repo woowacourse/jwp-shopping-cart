@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.domain.OrderDetail;
+import woowacourse.shoppingcart.dto.OrderQuantityInfo;
 
 import java.util.List;
 
@@ -22,14 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OrdersDetailDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
-    private final OrdersDetailDao ordersDetailDao;
+    private final OrderDetailDao ordersDetailDao;
     private long ordersId;
     private long productId;
     private long customerId;
 
     public OrdersDetailDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.ordersDetailDao = new OrdersDetailDao(jdbcTemplate);
+        this.ordersDetailDao = new OrderDetailDao(jdbcTemplate);
     }
 
     @BeforeEach
@@ -69,10 +69,10 @@ class OrdersDetailDaoTest {
         }
 
         //when
-        final List<OrderDetail> ordersDetailsByOrderId = ordersDetailDao
-                .findOrdersDetailsByOrderId(ordersId);
+        final List<OrderQuantityInfo> infosByOrderId = ordersDetailDao
+                .findOrderQuantityInfoByOrderId(ordersId);
 
         //then
-        assertThat(ordersDetailsByOrderId).hasSize(insertCount);
+        assertThat(infosByOrderId).hasSize(insertCount);
     }
 }

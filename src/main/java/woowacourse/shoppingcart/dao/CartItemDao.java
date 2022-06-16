@@ -9,6 +9,7 @@ import woowacourse.shoppingcart.exception.InvalidCartItemException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class CartItemDao {
@@ -49,7 +50,7 @@ public class CartItemDao {
             preparedStatement.setLong(2, productId);
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public void deleteCartItem(final Long id) {
@@ -68,16 +69,21 @@ public class CartItemDao {
 
     public Long findIdByCustomerIdAndProductId(Long customerId, Long productId) {
         final String query = "SELECT id FROM cart_item WHERE customer_id = ? and product_id = ?";
-        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getLong("customer_id"), customerId, productId);
+        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getLong("id"), customerId, productId);
     }
 
     public int findQuantityById(Long customerId) {
-        final String query = "SELECT product_quantity FROM cart_item WHERE customer_id = ?";
-        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getInt("product_quantity"), customerId);
+        final String query = "SELECT quantity FROM cart_item WHERE customer_id = ?";
+        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getInt("quantity"), customerId);
+    }
+
+    public int findQuantityByCartId(Long cartId) {
+        final String query = "SELECT quantity FROM cart_item WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> rs.getInt("quantity"), cartId);
     }
 
     public void updateProductQuantity(Long cartId, int quantity) {
-        final String query = "UPDATE cart_item SET product_quantity = ? WHERE id = ?";
+        final String query = "UPDATE cart_item SET quantity = ? WHERE id = ?";
         jdbcTemplate.update(query, quantity, cartId);
     }
 }
