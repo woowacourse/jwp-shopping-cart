@@ -1,132 +1,195 @@
 package woowacourse.shoppingcart.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static woowacourse.shoppingcart.acceptance.CartAcceptanceTest.장바구니_아이템_추가되어_있음;
-import static woowacourse.shoppingcart.acceptance.ProductAcceptanceTest.상품_등록되어_있음;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import java.util.Arrays;
-import java.util.Collections;
+import io.restassured.response.ValidatableResponse;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.domain.Orders;
-import woowacourse.shoppingcart.dto.OrderRequest;
+import woowacourse.shoppingcart.cart.dto.CartItemAdditionRequest;
+import woowacourse.shoppingcart.cart.dto.QuantityChangingRequest;
+import woowacourse.shoppingcart.order.dto.OrderCreationRequest;
 
-@DisplayName("주문 관련 기능")
-public class OrderAcceptanceTest extends AcceptanceTest {
-    private static final String USER = "puterism";
-    private Long cartId1;
-    private Long cartId2;
+class OrderAcceptanceTest extends AcceptanceTest {
 
-    public static ExtractableResponse<Response> 주문하기_요청(final String userName, final List<OrderRequest> orderRequests) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(orderRequests)
-                .when().post("/api/customers/{customerName}/orders", userName)
-                .then().log().all()
-                .extract();
-    }
+    private static final String REQUEST_URL = "/users/me/orders";
 
-    public static ExtractableResponse<Response> 주문_내역_조회_요청(final String userName) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders", userName)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 주문_단일_조회_요청(final String userName, final Long orderId) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/customers/{customerName}/orders/{orderId}", userName, orderId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static void 주문하기_성공함(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.header("Location")).isNotBlank();
-    }
-
-    public static Long 주문하기_요청_성공되어_있음(final String userName, final List<OrderRequest> orderRequests) {
-        final ExtractableResponse<Response> response = 주문하기_요청(userName, orderRequests);
-        return Long.parseLong(response.header("Location").split("/orders/")[1]);
-    }
-
-    public static void 주문_조회_응답됨(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-    }
-
-    public static void 주문_내역_포함됨(final ExtractableResponse<Response> response, final Long... orderIds) {
-        final List<Long> resultOrderIds = response.jsonPath().getList(".", Orders.class).stream()
-                .map(Orders::getId)
-                .collect(Collectors.toList());
-        assertThat(resultOrderIds).contains(orderIds);
-    }
-
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-
-        final Long productId1 = 상품_등록되어_있음("치킨", 10_000, "http://example.com/chicken.jpg");
-        final Long productId2 = 상품_등록되어_있음("맥주", 20_000, "http://example.com/beer.jpg");
-
-        cartId1 = 장바구니_아이템_추가되어_있음(USER, productId1);
-        cartId2 = 장바구니_아이템_추가되어_있음(USER, productId2);
-    }
-
-    @DisplayName("주문하기")
     @Test
+    @DisplayName("장바구니에 담긴 상품을 주문한다.")
     void addOrder() {
-        final List<OrderRequest> orderRequests = Stream.of(cartId1, cartId2)
-                .map(cartId -> new OrderRequest(cartId, 10))
-                .collect(Collectors.toList());
+        // given
+        postCartItem(new CartItemAdditionRequest(2L));
+        postCartItem(new CartItemAdditionRequest(5L));
+        postCartItem(new CartItemAdditionRequest(4L));
+        postCartItem(new CartItemAdditionRequest(1L));
 
-        final ExtractableResponse<Response> response = 주문하기_요청(USER, orderRequests);
+        final List<OrderCreationRequest> request = List.of(
+                new OrderCreationRequest(2L),
+                new OrderCreationRequest(5L),
+                new OrderCreationRequest(4L)
+        );
 
-        주문하기_성공함(response);
+        // when
+        final ValidatableResponse response = postOrder(request);
+
+        // then
+        response.statusCode(HttpStatus.CREATED.value())
+                .header(HttpHeaders.LOCATION, REQUEST_URL + "/" + 1);
     }
 
-    @DisplayName("주문 내역 조회")
     @Test
-    void getOrders() {
-        final Long orderId1 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId1, 2)));
-        final Long orderId2 = 주문하기_요청_성공되어_있음(USER, Collections.singletonList(new OrderRequest(cartId2, 5)));
+    @DisplayName("장바구니에 담겨있지 않은 상품을 주문하면 404를 반환한다.")
+    void addOrder_notContains_404() {
+        // given
+        postCartItem(new CartItemAdditionRequest(2L));
+        postCartItem(new CartItemAdditionRequest(5L));
 
-        final ExtractableResponse<Response> response = 주문_내역_조회_요청(USER);
+        final List<OrderCreationRequest> request = List.of(
+                new OrderCreationRequest(2L),
+                new OrderCreationRequest(5L),
+                new OrderCreationRequest(4L)
+        );
 
-        주문_조회_응답됨(response);
-        주문_내역_포함됨(response, orderId1, orderId2);
+        // when
+        final ValidatableResponse response = postOrder(request);
+
+        // then
+        response.statusCode(HttpStatus.NOT_FOUND.value())
+                .body("errorCode", equalTo("1200"))
+                .body("message", equalTo("장바구니에 포함되지 않은 상품이 존재합니다."));
     }
 
-    @DisplayName("주문 단일 조회")
     @Test
-    void getOrder() {
-        final Long orderId = 주문하기_요청_성공되어_있음(USER, Arrays.asList(
-                new OrderRequest(cartId1, 2),
-                new OrderRequest(cartId2, 4)
-        ));
+    @DisplayName("ID로 주문 단건 조회를 한다.")
+    void findOrder() {
+        // given
+        postCartItem(new CartItemAdditionRequest(2L));
+        putCartItemQuantity(2L, new QuantityChangingRequest(4));
 
-        final ExtractableResponse<Response> response = 주문_단일_조회_요청(USER, orderId);
+        postCartItem(new CartItemAdditionRequest(5L));
 
-        주문_조회_응답됨(response);
-        주문_조회됨(response, orderId);
+        postCartItem(new CartItemAdditionRequest(4L));
+        putCartItemQuantity(4L, new QuantityChangingRequest(7));
+
+        postCartItem(new CartItemAdditionRequest(1L));
+
+        final List<OrderCreationRequest> request = List.of(
+                new OrderCreationRequest(2L),
+                new OrderCreationRequest(5L),
+                new OrderCreationRequest(4L)
+        );
+        final String orderId = postOrder(request)
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split(REQUEST_URL + "/")[1];
+
+        // when
+        final ValidatableResponse response = RestAssured
+                .given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
+                .when()
+                .get(REQUEST_URL + "/{orderId}", orderId)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("id", equalTo(Integer.parseInt(orderId)))
+                .body("orderDetails.id", contains(2, 5, 4))
+                .body("orderDetails.quantity", contains(4, 1, 7))
+                .body("orderDetails.price", contains(700, 540, 2100))
+                .body("orderDetails.name", contains("포도", "오렌지", "딸기"))
+                .body("orderDetails.imageUrl", contains("podo.do", "orange.org", "strawberry.org"));
     }
 
-    private void 주문_조회됨(final ExtractableResponse<Response> response, final Long orderId) {
-        final Orders resultOrder = response.as(Orders.class);
-        assertThat(resultOrder.getId()).isEqualTo(orderId);
+    @Test
+    @DisplayName("ID에 해당하는 주문이 존재하지 않으면 404를 반환한다.")
+    void findOrder_notExistOrder_404() {
+        // when
+        final ValidatableResponse response = RestAssured
+                .given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
+                .when()
+                .get(REQUEST_URL + "/{orderId}", 999L)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.NOT_FOUND.value())
+                .body("errorCode", equalTo("2000"))
+                .body("message", equalTo("주문이 존재하지 않습니다."));
+    }
+
+    private ValidatableResponse postOrder(final List<OrderCreationRequest> request) {
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
+                .when()
+                .post(REQUEST_URL)
+                .then().log().all();
+    }
+
+    @Test
+    @DisplayName("Customer의 모든 주문 목록을 조회한다.")
+    void findOrders() {
+        // given
+        postCartItem(new CartItemAdditionRequest(2L));
+        putCartItemQuantity(2L, new QuantityChangingRequest(4));
+
+        postCartItem(new CartItemAdditionRequest(5L));
+
+        postCartItem(new CartItemAdditionRequest(4L));
+        putCartItemQuantity(4L, new QuantityChangingRequest(7));
+
+        postCartItem(new CartItemAdditionRequest(1L));
+
+        final List<OrderCreationRequest> firstOrderRequest = List.of(
+                new OrderCreationRequest(5L),
+                new OrderCreationRequest(4L)
+        );
+        final String firstOrderId = postOrder(firstOrderRequest)
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split(REQUEST_URL + "/")[1];
+
+        final List<OrderCreationRequest> secondOrderRequest = List.of(
+                new OrderCreationRequest(2L),
+                new OrderCreationRequest(1L)
+        );
+        final String secondOrderId = postOrder(secondOrderRequest)
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split(REQUEST_URL + "/")[1];
+
+        // when
+        final ValidatableResponse response = RestAssured
+                .given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, BEARER + token)
+                .when()
+                .get(REQUEST_URL)
+                .then().log().all();
+
+        final ValidatableResponse cartResponse = getCart();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("id", contains(Integer.parseInt(firstOrderId), Integer.parseInt(secondOrderId)))
+                .body("orderDetails.id", contains(contains(5, 4), contains(2, 1)))
+                .body("orderDetails.quantity", contains(contains(1, 7), contains(4, 1)))
+                .body("orderDetails.price", contains(contains(540, 2100), contains(700, 1600)))
+                .body("orderDetails.name", contains(contains("오렌지", "딸기"), contains("포도", "사과")))
+                .body("orderDetails.imageUrl",
+                        contains(contains("orange.org", "strawberry.org"), contains("podo.do", "apple.co.kr")));
+
+        cartResponse.statusCode(HttpStatus.OK.value())
+                .body("cartList", empty());
     }
 }

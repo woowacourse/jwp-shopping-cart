@@ -1,0 +1,45 @@
+= Shopping cartItem API - rick
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-product]]
+== 상품 관련 기능
+
+[[resources-product-products]]
+=== 상품 목록 조회
+
+==== HTTP Request
+
+include::{snippets}/products/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/products/http-response.adoc[]
+
+==== Response body
+
+include::{snippets}/products/response-fields.adoc[]
+
+[[resources-product-product]]
+=== 상품 상세 조회
+
+==== 성공
+
+===== HTTP Request
+
+include::{snippets}/product/http-request.adoc[]
+
+===== Request path variables
+
+include::{snippets}/product/path-parameters.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/product/http-response.adoc[]
+
+==== 실패 - 존재하지 않는 상품 조회
+
+===== HTTP Response
+
+include::{snippets}/product-not-exist-product/http-response.adoc[]

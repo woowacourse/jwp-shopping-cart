@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import woowacourse.shoppingcart.exception.unauthorized.UnauthorizedTokenException;
+import woowacourse.shoppingcart.exception.UnauthorizedTokenException;
 import woowacourse.shoppingcart.support.AuthorizationExtractor;
 import woowacourse.shoppingcart.support.JwtTokenProvider;
 
@@ -27,7 +27,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private boolean isPreflight(HttpServletRequest request) {
+    private boolean isPreflight(final HttpServletRequest request) {
         return HttpMethod.OPTIONS.matches(request.getMethod());
     }
 

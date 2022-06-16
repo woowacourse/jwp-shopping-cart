@@ -1,4 +1,4 @@
-= Shopping cart API - rick
+= Shopping cartItem API - rick
 :toc: left
 :toclevels: 2
 :sectlinks:
@@ -7,23 +7,22 @@
 == 인증 관련 기능
 
 [[resources-auth-login]]
-=== 로그인 성공
+=== 로그인
 
-==== HTTP request
+[[resources-auth-login-success]]
+==== 성공
+
+===== HTTP request
 
 include::{snippets}/login/http-request.adoc[]
 
-==== HTTP response
+===== HTTP response
 
 include::{snippets}/login/http-response.adoc[]
 
 [[resources-auth-login-fail]]
-=== 로그인 실패
+==== 로그인 실패
 
-==== HTTP request
-
-include::{snippets}/login-fail/http-request.adoc[]
-
-==== HTTP response
+===== HTTP response
 
 include::{snippets}/login-fail/http-response.adoc[]

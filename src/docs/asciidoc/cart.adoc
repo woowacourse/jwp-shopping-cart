@@ -1,0 +1,115 @@
+= Shopping cartItem API - rick
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-cartItem]]
+== 장바구니 관련 기능
+
+[[resources-cartItem-add-item]]
+=== 상품 추가
+
+[[resources-cartItem-add-item-success]]
+==== 성공
+
+===== HTTP Request
+
+include::{snippets}/add-cart-item/http-request.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/add-cart-item/http-response.adoc[]
+
+[[resources-cartItem-add-item-duplicate-product]]
+==== 실패 - 이미 추가한 상품 추가
+
+===== HTTP Response
+
+include::{snippets}/add-cart-item-duplicate-product/http-response.adoc[]
+
+[[resources-cartItem-add-item-not-exist-product]]
+==== 실패 - 존재하지 않는 상품 추가
+
+===== HTTP Response
+
+include::{snippets}/add-cart-item-not-exist-product/http-response.adoc[]
+
+[[resources-cartItem-get-cartItem-items]]
+=== 장바구니 상품 목록 조회
+
+==== HTTP Request
+
+include::{snippets}/get-cart-items/http-request.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/get-cart-items/http-response.adoc[]
+
+==== Response body fields
+
+include::{snippets}/get-cart-items/response-fields.adoc[]
+
+[[resources-cartItem-delete-cartItem-item]]
+=== 장바구니 상품 삭제
+
+==== HTTP Request
+
+include::{snippets}/delete-cart-item/http-request.adoc[]
+
+==== Request path variables
+
+include::{snippets}/delete-cart-item/path-parameters.adoc[]
+
+[[resources-cartItem-delete-cartItem-item-success]]
+==== 성공
+
+===== HTTP Response
+
+include::{snippets}/delete-cart-item/http-response.adoc[]
+
+[[resources-cartItem-delete-cartItem-item-not-exist-item]]
+==== 실패 - 존재하지 않는 상품
+
+===== HTTP Response
+
+include::{snippets}/delete-cart-item-not-exist-item/http-response.adoc[]
+
+[[resources-cartItem-change-quantity]]
+=== 장바구니 상품 수량 변경
+
+==== HTTP Request
+
+include::{snippets}/change-quantity-success/http-request.adoc[]
+
+==== Request path variables
+
+include::{snippets}/change-quantity-success/path-parameters.adoc[]
+
+==== Request body
+
+include::{snippets}/change-quantity-success/request-fields.adoc[]
+
+[[resources-cartItem-change-quantity-success]]
+==== 성공
+
+===== HTTP Response
+
+include::{snippets}/change-quantity-success/http-response.adoc[]
+
+===== Response body
+
+include::{snippets}/change-quantity-success/response-fields.adoc[]
+
+[[resources-cartItem-change-quantity-invalid-quantity]]
+==== 실패 - 잘못된 수량으로 요청한 경우
+
+===== HTTP Response
+
+include::{snippets}/change-quantity-invalid-quantity/http-response.adoc[]
+
+[[resources-cartItem-change-quantity-not-exist-product]]
+==== 실패 - 장바구니에 존재하지 않는 상품의 수량을 수정한 경우
+
+===== HTTP Response
+
+include::{snippets}/change-quantity-not-exist-product/http-response.adoc[]

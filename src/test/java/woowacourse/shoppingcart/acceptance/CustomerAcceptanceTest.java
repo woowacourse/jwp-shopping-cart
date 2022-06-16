@@ -10,14 +10,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import woowacourse.shoppingcart.dto.CustomerCreationRequest;
-import woowacourse.shoppingcart.dto.CustomerUpdationRequest;
-import woowacourse.shoppingcart.dto.LoginRequest;
-import woowacourse.shoppingcart.dto.LoginResponse;
+import woowacourse.shoppingcart.auth.dto.LoginRequest;
+import woowacourse.shoppingcart.auth.dto.LoginResponse;
+import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
+import woowacourse.shoppingcart.customer.dto.CustomerUpdationRequest;
 import woowacourse.shoppingcart.support.AuthorizationExtractor;
 
 @DisplayName("회원 관련 기능")
-public class CustomerAcceptanceTest extends AcceptanceTest {
+class CustomerAcceptanceTest extends AcceptanceTest {
+
+    private static final String REQUEST_URL = "/users/me";
 
     @DisplayName("회원가입이 정상적으로 된 경우 상태코드 204를 반환한다.")
     @Test
@@ -47,8 +49,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("errorCode", equalTo("1000"))
-                .body("message", equalTo(message));
+                .body(ERROR_CODE, equalTo("1000"))
+                .body(MESSAGE, equalTo(message));
     }
 
     @DisplayName("이메일이 중복 되었을 때, 상태코드 400을 반환한다.")
@@ -64,8 +66,8 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("errorCode", equalTo("1001"))
-                .body("message", equalTo("이메일이 중복입니다."));
+                .body(ERROR_CODE, equalTo("1001"))
+                .body(MESSAGE, equalTo("이메일이 중복입니다."));
     }
 
     @DisplayName("유효한 토큰으로 로그인한 자신의 정보를 요청한다.")
@@ -118,7 +120,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
                 .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(updateRequest)
-                .when().put("/users/me")
+                .when().put(REQUEST_URL)
                 .then().log().all();
 
         final ValidatableResponse updatedResponse = getMe(accessToken);
@@ -148,7 +150,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final ValidatableResponse response = RestAssured
                 .given().log().all()
                 .header(AuthorizationExtractor.AUTHORIZATION, AuthorizationExtractor.BEARER_TYPE + " " + accessToken)
-                .when().delete("/users/me")
+                .when().delete(REQUEST_URL)
                 .then().log().all();
 
         final ValidatableResponse loginResponse = postLogin(loginRequest);
@@ -156,7 +158,7 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
         loginResponse.statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("errorCode", equalTo("1002"))
-                .body("message", equalTo("로그인에 실패했습니다."));
+                .body(ERROR_CODE, equalTo("1002"))
+                .body(MESSAGE, equalTo("로그인에 실패했습니다."));
     }
 }

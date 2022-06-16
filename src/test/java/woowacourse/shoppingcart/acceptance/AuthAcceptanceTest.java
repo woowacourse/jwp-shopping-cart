@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
-import woowacourse.shoppingcart.dto.CustomerCreationRequest;
-import woowacourse.shoppingcart.dto.LoginRequest;
+import woowacourse.shoppingcart.auth.dto.LoginRequest;
+import woowacourse.shoppingcart.customer.dto.CustomerCreationRequest;
 
 @DisplayName("인증 관련 기능")
 class AuthAcceptanceTest extends AcceptanceTest {
@@ -48,8 +48,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("errorCode", equalTo("1000"))
-                .body("message", equalTo(message));
+                .body(ERROR_CODE, equalTo("1000"))
+                .body(MESSAGE, equalTo(message));
     }
 
     @Test
@@ -66,7 +66,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("errorCode", equalTo("1002"))
-                .body("message", equalTo("로그인에 실패했습니다."));
+                .body(ERROR_CODE, equalTo("1002"))
+                .body(MESSAGE, equalTo("로그인에 실패했습니다."));
     }
 }

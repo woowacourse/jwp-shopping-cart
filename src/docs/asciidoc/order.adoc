@@ -1,0 +1,71 @@
+= Shopping cartItem API - rick
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-order]]
+== 주문 관련 기능
+
+[[resources-order-add-order]]
+=== 주문 생성
+
+[[resources-order-add-order-success]]
+==== 성공
+
+===== HTTP Request
+
+include::{snippets}/add-order-contains-all/http-request.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/add-order-contains-all/http-response.adoc[]
+
+[[resources-order-add-order-not-contains]]
+==== 실패 - 장바구니에 담겨있지 않는 상품 주문 요청
+
+===== HTTP Response
+
+include::{snippets}/add-order-not-contains/http-response.adoc[]
+
+[[resources-order-find-order]]
+=== 주문 단건 조회
+
+[[resources-order-find-order-success]]
+==== 성공
+
+===== HTTP Request
+
+include::{snippets}/find-order/http-request.adoc[]
+
+===== Request path variables
+
+include::{snippets}/find-order/path-parameters.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/find-order/http-response.adoc[]
+
+[[resources-order-find-order-not-exist]]
+==== 실패 - 존재하지 않는 주문
+
+===== HTTP Response
+
+include::{snippets}/find-order-not-exist-order/http-response.adoc[]
+
+[[resources-order-find-orders]]
+=== 주문 목록 조회
+
+[[resources-order-find-orders-success]]
+==== 성공
+
+===== HTTP Request
+
+include::{snippets}/find-orders/http-request.adoc[]
+
+===== HTTP Response
+
+include::{snippets}/find-orders/http-response.adoc[]
+
+===== Response body
+
+include::{snippets}/find-orders/response-fields.adoc[]
