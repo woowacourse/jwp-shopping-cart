@@ -5,11 +5,11 @@ import org.springframework.transaction.annotation.Transactional;
 import woowacourse.auth.application.AuthService;
 import woowacourse.shoppingcart.dao.CustomerDao;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.CustomerPasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.dto.request.CustomerPasswordRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.request.LoginCustomer;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.util.HashTool;
@@ -50,6 +50,8 @@ public class CustomerService {
     @Transactional
     public void deleteCustomer(CustomerPasswordRequest customerPasswordRequest, LoginCustomer loginCustomer) {
         authService.checkPassword(loginCustomer.toCustomer(), customerPasswordRequest.getPassword());
-        customerDao.delete(customerDao.findIdByUserName(loginCustomer.getUsername()));
+        if (!customerDao.delete(loginCustomer.getId())) {
+            throw new InvalidCustomerException();
+        }
     }
 }

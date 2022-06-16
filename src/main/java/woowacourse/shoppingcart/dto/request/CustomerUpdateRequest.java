@@ -1,28 +1,22 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.request;
 
 import woowacourse.shoppingcart.domain.Customer;
 
-public class CustomerRequest {
+public class CustomerUpdateRequest {
 
-    private String loginId;
     private String name;
     private String password;
 
-    public CustomerRequest() {
+    public CustomerUpdateRequest() {
     }
 
-    public CustomerRequest(String loginId, String name, String password) {
-        this.loginId = loginId;
+    public CustomerUpdateRequest(String name, String password) {
         this.name = name;
         this.password = password;
     }
 
-    public Customer toCustomer() {
+    public Customer toCustomer(String loginId) {
         return new Customer(loginId, name, password);
-    }
-
-    public String getLoginId() {
-        return loginId;
     }
 
     public String getName() {

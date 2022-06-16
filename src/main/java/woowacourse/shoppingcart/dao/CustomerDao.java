@@ -56,13 +56,6 @@ public class CustomerDao {
         }
     }
 
-    public boolean existByLoginId(final String loginId) {
-        final String query = "SELECT EXISTS (SELECT 1 FROM customer WHERE loginId = :loginId)";
-        MapSqlParameterSource parameters = new MapSqlParameterSource("loginId", loginId);
-
-        return namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class) != 0;
-    }
-
     public Optional<Customer> save(Customer customer) {
         try {
             SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(customer);
@@ -85,10 +78,10 @@ public class CustomerDao {
         }
     }
 
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         final String query = "DELETE FROM customer WHERE id = :id";
         MapSqlParameterSource parameter = new MapSqlParameterSource("id", id);
 
-        namedParameterJdbcTemplate.update(query, parameter);
+        return namedParameterJdbcTemplate.update(query, parameter) != 0;
     }
 }

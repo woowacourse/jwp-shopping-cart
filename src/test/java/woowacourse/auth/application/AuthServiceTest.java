@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.auth.dto.TokenRequest;
 import woowacourse.auth.dto.TokenResponse;
 import woowacourse.shoppingcart.domain.Customer;
-import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.dto.request.LoginCustomer;
 import woowacourse.shoppingcart.exception.InvalidCustomerLoginException;
 import woowacourse.shoppingcart.exception.InvalidTokenException;
 import woowacourse.shoppingcart.util.HashTool;

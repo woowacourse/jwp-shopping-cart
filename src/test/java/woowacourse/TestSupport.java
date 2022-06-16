@@ -27,7 +27,7 @@ import woowacourse.auth.support.JwtTokenProvider;
 @AutoConfigureMockMvc
 @ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfiguration.class)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql", "classpath:test.sql"})
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class TestSupport {
 

@@ -1,19 +1,22 @@
 package woowacourse.shoppingcart.ui;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import woowacourse.shoppingcart.domain.Cart;
-import woowacourse.shoppingcart.domain.Product;
-import woowacourse.shoppingcart.dto.Request;
+import woowacourse.auth.support.AuthenticationPrincipal;
+import woowacourse.shoppingcart.dto.response.CartItemResponse;
+import woowacourse.shoppingcart.dto.request.LoginCustomer;
+import woowacourse.shoppingcart.dto.request.ProductIdRequest;
+import woowacourse.shoppingcart.dto.request.QuantityRequest;
+import woowacourse.shoppingcart.dto.request.Request;
 import woowacourse.shoppingcart.application.CartService;
 
-import java.net.URI;
 import java.util.List;
+import woowacourse.shoppingcart.dto.response.CartResponse;
 
 @RestController
-@RequestMapping("/api/customers/{customerName}/carts")
+@RequestMapping("/customers/carts")
 public class CartItemController {
     private final CartService cartService;
 
@@ -22,26 +25,37 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCartItems(@PathVariable final String customerName) {
-        return ResponseEntity.ok().body(cartService.findCartsByCustomerName(customerName));
+    public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+        final CartResponse cartResponse = cartService.findCartByCustomerId(loginCustomer.getId());
+        return ResponseEntity.ok().body(cartResponse.getCartItemResponses());
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartItem(@Validated(Request.id.class) @RequestBody final Product product,
-                                      @PathVariable final String customerName) {
-        final Long cartId = cartService.addCart(product.getId(), customerName);
-        final URI responseLocation = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{cartId}")
-                .buildAndExpand(cartId)
-                .toUri();
-        return ResponseEntity.created(responseLocation).build();
+    public ResponseEntity<CartItemResponse> addCartItem(@Validated(Request.id.class) @RequestBody final ProductIdRequest productIdRequest,
+                                      @AuthenticationPrincipal LoginCustomer loginCustomer) {
+        final CartItemResponse cartItemResponse = cartService.addCart(productIdRequest.getProductId(), loginCustomer.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartItemResponse);
     }
 
-    @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable final String customerName,
-                                         @PathVariable final Long cartId) {
-        cartService.deleteCart(customerName, cartId);
+    @DeleteMapping("/{cartItemId}")
+    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal LoginCustomer loginCustomer,
+                                         @PathVariable final Long cartItemId) {
+        cartService.deleteCartItem(loginCustomer.getId(), cartItemId);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{cartItemId}")
+    public ResponseEntity<CartItemResponse> updateCartItemQuantity(
+        @AuthenticationPrincipal LoginCustomer loginCustomer,
+        @PathVariable final Long cartItemId, @RequestBody QuantityRequest quantityRequest) {
+        CartItemResponse cartItemResponse = cartService.updateCartItemQuantity(loginCustomer.getId(), cartItemId, quantityRequest.getQuantity());
+        return ResponseEntity.ok().body(cartItemResponse);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCart(@AuthenticationPrincipal LoginCustomer loginCustomer) {
+        cartService.deleteCart(loginCustomer.getId());
+        return ResponseEntity.noContent().build();
+    }
+
 }

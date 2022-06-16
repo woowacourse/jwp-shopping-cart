@@ -18,7 +18,8 @@ import java.util.List;
 public class ControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handleUnhandledException() {
+    public ResponseEntity handleUnhandledException(RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity.badRequest().body("Unhandled Exception");
     }
 
@@ -36,22 +37,22 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            HttpMessageNotReadableException.class,
-            ConstraintViolationException.class,
+        HttpMessageNotReadableException.class,
+        ConstraintViolationException.class,
     })
     public ResponseEntity handleInvalidRequest(final RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler({
-            InvalidCartItemException.class,
-            InvalidProductException.class,
-            InvalidOrderException.class,
-            IllegalArgumentException.class,
-            NotInCustomerCartItemException.class,
-            DuplicateCustomerException.class
+        InvalidCartItemException.class,
+        InvalidOrderException.class,
+        IllegalArgumentException.class,
+        DuplicateCustomerException.class,
+        DuplicateCartItemByProduct.class
     })
     public ResponseEntity handleInvalidAccess(final RuntimeException e) {
+
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
@@ -63,7 +64,11 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
-    @ExceptionHandler(InvalidCustomerException.class)
+    @ExceptionHandler({
+        InvalidCustomerException.class,
+        InvalidProductException.class,
+        NotInCustomerCartItemException.class
+    })
     public ResponseEntity handleCustomerNotFound(final RuntimeException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }

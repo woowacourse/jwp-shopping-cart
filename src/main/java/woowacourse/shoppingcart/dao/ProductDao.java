@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import woowacourse.shoppingcart.domain.Product;
+import woowacourse.shoppingcart.dto.request.ProductRequest;
 import woowacourse.shoppingcart.exception.InvalidProductException;
 
 import java.sql.PreparedStatement;
@@ -20,15 +21,15 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final Product product) {
+    public Long save(final ProductRequest productRequest) {
         final String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement =
                     connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImageUrl());
+            preparedStatement.setString(1, productRequest.getName());
+            preparedStatement.setInt(2, productRequest.getPrice());
+            preparedStatement.setString(3, productRequest.getImageUrl());
             return preparedStatement;
         }, keyHolder);
 

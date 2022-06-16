@@ -1,13 +1,16 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.response;
 
 import woowacourse.shoppingcart.domain.Customer;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.request.LoginCustomer;
 
 public class CustomerResponse {
 
     private String loginId;
     private String name;
 
-    public CustomerResponse() {}
+    public CustomerResponse() {
+    }
 
     public CustomerResponse(String loginId, String name) {
         this.loginId = loginId;

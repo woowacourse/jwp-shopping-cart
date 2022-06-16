@@ -1,9 +1,10 @@
-package woowacourse.shoppingcart.dto;
+package woowacourse.shoppingcart.dto.request;
 
 import woowacourse.shoppingcart.domain.Customer;
 
 public class LoginCustomer {
 
+    private Long id;
     private String loginId;
     private String username;
     private String password;
@@ -12,17 +13,22 @@ public class LoginCustomer {
     }
 
     public LoginCustomer(Customer customer) {
-        this(customer.getLoginId(), customer.getUsername(), customer.getPassword());
+        this(customer.getId(), customer.getLoginId(), customer.getUsername(), customer.getPassword());
     }
 
-    public LoginCustomer(String loginId, String username, String password) {
+    public LoginCustomer(Long id, String loginId, String username, String password) {
+        this.id = id;
         this.loginId = loginId;
         this.username = username;
         this.password = password;
     }
 
     public Customer toCustomer() {
-        return new Customer(null, loginId, username, password);
+        return new Customer(id, loginId, username, password);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getLoginId() {

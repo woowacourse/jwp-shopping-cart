@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import woowacourse.shoppingcart.domain.Product;
 
 import java.util.List;
+import woowacourse.shoppingcart.dto.request.ProductRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,7 +36,7 @@ public class ProductDaoTest {
         final String imageUrl = "www.test.com";
 
         // when
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new ProductRequest(name, price, imageUrl));
 
         // then
         assertThat(productId).isEqualTo(1L);
@@ -48,7 +49,7 @@ public class ProductDaoTest {
         final String name = "초콜렛";
         final int price = 1_000;
         final String imageUrl = "www.test.com";
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new ProductRequest(name, price, imageUrl));
         final Product expectedProduct = new Product(productId, name, price, imageUrl);
 
         // when
@@ -80,7 +81,7 @@ public class ProductDaoTest {
         final int price = 1_000;
         final String imageUrl = "www.test.com";
 
-        final Long productId = productDao.save(new Product(name, price, imageUrl));
+        final Long productId = productDao.save(new ProductRequest(name, price, imageUrl));
         final int beforeSize = productDao.findProducts().size();
 
         // when

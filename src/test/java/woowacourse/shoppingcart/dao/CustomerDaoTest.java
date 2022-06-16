@@ -18,11 +18,12 @@ import woowacourse.shoppingcart.domain.Customer;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 
+@SuppressWarnings("NonAsciiChracters")
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql", "classpath:test.sql"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public class CustomerDaoTest {
+class CustomerDaoTest {
 
     private final CustomerDao customerDao;
     private DataSource dataSource;
@@ -143,10 +144,18 @@ public class CustomerDaoTest {
         }
     }
 
-    @Test
-    void delete메서드는_고객을_삭제한다() {
-        assertThatCode(() -> customerDao.delete(1L))
-            .doesNotThrowAnyException();
-    }
+    @DisplayName("delete메서드는_고객을_삭제한다")
+    @Nested
+    class Delete {
 
+        @Test
+        void 존재하는_유저를_삭제하는_경우_true() {
+            assertThat(customerDao.delete(1L)).isTrue();
+        }
+
+        @Test
+        void 존재하지_않는_유저를_삭제하는_경우_false() {
+            assertThat(customerDao.delete(9999L)).isFalse();
+        }
+    }
 }

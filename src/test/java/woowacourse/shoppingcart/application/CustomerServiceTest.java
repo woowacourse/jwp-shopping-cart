@@ -12,11 +12,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import woowacourse.shoppingcart.dto.CustomerPasswordRequest;
-import woowacourse.shoppingcart.dto.CustomerRequest;
-import woowacourse.shoppingcart.dto.CustomerResponse;
-import woowacourse.shoppingcart.dto.CustomerUpdateRequest;
-import woowacourse.shoppingcart.dto.LoginCustomer;
+import woowacourse.shoppingcart.dto.request.CustomerPasswordRequest;
+import woowacourse.shoppingcart.dto.request.CustomerRequest;
+import woowacourse.shoppingcart.dto.response.CustomerResponse;
+import woowacourse.shoppingcart.dto.request.CustomerUpdateRequest;
+import woowacourse.shoppingcart.dto.request.LoginCustomer;
 import woowacourse.shoppingcart.exception.DuplicateCustomerException;
 import woowacourse.shoppingcart.exception.InvalidCustomerException;
 import woowacourse.shoppingcart.util.HashTool;
@@ -24,7 +24,7 @@ import woowacourse.shoppingcart.util.HashTool;
 @SuppressWarnings("NonAsciiChracters")
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:schema.sql")
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"})
 class CustomerServiceTest {
 
     @Autowired
@@ -65,7 +65,7 @@ class CustomerServiceTest {
             customerService.addCustomer(customerRequest);
 
             CustomerUpdateRequest updateCustomerRequest = new CustomerUpdateRequest("seungpapang", "12345678aA!");
-            LoginCustomer loginCustomer = new LoginCustomer("angie@gmail.com", "angel", HashTool.hashing("12345678aA!"));
+            LoginCustomer loginCustomer = new LoginCustomer(26L, "angie@gmail.com", "angel", HashTool.hashing("12345678aA!"));
 
             CustomerResponse actual = customerService.updateCustomer(updateCustomerRequest, loginCustomer);
 
@@ -95,7 +95,7 @@ class CustomerServiceTest {
             customerService.addCustomer(customerRequest);
 
             CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest("12345678aA!");
-            LoginCustomer loginCustomer = new LoginCustomer("angie@gmail.com", "angel", HashTool.hashing("12345678aA!"));
+            LoginCustomer loginCustomer = new LoginCustomer(26L, "angie@gmail.com", "angel", HashTool.hashing("12345678aA!"));
 
             assertThatCode(() -> customerService.deleteCustomer(customerPasswordRequest, loginCustomer))
                 .doesNotThrowAnyException();
@@ -105,7 +105,7 @@ class CustomerServiceTest {
         void 존재하지_않는_회원일_경우_예외발생() {
             CustomerPasswordRequest customerPasswordRequest = new CustomerPasswordRequest(
                 "12345678aA!");
-            LoginCustomer loginCustomer = new LoginCustomer("angie@gmail.com", "angel", HashTool.hashing("12345678aA!"));
+            LoginCustomer loginCustomer = new LoginCustomer(9999L, "angie@gmail.com", "angel", HashTool.hashing("12345678aA!"));
 
             assertThatThrownBy(() -> customerService.deleteCustomer(customerPasswordRequest, loginCustomer))
                 .isInstanceOf(InvalidCustomerException.class);
