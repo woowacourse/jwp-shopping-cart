@@ -1,5 +1,7 @@
-package cart;
+package cart.application;
 
+import cart.domain.Product;
+import cart.dao.ProductDao;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
