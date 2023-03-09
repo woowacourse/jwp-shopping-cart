@@ -31,13 +31,12 @@
             <th>Actions</th>
         </tr>
         <tbody id="product-list">
-            <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
             <tr th:each="product : ${products}">
                 <td th:text="${product.id}"></td>
-                <td></td> <!-- 상품 이름 -->
-                <td></td> <!-- 상품 가격 -->
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.price}"></td>
                 <td>
-                    <img style="max-width: 100px;"> <!-- 상품 이미지 -->
+                    <img th:attr="src=@{|${product.imageUrl}|}" style="max-width: 100px;">
                 </td>
                 <td>
                     <button th:onclick="showEditModal([[${product}]])">수정</button>
@@ -50,18 +49,17 @@
     <div id="modal" class="modal" data-form-type="add">
         <div class="modal-content">
             <span class="close" onclick="hideAddModal()">&times;</span>
-            <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
             <form id="form">
                 <label for="name">상품명</label><br>
-                <input type="text" id="name" name="" required><br>
+                <input type="text" id="name" name="name" required><br>
 
                 <label for="price">가격</label><br>
-                <input type="number" id="price" name="" required><br>
+                <input type="number" id="price" name="price" required><br>
 
                 <label for="image-url">이미지 URL</label><br>
-                <input type="text" id="image-url" name="" required><br>
+                <input type="text" id="image-url" name="imageUrl" required><br>
 
-                <button type="submit">제출</button>
+                <button type="submit">Submit</button>
             </form>
         </div>
     </div>
