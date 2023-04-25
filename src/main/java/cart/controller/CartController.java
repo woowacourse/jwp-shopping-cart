@@ -6,7 +6,9 @@ import cart.service.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -20,17 +22,28 @@ public class CartController {
     }
 
     @GetMapping("/")
-    String allProducts() {
-        return "index";
+    String allProducts(Model model) {
+        return userAllProducts(model);
     }
 
     @GetMapping("/products")
-    String userAllProducts() {
+    String userAllProducts(Model model) {
+        List<ProductEntity> productEntities = adminService.selectAllProducts();
+        model.addAttribute("products", productEntities);
         return "index";
     }
 
     @GetMapping("/admin")
-    String adminAllProducts() {
+    String adminAllProducts(Model model) {
+        List<ProductEntity> productEntities = adminService.selectAllProducts();
+        model.addAttribute("products", productEntities);
+
         return "admin";
+    }
+
+    @PostMapping("/admin/product")
+    public ResponseEntity<String> registerProduct(@RequestBody ProductRequest productRequest) {
+        adminService.registerProduct(productRequest);
+        return ResponseEntity.ok().build();
     }
 }

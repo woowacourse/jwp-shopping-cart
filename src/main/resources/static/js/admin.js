@@ -34,6 +34,7 @@ form.addEventListener('submit', (event) => {
         const [key, value] = entry;
         product[key] = value;
     }
+    console.log(product);
 
     if (modal.dataset.formType === 'edit') {
         product['id'] = modal.dataset.productId;
@@ -47,7 +48,12 @@ form.addEventListener('submit', (event) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '',
+        url: '/admin/product',
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+        },
+        data: JSON.stringify(product)
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -57,7 +63,7 @@ const createProduct = (product) => {
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id} = product;
 
     axios.request({
         url: '',
