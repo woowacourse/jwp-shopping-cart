@@ -22,4 +22,5 @@ public class AdminController {
         model.addAttribute("products", products);
         return "admin";
     }
+
 }

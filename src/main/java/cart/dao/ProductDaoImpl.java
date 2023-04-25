@@ -14,7 +14,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<ProductEntity> selectAll() {
+    public List<ProductEntity> findAll() {
         final String sql = "SELECT * FROM PRODUCT";
 
         return jdbcTemplate.query(sql,
@@ -24,5 +24,11 @@ public class ProductDaoImpl implements ProductDao {
                         rs.getString("image"),
                         rs.getInt("price")
                 ));
+    }
+
+    @Override
+    public void insert(ProductEntity productEntity) {
+        final String sql = "INSERT INTO PRODUCT(name, image, price) values (?, ?, ?)";
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
     }
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface ProductDao {
 
-    List<ProductEntity> selectAll();
+    List<ProductEntity> findAll();
+
+    void insert(ProductEntity productEntity);
 
 }

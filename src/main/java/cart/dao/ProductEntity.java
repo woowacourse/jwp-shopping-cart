@@ -7,6 +7,12 @@ public class ProductEntity {
     private String image;
     private int price;
 
+    public ProductEntity(final String name, final String image, final int price) {
+        this.name = name;
+        this.image = image;
+        this.price = price;
+    }
+
     public ProductEntity(final int id, final String name, final String image, final int price) {
         this.id = id;
         this.name = name;
