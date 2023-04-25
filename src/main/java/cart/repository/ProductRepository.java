@@ -50,7 +50,7 @@ public class ProductRepository {
         jdbcTemplate.update(sql, ps -> ps.setLong(1, id));
     }
 
-    public void updateProduct(ProductEntity productEntity) {
+    public void update(ProductEntity productEntity) {
         String sql = "UPDATE PRODUCT SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, ps -> {
             ps.setString(1, productEntity.getName());
@@ -59,4 +59,5 @@ public class ProductRepository {
             ps.setLong(4, productEntity.getId());
         });
     }
+
 }

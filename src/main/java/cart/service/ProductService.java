@@ -33,6 +33,6 @@ public class ProductService {
     }
 
     public void updateProductById(Long id, String name, int price, String imageUrl) {
-        productRepository.updateProduct(new ProductEntity(id, name, price, imageUrl));
+        productRepository.update(new ProductEntity(id, name, price, imageUrl));
     }
 }
