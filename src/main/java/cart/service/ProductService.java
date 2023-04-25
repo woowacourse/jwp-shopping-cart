@@ -43,4 +43,8 @@ public class ProductService {
 
         productDao.modify(modifiedProductEntity);
     }
+
+    public void deleteProduct(final Long productId) {
+        productDao.deleteById(productId);
+    }
 }

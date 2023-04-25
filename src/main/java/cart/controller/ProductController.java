@@ -4,6 +4,7 @@ import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,13 @@ public class ProductController {
             @PathVariable("product-id") final Long productId,
             @RequestBody final ProductModifyRequest productModifyRequest) {
         productService.modifyProduct(productId, productModifyRequest);
+
+        return "admin";
+    }
+
+    @DeleteMapping("/products/{product-id}")
+    public String deleteProduct(@PathVariable("product-id") final Long productId) {
+        productService.deleteProduct(productId);
 
         return "admin";
     }

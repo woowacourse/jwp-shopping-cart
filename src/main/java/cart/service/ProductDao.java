@@ -48,4 +48,10 @@ public class ProductDao {
                             modifiedProductEntity.getImageUrl(),
                             modifiedProductEntity.getId());
     }
+
+    public void deleteById(final Long productId) {
+        final String sql = "DELETE from product where id = ?";
+
+        jdbcTemplate.update(sql, productId);
+    }
 }
