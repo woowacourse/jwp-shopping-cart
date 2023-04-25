@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
-import cart.service.AdminService;
+import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,22 +17,21 @@ import java.util.List;
 @Controller
 public class AdminController {
 
-    private final AdminService adminService;
+    private final ProductService productService;
 
-    public AdminController(AdminService adminService) {
-        this.adminService = adminService;
+    public AdminController(ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping("/admin/create")
     public String create(@RequestBody ProductRequest productRequest) {
-
-        adminService.create(productRequest);
+        productService.create(productRequest);
         return "admin";
     }
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        List<ProductResponse> products = adminService.findAll();
+        List<ProductResponse> products = productService.findAll();
         model.addAttribute("products", products);
         return "admin";
     }
@@ -40,13 +39,13 @@ public class AdminController {
     @PutMapping("/admin/{productId}")
     public String update(@PathVariable Long productId,
                          @RequestBody ProductRequest productRequest) {
-        adminService.update(productId, productRequest);
+        productService.update(productId, productRequest);
         return "admin";
     }
 
     @DeleteMapping("/admin/{productId}")
     public String delete(@PathVariable Long productId) {
-        adminService.deleteById(productId);
+        productService.deleteById(productId);
         return "admin";
     }
 }

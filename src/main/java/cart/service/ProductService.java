@@ -11,11 +11,11 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Service
-public class AdminService {
+public class ProductService {
 
     private final ProductDao productDao;
 
-    public AdminService(ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 
