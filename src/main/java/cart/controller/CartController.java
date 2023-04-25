@@ -16,7 +16,8 @@ public class CartController {
     }
 
     @GetMapping("/admin")
-    public String adminPage() {
+    public String adminPage(Model model) {
+        model.addAttribute("products", List.of(new ProductDto(1, "과자", "https://www.clickmall.kr/shopimages/clickmall/019007000099.jpg?1674614971", 1000)));
         return "admin";
     }
 }
