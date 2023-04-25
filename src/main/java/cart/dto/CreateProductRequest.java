@@ -18,9 +18,6 @@ public class CreateProductRequest {
             message = Product.PRICE_ERROR_MESSAGE)
     private final int price;
 
-    @Size(
-            max = Product.MAX_IMAGE_URL_LENGTH,
-            message = Product.IMAGE_URL_LENGTH_ERROR_MESSAGE)
     private final String image;
 
     public CreateProductRequest(String name, int price, String image) {
