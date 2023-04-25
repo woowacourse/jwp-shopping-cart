@@ -1,8 +1,9 @@
 package cart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.entity.product.ProductEntity;
 import javax.sql.DataSource;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ class ProductDaoTest {
 
     @Autowired
     private DataSource dataSource;
-    
+
     private ProductDao productDao;
 
     @BeforeEach
@@ -26,7 +27,7 @@ class ProductDaoTest {
     @DisplayName("상품을 DB에 저장한다.")
     void save() {
         //given
-        final ProductEntity dazzle = new ProductEntity(
+        final ProductEntity productEntity = new ProductEntity(
             null,
             "다즐",
             "스플릿.com",
@@ -35,9 +36,38 @@ class ProductDaoTest {
         );
 
         //when
-        final Long dazzleId = productDao.save(dazzle);
+        final Long savedProductId = productDao.save(productEntity);
 
         //then
-        Assertions.assertThat(dazzleId).isNotNull();
+        assertThat(savedProductId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("모든 상품을 조회한다.")
+    void findAll() {
+        //given
+        final ProductEntity firstProductEntity = new ProductEntity(
+            null,
+            "다즐",
+            "스플릿.com",
+            10000000,
+            "다즐짱"
+        );
+        final ProductEntity secondProductEntity = new ProductEntity(
+            null,
+            "다즐",
+            "스플릿.com",
+            10000000,
+            "다즐짱"
+        );
+
+        //when
+        final Long savedFirstProductId = productDao.save(firstProductEntity);
+        final Long savedSecondProductId = productDao.save(secondProductEntity);
+
+        //then
+        assertThat(productDao.findAll()).hasSize(2);
+        assertThat(productDao.findAll()).map(ProductEntity::getId)
+            .containsExactly(savedFirstProductId, savedSecondProductId);
     }
 }

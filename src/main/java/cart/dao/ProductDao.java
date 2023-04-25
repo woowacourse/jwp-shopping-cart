@@ -26,4 +26,16 @@ public class ProductDao {
     }
 
 
+    public List<ProductEntity> findAll() {
+        final String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql,
+            (rs, rowNum) -> new ProductEntity(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("image_url"),
+                rs.getInt("price"),
+                rs.getString("description")
+            )
+        );
+    }
 }
