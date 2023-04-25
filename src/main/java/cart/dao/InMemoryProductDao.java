@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+
 public class InMemoryProductDao implements ProductDao {
 
     private static final Map<Integer, ProductEntity> store = new HashMap<>();
@@ -24,5 +24,15 @@ public class InMemoryProductDao implements ProductDao {
     @Override
     public List<ProductEntity> selectAllProducts() {
         return new ArrayList<>(store.values());
+    }
+
+    @Override
+    public void updateProduct(ProductEntity productEntity) {
+
+    }
+
+    @Override
+    public void deleteProduct(int productId) {
+
     }
 }
