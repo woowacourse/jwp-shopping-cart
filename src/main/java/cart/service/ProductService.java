@@ -38,4 +38,8 @@ public class ProductService {
         productDao.save(product);
     }
 
+    public void deleteById(int id) {
+        productDao.deleteById(id);
+    }
+
 }
