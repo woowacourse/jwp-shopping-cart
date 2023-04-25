@@ -1,5 +1,7 @@
 package cart.dao;
 
+import cart.dto.ProductDto;
+
 public class ProductEntity {
 
     private int id;
@@ -20,6 +22,13 @@ public class ProductEntity {
         this.price = price;
     }
 
+    public ProductEntity update(final ProductDto productDto) {
+        this.name = productDto.getName();
+        this.image = productDto.getImage();
+        this.price = productDto.getPrice();
+        return this;
+    }
+
     public int getId() {
         return id;
     }
@@ -35,5 +44,4 @@ public class ProductEntity {
     public int getPrice() {
         return price;
     }
-
 }

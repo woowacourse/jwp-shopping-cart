@@ -19,9 +19,19 @@ public class ProductService {
         return productDao.findAll();
     }
 
-    public void insert(ProductDto productDto) {
+    public void insert(final ProductDto productDto) {
         ProductEntity productEntity = new ProductEntity(productDto.getName(), productDto.getImage(),
                 productDto.getPrice());
         productDao.insert(productEntity);
+    }
+
+    public void update(final int id, final ProductDto productDto) {
+        ProductEntity productEntity = productDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("상품 id를 확인해주세요."));
+
+        ProductEntity updatedEntity = productEntity.update(productDto);
+
+        productDao.update(updatedEntity);
+
     }
 }
