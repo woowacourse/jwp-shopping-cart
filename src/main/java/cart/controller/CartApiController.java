@@ -28,6 +28,7 @@ public class CartApiController {
 
     @PostMapping("product")
     public void insertProduct(@RequestBody InsertRequestDto insertRequestDto) {
+        validatePrice(insertRequestDto.getPrice());
         cartService.addProduct(insertRequestDto);
     }
 
@@ -38,11 +39,18 @@ public class CartApiController {
 
     @PutMapping("product")
     public void updateProduct(@RequestBody UpdateRequestDto updateRequestDto) {
+        validatePrice(updateRequestDto.getPrice());
         cartService.updateProduct(updateRequestDto);
     }
 
     @DeleteMapping("product/{id}")
     public void deleteProduct(@PathVariable int id) {
         cartService.deleteProduct(id);
+    }
+
+    private void validatePrice(int price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("가격은 음수일 수 없습니다.");
+        }
     }
 }
