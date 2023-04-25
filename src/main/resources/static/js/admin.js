@@ -51,7 +51,7 @@ const createProduct = (product) => {
         method: 'post',
         data: JSON.stringify(product),
         headers: {
-            "Content-Type" : "application/json; charset=utf-8"
+            "Content-Type": "application/json; charset=utf-8"
         }
     }).then((response) => {
         window.location.reload();
@@ -62,10 +62,11 @@ const createProduct = (product) => {
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id} = product;
 
     axios.request({
-        url: '',
+        url: '/admin/product/' + id,
+        method: 'put'
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -76,7 +77,8 @@ const updateProduct = (product) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: '',
+        url: '/admin/product/' + id,
+        method: 'post'
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
