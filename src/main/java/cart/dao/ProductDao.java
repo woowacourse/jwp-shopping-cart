@@ -30,4 +30,9 @@ public class ProductDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public void save(Product product) {
+        String sql = "INSERT INTO Product (name, price, image_url) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
 }
