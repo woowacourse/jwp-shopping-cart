@@ -14,5 +14,6 @@ public class controller {
     @GetMapping("admin")
     public String admin() {
         return "admin";
+
     }
 }
