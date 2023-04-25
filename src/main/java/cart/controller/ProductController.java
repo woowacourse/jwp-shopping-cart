@@ -1,7 +1,6 @@
 package cart.controller;
 
-import cart.domain.Product;
-import java.util.List;
+import cart.dao.ProductDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,13 +8,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ProductController {
 
+    private final ProductDao productDao;
+
+    public ProductController(final ProductDao productDao) {
+        this.productDao = productDao;
+    }
+
     @GetMapping(path = "/")
     public String home(Model model) {
-        model.addAttribute("products", List.of(
-                new Product("치킨", "xxx", 10000),
-                new Product("치킨", "xxx", 10000)
-        ));
+        model.addAttribute("products", productDao.findAll());
 
         return "index";
+    }
+
+    @GetMapping(path = "/admin")
+    public String admin(Model model) {
+        model.addAttribute("products", productDao.findAll());
+
+        return "admin";
     }
 }
