@@ -40,4 +40,12 @@ public class ProductCategoryDao {
             productId
         );
     }
+
+    public void delete(final Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID값이 null일 수 없습니다.");
+        }
+        final String sql = "DELETE FROM product_category WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

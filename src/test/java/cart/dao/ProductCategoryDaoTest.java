@@ -80,4 +80,27 @@ class ProductCategoryDaoTest {
             assertThat(productCategoryEntities).hasSize(1);
         }
     }
+
+    @Test
+    @DisplayName("ID에 해당하는 상품 카테고리를 삭제한다.")
+    void delete() {
+        //given
+        final ProductEntity productEntity = new ProductEntity(
+            1L,
+            "name",
+            "image_url",
+            1000,
+            "description"
+        );
+        final Long savedProductId = productDao.save(productEntity);
+        final ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity(savedProductId, 1L);
+        final Long savedProductCategoryId = productCategoryDao.save(productCategoryEntity);
+
+        //when
+        productCategoryDao.delete(savedProductCategoryId);
+
+        //then
+        final List<ProductCategoryEntity> productCategoryEntities = productCategoryDao.findAll(savedProductId);
+        assertThat(productCategoryEntities).hasSize(0);
+    }
 }
