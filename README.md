@@ -12,7 +12,6 @@
     - `/` : 상품 목록 페이지
     - `/admin` : 관리자 도구 페이지
 
-
 ## 기능 목록
 
 ### Controller
@@ -25,7 +24,7 @@
     - Request Body :  이름, 가격, 이미지URL
     - Response Body  : 상품 ID
 - [ ]  상품을 수정하고 해당 URL의 GET 메서드로 리다이렉트한다 .
-    - Request Body  : ID, 이름,  가격, 이미지URL
+    - Request Body  : ID, 이름, 가격, 이미지URL
     - Response Body : 없음
 - [ ]  상품을 삭제하고 해당 URL의 GET 메서드로 리다이렉트한다 .
     - Request Body  : ID
@@ -41,24 +40,24 @@
 ### DB
 
 - PRODUCT
-    - [ ]  ID  ( INT  NOT NULL AUTO_INCREMENT )
-    - [ ]  NAME ( VARCHAR(50) NOT NULL )
-    - [ ]  IMAGE_URL ( VARCHAR(255) NOT NULL )
-    - [ ]  PRICE ( INT NOT NULL )
-    - [ ]  DESCRIPTION ( TEXT )
-    - [ ]  PRIMARY KEY ( ID )
+    - [x]  ID  ( INT NOT NULL AUTO_INCREMENT )
+    - [x]  NAME ( VARCHAR(50) NOT NULL )
+    - [x]  IMAGE_URL ( VARCHAR(255) NOT NULL )
+    - [x]  PRICE ( INT NOT NULL )
+    - [x]  DESCRIPTION ( TEXT )
+    - [x]  PRIMARY KEY ( ID )
 
 - CATEGORY
-    - [ ]  ID  ( INT  NOT NULL AUTO_INCREMENT PK )
-    - [ ]  NAME ( VARCHAR(50) NOT NULL )
-    - [ ]  PRIMARY KEY ( ID )
+    - [x]  ID  ( INT NOT NULL AUTO_INCREMENT PK )
+    - [x]  NAME ( VARCHAR(50) NOT NULL )
+    - [x]  PRIMARY KEY ( ID )
 
 - PRODUCT_CATEGORY
-    - [ ]  PRODUCT_ID
-    - [ ]  CATEGORY_ID
-    - [ ]  PRIMARY KEY (PRODUCT_ID, CATEGORY_ID)
-    - [ ]  FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT(ID)
-    - [ ]  FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(ID)
+    - [x]  PRODUCT_ID
+    - [x]  CATEGORY_ID
+    - [x]  PRIMARY KEY (PRODUCT_ID, CATEGORY_ID)
+    - [x]  FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT(ID)
+    - [x]  FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(ID)
 
 ### Repository
 
