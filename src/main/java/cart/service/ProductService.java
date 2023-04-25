@@ -26,4 +26,8 @@ public class ProductService {
     public Product createProduct(Product product) {
         return productDao.save(product);
     }
+
+    public void deleteProductBy(long id) {
+        productDao.deleteById(id);
+    }
 }
