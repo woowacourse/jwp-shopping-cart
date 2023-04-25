@@ -31,7 +31,12 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public void update(ProductUpdateRequest request) {
-        productDao.update(request);
+    public void update(Long id, ProductUpdateRequest request) {
+        productDao.updateById(id, request);
     }
+
+    public void delete(Long id) {
+        productDao.deleteById(id);
+    }
+
 }

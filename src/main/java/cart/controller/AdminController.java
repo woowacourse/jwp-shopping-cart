@@ -5,7 +5,9 @@ import cart.controller.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,9 +34,18 @@ public class AdminController {
         productService.create(request);
     }
 
-    @PutMapping
-    public void update(@RequestBody ProductUpdateRequest request) {
-        productService.update(request);
+    @PutMapping("{id}")
+    public String update(
+            @PathVariable Long id,
+            @RequestBody ProductUpdateRequest request
+    ) {
+        productService.update(id, request);
+        return "admin";
     }
 
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Long id) {
+        productService.delete(id);
+        return "admin";
+    }
 }

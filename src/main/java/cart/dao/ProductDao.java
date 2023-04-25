@@ -32,8 +32,13 @@ public class ProductDao {
         );
     }
 
-    public void update(ProductUpdateRequest request) {
+    public void updateById(Long id, ProductUpdateRequest request) {
         String sql = "UPDATE PRODUCT SET(name, price, image_url) = (?, ?, ?) WHERE id = ?";
-        jdbcTemplate.update(sql, request.getName(), request.getPrice(), request.getImageUrl(), request.getId());
+        jdbcTemplate.update(sql, request.getName(), request.getPrice(), request.getImageUrl(), id);
+    }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM PRODUCT WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

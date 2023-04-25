@@ -1,7 +1,6 @@
 package cart.controller.dto.request;
 
 public class ProductUpdateRequest {
-    private Long id;
     private String name;
     private int price;
     private String imageUrl;
@@ -10,8 +9,7 @@ public class ProductUpdateRequest {
 
     }
 
-    public ProductUpdateRequest(Long id, String name, int price, String imageUrl) {
-        this.id = id;
+    public ProductUpdateRequest(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -19,10 +17,6 @@ public class ProductUpdateRequest {
 
     public String getName() {
         return name;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public int getPrice() {
