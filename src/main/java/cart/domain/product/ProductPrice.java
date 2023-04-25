@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.product;
 
 import java.math.BigDecimal;
 
@@ -19,7 +19,7 @@ public class ProductPrice {
     }
 
     private void validate(BigDecimal price) {
-        if(isLessThanMinimum(price)) {
+        if (isLessThanMinimum(price)) {
             throw new IllegalArgumentException();
         }
 

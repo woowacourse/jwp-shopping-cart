@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.product;
 
 public class ProductName {
     private static final int MAX_LENGTH = 20;
