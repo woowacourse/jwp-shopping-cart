@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -16,6 +17,12 @@ import java.util.Objects;
 
 @Component
 public class DbProductDao implements ProductDao {
+    public static final RowMapper<Product> productRowMapper = (resultSet, rowMapper) -> new Product(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getString("img_url"),
+            resultSet.getInt("price")
+    );
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -40,12 +47,14 @@ public class DbProductDao implements ProductDao {
     @Override
     public List<Product> findAll() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (resultSet, rowMapper) -> new Product(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getString("img_url"),
-                resultSet.getInt("price")
-        ));
+        return jdbcTemplate.query(sql, productRowMapper);
+    }
+
+    @Override
+    public Product findById(long id) {
+        String sql = "SELECT * FROM product WHERE id = :id";
+        Map<String, Long> parameter = Collections.singletonMap("id", id);
+        return namedParameterJdbcTemplate.queryForObject(sql, parameter, productRowMapper);
     }
 
     @Override
@@ -61,8 +70,8 @@ public class DbProductDao implements ProductDao {
     @Override
     public void deleteById(long id) {
         String sql = "DELETE FROM product WHERE id = :id";
-        Map<String, Long> parameters = Collections.singletonMap("id", id);
+        Map<String, Long> parameter = Collections.singletonMap("id", id);
 
-        namedParameterJdbcTemplate.update(sql, parameters);
+        namedParameterJdbcTemplate.update(sql, parameter);
     }
 }

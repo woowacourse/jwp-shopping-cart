@@ -33,6 +33,15 @@ class DbProductDaoTest {
     }
 
     @Test
+    void findByIdTest() {
+        Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
+
+        Product foundProduct = productDao.findById(gitchan.getId());
+
+        assertThat(foundProduct).isEqualTo(gitchan);
+    }
+
+    @Test
     void updateTest() {
         Product boxster = productDao.update(new Product(1L, "박스터", "boxster.img", 500));
 
