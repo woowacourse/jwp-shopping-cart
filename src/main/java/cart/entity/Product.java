@@ -29,4 +29,20 @@ public class Product {
     public Product(final String name, final String image, final int price) {
         this(null, name, image, price);
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public int getPrice() {
+        return price;
+    }
 }
