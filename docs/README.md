@@ -58,7 +58,7 @@ flowchart
 
 ### 상품 관리 CRUD API 작성
 
-- [ ] 사용자로부터 GET 요청을 받으면 DB에서 상품 목록을 불러와 반환한다.
+- [x] 사용자로부터 GET 요청을 받으면 DB에서 상품 목록을 불러와 반환한다.
     ```
   GET /admin/ HTTP/1.1
   ```
@@ -83,7 +83,7 @@ flowchart
         - Table 명 : `product`
 
           | id | name | image_url   | price |
-                              |----|---------|-------------|-------|
+                                        |----|---------|-------------|-------|
           | 1 | chicken | https://... | 10000 |
           | 2 | pizza | https://... | 12000 |
         - Table 명 : `user`

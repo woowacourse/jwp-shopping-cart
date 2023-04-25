@@ -1,9 +1,8 @@
 package cart.controller;
 
 import cart.dao.ProductDao;
-import java.util.ArrayList;
 import java.util.List;
-import org.springframework.http.HttpStatus;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
     private final ProductDao productDao;
 
     public AdminController(ProductDao productDao) {
@@ -23,12 +23,11 @@ public class AdminController {
 
     @GetMapping
     public String loadHome(Model model) {
-
-        List<ProductResponse> products = new ArrayList<>();
-
-        ProductResponse product = new ProductResponse(3L, "onigiri", 3800,
-            "https://ssl.pstatic.net/melona/libs/1442/1442607/3cbc04bb1da9138cb6e2_20230424140340572.jpg");
-        products.add(product);
+        List<ProductResponse> products = productDao.findAll()
+            .stream()
+            .map(entity -> new ProductResponse(entity.getId(), entity.getName(), entity.getPrice(),
+                entity.getImageUrl())).collect(
+                Collectors.toList());
 
         model.addAttribute("products", products);
         return "admin";

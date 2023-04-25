@@ -22,7 +22,13 @@ public class ProductDao implements CrudDao<ProductEntity, ProductRequest> {
 
     @Override
     public List<ProductEntity> findAll() {
-        return null;
+        String query = "SELECT * FROM product";
+        return jdbcTemplate.query(query, (resultSet, aa) ->
+            new ProductEntity(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getInt("price"),
+                resultSet.getString("image_url")));
     }
 
     @Override
