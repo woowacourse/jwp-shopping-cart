@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -50,8 +51,10 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Product findById(final Long id) {
-        return null;
+    public Optional<Product> findById(final Long id) {
+        String sql = "SELECT id, name, image_url, price FROM product WHERE id=?";
+        Product product = jdbcTemplate.queryForObject(sql, rowMapper, id);
+        return Optional.of(product);
     }
 
     @Override

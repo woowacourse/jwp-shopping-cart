@@ -5,6 +5,7 @@ import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.entity.Product;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +28,12 @@ public class ProductService {
         return products.stream()
             .map(ProductResponseDto::new)
             .collect(Collectors.toList());
+    }
+
+    private void validateProductExist(Long id) {
+        Optional<Product> product = productDao.findById(id);
+        if (!product.isPresent()) {
+            throw new IllegalStateException("존재하지 않는 상품입니다.");
+        }
     }
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.entity.Product;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,5 +58,24 @@ class ProductDaoImplTest {
 
         // then
         assertThat(result.size()).isEqualTo(2);
+    }
+
+    @DisplayName("상품 아이디를 통해서 상품을 조회한다.")
+    @Test
+    void find_product_by_id() {
+        // given
+        ProductDaoImpl productDao = new ProductDaoImpl(jdbcTemplate);
+        Product product1 = new Product("연필", "이미지url", 1000);
+        Product product2 = new Product("지우개", "이미지url", 1000);
+        Long product1Id = productDao.insertProduct(product1);
+        Long product2Id = productDao.insertProduct(product2);
+
+        // when
+        Optional<Product> result = productDao.findById(product1Id);
+
+        // then
+        assertThat(result.get().getName()).isEqualTo("연필");
+        assertThat(result.get().getImageUrl()).isEqualTo("이미지url");
+        assertThat(result.get().getPrice()).isEqualTo(1000);
     }
 }
