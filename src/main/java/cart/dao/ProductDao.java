@@ -33,6 +33,16 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(sql, productRowMapper(), id);
     }
 
+    public void update(final Product newProduct) {
+        final String sql = "update Product set name = ?, price = ?, image_url = ? where id = ?";
+
+        jdbcTemplate.update(sql,
+                newProduct.getName(),
+                newProduct.getPrice(),
+                newProduct.getImage_url(),
+                newProduct.getId());
+    }
+
     private RowMapper<Product> productRowMapper() {
         return (resultSet, rowNum) -> new Product(
                 resultSet.getLong("id"),

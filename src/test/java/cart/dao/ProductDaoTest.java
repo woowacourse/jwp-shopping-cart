@@ -54,6 +54,16 @@ class ProductDaoTest {
 
     @Test
     void 상품_데이터_수정() {
+        final Long id = 2L;
+        final Product newProduct = new Product(id, "new salad", 3000, "url");
+
+        productDao.update(newProduct);
+        final Product foundProduct = productDao.findById(id);
+
+        assertAll(
+                () -> assertThat(foundProduct.getName()).isEqualTo(newProduct.getName()),
+                () -> assertThat(foundProduct.getPrice()).isEqualTo(newProduct.getPrice())
+        );
     }
 
     @Test
