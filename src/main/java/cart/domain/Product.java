@@ -12,4 +12,21 @@ public class Product {
         this.url = url;
         this.price = price;
     }
+
+    public Long getUuid() {
+        return uuid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
 }
