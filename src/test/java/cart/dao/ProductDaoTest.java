@@ -1,11 +1,13 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.entity.product.ProductEntity;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -72,23 +74,37 @@ class ProductDaoTest {
     }
 
 
-    @Test
-    @DisplayName("상품을 DB에서 삭제한다.")
-    void delete() {
-        //given
-        final ProductEntity productEntity = new ProductEntity(
-            null,
-            "다즐",
-            "스플릿.com",
-            10000000,
-            "다즐짱"
-        );
-        final Long savedProductId = productDao.save(productEntity);
+    @Nested
+    class Delete {
 
-        //when
-        productDao.delete(savedProductId);
+        @Test
+        @DisplayName("삭제하고자 하는 ID가 null이면 오류를 던진다.")
+        void deleteWithNullID() {
+            //given
+            //when
+            //then
+            assertThatThrownBy(() -> productDao.delete(null))
+                .isInstanceOf(IllegalArgumentException.class);
+        }
 
-        //then
-        assertThat(productDao.findAll()).hasSize(0);
+        @Test
+        @DisplayName("상품을 DB에서 삭제한다.")
+        void delete() {
+            //given
+            final ProductEntity productEntity = new ProductEntity(
+                null,
+                "다즐",
+                "스플릿.com",
+                10000000,
+                "다즐짱"
+            );
+            final Long savedProductId = productDao.save(productEntity);
+
+            //when
+            productDao.delete(savedProductId);
+
+            //then
+            assertThat(productDao.findAll()).hasSize(0);
+        }
     }
 }

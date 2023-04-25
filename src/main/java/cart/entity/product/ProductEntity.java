@@ -55,4 +55,8 @@ public class ProductEntity {
     public String getDescription() {
         return description.getValue();
     }
+
+    public boolean isPersisted() {
+        return id != null;
+    }
 }
