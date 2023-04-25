@@ -31,4 +31,16 @@ public class H2ProductDao implements ProductDao {
                 rs.getInt("price")
         ));
     }
+
+    @Override
+    public void update(Product product) {
+        String sql = "UPDATE PRODUCT SET id=?, name=?, image_url=?, price=? WHERE id=?";
+        jdbcTemplate.update(sql,
+                product.getId(),
+                product.getName(),
+                product.getImage(),
+                product.getPrice(),
+                product.getId()
+        );
+    }
 }

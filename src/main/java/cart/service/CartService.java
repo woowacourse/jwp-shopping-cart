@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.domain.Product;
 import cart.dto.request.ProductRequest;
+import cart.dto.request.ProductUpdateRequest;
 import cart.dto.response.ProductResponse;
 import cart.persistence.ProductDao;
 import org.springframework.stereotype.Service;
@@ -35,5 +36,16 @@ public class CartService {
         return products.stream()
                 .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImage()))
                 .collect(Collectors.toList());
+    }
+
+    public void update(ProductUpdateRequest productUpdateRequest) {
+        Product product = new Product(
+                productUpdateRequest.getId(),
+                productUpdateRequest.getName(),
+                productUpdateRequest.getImageUrl(),
+                productUpdateRequest.getPrice()
+        );
+
+        productDao.update(product);
     }
 }

@@ -9,4 +9,6 @@ public interface ProductDao {
     void create(Product product);
 
     List<Product> findAll();
+
+    void update(Product product);
 }
