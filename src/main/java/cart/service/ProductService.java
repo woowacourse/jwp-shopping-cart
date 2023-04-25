@@ -22,4 +22,8 @@ public class ProductService {
     public void updateProduct(Product product) {
         productDao.update(product);
     }
+
+    public Product createProduct(Product product) {
+        return productDao.save(product);
+    }
 }
