@@ -1,6 +1,8 @@
 package cart.dao;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -40,5 +42,13 @@ public class JdbcProductDao implements ProductDao {
 
         final RowMapper<Product> rowMapper = BeanPropertyRowMapper.newInstance(Product.class);
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    @Override
+    public void delete(Long id) {
+        final String sql = "DELETE FROM product WHERE id = :id";
+
+        final Map<String, Long> params = Collections.singletonMap("id", id);
+        jdbcTemplate.update(sql, params);
     }
 }

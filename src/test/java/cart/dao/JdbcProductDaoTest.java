@@ -67,4 +67,20 @@ class JdbcProductDaoTest {
         // then
         assertThat(products).hasSize(2);
     }
+
+    @Test
+    @DisplayName("id가 일치하는 상품을 삭제한다.")
+    void delete() {
+        // given
+        final Product product1 = new Product("치킨", 10000, "imgUrl");
+        final Product product2 = new Product("치킨", 10000, "imgUrl");
+        final Long id = productDao.save(product1);
+        productDao.save(product2);
+
+        // when
+        productDao.delete(id);
+
+        // then
+        assertThat(productDao.findAll()).hasSize(1);
+    }
 }
