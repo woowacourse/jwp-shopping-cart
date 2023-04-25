@@ -27,7 +27,6 @@ const form = document.getElementById('form');
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
-
     const formData = new FormData(event.target);
     let product = {};
     for (const entry of formData.entries()) {
@@ -47,7 +46,9 @@ form.addEventListener('submit', (event) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '',
+        url: 'http://localhost:8080/admin',
+        method: 'POST',
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
