@@ -24,6 +24,10 @@ public class Product {
         this.price.edit(price);
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return this.name.getName();
     }
