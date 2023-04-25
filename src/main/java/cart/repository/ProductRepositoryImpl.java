@@ -23,14 +23,13 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) -> {
-        return new ProductEntity(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getString("image"),
-                resultSet.getInt("price")
-        );
-    };
+    private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) ->
+            new ProductEntity(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("image"),
+                    resultSet.getInt("price")
+            );
 
     @Override
     public ProductEntity save(Product product) {
