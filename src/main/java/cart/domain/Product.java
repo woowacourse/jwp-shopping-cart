@@ -1,14 +1,14 @@
-package domain;
+package cart.domain;
 public class Product {
     private final Long id;
     private final String name;
-    private final String imageURL;
+    private final String imageUrl;
     private final int price;
 
     private Product(Long id, String name, String imageURL, int price) {
         this.id = id;
         this.name = validateName(name);
-        this.imageURL = validateImageURL(imageURL);
+        this.imageUrl = validateImageUrl(imageURL);
         this.price = validatePrice(price);
     }
 
@@ -25,12 +25,12 @@ public class Product {
         return 0;
     }
 
-    private String validateImageURL(String imageURL) {
-        return null;
+    private String validateImageUrl(String imageUrl) {
+        return imageUrl;
     }
 
     private String validateName(String name) {
-        return null;
+        return name;
     }
 
     public Long getId() {
@@ -41,8 +41,8 @@ public class Product {
         return name;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public int getPrice() {

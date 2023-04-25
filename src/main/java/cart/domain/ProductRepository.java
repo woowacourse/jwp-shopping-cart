@@ -1,13 +1,14 @@
-package domain;
+package cart.domain;
 
 import java.util.List;
 
-import dto.ProductRequestDto;
+import cart.dto.ProductRequestDto;
+import cart.dto.ProductResponseDto;
 
 public interface ProductRepository {
     Long save(ProductRequestDto productRequestDto);
-    ProductRequestDto findById(Long id);
-    List<ProductRequestDto> findAll();
+    ProductResponseDto findById(Long id);
+    List<ProductResponseDto> findAll();
     void updateById(ProductRequestDto productRequestDto, Long id);
     void deleteById(Long id);
 }

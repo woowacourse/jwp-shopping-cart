@@ -1,4 +1,4 @@
-package repository;
+package cart.repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -8,8 +8,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import domain.ProductRepository;
-import dto.ProductRequestDto;
+import cart.domain.ProductRepository;
+import cart.dto.ProductRequestDto;
+import cart.dto.ProductResponseDto;
 
 @Repository
 public class DBProductRepository implements ProductRepository {
@@ -36,11 +37,12 @@ public class DBProductRepository implements ProductRepository {
     }
 
     @Override
-    public ProductRequestDto findById(Long id) {
+    public ProductResponseDto findById(Long id) {
         String sql = "SELECT name, imgURL, price FROM product WHERE id = ?";
 
         return jdbcTemplate.queryForObject(sql,
-            (resultSet, rowNum) -> new ProductRequestDto(
+            (resultSet, rowNum) -> new ProductResponseDto(
+                id,
                 resultSet.getString("name"),
                 resultSet.getString("imgURL"),
                 resultSet.getInt("price")),
@@ -48,11 +50,12 @@ public class DBProductRepository implements ProductRepository {
     }
 
     @Override
-    public List<ProductRequestDto> findAll() {
-        String sql = "SELECT name, imgURL, price FROM product";
+    public List<ProductResponseDto> findAll() {
+        String sql = "SELECT id, name, imgURL, price FROM product";
 
         return jdbcTemplate.query(sql,
-            (resultSet, rowNum) -> new ProductRequestDto(
+            (resultSet, rowNum) -> new ProductResponseDto(
+                resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("imgURL"),
                 resultSet.getInt("price")));
