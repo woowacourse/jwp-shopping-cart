@@ -38,4 +38,8 @@ public class ProductService {
         productRepository.update(productEntity);
         return ProductResponse.from(productEntity);
     }
+
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
+    }
 }
