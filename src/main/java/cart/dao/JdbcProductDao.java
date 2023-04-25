@@ -1,5 +1,9 @@
 package cart.dao;
 
+import java.util.List;
+
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -28,5 +32,13 @@ public class JdbcProductDao implements ProductDao {
         jdbcTemplate.update(sql, params, keyHolder);
 
         return (long) keyHolder.getKeys().get("id");
+    }
+
+    @Override
+    public List<Product> findAll() {
+        final String sql = "SELECT id, name, price, img_url FROM product";
+
+        final RowMapper<Product> rowMapper = BeanPropertyRowMapper.newInstance(Product.class);
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }

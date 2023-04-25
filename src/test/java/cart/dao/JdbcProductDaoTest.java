@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -50,5 +51,20 @@ class JdbcProductDaoTest {
                 () -> assertThat(result.getPrice()).isEqualTo(10000),
                 () -> assertThat(result.getImgUrl()).isEqualTo("imgUrl")
         );
+    }
+
+    @Test
+    @DisplayName("전체 상품을 조회한다.")
+    void findAll() {
+        final Product product1 = new Product("치킨", 10000, "imgUrl");
+        final Product product2 = new Product("치킨", 10000, "imgUrl");
+        productDao.save(product1);
+        productDao.save(product2);
+
+        // when
+        final List<Product> products = productDao.findAll();
+
+        // then
+        assertThat(products).hasSize(2);
     }
 }
