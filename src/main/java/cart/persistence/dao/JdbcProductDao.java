@@ -38,18 +38,20 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public ProductEntity findByName(final String name) {
-        return null;
+        final String sql = "SELECT product_id, name, image, price FROM product WHERE name = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, name);
     }
 
     @Override
     public List<ProductEntity> findAll() {
-        String sql = "SELECT product_id, name, image, price FROM PRODUCT";
+        final String sql = "SELECT product_id, name, image, price FROM product";
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
     @Override
     public void update(final ProductEntity productEntity) {
-
+        final String sql = "UPDATE product SET name=?, image=?, price=? WHERE product_id=?";
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), productEntity.getId());
     }
 
     @Override

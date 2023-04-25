@@ -12,6 +12,7 @@ import cart.persistence.entity.ProductEntity;
 
 @Service
 public class CartService {
+
     private final ProductDao productDao;
 
     public CartService(final ProductDao productDao) {
@@ -32,7 +33,10 @@ public class CartService {
     }
 
     public void update(final ProductRequest productRequest) {
-        //TODO:
+        final ProductEntity originalEntity = productDao.findByName(productRequest.getName());
+        final ProductEntity productEntity = new ProductEntity(originalEntity.getId(), productRequest.getName(),
+            productRequest.getImage(), productRequest.getPrice());
+        productDao.update(productEntity);
     }
 
     public void delete(final ProductRequest productRequest) {
