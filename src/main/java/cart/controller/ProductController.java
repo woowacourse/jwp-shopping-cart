@@ -20,4 +20,9 @@ public class ProductController {
     public String getSettings() {
         return "settings";
     }
+
+    @GetMapping("/cart")
+    public String getCart() {
+        return "cart";
+    }
 }
