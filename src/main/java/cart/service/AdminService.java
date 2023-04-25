@@ -29,4 +29,8 @@ public class AdminService {
                 .map(ProductResponse::new)
                 .collect(toList());
     }
+
+    public void deleteById(Long id) {
+        productDao.deleteById(id);
+    }
 }

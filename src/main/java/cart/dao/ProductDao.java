@@ -49,4 +49,9 @@ public class ProductDao {
         String sql = "select * from product";
         return jdbcTemplate.query(sql, rowMapper);
     }
+
+    public void deleteById(Long id) {
+        String sql = "delete from product where id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }
