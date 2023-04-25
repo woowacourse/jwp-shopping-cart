@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dto.ProductRequest;
+import cart.dto.RequestFixture;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class ProductIntegrationTest {
     @Test
     void updateProduct() {
         final long id = 1L;
-        final ProductRequest productRequest = new ProductRequest("누누", "naver.com", 1);
+        final ProductRequest productRequest = RequestFixture.NUNU_REQUEST;
         final var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
@@ -60,7 +61,7 @@ class ProductIntegrationTest {
     @Test
     void createProduct() {
         final long id = 1L;
-        final ProductRequest productRequest = new ProductRequest("누누", "naver.com", 1);
+        final ProductRequest productRequest = RequestFixture.NUNU_REQUEST;
         final var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)

@@ -11,6 +11,8 @@ import java.util.List;
 
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.dto.RequestFixture;
+import cart.dto.ResponseFixture;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +31,8 @@ class ProductControllerTest {
     @Test
     void 상품_조회_테스트() throws Exception {
         final List<ProductResponse> productResponses = List.of(
-                new ProductResponse(1, "누누", "naver.com", 1),
-                new ProductResponse(2, "오도", "naver.com", 1)
+                ResponseFixture.NUNU_RESPONSE,
+                ResponseFixture.ODO_RESPONSE
         );
         final String result = objectMapper.writeValueAsString(productResponses);
 
@@ -41,9 +43,9 @@ class ProductControllerTest {
 
     @Test
     void 상품_업데이트_테스트() throws Exception {
-        final ProductRequest productRequest = new ProductRequest("누누", "naver.com", 1);
+        final ProductRequest productRequest = RequestFixture.NUNU_REQUEST;
         final String request = objectMapper.writeValueAsString(productRequest);
-        final ProductResponse productResponse = new ProductResponse(1L, "누누", "naver.com", 1);
+        final ProductResponse productResponse = ResponseFixture.NUNU_RESPONSE;
         final String result = objectMapper.writeValueAsString(productResponse);
         final int id = 1;
         mockMvc.perform(put("/products/" + id)
@@ -55,9 +57,9 @@ class ProductControllerTest {
 
     @Test
     void 상품_생성_테스트() throws Exception {
-        final ProductRequest productRequest = new ProductRequest("오도", "naver.com", 1);
+        final ProductRequest productRequest = RequestFixture.NUNU_REQUEST;
         final String request = objectMapper.writeValueAsString(productRequest);
-        final ProductResponse productResponse = new ProductResponse(1, "오도", "naver.com", 1);
+        final ProductResponse productResponse = ResponseFixture.NUNU_RESPONSE;
         final String result = objectMapper.writeValueAsString(productResponse);
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
