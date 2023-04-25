@@ -7,7 +7,7 @@
 - [ ] 상품 관리 CRUD API 작성 
   - [ ] Create
     - [x] repository 구현
-    - [ ] service 구현
+    - [x] service 구현
     - [ ] controller 구현
   - [ ] Read
     - [ ] repository 구현
