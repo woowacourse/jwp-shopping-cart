@@ -4,11 +4,11 @@ import java.util.List;
 
 public class ProductRequestDto {
 
-    private String name;
-    private String imageUrl;
-    private Integer price;
-    private String description;
-    private List<Long> categoryIds;
+    private final String name;
+    private final String imageUrl;
+    private final Integer price;
+    private final String description;
+    private final List<Long> categoryIds;
 
     public ProductRequestDto(final String name, final String imageUrl, final Integer price, final String description,
         final List<Long> categoryIds) {
