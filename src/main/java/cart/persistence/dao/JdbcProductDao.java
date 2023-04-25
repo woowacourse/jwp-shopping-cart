@@ -56,6 +56,7 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public void deleteByName(final String name) {
-
+        final String sql = "DELETE FROM product WHERE name = ?";
+        jdbcTemplate.update(sql, name);
     }
 }

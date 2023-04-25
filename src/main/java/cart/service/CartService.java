@@ -40,6 +40,6 @@ public class CartService {
     }
 
     public void delete(final ProductRequest productRequest) {
-        //TODO:
+        productDao.deleteByName(productRequest.getName());
     }
 }

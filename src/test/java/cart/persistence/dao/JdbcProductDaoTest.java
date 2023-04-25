@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cart.persistence.entity.ProductEntity;
@@ -59,5 +60,15 @@ class JdbcProductDaoTest {
         productDao.update(originalJena);
         ProductEntity jena = productDao.findByName("jena");
         assertThat(jena.getName()).isEqualTo("jena");
+    }
+
+    @Test
+    void deleteByName_메서드로_저장된_Product를_삭제한다() {
+        final ProductEntity modi = new ProductEntity("modi", new byte[] {}, 10000);
+        productDao.save(modi);
+
+        productDao.deleteByName("modi");
+
+        assertThatThrownBy(() -> productDao.findByName("modi")).isInstanceOf(EmptyResultDataAccessException.class);
     }
 }
