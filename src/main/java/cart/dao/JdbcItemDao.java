@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.entity.CreateItem;
 import cart.entity.Item;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,10 +18,10 @@ public class JdbcItemDao implements ItemDao {
     }
 
     @Override
-    public void save(final Item item) {
-        String sql = "insert into item(name, item_url, price) values (?, ?, ?, ?)";
+    public void save(final CreateItem createItem) {
+        String sql = "insert into item(name, item_url, price) values (?, ?, ?)";
 
-        jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice());
+        jdbcTemplate.update(sql, createItem.getName(), createItem.getImageUrl(), createItem.getPrice());
     }
 
     @Override
@@ -43,7 +44,7 @@ public class JdbcItemDao implements ItemDao {
 
     @Override
     public void update(final Item item) {
-        String sql = "update item set name = ?, itemUrl = ?, price = ? where id = ?";
+        String sql = "update item set name = ?, item_url = ?, price = ? where id = ?";
 
         jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice(), item.getId());
     }

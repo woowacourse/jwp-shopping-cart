@@ -2,22 +2,16 @@ package cart.entity;
 
 import java.util.Objects;
 
-public class Item {
+public class CreateItem {
 
-    private final Long id;
     private final String name;
     private final String imageUrl;
     private final int price;
 
-    public Item(final Long id, final String name, final String imageUrl, final int price) {
-        this.id = id;
+    public CreateItem(final String name, final String imageUrl, final int price) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {
@@ -36,12 +30,12 @@ public class Item {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Item item = (Item) o;
-        return Objects.equals(id, item.id);
+        CreateItem that = (CreateItem) o;
+        return price == that.price && Objects.equals(name, that.name) && Objects.equals(imageUrl, that.imageUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(name, imageUrl, price);
     }
 }
