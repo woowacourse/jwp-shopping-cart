@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,10 +34,13 @@ public class AdminController {
 
     @PostMapping("/products")
     public ResponseEntity<Void> addProduct(@RequestBody final ProductRequestDto productRequestDto) {
-        System.out.println(productRequestDto.getName());
         Long id = productService.saveProduct(productRequestDto);
         return ResponseEntity.created(URI.create("admin/products/"+id)).build();
     }
 
-
+    @PatchMapping("products/{id}")
+    public ResponseEntity<Void> updateProduct(@PathVariable final Long id, @RequestBody ProductRequestDto productRequestDto) {
+        productService.updateProduct(id, productRequestDto);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -78,4 +78,23 @@ class ProductDaoImplTest {
         assertThat(result.get().getImageUrl()).isEqualTo("이미지url");
         assertThat(result.get().getPrice()).isEqualTo(1000);
     }
+
+    @DisplayName("상품의 ID를 통해 내용을 업데이트 한다.")
+    @Test
+    void update_product_by_id() {
+        // given
+        ProductDaoImpl productDao = new ProductDaoImpl(jdbcTemplate);
+        Product product = new Product("연필", "이미지url", 1000);
+        Long productId = productDao.insertProduct(product);
+        Product updateProduct = new Product("지우개", "이미지url", 2000);
+
+        // when
+        productDao.updateProduct(productId, updateProduct);
+        Optional<Product> result = productDao.findById(productId);
+
+        // then
+        assertThat(result.get().getName()).isEqualTo("지우개");
+        assertThat(result.get().getImageUrl()).isEqualTo("이미지url");
+        assertThat(result.get().getPrice()).isEqualTo(2000);
+    }
 }

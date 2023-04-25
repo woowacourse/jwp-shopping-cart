@@ -29,7 +29,7 @@ public class ProductDaoImpl implements ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long insertProduct(Product product) {
+    public Long insertProduct(final Product product) {
         String sql = "INSERT INTO product(name, image_url, price) VALUES(?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -58,8 +58,13 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Product updateProduct(final Long id, final ProductRequestDto productRequestDto) {
-        return null;
+    public void updateProduct(final Long id, final Product product) {
+        String sql = "UPDATE product SET name=?, image_url=?, price=? WHERE id=?";
+        jdbcTemplate.update(sql,
+            product.getName(),
+            product.getImageUrl(),
+            product.getPrice(),
+            id);
     }
 
     @Override

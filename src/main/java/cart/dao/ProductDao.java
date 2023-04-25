@@ -10,6 +10,6 @@ public interface ProductDao {
     public Long insertProduct(Product product);
     public List<Product> findAll();
     public Optional<Product> findById(Long id);
-    public Product updateProduct(Long id, ProductRequestDto productRequestDto);
+    public void updateProduct(Long id, Product product);
     public Long deleteProduct(Long id);
 }

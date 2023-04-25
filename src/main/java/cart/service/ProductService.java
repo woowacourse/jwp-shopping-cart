@@ -30,7 +30,12 @@ public class ProductService {
             .collect(Collectors.toList());
     }
 
-    private void validateProductExist(Long id) {
+    public void updateProduct(final Long id, final ProductRequestDto productRequestDto) {
+        validateProductExist(id);
+        productDao.updateProduct(id, new Product(productRequestDto));
+    }
+
+    private void validateProductExist(final Long id) {
         Optional<Product> product = productDao.findById(id);
         if (!product.isPresent()) {
             throw new IllegalStateException("존재하지 않는 상품입니다.");
