@@ -9,6 +9,9 @@
 
 --- 
 
+insert into product (name, price, image) values ('haha', 10000, 'https://tecoble.techcourse.co.kr/static/9eab43e832e71e7b485b4273b95ccc3a/02b8e/sample4.png')
+---
+
 - [x] 상품 목록 페이지 연동
   - [x] 요청 : Get /
   - [x] 응답 : index.html
@@ -43,10 +46,10 @@
     - id 전송
     - [ ] 응답 : 200 /admin redirect
       - [ ] 모델 추가 : List\<Product>
-- [ ] 관리자 도구 페이지 연동
-  - [ ] 요청 : Get /admin
-  - [ ] 응답 : admin.html
-    - [ ] 모델 추가 : List\<Product>
+- [x] 관리자 도구 페이지 연동
+  - [x] 요청 : Get /admin
+  - [x] 응답 : admin.html
+    - [x] 모델 추가 : List\<Product>
 
 ---
 

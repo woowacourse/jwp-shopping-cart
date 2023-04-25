@@ -19,9 +19,16 @@ public class CartController {
     }
 
     @GetMapping("/")
-    public String main(Model model) {
-        List<ProductDto> productDtos = cartService.findAll();
+    public String main(final Model model) {
+        final List<ProductDto> productDtos = cartService.findAll();
         model.addAttribute("products", productDtos);
         return "index";
+    }
+
+    @GetMapping("/admin")
+    public String adminProducts(final Model model) {
+        final List<ProductDto> productDtos = cartService.findAll();
+        model.addAttribute("products", productDtos);
+        return "admin";
     }
 }
