@@ -2,13 +2,13 @@ package cart.entity.product;
 
 public class ProductEntity {
 
-    private Integer id;
+    private Long id;
     private Name name;
     private ImageUrl imageUrl;
     private Price price;
     private Description description;
 
-    public ProductEntity(final Integer id, final String name, final String imageUrl, final Integer price,
+    public ProductEntity(final Long id, final String name, final String imageUrl, final Integer price,
         final String description) {
         this.id = id;
         this.name = new Name(name);
@@ -17,7 +17,7 @@ public class ProductEntity {
         this.description = new Description(description);
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

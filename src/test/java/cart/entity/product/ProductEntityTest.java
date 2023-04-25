@@ -12,12 +12,12 @@ class ProductEntityTest {
     @DisplayName("상품 정보를 조회한다.")
     void getInfo() {
         //given
-        final ProductEntity productEntity = new ProductEntity(1, "name", "imageUrl", 1000, "description");
+        final ProductEntity productEntity = new ProductEntity(1L, "name", "imageUrl", 1000, "description");
 
         //when
         //then
         assertAll(
-            () -> assertThat(productEntity.getId()).isEqualTo(1),
+            () -> assertThat(productEntity.getId()).isEqualTo(1L),
             () -> assertThat(productEntity.getName()).isEqualTo("name"),
             () -> assertThat(productEntity.getImageUrl()).isEqualTo("imageUrl"),
             () -> assertThat(productEntity.getPrice()).isEqualTo(1000),
