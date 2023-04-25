@@ -22,6 +22,8 @@ class ProductServiceTest {
     private int port;
 
     @Autowired
+    private ProductService productService;
+    @Autowired
     private ProductDao productDao;
 
     @BeforeEach
@@ -37,7 +39,7 @@ class ProductServiceTest {
 
     @Test
     void 모든_상품_목록_조회() {
-        final List<Product> products = productDao.findAll();
+        final List<Product> products = productService.findAll();
 
         assertThat(products.size()).isEqualTo(2);
     }
