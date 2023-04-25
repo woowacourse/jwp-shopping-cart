@@ -5,9 +5,11 @@ import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -42,5 +44,11 @@ public class ProductController {
     public void productSave(@RequestBody ProductRequest productRequest) {
         // TODO: dto 내부 값 validation
         productService.save(productRequest);
+    }
+
+    @GetMapping("/admin")
+    @ResponseBody
+    public List<ProductDto> productList() {
+        return productService.findAll();
     }
 }

@@ -1,10 +1,13 @@
 package cart.dto;
 
 public class ProductDto {
-    private final int id;
-    private final String name;
-    private final String imgUrl;
-    private final int price;
+    private int id;
+    private String name;
+    private String imgUrl;
+    private int price;
+
+    public ProductDto() {
+    }
 
     public ProductDto(int id, String name, String imgUrl, int price) {
         this.id = id;
@@ -27,5 +30,21 @@ public class ProductDto {
 
     public int getPrice() {
         return price;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

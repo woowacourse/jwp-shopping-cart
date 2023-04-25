@@ -8,7 +8,7 @@
   - [x] 상품 기본 정보 : 상품 ID, 상품 이름, 상품 이미지, 상품 가격
 - [ ] 상품 관리 CRUD API 작성
   - [x] Create : POST - /admin
-  - [ ] Read : GET - /admin
+  - [x] Read : GET - /admin
   - [ ] Update : POST - /admin/{id}
   - [ ] Delete : DELETE - /admin/{id}
 - [ ] 관리자 도구 페이지 연동
