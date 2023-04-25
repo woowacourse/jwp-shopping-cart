@@ -25,4 +25,9 @@ public class ProductDao {
                         .build()
         );
     }
+
+    public void insert(ProductEntity productEntity) {
+        String sql = "INSERT INTO product (name, img_url, price) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImgUrl(), productEntity.getPrice());
+    }
 }

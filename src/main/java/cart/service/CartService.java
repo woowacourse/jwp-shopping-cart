@@ -2,7 +2,8 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
-import cart.service.dto.ProductDto;
+import cart.service.dto.ProductRequest;
+import cart.service.dto.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,15 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<ProductDto> findAllProducts() {
+    public List<ProductResponse> findAllProducts() {
         List<ProductEntity> allProducts = productDao.findAll();
         return allProducts.stream()
-                .map(ProductDto::fromEntity)
+                .map(ProductResponse::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    public void save(ProductRequest productRequest) {
+        ProductEntity productEntity = productRequest.toEntity();
+        productDao.insert(productEntity);
     }
 }
