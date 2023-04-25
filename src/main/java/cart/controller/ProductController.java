@@ -1,9 +1,14 @@
 package cart.controller;
 
 import cart.dto.ProductCreateRequest;
+import cart.dto.ProductDto;
 import cart.dto.ProductUpdateRequest;
+import cart.dto.Response;
+import cart.dto.ResultResponse;
+import cart.dto.SimpleResponse;
 import cart.service.ProductService;
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,24 +28,24 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createProduct(@RequestBody ProductCreateRequest request) {
-        long productId = productService.createProduct(request.getName(), request.getPrice(), request.getImageUrl());
+    public ResponseEntity<Response> createProduct(@RequestBody @Valid ProductCreateRequest request) {
+        ProductDto productDto = productService.createProduct(request.getName(), request.getPrice(), request.getImageUrl());
         return ResponseEntity
-                .created(URI.create("/products/" + productId))
-                .body("ok");
+                .created(URI.create("/products/" + productDto.getId()))
+                .body(new ResultResponse<>("201", "상품이 생성되었습니다.", productDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Response> deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
         return ResponseEntity
-                .ok("ok");
+                .ok(new SimpleResponse("200", "상품이 제거되었습니다."));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequest request) {
+    public ResponseEntity<Response> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductUpdateRequest request) {
         productService.updateProductById(id, request.getName(), request.getPrice(), request.getImageUrl());
         return ResponseEntity
-                .ok("ok");
+                .ok(new ResultResponse<>("200", "상품이 수정되었습니다.", request));
     }
 }

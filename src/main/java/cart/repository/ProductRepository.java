@@ -27,7 +27,7 @@ public class ProductRepository {
         sqlParameterSource.addValue("name", name);
         sqlParameterSource.addValue("price", price);
         sqlParameterSource.addValue("image_url", imageUrl);
-        return simpleJdbcInsert.execute(sqlParameterSource);
+        return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
     public List<ProductEntity> findAll() {

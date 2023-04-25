@@ -16,8 +16,9 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public long createProduct(String name, int price, String imageUrl) {
-        return productRepository.save(name, price, imageUrl);
+    public ProductDto createProduct(String name, int price, String imageUrl) {
+        long productId = productRepository.save(name, price, imageUrl);
+        return new ProductDto(productId, name, price, imageUrl);
     }
 
     public List<ProductDto> findAllProducts() {
