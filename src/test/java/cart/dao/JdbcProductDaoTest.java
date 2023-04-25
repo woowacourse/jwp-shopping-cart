@@ -26,4 +26,15 @@ class JdbcProductDaoTest {
         Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
         assertThat(id).isPositive();
     }
+
+    @Test
+    @DisplayName("Product 조회 테스트")
+    void findAllTest() {
+        jdbcProductDao.insert(new Product("IO", 10000, null));
+        jdbcProductDao.insert(new Product("ASH", 10000, null));
+        jdbcProductDao.insert(new Product("BROWN", 10000, null));
+
+        assertThat(jdbcProductDao.findAll()).extracting("name")
+                .containsExactly("IO", "ASH", "BROWN");
+    }
 }
