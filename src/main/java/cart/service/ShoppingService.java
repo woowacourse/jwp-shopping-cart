@@ -1,11 +1,11 @@
 package cart.service;
 
 import cart.controller.dto.ProductDto;
-import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.persistence.dao.ProductDao;
+import cart.persistence.entity.Product;
+import cart.persistence.entity.ProductCategory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,5 +23,10 @@ public class ShoppingService {
         return products.stream()
                 .map(product -> new ProductDto(product.getId(), product.getName(), product.getImageUrl(),
                         product.getPrice(), product.getCategory().name())).collect(Collectors.toList());
+    }
+
+    public void save(final ProductDto productDto) {
+        productDao.insert(new Product(productDto.getId(), productDto.getName(), productDto.getImageUrl(),
+                productDto.getPrice(), ProductCategory.from(productDto.getCategory())));
     }
 }

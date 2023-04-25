@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.persistence.entity;
 
 public class Product {
     private Long id;
@@ -9,6 +9,13 @@ public class Product {
 
     public Product(final Long id, final String name, final String imageUrl, final int price, final ProductCategory category) {
         this.id = id;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.price = price;
+        this.category = category;
+    }
+
+    public Product(final String name, final String imageUrl, final int price, final ProductCategory category) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
