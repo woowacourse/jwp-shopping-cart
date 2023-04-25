@@ -2,9 +2,13 @@ package cart.controller;
 
 import java.util.List;
 
+import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,5 +20,12 @@ public class ProductController {
                 new ProductResponse(2, "오도", "naver.com", 1)
         );
         return ResponseEntity.ok(productResponses);
+    }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable final long id, @RequestBody final ProductRequest productRequest) {
+        final ProductResponse productResponse = new ProductResponse(id, productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
+
+        return ResponseEntity.ok(productResponse);
     }
 }
