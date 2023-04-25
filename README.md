@@ -47,3 +47,17 @@
   - [ ] 요청 : Get /admin
   - [ ] 응답 : admin.html
     - [ ] 모델 추가 : List\<Product>
+
+---
+
+DB 테이블
+
+```sql
+CREATE TABLE PRODUCT (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    price INT NOT NULL,
+    image VARCHAR(2000) NOT NULL,
+    PRIMARY KEY (id)
+);
+```
