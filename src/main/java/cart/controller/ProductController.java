@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
+//TODO : URL 에 따른 컨트롤러 분리할 것
 @Controller
 public class ProductController {
 
@@ -53,5 +54,12 @@ public class ProductController {
         productService.deleteProduct(productId);
 
         return "admin";
+    }
+
+    @GetMapping("/")
+    public String showWelcomePage(final Model model) {
+        List<ProductSearchResponse> productSearchResponses = productService.searchAllProducts();
+        model.addAttribute("products", productSearchResponses);
+        return "index";
     }
 }
