@@ -1,0 +1,52 @@
+package cart.persistence.dao;
+
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import cart.persistence.entity.ProductEntity;
+
+@JdbcTest
+@SuppressWarnings("NonAsciiCharacters")
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+class JdbcProductDaoTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private ProductDao productDao;
+
+    @BeforeEach
+    void setUp() {
+        productDao = new JdbcProductDao(jdbcTemplate);
+    }
+
+    @Test
+    void save_메서드로_Product를_저장한다() {
+        final ProductEntity productEntity = new ProductEntity("modi", new byte[]{},10000);
+
+        final Long productId = productDao.save(productEntity);
+
+        assertThat(productId).isGreaterThan(0L);
+    }
+
+    @Test
+    void findAll_메서드로_저장된_Product의_목록을_불러온다() {
+        final ProductEntity modi = new ProductEntity("modi", new byte[]{},10000);
+        final ProductEntity jena = new ProductEntity("jena", new byte[]{},100000);
+        productDao.save(modi);
+        productDao.save(jena);
+
+        final List<ProductEntity> products = productDao.findAll();
+
+        assertThat(products.size()).isEqualTo(2);
+    }
+}
