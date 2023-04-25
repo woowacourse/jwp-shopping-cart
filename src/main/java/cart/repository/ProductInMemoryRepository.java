@@ -26,7 +26,7 @@ public class ProductInMemoryRepository implements ProductRepository {
 
     @Override
     public void add(Product product) {
-        products.add(product);
+        products.add(Product.from((long) (products.size() + 1), product.getName(), product.getImgUrl(), product.getPrice()));
     }
 
     @Override

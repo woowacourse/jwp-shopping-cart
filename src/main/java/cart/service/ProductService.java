@@ -13,7 +13,11 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Transactional(readOnly = true)
     public ProductsResponseDto findAll() {
