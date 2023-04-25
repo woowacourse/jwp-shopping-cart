@@ -9,10 +9,10 @@
 
 --- 
 
-- [ ] 상품 목록 페이지 연동
-  - [ ] 요청 : Get /
-  - [ ] 응답 : index.html
-    - [ ] 모델 추가 : List\<Product>
+- [x] 상품 목록 페이지 연동
+  - [x] 요청 : Get /
+  - [x] 응답 : index.html
+    - [x] 모델 추가 : List\<Product>
 - [ ] 상품 관리 CRUD API 작성
   /product
   - [ ] Create
