@@ -7,15 +7,13 @@ import cart.entity.ProductEntity;
 import cart.exception.ProductNotFoundException;
 import cart.repository.ProductRepository;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     public ProductDto createProduct(String name, int price, String imageUrl) {
         long productId = productRepository.save(name, price, imageUrl);

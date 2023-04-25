@@ -3,8 +3,12 @@ package cart.dto;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+@Getter
+@RequiredArgsConstructor
 public class ProductUpdateRequest {
     @NotBlank
     @Length(min = 1, max = 10)
@@ -16,22 +20,4 @@ public class ProductUpdateRequest {
 
     @NotBlank
     private final String imageUrl;
-
-    public ProductUpdateRequest(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
 }

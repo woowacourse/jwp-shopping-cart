@@ -9,6 +9,7 @@ import cart.dto.SimpleResponse;
 import cart.service.ProductService;
 import java.net.URI;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,12 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/products")
+@RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
-
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @PostMapping
     public ResponseEntity<Response> createProduct(@RequestBody @Valid ProductCreateRequest request) {

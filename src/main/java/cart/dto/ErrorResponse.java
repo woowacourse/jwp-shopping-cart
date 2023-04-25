@@ -2,7 +2,9 @@ package cart.dto;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
 
+@Getter
 public class ErrorResponse extends Response {
     private final Map<String, String> validation = new HashMap<>();
 
@@ -16,9 +18,5 @@ public class ErrorResponse extends Response {
 
     public void addValidation(String fieldName, String errorMessage) {
         validation.put(fieldName, errorMessage);
-    }
-
-    public Map<String, String> getValidation() {
-        return validation;
     }
 }

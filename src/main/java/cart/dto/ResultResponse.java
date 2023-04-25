@@ -1,5 +1,8 @@
 package cart.dto;
 
+import lombok.Getter;
+
+@Getter
 public class ResultResponse<T> extends Response {
     private final T result;
 
@@ -14,9 +17,5 @@ public class ResultResponse<T> extends Response {
 
     public static <T> ResultResponse<T> created(String message, T result) {
         return new ResultResponse<>("201", message, result);
-    }
-
-    public T getResult() {
-        return result;
     }
 }
