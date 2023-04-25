@@ -25,9 +25,9 @@ public class ProductDao {
     public List<Product> findAll() {
         final String query = "SELECT p.id, p.name, p.image_url, p.price, p.category FROM product as p";
         return jdbcTemplate.query(query, (result, count) ->
-            new Product(result.getLong("id"), result.getString("name"),
-                    result.getString("image_url"), result.getInt("price"),
-                    ProductCategory.from(result.getString("category"))));
+                new Product(result.getLong("id"), result.getString("name"),
+                        result.getString("image_url"), result.getInt("price"),
+                        ProductCategory.from(result.getString("category"))));
     }
 
     public Long insert(final Product product) {
@@ -55,5 +55,12 @@ public class ProductDao {
         } catch (EmptyResultDataAccessException exception) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }
+    }
+
+    public void update(final Product product) {
+        final String query = "UPDATE product AS p SET p.name = ?, p.image_url = ?, p.price = ?, p.category = ? " +
+                "WHERE p.id = ?";
+        jdbcTemplate.update(query, product.getName(), product.getImageUrl(), product.getPrice(),
+                product.getCategory().name(), product.getId());
     }
 }

@@ -29,4 +29,10 @@ public class ShoppingService {
         productDao.insert(new Product(productDto.getId(), productDto.getName(), productDto.getImageUrl(),
                 productDto.getPrice(), ProductCategory.from(productDto.getCategory())));
     }
+
+    public void update(final Long id, final ProductDto productDto) {
+        productDao.findById(id);
+        productDao.update(new Product(id, productDto.getName(), productDto.getImageUrl(),
+                productDto.getPrice(), ProductCategory.from(productDto.getCategory())));
+    }
 }
