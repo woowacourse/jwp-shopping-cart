@@ -1,8 +1,11 @@
 package cart.dao;
 
 import cart.controller.dto.ProductCreateRequest;
+import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class ProductDao {
@@ -17,4 +20,14 @@ public class ProductDao {
         jdbcTemplate.update(sql, request.getName(), request.getPrice(), request.getImageUrl());
     }
 
+    public List<ProductEntity> findAll() {
+        String sql = "SELECT * FROM PRODUCT";
+        return jdbcTemplate.query(sql, (rs, rowNum)
+                -> new ProductEntity(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("image_url"),
+                rs.getInt("price"))
+        );
+    }
 }

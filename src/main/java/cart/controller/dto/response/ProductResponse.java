@@ -1,16 +1,19 @@
-package cart.entity;
+package cart.controller.dto.response;
 
-public class ProductEntity {
+import cart.entity.ProductEntity;
+
+public class ProductResponse {
+
     private final Long id;
     private final String name;
     private final String imageUrl;
     private final int price;
 
-    public ProductEntity(Long id, String name, String imageUrl, int price) {
-        this.id = id;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.price = price;
+    public ProductResponse(ProductEntity entity) {
+        this.id = entity.getId();
+        this.name = entity.getName();
+        this.imageUrl = entity.getImageUrl();
+        this.price = entity.getPrice();
     }
 
     public Long getId() {
@@ -28,6 +31,4 @@ public class ProductEntity {
     public int getPrice() {
         return price;
     }
-
 }
-

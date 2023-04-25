@@ -3,6 +3,7 @@ package cart.controller;
 import cart.controller.dto.ProductCreateRequest;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,9 @@ public class AdminController {
     }
 
     @GetMapping
-    public String admin() {
+    public String admin(Model model) {
+        model.addAttribute("products", productService.findAll());
+
         return "admin";
     }
 
