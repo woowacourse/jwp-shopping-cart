@@ -3,5 +3,5 @@ CREATE TABLE product (
     name VARCHAR(50) NOT NULL,
     img_url VARCHAR(255),
     price INT NOT NULL,
-    PRIMARY KEY (id);
+    PRIMARY KEY (id)
 );
