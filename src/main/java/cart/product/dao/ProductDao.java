@@ -9,5 +9,11 @@ public interface ProductDao {
     
     Product findByID(long id);
     
+    Product findByName(String name);
+    
+    void deleteByID(long id);
+    
+    void update(Product product);
+    
     List<Product> findAll();
 }

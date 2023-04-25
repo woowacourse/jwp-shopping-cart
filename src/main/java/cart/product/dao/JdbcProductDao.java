@@ -3,6 +3,7 @@ package cart.product.dao;
 import cart.product.domain.Name;
 import cart.product.domain.Price;
 import cart.product.domain.Product;
+import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,17 @@ public class JdbcProductDao implements ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
     
+    public void update(final Product product) {
+        final String sql = "update product_list set name = ?, image = ?, price = ? where id = ?";
+        this.jdbcTemplate.update(con -> {
+            final PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, product.getName().getValue());
+            preparedStatement.setString(2, product.getImage());
+            preparedStatement.setInt(3, product.getPrice().getValue());
+            preparedStatement.setLong(4, product.getId());
+            return preparedStatement;
+        });
+    }
     
     @Override
     public long insert(final Product product) {
@@ -48,6 +60,18 @@ public class JdbcProductDao implements ProductDao {
     public Product findByID(final long id) {
         final String sql = "select * from product_list where id = ?";
         return this.jdbcTemplate.queryForObject(sql, this.productRowMapper, id);
+    }
+    
+    @Override
+    public Product findByName(final String name) {
+        final String sql = "select * from product_list where name = ?";
+        return this.jdbcTemplate.queryForObject(sql, this.productRowMapper, name);
+    }
+    
+    @Override
+    public void deleteByID(final long id) {
+        final String sql = "delete from product_list where id = ?";
+        this.jdbcTemplate.update(sql, id);
     }
     
     @Override
