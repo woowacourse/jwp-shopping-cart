@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.controller.ProductModifyRequest;
 import cart.controller.ProductRegisterRequest;
 import cart.controller.ProductSearchResponse;
 import org.springframework.stereotype.Service;
@@ -32,5 +33,14 @@ public class ProductService {
                                                                        entity.getPrice(),
                                                                        entity.getImageUrl()))
                               .collect(Collectors.toList());
+    }
+
+    public void modifyProduct(final Long productId, final ProductModifyRequest productModifyRequest) {
+        final ProductEntity modifiedProductEntity = new ProductEntity(productId,
+                                                              productModifyRequest.getName(),
+                                                              productModifyRequest.getPrice(),
+                                                              productModifyRequest.getImageUrl());
+
+        productDao.modify(modifiedProductEntity);
     }
 }

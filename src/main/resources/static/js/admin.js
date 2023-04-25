@@ -63,9 +63,14 @@ const createProduct = (product) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
     const { id } = product;
-
+    console.log(id);
     axios.request({
-        url: '',
+        url: '/products/' + id,
+        method: 'patch',
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+        },
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {

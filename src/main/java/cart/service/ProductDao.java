@@ -38,4 +38,14 @@ public class ProductDao {
 
         return jdbcTemplate.query(sql, rowMapper);
     }
+
+    public void modify(final ProductEntity modifiedProductEntity) {
+        final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql,
+                            modifiedProductEntity.getName(),
+                            modifiedProductEntity.getPrice(),
+                            modifiedProductEntity.getImageUrl(),
+                            modifiedProductEntity.getId());
+    }
 }
