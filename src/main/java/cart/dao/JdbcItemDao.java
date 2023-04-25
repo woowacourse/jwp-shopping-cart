@@ -1,7 +1,8 @@
 package cart.dao;
 
-import cart.domain.Item;
+import cart.entity.Item;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,7 +25,20 @@ public class JdbcItemDao implements ItemDao {
 
     @Override
     public List<Item> findAll() {
-        return null;
+        String sql = "select * from item";
+
+        return jdbcTemplate.query(sql, mapRow());
+    }
+
+    public RowMapper<Item> mapRow() {
+        return (rs, rowNum) -> {
+            Long id = rs.getLong(1);
+            String name = rs.getString(2);
+            String itemUrl = rs.getString(3);
+            int price = rs.getInt(4);
+
+            return new Item(id, name, itemUrl, price);
+        };
     }
 
     @Override
