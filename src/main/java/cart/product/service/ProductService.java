@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.product.dao.ProductDao;
-import cart.product.entity.Product;
 import cart.product.dto.ProductRequest;
 import cart.product.dto.ProductResponse;
+import cart.product.entity.Product;
 
 @Service
+@Transactional
 public class ProductService {
 
 	private final ProductDao productDao;
@@ -20,7 +21,7 @@ public class ProductService {
 		this.productDao = productDao;
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<ProductResponse> findAll() {
 		return productDao.findAll().stream()
 			.map(ProductResponse::new)
