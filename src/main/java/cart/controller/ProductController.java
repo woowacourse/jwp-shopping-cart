@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -51,12 +50,15 @@ public class ProductController {
     }
 
     @GetMapping("/admin")
-    @ResponseBody
-    public List<ProductDto> productList() {
-        return productService.findAll();
+    public ModelAndView productList() {
+        ModelAndView mav = new ModelAndView("/admin");
+        List<ProductDto> products = productService.findAll();
+        System.out.println(products);
+        mav.addObject("products", products);
+        return mav;
     }
 
-    @PostMapping(path = "/admin/{id}")
+    @PostMapping("/admin/{id}")
     public ResponseEntity<String> productModify(@RequestBody ProductRequest productRequest, @PathVariable int id) {
         productService.update(productRequest, id);
         return new ResponseEntity<>("ok", HttpStatus.OK);
