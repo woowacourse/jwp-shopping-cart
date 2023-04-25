@@ -59,4 +59,9 @@ public class ProductDao {
 		final String sql = "UPDATE product SET name = ?, price = ?, image = ? WHERE id = ?";
 		return jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), id);
 	}
+
+	public void deleteById(Long id) {
+		final String sql = "DELETE FROM product where id = ?";
+		jdbcTemplate.update(sql, id);
+	}
 }

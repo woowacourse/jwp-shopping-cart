@@ -38,4 +38,8 @@ public class ProductService {
 			productRequest.getPrice(), null, null);
 		return productDao.updateById(id, product);
 	}
+
+	public void deleteProductsById(Long id) {
+		productDao.deleteById(id);
+	}
 }
