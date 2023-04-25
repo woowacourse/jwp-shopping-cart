@@ -1,4 +1,4 @@
-package cart.entity.category;
+package cart.entity;
 
 public class CategoryEntity {
 
