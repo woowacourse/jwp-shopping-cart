@@ -25,8 +25,10 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/products")
-    public String products() {
+    @GetMapping("/")
+    public String products(Model model) {
+        List<ProductResponse> productsResponse = cartService.readAll();
+        model.addAttribute("products", productsResponse);
         return "index";
     }
 
