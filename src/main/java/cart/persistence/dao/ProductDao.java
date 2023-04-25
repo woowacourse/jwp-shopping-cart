@@ -1,7 +1,10 @@
 package cart.persistence.dao;
 
+import cart.exception.ErrorCode;
+import cart.exception.GlobalException;
 import cart.persistence.entity.Product;
 import cart.persistence.entity.ProductCategory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
@@ -24,7 +27,7 @@ public class ProductDao {
         return jdbcTemplate.query(query, (result, count) ->
             new Product(result.getLong("id"), result.getString("name"),
                     result.getString("image_url"), result.getInt("price"),
-                    result.getObject("category", ProductCategory.class)));
+                    ProductCategory.from(result.getString("category"))));
     }
 
     public Long insert(final Product product) {
@@ -39,5 +42,18 @@ public class ProductDao {
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public Product findById(final Long id) {
+        final String query = "SELECT p.id, p.name, p.image_url, p.price, p.category FROM product as p " +
+                "WHERE p.id = ?";
+        try {
+            return jdbcTemplate.queryForObject(query, (result, count) ->
+                    new Product(result.getLong("id"), result.getString("name"),
+                            result.getString("image_url"), result.getInt("price"),
+                            ProductCategory.from(result.getString("category"))), id);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
     }
 }
