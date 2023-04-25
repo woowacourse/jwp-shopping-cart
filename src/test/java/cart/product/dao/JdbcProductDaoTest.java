@@ -48,4 +48,65 @@ class JdbcProductDaoTest {
         //then
         assertEquals(3, this.jdbcProductDao.findAll().size());
     }
+    
+    @Test
+    @DisplayName("상품 findByName 테스트")
+    void findByName() {
+        //given
+        final Product product1 = new Product(new Name("망고"), "https://mango", new Price(1000));
+        final Product product2 = new Product(new Name("에코"), "https://echo", new Price(2000));
+        final Product product3 = new Product(new Name("포비"), "https://pobi", new Price(3000));
+        
+        this.jdbcProductDao.insert(product1);
+        this.jdbcProductDao.insert(product2);
+        this.jdbcProductDao.insert(product3);
+        
+        //when
+        final Product result = this.jdbcProductDao.findByName("망고");
+        
+        //then
+        assertEquals(product1.getName().getValue(), result.getName().getValue());
+        assertEquals(product1.getImage(), result.getImage());
+        assertEquals(product1.getPrice().getValue(), result.getPrice().getValue());
+    }
+    
+    @Test
+    @DisplayName("상품 deleteByID 테스트")
+    void deleteByID() {
+        //given
+        final Product product1 = new Product(new Name("망고"), "https://mango", new Price(1000));
+        final Product product2 = new Product(new Name("에코"), "https://echo", new Price(2000));
+        final Product product3 = new Product(new Name("포비"), "https://pobi", new Price(3000));
+        
+        final long id1 = this.jdbcProductDao.insert(product1);
+        final long id2 = this.jdbcProductDao.insert(product2);
+        final long id3 = this.jdbcProductDao.insert(product3);
+        
+        //when
+        this.jdbcProductDao.deleteByID(id1);
+        this.jdbcProductDao.deleteByID(id2);
+        
+        //then
+        assertEquals(1, this.jdbcProductDao.findAll().size());
+    }
+    
+    @Test
+    @DisplayName("상품 update 테스트")
+    void update() {
+        //given
+        final Product product1 = new Product(new Name("망고"), "https://mango", new Price(1000));
+        final Product product2 = new Product(new Name("에코"), "https://echo", new Price(2000));
+        final Product product3 = new Product(new Name("포비"), "https://pobi", new Price(3000));
+        
+        final long id1 = this.jdbcProductDao.insert(product1);
+        final long id2 = this.jdbcProductDao.insert(product2);
+        final long id3 = this.jdbcProductDao.insert(product3);
+        
+        //when
+        final Product updatedProduct = new Product(id2, new Name("에코"), "https://echo", new Price(5000));
+        this.jdbcProductDao.update(updatedProduct);
+        
+        //then
+        assertEquals(5000, this.jdbcProductDao.findByID(id2).getPrice().getValue());
+    }
 }

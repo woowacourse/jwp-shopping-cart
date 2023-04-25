@@ -26,6 +26,21 @@ class ProductListServiceTest {
         }
         
         @Override
+        public Product findByName(final String name) {
+            return null;
+        }
+        
+        @Override
+        public void deleteByID(final long id) {
+        
+        }
+        
+        @Override
+        public void update(final Product product) {
+        
+        }
+        
+        @Override
         public List<Product> findAll() {
             final Product product1 = new Product(new Name("망고"), "http://mango", new Price(1000));
             final Product product2 = new Product(new Name("에코"), "http://echo", new Price(2000));
