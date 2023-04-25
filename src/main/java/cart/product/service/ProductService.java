@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.product.dao.ProductDao;
+import cart.product.domain.Product;
+import cart.product.dto.ProductRequest;
 import cart.product.dto.ProductResponse;
 
 @Service
@@ -23,6 +25,12 @@ public class ProductService {
 		return productDao.findAll().stream()
 			.map(ProductResponse::new)
 			.collect(Collectors.toList());
+	}
+
+	public long saveProduct(ProductRequest productRequest) {
+		Product product = new Product(null, productRequest.getName(), productRequest.getImage(),
+			productRequest.getPrice(), null, null);
+		return productDao.save(product);
 	}
 
 }

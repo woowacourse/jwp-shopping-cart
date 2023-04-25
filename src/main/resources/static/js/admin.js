@@ -40,14 +40,18 @@ form.addEventListener('submit', (event) => {
         updateProduct(product);
         return;
     }
-
     createProduct(product);
 });
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '',
+        url: '/products',
+        method : "POST",
+        headers : {
+            "Content-Type" : "multipart/form-data"
+        },
+        data : product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
