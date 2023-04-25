@@ -16,7 +16,7 @@ public class ProductDao {
         new Product.Builder().id(resultSet.getInt("id"))
                 .price(resultSet.getInt("price"))
                 .name(resultSet.getString("name"))
-                .imageUrl(resultSet.getString("imageUrl"))
+                .imageUrl(resultSet.getString("image_url"))
                 .build();
 
     private final JdbcTemplate jdbcTemplate;
