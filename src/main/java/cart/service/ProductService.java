@@ -39,4 +39,8 @@ public class ProductService {
                 )
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    public void delete(final Long id) {
+        productDao.delete(id);
+    }
 }
