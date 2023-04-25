@@ -30,16 +30,24 @@ public class ProductService {
     }
 
     public void save(ProductRequestDto productRequestDto) {
-        Product product = new Builder()
+        Product product = toEntity(productRequestDto);
+        productDao.save(product);
+    }
+
+    private Product toEntity(ProductRequestDto productRequestDto) {
+        return new Builder()
                 .name(productRequestDto.getName())
                 .price(productRequestDto.getPrice())
                 .imageUrl(productRequestDto.getImageUrl())
                 .build();
-        productDao.save(product);
     }
 
     public void deleteById(int id) {
         productDao.deleteById(id);
     }
 
+    public void updateById(int id, ProductRequestDto productRequestDto) {
+        Product product = toEntity(productRequestDto);
+        productDao.updateById(id, product);
+    }
 }
