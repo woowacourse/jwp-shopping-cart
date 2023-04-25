@@ -1,14 +1,14 @@
 package cart.dao;
 
 import cart.entity.Product;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class H2ProductDao implements ProductDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -27,13 +27,20 @@ public class H2ProductDao implements ProductDao {
     @Override
     public List<Product> findAll() {
         final String sql = "select * from product";
-        final RowMapper<Product> rowMapper = BeanPropertyRowMapper.newInstance(Product.class);
-        return jdbcTemplate.query(sql, rowMapper);
+
+        return jdbcTemplate.query(sql, (resultSet, count) ->
+                new Product(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("image_url"),
+                        resultSet.getInt("price")
+                )
+        );
     }
 
     @Override
     public void update(final Product product) {
-        final String sql = "update product set (name, image_url, price) values(:name, :imageUrl, :price) where id = :id";
+        final String sql = "update product set name = :name, image_url = :imageUrl, price = :price where id = :id";
         final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(product);
         jdbcTemplate.update(sql, parameterSource);
     }
