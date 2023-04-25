@@ -17,3 +17,16 @@
     - [ ] 상품을 수정할 수 있다.
     - [ ] 상품을 삭제할 수 있다.
 
+  
+## 테이블 구조
+```sql
+CREATE TABLE product (
+                      id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                      name varchar(255) NOT NULL,
+                      image text NOT NULL,
+                      price int NOT NULL
+);
+
+```
+
+
