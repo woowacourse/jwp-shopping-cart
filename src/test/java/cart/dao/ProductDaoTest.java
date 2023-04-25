@@ -24,7 +24,7 @@ class ProductDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @DisplayName("")
+    @DisplayName("상품 전체 조회 테스트")
     @Test
     void findAll() {
         jdbcTemplate.update("INSERT INTO product (name, price) VALUES ('Chicken', 18000), ('Pizza', 24000)");
