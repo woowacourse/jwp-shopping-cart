@@ -1,5 +1,7 @@
 package cart.repository.entity;
 
+import cart.dto.ProductDto;
+
 public class ProductEntity {
 
     private final Long id;
@@ -16,6 +18,14 @@ public class ProductEntity {
 
     public ProductEntity(final String name, final String imageUrl, final int price) {
         this(null, name, imageUrl, price);
+    }
+
+    public static ProductEntity from(final ProductDto productDto) {
+        return new ProductEntity(
+                productDto.getId(),
+                productDto.getName(),
+                productDto.getImageUrl(),
+                productDto.getPrice());
     }
 
     public Long getId() {
