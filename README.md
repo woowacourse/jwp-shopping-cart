@@ -1,8 +1,8 @@
 # 기능목록
 
 
-- [ ] database 세팅
-  - [ ] data.sql(product table) 생성
+- [x] database 세팅
+  - [x] data.sql(product table) 생성
 
 - [ ] 상품 관리 CRUD API 작성 
   - [ ] Create
