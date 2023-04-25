@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ProductDao {
     
-    void insert(Product product);
+    long insert(Product product);
     
     Product findByID(long id);
     

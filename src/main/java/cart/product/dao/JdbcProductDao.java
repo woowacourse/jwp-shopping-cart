@@ -35,13 +35,13 @@ public class JdbcProductDao implements ProductDao {
     
     
     @Override
-    public void insert(final Product product) {
+    public long insert(final Product product) {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", product.getName().getValue());
         parameters.put("image", product.getImage());
         parameters.put("price", product.getPrice().getValue());
         
-        this.simpleJdbcInsert.execute(parameters);
+        return this.simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
     
     @Override
