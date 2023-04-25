@@ -22,4 +22,8 @@ public class ProductService {
         final Product savedProduct = productRepository.save(product);
         return savedProduct.getId();
     }
+
+    public void updateProduct(final Product product) {
+        productRepository.save(product);
+    }
 }
