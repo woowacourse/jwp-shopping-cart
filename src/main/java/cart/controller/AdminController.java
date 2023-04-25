@@ -1,15 +1,25 @@
 package cart.controller;
 
+import cart.dao.ProductDao;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+    private final ProductDao productDao;
+
+    public AdminController(ProductDao productDao) {
+        this.productDao = productDao;
+    }
 
     @GetMapping
     public String loadHome(Model model) {
@@ -24,4 +34,9 @@ public class AdminController {
         return "admin";
     }
 
+    @PostMapping("/products")
+    public ResponseEntity create(@RequestBody ProductRequest product) {
+        productDao.add(product);
+        return ResponseEntity.ok().build();
+    }
 }

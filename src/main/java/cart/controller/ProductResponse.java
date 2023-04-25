@@ -1,10 +1,10 @@
 package cart.controller;
 
 public class ProductResponse {
-    Long id;
-    String name;
-    Integer price;
-    String imageUrl;
+    private final Long id;
+    private final String name;
+    private final Integer price;
+    private final String imageUrl;
 
     public ProductResponse(Long id, String name, Integer price, String imageUrl) {
         this.id = id;
