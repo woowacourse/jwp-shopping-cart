@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.controller.dto.NewProductDto;
 import cart.controller.dto.ProductDto;
+import cart.dao.entity.ProductEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,13 +17,13 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ProductDto> selectAll() {
+    public List<ProductEntity> selectAll() {
         final String sql = "SELECT * FROM PRODUCT";
         return jdbcTemplate.query(sql, getProductRowMapper());
     }
 
-    private RowMapper<ProductDto> getProductRowMapper() {
-        return (resultSet, rowNum) -> new ProductDto(
+    private RowMapper<ProductEntity> getProductRowMapper() {
+        return (resultSet, rowNum) -> new ProductEntity(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getInt("price"),
@@ -37,6 +38,17 @@ public class ProductDao {
                 newProductDto.getName(),
                 newProductDto.getPrice(),
                 newProductDto.getImage()
+        );
+    }
+
+    public void update(final ProductDto productDto) {
+        final String sql = "UPDATE PRODUCT SET name = ?, price = ?, image = ? WHERE id = ?";
+        jdbcTemplate.update(
+                sql,
+                productDto.getName(),
+                productDto.getPrice(),
+                productDto.getImage(),
+                productDto.getId()
         );
     }
 }

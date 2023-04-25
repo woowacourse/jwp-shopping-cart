@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -35,6 +36,12 @@ public class AdminController {
     @PostMapping("/product")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid NewProductDto newProductDto) {
         cartService.insert(newProductDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/product")
+    public ResponseEntity<Void> updateProduct(@RequestBody @Valid ProductDto productDto) {
+        cartService.update(productDto);
         return ResponseEntity.ok().build();
     }
 }
