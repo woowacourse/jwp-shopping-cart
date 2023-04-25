@@ -2,20 +2,14 @@ package cart.dto;
 
 public class ProductRequest {
 
-    private final long id;
     private final String name;
     private final String image;
     private final int price;
 
-    public ProductRequest(final long id, final String name, final String image, final int price) {
-        this.id = id;
+    public ProductRequest(final String name, final String image, final int price) {
         this.name = name;
         this.image = image;
         this.price = price;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public String getName() {

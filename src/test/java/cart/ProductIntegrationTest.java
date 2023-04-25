@@ -38,8 +38,8 @@ class ProductIntegrationTest {
 
     @Test
     void updateProduct() {
-        final int id = 1;
-        final ProductRequest productRequest = new ProductRequest(id, "누누", "naver.com", 1);
+        final long id = 1L;
+        final ProductRequest productRequest = new ProductRequest("누누", "naver.com", 1);
         final var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
@@ -51,6 +51,27 @@ class ProductIntegrationTest {
         assertAll(
                 () -> assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(result.body().jsonPath().getLong("id")).isEqualTo(1),
+                () -> assertThat(result.body().jsonPath().getString("name")).isEqualTo("누누"),
+                () -> assertThat(result.body().jsonPath().getString("image")).isEqualTo("naver.com"),
+                () -> assertThat(result.body().jsonPath().getInt("price")).isEqualTo(1)
+        );
+    }
+
+    @Test
+    void createProduct() {
+        final long id = 1L;
+        final ProductRequest productRequest = new ProductRequest("누누", "naver.com", 1);
+        final var result = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequest)
+                .when()
+                .post("/products")
+                .then()
+                .extract();
+
+        assertAll(
+                () -> assertThat(result.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
+                () -> assertThat(result.body().jsonPath().getLong("id")).isEqualTo(id),
                 () -> assertThat(result.body().jsonPath().getString("name")).isEqualTo("누누"),
                 () -> assertThat(result.body().jsonPath().getString("image")).isEqualTo("naver.com"),
                 () -> assertThat(result.body().jsonPath().getInt("price")).isEqualTo(1)
