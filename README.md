@@ -7,9 +7,9 @@
     - [x] 모든 상품의 정보를 가져와 보여가준다.
 - [ ] 상품 관리 CRUD API 작성
     - [ ] 상품 생성 POST `/admin/products`
-    - [ ] 상품 목록 조회 GET
+    - [x] 상품 목록 조회 GET
       - [x] home `/`
-      - [ ] admin `/admin`
+      - [x] admin `/admin`
     - [ ] 상품 수정 PUT `/admin/products`
     - [ ] 상품 삭제 DELETE `/admin/products`
 - [ ] 관리자 도구 페이지 연동
