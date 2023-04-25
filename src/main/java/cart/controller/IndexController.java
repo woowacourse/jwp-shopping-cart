@@ -1,24 +1,22 @@
 package cart.controller;
 
-import cart.domain.Product;
+import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Controller
 public class IndexController {
 
+    private final ProductService productService;
+
+    public IndexController(ProductService productService) {
+        this.productService = productService;
+    }
+
     @GetMapping("/")
     public String index(Model model) {
-        List<Product> products = new ArrayList<>();
-        products.add(new Product("a", "url", 1));
-        products.add(new Product("b", "url", 2));
-        products.add(new Product("c", "url", 3));
-
-        model.addAttribute("products", products);
+        model.addAttribute("products", productService.findAll());
         return "index";
     }
 

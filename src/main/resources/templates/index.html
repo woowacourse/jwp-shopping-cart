@@ -23,8 +23,8 @@
         <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
         <li class="product" th:each="product : ${products}">
             <div class="product-image">
-                <img alt="상품 이미지" th:src="${product.url}">
-                <span th:text="${product.url}"></span>
+                <img alt="상품 이미지" th:src="${product.imageUrl}">
+                <span th:text="${product.imageUrl}"></span>
             </div>
             <div class="product-info">
                 <div class="product-desc">
@@ -35,7 +35,7 @@
                         <span th:text="${product.price}"></span>
                     </p>
                 </div>
-                <button type="submit" class="product-btn" th:onclick="'addCartItem(' + ${product.uuid} + ')'">담기</button>
+                <button type="submit" class="product-btn" th:onclick="'addCartItem(' + ${product.id} + ')'">담기</button>
             </div>
         </li>
     </ul>

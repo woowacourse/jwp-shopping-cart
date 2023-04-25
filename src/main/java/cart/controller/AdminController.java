@@ -22,7 +22,6 @@ public class AdminController {
     @GetMapping
     public String admin(Model model) {
         model.addAttribute("products", productService.findAll());
-
         return "admin";
     }
 
