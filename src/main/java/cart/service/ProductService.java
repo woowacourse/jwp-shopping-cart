@@ -1,8 +1,10 @@
 package cart.service;
 
-import cart.controller.ProductModifyRequest;
-import cart.controller.ProductRegisterRequest;
-import cart.controller.ProductSearchResponse;
+import cart.dao.ProductDao;
+import cart.dao.ProductEntity;
+import cart.service.dto.ProductModifyRequest;
+import cart.service.dto.ProductRegisterRequest;
+import cart.service.dto.ProductSearchResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

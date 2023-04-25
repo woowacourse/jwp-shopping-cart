@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.service.ProductService;
+import cart.service.dto.ProductRegisterRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.controller.ProductRegisterRequest;
+import cart.service.dto.ProductRegisterRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

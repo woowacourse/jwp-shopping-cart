@@ -1,6 +1,9 @@
 package cart.controller;
 
 import cart.service.ProductService;
+import cart.service.dto.ProductModifyRequest;
+import cart.service.dto.ProductRegisterRequest;
+import cart.service.dto.ProductSearchResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

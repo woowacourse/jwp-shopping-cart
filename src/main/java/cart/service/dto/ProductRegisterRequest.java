@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.service.dto;
 
 public class ProductRegisterRequest {
 
