@@ -1,10 +1,7 @@
 package cart.dao;
 
-import cart.dto.ProductRequestDto;
 import cart.entity.Product;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
@@ -34,12 +31,12 @@ public class ProductDaoImpl implements ProductDao {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, product.getName());
-                ps.setString(2, product.getImageUrl());
-                ps.setInt(3, product.getPrice());
-                return ps;
-            }, keyHolder);
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, product.getName());
+            ps.setString(2, product.getImageUrl());
+            ps.setInt(3, product.getPrice());
+            return ps;
+        }, keyHolder);
 
         return Long.valueOf(keyHolder.getKeys().get("id").toString());
     }
@@ -69,6 +66,8 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Long deleteProduct(final Long id) {
-        return null;
+        String sql = "DELETE FROM product WHERE id=?";
+        jdbcTemplate.update(sql, id);
+        return id;
     }
 }

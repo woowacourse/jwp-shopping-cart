@@ -35,6 +35,11 @@ public class ProductService {
         productDao.updateProduct(id, new Product(productRequestDto));
     }
 
+    public Long deleteProduct(final Long id) {
+        validateProductExist(id);
+        return productDao.deleteProduct(id);
+    }
+
     private void validateProductExist(final Long id) {
         Optional<Product> product = productDao.findById(id);
         if (!product.isPresent()) {
