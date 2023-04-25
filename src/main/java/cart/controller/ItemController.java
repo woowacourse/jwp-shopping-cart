@@ -44,4 +44,9 @@ public class ItemController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity deleteItem(@PathVariable final Long itemId) {
+        itemService.deleteItem(itemId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
