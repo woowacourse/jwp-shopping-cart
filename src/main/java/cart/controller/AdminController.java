@@ -36,9 +36,9 @@ public class AdminController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity create(@RequestBody ProductRequest product) {
+    public String create(@RequestBody ProductRequest product) {
         productDao.add(product);
-        return ResponseEntity.ok().build();
+        return "redirect:/admin";
     }
 
     @PutMapping("/products/{id}")
