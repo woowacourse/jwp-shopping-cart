@@ -1,25 +1,28 @@
 package cart.controller;
 
-import cart.dao.ProductDao;
-import cart.entity.Product;
+import cart.dto.ProductResponse;
+import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProductController {
 
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public ProductController(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Product> products = productDao.findAll();
+        List<ProductResponse> products = productService.findProducts().stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
         model.addAttribute("products", products);
         return "index";
     }
