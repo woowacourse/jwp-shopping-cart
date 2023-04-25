@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -24,7 +25,7 @@ public class AdminController {
     }
 
     @PostMapping("/admin/create")
-    public String create(@RequestBody ProductRequest productRequest) {
+    public String create(@RequestBody @Valid ProductRequest productRequest) {
         productService.create(productRequest);
         return "admin";
     }
@@ -38,7 +39,7 @@ public class AdminController {
 
     @PutMapping("/admin/{productId}")
     public String update(@PathVariable Long productId,
-                         @RequestBody ProductRequest productRequest) {
+                         @RequestBody @Valid ProductRequest productRequest) {
         productService.update(productId, productRequest);
         return "admin";
     }
