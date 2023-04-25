@@ -1,6 +1,8 @@
 package cart.domain;
 
 
+import java.util.Objects;
+
 public class Product {
 
     private Long id;
@@ -43,5 +45,22 @@ public class Product {
 
     public int getPrice() {
         return this.price.getPrice();
+    }
+
+    public boolean isEqualsId(Long id) {
+        return Objects.equals(this.id, id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
