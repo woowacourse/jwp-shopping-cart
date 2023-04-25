@@ -1,4 +1,4 @@
-CREATE TABLE product
+CREATE TABLE IF NOT EXISTS product
 (
     product_id BIGINT UNSIGNED AUTO_INCREMENT,
     name       VARCHAR(20) NOT NULL,
