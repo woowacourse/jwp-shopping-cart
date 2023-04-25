@@ -1,6 +1,7 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +42,14 @@ class ProductDaoTest {
 
     @Test
     void 상품_데이터_조회() {
+        final Long id = 2L;
+
+        final Product foundProduct = productDao.findById(id);
+
+        assertAll(
+                () -> assertThat(foundProduct.getName()).isEqualTo("salad"),
+                () -> assertThat(foundProduct.getPrice()).isEqualTo(2000)
+        );
     }
 
     @Test
