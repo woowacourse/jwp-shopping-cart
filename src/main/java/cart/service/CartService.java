@@ -48,4 +48,8 @@ public class CartService {
 
         productDao.update(product);
     }
+
+    public void delete(Long id) {
+        productDao.delete(id);
+    }
 }

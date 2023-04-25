@@ -7,10 +7,12 @@ import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -44,6 +46,13 @@ public class CartController {
     @PutMapping("/admin/update")
     public ResponseEntity<String> update(@RequestBody ProductUpdateRequest productUpdateRequest) {
         cartService.update(productUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/admin/delete")
+    public ResponseEntity<String> delete(@RequestParam Long id) {
+        System.out.println(id);
+        cartService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

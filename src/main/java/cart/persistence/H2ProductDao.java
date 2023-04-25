@@ -43,4 +43,10 @@ public class H2ProductDao implements ProductDao {
                 product.getId()
         );
     }
+
+    @Override
+    public void delete(Long id) {
+        String sql = "DELETE FROM PRODUCT WHERE id=?";
+        jdbcTemplate.update(sql, id);
+    }
 }
