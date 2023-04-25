@@ -26,19 +26,21 @@ public class ProductService {
     }
 
     public void update(final int id, final ProductDto productDto) {
-        ProductEntity productEntity = productDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("상품 id를 확인해주세요."));
+        ProductEntity productEntity = findProductById(id);
 
         ProductEntity updatedEntity = productEntity.update(productDto);
 
         productDao.update(updatedEntity);
+    }
 
+    private ProductEntity findProductById(final int id) {
+        return productDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("상품 id를 확인해주세요."));
     }
 
     public void delete(final int id) {
-        ProductEntity productEntity = productDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("상품 id를 확인해주세요."));
-
+        findProductById(id);
         productDao.delete(id);
     }
+
 }

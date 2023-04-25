@@ -44,4 +44,5 @@ public class ProductEntity {
     public int getPrice() {
         return price;
     }
+
 }
