@@ -22,7 +22,7 @@
 
 1. 요청
 
-- URL : localhost:8080/admin/products
+- URL : localhost:8080/admin
 - method : GET
 
 ## 상품 수정

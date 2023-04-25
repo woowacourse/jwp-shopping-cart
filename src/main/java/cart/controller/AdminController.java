@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.controller.dto.ProductDto;
+import cart.dao.ProductDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,23 +13,15 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
+    private final ProductDao productDao;
+
+    public AdminController(final ProductDao productDao) {
+        this.productDao = productDao;
+    }
+
     @GetMapping
     public String findProduct(Model model) {
-        List<ProductDto> productDtos = List.of(
-                new ProductDto(
-                        1,
-                        "치킨",
-                        "https://grepp-programmers.s3.ap-northeast-2.amazonaws.com/files/production/d440b8f4-91c3-4272-8a81-876e9aaffb9c/RisingStarGraphBox.jpg",
-                        10000
-                ),
-                new ProductDto(
-                        2,
-                        "별모양핫도그",
-                        "https://grepp-programmers.s3.ap-northeast-2.amazonaws.com/files/production/d440b8f4-91c3-4272-8a81-876e9aaffb9c/RisingStarGraphBox.jpg",
-                        53000
-                )
-        );
-
+        List<ProductDto> productDtos = productDao.findAll();
         model.addAttribute("products", productDtos);
         return "admin";
     }
