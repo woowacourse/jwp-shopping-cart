@@ -47,7 +47,9 @@ form.addEventListener('submit', (event) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '',
+        url: '/admin',
+        data: product,
+        method: 'post'
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -60,7 +62,7 @@ const updateProduct = (product) => {
     const { id } = product;
 
     axios.request({
-        url: '',
+        url: '/admin',
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
