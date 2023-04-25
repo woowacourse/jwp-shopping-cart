@@ -9,4 +9,6 @@ public interface ProductDao {
     List<ProductEntity> selectAll();
 
     void update(ProductEntity product);
+
+    void delete(int productId);
 }

@@ -41,13 +41,6 @@ public class JdbcTemplateProductDao implements ProductDao{
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
-    @Override
-    public void update(final ProductEntity product) {
-        String sql = "update products set (name, price, image) = (?, ?, ?) where id = ?";
-
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), product.getId());
-    }
-
     private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNumber) -> {
         ProductEntity productEntity = new ProductEntity(
                 resultSet.getInt("id"),
@@ -57,4 +50,17 @@ public class JdbcTemplateProductDao implements ProductDao{
         );
         return productEntity;
     };
+
+    @Override
+    public void update(final ProductEntity product) {
+        String sql = "update products set (name, price, image) = (?, ?, ?) where id = ?";
+
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), product.getId());
+    }
+
+    @Override
+    public void delete(final int productId) {
+        String sql = "delete from products where id = ?";
+        jdbcTemplate.update(sql, productId);
+    }
 }

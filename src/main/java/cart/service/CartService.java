@@ -38,4 +38,8 @@ public class CartService {
     public void updateProduct(final UpdateRequestDto updateRequestDto) {
         productDao.update(updateRequestDto.toEntity());
     }
+
+    public void deleteProduct(final int productId) {
+        productDao.delete(productId);
+    }
 }

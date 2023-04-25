@@ -6,7 +6,9 @@ import cart.dto.UpdateRequestDto;
 import cart.service.CartService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,5 +39,10 @@ public class CartApiController {
     @PutMapping("product")
     public void updateProduct(@RequestBody UpdateRequestDto updateRequestDto) {
         cartService.updateProduct(updateRequestDto);
+    }
+
+    @DeleteMapping("product/{id}")
+    public void deleteProduct(@PathVariable int id) {
+        cartService.deleteProduct(id);
     }
 }
