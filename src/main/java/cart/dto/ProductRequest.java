@@ -1,20 +1,14 @@
-package cart.domain;
+package cart.dto;
 
-public class Product {
-    private final long id;
+public class ProductRequest {
     private final String name;
     private final String imgUrl;
     private final int price;
 
-    public Product(long id, String name, String imgUrl, int price) {
-        this.id = id;
+    public ProductRequest(String name, String imgUrl, int price) {
         this.name = name;
         this.imgUrl = imgUrl;
         this.price = price;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public String getName() {
