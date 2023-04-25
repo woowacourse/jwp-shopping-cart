@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,7 +43,7 @@ public class ProductController {
     }
 
     @PostMapping("/admin/products")
-    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getImgUrl(), productRequest.getPrice());
         Product createdProduct = productService.createProduct(product);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -53,7 +54,7 @@ public class ProductController {
     }
 
     @PatchMapping("/admin/products/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable long id, @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> updateProduct(@PathVariable long id, @Valid @RequestBody ProductRequest productRequest) {
         Product product = new Product(id, productRequest.getName(), productRequest.getImgUrl(), productRequest.getPrice());
         productService.updateProduct(product);
         return ResponseEntity.ok().build();
