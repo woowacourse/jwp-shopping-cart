@@ -2,6 +2,9 @@ package cart.controller;
 
 import cart.dto.ProductDto;
 import cart.service.ProductService;
+import javax.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,12 +21,16 @@ public class ProductApiController {
     }
 
     @PostMapping("/product/insert")
-    public void insert(@RequestBody ProductDto productDto) {
+    public ResponseEntity<String> insert(@Valid @RequestBody ProductDto productDto, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(errors.getFieldError().getField());
+        }
         productService.insert(productDto);
+        return ResponseEntity.ok().body("ok");
     }
 
     @PostMapping("/product/update/{id}")
-    public void update(@PathVariable int id, @RequestBody ProductDto productDto) {
+    public void update(@PathVariable int id, @Valid @RequestBody ProductDto productDto) {
         productService.update(id, productDto);
     }
 
