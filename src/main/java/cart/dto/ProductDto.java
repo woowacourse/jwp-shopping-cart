@@ -13,12 +13,12 @@ public class ProductDto {
         this.image = image;
     }
 
-    public static ProductDto createProductDto(final String name, final int price, final String image){
+    public static ProductDto createProductDto(final String name, final int price, final String image) {
         return new ProductDto(null, name, price, image);
     }
 
-    public static ProductDto createProductDto(final long id,final String name, final int price, final String image){
-        return new ProductDto(id,name,price,image);
+    public static ProductDto createProductDto(final long id, final String name, final int price, final String image) {
+        return new ProductDto(id, name, price, image);
     }
 
     public String getName() {

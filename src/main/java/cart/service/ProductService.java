@@ -17,11 +17,11 @@ public class ProductService {
         this.productsDao = productsDao;
     }
 
-    public void insertProduct(final ProductDto productDto){
-        productsDao.create(productDto.getName(),productDto.getPrice(),productDto.getImage());
+    public void insertProduct(final ProductDto productDto) {
+        productsDao.create(productDto.getName(), productDto.getPrice(), productDto.getImage());
     }
 
-    public List<ProductDto> findAll(){
+    public List<ProductDto> findAll() {
         return productsDao.readAll()
                 .stream()
                 .map(product ->
@@ -32,14 +32,14 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void updateById(final ProductDto productDto){
+    public void updateById(final ProductDto productDto) {
         productsDao.update(new Product(productDto.getId(),
                 productDto.getName(),
                 productDto.getPrice(),
                 productDto.getImage()));
     }
 
-    public void deleteById(final long id){
+    public void deleteById(final long id) {
         productsDao.delete(id);
     }
 }
