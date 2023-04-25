@@ -19,4 +19,10 @@ public class MainController {
         model.addAttribute("products", productDao.findAll());
         return "index";
     }
+
+    @GetMapping("/admin")
+    public String showAdmin(Model model) {
+        model.addAttribute("products", productDao.findAll());
+        return "admin";
+    }
 }
