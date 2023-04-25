@@ -1,10 +1,12 @@
 package cart.controller;
 
 import cart.dto.ProductCreateRequest;
+import cart.dto.ProductUpdateRequest;
 import cart.service.ProductService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +33,13 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
+        return ResponseEntity
+                .ok("ok");
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequest request) {
+        productService.updateProductById(id, request.getName(), request.getPrice(), request.getImageUrl());
         return ResponseEntity
                 .ok("ok");
     }

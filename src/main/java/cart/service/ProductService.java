@@ -3,6 +3,7 @@ package cart.service;
 import static java.util.stream.Collectors.toList;
 
 import cart.dto.ProductDto;
+import cart.entity.ProductEntity;
 import cart.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,9 @@ public class ProductService {
 
     public void deleteById(Long id) {
         productRepository.deleteById(id);
+    }
+
+    public void updateProductById(Long id, String name, int price, String imageUrl) {
+        productRepository.updateProduct(new ProductEntity(id, name, price, imageUrl));
     }
 }
