@@ -35,16 +35,10 @@ class JdbcProductDaoTest {
     @DisplayName("상품의 내용을 저장한다.")
     void save() {
         // given
-        final Product product = new Product("치킨", 10000, "imgUrl");
-
-        // when
-        final Long id = productDao.save(product);
+        final Long id = saveProduct("치킨", 10000);
 
         // then
-        final String selectQuery = "select * from product where id = :id";
-        final Map<String, Long> params = Collections.singletonMap("id", id);
-        final RowMapper<Product> rowMapper = BeanPropertyRowMapper.newInstance(Product.class);
-        final Product result = jdbcTemplate.queryForObject(selectQuery, params, rowMapper);
+        final Product result = findById(id);
 
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("치킨"),
@@ -56,10 +50,9 @@ class JdbcProductDaoTest {
     @Test
     @DisplayName("전체 상품을 조회한다.")
     void findAll() {
-        final Product product1 = new Product("치킨", 10000, "imgUrl");
-        final Product product2 = new Product("치킨", 10000, "imgUrl");
-        productDao.save(product1);
-        productDao.save(product2);
+        // given
+        saveProduct("치킨", 10000);
+        saveProduct("샐러드", 30000);
 
         // when
         final List<Product> products = productDao.findAll();
@@ -72,15 +65,45 @@ class JdbcProductDaoTest {
     @DisplayName("id가 일치하는 상품을 삭제한다.")
     void delete() {
         // given
-        final Product product1 = new Product("치킨", 10000, "imgUrl");
-        final Product product2 = new Product("치킨", 10000, "imgUrl");
-        final Long id = productDao.save(product1);
-        productDao.save(product2);
+        final Long id = saveProduct("치킨", 10000);
+        saveProduct("치킨", 10000);
 
         // when
         productDao.delete(id);
 
         // then
         assertThat(productDao.findAll()).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("id가 일치하는 상품을 수정한다.")
+    void update() {
+        // given
+        final Long id = saveProduct("치킨", 10000);
+        final Product updateProduct = new Product("샐러드", 20000, "changeImgUrl");
+
+        // when
+        productDao.update(id, updateProduct);
+
+        //
+        final Product result = findById(id);
+        assertAll(
+                () -> assertThat(result.getName()).isEqualTo("샐러드"),
+                () -> assertThat(result.getPrice()).isEqualTo(20000),
+                () -> assertThat(result.getImgUrl()).isEqualTo("changeImgUrl")
+        );
+    }
+
+    private Long saveProduct(final String name, final int price) {
+        final Product product = new Product(name, price, "imgUrl");
+        return productDao.save(product);
+    }
+
+    private Product findById(Long id) {
+        final String selectQuery = "select * from product where id = :id";
+        final Map<String, Long> params = Collections.singletonMap("id", id);
+        final RowMapper<Product> rowMapper = BeanPropertyRowMapper.newInstance(Product.class);
+
+        return jdbcTemplate.queryForObject(selectQuery, params, rowMapper);
     }
 }

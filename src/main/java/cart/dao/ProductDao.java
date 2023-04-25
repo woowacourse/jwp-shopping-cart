@@ -10,5 +10,7 @@ public interface ProductDao {
 
     List<Product> findAll();
 
-    void delete(Long id);
+    void delete(final Long id);
+
+    void update(final Long id, final Product product);
 }
