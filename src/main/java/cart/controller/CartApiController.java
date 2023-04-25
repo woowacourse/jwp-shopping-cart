@@ -1,11 +1,11 @@
 package cart.controller;
 
 import cart.dto.InsertRequestDto;
-import java.util.HashMap;
-import java.util.Map;
+import cart.dto.ProductResponseDto;
+import cart.service.CartService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,25 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class CartApiController {
 
-    private final SimpleJdbcInsert insertProducts;
-
-    private final JdbcTemplate jdbcTemplate;
+    private final CartService cartService;
 
     @Autowired
-    public CartApiController(JdbcTemplate jdbcTemplate) {
-        this.insertProducts = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("products")
-                .usingGeneratedKeyColumns("id");
-
-        this.jdbcTemplate = jdbcTemplate;
+    public CartApiController(CartService cartService) {
+        this.cartService = cartService;
     }
 
     @PostMapping("product")
     public void insertProduct(@RequestBody InsertRequestDto insertRequestDto) {
-        Map<String, Object> parameters = new HashMap<>(3);
-        parameters.put("name", insertRequestDto.getName());
-        parameters.put("price", insertRequestDto.getPrice());
-        parameters.put("image", insertRequestDto.getImage());
-        insertProducts.execute(parameters);
+        cartService.addProduct(insertRequestDto);
+    }
+
+    @GetMapping("product")
+    public List<ProductResponseDto> getProducts() {
+        return cartService.getProducts();
     }
 }

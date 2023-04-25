@@ -1,5 +1,7 @@
 package cart.dto;
 
+import cart.entity.ProductEntity;
+
 public class InsertRequestDto {
     private final String name;
     private final String image;
@@ -21,5 +23,9 @@ public class InsertRequestDto {
 
     public int getPrice() {
         return price;
+    }
+
+    public ProductEntity toEntity() {
+        return new ProductEntity(null, name, price, image);
     }
 }

@@ -1,24 +1,20 @@
-package cart.dto;
+package cart.entity;
 
-public class ProductDto {
-    private final int id;
-    private final String image;
+public class ProductEntity {
+    private final Integer id;
     private final String name;
     private final int price;
+    private final String image;
 
-    public ProductDto(final int id, final String image, final String name, final int price) {
+    public ProductEntity(final Integer id, final String name, final int price, final String image) {
         this.id = id;
-        this.image = image;
         this.name = name;
         this.price = price;
+        this.image = image;
     }
 
     public int getId() {
         return id;
-    }
-
-    public String getImage() {
-        return image;
     }
 
     public String getName() {
@@ -27,5 +23,9 @@ public class ProductDto {
 
     public int getPrice() {
         return price;
+    }
+
+    public String getImage() {
+        return image;
     }
 }
