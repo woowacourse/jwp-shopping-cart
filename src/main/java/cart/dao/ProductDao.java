@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.product.Product;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -25,5 +26,17 @@ public class ProductDao {
         long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
 
         return id;
+    }
+
+    public List<Product> findAll() {
+        final String sql = "SELECT id, name, price, image_url FROM product";
+        List<Product> products = jdbcTemplate.query(sql, (resultSet, rowNumber) -> new Product(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getLong("price"),
+                resultSet.getString("image_url")
+        ));
+
+        return products;
     }
 }
