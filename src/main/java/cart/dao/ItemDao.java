@@ -45,4 +45,9 @@ public class ItemDao {
         }, keyHolder);
         return (Long) keyHolder.getKey();
     }
+
+    public void update(final Item item) {
+        final String sql = "UPDATE items SET name = ?, image_url = ?, price = ? WHERE id = ?";
+        jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice(), item.getId());
+    }
 }
