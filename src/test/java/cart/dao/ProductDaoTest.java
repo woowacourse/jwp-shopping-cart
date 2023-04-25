@@ -70,4 +70,25 @@ class ProductDaoTest {
         assertThat(productDao.findAll()).map(ProductEntity::getId)
             .containsExactly(savedFirstProductId, savedSecondProductId);
     }
+
+
+    @Test
+    @DisplayName("상품을 DB에서 삭제한다.")
+    void delete() {
+        //given
+        final ProductEntity productEntity = new ProductEntity(
+            null,
+            "다즐",
+            "스플릿.com",
+            10000000,
+            "다즐짱"
+        );
+        final Long savedProductId = productDao.save(productEntity);
+
+        //when
+        productDao.delete(savedProductId);
+
+        //then
+        assertThat(productDao.findAll()).hasSize(0);
+    }
 }
