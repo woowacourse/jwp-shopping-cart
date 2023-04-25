@@ -1,8 +1,8 @@
 package cart.controller;
 
 import cart.dao.ProductDao;
+import cart.dao.ProductEntity;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +18,8 @@ public class HomeController {
 
     @GetMapping
     public String loadHome(Model model) {
-        List<ProductResponse> products = productDao.findAll()
-            .stream()
-            .map(entity -> new ProductResponse(entity.getId(), entity.getName(), entity.getPrice(),
-                entity.getImageUrl())).collect(
-                Collectors.toList());
+        final List<ProductEntity> productEntities = productDao.findAll();
+        List<ProductResponse> products = ResponseMapper.from(productEntities);
 
         model.addAttribute("products", products);
         return "index";
