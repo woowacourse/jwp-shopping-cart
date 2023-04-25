@@ -17,9 +17,10 @@ CREATE TABLE CATEGORY
 
 CREATE TABLE PRODUCT_CATEGORY
 (
+    id          BIGINT NOT NULL AUTO_INCREMENT,
     product_id  BIGINT NOT NULL,
     category_id BIGINT NOT NULL,
-    PRIMARY KEY (product_id, category_id),
+    PRIMARY KEY (id),
     FOREIGN KEY (product_id) REFERENCES PRODUCT (id),
     FOREIGN KEY (category_id) REFERENCES CATEGORY (id)
 );

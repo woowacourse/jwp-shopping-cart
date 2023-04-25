@@ -53,9 +53,10 @@
     - [x]  PRIMARY KEY ( ID )
 
 - PRODUCT_CATEGORY
+    - [x]  ID  ( INT NOT NULL AUTO_INCREMENT PK )
     - [x]  PRODUCT_ID
     - [x]  CATEGORY_ID
-    - [x]  PRIMARY KEY (PRODUCT_ID, CATEGORY_ID)
+    - [x]  PRIMARY KEY (ID)
     - [x]  FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT(ID)
     - [x]  FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(ID)
 
@@ -77,5 +78,5 @@
     - [x]  조회
 - 상품카테고리 DAO
     - [ ]  조회
-    - [ ]  생성
+    - [x]  생성
     - [ ]  삭제
