@@ -75,7 +75,8 @@ const updateProduct = (product) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: '/admin/product',
+        method: 'delete',
+        url: `/admin/product/${id}`
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {

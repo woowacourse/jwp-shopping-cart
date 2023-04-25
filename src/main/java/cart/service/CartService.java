@@ -33,4 +33,8 @@ public class CartService {
     public void update(final ProductDto productDto) {
         productDao.update(productDto);
     }
+
+    public void delete(final Long id) {
+        productDao.delete(id);
+    }
 }
