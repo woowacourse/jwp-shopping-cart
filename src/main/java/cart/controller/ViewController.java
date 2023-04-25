@@ -15,7 +15,8 @@ public class ViewController {
     }
 
     @GetMapping("/")
-    public String getHome() {
+    public String getHome(Model model) {
+        model.addAttribute("productsDto", productService.findAll());
         return "index";
     }
 
