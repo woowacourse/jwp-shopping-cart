@@ -4,12 +4,22 @@ import java.util.Objects;
 
 public class ProductCategoryEntity {
 
+    private Long id;
     private Long productId;
     private Long categoryId;
 
     public ProductCategoryEntity(final Long productId, final Long categoryId) {
+        this(null, productId, categoryId);
+    }
+
+    public ProductCategoryEntity(final Long id, final Long productId, final Long categoryId) {
+        this.id = id;
         this.productId = productId;
         this.categoryId = categoryId;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getProductId() {

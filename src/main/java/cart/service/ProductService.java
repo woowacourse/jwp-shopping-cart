@@ -26,7 +26,7 @@ public class ProductService {
         this.productCategoryDao = productCategoryDao;
     }
 
-    public void register(final ProductRequestDto productRequestDto) {
+    public Long register(final ProductRequestDto productRequestDto) {
         final ProductEntity productEntity = new ProductEntity(
             productRequestDto.getName(),
             productRequestDto.getImageUrl(),
@@ -37,6 +37,7 @@ public class ProductService {
         for (final Long categoryId : productRequestDto.getCategoryIds()) {
             productCategoryDao.save(new ProductCategoryEntity(savedProductId, categoryId));
         }
+        return savedProductId;
     }
 
     public List<ProductResponseDto> findProducts() {
@@ -54,5 +55,22 @@ public class ProductService {
             .stream()
             .map(ProductCategoryEntity::getCategoryId)
             .collect(Collectors.toList());
+    }
+
+    public void update(final Long id, final ProductRequestDto productRequestDto) {
+        final ProductEntity productEntity = new ProductEntity(
+            id,
+            productRequestDto.getName(),
+            productRequestDto.getImageUrl(),
+            productRequestDto.getPrice(),
+            productRequestDto.getDescription()
+        );
+        productDao.update(productEntity);
+        for (ProductCategoryEntity productCategoryEntity : productCategoryDao.findAll(id)) {
+            productCategoryDao.delete(productCategoryEntity.getId());
+        }
+        for (final Long categoryId : productRequestDto.getCategoryIds()) {
+            productCategoryDao.save(new ProductCategoryEntity(id, categoryId));
+        }
     }
 }

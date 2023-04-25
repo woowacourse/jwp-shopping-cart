@@ -35,6 +35,7 @@ public class ProductCategoryDao {
         return jdbcTemplate.query(
             sql,
             (rs, rowNum) -> new ProductCategoryEntity(
+                rs.getLong("id"),
                 rs.getLong("product_id"),
                 rs.getLong("category_id")),
             productId

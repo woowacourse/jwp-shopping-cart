@@ -6,14 +6,18 @@ import java.util.List;
 
 public class ProductResponseDto {
 
+    private final Long id;
+
     private final String name;
     private final String imageUrl;
     private final Integer price;
     private final String description;
     private final List<CategoryResponseDto> categoryResponseDtos;
 
-    private ProductResponseDto(final String name, final String imageUrl, final Integer price, final String description,
+    private ProductResponseDto(final Long id, final String name, final String imageUrl, final Integer price,
+        final String description,
         final List<CategoryResponseDto> categoryResponseDtos) {
+        this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
@@ -24,12 +28,17 @@ public class ProductResponseDto {
     public static ProductResponseDto of(final ProductEntity productEntity,
         final List<CategoryEntity> categoryEntities) {
         return new ProductResponseDto(
+            productEntity.getId(),
             productEntity.getName(),
             productEntity.getImageUrl(),
             productEntity.getPrice(),
             productEntity.getDescription(),
             CategoryResponseDto.listOf(categoryEntities)
         );
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
