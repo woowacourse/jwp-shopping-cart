@@ -10,6 +10,10 @@ public class ErrorResponse extends Response {
         super(code, message);
     }
 
+    public static ErrorResponse badRequest(String message) {
+        return new ErrorResponse("400", message);
+    }
+
     public void addValidation(String fieldName, String errorMessage) {
         validation.put(fieldName, errorMessage);
     }

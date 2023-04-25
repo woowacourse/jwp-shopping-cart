@@ -21,12 +21,12 @@ public class ExceptionController {
         log.error("알 수 없는 문제가 발생했습니다.", e);
         return ResponseEntity
                 .internalServerError()
-                .body(new SimpleResponse("500", "알 수 없는 문제가 발생했습니다."));
+                .body(SimpleResponse.internalServerError("알 수 없는 문제가 발생했습니다."));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Response> handle(MethodArgumentNotValidException e) {
-        ErrorResponse errorResponse = new ErrorResponse("400", "잘못된 요청입니다.");
+        ErrorResponse errorResponse = ErrorResponse.badRequest("잘못된 요청입니다.");
         for (FieldError fieldError : e.getFieldErrors()) {
             errorResponse.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
         }
@@ -37,7 +37,7 @@ public class ExceptionController {
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<Response> handleIllegalArgument(ProductNotFoundException e) {
-        SimpleResponse response = new SimpleResponse("400", e.getMessage());
+        Response response = SimpleResponse.badRequest(e.getMessage());
         return ResponseEntity
                 .badRequest()
                 .body(response);

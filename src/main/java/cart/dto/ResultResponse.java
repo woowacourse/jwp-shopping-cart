@@ -8,6 +8,14 @@ public class ResultResponse<T> extends Response {
         this.result = result;
     }
 
+    public static <T> ResultResponse<T> ok(String message, T result) {
+        return new ResultResponse<>("200", message, result);
+    }
+
+    public static <T> ResultResponse<T> created(String message, T result) {
+        return new ResultResponse<>("201", message, result);
+    }
+
     public T getResult() {
         return result;
     }
