@@ -1,23 +1,27 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
-import java.util.List;
+import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class CartController {
+    private final ProductService productService;
+
+    public CartController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("/")
     public String indexPage(Model model) {
-        model.addAttribute("products", List.of(new ProductDto(1, "과자", "https://www.clickmall.kr/shopimages/clickmall/019007000099.jpg?1674614971", 1000)));
+        model.addAttribute("products", productService.findAllProducts());
         return "index";
     }
 
     @GetMapping("/admin")
     public String adminPage(Model model) {
-        model.addAttribute("products", List.of(new ProductDto(1, "과자", "https://www.clickmall.kr/shopimages/clickmall/019007000099.jpg?1674614971", 1000)));
+        model.addAttribute("products", productService.findAllProducts());
         return "admin";
     }
 }

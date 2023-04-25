@@ -1,6 +1,8 @@
 package cart.controller;
 
 import cart.dto.ProductCreateRequest;
+import cart.service.ProductService;
+import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,12 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @PostMapping
     public ResponseEntity<String> createProduct(@RequestBody ProductCreateRequest request) {
-        System.out.println(request.getName());
-        System.out.println(request.getPrice());
-        System.out.println(request.getImageUrl());
-        return ResponseEntity.ok("hello");
+        long productId = productService.createProduct(request.getName(), request.getPrice(), request.getImageUrl());
+        return ResponseEntity
+                .created(URI.create("/products/" + productId))
+                .body("ok");
     }
 }
