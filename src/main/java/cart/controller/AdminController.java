@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -30,19 +31,27 @@ public class AdminController {
     @GetMapping("/product")
     public String getProduct(Model model) {
         model.addAttribute("products", productService.findAll());
+        System.out.println("hello");
         return "admin";
     }
 
     @PostMapping("/product")
     public String saveProduct(@RequestBody ProductRequestDto productRequestDto) {
         productService.save(productRequestDto);
-        return "redirect:/admin/product";
+        return "admin";
     }
 
-    @PostMapping("/product/{id}")
+    @PutMapping("/product/{id}")
+    public String updateProduct(@PathVariable int id, @RequestBody ProductRequestDto productRequestDto) {
+        productService.updateById(id, productRequestDto);
+        System.out.println(productRequestDto);
+        return "admin";
+    }
+
+    @DeleteMapping("/product/{id}")
     public String deleteProduct(@PathVariable int id) {
         productService.deleteById(id);
-        return "redirect:/admin/product";
+        return "admin";
     }
 
 }
