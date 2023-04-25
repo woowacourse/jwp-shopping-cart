@@ -28,6 +28,9 @@ public class ProductCategoryDao {
     }
 
     public List<ProductCategoryEntity> findAll(final Long productId) {
+        if (productId == null) {
+            throw new IllegalArgumentException("상품 ID는 null일 수 없습니다.");
+        }
         final String sql = "SELECT * FROM product_category WHERE product_id = ?";
         return jdbcTemplate.query(
             sql,
