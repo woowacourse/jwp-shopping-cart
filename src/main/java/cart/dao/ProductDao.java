@@ -44,6 +44,7 @@ public class ProductDao implements CrudDao<ProductEntity, ProductRequest> {
 
     @Override
     public void deleteById(Long id) {
-
+        String query = "DELETE FROM product WHERE id = ?";
+        jdbcTemplate.update(query, id);
     }
 }

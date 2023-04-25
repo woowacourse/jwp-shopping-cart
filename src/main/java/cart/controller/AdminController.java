@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +45,12 @@ public class AdminController {
     @PutMapping("/products/{id}")
     public String update(@PathVariable Long id, @RequestBody ProductRequest product) {
         productDao.updateById(id, product);
+        return "admin";
+    }
+
+    @DeleteMapping("/products/{id}")
+    public String delete(@PathVariable Long id) {
+        productDao.deleteById(id);
         return "admin";
     }
 }

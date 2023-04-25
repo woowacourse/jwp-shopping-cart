@@ -70,7 +70,7 @@ flowchart
     ```
   PUT /admin/products/{product_id} HTTP/1.1
   ```
-- [ ] 사용자로부터 DELETE 요청을 받으면 상품을 DB에서 제거한다.
+- [x] 사용자로부터 DELETE 요청을 받으면 상품을 DB에서 제거한다.
     ```
   DELETE /admin/products/{product_id} HTTP/1.1
   ```
@@ -83,7 +83,7 @@ flowchart
         - Table 명 : `product`
 
           | id | name | image_url   | price |
-                                        |----|---------|-------------|-------|
+                                                  |----|---------|-------------|-------|
           | 1 | chicken | https://... | 10000 |
           | 2 | pizza | https://... | 12000 |
         - Table 명 : `user`
