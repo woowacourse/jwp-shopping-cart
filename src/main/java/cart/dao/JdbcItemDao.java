@@ -50,6 +50,8 @@ public class JdbcItemDao implements ItemDao {
 
     @Override
     public void delete(final Long id) {
+        String sql = "delete from item where id = ?";
 
+        jdbcTemplate.update(sql, id);
     }
 }
