@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import cart.dto.ProductDto;
 import cart.entity.ProductEntity;
+import cart.exception.ProductNotFoundException;
 import cart.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,18 @@ public class ProductService {
     }
 
     public void deleteById(Long id) {
+        validateId(id);
         productRepository.deleteById(id);
     }
 
     public void updateProductById(Long id, String name, int price, String imageUrl) {
+        validateId(id);
         productRepository.update(new ProductEntity(id, name, price, imageUrl));
+    }
+
+    private void validateId(Long id) {
+        if (!productRepository.existById(id)) {
+            throw new ProductNotFoundException("존재하지 않는 id 입니다.");
+        }
     }
 }
