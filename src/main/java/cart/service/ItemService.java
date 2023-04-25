@@ -30,4 +30,14 @@ public class ItemService {
                 .build();
         itemDao.save(item);
     }
+
+    public void updateItem(final Long itemId, final ItemRequest itemRequest) {
+        Item item = new Item.Builder()
+                .id(itemId)
+                .name(itemRequest.getName())
+                .imageUrl(itemRequest.getImageUrl())
+                .price(itemRequest.getPrice())
+                .build();
+        itemDao.update(item);
+    }
 }
