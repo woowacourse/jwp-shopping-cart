@@ -1,6 +1,7 @@
 package cart.service;
 
-import cart.controller.dto.ProductCreateRequest;
+import cart.controller.dto.request.ProductCreateRequest;
+import cart.controller.dto.request.ProductUpdateRequest;
 import cart.controller.dto.response.ProductResponse;
 import cart.dao.ProductDao;
 import org.springframework.stereotype.Service;
@@ -30,4 +31,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    public void update(ProductUpdateRequest request) {
+        productDao.update(request);
+    }
 }

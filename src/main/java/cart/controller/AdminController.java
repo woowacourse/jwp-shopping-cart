@@ -1,11 +1,13 @@
 package cart.controller;
 
-import cart.controller.dto.ProductCreateRequest;
+import cart.controller.dto.request.ProductCreateRequest;
+import cart.controller.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -28,6 +30,11 @@ public class AdminController {
     @PostMapping
     public void createProduct(@RequestBody ProductCreateRequest request) {
         productService.create(request);
+    }
+
+    @PutMapping
+    public void update(@RequestBody ProductUpdateRequest request) {
+        productService.update(request);
     }
 
 }

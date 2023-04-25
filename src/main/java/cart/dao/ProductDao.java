@@ -1,6 +1,7 @@
 package cart.dao;
 
-import cart.controller.dto.ProductCreateRequest;
+import cart.controller.dto.request.ProductCreateRequest;
+import cart.controller.dto.request.ProductUpdateRequest;
 import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,5 +30,10 @@ public class ProductDao {
                 rs.getString("image_url"),
                 rs.getInt("price"))
         );
+    }
+
+    public void update(ProductUpdateRequest request) {
+        String sql = "UPDATE PRODUCT SET(name, price, image_url) = (?, ?, ?) WHERE id = ?";
+        jdbcTemplate.update(sql, request.getName(), request.getPrice(), request.getImageUrl(), request.getId());
     }
 }
