@@ -48,7 +48,7 @@ public class ProductDao {
         jdbcTemplate.update(sql,
                 newProduct.getName(),
                 newProduct.getPrice(),
-                newProduct.getImage_url(),
+                newProduct.getImageUrl(),
                 newProduct.getId());
     }
 
