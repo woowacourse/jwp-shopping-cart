@@ -1,19 +1,21 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
+import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import cart.dto.ProductSaveRequest;
 
 @SpringBootTest
+@Transactional
 class ProductServiceTest {
 
     @Autowired
@@ -25,7 +27,7 @@ class ProductServiceTest {
         saveProduct("치킨", 10000);
 
         final List<ProductResponse> result = productService.findAll();
-        Assertions.assertAll(
+        assertAll(
                 () -> assertThat(result).hasSize(1),
                 () -> assertThat(result.get(0).getName()).isEqualTo("치킨"),
                 () -> assertThat(result.get(0).getPrice()).isEqualTo(10000),
@@ -47,8 +49,27 @@ class ProductServiceTest {
         assertThat(results).isEmpty();
     }
 
+    @Test
+    @DisplayName("id에 해당하는 상품을 수정한다.")
+    void update() {
+        // given
+        final Long id = saveProduct("샐러드", 20000);
+        final ProductRequest request = new ProductRequest("치킨", 10000, "changedImg");
+
+        // when
+        productService.update(id, request);
+
+        // then
+        final List<ProductResponse> results = productService.findAll();
+        assertAll(
+                () -> assertThat(results.get(0).getName()).isEqualTo("치킨"),
+                () -> assertThat(results.get(0).getPrice()).isEqualTo(10000),
+                () -> assertThat(results.get(0).getImgUrl()).isEqualTo("changedImg")
+        );
+    }
+
     private Long saveProduct(final String name, final int price) {
-        final ProductSaveRequest request = new ProductSaveRequest(name, price, "img");
+        final ProductRequest request = new ProductRequest(name, price, "img");
         return productService.save(request);
     }
 }

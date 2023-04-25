@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import cart.dao.ProductDao;
 import cart.dao.entity.Product;
+import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import cart.dto.ProductSaveRequest;
 
 @Service
 public class ProductService {
@@ -19,12 +19,8 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public Long save(ProductSaveRequest productSaveRequest) {
-        final Product product = new Product(
-                productSaveRequest.getName(),
-                productSaveRequest.getPrice(),
-                productSaveRequest.getImgUrl()
-        );
+    public Long save(ProductRequest productRequest) {
+        final Product product = createProduct(productRequest);
         return productDao.save(product);
     }
 
@@ -42,5 +38,17 @@ public class ProductService {
 
     public void delete(final Long id) {
         productDao.delete(id);
+    }
+
+    public void update(final Long id, final ProductRequest request) {
+        productDao.update(id, createProduct(request));
+    }
+
+    private Product createProduct(ProductRequest productRequest) {
+        return new Product(
+                productRequest.getName(),
+                productRequest.getPrice(),
+                productRequest.getImgUrl()
+        );
     }
 }
