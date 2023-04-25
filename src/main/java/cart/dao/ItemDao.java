@@ -21,14 +21,12 @@ public class ItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Item> actorRowMapper =  (resultSet, rowNumber) -> {
-        return new Item(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getString("image_url"),
-                resultSet.getInt("price")
-        );
-    };
+    private final RowMapper<Item> actorRowMapper = (resultSet, rowNumber) -> new Item.Builder()
+            .id(resultSet.getLong("id"))
+            .name(resultSet.getString("name"))
+            .imageUrl(resultSet.getString("image_url"))
+            .price(resultSet.getInt("price"))
+            .build();
 
     public List<Item> findAll() {
         final String sql = "SELECT id, name, image_url, price FROM items ";

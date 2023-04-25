@@ -9,11 +9,41 @@ public class Item {
     private final String imageUrl;
     private final Integer price;
 
-    public Item(Long id, String name, String imageUrl, Integer price) {
-        this.id = id;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.price = price;
+    public static class Builder {
+        private Long id;
+        private String name;
+        private String imageUrl;
+        private Integer price;
+
+        public Builder() {}
+
+        public Builder id(Long value) {
+            id = value;
+            return this;
+        }
+        public Builder name(String value) {
+            name = value;
+            return this;
+        }
+        public Builder imageUrl(String value) {
+            imageUrl = value;
+            return this;
+        }
+        public Builder price(Integer value) {
+            price = value;
+            return this;
+        }
+
+        public Item build() {
+            return new Item(this);
+        }
+    }
+
+    private Item(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.imageUrl = builder.imageUrl;
+        this.price = builder.price;
     }
 
     public Long getId() {
