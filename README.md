@@ -22,12 +22,12 @@
 
 Product
 
-| column | type |  |
-| --- | --- | --- |
+| column | type |                    |
+| --- | --- |--------------------|
 | id | BIGINT | PK, AUTO_INCREMENT |
-| name | VARCHAR(64) |  |
-| price | INT |  |
-| image | VARCHAR(256) |  |
+| name | VARCHAR(64) |                    |
+| price | INT |                    |
+| image | VARCHAR(256) | NULLABLE           |
 
 ### API
 
