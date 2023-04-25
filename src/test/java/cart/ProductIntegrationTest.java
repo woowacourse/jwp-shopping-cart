@@ -34,4 +34,16 @@ public class ProductIntegrationTest {
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @Test
+    public void getAdmin() {
+        var result = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/admin")
+                .then()
+                .extract();
+
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
 }

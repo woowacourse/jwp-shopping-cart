@@ -8,6 +8,8 @@ public class JwpCartApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(JwpCartApplication.class, args);
+        Integer a = 10;
+        Long b = 10L;
     }
 
 }
