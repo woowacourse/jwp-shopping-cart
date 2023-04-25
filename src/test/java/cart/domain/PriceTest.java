@@ -3,6 +3,7 @@ package cart.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -26,6 +27,32 @@ class PriceTest {
 
         // when & then
         assertThatThrownBy(() -> new Price(price))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("가격을 수정한다.")
+    void edit_success() {
+        // given
+        Price price = new Price(1000);
+        int expected = 500;
+
+        // when
+        price.edit(expected);
+
+        // then
+        assertThat(price.getPrice()).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("가격 수정에 실패한다.")
+    void edit_fail_when_invalid_price() {
+        // given
+        Price price = new Price(1000);
+        int expected = -100;
+
+        // when & then
+        assertThatThrownBy(() -> price.edit(expected))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

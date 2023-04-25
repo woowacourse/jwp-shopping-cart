@@ -2,7 +2,7 @@ package cart.domain;
 
 public class Name {
 
-    private final String name;
+    private String name;
 
     public Name(final String name) {
         validate(name);
@@ -13,5 +13,14 @@ public class Name {
         if (name.isBlank()) {
             throw new IllegalArgumentException("이름은 공백이 되면 안됩니다.");
         }
+    }
+
+    public void edit(final String name) {
+        validate(name);
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

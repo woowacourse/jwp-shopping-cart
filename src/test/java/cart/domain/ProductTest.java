@@ -3,6 +3,8 @@ package cart.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class ProductTest {
@@ -19,6 +21,23 @@ class ProductTest {
         // when & then
         assertDoesNotThrow(
                 () -> Product.from(id, name, imgUrl, price)
+        );
+    }
+
+    @Test
+    @DisplayName("이름, 이미지, 가격을 수정한다.")
+    void edit_product_success() {
+        // given
+        Product product = Product.from(1L, "치킨", "URL", 1000);
+
+        // when
+        product.edit("피자", "img", 20000);
+
+        // then
+        assertAll(
+                () -> assertThat(product.getName()).isEqualTo("피자"),
+                () -> assertThat(product.getImgUrl()).isEqualTo("img"),
+                () -> assertThat(product.getPrice()).isEqualTo(20000)
         );
     }
 }
