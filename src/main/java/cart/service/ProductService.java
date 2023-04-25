@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.domain.Product;
+import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductsResponseDto;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,12 @@ public class ProductService {
     public ProductsResponseDto findAll() {
         List<Product> products = productRepository.findAll();
         return ProductsResponseDto.from(products);
+    }
+
+    @Transactional
+    public void createProduct(ProductCreateRequestDto productCreateRequestDto) {
+        Product product = Product.from(productCreateRequestDto.getName(), productCreateRequestDto.getImgUrl(), productCreateRequestDto.getPrice());
+        productRepository.add(product);
     }
 
 }

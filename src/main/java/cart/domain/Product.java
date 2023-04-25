@@ -1,5 +1,6 @@
 package cart.domain;
 
+
 public class Product {
 
     private Long id;
@@ -16,6 +17,10 @@ public class Product {
 
     public static Product from(final Long id, final String name, final String imgUrl, final int price) {
         return new Product(id, new Name(name), imgUrl, new Price(price));
+    }
+
+    public static Product from(final String name, final String imgUrl, final int price) {
+        return Product.from(null, name, imgUrl, price);
     }
 
     public void edit(final String name, final String imgUrl, final int price) {

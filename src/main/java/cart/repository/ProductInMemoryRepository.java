@@ -15,4 +15,9 @@ public class ProductInMemoryRepository implements ProductRepository{
     public List<Product> findAll() {
         return products;
     }
+
+    @Override
+    public void add(Product product) {
+        products.add(product);
+    }
 }

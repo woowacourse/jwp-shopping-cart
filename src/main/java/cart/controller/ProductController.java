@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductsResponseDto;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -21,4 +22,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAll());
     }
 
+    @PostMapping
+    public ResponseEntity<Void> createProduct(@RequestBody ProductCreateRequestDto productCreateRequestDto) {
+        productService.createProduct(productCreateRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
+    }
 }
