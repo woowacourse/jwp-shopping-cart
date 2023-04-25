@@ -19,6 +19,14 @@ public class ProductEntity {
         this.description = new Description(description);
     }
 
+    public void update(final String name, final String imageUrl, final Integer price,
+        final String description) {
+        this.name = new Name(name);
+        this.imageUrl = new ImageUrl(imageUrl);
+        this.price = new Price(price);
+        this.description = new Description(description);
+    }
+
     public Long getId() {
         return id;
     }

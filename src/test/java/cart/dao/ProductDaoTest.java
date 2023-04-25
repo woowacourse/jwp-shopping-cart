@@ -2,6 +2,7 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.entity.product.ProductEntity;
 import javax.sql.DataSource;
@@ -131,6 +132,49 @@ class ProductDaoTest {
 
             //then
             assertThat(productDao.findAll()).hasSize(0);
+        }
+    }
+
+    @Nested
+    class Update {
+
+        @Test
+        @DisplayName("수정하고자 하는 데이터의 ID가 null이면 오류를 던진다.")
+        void updateWithNullID() {
+            //given
+            final ProductEntity updateProductEntity = new ProductEntity(null, "name", "imageUrl", 1000, "description");
+            //when
+            //then
+            assertThatThrownBy(() -> productDao.update(updateProductEntity))
+                .isInstanceOf(IllegalArgumentException.class);
+        }
+
+        @Test
+        @DisplayName("상품을 수정한다.")
+        void update() {
+            //given
+            final ProductEntity productEntity = new ProductEntity(
+                null,
+                "다즐",
+                "스플릿.com",
+                10000000,
+                "다즐짱"
+            );
+            final Long savedProductId = productDao.save(productEntity);
+            final ProductEntity findProductEntity = productDao.findById(savedProductId);
+            findProductEntity.update("name", "imageUrl", 1000, "description");
+
+            //when
+            productDao.update(findProductEntity);
+            final ProductEntity updatedProductEntity = productDao.findById(findProductEntity.getId());
+
+            //then
+            assertAll(
+                () -> assertThat(updatedProductEntity.getName()).isEqualTo("name"),
+                () -> assertThat(updatedProductEntity.getImageUrl()).isEqualTo("imageUrl"),
+                () -> assertThat(updatedProductEntity.getPrice()).isEqualTo(1000),
+                () -> assertThat(updatedProductEntity.getDescription()).isEqualTo("description")
+            );
         }
     }
 }

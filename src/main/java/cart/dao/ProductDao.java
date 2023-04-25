@@ -63,4 +63,15 @@ public class ProductDao {
             id
         );
     }
+
+    public void update(final ProductEntity productEntity) {
+        if (!productEntity.isPersisted()) {
+            throw new IllegalArgumentException("한 번도 저장되지 않은 데이터는 수정할 수 없습니다.");
+        }
+        final String sql = "UPDATE product "
+            + "SET name = :name, image_url = :imageUrl, price = :price, description = :description "
+            + "WHERE id = :id";
+        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(productEntity);
+        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+    }
 }
