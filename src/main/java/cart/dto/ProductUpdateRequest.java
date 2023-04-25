@@ -6,7 +6,6 @@ import javax.validation.constraints.Positive;
 import org.hibernate.validator.constraints.Length;
 
 public class ProductUpdateRequest {
-
     @NotBlank
     @Length(min = 1, max = 10)
     private final String name;
