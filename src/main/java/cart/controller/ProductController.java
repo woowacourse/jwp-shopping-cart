@@ -1,11 +1,14 @@
 package cart.controller;
 
 import cart.domain.Product;
+import cart.request.ProductRequest;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ProductController {
@@ -32,5 +35,10 @@ public class ProductController {
         model.addAttribute("products", products);
 
         return "admin";
+    }
+
+    @PostMapping("/admin")
+    public void register(@RequestBody final ProductRequest productRequest) {
+        productService.register(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
     }
 }

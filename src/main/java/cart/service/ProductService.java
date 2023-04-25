@@ -17,4 +17,9 @@ public class ProductService {
     public List<Product> findAll() {
         return productDao.findAll();
     }
+
+    public Long register(final String name, final int price, final String imageUrl) {
+        final Product product = new Product(name, price, imageUrl);
+        return productDao.insert(product);
+    }
 }

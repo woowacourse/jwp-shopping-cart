@@ -43,4 +43,11 @@ class ProductServiceTest {
 
         assertThat(products.size()).isEqualTo(2);
     }
+
+    @Test
+    void 상품_등록() {
+        final Long id = productService.register("족발", 5000, "족발 이미지");
+
+        assertThat(id).isEqualTo(3L);
+    }
 }
