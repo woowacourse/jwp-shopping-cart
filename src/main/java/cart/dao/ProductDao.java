@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -34,5 +35,15 @@ public class ProductDao {
         String sql = "SELECT * FROM product";
         BeanPropertyRowMapper<ProductDto> mapper = BeanPropertyRowMapper.newInstance(ProductDto.class);
         return jdbcTemplate.query(sql, mapper);
+    }
+
+    public void update(ProductRequest productRequest, int id) {
+        String sql = "UPDATE product SET name=:name, imgUrl=:imgUrl, price=:price WHERE id=:id";
+        MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource()
+                .addValue("name", productRequest.getName())
+                .addValue("imgUrl", productRequest.getImgUrl())
+                .addValue("price", productRequest.getPrice())
+                .addValue("id", id);
+        namedParameterJdbcTemplate.update(sql, mapSqlParameters);
     }
 }

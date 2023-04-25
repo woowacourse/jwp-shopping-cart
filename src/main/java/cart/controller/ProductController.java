@@ -4,8 +4,11 @@ import cart.dto.ProductDto;
 import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,14 +44,21 @@ public class ProductController {
     }
 
     @PostMapping("/admin")
-    public void productSave(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<String> productAdd(@RequestBody ProductRequest productRequest) {
         // TODO: dto 내부 값 validation
         productService.save(productRequest);
+        return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 
     @GetMapping("/admin")
     @ResponseBody
     public List<ProductDto> productList() {
         return productService.findAll();
+    }
+
+    @PostMapping(path = "/admin/{id}")
+    public ResponseEntity<String> productModify(@RequestBody ProductRequest productRequest, @PathVariable int id) {
+        productService.update(productRequest, id);
+        return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 }

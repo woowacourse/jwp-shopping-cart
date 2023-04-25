@@ -9,7 +9,7 @@
 - [ ] 상품 관리 CRUD API 작성
   - [x] Create : POST - /admin
   - [x] Read : GET - /admin
-  - [ ] Update : POST - /admin/{id}
+  - [x] Update : POST - /admin/{id}
   - [ ] Delete : DELETE - /admin/{id}
 - [ ] 관리자 도구 페이지 연동
   - [ ] admin.html, admin.js 파일 내 TODO 주석을 참고하여 코드를 변경
