@@ -66,13 +66,13 @@ flowchart
     ```
   POST /admin/products HTTP/1.1
   ```
+- [x] 사용자로부터 PUT 요청을 받으면 상품의 정보를 수정하여 DB에 저장한다.
+    ```
+  PUT /admin/products/{product_id} HTTP/1.1
+  ```
 - [ ] 사용자로부터 DELETE 요청을 받으면 상품을 DB에서 제거한다.
     ```
   DELETE /admin/products/{product_id} HTTP/1.1
-  ```
-- [ ] 사용자로부터 PUT 요청을 받으면 상품의 정보를 수정하여 DB에 저장한다.
-    ```
-  PUT /admin/products/{product_id} HTTP/1.1
   ```
 
 ## DB(DAO)

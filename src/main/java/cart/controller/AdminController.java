@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -36,6 +38,12 @@ public class AdminController {
     @PostMapping("/products")
     public ResponseEntity create(@RequestBody ProductRequest product) {
         productDao.add(product);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity update(@PathVariable Long id, @RequestBody ProductRequest product) {
+        productDao.updateById(id, product);
         return ResponseEntity.ok().build();
     }
 }

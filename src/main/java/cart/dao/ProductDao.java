@@ -37,8 +37,9 @@ public class ProductDao implements CrudDao<ProductEntity, ProductRequest> {
     }
 
     @Override
-    public void updateById(Long id) {
-
+    public void updateById(Long id, ProductRequest request) {
+        String query = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        jdbcTemplate.update(query, request.getName(), request.getPrice(), request.getImageUrl(), id);
     }
 
     @Override

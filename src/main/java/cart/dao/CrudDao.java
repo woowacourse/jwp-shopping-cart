@@ -10,7 +10,7 @@ public interface CrudDao<E, R> {
 
     E findById(Long id);
 
-    void updateById(Long id);
+    void updateById(Long id, R request);
 
     void deleteById(Long id);
 }
