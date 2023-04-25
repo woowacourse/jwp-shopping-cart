@@ -25,4 +25,8 @@ public class ProductImageUrl {
             throw new IllegalArgumentException("[ERROR] 상품 이미지 url이 비어있습니다.");
         }
     }
+
+    public String getUrl() {
+        return url;
+    }
 }

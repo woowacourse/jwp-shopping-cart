@@ -3,15 +3,15 @@ package cart.domain.product;
 public class Product {
 
     private final Long id;
-    private final String name;
-    private final long price;
-    private final String imageUrl;
+    private final ProductName name;
+    private final ProductPrice price;
+    private final ProductImageUrl imageUrl;
 
     public Product(Long id, String name, long price, String imageUrl) {
         this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.name = new ProductName(name);
+        this.price = new ProductPrice(price);
+        this.imageUrl = new ProductImageUrl(imageUrl);
     }
 
     public Product(String name, long price, String imageUrl) {
@@ -23,14 +23,14 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return name.getName();
     }
 
     public long getPrice() {
-        return price;
+        return price.getAmount();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl.getUrl();
     }
 }
