@@ -60,13 +60,6 @@
     - [x]  FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT(ID)
     - [x]  FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(ID)
 
-### Repository
-
-- [ ]  상품 조회
-- [ ]  상품 생성
-- [ ]  상품 수정
-- [ ]  상품 삭제
-
 ### DAO
 
 - 상품 DAO
