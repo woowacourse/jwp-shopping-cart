@@ -37,7 +37,7 @@
       <td th:text="${product.name}"></td>
       <td th:text="${product.price}"></td>
       <td>
-        <img style="max-width: 100px;" th:src="${product.imagePath}">
+        <img style="max-width: 100px;" th:src="${product.imageUrl}">
       </td>
       <td>
         <button th:onclick="showEditModal([[${product}]])">수정</button>

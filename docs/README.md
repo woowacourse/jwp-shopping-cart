@@ -78,8 +78,8 @@ flowchart
     - Database 명 : `shopping_cart`
         - Table 명 : `product`
 
-          | id | name | image | price |
-                    |----|---------|------------|-------|
+          | id | name | image_url   | price |
+                    |----|---------|-------------|-------|
           | 1 | chicken | https://... | 10000 |
           | 2 | pizza | https://... | 12000 |
         - Table 명 : `user`

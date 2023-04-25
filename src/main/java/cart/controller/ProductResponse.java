@@ -4,13 +4,13 @@ public class ProductResponse {
     Long id;
     String name;
     Integer price;
-    String imagePath;
+    String imageUrl;
 
-    public ProductResponse(Long id, String name, Integer price, String imagePath) {
+    public ProductResponse(Long id, String name, Integer price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.imagePath = imagePath;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -25,7 +25,7 @@ public class ProductResponse {
         return price;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
