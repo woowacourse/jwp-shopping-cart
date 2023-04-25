@@ -35,4 +35,8 @@ public class ProductPrice {
     private boolean isLessThanMinimum(BigDecimal price) {
         return price.compareTo(MINIMUM_UNIT) < 0;
     }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
 }
