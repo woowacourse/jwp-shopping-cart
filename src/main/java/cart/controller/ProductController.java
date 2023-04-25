@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,6 +62,12 @@ public class ProductController {
     @PostMapping("/admin/{id}")
     public ResponseEntity<String> productModify(@RequestBody ProductRequest productRequest, @PathVariable int id) {
         productService.update(productRequest, id);
+        return new ResponseEntity<>("ok", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/{id}")
+    public ResponseEntity<String> productRemove(@PathVariable int id) {
+        productService.delete(id);
         return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 }

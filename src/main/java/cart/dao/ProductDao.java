@@ -46,4 +46,11 @@ public class ProductDao {
                 .addValue("id", id);
         namedParameterJdbcTemplate.update(sql, mapSqlParameters);
     }
+
+    public void delete(int id) {
+        String sql = "DELETE FROM product WHERE id=:id";
+        MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource()
+                .addValue("id", id);
+        namedParameterJdbcTemplate.update(sql, mapSqlParameters);
+    }
 }

@@ -25,4 +25,8 @@ public class ProductService {
     public void update(ProductRequest productRequest, int id) {
         productDao.update(productRequest, id);
     }
+
+    public void delete(int id) {
+        productDao.delete(id);
+    }
 }
