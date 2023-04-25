@@ -41,16 +41,15 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public ProductEntity update(ProductEntity entity) {
-        return null;
+        String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
+        jdbcTemplate.update(sql, entity.getName(), entity.getImage(), entity.getPrice(), entity.getId());
+        return entity;
     }
 
     @Override
     public ProductEntity findById(Long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
-
-
         return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
-
     }
 
     @Override

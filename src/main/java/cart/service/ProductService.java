@@ -31,4 +31,11 @@ public class ProductService {
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
     }
+
+    public ProductResponse update(ProductRequest productRequest, Long id) {
+        ProductEntity productEntity = productRepository.findById(id);
+        productEntity.update(productRequest);
+        productRepository.update(productEntity);
+        return ProductResponse.from(productEntity);
+    }
 }
