@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS products
+CREATE TABLE IF NOT EXISTS product
 (
     id      LONG            NOT NULL    AUTO_INCREMENT
     name    VARCHAR(255)    NOT NULL
