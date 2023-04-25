@@ -1,5 +1,7 @@
 package cart.controller;
 
+import cart.dao.ProductEntity;
+import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,11 +10,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
+    private final ProductService productService;
+
+    public HomeController(final ProductService productService) {
+        this.productService = productService;
+    }
+
     @GetMapping("/")
     public String home(Model model) {
-
-        model.addAttribute("products", List.of(1, 2, 3, 4, 5));
+        List<ProductEntity> products = productService.findAll();
+        model.addAttribute("products", products);
         return "index";
     }
+
 
 }
