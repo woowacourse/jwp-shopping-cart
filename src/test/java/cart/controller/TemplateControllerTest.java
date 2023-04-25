@@ -33,4 +33,16 @@ class TemplateControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(model().attribute("products", equalTo(expected)));
     }
+
+    @Test
+    void 어드민_페이지_조회_테스트() throws Exception {
+        final List<ProductResponse> expected = List.of(
+                ResponseFixture.NUNU_RESPONSE,
+                ResponseFixture.ODO_RESPONSE
+        );
+        mockMvc.perform(get("/admin"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(model().attribute("products", equalTo(expected)));
+    }
 }

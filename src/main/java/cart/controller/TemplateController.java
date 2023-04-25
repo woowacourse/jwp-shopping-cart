@@ -18,4 +18,13 @@ public class TemplateController {
         ));
         return "index";
     }
+
+    @GetMapping("/admin")
+    public String getAdminPage(final Model model) {
+        model.addAttribute("products", List.of(
+                new ProductResponse(1, "누누", "naver.com", 1),
+                new ProductResponse(2, "오도", "naver.com", 1)
+        ));
+        return "admin";
+    }
 }
