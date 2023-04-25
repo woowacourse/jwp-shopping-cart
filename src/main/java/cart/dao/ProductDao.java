@@ -17,6 +17,16 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void save(final ModifyProductRequest modifyProductRequest) {
+        String sql = "INSERT INTO product (name, price, image) VALUES (?, ?, ?)";
+
+        jdbcTemplate.update(sql, ps -> {
+            ps.setString(1, modifyProductRequest.getName());
+            ps.setInt(2, modifyProductRequest.getPrice());
+            ps.setString(3, modifyProductRequest.getImage());
+        });
+    }
+
     public List<ProductDto> findAll() {
         String sql = "SELECT * FROM product";
 
@@ -44,6 +54,11 @@ public class ProductDao {
             ps.setInt(3, modifyProductRequest.getPrice());
             ps.setLong(4, id);
         });
+    }
 
+    public void deleteById(final Long id) {
+        String sql = "DELETE FROM product WHERE id = ?";
+
+        jdbcTemplate.update(sql, id);
     }
 }
