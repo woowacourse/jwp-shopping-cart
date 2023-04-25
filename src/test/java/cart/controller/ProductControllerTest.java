@@ -27,4 +27,13 @@ public class ProductControllerTest {
                 .contentType(MediaType.TEXT_HTML_VALUE)
                 .statusCode(200);
     }
+
+    @Test
+    void 어드민_페이지_조회() {
+        RestAssured.when()
+                .get("/admin")
+                .then()
+                .contentType(MediaType.TEXT_HTML_VALUE)
+                .statusCode(200);
+    }
 }

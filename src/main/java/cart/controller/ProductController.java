@@ -24,4 +24,13 @@ public class ProductController {
 
         return "index";
     }
+
+    @GetMapping("/admin")
+    public String admin(final Model model) {
+        final List<Product> products = productService.findAll();
+
+        model.addAttribute("products", products);
+
+        return "admin";
+    }
 }
