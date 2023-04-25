@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dto.request.ProductRequestDto;
 import cart.dto.response.ProductResponseDto;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,21 @@ class ProductServiceTest {
             () -> assertThat(productResponseDto.getCategoryResponseDtos().get(0).getId()).isEqualTo(3L),
             () -> assertThat(productResponseDto.getCategoryResponseDtos().get(1).getId()).isEqualTo(4L)
         );
+    }
 
+    @Test
+    @DisplayName("상품을 삭제한다.")
+    void delete() {
+        //given
+        final Long id = productService.register(
+            new ProductRequestDto("name", "imageUrl", 1000, "description", List.of(1L, 2L))
+        );
+
+        //when
+        productService.delete(id);
+
+        //then
+        final List<ProductResponseDto> productResponseDtos = productService.findProducts();
+        Assertions.assertThat(productResponseDtos).hasSize(0);
     }
 }

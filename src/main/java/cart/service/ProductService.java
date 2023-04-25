@@ -73,4 +73,12 @@ public class ProductService {
             productCategoryDao.save(new ProductCategoryEntity(id, categoryId));
         }
     }
+
+    public void delete(final Long id) {
+        final List<ProductCategoryEntity> productCategoryEntities = productCategoryDao.findAll(id);
+        for (ProductCategoryEntity productCategoryEntity : productCategoryEntities) {
+            productCategoryDao.delete(productCategoryEntity.getId());
+        }
+        productDao.delete(id);
+    }
 }
