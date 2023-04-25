@@ -10,4 +10,9 @@ public class ProductController {
     public String getHome() {
         return "index";
     }
+
+    @GetMapping("/admin")
+    public String getAdmin() {
+        return "admin";
+    }
 }
