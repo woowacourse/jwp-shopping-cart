@@ -8,3 +8,14 @@
     - [ ] 수정
     - [ ] 삭제
 - [ ] 관리자 도구 페이지 연동
+
+# API 명세서
+
+## 상품 API
+
+| Method | URL             | Description |
+|--------|-----------------|-------------|
+| POST   | `/product`      | 상품 작성       |
+| GET    | `/product/list` | 상품 조회       |
+| PUT    | `/product/{id}` | 상품 수정       |
+| DELETE | `/product/{id}` | 상품 삭제       |
