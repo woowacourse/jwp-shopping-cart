@@ -7,4 +7,6 @@ public interface ProductDao {
     void insert(ProductEntity product);
 
     List<ProductEntity> selectAll();
+
+    void update(ProductEntity product);
 }

@@ -3,6 +3,7 @@ package cart.service;
 import cart.dao.ProductDao;
 import cart.dto.InsertRequestDto;
 import cart.dto.ProductResponseDto;
+import cart.dto.UpdateRequestDto;
 import cart.entity.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,5 +33,9 @@ public class CartService {
                         product.getPrice()
                 ))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public void updateProduct(final UpdateRequestDto updateRequestDto) {
+        productDao.update(updateRequestDto.toEntity());
     }
 }
