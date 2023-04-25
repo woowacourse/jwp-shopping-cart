@@ -4,7 +4,7 @@ import cart.domain.Product;
 import cart.domain.Products;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -28,7 +28,7 @@ public class ProductService {
         products.modify(product);
     }
 
-    public Set<Product> getAll() {
+    public List<Product> getAll() {
         return products.findAll();
     }
 }
