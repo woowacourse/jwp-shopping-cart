@@ -2,6 +2,23 @@
 
 ## 기능 구현 목록
 
+### Database
+
+- H2 Database 사용
+- DDL은 이하 기술
+
+```sql
+CREATE TABLE product
+(
+    id        BIGINT       NOT NULL AUTO_INCREMENT,
+    name      VARCHAR(50)  NOT NULL,
+    price     BIGINT       NOT NULL,
+    image_url VARCHAR(500) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+```
+
 ### Domain
 
 - [x] 상품
