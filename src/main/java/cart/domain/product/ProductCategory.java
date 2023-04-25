@@ -6,6 +6,6 @@ public enum ProductCategory {
     CLOTH,
     FURNITURE,
     INSTRUMENT,
+    ETC,
     ;
-
 }
