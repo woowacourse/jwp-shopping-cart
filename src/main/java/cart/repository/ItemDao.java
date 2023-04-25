@@ -53,9 +53,9 @@ public class ItemDao {
         jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice(), id);
     }
 
-    public void delete(Long id) {
+    public int delete(Long id) {
         String sql = "DELETE FROM ITEM WHERE item_id = ?";
-        jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 
     private final RowMapper<ItemDto> actorRowMapper = (resultSet, rowNum) -> {
