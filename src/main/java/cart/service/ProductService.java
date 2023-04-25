@@ -20,7 +20,8 @@ public class ProductService {
     }
 
     public void create(ProductRequest productRequest) {
-        productDao.save(productRequest);
+        Product product = productRequest.toEntity();
+        productDao.save(product);
     }
 
     public List<ProductResponse> findAll() {
@@ -35,6 +36,7 @@ public class ProductService {
     }
 
     public void update(Long productId, ProductRequest productRequest) {
-        productDao.updateById(productId, productRequest);
+        Product product = productRequest.toEntity();
+        productDao.updateById(productId, product);
     }
 }

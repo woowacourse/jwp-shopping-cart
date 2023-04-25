@@ -1,5 +1,7 @@
 package cart.dto.request;
 
+import cart.domain.Product;
+
 public class ProductRequest {
     private String name;
     private Integer price;
@@ -9,6 +11,10 @@ public class ProductRequest {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public Product toEntity() {
+        return new Product(name, price, imageUrl);
     }
 
     public String getName() {

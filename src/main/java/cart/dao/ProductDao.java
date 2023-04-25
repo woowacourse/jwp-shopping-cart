@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.domain.Product;
-import cart.dto.request.ProductRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -34,13 +33,11 @@ public class ProductDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void save(ProductRequest productRequest) {
-        String sql = "insert into Product(name, price, image_url) values (?,?,?)";
-
+    public void save(Product product) {
         Map<String, Object> parameters = new HashMap<>(3);
-        parameters.put("name", productRequest.getName());
-        parameters.put("price", productRequest.getPrice());
-        parameters.put("image_url", productRequest.getImageUrl());
+        parameters.put("name", product.getName());
+        parameters.put("price", product.getPrice());
+        parameters.put("image_url", product.getImageUrl());
 
         insertActor.execute(parameters);
     }
@@ -55,10 +52,10 @@ public class ProductDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public void updateById(Long id, ProductRequest productRequest) {
+    public void updateById(Long id, Product product) {
         String sql = "update product " +
                 "set name = ? , price = ?, image_url = ? " +
                 "where id = ?";
-        jdbcTemplate.update(sql, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl(), id);
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
     }
 }
