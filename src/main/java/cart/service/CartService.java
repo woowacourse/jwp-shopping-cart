@@ -1,10 +1,14 @@
 package cart.service;
 
 import cart.domain.Product;
-import cart.dto.CreateProductRequest;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import cart.persistence.ProductDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -16,13 +20,20 @@ public class CartService {
     }
 
     @Transactional
-    public void create(CreateProductRequest createProductRequest) {
+    public void create(ProductRequest productRequest) {
         Product product = new Product(
-                createProductRequest.getName(),
-                createProductRequest.getImageUrl(),
-                createProductRequest.getPrice()
+                productRequest.getName(),
+                productRequest.getImageUrl(),
+                productRequest.getPrice()
         );
 
         productDao.create(product);
+    }
+
+    public List<ProductResponse> readAll() {
+        List<Product> products = productDao.findAll();
+        return products.stream()
+                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImage()))
+                .collect(Collectors.toList());
     }
 }
