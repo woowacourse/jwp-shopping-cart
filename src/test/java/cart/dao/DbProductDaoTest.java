@@ -31,4 +31,15 @@ class DbProductDaoTest {
 
         assertThat(products).contains(product);
     }
+
+    @Test
+    void updateTest() {
+        Product boxster = productDao.update(new Product(1L, "박스터", "boxster.img", 500));
+
+        List<Product> products = productDao.findAll();
+
+        assertThat(products)
+                .extracting("name")
+                .contains(boxster.getName());
+    }
 }

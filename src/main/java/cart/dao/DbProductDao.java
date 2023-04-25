@@ -59,7 +59,18 @@ public class DbProductDao implements ProductDao {
 
     @Override
     public Product update(Product product) {
-        return null;
+        String sql = "UPDATE product SET name = :name, img_url = :img_url, price = :price WHERE id = :id";
+
+        SqlParameterSource parameters = new MapSqlParameterSource(Map.of(
+                "name", product.getName(),
+                "img_url", product.getImgUrl(),
+                "price", product.getPrice(),
+                "id", product.getId()
+        ));
+
+        namedParameterJdbcTemplate.update(sql, parameters);
+
+        return product;
     }
 
     @Override
