@@ -33,7 +33,7 @@ class DBProductRepositoryTest {
         jdbcTemplate.execute("CREATE TABLE product ("
             + "    id      BIGINT            NOT NULL    AUTO_INCREMENT,"
             + "    name    VARCHAR(255)    NOT NULL,"
-            + "    imgURL  VARCHAR(255)    NOT NULL,"
+            + "    imgURL  VARCHAR(8000)    NOT NULL,"
             + "    price   INT             NOT NULL,"
             + "    PRIMARY KEY (id))");
 
@@ -46,12 +46,12 @@ class DBProductRepositoryTest {
 
         Map<String, Object> map1 = Map.of(
             "name", product1.getName(),
-            "imgurl", product1.getImgURL(),
+            "imgurl", product1.getImgUrl(),
             "price", product1.getPrice()
         );
         Map<String, Object> map2 = Map.of(
             "name", product2.getName(),
-            "imgurl", product2.getImgURL(),
+            "imgurl", product2.getImgUrl(),
             "price", product2.getPrice()
         );
 
@@ -101,7 +101,7 @@ class DBProductRepositoryTest {
 
         assertAll(
             () -> assertThat(productResponseDto.getName()).isEqualTo(product.getName()),
-            () -> assertThat(productResponseDto.getImageUrl()).isEqualTo(product.getImgURL()),
+            () -> assertThat(productResponseDto.getImageUrl()).isEqualTo(product.getImgUrl()),
             () -> assertThat(productResponseDto.getPrice()).isEqualTo(product.getPrice())
         );
     }

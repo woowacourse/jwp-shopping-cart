@@ -28,7 +28,7 @@ public class DBProductRepository implements ProductRepository {
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[] {"id"});
             preparedStatement.setString(1, productRequestDto.getName());
-            preparedStatement.setString(2, productRequestDto.getImgURL());
+            preparedStatement.setString(2, productRequestDto.getImgUrl());
             preparedStatement.setInt(3, productRequestDto.getPrice());
             return preparedStatement;
         }, keyHolder);
@@ -51,7 +51,7 @@ public class DBProductRepository implements ProductRepository {
 
     @Override
     public List<ProductResponseDto> findAll() {
-        String sql = "SELECT id, name, imgURL, price FROM product";
+        String sql = "SELECT id, name, imgUrl, price FROM product";
 
         return jdbcTemplate.query(sql,
             (resultSet, rowNum) -> new ProductResponseDto(
@@ -63,10 +63,10 @@ public class DBProductRepository implements ProductRepository {
 
     @Override
     public void updateById(ProductRequestDto productRequestDto, Long id) {
-        String sql = "UPDATE product SET name = ?, imgURL = ?, price = ? WHERE id = ?";
+        String sql = "UPDATE product SET name = ?, imgUrl = ?, price = ? WHERE id = ?";
         jdbcTemplate.update(sql,
             productRequestDto.getName(),
-            productRequestDto.getImgURL(),
+            productRequestDto.getImgUrl(),
             productRequestDto.getPrice(),
             id);
     }

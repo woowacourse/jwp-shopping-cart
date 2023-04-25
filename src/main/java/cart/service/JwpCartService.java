@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.domain.ProductRepository;
+import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
 
 @Service
@@ -20,5 +21,17 @@ public class JwpCartService {
 
     public List<ProductResponseDto> findAll() {
         return productRepository.findAll();
+    }
+
+    public void add(ProductRequestDto productRequestDto) {
+        productRepository.save(productRequestDto);
+    }
+
+    public void updateById(ProductRequestDto productRequestDto, Long id) {
+        productRepository.updateById(productRequestDto, id);
+    }
+
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
     }
 }
