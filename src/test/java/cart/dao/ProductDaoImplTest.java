@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.entity.Product;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,5 +40,22 @@ class ProductDaoImplTest {
 
         // then
         assertThat(result).isEqualTo(1);
+    }
+
+    @DisplayName("상품 전체를 조회한다.")
+    @Test
+    void find_all_product() {
+        // given
+        ProductDaoImpl productDao = new ProductDaoImpl(jdbcTemplate);
+        Product product1 = new Product("연필", "이미지url", 1000);
+        Product product2 = new Product("지우개", "이미지url", 1000);
+        productDao.insertProduct(product1);
+        productDao.insertProduct(product2);
+
+        // when
+        List<Product> result = productDao.findAll();
+
+        // then
+        assertThat(result.size()).isEqualTo(2);
     }
 }
