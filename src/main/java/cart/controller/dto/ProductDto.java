@@ -1,13 +1,14 @@
-package cart.domain;
+package cart.controller.dto;
 
-public class Product {
-    private Long id;
+public class ProductDto {
+
+    private final Long id;
     private final String name;
     private final String imageUrl;
     private final int price;
-    private final ProductCategory category;
+    private final String category;
 
-    public Product(final Long id, final String name, final String imageUrl, final int price, final ProductCategory category) {
+    public ProductDto(final Long id, final String name, final String imageUrl, final int price, final String category) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -31,7 +32,7 @@ public class Product {
         return price;
     }
 
-    public ProductCategory getCategory() {
+    public String getCategory() {
         return category;
     }
 }
