@@ -5,6 +5,7 @@ import cart.service.dto.ProductModifyRequest;
 import cart.service.dto.ProductRegisterRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-//TODO : URL 에 따른 컨트롤러 분리할 것
 @Controller
 @RequestMapping("/products")
 public class ProductController {
@@ -26,14 +26,15 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerProduct(@RequestBody final ProductRegisterRequest productRegisterRequest) {
+    public void registerProduct(@Validated @RequestBody final ProductRegisterRequest productRegisterRequest) {
         productService.registerProduct(productRegisterRequest);
     }
 
     @PatchMapping("/{product-id}")
     public String modifyProduct(
             @PathVariable("product-id") final Long productId,
-            @RequestBody final ProductModifyRequest productModifyRequest) {
+            @Validated @RequestBody final ProductModifyRequest productModifyRequest
+    ) {
         productService.modifyProduct(productId, productModifyRequest);
 
         return "admin";
