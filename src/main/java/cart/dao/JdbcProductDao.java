@@ -23,7 +23,7 @@ public class JdbcProductDao implements ProductDao {
             resultSet.getInt("price")
     );
 
-    public List<ProductEntity> selectAll(){
+    public List<ProductEntity> selectAll() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
