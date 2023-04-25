@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.ModifyProductRequest;
 import cart.controller.dto.ProductDto;
+import cart.controller.dto.ProductRequest;
 import cart.dao.ProductDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,23 +11,23 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminCartController {
 
     private final ProductDao productDao;
 
-    public AdminController(final ProductDao productDao) {
+    public AdminCartController(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
     @PostMapping("/products")
-    public String createProduct(@RequestBody final ModifyProductRequest modifyProductRequest) {
-        productDao.save(modifyProductRequest);
+    public String createProduct(@RequestBody final ProductRequest productRequest) {
+        productDao.save(productRequest);
 
         return "admin";
     }
 
     @GetMapping
-    public String findProduct(final Model model) {
+    public String findAllProducts(final Model model) {
         List<ProductDto> productDtos = productDao.findAll();
         model.addAttribute("products", productDtos);
 
@@ -35,8 +35,8 @@ public class AdminController {
     }
 
     @PutMapping("/products/{productId}")
-    public String modifyProduct(@PathVariable final Long productId, @RequestBody final ModifyProductRequest modifyProductRequest) {
-        productDao.update(productId, modifyProductRequest);
+    public String modifyProduct(@PathVariable final Long productId, @RequestBody final ProductRequest productRequest) {
+        productDao.updateById(productId, productRequest);
 
         return "admin";
     }

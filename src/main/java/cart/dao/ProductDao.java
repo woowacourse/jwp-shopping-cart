@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.controller.dto.ModifyProductRequest;
 import cart.controller.dto.ProductDto;
+import cart.controller.dto.ProductRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -17,13 +17,13 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(final ModifyProductRequest modifyProductRequest) {
-        String sql = "INSERT INTO product (name, price, image) VALUES (?, ?, ?)";
+    public void save(final ProductRequest productRequest) {
+        String sql = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(sql, ps -> {
-            ps.setString(1, modifyProductRequest.getName());
-            ps.setInt(2, modifyProductRequest.getPrice());
-            ps.setString(3, modifyProductRequest.getImage());
+            ps.setString(1, productRequest.getName());
+            ps.setInt(2, productRequest.getPrice());
+            ps.setString(3, productRequest.getImageUrl());
         });
     }
 
@@ -45,13 +45,13 @@ public class ProductDao {
         });
     }
 
-    public void update(final Long id, final ModifyProductRequest modifyProductRequest) {
-        String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
+    public void updateById(final Long id, final ProductRequest productRequest) {
+        String sql = "UPDATE product SET name = ?, image_url = ?, price = ? WHERE id = ?";
 
         jdbcTemplate.update(sql, ps -> {
-            ps.setString(1, modifyProductRequest.getName());
-            ps.setString(2, modifyProductRequest.getImage());
-            ps.setInt(3, modifyProductRequest.getPrice());
+            ps.setString(1, productRequest.getName());
+            ps.setString(2, productRequest.getImageUrl());
+            ps.setInt(3, productRequest.getPrice());
             ps.setLong(4, id);
         });
     }

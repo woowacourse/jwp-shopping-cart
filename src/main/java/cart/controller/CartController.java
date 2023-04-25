@@ -18,9 +18,10 @@ public class CartController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String findAllProducts(final Model model) {
         List<ProductDto> productDtos = productDao.findAll();
         model.addAttribute("products", productDtos);
+
         return "index";
     }
 }

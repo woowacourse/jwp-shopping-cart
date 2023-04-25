@@ -1,14 +1,14 @@
 package cart.controller.dto;
 
-public class ModifyProductRequest {
+public class ProductRequest {
 
     private final String name;
-    private final String image;
+    private final String imageUrl;
     private final int price;
 
-    public ModifyProductRequest(final String name, final String image, final int price) {
+    public ProductRequest(final String name, final String imageUrl, final int price) {
         this.name = name;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.price = price;
     }
 
@@ -16,8 +16,8 @@ public class ModifyProductRequest {
         return name;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public int getPrice() {
