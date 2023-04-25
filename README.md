@@ -6,7 +6,7 @@
 
 1. 요청
 
-- URL : localhost:8080/admin/product
+- URL : localhost:8080/admin/products
 - method : POST
 - Body :
 
@@ -22,19 +22,21 @@
 
 1. 요청
 
-- URL : localhost:8080/admin
+- URL : localhost:8080/admin/products
 - method : GET
 
 ## 상품 수정
 
 1. 요청
 
-- URL : localhost:8080/admin/product
-- method : PATCH
+- URL : localhost:8080/admin/products/:productId
+- method : PUT
 
 ```json
 {
-  "name": "치킨"
+  "name": "치킨",
+  "price": 10000,
+  "image": "https://grepp-programmers.s3.ap-northeast-2.amazonaws.com/files/production/d440b8f4-91c3-4272-8a81-876e9aaffb9c/RisingStarGraphBox.jpg"
 }
 ```
 
@@ -42,11 +44,5 @@
 
 1. 요청
 
-- URL : localhost:8080/admin/product
+- URL : localhost:8080/admin/products/:productId
 - method : DELETE
-
-```json
-{
-  "productId": "1"
-}
-```
