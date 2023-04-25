@@ -48,4 +48,19 @@ public class ProductDao {
             )
         );
     }
+
+    public ProductEntity findById(final Long id) {
+        final String sql = "SELECT * FROM product WHERE id = ?";
+        return namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(
+            sql,
+            (rs, rowNum) -> new ProductEntity(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("image_url"),
+                rs.getInt("price"),
+                rs.getString("description")
+            ),
+            id
+        );
+    }
 }

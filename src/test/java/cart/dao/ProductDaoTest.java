@@ -73,6 +73,32 @@ class ProductDaoTest {
             .containsExactly(savedFirstProductId, savedSecondProductId);
     }
 
+    @Test
+    @DisplayName("ID로 상품을 조회한다.")
+    void findById() {
+        //given
+        final ProductEntity firstProductEntity = new ProductEntity(
+            null,
+            "다즐",
+            "스플릿.com",
+            10000000,
+            "다즐짱"
+        );
+        final Long savedFirstProductId = productDao.save(firstProductEntity);
+
+        //when
+        final ProductEntity findProductEntity = productDao.findById(savedFirstProductId);
+
+        //then
+        assertAll(
+            () -> assertThat(findProductEntity.getId()).isEqualTo(savedFirstProductId),
+            () -> assertThat(findProductEntity.getName()).isEqualTo("다즐"),
+            () -> assertThat(findProductEntity.getImageUrl()).isEqualTo("스플릿.com"),
+            () -> assertThat(findProductEntity.getPrice()).isEqualTo(10000000),
+            () -> assertThat(findProductEntity.getDescription()).isEqualTo("다즐짱")
+        );
+    }
+
 
     @Nested
     class Delete {
