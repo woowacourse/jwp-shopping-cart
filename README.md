@@ -9,8 +9,6 @@
 
 --- 
 
-insert into product (name, price, image) values ('haha', 10000, 'https://tecoble.techcourse.co.kr/static/9eab43e832e71e7b485b4273b95ccc3a/02b8e/sample4.png')
----
 
 - [x] 상품 목록 페이지 연동
   - [x] 요청 : Get /
@@ -18,15 +16,16 @@ insert into product (name, price, image) values ('haha', 10000, 'https://tecoble
     - [x] 모델 추가 : List\<Product>
 - [ ] 상품 관리 CRUD API 작성
   /product
-  - [ ] Create
-    - [ ] 요청 : Post
-      - [ ] 상품 이름, 가격, 이미지
-    - [ ] 응답 : 200
-    - [ ] 예외 : 
+  - [x] Create
+    - [x] 요청 : Post
+      - [x] 상품 이름, 가격, 이미지
+    - [x] 응답 : 200
+    - [ ] 예외 :
       - [ ] 입력값이 비어있는 경우
       - [ ] 입력값이 아래의 조건을 만족하지 않은 경우
         - [ ] 상품 이름 : 50자 미만
         - [ ] 가격 : 0 이상 10억 이하
+      - [ ] DB 저장이 안된 경우
   - [ ] Read
     - [ ] 요청 : Get
     - [ ] 응답 : 200, List\<Product>

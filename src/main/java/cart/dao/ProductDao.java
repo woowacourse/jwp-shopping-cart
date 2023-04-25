@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.controller.dto.NewProductDto;
 import cart.controller.dto.ProductDto;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,6 +27,16 @@ public class ProductDao {
                 resultSet.getString("name"),
                 resultSet.getInt("price"),
                 resultSet.getString("image")
+        );
+    }
+
+    public int insert(final NewProductDto newProductDto) {
+        final String sql = "INSERT INTO PRODUCT (name, price, image) VALUES (?, ?, ?)";
+        return jdbcTemplate.update(
+                sql,
+                newProductDto.getName(),
+                newProductDto.getPrice(),
+                newProductDto.getImage()
         );
     }
 }

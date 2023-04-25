@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.controller.dto.NewProductDto;
 import cart.controller.dto.ProductDto;
 import cart.dao.ProductDao;
 import java.util.List;
@@ -18,5 +19,9 @@ public class CartService {
 
     public List<ProductDto> findAll() {
         return productDao.selectAll();
+    }
+
+    public void insert(final NewProductDto newProductDto) {
+        productDao.insert(newProductDto);
     }
 }
