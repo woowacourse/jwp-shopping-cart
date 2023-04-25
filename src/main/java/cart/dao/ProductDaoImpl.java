@@ -54,4 +54,11 @@ public class ProductDaoImpl implements ProductDao {
         jdbcTemplate.update(sql, updatedEntity.getName(), updatedEntity.getImage(), updatedEntity.getPrice(),
                 updatedEntity.getId());
     }
+
+    @Override
+    public void delete(final int id) {
+        final String sql = "DELETE FROM PRODUCT WHERE id = ?";
+
+        jdbcTemplate.update(sql, id);
+    }
 }

@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dto.ProductDto;
 import cart.service.ProductService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,4 +27,8 @@ public class ProductApiController {
         productService.update(id, productDto);
     }
 
+    @DeleteMapping("/product/delete/{id}")
+    public void delete(@PathVariable int id) {
+        productService.delete(id);
+    }
 }

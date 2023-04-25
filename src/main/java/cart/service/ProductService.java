@@ -34,4 +34,11 @@ public class ProductService {
         productDao.update(updatedEntity);
 
     }
+
+    public void delete(final int id) {
+        ProductEntity productEntity = productDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("상품 id를 확인해주세요."));
+
+        productDao.delete(id);
+    }
 }

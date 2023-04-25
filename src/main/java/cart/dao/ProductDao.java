@@ -12,4 +12,6 @@ public interface ProductDao {
     Optional<ProductEntity> findById(final int id);
 
     void update(final ProductEntity updatedEntity);
+
+    void delete(int id);
 }
