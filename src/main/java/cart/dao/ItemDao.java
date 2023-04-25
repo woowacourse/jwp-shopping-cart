@@ -50,4 +50,9 @@ public class ItemDao {
         final String sql = "UPDATE items SET name = ?, image_url = ?, price = ? WHERE id = ?";
         jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice(), item.getId());
     }
+
+    public void deleteBy(final Long itemId) {
+        final String sql = "DELETE FROM items WHERE id = ?";
+        jdbcTemplate.update(sql, itemId);
+    }
 }
