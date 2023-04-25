@@ -48,6 +48,11 @@ form.addEventListener('submit', (event) => {
 const createProduct = (product) => {
     axios.request({
         url: '/products',
+        method: 'post',
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+        },
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {

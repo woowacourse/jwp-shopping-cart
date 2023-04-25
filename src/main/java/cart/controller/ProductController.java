@@ -20,9 +20,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerProduct(@RequestBody final ProductRegisterRequest productRegisterRequest) {
+    public void registerProduct(@RequestBody final ProductRegisterRequest productRegisterRequest) {
         productService.registerProduct(productRegisterRequest);
-
-        return "redirect:/index.html";
     }
 }
