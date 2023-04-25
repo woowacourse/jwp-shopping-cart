@@ -6,11 +6,13 @@ import cart.service.dto.ProductModifyRequest;
 import cart.service.dto.ProductRegisterRequest;
 import cart.service.dto.ProductSearchResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductDao productDao;
@@ -20,28 +22,36 @@ public class ProductService {
     }
 
     public void registerProduct(final ProductRegisterRequest productRegisterRequest) {
-        ProductEntity productEntity = new ProductEntity(productRegisterRequest.getName(),
-                                                        productRegisterRequest.getPrice(),
-                                                        productRegisterRequest.getImageUrl());
+        ProductEntity productEntity = new ProductEntity(
+                productRegisterRequest.getName(),
+                productRegisterRequest.getPrice(),
+                productRegisterRequest.getImageUrl()
+        );
 
         productDao.save(productEntity);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductSearchResponse> searchAllProducts() {
         List<ProductEntity> productEntities = productDao.findAll();
+
         return productEntities.stream()
-                              .map(entity -> new ProductSearchResponse(entity.getId(),
-                                                                       entity.getName(),
-                                                                       entity.getPrice(),
-                                                                       entity.getImageUrl()))
+                              .map(entity -> new ProductSearchResponse(
+                                      entity.getId(),
+                                      entity.getName(),
+                                      entity.getPrice(),
+                                      entity.getImageUrl())
+                              )
                               .collect(Collectors.toList());
     }
 
     public void modifyProduct(final Long productId, final ProductModifyRequest productModifyRequest) {
-        final ProductEntity modifiedProductEntity = new ProductEntity(productId,
-                                                              productModifyRequest.getName(),
-                                                              productModifyRequest.getPrice(),
-                                                              productModifyRequest.getImageUrl());
+        final ProductEntity modifiedProductEntity =
+                new ProductEntity(productId,
+                                  productModifyRequest.getName(),
+                                  productModifyRequest.getPrice(),
+                                  productModifyRequest.getImageUrl()
+                );
 
         productDao.modify(modifiedProductEntity);
     }
