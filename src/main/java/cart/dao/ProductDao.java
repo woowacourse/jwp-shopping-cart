@@ -35,4 +35,9 @@ public class ProductDao {
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
+    public void deleteById(int id) {
+        String sql = "DELETE FROM Product WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
 }
