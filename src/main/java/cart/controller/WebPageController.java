@@ -15,8 +15,14 @@ public class WebPageController {
     }
 
     @GetMapping("/")
-    public String renderStartPage(Model model) {
+    public String renderStartPage(final Model model) {
         model.addAttribute("products", productService.getAll());
         return "index";
+    }
+
+    @GetMapping("/admin")
+    public String renderAdminPage(final Model model) {
+        model.addAttribute("products", productService.getAll());
+        return "admin";
     }
 }
