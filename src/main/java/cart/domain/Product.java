@@ -1,20 +1,20 @@
 package cart.domain;
 
+import cart.dto.ProductRequest;
+
 public class Product {
-    private final Long id;
     private final String name;
     private final String image;
     private final Integer price;
 
-    public Product(Long id, String name, String image, Integer price) {
-        this.id = id;
+    public Product(String name, String image, Integer price) {
         this.name = name;
         this.image = image;
         this.price = price;
     }
 
-    public Long getId() {
-        return id;
+    public static Product from(ProductRequest productRequest) {
+        return new Product(productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
     }
 
     public String getImage() {
