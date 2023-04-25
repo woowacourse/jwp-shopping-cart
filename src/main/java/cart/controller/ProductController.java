@@ -26,4 +26,13 @@ public class ProductController {
         model.addAttribute("products", products);
         return "index";
     }
+
+    @GetMapping("/admin")
+    public String admin(Model model) {
+        List<ProductResponse> products = productService.findProducts().stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
+        model.addAttribute("products", products);
+        return "admin";
+    }
 }
