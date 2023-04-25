@@ -1,5 +1,6 @@
 package cart.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -63,5 +64,11 @@ class ProductControllerTest {
                         .content(request))
                 .andExpect(status().isCreated())
                 .andExpect(content().json(result));
+    }
+
+    @Test
+    void 상품_삭제_테스트() throws Exception {
+        mockMvc.perform(delete("/products/1"))
+                .andExpect(status().isNoContent());
     }
 }

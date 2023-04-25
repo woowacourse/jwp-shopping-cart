@@ -77,4 +77,16 @@ class ProductIntegrationTest {
                 () -> assertThat(result.body().jsonPath().getInt("price")).isEqualTo(1)
         );
     }
+
+    @Test
+    void deleteProduct() {
+        final long id = 1L;
+        final var result = given()
+                .when()
+                .delete("/products/" + id)
+                .then()
+                .extract();
+
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
 }
