@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,13 @@ class ProductDaoTest {
                 () -> assertThat(foundProduct.getName()).isEqualTo("salad"),
                 () -> assertThat(foundProduct.getPrice()).isEqualTo(2000)
         );
+    }
+
+    @Test
+    void 모든_상품_데이터_조회() {
+        final List<Product> results = productDao.findAll();
+
+        assertThat(results.size()).isEqualTo(2);
     }
 
     @Test
