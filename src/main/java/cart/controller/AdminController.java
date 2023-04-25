@@ -4,6 +4,7 @@ import cart.controller.dto.ProductDto;
 import cart.service.ShoppingService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +42,12 @@ public class AdminController {
             @PathVariable final Long id,
             @RequestBody final ProductDto productDto) {
         shoppingService.update(id, productDto);
+        return "admin";
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteProduct( @PathVariable final Long id) {
+        shoppingService.delete(id);
         return "admin";
     }
 }

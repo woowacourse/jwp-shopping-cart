@@ -5,6 +5,7 @@ import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.Product;
 import cart.persistence.entity.ProductCategory;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -34,6 +35,7 @@ class ProductDaoTest {
                 20000, ProductCategory.KOREAN);
     }
 
+    @DisplayName("존재하는 상품을 조회하면, 성공적으로 가져온다.")
     @Test
     void findById_success() {
         // given
@@ -49,22 +51,28 @@ class ProductDaoTest {
                 () -> assertThat(findProduct.getCategory()).isEqualTo(ProductCategory.KOREAN));
     }
 
+    @DisplayName("존재하지 않는 상품을 조회하면 예외가 발생한다.")
     @Test
     void findById_fail() {
         assertThatThrownBy(() -> productDao.findById(1L))
                 .isInstanceOf(GlobalException.class);
     }
 
+    @DisplayName("상품을 저장한다.")
     @Test
     void insert() {
         // when
-        productDao.insert(product);
+        final Long productId = productDao.insert(product);
 
         // then
-        final Product findProduct = productDao.findById(1L);
-        assertThat(findProduct.getId()).isEqualTo(1L);
+        final Product findProduct = productDao.findById(productId);
+        assertAll(() -> assertThat(findProduct.getName()).isEqualTo("치킨"),
+                () -> assertThat(findProduct.getPrice()).isEqualTo(20000),
+                () -> assertThat(findProduct.getImageUrl()).isEqualTo(IMAGE_URL),
+                () -> assertThat(findProduct.getCategory()).isEqualTo(ProductCategory.KOREAN));
     }
 
+    @DisplayName("상품 전체를 조회한다.")
     @Test
     void findAll() {
         // given
@@ -77,5 +85,38 @@ class ProductDaoTest {
         // then
         assertThat(products)
                 .hasSize(2);
+    }
+
+    @DisplayName("상품을 수정한다.")
+    @Test
+    void update() {
+        // given
+        final Long productId = productDao.insert(product);
+
+        // when
+        final Product updateProduct = new Product(productId, "탕수육", "imageUrl",
+                30000, ProductCategory.CHINESE);
+        productDao.update(updateProduct);
+
+        // then
+        final Product findProduct = productDao.findById(productId);
+        assertAll(() -> assertThat(findProduct.getName()).isEqualTo("탕수육"),
+                () -> assertThat(findProduct.getPrice()).isEqualTo(30000),
+                () -> assertThat(findProduct.getImageUrl()).isEqualTo("imageUrl"),
+                () -> assertThat(findProduct.getCategory()).isEqualTo(ProductCategory.CHINESE));
+    }
+
+    @DisplayName("상품을 삭제한다.")
+    @Test
+    void delete() {
+        // given
+        final Long productId = productDao.insert(product);
+
+        // when
+        productDao.deleteById(productId);
+
+        // then
+        assertThatThrownBy(() -> productDao.findById(productId))
+                .isInstanceOf(GlobalException.class);
     }
 }
