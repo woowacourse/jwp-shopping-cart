@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Component
 public class ProductInMemoryRepository implements ProductRepository {
 
     List<Product> products = new ArrayList<>(List.of(Product.from(1L, "치킨", "url", 1000)));
