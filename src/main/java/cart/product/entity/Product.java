@@ -1,4 +1,4 @@
-package cart.product.domain;
+package cart.product.entity;
 
 import java.time.LocalDateTime;
 

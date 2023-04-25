@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.product.dao.ProductDao;
-import cart.product.domain.Product;
+import cart.product.entity.Product;
 import cart.product.dto.ProductRequest;
 import cart.product.dto.ProductResponse;
 
