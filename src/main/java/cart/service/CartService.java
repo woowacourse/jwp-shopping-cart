@@ -19,7 +19,9 @@ public class CartService {
     }
 
     public void create(final ProductRequest productRequest) {
-        //TODO:
+        final ProductEntity productEntity = new ProductEntity(productRequest.getName(), productRequest.getImage(),
+            productRequest.getPrice());
+        productDao.save(productEntity);
     }
 
     public List<ProductResponse> read() {

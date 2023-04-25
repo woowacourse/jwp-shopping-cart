@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
@@ -24,6 +25,7 @@ public class CartController {
     }
 
     @PostMapping("/product")
+    @ResponseBody
     public void createProduct(@ModelAttribute final ProductRequest productRequest) {
         cartService.create(productRequest);
     }
