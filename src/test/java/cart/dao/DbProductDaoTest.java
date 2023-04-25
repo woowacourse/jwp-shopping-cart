@@ -25,11 +25,11 @@ class DbProductDaoTest {
 
     @Test
     void saveTest() {
-        Product product = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
+        Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
 
         List<Product> products = productDao.findAll();
 
-        assertThat(products).contains(product);
+        assertThat(products).contains(gitchan);
     }
 
     @Test
@@ -41,5 +41,15 @@ class DbProductDaoTest {
         assertThat(products)
                 .extracting("name")
                 .contains(boxster.getName());
+    }
+
+    @Test
+    void deleteTest() {
+        Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
+
+        productDao.deleteById(gitchan.getId());
+
+        List<Product> products = productDao.findAll();
+        assertThat(products).doesNotContain(gitchan);
     }
 }
