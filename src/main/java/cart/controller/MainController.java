@@ -5,6 +5,7 @@ import cart.service.ProductManagementService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class MainController {
@@ -16,8 +17,9 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("products", ProductResponse.from(managementService.findAll()));
-        return "index";
+    public ModelAndView home(ModelAndView modelAndView) {
+        modelAndView.addObject("products", ProductResponse.from(managementService.findAll()));
+        modelAndView.setViewName("index");
+        return modelAndView;
     }
 }
