@@ -20,7 +20,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 class ProductDaoTest {
 
     @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate; //todo :
+    private NamedParameterJdbcTemplate jdbcTemplate;
     private ProductDao productDao;
 
     @BeforeEach
