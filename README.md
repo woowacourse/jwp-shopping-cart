@@ -9,7 +9,7 @@
 
 - [ ] 상품 관리 CRUD API 작성
     - [x] DB 설계
-    - [ ] API 설계
+    - [x] API 설계
     - [ ] DAO 구현
 
 - [ ] 관리자 도구 페이지 연동
@@ -17,3 +17,15 @@
     - [ ] 컨트롤러에서 필요한 정보 뷰에 전달
 
 ## API 설계
+
+- CREATE
+    - Request: POST /product HTTP/1.1
+
+- READ
+    - Request: GET /product HTTP/1.1
+
+- UPDATE
+    - Request: PUT /product HTTP/1.1
+
+- DELETE
+    - Request: DELETE /product HTTP/1.1
