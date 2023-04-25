@@ -64,7 +64,11 @@ public class DBProductRepository implements ProductRepository {
     @Override
     public void updateById(ProductRequestDto productRequestDto, Long id) {
         String sql = "UPDATE product SET name = ?, imgURL = ?, price = ? WHERE id = ?";
-        jdbcTemplate.update(sql, productRequestDto.getName(), productRequestDto.getImgURL(), productRequestDto.getPrice(), id);
+        jdbcTemplate.update(sql,
+            productRequestDto.getName(),
+            productRequestDto.getImgURL(),
+            productRequestDto.getPrice(),
+            id);
     }
 
     @Override
