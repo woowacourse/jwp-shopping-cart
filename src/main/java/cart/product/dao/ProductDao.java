@@ -45,12 +45,18 @@ public class ProductDao {
 
 		final KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
-			PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+			PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"});
 			ps.setString(1, product.getName());
 			ps.setInt(2, product.getPrice());
 			ps.setString(3, product.getImage());
 			return ps;
 		}, keyHolder);
 
-		return (long) keyHolder.getKeys().get("id");
-	}}
+		return (long)keyHolder.getKeys().get("id");
+	}
+
+	public long updateById(Long id, Product product) {
+		final String sql = "UPDATE product SET name = ?, price = ?, image = ? WHERE id = ?";
+		return jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), id);
+	}
+}

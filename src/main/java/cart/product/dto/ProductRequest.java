@@ -22,4 +22,13 @@ public class ProductRequest {
 	public String getImage() {
 		return image;
 	}
+
+	@Override
+	public String toString() {
+		return "ProductRequest{" +
+			"name='" + name + '\'' +
+			", price=" + price +
+			", image='" + image + '\'' +
+			'}';
+	}
 }

@@ -27,10 +27,15 @@ public class ProductService {
 			.collect(Collectors.toList());
 	}
 
-	public long saveProduct(ProductRequest productRequest) {
+	public long saveProducts(ProductRequest productRequest) {
 		Product product = new Product(null, productRequest.getName(), productRequest.getImage(),
 			productRequest.getPrice(), null, null);
 		return productDao.save(product);
 	}
 
+	public long updateProducts(Long id, ProductRequest productRequest) {
+		Product product = new Product(null, productRequest.getName(), productRequest.getImage(),
+			productRequest.getPrice(), null, null);
+		return productDao.updateById(id, product);
+	}
 }
