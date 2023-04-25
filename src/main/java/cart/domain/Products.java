@@ -15,7 +15,8 @@ public class Products {
     public Products() {
         this(List.of(
                 new Product(1, "비버", "https://gmlwjd9405.github.io/images/network/rest.png", 10000L),
-                new Product(2, "땡칠", "https://gmlwjd9405.github.io/images/network/rest.png", 5000L)
+                new Product(2, "땡칠", "https://gmlwjd9405.github.io/images/network/rest.png", 10000L),
+                new Product(3, "포비", "https://wimg.mk.co.kr/meet/neds/2020/12/image_readtop_2020_1292243_16081264674474585.jpg", 5000L)
         ));
     }
 
