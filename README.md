@@ -33,7 +33,7 @@
 
 |     URL     |                      /products                       |
 |:---:|:----------------------------------------------------:|
-| HTTP METHOD |                        PATCH                         |
+| HTTP METHOD |                         PUT                          |
 | BODY | int: Id, String: Name,  int: Price, String: ImageUrl |
 
 #### 삭제
@@ -42,3 +42,4 @@
 |:---:|:---------:|
 | HTTP METHOD |  DELETE   |
 | BODY |  int: Id  |
+
