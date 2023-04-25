@@ -25,4 +25,8 @@ public class ProductService {
                         productEntity.getPrice(), productEntity.getImageUrl()))
                 .collect(toList());
     }
+
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
+    }
 }

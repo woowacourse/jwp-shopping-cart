@@ -44,4 +44,9 @@ public class ProductRepository {
             return productEntities;
         });
     }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM PRODUCT WHERE id = ?";
+        jdbcTemplate.update(sql, ps -> ps.setLong(1, id));
+    }
 }

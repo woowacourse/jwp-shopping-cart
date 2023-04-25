@@ -50,7 +50,7 @@ const createProduct = (product) => {
         url: '/products',
         data: product,
         headers: {
-            'Content-Type': 'application/json', // 요청 헤더 (예: 컨텐츠 타입)
+            'Content-Type': 'application/json',
         },
     }).then((response) => {
         window.location.reload();
@@ -75,7 +75,11 @@ const updateProduct = (product) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: '',
+        method: 'delete',
+        url: `/products/${id}`,
+        header: {
+            'Content-Type': 'application/json',
+        }
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
