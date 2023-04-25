@@ -34,4 +34,9 @@ public class ProductInMemoryRepository implements ProductRepository {
         int index = products.indexOf(updateProduct);
         products.set(index, updateProduct);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        products.removeIf(product -> product.isEqualsId(id));
+    }
 }

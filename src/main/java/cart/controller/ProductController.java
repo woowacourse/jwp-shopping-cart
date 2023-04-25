@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dto.ProductCreateRequestDto;
+import cart.dto.ProductDeleteRequestDto;
 import cart.dto.ProductEditRequestDto;
 import cart.dto.ProductsResponseDto;
 import cart.service.ProductService;
@@ -35,5 +36,11 @@ public class ProductController {
         productService.editProduct(productEditRequestDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteProduct(@RequestBody ProductDeleteRequestDto productDeleteRequestDto) {
+        productService.deleteById(productDeleteRequestDto.getId());
+        return ResponseEntity.ok().build();
     }
 }
