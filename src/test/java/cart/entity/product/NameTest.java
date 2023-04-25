@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 class NameTest {
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "상품명이 {0}일 떄")
     @NullAndEmptySource
     @DisplayName("상품명이 존재하지 않을 경우 오류를 던진다.")
     void nameNotExist(final String value) {

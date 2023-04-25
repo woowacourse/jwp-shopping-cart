@@ -10,10 +10,10 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 class ImageUrlTest {
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "이미지 경로가 {0}일 떄")
     @NullAndEmptySource
     @DisplayName("이미지 경로가 존재하지 않을 경우 오류를 던진다.")
-    void nameNotExist(final String value) {
+    void imageUrlNotExist(final String value) {
         //given
         //when
         //then
@@ -23,7 +23,7 @@ class ImageUrlTest {
 
     @Test
     @DisplayName("이미지 경로가 50자 초과일 경우 오류를 던진다")
-    void nameOverLength() {
+    void imageUrlOverLength() {
         //given
         //when
         //then
