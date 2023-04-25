@@ -1,21 +1,15 @@
 package cart.controller.dto;
 
-public class ProductDto {
+public class ModifyProductRequest {
 
-    private final Long id;
     private final String name;
     private final String image;
     private final int price;
 
-    public ProductDto(final long id, final String name, final String image, final int price) {
-        this.id = id;
+    public ModifyProductRequest(final String name, final String image, final int price) {
         this.name = name;
         this.image = image;
         this.price = price;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {
