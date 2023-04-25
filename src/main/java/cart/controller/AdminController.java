@@ -42,8 +42,8 @@ public class AdminController {
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity update(@PathVariable Long id, @RequestBody ProductRequest product) {
+    public String update(@PathVariable Long id, @RequestBody ProductRequest product) {
         productDao.updateById(id, product);
-        return ResponseEntity.ok().build();
+        return "admin";
     }
 }
