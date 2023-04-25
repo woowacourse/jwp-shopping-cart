@@ -2,10 +2,16 @@ package cart.dao;
 
 import cart.entity.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class DbProductDao implements ProductDao {
@@ -19,7 +25,25 @@ public class DbProductDao implements ProductDao {
 
     @Override
     public Product save(Product product) {
-        return null;
+        String sql = "INSERT INTO product (name, img_url, price) VALUES (:name, :img_url, :price)";
+
+        String name = product.getName();
+        String imgUrl = product.getImgUrl();
+        Integer price = product.getPrice();
+
+        SqlParameterSource parameters = new MapSqlParameterSource(
+                Map.of(
+                        "name", name,
+                        "img_url", imgUrl,
+                        "price", price
+                )
+        );
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(sql, parameters, keyHolder);
+
+        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new Product(id, name, imgUrl, price);
     }
 
     @Override
