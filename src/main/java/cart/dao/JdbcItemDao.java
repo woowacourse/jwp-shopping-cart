@@ -42,8 +42,10 @@ public class JdbcItemDao implements ItemDao {
     }
 
     @Override
-    public void update(final Long id, final Item item) {
+    public void update(final Item item) {
+        String sql = "update item set name = ?, itemUrl = ?, price = ? where id = ?";
 
+        jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice(), item.getId());
     }
 
     @Override
