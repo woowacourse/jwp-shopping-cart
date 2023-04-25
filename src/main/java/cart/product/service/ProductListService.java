@@ -22,4 +22,16 @@ public class ProductListService {
                 .map(ProductDto::create)
                 .collect(Collectors.toList());
     }
+    
+    public void create(final ProductDto productDto) {
+        final Product product = Product.create(productDto);
+        this.productDao.insert(product);
+    }
+    
+    public ProductDto update(final String name, final ProductDto productDto) {
+        final Product originalProduct = this.productDao.findByName(name);
+        final Product updatedProduct = originalProduct.update(productDto);
+        this.productDao.update(updatedProduct);
+        return ProductDto.create(updatedProduct);
+    }
 }
