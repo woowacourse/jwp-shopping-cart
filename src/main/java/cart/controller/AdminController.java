@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -36,6 +37,12 @@ public class AdminController {
         return "admin";
     }
 
+    @PutMapping("/admin/{productId}")
+    public String update(@PathVariable Long productId,
+                         @RequestBody ProductRequest productRequest) {
+        adminService.update(productId, productRequest);
+        return "admin";
+    }
 
     @DeleteMapping("/admin/{productId}")
     public String delete(@PathVariable Long productId) {

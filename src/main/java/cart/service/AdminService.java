@@ -33,4 +33,8 @@ public class AdminService {
     public void deleteById(Long id) {
         productDao.deleteById(id);
     }
+
+    public void update(Long productId, ProductRequest productRequest) {
+        productDao.updateById(productId, productRequest);
+    }
 }
