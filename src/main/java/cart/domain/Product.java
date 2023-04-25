@@ -2,31 +2,34 @@ package cart.domain;
 public class Product {
     private final Long id;
     private final String name;
-    private final String imageUrl;
+    private final String imgUrl;
     private final int price;
 
-    private Product(Long id, String name, String imageURL, int price) {
+    private Product(Long id, String name, String imgURL, int price) {
         this.id = id;
         this.name = validateName(name);
-        this.imageUrl = validateImageUrl(imageURL);
+        this.imgUrl = validateImgUrl(imgURL);
         this.price = validatePrice(price);
     }
 
-    public static Product createWithId(Long id, String name, String imageURL, int price) {
-        return new Product(id, name, imageURL, price);
+    public static Product createWithId(Long id, String name, String imgURL, int price) {
+        return new Product(id, name, imgURL, price);
     }
 
-    public static Product createWithoutId(String name, String imageURL, int price) {
-        return new Product(null, name, imageURL, price);
+    public static Product createWithoutId(String name, String imgURL, int price) {
+        return new Product(null, name, imgURL, price);
     }
 
 
     private int validatePrice(int price) {
-        return 0;
+        if (price < 0) {
+            throw new IllegalArgumentException("상품 가격은 0원 이상입니다.");
+        }
+        return price;
     }
 
-    private String validateImageUrl(String imageUrl) {
-        return imageUrl;
+    private String validateImgUrl(String imgUrl) {
+        return imgUrl;
     }
 
     private String validateName(String name) {
@@ -41,8 +44,8 @@ public class Product {
         return name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
     public int getPrice() {

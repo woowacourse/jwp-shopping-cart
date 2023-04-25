@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import cart.domain.ProductRepository;
+import cart.dto.ProductDto;
 import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
 
@@ -61,7 +62,7 @@ class DBProductRepositoryTest {
 
     @Test
     void save() {
-        ProductRequestDto product3 = new ProductRequestDto("name3", "url3", 3000);
+        ProductDto product3 = new ProductDto(null, "name3", "url3", 3000);
         Long id3 = productRepository.save(product3);
 
         String sql = "SELECT * FROM product";
@@ -71,10 +72,10 @@ class DBProductRepositoryTest {
 
     @Test
     void findById() {
-        ProductResponseDto response = productRepository.findById(id1);
+        ProductDto response = productRepository.findById(id1);
         assertAll(
             () -> assertThat(response.getName()).isEqualTo("name1"),
-            () -> assertThat(response.getImageUrl()).isEqualTo("url1"),
+            () -> assertThat(response.getImgUrl()).isEqualTo("url1"),
             () -> assertThat(response.getPrice()).isEqualTo(1000)
         );
 
@@ -87,12 +88,12 @@ class DBProductRepositoryTest {
 
     @Test
     void updateById() {
-        ProductRequestDto product = new ProductRequestDto("name4", "url4", 4000);
+        ProductDto product = new ProductDto(id2, "name4", "url4", 4000);
         productRepository.updateById(product, id2);
 
         String sql = "SELECT id, name, imgurl, price FROM product WHERE id = ?";
-        ProductResponseDto productResponseDto = jdbcTemplate.queryForObject(sql,
-            (rs, rn) -> new ProductResponseDto(
+        ProductDto productDto = jdbcTemplate.queryForObject(sql,
+            (rs, rn) -> new ProductDto(
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getString("imgurl"),
@@ -100,9 +101,9 @@ class DBProductRepositoryTest {
             id2);
 
         assertAll(
-            () -> assertThat(productResponseDto.getName()).isEqualTo(product.getName()),
-            () -> assertThat(productResponseDto.getImageUrl()).isEqualTo(product.getImgUrl()),
-            () -> assertThat(productResponseDto.getPrice()).isEqualTo(product.getPrice())
+            () -> assertThat(productDto.getName()).isEqualTo(product.getName()),
+            () -> assertThat(productDto.getImgUrl()).isEqualTo(product.getImgUrl()),
+            () -> assertThat(productDto.getPrice()).isEqualTo(product.getPrice())
         );
     }
 

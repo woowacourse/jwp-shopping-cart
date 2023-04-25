@@ -1,16 +1,18 @@
 package cart.dto;
 
+import cart.domain.Product;
+
 public class ProductResponseDto {
     private final Long id;
     private final String name;
-    private final String imageUrl;
+    private final String imgUrl;
     private final int price;
 
-    public ProductResponseDto(Long id, String name, String imageUrl, int price) {
-        this.id = id;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.price = price;
+    public ProductResponseDto(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.imgUrl = product.getImgUrl();
+        this.price = product.getPrice();
     }
 
     public Long getId() {
@@ -21,8 +23,8 @@ public class ProductResponseDto {
         return name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
     public int getPrice() {
