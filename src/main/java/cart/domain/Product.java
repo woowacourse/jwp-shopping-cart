@@ -7,14 +7,14 @@ public class Product {
     private final String image;
     private final Price price;
 
-    public Product(Long id, Name name, String image, Price price) {
+    public Product(Long id, String name, String image, Integer price) {
         this.id = id;
-        this.name = name;
+        this.name = new Name(name);
         this.image = image;
-        this.price = price;
+        this.price = new Price(price);
     }
 
-    public Product(Name name, String image, Price price) {
+    public Product(String name, String image, Integer price) {
         this(null, name, image, price);
     }
 
