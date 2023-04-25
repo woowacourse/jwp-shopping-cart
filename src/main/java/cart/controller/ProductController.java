@@ -15,4 +15,9 @@ public class ProductController {
     public String getAdmin() {
         return "admin";
     }
+
+    @GetMapping("/settings")
+    public String getSettings() {
+        return "settings";
+    }
 }
