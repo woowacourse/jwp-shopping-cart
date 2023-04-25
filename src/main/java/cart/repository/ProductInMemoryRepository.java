@@ -10,7 +10,7 @@ import java.util.Optional;
 @Component
 public class ProductInMemoryRepository implements ProductRepository {
 
-    List<Product> products = new ArrayList<>();
+    List<Product> products = new ArrayList<>(List.of(Product.from(1L, "치킨", "url", 1000)));
 
     @Override
     public List<Product> findAll() {

@@ -1,7 +1,6 @@
 package cart.controller;
 
 import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductDeleteRequestDto;
 import cart.dto.ProductEditRequestDto;
 import cart.dto.ProductsResponseDto;
 import cart.service.ProductService;
@@ -38,9 +37,9 @@ public class ProductController {
                 .build();
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteProduct(@RequestBody ProductDeleteRequestDto productDeleteRequestDto) {
-        productService.deleteById(productDeleteRequestDto.getId());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

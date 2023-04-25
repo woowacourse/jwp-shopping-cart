@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public class ProductsResponseDto {
 
-    private List<ProductResponseDto> products;
+    private final List<ProductResponseDto> products;
 
     private ProductsResponseDto(List<ProductResponseDto> products) {
         this.products = products;
