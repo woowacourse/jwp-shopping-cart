@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.ProductCategoryEntity;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -24,5 +25,16 @@ public class ProductCategoryDao {
     public Long save(final ProductCategoryEntity productCategoryEntity) {
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(productCategoryEntity);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+    }
+
+    public List<ProductCategoryEntity> findAll(final Long productId) {
+        final String sql = "SELECT * FROM product_category WHERE product_id = ?";
+        return jdbcTemplate.query(
+            sql,
+            (rs, rowNum) -> new ProductCategoryEntity(
+                rs.getLong("product_id"),
+                rs.getLong("category_id")),
+            productId
+        );
     }
 }
