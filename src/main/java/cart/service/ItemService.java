@@ -40,4 +40,8 @@ public class ItemService {
                 .build();
         itemDao.update(item);
     }
+
+    public void deleteItem(final Long itemId) {
+        itemDao.deleteBy(itemId);
+    }
 }
