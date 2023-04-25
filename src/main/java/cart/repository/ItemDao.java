@@ -25,7 +25,7 @@ public class ItemDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"item_id"});
             ps.setString(1, item.getName());
             ps.setString(2, item.getImageUrl());
             ps.setInt(3, item.getPrice());
