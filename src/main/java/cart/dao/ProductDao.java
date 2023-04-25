@@ -40,4 +40,8 @@ public class ProductDao {
         jdbcTemplate.update(sql, id);
     }
 
+    public void updateById(int id, Product product) {
+        String sql = "UPDATE Product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
+    }
 }
