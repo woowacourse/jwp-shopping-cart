@@ -1,3 +1,5 @@
+DROP TABLE product IF EXISTS;
+
 CREATE TABLE product(
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(20) NOT NULL,
