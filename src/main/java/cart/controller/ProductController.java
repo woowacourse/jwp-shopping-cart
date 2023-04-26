@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductSaveRequest;
+import cart.dto.ProductSaveRequestDto;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ public class ProductController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public String save(@RequestBody final ProductSaveRequest request) {
+    public String save(@RequestBody final ProductSaveRequestDto request) {
         productService.save(request);
         return "admin";
     }

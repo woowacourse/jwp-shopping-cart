@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.ProductSaveRequest;
+import cart.dto.ProductSaveRequestDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -39,7 +39,7 @@ class ProductControllerTest {
     @Test
     void 상품을_저장한다() {
         // given
-        final ProductSaveRequest request = new ProductSaveRequest("허브티", "tea.jpg", 1000L);
+        final ProductSaveRequestDto request = new ProductSaveRequestDto("허브티", "tea.jpg", 1000L);
 
         // when
         RestAssured.given()

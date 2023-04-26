@@ -54,10 +54,9 @@ class ProductDaoTest {
         productDao.saveAndGetId(product2);
 
         // when
-        List<Product> products = productDao.findAll();
+        List<Product> result = productDao.findAll();
 
         // then
-        assertThat(products).usingRecursiveComparison().isEqualTo(List.of(product1, product2));
-
+        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(product1, product2));
     }
 }
