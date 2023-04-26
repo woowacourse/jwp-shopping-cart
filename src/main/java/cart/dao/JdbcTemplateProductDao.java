@@ -26,12 +26,12 @@ public class JdbcTemplateProductDao implements ProductDao{
     }
 
     @Override
-    public void insert(final ProductEntity product) {
+    public int insert(final ProductEntity product) {
         Map<String, Object> parameters = new HashMap<>(3);
         parameters.put("name", product.getName());
         parameters.put("price", product.getPrice());
         parameters.put("image", product.getImage());
-        insertProducts.execute(parameters);
+        return insertProducts.executeAndReturnKey(parameters).intValue();
     }
 
     @Override

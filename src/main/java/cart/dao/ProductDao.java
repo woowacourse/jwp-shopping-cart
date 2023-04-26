@@ -4,7 +4,7 @@ import cart.entity.ProductEntity;
 import java.util.List;
 
 public interface ProductDao {
-    void insert(ProductEntity product);
+    int insert(ProductEntity product);
 
     List<ProductEntity> selectAll();
 
