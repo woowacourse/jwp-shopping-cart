@@ -57,7 +57,7 @@ PRIMARY KEY(id)
     Response
     HttpStatus : 204 No Content
     ```
-  - [ ] 상품 수정 API
+  - [x] 상품 수정 API
     ```
     PATCH /product/{id}
     

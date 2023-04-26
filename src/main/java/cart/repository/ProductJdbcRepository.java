@@ -11,23 +11,22 @@ import org.springframework.stereotype.Repository;
 
 import cart.domain.Product;
 import cart.controller.request.ProductCreateRequest;
+import cart.controller.request.ProductUpdateRequest;
 
 @Repository
 public class ProductJdbcRepository implements ProductRepository {
 	private final JdbcTemplate jdbcTemplate;
-
-	public ProductJdbcRepository(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
-
-	private final RowMapper<Product> productRowMapper = (resultSet, rowNum) -> {
-		return new Product(
+	private final RowMapper<Product> productRowMapper = (resultSet, rowNum) ->
+		new Product(
 			resultSet.getLong("id"),
 			resultSet.getString("name"),
 			resultSet.getDouble("price"),
 			resultSet.getString("image")
 		);
-	};
+
+	public ProductJdbcRepository(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
 	@Override
 	public List<Product> findAll() {
@@ -56,6 +55,15 @@ public class ProductJdbcRepository implements ProductRepository {
 		final String sql = "DELETE FROM products WHERE id = ?";
 		jdbcTemplate.update(sql, productId);
 		return productId;
+	}
+
+	@Override
+	public Product update(long productId, ProductUpdateRequest request) {
+		final String updateSql = "UPDATE products SET name = ?, price = ?, image = ? WHERE id = ?";
+		jdbcTemplate.update(updateSql, request.getName(), request.getPrice(), request.getImage(), productId);
+
+		final String selectSql = "SELECT * FROM products WHERE id = ?";
+		return jdbcTemplate.queryForObject(selectSql, productRowMapper, productId);
 	}
 
 }

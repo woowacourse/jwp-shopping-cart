@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import cart.controller.request.ProductCreateRequest;
+import cart.controller.request.ProductUpdateRequest;
+import cart.domain.Product;
 
 @ExtendWith(MockitoExtension.class)
 class ProductJdbcRepositoryTest {
@@ -59,5 +61,24 @@ class ProductJdbcRepositoryTest {
 
 		// then
 		assertThat(deleteProductId).isEqualTo(1L);
+	}
+
+	@DisplayName("상품 갱신 테스트")
+	@Test
+	void updateProduct(){
+		// given
+		final Product product = new Product(1L,"kiara", 300.0, "이미지2");
+		given(productJdbcRepository.update(anyLong(), any())).willReturn(product);
+
+		// when
+		final ProductUpdateRequest request = new ProductUpdateRequest("kiara", 300.0, "이미지2");
+		final Product updateProduct = productJdbcRepository.update(1L, request);
+
+		// then
+		assertThat(updateProduct)
+			.hasFieldOrPropertyWithValue("id", 1L)
+			.hasFieldOrPropertyWithValue("name", "kiara")
+			.hasFieldOrPropertyWithValue("price",300.0)
+			.hasFieldOrPropertyWithValue("image","이미지2");
 	}
 }
