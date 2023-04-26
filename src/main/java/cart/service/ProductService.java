@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.domain.Product;
 import cart.dto.ProductDto;
-import cart.repository.ProductRepository;
+import cart.dao.ProductDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +12,16 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-    private final ProductRepository productRepository;
+    private final ProductDao productDao;
     
     public List<ProductDto> findAll() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productDao.findAll();
         return products.stream()
                 .map(ProductDto::from)
                 .collect(Collectors.toUnmodifiableList());
+    }
+    
+    public void save(final Product product) {
+    
     }
 }

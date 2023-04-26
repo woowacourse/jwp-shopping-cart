@@ -9,3 +9,15 @@
     - [ ] 상품 리스트 조회
     - [ ] 상품 객체 업데이트
     - [ ] 상품 객체 삭제
+
+- [x] DB 연동
+```sql
+CREATE TABLE PRODUCT
+(
+    ID          INT     UNSIGNED    NOT NULL AUTO_INCREMENT,
+    NAME        VARCHAR(255)        NOT NULL,
+    IMAGE_URL   VARCHAR(255)        NOT NULL,
+    PRICE       INT                 NOT NULL,
+    PRIMARY KEY (ID)
+);
+```
