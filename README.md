@@ -15,18 +15,4 @@
 - [ ] 관리자 도구 페이지 연동
     - [ ] url과 컨트롤러 매핑
         - [x] 관리자 도구 페이지 url 매핑
-    - [ ] 컨트롤러에서 필요한 정보 뷰에 전달
-
-## API 설계
-
-- CREATE
-    - Request: POST /product HTTP/1.1
-
-- READ
-    - Request: GET /product HTTP/1.1
-
-- UPDATE
-    - Request: PUT /product HTTP/1.1
-
-- DELETE
-    - Request: DELETE /product HTTP/1.1
+        - [x] 상품 추가 기능 구현
