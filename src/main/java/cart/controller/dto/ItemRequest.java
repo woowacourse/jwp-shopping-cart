@@ -1,6 +1,7 @@
 package cart.controller.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 public class ItemRequest {
@@ -12,7 +13,8 @@ public class ItemRequest {
     private String imageUrl;
 
     @Positive(message = "가격은 음수가 입력될 수 없습니다.")
-    private int price;
+    @NotNull(message = "빈 값은 입력될 수 없습니다.")
+    private Integer price;
 
     private ItemRequest() {
     }

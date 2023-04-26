@@ -1,13 +1,13 @@
 package cart.controller.dto;
 
-import cart.repository.dto.ItemDto;
+import cart.dao.dto.ItemDto;
 
 public class ItemResponse {
 
     private final Long id;
     private final String name;
     private final String imageUrl;
-    private final int price;
+    private final Integer price;
 
     private ItemResponse(Long id, String name, String imageUrl, int price) {
         this.id = id;

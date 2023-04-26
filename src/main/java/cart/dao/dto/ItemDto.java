@@ -1,13 +1,11 @@
-package cart.repository.dto;
-
-import cart.model.Item;
+package cart.dao.dto;
 
 public class ItemDto {
 
     private final Long id;
     private final String name;
     private final String imageUrl;
-    private final int price;
+    private final Integer price;
 
     public ItemDto(Long id, String name, String imageUrl, int price) {
         this.id = id;
