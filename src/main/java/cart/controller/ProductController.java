@@ -40,6 +40,12 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/admin")).build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable final int id) {
+        productService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Void> handle() {
         return ResponseEntity.badRequest().build();

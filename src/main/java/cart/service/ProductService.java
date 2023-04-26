@@ -28,6 +28,10 @@ public class ProductService {
         productDao.update(productRequestDto, id);
     }
 
+    public void delete(final int id) {
+        productDao.delete(id);
+    }
+
     private ProductEntity dtoToEntity(final ProductRequestDto productRequestDto) {
         return new ProductEntity(productRequestDto.getName(),
                 productRequestDto.getImage(),
