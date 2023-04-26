@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
-public class WebController {
+public class ViewController {
 
     private final ProductService productService;
 
-    public WebController(final ProductService productService) {
+    public ViewController(final ProductService productService) {
         this.productService = productService;
     }
 
