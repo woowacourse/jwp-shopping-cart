@@ -54,7 +54,6 @@ public class ProductController {
     public ModelAndView productList() {
         ModelAndView mav = new ModelAndView("/admin");
         List<ProductDto> products = productService.findAll();
-        System.out.println(products);
         mav.addObject("products", products);
         return mav;
     }
