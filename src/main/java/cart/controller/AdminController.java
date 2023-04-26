@@ -3,6 +3,8 @@ package cart.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +31,7 @@ public class AdminController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Void> createProduct(@RequestBody final ProductRequest productRequest) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
         final long id = cartService.create(productRequest);
         return ResponseEntity.created(URI.create("/admin/product/" + id)).build();
     }
