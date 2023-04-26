@@ -29,12 +29,12 @@
 
 Product
 
-| column | type         |                    |
-|--------|--------------|--------------------|
-| id     | BIGINT       | PK, AUTO_INCREMENT |
-| name   | VARCHAR(64)  |                    |
-| price  | INT          |                    |
-| image  | VARCHAR(256) | NULLABLE           |
+| column | type        |                    |
+|--------|-------------|--------------------|
+| id     | BIGINT      | PK, AUTO_INCREMENT |
+| name   | VARCHAR(64) |                    |
+| price  | INT         |                    |
+| image  | TEXT        | NULLABLE           |
 
 ### API
 
@@ -44,9 +44,9 @@ Product
 
         ```json
         {
-        	"name":"",
-        	"price":0,
-        	"image":""
+          "name":"",
+          "price":0,
+          "image":""
         }
         ```
 
@@ -56,16 +56,15 @@ Product
 
         ```json
         {
-        	"products": [
-        				{
-        			"id":0,
-        			"name":"",
-        			"price":0,
-        			"image":""
-        			},
-        			{..}
-        	..
-        	]
+          "products": [
+            {
+              "id":0,
+              "name":"",
+              "price":0,
+              "image":""
+            },
+            ...
+          ]
         }
         ```
 
@@ -75,9 +74,9 @@ Product
 
         ```json
         {
-        	"name":"",
-        	"price":0,
-        	"image":""
+          "name":"",
+          "price":0,
+          "image":""
         }
         ```
 
