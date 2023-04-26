@@ -1,8 +1,10 @@
 package cart.dao;
 
+import java.util.Objects;
+
 public class ProductEntity {
 
-    private Long id;
+    private final Long id;
     private final String name;
     private final Integer price;
     private final String imageUrl;
@@ -28,5 +30,22 @@ public class ProductEntity {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ProductEntity that = (ProductEntity) o;
+        return Objects.equals(this.id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, imageUrl);
     }
 }

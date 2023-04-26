@@ -23,7 +23,7 @@ public class ProductDao implements CrudDao<ProductEntity, ProductRequest> {
     @Override
     public List<ProductEntity> findAll() {
         String query = "SELECT * FROM product";
-        return jdbcTemplate.query(query, (resultSet, aa) ->
+        return jdbcTemplate.query(query, (resultSet, rowNum) ->
             new ProductEntity(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
@@ -33,13 +33,20 @@ public class ProductDao implements CrudDao<ProductEntity, ProductRequest> {
 
     @Override
     public ProductEntity findById(Long id) {
-        return null;
+        String query = "SELECT * FROM product WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, (resultSet, rowNum) ->
+            new ProductEntity(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getInt("price"),
+                resultSet.getString("image_url")), id);
     }
 
     @Override
     public void updateById(Long id, ProductRequest request) {
         String query = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(query, request.getName(), request.getPrice(), request.getImageUrl(), id);
+        jdbcTemplate.update(query, request.getName(), request.getPrice(), request.getImageUrl(),
+            id);
     }
 
     @Override
