@@ -132,4 +132,19 @@ public class ProductControllerTest {
                 .assertThat()
                 .statusCode(400);
     }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2072, 2073, 2345})
+    void 길이_제한을_벗어난_URL을_입력하면_예외_발생(final int repeatCount) {
+        final String url = "https://" + "a".repeat(repeatCount) + ".com";
+
+        RestAssured.given()
+                .body(new ProductRequest("상품 이름", 1000, url))
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/admin")
+                .then()
+                .assertThat()
+                .statusCode(400);
+    }
 }
