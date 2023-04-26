@@ -26,4 +26,9 @@ public class ProductService {
         Product product = new Product(null, productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
         productDao.save(product);
     }
+    
+    public void update(final Long id, final ProductRequest productRequest) {
+        Product product = new Product(id, productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        productDao.update(product);
+    }
 }

@@ -35,4 +35,10 @@ public class ProductDao {
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
+    
+    public void update(final Product product) {
+        String sql = "UPDATE PRODUCT SET NAME=:name,IMAGE_URL=:imageUrl, PRICE=:price WHERE ID=:id";
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
+        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+    }
 }

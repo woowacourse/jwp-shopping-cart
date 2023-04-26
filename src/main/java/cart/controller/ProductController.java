@@ -5,10 +5,7 @@ import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -33,12 +30,15 @@ public class ProductController {
     }
     
     @PostMapping("/product")
-    public ModelAndView createProduct(ModelAndView modelAndView, @RequestBody ProductRequest productRequest) {
+    public void createProduct(@RequestBody ProductRequest productRequest) {
         productService.save(productRequest);
-        modelAndView.setViewName("redirect:admin");
-        return modelAndView;
     }
 
+    @PutMapping("/product/{id}")
+    public void updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest){
+        productService.update(id, productRequest);
+    }
+    
     @GetMapping("/products")
     public ResponseEntity<List<ProductDto>> getProducts() {
         return ResponseEntity.ok(productService.findAll());
