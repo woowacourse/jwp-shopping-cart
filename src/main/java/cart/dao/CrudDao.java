@@ -1,16 +1,17 @@
 package cart.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CrudDao<E, R> {
 
-    void add(R entity);
+    long add(R entity);
 
     List<E> findAll();
 
-    E findById(Long id);
+    Optional<E> findById(Long id);
 
-    void updateById(Long id, R request);
+    int updateById(Long id, R request);
 
-    void deleteById(Long id);
+    int deleteById(Long id);
 }

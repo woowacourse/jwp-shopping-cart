@@ -1,8 +1,12 @@
 package cart.dao;
 
 import cart.controller.ProductRequest;
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -15,9 +19,17 @@ public class ProductDao implements CrudDao<ProductEntity, ProductRequest> {
     }
 
     @Override
-    public void add(ProductRequest request) {
+    public long add(ProductRequest request) {
         String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query, request.getName(), request.getPrice(), request.getImageUrl());
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
+            ps.setString(1, request.getName());
+            ps.setInt(2, request.getPrice());
+            ps.setString(3, request.getImageUrl());
+            return ps;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     @Override
@@ -32,26 +44,32 @@ public class ProductDao implements CrudDao<ProductEntity, ProductRequest> {
     }
 
     @Override
-    public ProductEntity findById(Long id) {
+    public Optional<ProductEntity> findById(Long id) {
         String query = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, (resultSet, rowNum) ->
-            new ProductEntity(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("price"),
-                resultSet.getString("image_url")), id);
+        try{
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, (resultSet, rowNum) ->
+                new ProductEntity(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getInt("price"),
+                    resultSet.getString("image_url")), id));
+        } catch (EmptyResultDataAccessException exception){
+            return Optional.empty();
+        }
+
     }
 
     @Override
-    public void updateById(Long id, ProductRequest request) {
+    public int updateById(Long id, ProductRequest request) {
         String query = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(query, request.getName(), request.getPrice(), request.getImageUrl(),
+        return jdbcTemplate.update(query, request.getName(), request.getPrice(),
+            request.getImageUrl(),
             id);
     }
 
     @Override
-    public void deleteById(Long id) {
+    public int deleteById(Long id) {
         String query = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(query, id);
+        return jdbcTemplate.update(query, id);
     }
 }

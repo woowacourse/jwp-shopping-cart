@@ -6,12 +6,14 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Optional;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
@@ -67,7 +69,7 @@ public class ProductDaoTest {
         // given
 
         // when
-        final ProductEntity actual = productDao.findById(firstRecordId);
+        final ProductEntity actual = productDao.findById(firstRecordId).get();
 
         // then
         assertThat(actual).isEqualTo(firstRecord);
@@ -84,11 +86,12 @@ public class ProductDaoTest {
             requestUrl);
 
         // when
-        productDao.updateById(firstRecordId, updateRequest);
+        final int updateCount = productDao.updateById(firstRecordId, updateRequest);
 
         // then
-        final ProductEntity actual = productDao.findById(firstRecordId);
+        final ProductEntity actual = productDao.findById(firstRecordId).get();
         assertAll(
+            () -> assertThat(updateCount).isEqualTo(1),
             () -> assertThat(actual.getName()).isEqualTo(requestName),
             () -> assertThat(actual.getPrice()).isEqualTo(requestPrice),
             () -> assertThat(actual.getImageUrl()).isEqualTo(requestUrl)
@@ -101,10 +104,13 @@ public class ProductDaoTest {
         // given
 
         // when
-        productDao.deleteById(firstRecordId);
+        final int deleteCount = productDao.deleteById(firstRecordId);
+        final Optional<ProductEntity> deletedRecord = productDao.findById(firstRecordId);
 
         // then
-        final ThrowingCallable throwable = () -> productDao.findById(firstRecordId);
-        assertThatThrownBy(throwable);
+        assertAll(
+            () -> assertThat(deletedRecord).isEmpty(),
+            () -> assertThat(deleteCount).isEqualTo(1)
+        );
     }
 }
