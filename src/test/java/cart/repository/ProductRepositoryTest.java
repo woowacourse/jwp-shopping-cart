@@ -5,14 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.entity.Product;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Import;
 
-@DataJpaTest
-@Sql({"/test-fixture.sql"})
+@JdbcTest
+@Import(JdbcProductRepository.class)
 class ProductRepositoryTest {
 
     private static final Product PRODUCT = new Product("테스트", "테스트URL", 4000);
@@ -22,9 +23,26 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("모든 상품을 조회하는 기능 테스트")
     public void findAll() {
-        final List<Product> all = productRepository.findAll();
+        productRepository.save(PRODUCT);
+        productRepository.save(PRODUCT);
+        productRepository.save(PRODUCT);
+        productRepository.save(PRODUCT);
 
+        final List<Product> all = productRepository.findAll();
         assertThat(all).hasSize(4);
+    }
+
+    @Test
+    @DisplayName("ID로 상품을 조회하는 기능 테스트")
+    public void findById() {
+        final Product savedProduct = productRepository.save(PRODUCT);
+
+        final Optional<Product> product = productRepository.findById(savedProduct.getId());
+
+        assertAll(
+                () -> assertThat(product).isNotEmpty(),
+                () -> assertThat(product.get().getName()).isEqualTo(PRODUCT.getName())
+        );
     }
 
     @Test
@@ -35,7 +53,7 @@ class ProductRepositoryTest {
         assertAll(
                 () -> assertThat(savedProduct.getId()).isNotNull(),
                 () -> assertThat(savedProduct.getName()).isEqualTo(PRODUCT.getName()),
-                () -> assertThat(savedProduct.getImage()).isEqualTo(PRODUCT.getImage()),
+                () -> assertThat(savedProduct.getImageUrl()).isEqualTo(PRODUCT.getImageUrl()),
                 () -> assertThat(savedProduct.getPrice()).isEqualTo(PRODUCT.getPrice())
         );
     }
@@ -43,22 +61,31 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("상품을 업데이트하는 기능 테스트")
     public void updateProduct() {
-        final Product product = productRepository.findById(1L)
+        final Product savedProduct = productRepository.save(PRODUCT);
+        //given
+        final Product product = productRepository.findById(savedProduct.getId())
                 .orElseThrow(IllegalArgumentException::new);
-        assertThat(product.getName()).isEqualTo("TEST1");
+        assertThat(product.getName()).isEqualTo(PRODUCT.getName());
 
-        final Product changedProduct = new Product(1L, "CHANGED", product.getImage(), product.getPrice());
-        productRepository.save(changedProduct);
-        assertThat(product.getName()).isEqualTo("CHANGED");
+        //when
+        final Product changedProduct = new Product(savedProduct.getId(), "CHANGED", product.getImageUrl(),
+                product.getPrice());
+        productRepository.update(changedProduct);
+
+        //then
+        final Product updatedProduct = productRepository.findById(savedProduct.getId())
+                .orElseThrow(IllegalArgumentException::new);
+        assertThat(updatedProduct.getName()).isEqualTo("CHANGED");
     }
 
     @Test
     @DisplayName("상품을 삭제하는 기능 테스트")
     public void deleteById() {
-        assertThat(productRepository.findAll()).hasSize(4);
+        final Product savedProduct = productRepository.save(PRODUCT);
+        assertThat(productRepository.findAll()).hasSize(1);
 
-        productRepository.deleteById(1L);
+        productRepository.deleteById(savedProduct.getId());
 
-        assertThat(productRepository.findAll()).hasSize(3);
+        assertThat(productRepository.findAll()).hasSize(0);
     }
 }
