@@ -59,9 +59,7 @@ class ProductManagementServiceTest {
 
         managementService.save(productDto);
 
-        assertAll(
-                () -> verify(productDao, times(1)).insert(any())
-        );
+        verify(productDao, times(1)).insert(any());
     }
 
     @DisplayName("상품 데이터가 수정되는지 확인한다")
@@ -73,9 +71,7 @@ class ProductManagementServiceTest {
 
         managementService.updateById(id, productDto);
 
-        assertAll(
-                () -> verify(productDao, times(1)).updateById(any(), any())
-        );
+        verify(productDao, times(1)).updateById(any(), any());
     }
 
     @DisplayName("상품 데이터가 삭제되는지 확인한다")
@@ -86,8 +82,6 @@ class ProductManagementServiceTest {
 
         managementService.deleteById(id);
 
-        assertAll(
-                () -> verify(productDao, times(1)).deleteById(any())
-        );
+        verify(productDao, times(1)).deleteById(any());
     }
 }
