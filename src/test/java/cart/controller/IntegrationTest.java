@@ -8,7 +8,6 @@ import io.restassured.RestAssured;
 import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -66,7 +65,6 @@ class IntegrationTest {
                 .statusCode(Response.SC_BAD_REQUEST);
     }
 
-    @Order(2)
     @Test
     @DisplayName("상품 수정 테스트")
     @Sql({"/test-fixture.sql"})
@@ -83,7 +81,6 @@ class IntegrationTest {
                 .statusCode(200);
     }
 
-    @Order(1)
     @Test
     @DisplayName("상품 삭제 테스트")
     @Sql({"/test-fixture.sql"})
