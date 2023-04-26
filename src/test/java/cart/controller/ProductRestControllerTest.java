@@ -4,6 +4,7 @@ import cart.dto.ProductRequestDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -26,28 +27,58 @@ class ProductRestControllerTest {
         productRequestDto = new ProductRequestDto("연어", "https://techblog.woowahan.com/wp-content/uploads/img/2020-04-10/pobi.png", 10000);
     }
 
-    @DisplayName("상품 추가")
-    @Test
-    void createProduct() {
-        given().log().uri()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
-                .when().post("/product")
-                .then()
-                .statusCode(HttpStatus.OK.value());
-    }
+    @Nested
+    @DisplayName("상품 추가 테스트")
+    class CreateTest {
+        @DisplayName("상품을 추가할 수 있다")
+        @Test
+        void createProduct() {
+            given().log().uri()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(productRequestDto)
+                    .when().post("/product")
+                    .then()
+                    .statusCode(HttpStatus.OK.value());
+        }
 
-    @DisplayName("상품이 null일 경우 예외 발생")
-    @Test
-    void createProduct_Exception() {
-        productRequestDto = new ProductRequestDto(null, null, null);
+        @DisplayName("상품 이름이 null일 경우 예외 발생")
+        @Test
+        void createProduct_Exception1() {
+            productRequestDto = new ProductRequestDto(null, "이미지주소", 1000);
 
-        given().log().uri()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
-                .when().post("/product")
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+            given().log().uri()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(productRequestDto)
+                    .when().post("/product")
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @DisplayName("상품 이미지가 null일 경우 예외 발생")
+        @Test
+        void createProduct_Exception2() {
+            productRequestDto = new ProductRequestDto("연어", null, 1000);
+
+            given().log().uri()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(productRequestDto)
+                    .when().post("/product")
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @DisplayName("상품 가격이 null일 경우 예외 발생")
+        @Test
+        void createProduct_Exception3() {
+            productRequestDto = new ProductRequestDto("연어", "이미지주소", null);
+
+            given().log().uri()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(productRequestDto)
+                    .when().post("/product")
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
     }
 
     @DisplayName("상품 전체 조회")
