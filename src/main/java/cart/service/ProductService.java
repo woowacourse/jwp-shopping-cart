@@ -23,7 +23,7 @@ public class ProductService {
         products.delete(id);
     }
 
-    public void modify(final Integer id, final String name, final String image, final Long price) {
+    public void update(final Integer id, final String name, final String image, final Long price) {
         final Product product = new Product(id, name, image, price);
         products.modify(product);
     }
