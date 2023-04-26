@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.test.context.ActiveProfiles;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -18,11 +17,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@ActiveProfiles("test")
 @JdbcTest
 class ProductDaoTest {
-    public static final Product PRODUCT_A = new Product("마우스", 10000, "image");
-    public static final Product PRODUCT_B = new Product("키보드", 20000, "image2");
+    private static final Product PRODUCT_A = new Product("마우스", 10000, "image");
+    private static final Product PRODUCT_B = new Product("키보드", 20000, "image2");
     @Autowired
     private DataSource dataSource;
 
