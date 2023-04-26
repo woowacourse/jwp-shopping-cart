@@ -18,7 +18,7 @@ public class AdminService {
     }
 
 
-    public void registerProduct(ProductRequest productRequest) {
+    public void addProduct(ProductRequest productRequest) {
         ProductEntity productEntity = new ProductEntity(productRequest.getName(), productRequest.getPrice(), productRequest.getImage());
         productDao.insertProduct(productEntity);
     }

@@ -15,8 +15,8 @@ public class CartController {
     }
 
     @PostMapping("/admin/product")
-    public ResponseEntity<String> registerProduct(@RequestBody ProductRequest productRequest) {
-        adminService.registerProduct(productRequest);
+    public ResponseEntity<String> addProduct(@RequestBody ProductRequest productRequest) {
+        adminService.addProduct(productRequest);
         return ResponseEntity.ok().build();
     }
 
