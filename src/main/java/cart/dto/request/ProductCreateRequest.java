@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.request;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
 
 @Getter
 @RequiredArgsConstructor
-public class ProductUpdateRequest {
+public class ProductCreateRequest {
     @NotBlank
     @Length(min = 1, max = 10)
     private final String name;

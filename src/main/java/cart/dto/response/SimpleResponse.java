@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.response;
 
 public class SimpleResponse extends Response {
     public SimpleResponse(String code, String message) {

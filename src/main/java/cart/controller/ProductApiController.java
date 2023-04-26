@@ -1,11 +1,11 @@
 package cart.controller;
 
-import cart.dto.ProductCreateRequest;
+import cart.dto.request.ProductCreateRequest;
 import cart.dto.ProductDto;
-import cart.dto.ProductUpdateRequest;
-import cart.dto.Response;
-import cart.dto.ResultResponse;
-import cart.dto.SimpleResponse;
+import cart.dto.request.ProductUpdateRequest;
+import cart.dto.response.Response;
+import cart.dto.response.ResultResponse;
+import cart.dto.response.SimpleResponse;
 import cart.service.ProductService;
 import java.net.URI;
 import java.util.List;

@@ -12,9 +12,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dto.ProductCreateRequest;
+import cart.dto.request.ProductCreateRequest;
 import cart.dto.ProductDto;
-import cart.dto.ProductUpdateRequest;
+import cart.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;

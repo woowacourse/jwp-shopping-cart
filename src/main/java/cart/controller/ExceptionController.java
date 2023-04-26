@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.dto.ErrorResponse;
-import cart.dto.Response;
-import cart.dto.SimpleResponse;
+import cart.dto.response.ErrorResponse;
+import cart.dto.response.Response;
+import cart.dto.response.SimpleResponse;
 import cart.exception.ProductNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
