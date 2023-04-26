@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS ITEM
 ## API SPEC
 * 모든 상품 조회
   * `GET`: /items
+  * STATUS CODE: `200 OK`
 ```text
 request: 
 http://localhost:8080/items
@@ -37,6 +38,7 @@ response:
 
 * 단일 상품 등록
   * `POST`: /items
+  * * STATUS CODE: `201 CREATED`, `400 BAD REQUEST`
 ```text
 request: 
 http://localhost:8080/items
@@ -61,6 +63,7 @@ response:
 
 * 단일 상품 수정
   * `PUT`: /items/{id}
+  * STATUS CODE: `200 OK`, `400 BAD REQUEST`
 ```text
 request: 
 http://localhost:8080/items/1
@@ -85,6 +88,7 @@ response:
 
 * 단일 상품 삭제
   * `DELETE`: /items/{id}
+  * STATUS CODE: `200 OK`, `400 BAD REQUEST`
 ```text
 request: 
 http://localhost:8080/items/1
