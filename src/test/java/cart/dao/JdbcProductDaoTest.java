@@ -30,7 +30,7 @@ class JdbcProductDaoTest {
     @DisplayName("상품 등록이 되는지 확인한다")
     @Test
     void insertTest() {
-        ProductEntity productEntity = ProductEntity.of("chicken", "image", 10000);
+        final ProductEntity productEntity = ProductEntity.of("chicken", "image", 10000);
 
         assertDoesNotThrow(() -> productDao.insert(productEntity));
     }
@@ -38,7 +38,7 @@ class JdbcProductDaoTest {
     @DisplayName("상품 수정이 되는지 확인한다")
     @Test
     void updateTest() {
-        ProductEntity productEntity = ProductEntity.of(1L, "chicken", "image", 10000);
+        final ProductEntity productEntity = ProductEntity.of(1L, "chicken", "image", 10000);
 
         assertDoesNotThrow(() -> productDao.update(productEntity));
     }
@@ -46,7 +46,7 @@ class JdbcProductDaoTest {
     @DisplayName("상품 삭제가 되는지 확인한다")
     @Test
     void deleteTest() {
-        ProductEntity productEntity = ProductEntity.of(1L, null, null, null);
+        final ProductEntity productEntity = ProductEntity.of(1L, null, null, null);
 
         assertDoesNotThrow(() -> productDao.delete(productEntity));
     }

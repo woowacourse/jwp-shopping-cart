@@ -36,7 +36,7 @@ class AdminControllerTest {
     @DisplayName("상품을 등록하면 상태코드 201을 반환하는지 확인한다")
     @Test
     void postProductsTest() {
-        ProductCreationRequest request = new ProductCreationRequest("pbo", "image", 10000000);
+        final ProductCreationRequest request = new ProductCreationRequest("pbo", "image", 10000000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -50,7 +50,7 @@ class AdminControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     void throwExceptionWhenInvalidNamePostProductsTest(final String nameInput) {
-        ProductCreationRequest request = new ProductCreationRequest(nameInput, "image", 10_000_000);
+        final ProductCreationRequest request = new ProductCreationRequest(nameInput, "image", 10_000_000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -64,7 +64,7 @@ class AdminControllerTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 10_000_001})
     void throwExceptionWhenInvalidPricePostProductsTest(final int priceInput) {
-        ProductCreationRequest request = new ProductCreationRequest("pobi", "image", priceInput);
+        final ProductCreationRequest request = new ProductCreationRequest("pobi", "image", priceInput);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -78,7 +78,7 @@ class AdminControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {" ", ""})
     void throwExceptionWhenInvalidPricePostProductsTest(final String imageInput) {
-        ProductCreationRequest request = new ProductCreationRequest("pobi", imageInput, 10_000_000);
+        final ProductCreationRequest request = new ProductCreationRequest("pobi", imageInput, 10_000_000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -91,7 +91,7 @@ class AdminControllerTest {
     @DisplayName("상품을 수정하면 상태코드 204를 반환하는지 확인한다")
     @Test
     void putProductsTest() {
-        ProductModificationRequest request = new ProductModificationRequest(1L, "pbo", "image", 10000000);
+        final ProductModificationRequest request = new ProductModificationRequest(1L, "pbo", "image", 10000000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -105,7 +105,7 @@ class AdminControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     void throwExceptionWhenInvalidNamePutProductsTest(final String nameInput) {
-        ProductModificationRequest request = new ProductModificationRequest(1L, nameInput, "image", 10_000_000);
+        final ProductModificationRequest request = new ProductModificationRequest(1L, nameInput, "image", 10_000_000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -119,7 +119,7 @@ class AdminControllerTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 10_000_001})
     void throwExceptionWhenInvalidPricePutProductsTest(final int priceInput) {
-        ProductModificationRequest request = new ProductModificationRequest(1L, "pobi", "image", priceInput);
+        final ProductModificationRequest request = new ProductModificationRequest(1L, "pobi", "image", priceInput);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -133,7 +133,7 @@ class AdminControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {" ", ""})
     void throwExceptionWhenInvalidPricePutProductsTest(final String imageInput) {
-        ProductModificationRequest request = new ProductModificationRequest(1L, "pobi", imageInput, 10_000_000);
+        final ProductModificationRequest request = new ProductModificationRequest(1L, "pobi", imageInput, 10_000_000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
