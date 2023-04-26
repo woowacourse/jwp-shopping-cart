@@ -31,10 +31,12 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void update(Long id, ProductUpdateRequest request) {
         productDao.updateById(id, request);
     }
 
+    @Transactional
     public void delete(Long id) {
         productDao.deleteById(id);
     }
