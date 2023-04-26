@@ -64,6 +64,7 @@ public class ProductIntegrationTest {
         
         //then
         final String productLiteral = result.body().asString();
+        System.out.println("productLiteral = " + productLiteral);
         final String name = JsonPath.with(productLiteral).getString("name");
         
         assertThat(name).isEqualTo(requestProductDto.getName());
@@ -76,7 +77,7 @@ public class ProductIntegrationTest {
         final var deleteResult = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/admin/product/delete/1")
+                .delete("/admin/product/delete/2")
                 .then()
                 .extract();
         
