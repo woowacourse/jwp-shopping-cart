@@ -21,4 +21,6 @@ public class AdminController {
         model.addAttribute("products", productService.findAll());
         return "admin";
     }
+
+
 }
