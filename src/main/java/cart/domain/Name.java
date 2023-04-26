@@ -1,7 +1,7 @@
 package cart.domain;
 
 public class Name {
-    
+
     private final String value;
 
     public Name(final String value) {
