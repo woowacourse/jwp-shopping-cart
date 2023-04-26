@@ -37,4 +37,19 @@ public class ProductDaoTest {
         assertThat(products.size()).isEqualTo(3);
     }
 
+    @Test
+    @DisplayName("상품 저장")
+    void save() {
+        System.out.println("roll");
+        assertDoesNotThrow(
+                () -> productDao.save(
+                        new Product.Builder()
+                                .name("a")
+                                .price(100)
+                                .imageUrl("미성씨")
+                                .build()
+                )
+        );
+    }
+
 }
