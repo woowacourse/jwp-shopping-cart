@@ -23,8 +23,8 @@
 - [x]  상품을 생성하고 해당 URL의 GET 메서드로 리다이렉트한다 . ( POST "/products" )
     - Request Body :  이름, 가격, 이미지URL, 카테고리 아이디 목록
     - Response Header Location  : /products/{상품 ID}
-- [ ]  상품을 수정하고 해당 URL의 GET 메서드로 리다이렉트한다 . ( PUT "/products/{id}" )
-    - Request Body  : ID, 이름, 가격, 이미지URL
+- [x]  상품을 수정하고 해당 URL의 GET 메서드로 리다이렉트한다 . ( PUT "/products/{id}" )
+    - Request Body  : ID, 이름, 가격, 이미지URL, 카테고리 아이디 목록
     - Response Body : 없음
 - [ ]  상품을 삭제하고 해당 URL의 GET 메서드로 리다이렉트한다 . ( DELETE "/products/{id}" )
     - Request Body  : ID
