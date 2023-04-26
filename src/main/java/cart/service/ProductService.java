@@ -22,6 +22,7 @@ public class ProductService {
 
     @Transactional
     public void create(ProductCreateRequest request) {
+        request.validatePrice(request.getPrice());
         productDao.create(request);
     }
 
