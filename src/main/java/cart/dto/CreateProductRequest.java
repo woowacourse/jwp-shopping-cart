@@ -5,7 +5,6 @@ import cart.domain.ProductName;
 import cart.domain.ProductPrice;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 
 public class CreateProductRequest {
@@ -22,8 +21,8 @@ public class CreateProductRequest {
             message = ProductPrice.PRICE_ERROR_MESSAGE)
     private final int price;
 
-    @Max(
-            value = ProductImage.MAX_IMAGE_URL_LENGTH,
+    @Size(
+            max = ProductImage.MAX_IMAGE_URL_LENGTH,
             message = ProductImage.IMAGE_URL_LENGTH_ERROR_MESSAGE)
     private final String image;
 
