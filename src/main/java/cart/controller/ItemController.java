@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -30,23 +32,33 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Item>> loadItem() {
+    public ResponseEntity<List<Item>> loadAllItem() {
         List<Item> items = itemService.loadAllItem();
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(items);
     }
 
+    @GetMapping("/{itemId}")
+    public ResponseEntity<Item> loadItem(@PathVariable final Long itemId) {
+        Item item = itemService.loadItem(itemId);
+        return ResponseEntity.status(HttpStatus.OK)
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(item);
+    }
+
     @PutMapping("/{itemId}")
     public ResponseEntity updateItem(@PathVariable final Long itemId,
                                      @RequestBody final ItemRequest itemRequest) {
         itemService.updateItem(itemId, itemRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .build();
     }
 
     @DeleteMapping("/{itemId}")
     public ResponseEntity deleteItem(@PathVariable final Long itemId) {
         itemService.deleteItem(itemId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                             .build();
     }
 }

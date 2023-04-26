@@ -55,4 +55,9 @@ public class ItemDao {
         final String sql = "DELETE FROM items WHERE id = ?";
         jdbcTemplate.update(sql, itemId);
     }
+
+    public Item findBy(final Long itemId) {
+        final String sql = "SELECT id, name, image_url, price FROM items WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, itemId);
+    }
 }

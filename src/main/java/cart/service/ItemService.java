@@ -22,13 +22,13 @@ public class ItemService {
         return itemDao.findAll();
     }
 
-    public void saveItem(final ItemRequest itemRequest) {
+    public Long saveItem(final ItemRequest itemRequest) {
         Item item = new Item.Builder()
                 .name(itemRequest.getName())
                 .imageUrl(itemRequest.getImageUrl())
                 .price(itemRequest.getPrice())
                 .build();
-        itemDao.save(item);
+        return itemDao.save(item);
     }
 
     public void updateItem(final Long itemId, final ItemRequest itemRequest) {
@@ -43,5 +43,9 @@ public class ItemService {
 
     public void deleteItem(final Long itemId) {
         itemDao.deleteBy(itemId);
+    }
+
+    public Item loadItem(final Long itemId) {
+        return itemDao.findBy(itemId);
     }
 }
