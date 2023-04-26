@@ -60,9 +60,7 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
-    console.log(product);
     const id = product['id'];
-    console.log(id);
 
     axios.request({
         method: 'put',

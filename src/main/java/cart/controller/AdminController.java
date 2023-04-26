@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.dto.ProductRequestDto;
 import cart.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +30,6 @@ public class AdminController {
     @GetMapping("/product")
     public String getProduct(Model model) {
         model.addAttribute("products", productService.findAll());
-        System.out.println("hello");
         return "admin";
     }
 
@@ -44,7 +42,6 @@ public class AdminController {
     @PutMapping("/product/{id}")
     public String updateProduct(@PathVariable int id, @RequestBody ProductRequestDto productRequestDto) {
         productService.updateById(id, productRequestDto);
-        System.out.println(productRequestDto);
         return "admin";
     }
 
