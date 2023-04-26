@@ -6,7 +6,7 @@ import cart.product.dao.ProductDao;
 import cart.product.domain.Name;
 import cart.product.domain.Price;
 import cart.product.domain.Product;
-import cart.product.dto.ProductDto;
+import cart.product.dto.ResponseProductDto;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,13 +54,13 @@ class ProductListServiceTest {
         final FakeProductDao fakeProductDao = new FakeProductDao();
         final ProductListService productListService = new ProductListService(fakeProductDao);
         
-        final List<ProductDto> productDtos = productListService.display();
+        final List<ResponseProductDto> responseDtos = productListService.display();
         
-        assertEquals(productDtos.get(0).getName(), "망고");
-        assertEquals(productDtos.get(0).getImage(), "http://mango");
-        assertEquals(productDtos.get(0).getPrice(), 1000);
-        assertEquals(productDtos.get(1).getName(), "에코");
-        assertEquals(productDtos.get(1).getImage(), "http://echo");
-        assertEquals(productDtos.get(1).getPrice(), 2000);
+        assertEquals(responseDtos.get(0).getName(), "망고");
+        assertEquals(responseDtos.get(0).getImage(), "http://mango");
+        assertEquals(responseDtos.get(0).getPrice(), 1000);
+        assertEquals(responseDtos.get(1).getName(), "에코");
+        assertEquals(responseDtos.get(1).getImage(), "http://echo");
+        assertEquals(responseDtos.get(1).getPrice(), 2000);
     }
 }

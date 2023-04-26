@@ -2,7 +2,8 @@ package cart.product.service;
 
 import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
-import cart.product.dto.ProductDto;
+import cart.product.dto.RequestProductDto;
+import cart.product.dto.ResponseProductDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -16,23 +17,23 @@ public class ProductListService {
         this.productDao = productDao;
     }
     
-    public List<ProductDto> display() {
+    public List<ResponseProductDto> display() {
         final List<Product> products = this.productDao.findAll();
         return products.stream()
-                .map(ProductDto::create)
+                .map(ResponseProductDto::create)
                 .collect(Collectors.toList());
     }
     
-    public void create(final ProductDto productDto) {
-        final Product product = Product.create(productDto);
+    public void create(final RequestProductDto requestProductDto) {
+        final Product product = Product.create(requestProductDto);
         this.productDao.insert(product);
     }
     
-    public ProductDto update(final long id, final ProductDto productDto) {
+    public ResponseProductDto update(final long id, final RequestProductDto requestProductDto) {
         final Product originalProduct = this.productDao.findByID(id);
-        final Product updatedProduct = originalProduct.update(productDto);
+        final Product updatedProduct = originalProduct.update(requestProductDto);
         this.productDao.update(updatedProduct);
-        return ProductDto.create(updatedProduct);
+        return ResponseProductDto.create(updatedProduct);
     }
     
     public void delete(final long id) {

@@ -1,6 +1,7 @@
 package cart.product.controller;
 
-import cart.product.dto.ProductDto;
+import cart.product.dto.RequestProductDto;
+import cart.product.dto.ResponseProductDto;
 import cart.product.service.ProductListService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -26,20 +27,21 @@ public class AdminController {
     
     @GetMapping("/product/list")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductDto> display() {
+    public List<ResponseProductDto> display() {
         return this.productListService.display();
     }
     
     @PostMapping("/product/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody final ProductDto productDto) {
-        this.productListService.create(productDto);
+    public void create(@RequestBody final RequestProductDto requestProductDto) {
+        this.productListService.create(requestProductDto);
     }
     
     @PutMapping("/product/update/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDto update(@PathVariable final long id, @RequestBody final ProductDto productDto) {
-        return this.productListService.update(id, productDto);
+    public ResponseProductDto update(@PathVariable final long id,
+            @RequestBody final RequestProductDto requestProductDto) {
+        return this.productListService.update(id, requestProductDto);
     }
     
     @DeleteMapping("/product/delete/{id}")
