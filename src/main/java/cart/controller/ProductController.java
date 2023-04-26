@@ -3,11 +3,17 @@ package cart.controller;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ErrorDto;
-import cart.dto.ProductDto;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -36,13 +42,13 @@ public class ProductController {
     }
 
     @PostMapping(path = "/add")
-    public ResponseEntity<Void> create(@Valid @RequestBody ProductDto productDto) {
+    public ResponseEntity<Void> create(@Valid @RequestBody ProductAddRequest productDto) {
         productDao.insert(new Product(productDto.getName(), productDto.getImage(), productDto.getPrice()));
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(path = "/edit")
-    public ResponseEntity<Void> update(@Valid @RequestBody ProductDto productDto) {
+    public ResponseEntity<Void> update(@Valid @RequestBody ProductUpdateRequest productDto) {
         productDao.update(new Product(
                 productDto.getId(),
                 productDto.getName(),
@@ -74,5 +80,41 @@ public class ProductController {
     public ErrorDto handleException(ConstraintViolationException exception) {
         log.error("ConstraintViolationException message={}", exception.getMessage());
         return new ErrorDto(exception.getMessage());
+    }
+
+    @Getter
+    @NoArgsConstructor
+    private static class ProductAddRequest {
+
+        @NotNull
+        @NotBlank(message = "상품 이름은 빈 문자열일 수 없습니다")
+        @Length(min = 1, max = 30, message = "상품 이름은 최소 1, 최대 30글자입니다.")
+        private String name;
+        @NotNull
+        @NotBlank(message = "이미지 URL은 빈 문자열일 수 없습니다")
+        @Length(max = 1000, message = "이미지 URL 길이가 너무 깁니다.")
+        private String image;
+        @PositiveOrZero
+        @Max(value = Integer.MAX_VALUE, message = "상품 금액이 너무 큽니다.")
+        private int price;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    private static class ProductUpdateRequest {
+
+        @NotNull
+        private long id;
+        @NotNull
+        @NotBlank(message = "상품 이름은 빈 문자열일 수 없습니다")
+        @Length(min = 1, max = 30, message = "상품 이름은 최소 1, 최대 30글자입니다.")
+        private String name;
+        @NotNull
+        @NotBlank(message = "이미지 URL은 빈 문자열일 수 없습니다")
+        @Length(max = 1000, message = "이미지 URL 길이가 너무 깁니다.")
+        private String image;
+        @PositiveOrZero
+        @Max(value = Integer.MAX_VALUE, message = "상품 금액이 너무 큽니다.")
+        private int price;
     }
 }
