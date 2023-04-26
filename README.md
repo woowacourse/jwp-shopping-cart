@@ -14,11 +14,11 @@
 
 ## 상품 API
 
-| Method | URL             | Description |
-|--------|-----------------|-------------|
-| POST   | `/product`      | 상품 작성       |
-| PUT    | `/product/{id}` | 상품 수정       |
-| DELETE | `/product/{id}` | 상품 삭제       |
+| Method | URL              | Description |
+|--------|------------------|-------------|
+| POST   | `/products`      | 상품 작성       |
+| PUT    | `/products/{id}` | 상품 수정       |
+| DELETE | `/products/{id}` | 상품 삭제       |
 
 # 테이블 명세
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
