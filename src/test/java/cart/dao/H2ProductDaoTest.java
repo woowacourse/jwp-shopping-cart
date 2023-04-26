@@ -12,12 +12,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class H2ProductDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private ProductDao productDao;
 
     @Autowired
     H2ProductDaoTest(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
         this.productDao = new H2ProductDao(jdbcTemplate);
     }
 
