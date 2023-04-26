@@ -16,8 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
-@Sql(value = {"/test-fixture.sql"})
-class AdminControllerTest {
+class IntegrationTest {
 
     @LocalServerPort
     private int port;
@@ -38,6 +37,7 @@ class AdminControllerTest {
     }
 
     @Test
+    @DisplayName("상품 추가 테스트")
     void createProduct() {
         final Product product = new Product("TEST",
                 "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", 4000);
@@ -53,6 +53,7 @@ class AdminControllerTest {
     }
 
     @Test
+    @DisplayName("상품 수정 테스트")
     @Sql({"/test-fixture.sql"})
     void editProduct() {
         final Product product = new Product(1L, "TEST787",
@@ -68,6 +69,7 @@ class AdminControllerTest {
     }
 
     @Test
+    @DisplayName("상품 삭제 테스트")
     @Sql({"/test-fixture.sql"})
     void deleteProduct() {
         given()
@@ -77,5 +79,19 @@ class AdminControllerTest {
                 .delete("/admin/delete/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("유저가 유효하지 않는 입력을 하는 경우 테스트")
+    void badRequest() {
+        String jsonStr = "{ \"name\"\"홍실\", \"price\":\"321321\", \"imageUrl\":\"ddong.exe\"}";
+
+        given()
+                .body(jsonStr)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/admin/create")
+                .then()
+                .statusCode(400);
     }
 }

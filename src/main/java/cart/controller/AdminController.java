@@ -30,7 +30,6 @@ public class AdminController {
         return "admin";
     }
 
-    //TODO: Entity가 아닌 DTO로 받도록 수정
     @PostMapping("/create")
     public ResponseEntity<Void> createProduct(@RequestBody Product product) {
         long id = productService.createProduct(product);
