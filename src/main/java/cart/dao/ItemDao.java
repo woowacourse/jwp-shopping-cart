@@ -1,19 +1,29 @@
-package cart.repository;
+package cart.dao;
 
+import cart.dao.dto.ItemDto;
 import cart.model.Item;
-import cart.repository.dto.ItemDto;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class ItemDao {
 
     private final JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<ItemDto> actorRowMapper = (resultSet, rowNum) -> {
+        ItemDto itemDto = new ItemDto(
+                resultSet.getLong("item_id"),
+                resultSet.getString("name"),
+                resultSet.getString("image_url"),
+                resultSet.getInt("price")
+        );
+        return itemDto;
+    };
 
     public ItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -57,14 +67,4 @@ public class ItemDao {
         String sql = "DELETE FROM ITEM WHERE item_id = ?";
         return jdbcTemplate.update(sql, id);
     }
-
-    private final RowMapper<ItemDto> actorRowMapper = (resultSet, rowNum) -> {
-        ItemDto itemDto = new ItemDto(
-                resultSet.getLong("item_id"),
-                resultSet.getString("name"),
-                resultSet.getString("image_url"),
-                resultSet.getInt("price")
-        );
-        return itemDto;
-    };
 }

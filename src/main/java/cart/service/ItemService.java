@@ -2,8 +2,8 @@ package cart.service;
 
 import cart.controller.dto.ItemRequest;
 import cart.controller.dto.ItemResponse;
+import cart.dao.ItemDao;
 import cart.model.Item;
-import cart.repository.ItemDao;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

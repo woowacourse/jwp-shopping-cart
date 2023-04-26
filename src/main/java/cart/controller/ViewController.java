@@ -17,14 +17,14 @@ public class ViewController {
     }
 
     @GetMapping
-    public String home(Model model) {
+    public String redirectHomePage(Model model) {
         List<ItemResponse> itemResponses = itemService.findAll();
         model.addAttribute("products", itemResponses);
         return "index";
     }
 
     @GetMapping("/admin")
-    public String admin(Model model) {
+    public String redirectAdminPage(Model model) {
         List<ItemResponse> itemResponses = itemService.findAll();
         model.addAttribute("products", itemResponses);
         return "admin";
