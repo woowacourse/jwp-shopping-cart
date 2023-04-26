@@ -25,6 +25,7 @@ public class ViewController {
 
     @GetMapping("/admin")
     public String adminPageView(Model model) {
+        //todo: 뷰 컨트롤러와 코드가 중복되는데, 어떻게 고칠지 고민꼭 해보기!!!!!!!!!
         List<Product> products = productService.findAllProducts();
         model.addAttribute("products", products);
         return "admin";
