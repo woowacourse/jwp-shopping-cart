@@ -34,4 +34,12 @@ class JdbcProductDaoTest {
 
         assertDoesNotThrow(() -> productDao.insert(productEntity));
     }
+
+    @DisplayName("상품 수정이 제대로 되는지 확인한다")
+    @Test
+    void updateTest() {
+        ProductEntity productEntity = ProductEntity.of(1L, "chicken", "image", 10000);
+
+        assertDoesNotThrow(() -> productDao.update(productEntity));
+    }
 }
