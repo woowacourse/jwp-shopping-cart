@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class ProductDaoTest {
     private static final Product PRODUCT_A = new Product("마우스", 10000, "image");
     private static final Product PRODUCT_B = new Product("키보드", 20000, "image2");
+
     @Autowired
     private DataSource dataSource;
 
@@ -28,7 +29,6 @@ class ProductDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     private ProductDao productDao;
-
 
     private final RowMapper<Product> rowMapper = (resultSet, rowNum) -> {
         Product product = new Product(
@@ -38,7 +38,6 @@ class ProductDaoTest {
                 resultSet.getString("image_url"));
         return product;
     };
-
 
     @BeforeEach
     void setUp() {
@@ -82,6 +81,7 @@ class ProductDaoTest {
         assertThatThrownBy(
                 () -> findProductById(id)).isInstanceOf(EmptyResultDataAccessException.class);
     }
+
     @Test
     @DisplayName("상품데이터를 수정한다.")
     void update() {
