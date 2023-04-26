@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -25,7 +26,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity addItem(@RequestBody final ItemRequest itemRequest) {
+    public ResponseEntity addItem(@RequestBody @Validated final ItemRequest itemRequest) {
         itemService.saveItem(itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))
@@ -50,7 +51,7 @@ public class ItemController {
 
     @PutMapping("/{itemId}")
     public ResponseEntity updateItem(@PathVariable final Long itemId,
-                                     @RequestBody final ItemRequest itemRequest) {
+                                     @RequestBody @Validated final ItemRequest itemRequest) {
         itemService.updateItem(itemId, itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))
