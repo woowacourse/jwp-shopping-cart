@@ -3,6 +3,7 @@ package cart.repository;
 import cart.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -30,30 +31,15 @@ public class ProductDbRepository implements ProductRepository {
     public List<Product> findAll() {
         String sql = "SELECT id, name, price, img_url FROM product";
 
-        return namedParameterJdbcTemplate.query(sql, (rs, rowNum) -> {
-            Long id = rs.getLong("id");
-            String name = rs.getString("name");
-            int price = rs.getInt("price");
-            String imgUrl = rs.getString("img_url");
-
-            return Product.from(id, name, imgUrl, price);
-        });
+        return namedParameterJdbcTemplate.query(sql, getProductRowMapper());
     }
 
     @Override
     public Optional<Product> findById(Long id) {
         String sql = "SELECT id, name, price, img_url FROM product WHERE id = :id";
 
-        Product product = namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id),
-                (rs, rowNum) -> {
-                    String name = rs.getString("name");
-                    int price = rs.getInt("price");
-                    String imgUrl = rs.getString("img_url");
-
-                    return Product.from(id, name, imgUrl, price);
-                });
-
-        return Optional.ofNullable(product);
+        return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource("id", id), getProductRowMapper()).stream()
+                .findAny();
     }
 
     @Override
@@ -72,5 +58,16 @@ public class ProductDbRepository implements ProductRepository {
     public void delete(Product product) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, product.getId());
+    }
+
+    private RowMapper<Product> getProductRowMapper() {
+        return (rs, rowNum) -> {
+            Long id = rs.getLong("id");
+            String name = rs.getString("name");
+            int price = rs.getInt("price");
+            String imgUrl = rs.getString("img_url");
+
+            return Product.from(id, name, imgUrl, price);
+        };
     }
 }
