@@ -27,5 +27,4 @@ class MainControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
-
 }
