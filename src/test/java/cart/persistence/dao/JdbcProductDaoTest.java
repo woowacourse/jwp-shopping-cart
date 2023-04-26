@@ -1,9 +1,6 @@
 package cart.persistence.dao;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-
-import java.util.List;
-
+import cart.persistence.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -13,7 +10,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import cart.persistence.entity.ProductEntity;
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @JdbcTest
 @SuppressWarnings("NonAsciiCharacters")
@@ -32,7 +32,7 @@ class JdbcProductDaoTest {
 
     @Test
     void save_메서드로_Product를_저장한다() {
-        final ProductEntity productEntity = new ProductEntity("modi", 10000,"");
+        final ProductEntity productEntity = new ProductEntity("modi", 10000, "");
 
         final Long productId = productDao.save(productEntity);
 
@@ -55,7 +55,7 @@ class JdbcProductDaoTest {
     void update_메서드로_저장된_Product를_수정한다() {
         final ProductEntity modi = new ProductEntity("modi", 10000, "");
         final Long productId = productDao.save(modi);
-        final ProductEntity originalJena = new ProductEntity(productId,"jena", 10000, "");
+        final ProductEntity originalJena = new ProductEntity(productId, "jena", 10000, "");
 
         productDao.update(originalJena);
         ProductEntity jena = productDao.findByName("jena");

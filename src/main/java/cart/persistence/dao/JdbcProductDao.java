@@ -1,7 +1,6 @@
 package cart.persistence.dao;
 
-import java.util.List;
-
+import cart.persistence.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -9,7 +8,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import cart.persistence.entity.ProductEntity;
+import java.util.List;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
@@ -17,17 +16,17 @@ public class JdbcProductDao implements ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<ProductEntity> actorRowMapper = (resultSet, rowNum) -> new ProductEntity(
-        resultSet.getLong("product_id"),
-        resultSet.getString("name"),
-        resultSet.getInt("price"),
-        resultSet.getString("image_url")
+            resultSet.getLong("product_id"),
+            resultSet.getString("name"),
+            resultSet.getInt("price"),
+            resultSet.getString("image_url")
     );
 
     public JdbcProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-            .withTableName("PRODUCT")
-            .usingGeneratedKeyColumns("product_id");
+                .withTableName("PRODUCT")
+                .usingGeneratedKeyColumns("product_id");
     }
 
     @Override
