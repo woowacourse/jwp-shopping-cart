@@ -121,6 +121,7 @@ public class ProductIntegrationTest {
     }
 
     @Test
+    @DisplayName("상품 수정 성공 시 OK 응답 코드를 반환한다")
     void update() throws JSONException {
         int updateCount = jdbcTemplate.update(
                 "INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000)");
@@ -145,6 +146,7 @@ public class ProductIntegrationTest {
     }
 
     @Test
+    @DisplayName("상품 식제 성공 시 OK 응답 코드를 반환한다")
     void delete() {
         int updateCount = jdbcTemplate.update(
                 "INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000)");
