@@ -20,4 +20,8 @@ public class ProductManagementService {
         final List<ProductEntity> productEntities = productDao.selectAll();
         return ProductDto.from(productEntities);
     }
+
+    public void save(final ProductDto productDto) {
+        productDao.insert(ProductEntity.from(productDto));
+    }
 }
