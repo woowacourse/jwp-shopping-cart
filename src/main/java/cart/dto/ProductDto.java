@@ -14,10 +14,6 @@ public class ProductDto {
         this.price = price;
     }
 
-    public static ProductDto from(final Long id) {
-        return new ProductDto(id, null, null, null);
-    }
-
     public static ProductDto of(final String name, final String image, final Integer price) {
         return new ProductDto(null, name, image, price);
     }
