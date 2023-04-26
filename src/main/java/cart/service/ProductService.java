@@ -42,6 +42,10 @@ public class ProductService {
 
     @Transactional
     public void deleteById(Long id) {
+        if (productRepository.findById(id).isEmpty()) {
+            throw new IllegalArgumentException("ID가 존재 X");
+        }
+
         productRepository.deleteById(id);
     }
 }
