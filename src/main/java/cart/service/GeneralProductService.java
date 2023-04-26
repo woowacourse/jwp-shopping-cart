@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.controller.request.ProductCreateRequest;
 import cart.repository.ProductRepository;
@@ -30,5 +31,16 @@ public class GeneralProductService implements ProductService {
 	@Override
 	public long save(ProductCreateRequest request) {
 		return productRepository.save(request);
+	}
+
+	@Override
+	public long deleteByProductId(long productId) {
+		final boolean isDelete = productRepository.deleteByProductId(productId) == productId;
+
+		if (!isDelete) {
+			throw new IllegalStateException("상품 삭제에 실패했습니다.");
+		}
+
+		return productId;
 	}
 }

@@ -54,4 +54,17 @@ class GeneralProductServiceTest {
 		// then
 		assertThat(saveId).isEqualTo(1L);
 	}
+
+	@DisplayName("상품 삭제 테스트")
+	@Test
+	void deleteByProductId() {
+		// given
+		given(productRepository.deleteByProductId(anyLong())).willReturn(1L);
+
+		// when
+		long deleteProductId = generalProductService.deleteByProductId(1L);
+
+		// then
+		assertThat(deleteProductId).isEqualTo(1L);
+	}
 }

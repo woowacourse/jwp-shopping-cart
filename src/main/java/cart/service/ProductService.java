@@ -7,4 +7,5 @@ import cart.dto.ProductDto;
 public interface ProductService {
 	List<ProductDto> findAll();
 	long save(ProductCreateRequest request);
+	long deleteByProductId(long productId);
 }
