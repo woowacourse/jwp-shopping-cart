@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import cart.controller.request.ProductCreateRequest;
 import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.repository.ProductRepository;
@@ -38,5 +39,19 @@ class GeneralProductServiceTest {
 		assertThat(findAll)
 			.usingRecursiveComparison()
 			.isEqualTo(List.of(new ProductDto(1L, "KIARA", 1000, "이미지")));
+	}
+
+	@DisplayName("상품 저장 테스트")
+	@Test
+	void save(){
+		// given
+		given(productRepository.save(any())).willReturn(1L);
+
+		// when
+		final ProductCreateRequest request = new ProductCreateRequest("KIARA", 1000, "이미지");
+		final long saveId = generalProductService.save(request);
+
+		// then
+		assertThat(saveId).isEqualTo(1L);
 	}
 }
