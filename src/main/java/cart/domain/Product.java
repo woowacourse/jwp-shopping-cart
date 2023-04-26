@@ -1,4 +1,5 @@
 package cart.domain;
+
 public class Product {
     private final Long id;
     private final String name;
@@ -19,7 +20,6 @@ public class Product {
     public static Product createWithoutId(String name, String imgURL, int price) {
         return new Product(null, name, imgURL, price);
     }
-
 
     private int validatePrice(int price) {
         if (price < 0) {

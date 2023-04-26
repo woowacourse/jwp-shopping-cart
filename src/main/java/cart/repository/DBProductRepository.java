@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import cart.domain.Product;
 import cart.domain.ProductRepository;
 import cart.dto.ProductDto;
 

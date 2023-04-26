@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -22,6 +21,7 @@ class JwpCartControllerTest {
 
     @LocalServerPort
     int port;
+
 
     @BeforeEach
     void setUp() {
@@ -76,12 +76,6 @@ class JwpCartControllerTest {
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    static Stream<Arguments> makeDto() {
-        return Stream.of(Arguments.arguments(new ProductRequestDto("a".repeat(256), "https://naver.com", 1000)),
-            Arguments.arguments(new ProductRequestDto("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
-            Arguments.arguments(new ProductRequestDto("aaa", "https://naver.com", -1000)));
-    }
-
     @Test
     @DisplayName("상품 정보를 수정한다.")
     void updateProduct() {
@@ -115,5 +109,11 @@ class JwpCartControllerTest {
             .when().delete("/admin/products/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
+    }
+
+    static Stream<Arguments> makeDto() {
+        return Stream.of(Arguments.arguments(new ProductRequestDto("a".repeat(256), "https://naver.com", 1000)),
+            Arguments.arguments(new ProductRequestDto("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
+            Arguments.arguments(new ProductRequestDto("aaa", "https://naver.com", -1000)));
     }
 }
