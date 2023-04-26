@@ -29,10 +29,20 @@ public class ProductService {
 
     @Transactional
     public void update(final Long id, final String name, final int price, final String image) {
+        checkExistProductId(id);
+        Product product = new Product(id, name, price, image);
+        productDao.update(product);
+    }
+
+    private void checkExistProductId(Long id) {
         if (productDao.findById(id) == null) {
             throw new IllegalArgumentException("존재하지 않는 상품 id 입니다.");
         }
-        Product product = new Product(id, name, price, image);
-        productDao.update(product);
+    }
+
+    @Transactional
+    public void delete(final Long id) {
+        checkExistProductId(id);
+        productDao.deleteById(id);
     }
 }
