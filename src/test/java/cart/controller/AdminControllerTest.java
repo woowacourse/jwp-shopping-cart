@@ -39,6 +39,18 @@ class AdminControllerTest {
     }
 
     @Test
+    void Product_POST_API_유효성_검증_테스트() {
+        final ProductRequest request = new ProductRequest("modi", 10000, "imageUrl");
+
+        given()
+                .body(request)
+                .when()
+                .post("/admin/product")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     void Product_GET_API_테스트() {
         saveProduct("modi", 10000, "http:://naver.com");
 
