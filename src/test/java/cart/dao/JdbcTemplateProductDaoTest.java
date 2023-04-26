@@ -51,8 +51,7 @@ class JdbcTemplateProductDaoTest {
                 resultSet.getString("image")
         );
 
-        ProductEntity product = jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
-        return product;
+        return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
     }
 
     @Test
