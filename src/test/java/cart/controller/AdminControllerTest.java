@@ -73,7 +73,7 @@ class AdminControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
                 .andDo(print())
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -88,7 +88,7 @@ class AdminControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
                 .andDo(print())
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -100,6 +100,6 @@ class AdminControllerTest {
         mockMvc.perform(delete("/admin/{id}", 1L)
                         .contentType(MediaType.TEXT_HTML))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isOk());
     }
 }

@@ -58,7 +58,8 @@ const createProduct = (product) => {
         .then((response) => {
         window.location.reload();
     }).catch((error) => {
-        console.error(error);
+        const {data} = error.response;
+        window.alert(data.errorMessage)
     });
 };
 
@@ -69,7 +70,8 @@ const updateProduct = (product) => {
         .then((response) => {
         window.location.reload();
     }).catch((error) => {
-        console.error(error);
+        const {data} = error.response;
+        window.alert(data.errorMessage)
     });
 };
 

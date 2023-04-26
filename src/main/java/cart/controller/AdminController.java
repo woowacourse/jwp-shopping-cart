@@ -37,7 +37,7 @@ public class AdminController {
     @PostMapping
     public String addProduct(@RequestBody @Valid final ProductDto productDto) {
         shoppingService.save(productDto);
-        return "redirect:/admin";
+        return "admin";
     }
 
     @PutMapping("/{id}")
@@ -45,13 +45,13 @@ public class AdminController {
             @PathVariable final Long id,
             @RequestBody @Valid final ProductDto productDto) {
         shoppingService.update(id, productDto);
-        return "redirect:/admin";
+        return "admin";
     }
 
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable final Long id) {
         shoppingService.delete(id);
-        return "redirect:/admin";
+        return "admin";
     }
 
     @ModelAttribute("categorys")

@@ -56,7 +56,7 @@ public class ProductIntegrationTest {
                 .body(productDto)
                 .post("/admin")
                 .then().log().all()
-                .statusCode(HttpStatus.FOUND.value());
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class ProductIntegrationTest {
                 .body(productDto)
                 .post("/admin")
                 .then().log().all()
-                .statusCode(HttpStatus.FOUND.value());
+                .statusCode(HttpStatus.OK.value());
 
 
         given()
@@ -78,7 +78,7 @@ public class ProductIntegrationTest {
                 .body(productDto)
                 .put("/admin/{id}", 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.FOUND.value());
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class ProductIntegrationTest {
                 .body(productDto)
                 .post("/admin")
                 .then().log().all()
-                .statusCode(HttpStatus.FOUND.value());
+                .statusCode(HttpStatus.OK.value());
 
 
         given()
@@ -99,6 +99,6 @@ public class ProductIntegrationTest {
                 .when()
                 .delete("/admin/{id}", 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.FOUND.value());
+                .statusCode(HttpStatus.OK.value());
     }
 }
