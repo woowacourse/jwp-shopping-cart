@@ -27,7 +27,7 @@ class MemoryProductRepositoryTest {
     @DisplayName("Product 객체를 넣었을 때 ID를 반환할 수 있다")
     void test_insert() throws MalformedURLException {
         //given
-        Product salmon = new Product(
+        Product salmon = new Product(1,
                 new ProductName("salmon"),
                 new ProductImage("https://www.salmonlover.com"),
                 new ProductPrice(17000));
@@ -43,12 +43,12 @@ class MemoryProductRepositoryTest {
     @DisplayName("모든 Product 객체를 반환할 수 있다")
     void test_findAll() throws MalformedURLException {
         //given
-        Product salmon = new Product(
+        Product salmon = new Product(1,
                 new ProductName("salmon"),
                 new ProductImage("https://www.salmonlover.com"),
                 new ProductPrice(17000));
 
-        Product pizza = new Product(
+        Product pizza = new Product(2,
                 new ProductName("pizza"),
                 new ProductImage("http://www.pizzalover.com"),
                 new ProductPrice(40000));
@@ -63,44 +63,10 @@ class MemoryProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("ID를 통해 Product 객체를 반환할 수 있다")
-    void test_findById() throws MalformedURLException {
-        //given
-        Product salmon = new Product(
-                new ProductName("salmon"),
-                new ProductImage("https://www.salmonlover.com"),
-                new ProductPrice(17000));
-
-        //when
-        Integer salmonId = memoryProductRepository.insert(salmon);
-        Product actual = memoryProductRepository.findById(salmonId);
-
-        //then
-        assertThat(actual).isSameAs(salmon);
-    }
-
-    @Test
-    @DisplayName("Product 객체를 통해 ID를 찾을 수 있다")
-    void test_ifAbsentReplace() throws MalformedURLException {
-        //given
-        Product salmon = new Product(
-                new ProductName("salmon"),
-                new ProductImage("https://www.salmonlover.com"),
-                new ProductPrice(17000));
-
-        //when
-        memoryProductRepository.insert(salmon);
-        Integer salmonId = memoryProductRepository.findIdByProduct(salmon);
-
-        //then
-        assertThat(salmonId).isEqualTo(1);
-    }
-
-    @Test
     @DisplayName("해당하는 Product 객체를 삭제할 수 있다")
     void remove() throws MalformedURLException {
         //given
-        Product salmon = new Product(
+        Product salmon = new Product(1,
                 new ProductName("salmon"),
                 new ProductImage("https://www.salmonlover.com"),
                 new ProductPrice(17000));

@@ -10,9 +10,5 @@ public interface ProductRepository {
 
     List<Product> findAll();
 
-    Product findById(Integer id);
-
-    Integer findIdByProduct(Product product);
-
     Product remove(Integer productId);
 }

@@ -11,12 +11,11 @@ import java.util.stream.Collectors;
 public class MemoryProductRepository implements ProductRepository {
 
     private final Map<Integer, Product> store = new ConcurrentHashMap<>();
-    private int sequence = 1;
 
     @Override
     public Integer insert(Product product) {
-        store.put(sequence, product);
-        return sequence++;
+        store.put(product.getId(), product);
+        return product.getId();
     }
 
     @Override
@@ -27,23 +26,7 @@ public class MemoryProductRepository implements ProductRepository {
     }
 
     @Override
-    public Product findById(Integer id) {
-        return store.get(id);
-    }
-
-    @Override
-    public Integer findIdByProduct(Product product) {
-        return store.entrySet()
-                .stream()
-                .filter(entry -> entry.getValue() == product)
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 ID에 맞는 상품을 찾지 못했습니다."))
-                .getKey();
-    }
-
-    @Override
     public Product remove(Integer productId) {
         return store.remove(productId);
     }
-
 }
