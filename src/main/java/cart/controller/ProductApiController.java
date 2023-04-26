@@ -38,14 +38,15 @@ public class ProductApiController {
     public ResponseEntity<Response> deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
         return ResponseEntity
-                .ok(SimpleResponse.ok("상품이 제거되었습니다."));
+                .ok(SimpleResponse.ok("상품이 삭제되었습니다."));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Response> updateProduct(@PathVariable Long id,
                                                   @RequestBody @Valid ProductUpdateRequest request) {
-        productService.updateProductById(id, request.getName(), request.getPrice(), request.getImageUrl());
+        ProductDto productDto = productService.updateProductById(id, request.getName(), request.getPrice(),
+                request.getImageUrl());
         return ResponseEntity
-                .ok(ResultResponse.ok("상품이 수정되었습니다.", request));
+                .ok(ResultResponse.ok("상품이 수정되었습니다.", productDto));
     }
 }

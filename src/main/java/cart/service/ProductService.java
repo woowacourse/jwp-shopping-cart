@@ -37,7 +37,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public void updateProductById(Long id, String name, int price, String imageUrl) {
+    public ProductDto updateProductById(Long id, String name, int price, String imageUrl) {
         validateId(id);
         ProductEntity productEntity = ProductEntity.builder()
                 .id(id)
@@ -46,6 +46,7 @@ public class ProductService {
                 .imageUrl(imageUrl)
                 .build();
         productRepository.update(productEntity);
+        return new ProductDto(id, name, price, imageUrl);
     }
 
     private void validateId(Long id) {
