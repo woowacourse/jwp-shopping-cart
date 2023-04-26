@@ -3,16 +3,18 @@ package cart.controller;
 import cart.service.CartService;
 import cart.service.dto.ProductRequest;
 import cart.service.dto.ProductResponse;
+import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
 public class CartController {
@@ -32,8 +34,14 @@ public class CartController {
 
     @PostMapping("/admin/product")
     @ResponseBody
-    @ResponseStatus(HttpStatus.CREATED)
-    public void registerProduct(@RequestBody @Valid ProductRequest productRequest) {
-        cartService.save(productRequest);
+    public ResponseEntity<Void> registerProduct(@RequestBody @Valid ProductRequest productRequest) {
+        long savedId = cartService.save(productRequest);
+        return ResponseEntity.created(URI.create("/admin/product/" + savedId)).build();
+    }
+
+    @PutMapping("/admin/product/{id}")
+    @ResponseBody
+    public void modifyProduct(@RequestBody @Valid ProductRequest productRequest, @PathVariable long id) {
+        cartService.modify(productRequest, id);
     }
 }

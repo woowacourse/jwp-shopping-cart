@@ -24,9 +24,9 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public void save(ProductRequest productRequest) {
+    public long save(ProductRequest productRequest) {
         ProductEntity productEntity = productRequest.toEntity();
-        productDao.insert(productEntity);
+        return productDao.insert(productEntity);
     }
 
     public void modify(ProductRequest productRequest, long id) {

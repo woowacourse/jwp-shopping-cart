@@ -19,9 +19,9 @@
       - 상품 이름
       - 상품 가격
       - 상품 이미지 URL
-  - [ ] 상품 수정 API 구현
+  - [x] 상품 수정 API 구현
     - [x] 상품 정보 업데이트 기능 구현
-    - [ ] PUT `admin/product/{id}` url 맵핑
+    - [x] PUT `admin/product/{id}` url 맵핑
       - 상품 이름
       - 상품 가격
       - 상품 이미지 URL

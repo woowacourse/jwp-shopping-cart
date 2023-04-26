@@ -15,7 +15,8 @@ public class ProductDao {
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product").usingGeneratedKeyColumns("id");
     }
 
     public List<ProductEntity> findAll() {
@@ -31,15 +32,12 @@ public class ProductDao {
     }
 
     public long insert(ProductEntity productEntity) {
-        SimpleJdbcInsert jdbcInsert =
-                simpleJdbcInsert.withTableName("product").usingGeneratedKeyColumns("id");
-
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", productEntity.getName())
                 .addValue("price", productEntity.getPrice())
                 .addValue("img_url", productEntity.getImgUrl());
 
-        return jdbcInsert.executeAndReturnKey(params).longValue();
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public void update(ProductEntity productEntity) {
