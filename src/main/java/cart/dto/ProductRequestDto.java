@@ -24,13 +24,4 @@ public class ProductRequestDto {
         return imageUrl;
     }
 
-    @Override
-    public String toString() {
-        return "ProductRequestDto{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
-    }
-
 }

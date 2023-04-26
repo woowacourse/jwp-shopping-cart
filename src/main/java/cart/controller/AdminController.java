@@ -23,26 +23,26 @@ public class AdminController {
     }
 
     @GetMapping("")
-    public String admin(Model model) {
+    public String adminPage(Model model) {
         model.addAttribute("products", productService.findAll());
         return "admin";
     }
 
-    @PostMapping("/product")
-    public String saveProduct(@RequestBody ProductRequestDto productRequestDto) {
-        productService.save(productRequestDto);
+    @PostMapping("/products")
+    public String addProduct(@RequestBody ProductRequestDto productRequestDto) {
+        productService.add(productRequestDto);
         return "admin";
     }
 
-    @PutMapping("/product/{id}")
-    public String updateProduct(@PathVariable int id, @RequestBody ProductRequestDto productRequestDto) {
-        productService.updateById(id, productRequestDto);
+    @PutMapping("/products/{id}")
+    public String modifyProduct(@PathVariable int id, @RequestBody ProductRequestDto productRequestDto) {
+        productService.modifyById(id, productRequestDto);
         return "admin";
     }
 
-    @DeleteMapping("/product/{id}")
-    public String deleteProduct(@PathVariable int id) {
-        productService.deleteById(id);
+    @DeleteMapping("/products/{id}")
+    public String removeProduct(@PathVariable int id) {
+        productService.removeById(id);
         return "admin";
     }
 

@@ -19,7 +19,7 @@ public class ProductService {
     }
 
     public List<ProductResponseDto> findAll() {
-        return productDao.findAll()
+        return productDao.selectAll()
                 .stream()
                 .map(this::toProductResponseDto)
                 .collect(Collectors.toList());
@@ -29,9 +29,14 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    public void save(ProductRequestDto productRequestDto) {
+    public void add(ProductRequestDto productRequestDto) {
         Product product = toEntity(productRequestDto);
         productDao.save(product);
+    }
+
+    public void modifyById(int id, ProductRequestDto productRequestDto) {
+        Product product = toEntity(productRequestDto);
+        productDao.updateById(id, product);
     }
 
     private Product toEntity(ProductRequestDto productRequestDto) {
@@ -42,12 +47,8 @@ public class ProductService {
                 .build();
     }
 
-    public void deleteById(int id) {
+    public void removeById(int id) {
         productDao.deleteById(id);
     }
 
-    public void updateById(int id, ProductRequestDto productRequestDto) {
-        Product product = toEntity(productRequestDto);
-        productDao.updateById(id, product);
-    }
 }

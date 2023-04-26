@@ -14,10 +14,10 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Product> findAll() {
-        String sql = "SELECT * FROM Product";
+    public List<Product> selectAll() {
+        String sqlForSelectAll = "SELECT * FROM Product";
         return jdbcTemplate.query(
-                sql,
+                sqlForSelectAll,
                 (resultSet, rowNum) ->
                         new Product.Builder().id(resultSet.getInt("id"))
                                 .price(resultSet.getInt("price"))
@@ -28,17 +28,18 @@ public class ProductDao {
     }
 
     public void save(Product product) {
-        String sql = "INSERT INTO Product (name, price, image_url) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl());
+        String sqlForSave = "INSERT INTO Product (name, price, image_url) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sqlForSave, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public void deleteById(int id) {
-        String sql = "DELETE FROM Product WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        String sqlForDeleteById = "DELETE FROM Product WHERE id = ?";
+        jdbcTemplate.update(sqlForDeleteById, id);
     }
 
     public void updateById(int id, Product product) {
-        String sql = "UPDATE Product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
+        String sqlForUpdateById = "UPDATE Product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        jdbcTemplate.update(sqlForUpdateById, product.getName(), product.getPrice(), product.getImageUrl(), id);
     }
+
 }
