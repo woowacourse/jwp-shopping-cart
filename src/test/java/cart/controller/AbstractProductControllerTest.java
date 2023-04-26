@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.service.ProductCreateService;
 import cart.service.ProductSearchService;
 import cart.service.ProductUpdateService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,8 @@ public class AbstractProductControllerTest {
     protected ProductSearchService productSearchService;
     @MockBean
     protected ProductUpdateService productUpdateService;
+    @MockBean
+    protected ProductCreateService productCreateService;
     @Autowired
     protected ObjectMapper objectMapper;
     @Autowired
