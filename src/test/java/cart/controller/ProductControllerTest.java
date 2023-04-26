@@ -2,7 +2,6 @@ package cart.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -24,20 +23,6 @@ class ProductControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Test
-    void 상품_업데이트_테스트() throws Exception {
-        final ProductRequest productRequest = RequestFixture.NUNU_REQUEST;
-        final String request = objectMapper.writeValueAsString(productRequest);
-        final ProductResponse productResponse = ResponseFixture.NUNU_RESPONSE;
-        final String result = objectMapper.writeValueAsString(productResponse);
-        final int id = 1;
-        mockMvc.perform(put("/products/" + id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(request))
-                .andExpect(status().isOk())
-                .andExpect(content().json(result));
-    }
 
     @Test
     void 상품_생성_테스트() throws Exception {

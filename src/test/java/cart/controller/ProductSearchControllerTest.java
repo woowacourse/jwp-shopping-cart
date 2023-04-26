@@ -10,16 +10,11 @@ import java.util.List;
 import cart.domain.Product;
 import cart.dto.ProductResponse;
 import cart.dto.ResponseFixture;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 @WebMvcTest
 class ProductSearchControllerTest extends AbstractProductControllerTest {
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
     void 상품_조회_테스트() throws Exception {
