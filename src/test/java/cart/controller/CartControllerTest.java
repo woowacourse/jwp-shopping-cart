@@ -37,6 +37,19 @@ class CartControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("상품이 null일 경우 예외 발생")
+    @Test
+    void createProduct_Exception() {
+        productRequestDto = new ProductRequestDto(null, null, null);
+
+        given().log().uri()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequestDto)
+                .when().post("/product")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("상품 전체 조회")
     @Test
     void getProducts() {
