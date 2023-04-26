@@ -13,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminControllerTest {
@@ -49,7 +46,9 @@ class AdminControllerTest {
                 .body(createItem)
                 .when().post("/admin/items/add")
                 .then().log().all()
-                .statusCode(HttpStatus.MOVED_TEMPORARILY.value());
+                .statusCode(HttpStatus.CREATED.value())
+                .contentType(MediaType.TEXT_PLAIN_VALUE)
+                .body(equalTo("ok"));
     }
 
     @Test
@@ -64,7 +63,9 @@ class AdminControllerTest {
                 .body(createItem)
                 .when().post("/admin/items/edit/1")
                 .then().log().all()
-                .statusCode(HttpStatus.MOVED_TEMPORARILY.value());
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.TEXT_PLAIN_VALUE)
+                .body(equalTo("ok"));
     }
 
     @Test
@@ -74,6 +75,8 @@ class AdminControllerTest {
         RestAssured.given().log().all()
                 .when().post("/admin/items/delete/1")
                 .then().log().all()
-                .statusCode(HttpStatus.MOVED_TEMPORARILY.value());
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.TEXT_PLAIN_VALUE)
+                .body(equalTo("ok"));
     }
 }

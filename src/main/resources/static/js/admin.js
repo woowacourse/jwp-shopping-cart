@@ -70,8 +70,8 @@ const updateProduct = (product) => {
 const deleteProduct = (id) => {
     axios.post("/admin/items/delete/" + id)
         .then((response) => {
-        window.location.reload();
-    }).catch((error) => {
+            window.location.reload();
+        }).catch((error) => {
         console.error(error);
     });
 };

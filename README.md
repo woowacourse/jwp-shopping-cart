@@ -18,5 +18,12 @@
 - 상품은 이미지를 가진다.
 - 상품은 가격을 가진다.
 
+## admin api
+
+POST admin/items/add
+POST admin/items/edit/{id}
+POST admin/items/delete/{id}
+GET  admin/
+
 ## 질문
 - 값을 변경시에 수정해야하는 칼럼만 수정하는 방식이랑 전부 수정하는 거랑 어떤차이가 있는지
