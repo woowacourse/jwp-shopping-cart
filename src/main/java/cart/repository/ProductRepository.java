@@ -59,7 +59,7 @@ public class ProductRepository {
         });
     }
 
-    public boolean existById(Long id) {
+    public boolean existsById(Long id) {
         String sql = "SELECT COUNT(*) FROM PRODUCT WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
     }

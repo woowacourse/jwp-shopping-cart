@@ -34,7 +34,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<Response> handleIllegalArgument(ProductNotFoundException e) {
+    public ResponseEntity<Response> handle(ProductNotFoundException e) {
         Response response = SimpleResponse.badRequest(e.getMessage());
         return ResponseEntity
                 .badRequest()

@@ -38,8 +38,8 @@ public class ProductService {
     }
 
     private void validateId(Long id) {
-        if (!productRepository.existById(id)) {
-            throw new ProductNotFoundException("존재하지 않는 id 입니다.");
+        if (!productRepository.existsById(id)) {
+            throw new ProductNotFoundException("존재하지 않는 상품의 ID 입니다.");
         }
     }
 }
