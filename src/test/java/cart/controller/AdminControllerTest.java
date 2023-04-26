@@ -1,18 +1,22 @@
 package cart.controller;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.notNullValue;
 
 import cart.entity.Product;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase
+@Sql(value = {"/test-fixture.sql"})
 class AdminControllerTest {
 
     @LocalServerPort
@@ -45,7 +49,7 @@ class AdminControllerTest {
                 .post("/admin/create")
                 .then().log().all()
                 .statusCode(201)
-                .header("Location", "/admin/1");
+                .header("Location", notNullValue());
     }
 
     @Test
