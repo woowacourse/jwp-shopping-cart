@@ -14,16 +14,7 @@ public class ProductInMemoryDao implements ProductDao {
     private final AtomicInteger sequence = new AtomicInteger(0); // 동시성 문제 해결
 
     public ProductInMemoryDao() {
-        this(List.of(
-                new ProductEntity(1, "비버", "https://gmlwjd9405.github.io/images/network/rest.png", 10000L),
-                new ProductEntity(2, "땡칠", "https://gmlwjd9405.github.io/images/network/rest.png", 10000L),
-                new ProductEntity(3, "포비", "https://wimg.mk.co.kr/meet/neds/2020/12/image_readtop_2020_1292243_16081264674474585.jpg", 5000L)
-        ));
-    }
-
-    private ProductInMemoryDao(final List<ProductEntity> products) {
-        this.products = new ArrayList<>(products);
-        sequence.addAndGet(products.size());
+        this.products = new ArrayList<>();
     }
 
     @Override
