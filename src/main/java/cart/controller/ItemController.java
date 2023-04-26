@@ -4,9 +4,11 @@ import cart.controller.dto.ItemRequest;
 import cart.controller.dto.ItemResponse;
 import cart.service.ItemService;
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,6 +24,12 @@ public class ItemController {
 
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ItemResponse>> findAllItems() {
+        List<ItemResponse> itemResponses = itemService.findAll();
+        return ResponseEntity.ok(itemResponses);
     }
 
     @PostMapping
