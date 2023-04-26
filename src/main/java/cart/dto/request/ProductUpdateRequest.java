@@ -10,14 +10,20 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @RequiredArgsConstructor
 public class ProductUpdateRequest {
-    @NotBlank
-    @Length(min = 1, max = 10)
+    @NotBlank(message = "상품 이름은 비어있으면 안 됩니다.")
+    @Length(
+            max = 10,
+            message = "상품 이름의 길이는 {max}자리 보다 작아야 합니다."
+    )
     private final String name;
 
-    @Positive
-    @Max(10_000_000)
+    @Positive(message = "상품의 가격은 0보다 커야 합니다.")
+    @Max(
+            value = 10_000_000,
+            message = "상품의 가격은 {value}보다 작아야 합니다."
+    )
     private final int price;
 
-    @NotBlank
+    @NotBlank(message = "상품의 이미지는 비어있으면 안 됩니다.")
     private final String imageUrl;
 }
