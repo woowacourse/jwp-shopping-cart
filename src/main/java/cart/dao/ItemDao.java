@@ -33,6 +33,11 @@ public class ItemDao {
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
+    public Item findBy(final Long itemId) {
+        final String sql = "SELECT id, name, image_url, price FROM items WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, itemId);
+    }
+
     public Long save(final Item item) {
         final String sql = "INSERT INTO items(name, image_url, price) VALUES(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -54,10 +59,5 @@ public class ItemDao {
     public void deleteBy(final Long itemId) {
         final String sql = "DELETE FROM items WHERE id = ?";
         jdbcTemplate.update(sql, itemId);
-    }
-
-    public Item findBy(final Long itemId) {
-        final String sql = "SELECT id, name, image_url, price FROM items WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, actorRowMapper, itemId);
     }
 }
