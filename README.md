@@ -1,9 +1,9 @@
 # jwp-shopping-cart
 
 ## 상품 목록 페이지 연동
-- [ ] spec
-    - [ ] HttpMethod: GET
-    - [ ] path: "/"
+- [x] spec
+    - [x] HttpMethod: GET
+    - [x] path: "/"
 
 ## 상품 관리 CRUD API 작성
 - [x] Create
