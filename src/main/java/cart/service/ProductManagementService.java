@@ -28,4 +28,8 @@ public class ProductManagementService {
     public void update(final ProductDto productDto) {
         productDao.update(ProductEntity.from(productDto));
     }
+
+    public void delete(final ProductDto productDto) {
+        productDao.delete(ProductEntity.from(productDto));
+    }
 }
