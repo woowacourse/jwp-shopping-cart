@@ -6,11 +6,11 @@
 
 - [x]  상품 목록 페이지 연동
     - [x]  상품 목록 표시
-- [ ]  상품 관리 CRUD API
+- [x]  상품 관리 CRUD API
     - [x]  Create
     - [x]  Read
     - [x]  Update
-    - [ ]  Delete
+    - [x]  Delete
 - [ ]  관리자 도구 페이지 연동
     - [x]  `/admin` url로 관리자 도구 페이지 조회
     - [ ]  상품 관리 CRUD API 연동

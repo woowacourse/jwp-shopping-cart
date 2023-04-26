@@ -51,7 +51,7 @@ class ProductControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("PUT /product")
+    @DisplayName("PUT /product/{id}")
     @Test
     void updateProduct() {
         Long id = productDao.insert(new Product("이오", 1000, null));
@@ -74,5 +74,18 @@ class ProductControllerTest {
                 () -> assertThat(product.getPrice()).isEqualTo(2000),
                 () -> assertThat(product.getImage()).isEqualTo("image")
         );
+    }
+
+    @DisplayName("DELETE /product/{id}")
+    @Test
+    void deleteProduct() {
+        Long id = productDao.insert(new Product("이오", 1000, null));
+
+        RestAssured.given().log().all()
+                .when().delete("/product/" + id)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+        assertThat(productDao.findById(id)).isNull();
     }
 }
