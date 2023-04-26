@@ -68,6 +68,7 @@ class ProductDaoTest {
     @DisplayName("상품을 수정한다.")
     @Test
     void shouldUpdateWhenRequest() {
+        //given
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -86,6 +87,8 @@ class ProductDaoTest {
                 1000,
                 "domain.kr"
         );
+
+        //when
         productDao.update(productToUpdate);
 
         Product productAfterUpdate = jdbcTemplate.queryForObject(
@@ -97,11 +100,46 @@ class ProductDaoTest {
                         resultSet.getString("image_url")
                 ), productId);
 
+        //then
         assertAll(
                 () -> assertThat(productAfterUpdate.getId()).isEqualTo(productToUpdate.getId()),
                 () -> assertThat(productAfterUpdate.getName()).isEqualTo(productToUpdate.getName()),
                 () -> assertThat(productAfterUpdate.getPrice()).isEqualTo(productToUpdate.getPrice()),
                 () -> assertThat(productAfterUpdate.getImageUrl()).isEqualTo(productToUpdate.getImageUrl())
         );
+    }
+
+    @DisplayName("상품을 삭제한다.")
+    @Test
+    void shouldDeleteWhenRequest() {
+
+        //given
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)", "당근", 1000, "domain.com");
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)", new String[]{"id"});
+            preparedStatement.setString(1, "사과");
+            preparedStatement.setLong(2, 100);
+            preparedStatement.setString(3, "domain.com");
+            return preparedStatement;
+        }, keyHolder);
+        long id = keyHolder.getKey().longValue();
+
+        //when
+        productDao.deleteById(id);
+
+        List<Product> products = jdbcTemplate.query(
+                "SELECT id, name, price, image_url FROM product",
+                (resultSet, rowNumber) -> new Product(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getLong("price"),
+                        resultSet.getString("image_url")
+                ));
+
+        //then
+        assertThat(products).hasSize(1);
     }
 }
