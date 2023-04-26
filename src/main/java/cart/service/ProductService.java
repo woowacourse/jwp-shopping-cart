@@ -34,8 +34,8 @@ public class ProductService {
     }
 
     @Transactional
-    public void editProduct(final ProductEditRequestDto productEditRequestDto) {
-        Product product = findProductById(productEditRequestDto.getId());
+    public void editProduct(final Long id, final ProductEditRequestDto productEditRequestDto) {
+        Product product = findProductById(id);
         product.edit(productEditRequestDto.getName(), productEditRequestDto.getImgUrl(), productEditRequestDto.getPrice());
 
         productRepository.update(product);

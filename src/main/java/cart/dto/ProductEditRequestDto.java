@@ -6,9 +6,6 @@ import javax.validation.constraints.PositiveOrZero;
 
 public class ProductEditRequestDto {
 
-    @PositiveOrZero(message = "상품의 ID값을 입력해주세요.")
-    private Long id;
-
     @NotBlank(message = "상품명은 공백일 수 없습니다.")
     private String name;
 
@@ -21,10 +18,6 @@ public class ProductEditRequestDto {
 
     public ProductEditRequestDto() {
 
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {
