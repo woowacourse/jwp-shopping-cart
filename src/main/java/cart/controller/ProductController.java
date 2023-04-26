@@ -5,13 +5,17 @@ import cart.domain.Product;
 import cart.dto.ErrorDto;
 import cart.dto.ProductDto;
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -31,6 +35,23 @@ public class ProductController {
     @PostMapping(path = "/add")
     public ResponseEntity<Void> create(@Valid @RequestBody ProductDto productDto) {
         productDao.insert(new Product(productDto.getName(), productDto.getImage(), productDto.getPrice()));
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(path = "/edit")
+    public ResponseEntity<Void> update(@Valid @RequestBody ProductDto productDto) {
+        productDao.update(new Product(
+                productDto.getId(),
+                productDto.getName(),
+                productDto.getImage(),
+                productDto.getPrice())
+        );
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@Positive @PathVariable Long id) {
+        productDao.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
