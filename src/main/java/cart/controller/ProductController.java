@@ -6,15 +6,11 @@ import cart.dto.ErrorDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -83,22 +79,24 @@ public class ProductController {
         return new ErrorDto(exception.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ErrorDto handleException(IllegalArgumentException exception) {
+        log.error("IllegalArgumentException message={}", exception.getMessage());
+        return new ErrorDto(exception.getMessage());
+    }
+
     @Getter
     @NoArgsConstructor
     private static class ProductAddRequest {
 
         @NotNull
-        @NotBlank(message = "상품 이름은 빈 문자열일 수 없습니다")
-        @Length(min = 1, max = 30, message = "상품 이름은 최소 1, 최대 30글자입니다.")
         private String name;
         @JsonProperty("image-url")
         @NotNull
-        @NotBlank(message = "이미지 URL은 빈 문자열일 수 없습니다")
-        @Length(max = 1000, message = "이미지 URL 길이가 너무 깁니다.")
         private String imageUrl;
-        @PositiveOrZero
-        @Max(value = 1_000_000_000, message = "상품 금액이 너무 큽니다.")
-        private int price;
+        @NotNull
+        private Integer price;
     }
 
     @Getter
@@ -106,18 +104,13 @@ public class ProductController {
     private static class ProductUpdateRequest {
 
         @NotNull
-        private long id;
+        private Long id;
         @NotNull
-        @NotBlank(message = "상품 이름은 빈 문자열일 수 없습니다")
-        @Length(min = 1, max = 30, message = "상품 이름은 최소 1, 최대 30글자입니다.")
         private String name;
-        @NotNull
-        @NotBlank(message = "이미지 URL은 빈 문자열일 수 없습니다")
-        @Length(max = 1000, message = "이미지 URL 길이가 너무 깁니다.")
         @JsonProperty("image-url")
+        @NotNull
         private String imageUrl;
-        @PositiveOrZero
-        @Max(value = 1_000_000_000, message = "상품 금액이 너무 큽니다.")
-        private int price;
+        @NotNull
+        private Integer price;
     }
 }
