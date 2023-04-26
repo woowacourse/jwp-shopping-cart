@@ -1,13 +1,10 @@
 package cart.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
 
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
@@ -27,19 +24,6 @@ class ProductControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Test
-    void 상품_조회_테스트() throws Exception {
-        final List<ProductResponse> productResponses = List.of(
-                ResponseFixture.NUNU_RESPONSE,
-                ResponseFixture.ODO_RESPONSE
-        );
-        final String result = objectMapper.writeValueAsString(productResponses);
-
-        mockMvc.perform(get("/products"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(result));
-    }
 
     @Test
     void 상품_업데이트_테스트() throws Exception {

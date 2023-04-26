@@ -2,6 +2,8 @@ package cart.dto;
 
 import java.util.Objects;
 
+import cart.domain.Product;
+
 public class ProductResponse {
     private final long id;
     private final String name;
@@ -13,6 +15,15 @@ public class ProductResponse {
         this.name = name;
         this.image = image;
         this.price = price;
+    }
+
+    public static ProductResponse from(final Product product) {
+        return new ProductResponse(
+                product.getProductId().getValue(),
+                product.getProductName().getValue(),
+                product.getProductImage().getValue(),
+                product.getProductPrice().getValue()
+        );
     }
 
     public long getId() {
