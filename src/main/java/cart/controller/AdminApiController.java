@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/admin")
 public class AdminApiController {
@@ -24,7 +26,7 @@ public class AdminApiController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Void> insertProduct(@RequestBody final ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> insertProduct(@Valid @RequestBody final ProductRequestDto productRequestDto) {
         productService.insertProduct(new ProductDto.Builder()
                 .name(productRequestDto.getName())
                 .price(productRequestDto.getPrice())
@@ -35,7 +37,7 @@ public class AdminApiController {
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable final Long id, @RequestBody final ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> updateProduct(@PathVariable final Long id,@Valid @RequestBody final ProductRequestDto productRequestDto) {
         productService.updateById(new ProductDto.Builder()
                 .id(id)
                 .name(productRequestDto.getName())
