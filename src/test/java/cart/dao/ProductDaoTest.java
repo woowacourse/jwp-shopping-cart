@@ -1,12 +1,10 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.entity.Product;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,14 +42,13 @@ public class ProductDaoTest {
         assertDoesNotThrow(
                 () -> productDao.save(
                         new Product.Builder()
-                                .name("a")
-                                .price(100)
-                                .imageUrl("미성씨")
+                                .name("샐러드")
+                                .price(10000)
+                                .imageUrl("밋엉씨")
                                 .build()
                 )
         );
     }
-
 
     @Test
     @DisplayName("상품 삭제")
@@ -59,6 +56,18 @@ public class ProductDaoTest {
         System.out.println("abc");
         assertDoesNotThrow(
                 () -> productDao.deleteById(1)
+        );
+    }
+
+    @Test
+    @DisplayName("상품 수정")
+    void updateById() {
+        assertDoesNotThrow(
+                () -> productDao.updateById(2, new Product.Builder()
+                        .name("치킨")
+                        .price(10000)
+                        .imageUrl("밋엉")
+                        .build())
         );
     }
 
