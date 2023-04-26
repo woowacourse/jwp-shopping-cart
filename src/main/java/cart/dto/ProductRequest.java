@@ -1,5 +1,6 @@
 package cart.dto;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -13,6 +14,7 @@ public class ProductRequest {
 
     @NotNull
     @Positive
+    @Max(1_000_000_000)
     private final Integer price;
 
     public ProductRequest(String image, String name, Integer price) {
