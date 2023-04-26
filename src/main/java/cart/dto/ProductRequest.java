@@ -1,14 +1,14 @@
 package cart.dto;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 public class ProductRequest {
 
-    @NotNull
+    @NotBlank(message = "상품명은 공백일 수 없습니다.")
     private final String name;
     private final String imageUrl;
-    @Positive
+    @Positive(message = "가격은 0보다 커야 합니다.")
     private final int price;
 
     public ProductRequest(final String name, final String imageUrl, final int price) {

@@ -24,6 +24,7 @@ const hideAddModal = () => {
 }
 
 const form = document.getElementById('form');
+const errorText = document.getElementById('error')
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -67,6 +68,7 @@ const updateProduct = (product) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
+        showError(error.response['data']);
     });
 };
 
@@ -81,3 +83,7 @@ const deleteProduct = (id) => {
         console.error(error);
     });
 };
+
+const showError = (errorMessage) => {
+    errorText.innerHTML = errorMessage;
+}
