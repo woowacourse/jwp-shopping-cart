@@ -1,17 +1,19 @@
 package cart.service;
 
-import cart.dao.ProductDao;
-import cart.entiy.ProductEntity;
+import cart.domain.Product;
+import cart.repository.ProductRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CreateProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public CreateProductService(final ProductDao productDao) {
-        this.productDao = productDao;
+    public CreateProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public ProductEntity create(final String name, final String image, final int price) {
-        return productDao.save(new ProductEntity(name, image, price));
+    public Product create(final String name, final String image, final int price) {
+        return productRepository.save(new Product(name, image, price));
     }
 }

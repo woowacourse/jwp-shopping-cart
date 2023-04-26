@@ -1,7 +1,9 @@
 package cart.entiy;
 
+import cart.domain.Product;
+
 public class ProductEntity {
-    private final Long id;
+    private final ProductEntityId id;
     private final String name;
     private final String image;
     private final int price;
@@ -10,14 +12,30 @@ public class ProductEntity {
         this(null, name, image, price);
     }
 
+    public ProductEntity(final Long id, final ProductEntity other) {
+        this(id, other.name, other.image, other.price);
+    }
+
     public ProductEntity(final Long id, final String name, final String image, final int price) {
-        this.id = id;
+        this.id = new ProductEntityId(id);
         this.name = name;
         this.image = image;
         this.price = price;
     }
 
-    public Long getId() {
+    public static ProductEntity from(final Product product) {
+        return new ProductEntity(
+                product.getProductId().getValue(),
+                product.getProductName().getValue(),
+                product.getProductImage().getValue(),
+                product.getProductPrice().getValue());
+    }
+
+    public Product toDomain() {
+        return new Product(id.getValue(), name, image, price);
+    }
+
+    public ProductEntityId getId() {
         return id;
     }
 
