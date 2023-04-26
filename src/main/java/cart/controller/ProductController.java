@@ -40,7 +40,11 @@ public class ProductController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<Void> create(@Valid @RequestBody ProductAddRequest productDto) {
-        productDao.insert(new Product(productDto.getName(), productDto.getImageUrl(), productDto.getPrice()));
+        productDao.insert(new Product(
+                productDto.getName(),
+                productDto.getImageUrl(),
+                productDto.getPrice()
+        ));
         return ResponseEntity.ok().build();
     }
 
@@ -50,8 +54,8 @@ public class ProductController {
                 productDto.getId(),
                 productDto.getName(),
                 productDto.getImageUrl(),
-                productDto.getPrice())
-        );
+                productDto.getPrice()
+        ));
         return ResponseEntity.ok().build();
     }
 
