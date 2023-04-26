@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.business.domain;
 
 import java.net.MalformedURLException;
 import java.net.URL;

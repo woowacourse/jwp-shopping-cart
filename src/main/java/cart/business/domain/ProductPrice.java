@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.business.domain;
 
 public class ProductPrice {
 
