@@ -28,10 +28,9 @@ public class ProductListService {
         this.productDao.insert(product);
     }
     
-    public ProductDto update(final String name, final ProductDto productDto) {
-        final Product originalProduct = this.productDao.findByName(name);
-        final Product updatedProduct = originalProduct.update(productDto);
-        this.productDao.update(updatedProduct);
-        return ProductDto.create(updatedProduct);
+    public ProductDto update(final ProductDto productDto) {
+        final Product product = Product.create(productDto);
+        this.productDao.update(product);
+        return ProductDto.create(product);
     }
 }
