@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -60,6 +61,7 @@ class DBProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("상품 정보를 DB에 저장한다.")
     void save() {
         ProductDto product3 = new ProductDto(null, "name3", "url3", 3000);
         Long id3 = productRepository.save(product3);
@@ -70,6 +72,7 @@ class DBProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("ID로 상품 정보를 조회한다.")
     void findById() {
         ProductDto response = productRepository.findById(id1);
         assertAll(
@@ -81,11 +84,13 @@ class DBProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("모든 상품 정보를 조회한다.")
     void findAll() {
         assertThat(productRepository.findAll().size()).isEqualTo(2);
     }
 
     @Test
+    @DisplayName("ID에 해당하는 상품 정보를 수정한다.")
     void updateById() {
         ProductDto product = new ProductDto(id2, "name4", "url4", 4000);
         productRepository.updateById(product, id2);
@@ -107,6 +112,7 @@ class DBProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("ID에 해당하는 상품 정보를 삭제한다.")
     void deleteById() {
         productRepository.deleteById(id2);
 
