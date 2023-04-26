@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dto.ProductCreationRequest;
+import cart.dto.ProductModificationRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,5 +42,18 @@ class AdminControllerTest {
                 .when().post("/admin/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("상품을 수정하면 상태코드 204를 반환하는지 확인한다")
+    @Test
+    void putProductsTest() {
+        ProductModificationRequest request = new ProductModificationRequest(1L, "pbo", "image", 10000000);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/admin/products")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
