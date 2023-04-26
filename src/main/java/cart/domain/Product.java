@@ -7,7 +7,6 @@ public class Product {
     private final ProductPrice price;
     private final ProductImage image;
 
-
     public Product(String name, int price, String image) {
         this(null, name, price, image);
     }
