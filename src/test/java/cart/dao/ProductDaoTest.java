@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.entity.ProductEntity;
+import cart.dao.entity.ProductEntity.Builder;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,13 +45,30 @@ class ProductDaoTest {
     @Test
     void save() {
         // when
-        productDao.insert(productEntity);
+        long savedId = productDao.insert(productEntity);
+
+        // then
+        assertThat(productDao.findAll().get(0).getId()).isEqualTo(savedId);
+    }
+
+    @DisplayName("상품 정보를 수정한다.")
+    @Test
+    void update() {
+        // given
+        long savedId = productDao.insert(productEntity);
+        ProductEntity updateProductEntity = new Builder()
+                .id(savedId)
+                .name("cuteBaronDoll")
+                .price(100000)
+                .imgUrl("https://avatars.githubusercontent.com/u/70891072?v=4")
+                .build();
+
+        // when
+        productDao.update(updateProductEntity);
 
         // then
         assertThat(productDao.findAll().get(0))
                 .usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(productEntity);
-        assertThat(productDao.findAll()).hasSize(1);
+                .isEqualTo(updateProductEntity);
     }
 }

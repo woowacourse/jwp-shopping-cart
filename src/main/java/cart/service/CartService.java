@@ -28,4 +28,9 @@ public class CartService {
         ProductEntity productEntity = productRequest.toEntity();
         productDao.insert(productEntity);
     }
+
+    public void modify(ProductRequest productRequest, long id) {
+        ProductEntity productEntity = productRequest.toEntityBy(id);
+        productDao.update(productEntity);
+    }
 }

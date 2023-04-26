@@ -22,6 +22,15 @@ public class ProductRequest {
                 .build();
     }
 
+    public ProductEntity toEntityBy(long id) {
+        return new ProductEntity.Builder()
+                .name(name)
+                .imgUrl(imgUrl)
+                .price(price)
+                .id(id)
+                .build();
+    }
+
     public String getName() {
         return name;
     }
