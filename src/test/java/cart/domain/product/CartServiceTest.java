@@ -19,7 +19,7 @@ class CartServiceTest {
     private ProductRepository productRepository;
 
     @Test
-    void getAllProductsTest() {
+    void getAllProducts() {
         Product pizza = TestFixture.PIZZA;
         Product chicken = TestFixture.CHICKEN;
         productRepository.save(pizza);
