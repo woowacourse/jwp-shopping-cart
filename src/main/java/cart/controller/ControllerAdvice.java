@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.controller.dto.ExceptionResponse;
+import cart.exception.ItemException;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -43,6 +44,12 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
                                                                   WebRequest request) {
         LOGGER.warn(ex.getMessage());
         return ResponseEntity.badRequest().body(new ExceptionResponse<>(NOT_READABLE_MESSAGE));
+    }
+
+    @ExceptionHandler(ItemException.class)
+    private ResponseEntity<ExceptionResponse> handleItemException(ItemException ex) {
+        LOGGER.warn(ex.getMessage());
+        return ResponseEntity.status(ex.getErrorStatus()).body(new ExceptionResponse<>(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,5 +1,8 @@
 package cart.model;
 
+import cart.exception.ErrorStatus;
+import cart.exception.ItemException;
+
 public class Item {
 
     private static final int MIN_LENGTH = 1;
@@ -23,13 +26,13 @@ public class Item {
         int length = name.length();
 
         if (length < MIN_LENGTH || length > MAX_LENGTH) {
-            throw new IllegalArgumentException("상품의 이름은 최소 1자, 최대 50자까지 가능합니다.");
+            throw new ItemException(ErrorStatus.NAME_RANGE_ERROR);
         }
     }
 
     private void validatePrice(int price) {
         if (price < MIN_PRICE || price > MAX_PRICE) {
-            throw new IllegalArgumentException("상품의 금액은 최소 10원, 최대 1억원 까지 가능합니다.");
+            throw new ItemException(ErrorStatus.PRICE_RANGE_ERROR);
         }
     }
 
