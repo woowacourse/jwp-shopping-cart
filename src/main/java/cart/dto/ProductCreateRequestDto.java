@@ -1,9 +1,19 @@
 package cart.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+
 public class ProductCreateRequestDto {
 
+    @NotBlank(message = "상품명은 공백일 수 없습니다.")
     private String name;
-    private int price;
+
+    @NotNull(message = "가격은 공백일 수 없습니다.")
+    @PositiveOrZero(message = "가격은 0원 이상이어야 합니다.")
+    private Integer price;
+
+    @NotNull(message = "상품 이미지 url을 넣어주세요.")
     private String imgUrl;
 
     public ProductCreateRequestDto() {
