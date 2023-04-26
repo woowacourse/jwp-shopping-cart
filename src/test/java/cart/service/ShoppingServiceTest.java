@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,6 +38,55 @@ class ShoppingServiceTest {
         productDto = new ProductDto(1L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN);
     }
 
+    @DisplayName("상품을 저장한다")
+    @Test
+    void save() {
+        // given
+        final List<Product> products = List.of(new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN));
+        when(productDao.insert(any())).thenReturn(1L);
+        when(productDao.findAll()).thenReturn(products);
+
+        // when
+        shoppingService.save(productDto);
+
+        // then
+        final List<ProductDto> resultProducts = shoppingService.getProducts();
+        assertAll(
+                () -> assertThat(resultProducts).hasSize(1),
+                () -> assertThat(resultProducts.get(0).getName()).isEqualTo("스테이크")
+        );
+    }
+
+    @DisplayName("존재하는 상품을 조회한다")
+    @Test
+    void findProduct_success() {
+        // given
+        final Product product = new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN);
+        when(productDao.findById(any())).thenReturn(Optional.of(product));
+
+        // when
+        final ProductDto productDto = shoppingService.getById(1L);
+
+        // then
+        assertAll(
+                () -> assertThat(productDto.getName()).isEqualTo("스테이크"),
+                () -> assertThat(productDto.getImageUrl()).isEqualTo("steakUrl"),
+                () -> assertThat(productDto.getPrice()).isEqualTo(40000),
+                () -> assertThat(productDto.getCategory()).isEqualTo(ProductCategory.WESTERN)
+        );
+    }
+
+    @DisplayName("존재하지 않는 상품을 조회하면 예외가 발생한다")
+    @Test
+    void findProduct_fail() {
+        // given
+        when(productDao.findById(any())).thenReturn(Optional.empty());
+
+        // when, then
+        assertThatThrownBy(() -> shoppingService.getById(1L))
+                .isInstanceOf(GlobalException.class);
+    }
+
     @DisplayName("전체 상품을 조회한다")
     @Test
     void getProducts() {
@@ -57,25 +107,6 @@ class ShoppingServiceTest {
                 () -> assertThat(resultProducts.get(0).getName()).isEqualTo("치킨"),
                 () -> assertThat(resultProducts.get(1).getName()).isEqualTo("초밥"),
                 () -> assertThat(resultProducts.get(2).getName()).isEqualTo("스테이크")
-        );
-    }
-
-    @DisplayName("상품을 저장한다")
-    @Test
-    void save() {
-        // given
-        final List<Product> products = List.of(new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN));
-        when(productDao.insert(any())).thenReturn(1L);
-        when(productDao.findAll()).thenReturn(products);
-
-        // when
-        shoppingService.save(productDto);
-
-        // then
-        final List<ProductDto> resultProducts = shoppingService.getProducts();
-        assertAll(
-                () -> assertThat(resultProducts).hasSize(1),
-                () -> assertThat(resultProducts.get(0).getName()).isEqualTo("스테이크")
         );
     }
 
@@ -119,24 +150,5 @@ class ShoppingServiceTest {
         // when, then
         assertThatThrownBy(() -> shoppingService.delete(1L))
                 .isInstanceOf(GlobalException.class);
-    }
-
-    @DisplayName("상품을 조회한다")
-    @Test
-    void findById() {
-        // given
-        final Product product = new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN);
-        when(productDao.findById(any())).thenReturn(product);
-
-        // when
-        final ProductDto productDto = shoppingService.getById(1L);
-
-        // then
-        assertAll(
-                () -> assertThat(productDto.getName()).isEqualTo("스테이크"),
-                () -> assertThat(productDto.getImageUrl()).isEqualTo("steakUrl"),
-                () -> assertThat(productDto.getPrice()).isEqualTo(40000),
-                () -> assertThat(productDto.getCategory()).isEqualTo(ProductCategory.WESTERN)
-        );
     }
 }

@@ -8,6 +8,7 @@ import cart.persistence.entity.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +48,11 @@ public class ShoppingService {
     }
 
     public ProductDto getById(final Long id) {
-        final Product product = productDao.findById(id);
+        final Optional<Product> productById = productDao.findById(id);
+        if (productById.isEmpty()) {
+            throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+        final Product product = productById.get();
         return new ProductDto(product.getId(), product.getName(), product.getImageUrl(),
                 product.getPrice(), product.getCategory());
     }
