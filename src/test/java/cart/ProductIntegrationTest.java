@@ -83,4 +83,19 @@ public class ProductIntegrationTest {
         
         assertThat(deleteResult.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
+    
+    @Test
+    @DisplayName("에러 발생시 400코드 반환 테스트")
+    void errorTest() {
+        final RequestProductDto requestProductDto = new RequestProductDto("333333에코3333333", "http://echo", 1000);
+        final var result = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestProductDto)
+                .when()
+                .put("/admin/product/update/1")
+                .then()
+                .extract();
+        
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 }
