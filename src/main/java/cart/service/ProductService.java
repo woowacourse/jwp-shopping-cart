@@ -33,11 +33,11 @@ public class ProductService {
 
     public void deleteProduct(final long id) {
         validateExistData(id);
-        
+
         productDao.delete(id);
     }
 
-    private void validateExistData(final Long id) {
+    private void validateExistData(final long id) {
         if (!productDao.isExist(id)) {
             throw new IllegalArgumentException("존재하지 않는 id입니다.");
         }
