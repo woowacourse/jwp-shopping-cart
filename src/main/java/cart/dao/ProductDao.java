@@ -64,8 +64,8 @@ public class ProductDao {
         jdbcTemplate.update(sql, paramSource);
     }
 
-    public void deleteProduct(Long productId) {
-        String sql = "delete PRODUCT where product_id = :product_id";
+    public void deleteProduct(long productId) {
+        String sql = "delete from PRODUCT where product_id = :product_id";
         SqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("product_id", productId);
 

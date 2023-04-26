@@ -65,6 +65,7 @@ class ProductDaoTest {
         //todo : 테스트를 위한 사전 상황을 어떻게 할지.
         Product product = Product.of("chicken", "imagelink", 100);
         long productId = productDao.save(product);
+        assertThat(productDao.findAllProducts()).hasSize(1);
 
         productDao.deleteProduct(productId);
         assertThat(productDao.findAllProducts()).isEmpty();
