@@ -50,4 +50,15 @@ class ProductServiceTest {
 
         assertThat(id).isEqualTo(3L);
     }
+
+    @Test
+    void 상품_수정() {
+        final long id = 2L;
+        final String newProductName = "salmonSalad";
+        
+        productService.updateProduct(id, newProductName, 20000, "연어 샐러드 이미지");
+
+        final Product updatedProduct = productDao.findById(id);
+        assertThat(updatedProduct.getName()).isEqualTo(newProductName);
+    }
 }

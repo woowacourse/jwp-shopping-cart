@@ -22,4 +22,10 @@ public class ProductService {
         final Product product = new Product(name, price, imageUrl);
         return productDao.insert(product);
     }
+
+    public void updateProduct(final long id, final String name, final int price, final String imageUrl) {
+        final Product newProduct = new Product(id, name, price, imageUrl);
+
+        productDao.update(newProduct);
+    }
 }
