@@ -3,6 +3,7 @@ package cart.controller;
 import cart.dto.ProductDto;
 import cart.service.ProductManagementService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,13 +34,13 @@ public class AdminController {
 
     @PostMapping("/admin/products")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody final ProductDto productDto) {
+    public void createProduct(@RequestBody @Valid final ProductDto productDto) {
         productManagementService.addProduct(productDto);
     }
 
     @PatchMapping("/admin/products/{product_id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void updateProduct(@PathVariable("product_id") final Long id, @RequestBody final ProductDto productDto) {
+    public void updateProduct(@PathVariable("product_id") final Long id, @RequestBody @Valid final ProductDto productDto) {
         final ProductDto updatedProductDto
                 = new ProductDto(id, productDto.getName(), productDto.getImageUrl(), productDto.getPrice());
         productManagementService.updateProduct(updatedProductDto);
