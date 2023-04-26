@@ -18,12 +18,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static cart.factory.ProductFactory.createOtherProduct;
+import static cart.factory.ProductFactory.createProduct;
+import static cart.factory.ProductRequestDtoFactory.createProductCreateRequest;
+import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,8 +43,10 @@ class ProductServiceMockTest {
     void find_products_success() {
         // given
         List<Product> givenProducts = List.of(
-                Product.from(1L, "라면", "imgUrl", 10000),
-                Product.from(2L, "김밥", "imgUrl", 10000));
+                createProduct(),
+                createOtherProduct()
+        );
+
         given(productRepository.findAll()).willReturn(givenProducts);
 
         // when
@@ -66,7 +71,7 @@ class ProductServiceMockTest {
     @DisplayName("상품을 추가한다.")
     void create_product_success() {
         // given
-        ProductCreateRequestDto req = new ProductCreateRequestDto("치킨", 1000, "url");
+        ProductCreateRequestDto req = createProductCreateRequest();
 
         // when
         productService.createProduct(req);
@@ -83,17 +88,16 @@ class ProductServiceMockTest {
         Product product = Product.from(id, "치킨", "imgUrl", 1000);
         given(productRepository.findById(id)).willReturn(Optional.of(product));
 
-        ProductEditRequestDto req = new ProductEditRequestDto("치킨 수정", 10000, "urlEdit");
-
+        ProductEditRequestDto req = createProductEditRequest();
         // when
         productService.editProduct(id, req);
 
         // then
         verify(productRepository).update(product);
         assertAll(
-                () -> assertThat(product.getName()).isEqualTo("치킨 수정"),
-                () -> assertThat(product.getPrice()).isEqualTo(10000),
-                () -> assertThat(product.getImgUrl()).isEqualTo("urlEdit")
+                () -> assertThat(product.getName()).isEqualTo(req.getName()),
+                () -> assertThat(product.getPrice()).isEqualTo(req.getPrice()),
+                () -> assertThat(product.getImgUrl()).isEqualTo(req.getImgUrl())
         );
     }
 
@@ -113,7 +117,7 @@ class ProductServiceMockTest {
     void delete_product_success() {
         // given
         Long id = 1L;
-        Product product = Product.from(id, "치킨", "imgUrl", 10000);
+        Product product = createProduct();
         given(productRepository.findById(id)).willReturn(Optional.of(product));
 
         // when
