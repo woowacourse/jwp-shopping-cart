@@ -15,6 +15,7 @@ public class ProductDto {
 
     private final String imageUrl;
 
+    @NotNull(message = "상품 가격은 비어있을 수 없습니다.")
     @Range(min = 0, max = 10_000_000, message = "상품 가격은 0 ~ 10,000,000원까지 가능합니다.")
     private final Integer price;
 

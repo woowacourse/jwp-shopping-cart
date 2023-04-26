@@ -2,11 +2,13 @@ package cart.controller.dto;
 
 import cart.exception.ErrorCode;
 
+import java.util.List;
+
 public class ErrorResponse {
     private final ErrorCode errorCode;
-    private final String errorMessage;
+    private final List<String> errorMessage;
 
-    public ErrorResponse(final ErrorCode errorCode, final String errorMessage) {
+    public ErrorResponse(final ErrorCode errorCode, final List<String> errorMessage) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
@@ -15,7 +17,7 @@ public class ErrorResponse {
         return errorCode;
     }
 
-    public String getErrorMessage() {
+    public List<String> getErrorMessage() {
         return errorMessage;
     }
 }

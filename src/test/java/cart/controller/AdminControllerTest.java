@@ -4,6 +4,7 @@ import cart.controller.dto.ProductDto;
 import cart.persistence.entity.ProductCategory;
 import cart.service.ShoppingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -22,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AdminController.class)
@@ -57,7 +59,6 @@ class AdminControllerTest {
         // when, then
         mockMvc.perform(get("/admin")
                         .contentType(MediaType.TEXT_HTML))
-                .andDo(print())
                 .andExpect(status().isOk());
     }
 
@@ -72,9 +73,27 @@ class AdminControllerTest {
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
-                .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void addProduct_fail() throws Exception {
+        final ProductDto productDto = new ProductDto(1L, "", "", null, null);
+        mockMvc.perform(post("/admin")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorMessage",
+                        containsInAnyOrder(
+                                "상품 이름의 길이는 1 ~ 25글자여야 합니다.",
+                                "상품 가격은 비어있을 수 없습니다.",
+                                "상품 카테고리는 비어있을 수 없습니다."
+                        )
+                ));
+    }
+
 
     @Test
     void updateProduct() throws Exception {
@@ -87,8 +106,25 @@ class AdminControllerTest {
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
-                .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateProduct_fail() throws Exception {
+        final ProductDto productDto = new ProductDto(1L, "", "", null, null);
+        mockMvc.perform(put("/admin/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorMessage",
+                        containsInAnyOrder(
+                                "상품 이름의 길이는 1 ~ 25글자여야 합니다.",
+                                "상품 가격은 비어있을 수 없습니다.",
+                                "상품 카테고리는 비어있을 수 없습니다."
+                        )
+                ));
     }
 
     @Test
@@ -99,7 +135,6 @@ class AdminControllerTest {
         // when, then
         mockMvc.perform(delete("/admin/{id}", 1L)
                         .contentType(MediaType.TEXT_HTML))
-                .andDo(print())
                 .andExpect(status().isOk());
     }
 }
