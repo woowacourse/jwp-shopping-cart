@@ -6,27 +6,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class CartController {
+@RequestMapping("/admin")
+public class AdminController {
 
     private final AdminService adminService;
 
-    public CartController(AdminService adminService) {
+    public AdminController(AdminService adminService) {
         this.adminService = adminService;
     }
 
-    @PostMapping("/admin/product")
+    @PostMapping("/products")
     public ResponseEntity<String> addProduct(@RequestBody ProductRequest productRequest) {
         adminService.addProduct(productRequest);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/admin/product/{id}")
+    @PostMapping("/products/{id}")
     public ResponseEntity<String> updateProduct(@RequestBody ProductRequest productRequest, @PathVariable int id) {
         adminService.updateProduct(productRequest, id);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/admin/product/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable int id) {
         adminService.deleteProduct(id);
         return ResponseEntity.ok().build();

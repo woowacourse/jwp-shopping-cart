@@ -48,7 +48,7 @@ form.addEventListener('submit', (event) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '/admin/product',
+        url: '/admin/products/',
         method: "POST",
         headers: {
             "Content-Type": "application/json;charset=UTF-8"
@@ -66,7 +66,7 @@ const updateProduct = (product) => {
     const {id} = product;
 
     axios.request({
-        url: '/admin/product/'+product.id,
+        url: '/admin/products/' + product.id,
         method: "POST",
         headers: {
             "Content-Type": "application/json;charset=UTF-8"
@@ -82,8 +82,8 @@ const updateProduct = (product) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: '/admin/product/' + id,
-            method: "DELETE",
+        url: '/admin/products/' + id,
+        method: "DELETE",
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
