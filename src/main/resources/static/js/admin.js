@@ -48,7 +48,7 @@ const createProduct = (product) => {
     const {name, imgUrl, price} = product;
 
     axios.request({
-        url: '/admin/products',
+        url: '/products',
         method: 'POST',
         data: {
             "name": name, "imgUrl": imgUrl, "price": price
@@ -64,7 +64,7 @@ const updateProduct = (product) => {
     const {id, name, imgUrl, price} = product;
 
     axios.request({
-        url: '/admin/products/' + id, method: 'PATCH', data: {
+        url: '/products/' + id, method: 'PATCH', data: {
             "name": name, "imgUrl": imgUrl, "price": price
         }
     }).then((response) => {
@@ -76,7 +76,7 @@ const updateProduct = (product) => {
 
 const deleteProduct = (id) => {
     axios.request({
-        url: '/admin/products/' + id,
+        url: '/products/' + id,
         method: 'DELETE'
     }).then((response) => {
         window.location.reload();

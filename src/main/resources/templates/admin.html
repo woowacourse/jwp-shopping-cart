@@ -35,7 +35,7 @@
         <tr th:each="product : ${products}">
             <td th:text="${product.id}"></td>
             <td th:text="${product.name}"></td> <!-- 상품 이름 -->
-            <td th:text="${product.price}"></td> <!-- 상품 가격 -->
+            <td th:text="${product.price} + '원'"></td> <!-- 상품 가격 -->
             <td>
                 <img th:src="${product.imgUrl}" style="max-width: 100px;"> <!-- 상품 이미지 -->
             </td>
