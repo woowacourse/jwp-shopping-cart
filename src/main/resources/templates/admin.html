@@ -45,7 +45,7 @@
       <td th:text="${product.description}"></td> <!-- 상품 설명 -->
       <td th:text="${product.categoryNames}"></td> <!-- 상품 카테코리 -->
       <td>
-        <button th:onclick="showEditModal([[${product}]])">수정</button>
+        <button th:onclick="showEditModal([[${product}]],[[${categories}]])">수정</button>
         <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
       </td>
     </tr>
@@ -58,25 +58,25 @@
       <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
       <form id="form">
         <label for="name">상품명</label><br>
-        <input type="text" id="name" name="name" required><br>
+        <input class="productInfo" type="text" id="name" name="name" required><br>
 
         <label for="price">가격</label><br>
-        <input type="number" id="price" name="price" required><br>
+        <input class="productInfo" type="number" id="price" name="price" required><br>
 
         <label for="image-url">이미지 URL</label><br>
-        <input type="text" id="image-url" name="imageUrl" required><br>
+        <input class="productInfo" type="text" id="image-url" name="imageUrl" required><br>
 
         <label for="description">설명</label><br>
-        <input type="text" id="description" name="description" required><br>
+        <input class="productInfo" type="text" id="description" name="description" required><br>
 
         <h4>카테고리 (다중 선택 가능)</h4>
         <div th:each="category : ${categories}" class="form-check">
           <label th:for="'categoryIds'+${category.id}" class="form-check-lable"
                  th:text="${category.name}"
                  style="display: inline-block;"></label>
-          <input type="checkbox" th:id="'categoryIds'+${category.id}"
-                 th:name="'categoryIds'+${category.id}"
-                 class="form-check-input" th:value="${category.id}">
+          <input class="category form-check-input" type="checkbox"
+                 th:id="'categoryIds'+${category.id}"
+                 th:name="${category.id}" th:value="${category.id}">
         </div>
         <button type="submit">제출</button>
       </form>

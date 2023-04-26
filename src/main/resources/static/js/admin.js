@@ -1,19 +1,34 @@
 const modal = document.getElementById('modal');
 
 const showAddModal = () => {
+    const categoriesInfo = modal.getElementsByClassName("category");
+    for (const categoryInfo of categoriesInfo) {
+        categoryInfo.removeAttribute("checked");
+    }
     modal.dataset.formType = 'add';
     modal.style.display = 'block';
 };
 
-const showEditModal = (product) => {
-    const elements = modal.getElementsByTagName('input');
-    for (const element of elements) {
-        element.value = product[element.getAttribute('name')];
+const showEditModal = (product, categories) => {
+        const productInfos = modal.getElementsByClassName("productInfo");
+        console.log(product);
+        console.log(typeof product.categoryNames)
+        for (const productInfo of productInfos) {
+            productInfo.value = product[productInfo.getAttribute('name')];
+        }
+        const categoriesInfo = modal.getElementsByClassName("category");
+        for (const category of categoriesInfo) {
+            let currentCategory = categories[category.getAttribute('name') - 1];
+            category.value = currentCategory.id;
+            if (product.categoryNames.includes(currentCategory.name)) {
+                category.setAttribute("checked", "checked");
+            }
+        }
+        modal.dataset.formType = 'edit';
+        modal.dataset.productId = product.id;
+        modal.style.display = 'block';
     }
-    modal.dataset.formType = 'edit';
-    modal.dataset.productId = product.id;
-    modal.style.display = 'block';
-};
+;
 
 const hideAddModal = () => {
     modal.style.display = 'none';
@@ -47,6 +62,7 @@ form.addEventListener('submit', (event) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     const {name, imageUrl, price, description, ...categoryIds} = product;
+
     axios.request({
         url: 'http://localhost:8080/products',
         method: 'post',
@@ -66,10 +82,18 @@ const createProduct = (product) => {
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id, name, imageUrl, price, description, ...categoryIds} = product;
 
     axios.request({
-        url: '',
+        url: 'http://localhost:8080/products/' + id,
+        method: 'put',
+        data: {
+            "name": name,
+            "imageUrl": imageUrl,
+            "price": price,
+            "description": description,
+            "categoryIds": Object.values(categoryIds).map(Number)
+        }
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -80,7 +104,8 @@ const updateProduct = (product) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: '',
+        url: 'http://localhost:8080/products/' + id,
+        method: 'delete',
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
