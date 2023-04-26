@@ -59,9 +59,9 @@ class JdbcItemDaoTest {
     @Test
     @DisplayName("상품 정보를 수정할 수 있다.")
     void update() {
-        Item item = new Item(2L, "햄버거", "c", 2000);
+        CreateItem item = new CreateItem("햄버거", "c", 2000);
 
-        itemDao.update(item);
+        itemDao.update(2L, item);
 
         List<Item> items = itemDao.findAll();
 
