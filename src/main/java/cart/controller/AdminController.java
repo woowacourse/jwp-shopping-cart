@@ -1,36 +1,35 @@
 package cart.controller;
 
-import cart.dao.ItemDao;
-import cart.entity.CreateItem;
-import cart.entity.Item;
+import cart.dto.ItemRequest;
+import cart.service.ItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    private final ItemDao itemDao;
+    private final ItemService itemService;
 
-    public AdminController(final ItemDao itemDao) {
-        this.itemDao = itemDao;
+    public AdminController(final ItemService itemService) {
+        this.itemService = itemService;
     }
 
     @GetMapping
     public String displayItemList(Model model) {
-        List<Item> items = itemDao.findAll();
-        model.addAttribute("products", items);
+        model.addAttribute("products", itemService.findAll());
         return "admin";
     }
 
     @PostMapping("/items/add")
-    public String addItem(@RequestBody CreateItem createItem) {
-        itemDao.save(createItem);
+    public String addItem(@RequestBody ItemRequest itemRequest) {
+        itemService.save(itemRequest);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/items/edit/{itemId}")
+    public String editItem(@PathVariable Long itemId, @RequestBody ItemRequest itemRequest) {
+        itemService.updateItem(itemId, itemRequest);
         return "redirect:/admin";
     }
 }

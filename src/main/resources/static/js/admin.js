@@ -58,9 +58,8 @@ const createProduct = (product) => {
 const updateProduct = (product) => {
     const {id} = product;
 
-    axios.request({
-        url: '',
-    }).then((response) => {
+    axios.post("/admin/items/edit/" + id, product
+    ).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);

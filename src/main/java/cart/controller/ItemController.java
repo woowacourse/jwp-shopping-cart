@@ -1,25 +1,24 @@
 package cart.controller;
 
-import cart.dao.ItemDao;
-import cart.entity.Item;
+import cart.dto.ItemRequest;
+import cart.service.ItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.List;
+import javax.annotation.PostConstruct;
 
 @Controller
 public class ItemController {
-    private final ItemDao itemDao;
+    private final ItemService itemService;
 
-    public ItemController(final ItemDao itemDao) {
-        this.itemDao = itemDao;
+    public ItemController(final ItemService itemService) {
+        this.itemService = itemService;
     }
 
     @GetMapping("/")
     public String displayItemList(Model model) {
-        List<Item> items = itemDao.findAll();
-        model.addAttribute("products", items);
+        model.addAttribute("products", itemService.findAll());
         return "index";
     }
 }
