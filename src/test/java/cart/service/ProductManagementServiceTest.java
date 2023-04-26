@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductManagementServiceTest {
@@ -44,6 +44,18 @@ class ProductManagementServiceTest {
                 () -> assertThat(productDtos.get(1).getName()).isEqualTo("pizza"),
                 () -> assertThat(productDtos.get(1).getImage()).isEqualTo("image2"),
                 () -> assertThat(productDtos.get(1).getPrice()).isEqualTo(20000)
+        );
+    }
+
+    @DisplayName("상품 데이터가 잘 등록되는지 확인한다")
+    @Test
+    void saveTest() {
+        final ProductDto productDto = ProductDto.of("pobi_doll", "image", 10000000);
+        doNothing().when(productDao).insert(any());
+        managementService.save(productDto);
+
+        assertAll(
+                () -> verify(productDao, times(1)).insert(any())
         );
     }
 }
