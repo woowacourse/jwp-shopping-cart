@@ -47,10 +47,6 @@ public class Product {
         return this.price.getPrice();
     }
 
-    public boolean isEqualsId(Long id) {
-        return Objects.equals(this.id, id);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

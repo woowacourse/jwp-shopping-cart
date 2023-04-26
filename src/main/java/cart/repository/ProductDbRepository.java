@@ -21,7 +21,7 @@ public class ProductDbRepository implements ProductRepository {
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     @Autowired
-    public ProductDbRepository(JdbcTemplate jdbcTemplate) {
+    public ProductDbRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("product");
@@ -35,7 +35,7 @@ public class ProductDbRepository implements ProductRepository {
     }
 
     @Override
-    public Optional<Product> findById(Long id) {
+    public Optional<Product> findById(final Long id) {
         String sql = "SELECT id, name, price, img_url FROM product WHERE id = :id";
 
         return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource("id", id), getProductRowMapper()).stream()
@@ -43,19 +43,19 @@ public class ProductDbRepository implements ProductRepository {
     }
 
     @Override
-    public void add(Product product) {
+    public void add(final Product product) {
         BeanPropertySqlParameterSource source = new BeanPropertySqlParameterSource(product);
         simpleJdbcInsert.execute(source);
     }
 
     @Override
-    public void update(Product updateProduct) {
+    public void update(final Product updateProduct) {
         String sql = "UPDATE product SET name = ?, price = ?, img_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, updateProduct.getName(), updateProduct.getPrice(), updateProduct.getImgUrl(), updateProduct.getId());
     }
 
     @Override
-    public void delete(Product product) {
+    public void delete(final Product product) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, product.getId());
     }

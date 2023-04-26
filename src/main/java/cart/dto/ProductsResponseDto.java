@@ -9,7 +9,7 @@ public class ProductsResponseDto {
 
     private final List<ProductResponseDto> products;
 
-    private ProductsResponseDto(List<ProductResponseDto> products) {
+    private ProductsResponseDto(final List<ProductResponseDto> products) {
         this.products = products;
     }
 

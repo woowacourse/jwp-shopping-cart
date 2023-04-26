@@ -9,13 +9,14 @@ import java.util.Objects;
 
 @org.springframework.web.bind.annotation.ControllerAdvice
 public class ControllerAdvice {
+
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException exception) {
+    public ResponseEntity<String> handleProductNotFoundException(final ProductNotFoundException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<String> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         String defaultMessage = Objects.requireNonNull(exception.getBindingResult().getFieldError()).getDefaultMessage();
 
         return ResponseEntity.badRequest().body(defaultMessage);

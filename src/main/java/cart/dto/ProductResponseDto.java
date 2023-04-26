@@ -9,15 +9,22 @@ public class ProductResponseDto {
     private String imgUrl;
     private int price;
 
-    private ProductResponseDto(Long id, String name, String imgUrl, int price) {
+    private ProductResponseDto(final Long id,
+                               final String name,
+                               final String imgUrl,
+                               final int price) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
         this.price = price;
     }
 
-    public static ProductResponseDto from(Product product) {
-        return new ProductResponseDto(product.getId(), product.getName(), product.getImgUrl(), product.getPrice());
+    public static ProductResponseDto from(final Product product) {
+        return new ProductResponseDto(product.getId(),
+                product.getName(),
+                product.getImgUrl(),
+                product.getPrice()
+        );
     }
 
     public Long getId() {
