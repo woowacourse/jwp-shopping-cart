@@ -12,7 +12,7 @@ public class ItemRequest {
     @NotBlank(message = "이미지 URL은 공백이 입력될 수 없습니다.")
     private String imageUrl;
 
-    @Positive(message = "가격은 음수가 입력될 수 없습니다.")
+    @Positive(message = "가격은 양수만 입력할 수 있습니다.")
     @NotNull(message = "빈 값은 입력될 수 없습니다.")
     private Integer price;
 
