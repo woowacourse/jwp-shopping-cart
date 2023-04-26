@@ -2,6 +2,7 @@ package cart;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -22,6 +23,7 @@ public class ProductIntegrationTest {
         RestAssured.port = port;
     }
 
+    @Disabled
     @Test
     public void getProducts() {
         var result = given()

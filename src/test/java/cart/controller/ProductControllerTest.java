@@ -2,8 +2,7 @@ package cart.controller;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.CreateProductRequest;
-import cart.dto.UpdateProductRequest;
+import cart.dto.ProductRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +41,7 @@ class ProductControllerTest {
     @DisplayName("POST /product")
     @Test
     void createProduct() {
-        CreateProductRequest request = new CreateProductRequest("이오", 1000, null);
+        ProductRequest request = new ProductRequest("이오", 1000, null);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -57,12 +56,12 @@ class ProductControllerTest {
     void updateProduct() {
         Long id = productDao.insert(new Product("이오", 1000, null));
 
-        UpdateProductRequest request = new UpdateProductRequest(id, "애쉬", 2000, "image");
+        ProductRequest request = new ProductRequest("애쉬", 2000, "image");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put("/product")
+                .when().put("/product/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 

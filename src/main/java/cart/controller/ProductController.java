@@ -1,12 +1,12 @@
 package cart.controller;
 
-import cart.dto.CreateProductRequest;
-import cart.dto.UpdateProductRequest;
+import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/product")
@@ -19,14 +19,16 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody @Valid CreateProductRequest request) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest request) {
         productService.save(request.getName(), request.getPrice(), request.getImage());
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping
-    public ResponseEntity<Void> updateProduct(@RequestBody @Valid UpdateProductRequest request) {
-        productService.update(request.getId(), request.getName(), request.getPrice(), request.getImage());
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateProduct(
+            @PathVariable @NotNull Long id,
+            @RequestBody @Valid ProductRequest request) {
+        productService.update(id, request.getName(), request.getPrice(), request.getImage());
         return ResponseEntity.ok().build();
     }
 }
