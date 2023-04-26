@@ -1,5 +1,6 @@
 package cart.service;
 
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -70,11 +71,25 @@ class ProductServiceTest {
         );
     }
 
+    @Test
+    void 존재하지_않는_상품_수정시_예외_발생() {
+        assertThatIllegalArgumentException().isThrownBy(
+                () -> productService.updateProduct(10L, "name", 1234, "imageUrl")
+        ).withMessage("존재하지 않는 id입니다.");
+    }
+
     @ParameterizedTest
     @ValueSource(ints = {1, 2})
     void 상품_삭제(final long id) {
         productService.deleteProduct(id);
 
         assertThat(productService.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    void 존재하지_않는_상품_삭제시_예외_발생() {
+        assertThatIllegalArgumentException().isThrownBy(
+                () -> productService.deleteProduct(3L)
+        ).withMessage("존재하지 않는 id입니다.");
     }
 }

@@ -29,8 +29,6 @@ public class ProductDao {
     }
 
     public Product findById(final Long id) {
-        validateExistData(id);
-
         final String sql = "select id, name, price, image_url from Product where id = ?";
 
         return jdbcTemplate.queryForObject(sql, productRowMapper(), id);
@@ -53,10 +51,15 @@ public class ProductDao {
     }
 
     public void delete(final Long id) {
-        validateExistData(id);
         final String sql = "delete Product where id = ?";
 
         jdbcTemplate.update(sql, id);
+    }
+
+    public boolean isExist(final Long id) {
+        final String sql = "select count(*) from Product where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
     }
 
     private RowMapper<Product> productRowMapper() {
@@ -66,13 +69,5 @@ public class ProductDao {
                 resultSet.getInt("price"),
                 resultSet.getString("image_url")
         );
-    }
-
-    private void validateExistData(final Long id) {
-        final String sql = "SELECT count(*) FROM Product WHERE id = ?";
-
-        if (jdbcTemplate.queryForObject(sql, Integer.class, id) == 0) {
-            throw new IllegalArgumentException("존재하지 않는 id입니다.");
-        }
     }
 }
