@@ -1,7 +1,6 @@
 package cart.controller;
 
-import cart.dto.AddProductRequest;
-import cart.dto.UpdateProductRequest;
+import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +17,21 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addProduct(@Valid @RequestBody AddProductRequest addProductRequest) {
-        productService.addProduct(addProductRequest);
+    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest) {
+        productService.addProduct(productRequest);
         return ResponseEntity.ok().build(); // TODO: 2023/04/26 created 변경
     }
 
-    @PutMapping
-    public ResponseEntity<?> updateProduct(@Valid @RequestBody UpdateProductRequest updateProductRequest) {
-        productService.updateProduct(updateProductRequest);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable long id, @Valid @RequestBody ProductRequest productRequest) {
+        productService.updateProduct(id, productRequest);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.ok().build();
+    }
+
 }
