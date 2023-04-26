@@ -1,3 +1,5 @@
+drop table if EXISTS product;
+
 CREATE TABLE product
 (
     id        BIGINT       NOT NULL AUTO_INCREMENT,
