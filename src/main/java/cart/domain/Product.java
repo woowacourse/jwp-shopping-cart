@@ -23,16 +23,22 @@ public class Product {
 
     private int validatePrice(int price) {
         if (price < 0) {
-            throw new IllegalArgumentException("상품 가격은 0원 이상입니다.");
+            throw new IllegalArgumentException("가격은 0원부터 21억원 미만입니다.");
         }
         return price;
     }
 
     private String validateImgUrl(String imgUrl) {
+        if (imgUrl.length() > 8000) {
+            throw new IllegalArgumentException("URL은 영문기준 8000자 이하입니다.");
+        }
         return imgUrl;
     }
 
     private String validateName(String name) {
+        if (name.length() > 255) {
+            throw new IllegalArgumentException("상품명은 영문기준 255자 이하입니다.");
+        }
         return name;
     }
 
