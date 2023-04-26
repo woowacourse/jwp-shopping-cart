@@ -11,8 +11,6 @@ const showAddModal = () => {
 
 const showEditModal = (product, categories) => {
         const productInfos = modal.getElementsByClassName("productInfo");
-        console.log(product);
-        console.log(typeof product.categoryNames)
         for (const productInfo of productInfos) {
             productInfo.value = product[productInfo.getAttribute('name')];
         }
