@@ -8,10 +8,12 @@ import cart.dto.ResultResponse;
 import cart.dto.SimpleResponse;
 import cart.service.ProductService;
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,5 +50,12 @@ public class ProductApiController {
                 request.getImageUrl());
         return ResponseEntity
                 .ok(ResultResponse.ok("상품이 수정되었습니다.", productDto));
+    }
+
+    @GetMapping
+    public ResponseEntity<Response> findAllProducts() {
+        List<ProductDto> allProducts = productService.findAllProducts();
+        return ResponseEntity.ok()
+                .body(ResultResponse.ok("총 " + allProducts.size() + "개의 상품이 조회되었습니다.", allProducts));
     }
 }
