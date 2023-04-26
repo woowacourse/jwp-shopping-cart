@@ -63,7 +63,7 @@ class GeneralProductServiceTest {
 		given(productRepository.deleteByProductId(anyLong())).willReturn(1L);
 
 		// when
-		long deleteProductId = generalProductService.deleteByProductId(1L);
+		final long deleteProductId = generalProductService.deleteByProductId(1L);
 
 		// then
 		assertThat(deleteProductId).isEqualTo(1L);
@@ -78,7 +78,7 @@ class GeneralProductServiceTest {
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("hyena", 400, "이미지");
-		ProductDto updateProduct = generalProductService.update(1L, request);
+		final ProductDto updateProduct = generalProductService.update(1L, request);
 
 		// then
 		assertThat(updateProduct)

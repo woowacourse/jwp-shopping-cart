@@ -33,7 +33,7 @@ public class ProductIntegrationTest {
 
 	@Test
 	public void getProducts() {
-		ExtractableResponse<Response> result = given()
+		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.when()
 			.get("/products")
@@ -45,9 +45,9 @@ public class ProductIntegrationTest {
 
 	@Test
 	public void createProduct() {
-		ProductCreateRequest request = new ProductCreateRequest("KIARA", 10000, "이미지");
+		final ProductCreateRequest request = new ProductCreateRequest("KIARA", 10000, "이미지");
 
-		ExtractableResponse<Response> result = given()
+		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.body(request)
 			.when().post("/products")
@@ -59,9 +59,9 @@ public class ProductIntegrationTest {
 
 	@Test
 	public void deleteProduct() {
-		long saveId = repository.save(new ProductCreateRequest("KIARA", 10000, "이미지"));
+		final long saveId = repository.save(new ProductCreateRequest("KIARA", 10000, "이미지"));
 
-		ExtractableResponse<Response> result = given()
+		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.pathParam("id", saveId)
 			.when().delete("/products/{id}")
@@ -73,10 +73,10 @@ public class ProductIntegrationTest {
 
 	@Test
 	public void updateProduct() {
-		long saveId = repository.save(new ProductCreateRequest("KIARA", 10000, "이미지"));
-		ProductUpdateRequest request = new ProductUpdateRequest("HYENA", 3000,"이미지2");
+		final long saveId = repository.save(new ProductCreateRequest("KIARA", 10000, "이미지"));
+		final ProductUpdateRequest request = new ProductUpdateRequest("HYENA", 3000,"이미지2");
 
-		ExtractableResponse<Response> result = given()
+		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.pathParam("id", saveId)
 			.body(request)

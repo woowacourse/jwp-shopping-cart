@@ -7,16 +7,18 @@ public class ProductDto {
 	private String image;
 
 	public ProductDto() {
-
 	}
 
-	public ProductDto(long id, String name, double price, String image) {
+	public ProductDto(final long id, final String name, final double price, final String image) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.image = image;
 	}
-	public long getId() { return id;}
+
+	public long getId() {
+		return id;
+	}
 
 	public String getName() {
 		return name;

@@ -26,7 +26,7 @@ public class ProductJdbcRepository implements ProductRepository {
 			resultSet.getString("image")
 		);
 
-	public ProductJdbcRepository(JdbcTemplate jdbcTemplate) {
+	public ProductJdbcRepository(final JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
@@ -37,7 +37,7 @@ public class ProductJdbcRepository implements ProductRepository {
 	}
 
 	@Override
-	public long save(ProductCreateRequest request) {
+	public long save(final ProductCreateRequest request) {
 		final String sql = "INSERT INTO products(name, price, image) VALUES(?, ?, ?)";
 		final KeyHolder key = new GeneratedKeyHolder();
 
@@ -53,14 +53,14 @@ public class ProductJdbcRepository implements ProductRepository {
 	}
 
 	@Override
-	public long deleteByProductId(long productId) {
+	public long deleteByProductId(final long productId) {
 		final String sql = "DELETE FROM products WHERE id = ?";
 		jdbcTemplate.update(sql, productId);
 		return productId;
 	}
 
 	@Override
-	public Product update(long productId, ProductUpdateRequest request) {
+	public Product update(final long productId, final ProductUpdateRequest request) {
 		final String updateSql = "UPDATE products SET name = ?, price = ?, image = ? WHERE id = ?";
 		jdbcTemplate.update(updateSql, request.getName(), request.getPrice(), request.getImage(), productId);
 
