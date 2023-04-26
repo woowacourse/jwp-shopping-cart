@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
+import cart.dto.ProductSaveRequest;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -28,10 +29,10 @@ class ProductServiceTest {
     @Test
     void 상품을_저장한다() {
         // given
-        final Product product = new Product(1L, "허브티", "tea.jpg", 1000L);
+        final ProductSaveRequest request = new ProductSaveRequest("허브티", "tea.jpg", 1000L);
 
         // when
-        final Long id = productService.save(product);
+        final Long id = productService.save(request);
 
         // then
         final List<Product> products = productDao.findAll();
