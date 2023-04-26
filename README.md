@@ -1,5 +1,7 @@
 # jwp-shopping-cart
 
+- [ ] 도메인
+  - [x] 상품
 - [ ] 상품 목록 페이지 연동
 - [ ] 상품 관리 CRUD API 작성
   - [ ] 상품 저장 API
