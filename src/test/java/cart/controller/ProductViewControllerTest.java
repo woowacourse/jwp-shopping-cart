@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
 @WebMvcTest
-class TemplateControllerTest extends AbstractProductControllerTest {
+class ProductViewControllerTest extends AbstractProductControllerTest {
 
     @Test
     void 상품_조회_테스트() throws Exception {
