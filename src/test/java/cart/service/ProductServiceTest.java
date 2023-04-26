@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@Sql(value = "/schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql("/schema.sql")
+@Sql("/data.sql")
 class ProductServiceTest {
 
     @Autowired
@@ -32,7 +32,6 @@ class ProductServiceTest {
         final String imageUrl = "imageUrl";
 
         final ProductRegisterRequest productRegisterRequest = new ProductRegisterRequest(name, price, imageUrl);
-
 
         //when
         final int beforeSize = productService.searchAllProducts().size();
@@ -66,7 +65,7 @@ class ProductServiceTest {
     @DisplayName("deleteProduct() : 물품을 삭제할 수 있다.")
     void test_deleteProduct() throws Exception {
         //given
-        final Long id = 2L;
+        final Long id = 3L;
 
         //when
         final int beforeSize = productService.searchAllProducts().size();
@@ -83,7 +82,7 @@ class ProductServiceTest {
     @DisplayName("modifyProduct() : 물품을 수정할 수 있다.")
     void test_modifyProduct() throws Exception {
         //given
-        final Long id = 2L;
+        final Long id = 3L;
         final String name = "수정된 피자";
         final int price = 20000;
         final String imageUrl = "수정된 imageUrl";

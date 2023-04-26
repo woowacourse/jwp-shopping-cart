@@ -6,11 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JdbcTest
+@Sql("/schema.sql")
+@Sql("/data.sql")
 class ProductDaoTest {
 
     private ProductDao productDao;
@@ -58,7 +61,7 @@ class ProductDaoTest {
     @DisplayName("modify() : 저장된 물품을 수정할 수 있다.")
     void test_modify() throws Exception {
         //given
-        final Long id = 2L;
+        final Long id = 3L;
         final String name = "수정된 피자";
         final int price = 20000;
         final String imageUrl = "수정된 imageUrl";
@@ -86,7 +89,7 @@ class ProductDaoTest {
     @DisplayName("deleteById() : 저장된 물품을 삭제할 수 있다.")
     void test_deleteById() throws Exception {
         //given
-        final Long id = 2L;
+        final Long id = 3L;
 
         //when
         final int beforeSize = productDao.findAll().size();
