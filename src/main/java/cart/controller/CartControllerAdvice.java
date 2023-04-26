@@ -16,6 +16,11 @@ public class CartControllerAdvice {
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleServerException(Exception e) {
         return new ResponseEntity<>(SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -23,10 +23,16 @@ public class ProductService {
     }
 
     public void update(ProductRequest productRequest, int id) {
-        productDao.update(productRequest, id);
+        int updateRowNumber = productDao.update(productRequest, id);
+        if (updateRowNumber == 0) {
+            throw new IllegalArgumentException("해당하는 ID가 없습니다.");
+        }
     }
 
     public void delete(int id) {
-        productDao.delete(id);
+        int deleteRowNumber = productDao.delete(id);
+        if (deleteRowNumber == 0) {
+            throw new IllegalArgumentException("해당하는 ID가 없습니다.");
+        }
     }
 }

@@ -22,9 +22,9 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> productAdd(@Validated @RequestBody ProductRequest productRequest) {
-        productService.save(productRequest);
-        return new ResponseEntity<>("ok", HttpStatus.OK);
+    public ResponseEntity<Integer> productAdd(@Validated @RequestBody ProductRequest productRequest) {
+        int productId = productService.save(productRequest);
+        return new ResponseEntity<>(productId, HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
