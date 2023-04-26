@@ -14,7 +14,11 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProductManagementServiceTest {
@@ -62,7 +66,7 @@ class ProductManagementServiceTest {
     @DisplayName("상품 데이터가 수정되는지 확인한다")
     @Test
     void updateTest() {
-        final ProductDto productDto = ProductDto.of(1L,"pobi_doll", "image", 10000000);
+        final ProductDto productDto = ProductDto.of(1L, "pobi_doll", "image", 10000000);
         doNothing().when(productDao).update(any());
         managementService.update(productDto);
 
@@ -74,7 +78,7 @@ class ProductManagementServiceTest {
     @DisplayName("상품 데이터가 삭제되는지 확인한다")
     @Test
     void deleteTest() {
-        final ProductDto productDto = ProductDto.of(1L,null, null, null);
+        final ProductDto productDto = ProductDto.of(1L, null, null, null);
         doNothing().when(productDao).delete(any());
         managementService.delete(productDto);
 

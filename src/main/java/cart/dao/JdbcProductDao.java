@@ -28,17 +28,17 @@ public class JdbcProductDao implements ProductDao {
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
-    public void insert(final ProductEntity productEntity){
+    public void insert(final ProductEntity productEntity) {
         String sql = "INSERT INTO product(name, image, price) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
     }
 
-    public void update(final ProductEntity productEntity){
+    public void update(final ProductEntity productEntity) {
         String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
         jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), productEntity.getId());
     }
 
-    public void delete(final ProductEntity productEntity){
+    public void delete(final ProductEntity productEntity) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, productEntity.getId());
     }
