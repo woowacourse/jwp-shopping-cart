@@ -75,13 +75,12 @@
 
 201
 
-# 상품 수정 PUT `/products`
+# 상품 수정 PUT `/products/{id}`
 
 ## 요청
 
 ```json
 {
-  "id": 1,
   "name": "이름",
   "price": 10000,
   "imgUrl": "dfowf"
@@ -92,15 +91,10 @@
 
 200
 
-# 상품 삭제 DELETE `/products`
+# 상품 삭제 DELETE `/products/{id}`
 
 ## 요청
 
-```json
-{
-  "id": 1
-}
-```
 
 ## 응답
 
