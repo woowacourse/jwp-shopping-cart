@@ -1,16 +1,20 @@
 package cart.controller;
 
 import cart.dto.ProductCreateDto;
+import cart.entity.ProductEntity;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 
 @Controller
@@ -25,6 +29,13 @@ public class ProductController {
     public ResponseEntity<Void> create(@RequestBody @Valid ProductCreateDto productCreateDto) {
         productService.create(productCreateDto);
         return ResponseEntity.created(URI.create("/admin")).build();
+    }
+
+    @GetMapping("/admin")
+    public String findAll(Model model) {
+        final List<ProductEntity> allProducts = productService.findAll();
+        model.addAttribute("products", allProducts);
+        return "admin";
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

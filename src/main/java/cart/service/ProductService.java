@@ -5,6 +5,8 @@ import cart.entity.ProductEntity;
 import cart.repository.ProductDao;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductService {
 
@@ -16,6 +18,10 @@ public class ProductService {
 
     public int create(final ProductCreateDto productCreateDto) {
         return productDao.create(dtoToEntity(productCreateDto));
+    }
+
+    public List<ProductEntity> findAll() {
+        return productDao.findAll();
     }
 
     private ProductEntity dtoToEntity(final ProductCreateDto productCreateDto) {
