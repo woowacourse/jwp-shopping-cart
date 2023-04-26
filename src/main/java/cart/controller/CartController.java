@@ -19,7 +19,7 @@ public class CartController {
     }
 
     @GetMapping
-    public String run(Model model) {
+    public String index(Model model) {
         final List<ProductResponseDto> products = cartService.getProducts();
         model.addAttribute("products", products);
         return "index";
