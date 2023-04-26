@@ -1,6 +1,7 @@
 package cart.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
@@ -8,6 +9,9 @@ import io.restassured.RestAssured;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -44,28 +48,31 @@ class ProductServiceTest {
         assertThat(products.size()).isEqualTo(2);
     }
 
-    @Test
-    void 상품_등록() {
-        final Long id = productService.register("족발", 5000, "족발 이미지");
+    @ParameterizedTest
+    @CsvSource(value = {"applePizza:10000:사과피자 이미지", "salmonSalad:20000:연어 샐러드 이미지"}, delimiter = ':')
+    void 상품_등록(final String name, final int price, final String imageUrl) {
+        final long expectedId = 3L;
+        final Long savedId = productService.register(name, price, imageUrl);
 
-        assertThat(id).isEqualTo(3L);
+        assertThat(savedId).isEqualTo(expectedId);
     }
 
-    @Test
-    void 상품_수정() {
-        final long id = 2L;
-        final String newProductName = "salmonSalad";
-
-        productService.updateProduct(id, newProductName, 20000, "연어 샐러드 이미지");
+    @ParameterizedTest
+    @CsvSource(value = {"1:applePizza:10000:사과피자 이미지", "2:salmonSalad:20000:연어 샐러드 이미지"}, delimiter = ':')
+    void 상품_수정(final long id, final String newName, final int newPrice, final String newImageUrl) {
+        productService.updateProduct(id, newName, newPrice, newImageUrl);
 
         final Product updatedProduct = productDao.findById(id);
-        assertThat(updatedProduct.getName()).isEqualTo(newProductName);
+        assertAll(
+                () -> assertThat(updatedProduct.getName()).isEqualTo(newName),
+                () -> assertThat(updatedProduct.getPrice()).isEqualTo(newPrice),
+                () -> assertThat(updatedProduct.getImageUrl()).isEqualTo(newImageUrl)
+        );
     }
 
-    @Test
-    void 상품_삭제() {
-        final long id = 1L;
-
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2})
+    void 상품_삭제(final long id) {
         productService.deleteProduct(id);
 
         assertThat(productService.findAll().size()).isEqualTo(1);
