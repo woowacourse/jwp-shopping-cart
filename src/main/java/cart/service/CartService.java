@@ -31,7 +31,7 @@ public class CartService {
     }
 
     public void updateProduct(ProductRequestDto productRequestDto) {
-        ProductDto product = new ProductDto(productRequestDto.getName(), productRequestDto.getImage(), productRequestDto.getPrice());
+        ProductDto product = new ProductDto(productRequestDto.getId(), productRequestDto.getName(), productRequestDto.getImage(), productRequestDto.getPrice());
         productDao.update(product);
     }
 

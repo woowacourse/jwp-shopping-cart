@@ -41,9 +41,9 @@ public class ProductDao {
     }
 
     public ProductDto update(final ProductDto productDto) {
-        final String sql = "UPDATE products SET id=?, name=?, image=?, price=?";
+        final String sql = "UPDATE products SET id=?, name=?, image=?, price=? WHERE id=?";
 
-        jdbcTemplate.update(sql, productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice());
+        jdbcTemplate.update(sql, productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice(), productDto.getId());
         return productDto;
     }
 
