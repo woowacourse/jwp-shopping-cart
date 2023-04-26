@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartService {
 
     private final ProductDao productDao;
@@ -20,7 +21,6 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    @Transactional
     public void create(ProductRequest productRequest) {
         Product product = new Product(
                 productRequest.getName(),
