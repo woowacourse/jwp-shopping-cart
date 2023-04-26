@@ -52,13 +52,13 @@ const createProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data)
         console.error(error);
     });
 };
 
 const updateProduct = (product) => {
     const id = product.id;
-    console.log("put")
 
     axios.request({
         url: '/admin/' + id,
@@ -67,6 +67,7 @@ const updateProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data)
         console.error(error);
     });
 };
@@ -78,6 +79,7 @@ const deleteProduct = (id) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data)
         console.error(error);
     });
 };
