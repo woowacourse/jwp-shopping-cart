@@ -23,5 +23,5 @@
   - [x] 이름은 `name`, 이미지는 `imageUrl`, 가격은 `price`로 한다.
 - [x] 삭제
   - [x] `/products/{id}` URL에 `DELETE` 요청을 보내면 상품이 삭제되어야 한다.
-- [ ] 조회
-  - [ ] `/products` URL에 `GET` 요청을 보내면 상품이 조회되어야 한다.
+- [x] 조회
+  - [x] `/products` URL에 `GET` 요청을 보내면 상품이 조회되어야 한다.
