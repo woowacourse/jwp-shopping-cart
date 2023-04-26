@@ -23,4 +23,12 @@ public class ViewController {
         return "index";
     }
 
+    @GetMapping("/admin")
+    public String adminPageView(Model model) {
+        List<Product> products = productService.findAllProducts();
+        model.addAttribute("products", products);
+        return "admin";
+    }
+
+
 }
