@@ -12,7 +12,7 @@ public interface ProductDao {
 
     List<ProductEntity> findAll();
 
-    void update(long id, ProductEntity productEntity);
+    void update(ProductEntity productEntity);
 
     void deleteById(long id);
 }

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.ProductEntity;
@@ -18,8 +19,9 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public long create(final String name, final int price, final String imageUrl) {
-        final ProductEntity productEntity = new ProductEntity(name, price, imageUrl);
+    public long create(final ProductRequest productRequest) {
+        final ProductEntity productEntity =
+            new ProductEntity(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         return productDao.save(productEntity);
     }
 
@@ -30,9 +32,10 @@ public class CartService {
             .collect(Collectors.toList());
     }
 
-    public void update(final long id, final String name, final int price, final String imageUrl) {
-        final ProductEntity productEntity = new ProductEntity(name, price, imageUrl);
-        productDao.update(id, productEntity);
+    public void update(final long id, final ProductRequest productRequest) {
+        final ProductEntity productEntity =
+            new ProductEntity(id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        productDao.update(productEntity);
     }
 
     public void delete(final long id) {

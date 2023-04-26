@@ -57,7 +57,7 @@ class JdbcProductDaoTest {
         final Long productId = productDao.save(modi);
         final ProductEntity originalJena = new ProductEntity(productId,"jena", 10000, "");
 
-        productDao.update(productId, originalJena);
+        productDao.update(originalJena);
         ProductEntity jena = productDao.findByName("jena");
         assertThat(jena.getName()).isEqualTo("jena");
     }

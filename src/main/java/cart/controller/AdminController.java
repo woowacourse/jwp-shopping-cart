@@ -30,7 +30,7 @@ public class AdminController {
 
     @PostMapping("/product")
     public ResponseEntity<Void> createProduct(@RequestBody final ProductRequest productRequest) {
-        long id = cartService.create(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        final long id = cartService.create(productRequest);
         return ResponseEntity.created(URI.create("/admin/product/" + id)).build();
     }
 
@@ -43,7 +43,7 @@ public class AdminController {
 
     @PutMapping("/product/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody final ProductRequest productRequest) {
-        cartService.update(id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        cartService.update(id, productRequest);
         return ResponseEntity.ok().build();
     }
 
