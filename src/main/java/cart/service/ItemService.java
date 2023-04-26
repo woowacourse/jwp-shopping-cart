@@ -43,4 +43,8 @@ public class ItemService {
         CreateItem createItem = convertItemRequestToCreateItem(itemRequest);
         itemDao.update(itemId, createItem);
     }
+
+    public void deleteItem(Long itemId) {
+        itemDao.delete(itemId);
+    }
 }

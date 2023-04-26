@@ -32,4 +32,10 @@ public class AdminController {
         itemService.updateItem(itemId, itemRequest);
         return "redirect:/admin";
     }
+
+    @PostMapping("/items/delete/{itemId}")
+    public String deleteItem(@PathVariable Long itemId) {
+        itemService.deleteItem(itemId);
+        return "redirect:/admin";
+    }
 }
