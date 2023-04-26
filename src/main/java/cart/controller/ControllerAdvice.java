@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ControllerAdvice.class);
     private static final String INTERNAL_ERROR_MESSAGE = "예상치 못한 예외가 발생했습니다.";
+    private static final String NOT_READABLE_MESSAGE = "입력 타입을 확인하세요.";
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -29,12 +31,23 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
                 .stream()
                 .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
 
+        fieldErrors.values()
+                .forEach(LOGGER::warn);
+
         return ResponseEntity.badRequest().body(new ExceptionResponse<>(fieldErrors));
     }
 
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+                                                                  HttpHeaders headers, HttpStatus status,
+                                                                  WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return ResponseEntity.badRequest().body(new ExceptionResponse<>(NOT_READABLE_MESSAGE));
+    }
+
     @ExceptionHandler(Exception.class)
-    private ResponseEntity<ExceptionResponse> handleException(Exception e) {
-        LOGGER.error(e.getMessage());
+    private ResponseEntity<ExceptionResponse> handleException(Exception ex) {
+        LOGGER.warn(ex.getMessage());
         return ResponseEntity.internalServerError().body(new ExceptionResponse<>(INTERNAL_ERROR_MESSAGE));
     }
 }
