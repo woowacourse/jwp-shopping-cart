@@ -3,6 +3,7 @@ package cart.controller;
 import cart.controller.dto.ProductDto;
 import cart.persistence.entity.ProductCategory;
 import cart.service.ShoppingService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -12,9 +13,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ShoppingController.class)
@@ -26,6 +27,7 @@ class ShoppingControllerTest {
     @MockBean
     private ShoppingService shoppingService;
 
+    @DisplayName("메인 페이지를 조회한다")
     @Test
     void index() throws Exception {
         // given
@@ -39,7 +41,19 @@ class ShoppingControllerTest {
         // when, then
         mockMvc.perform(get("/")
                         .contentType(MediaType.TEXT_HTML))
-                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("상세 페이지를 조회한다")
+    @Test
+    void getProduct() throws Exception {
+        // given
+        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+        when(shoppingService.getById(any())).thenReturn(productDto);
+
+        //when
+        mockMvc.perform(get("/{id}", 1L)
+                        .contentType(MediaType.TEXT_HTML))
                 .andExpect(status().isOk());
     }
 }

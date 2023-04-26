@@ -120,4 +120,23 @@ class ShoppingServiceTest {
         assertThatThrownBy(() -> shoppingService.delete(1L))
                 .isInstanceOf(GlobalException.class);
     }
+
+    @DisplayName("상품을 조회한다")
+    @Test
+    void findById() {
+        // given
+        final Product product = new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN);
+        when(productDao.findById(any())).thenReturn(product);
+
+        // when
+        final ProductDto productDto = shoppingService.getById(1L);
+
+        // then
+        assertAll(
+                () -> assertThat(productDto.getName()).isEqualTo("스테이크"),
+                () -> assertThat(productDto.getImageUrl()).isEqualTo("steakUrl"),
+                () -> assertThat(productDto.getPrice()).isEqualTo(40000),
+                () -> assertThat(productDto.getCategory()).isEqualTo(ProductCategory.WESTERN)
+        );
+    }
 }

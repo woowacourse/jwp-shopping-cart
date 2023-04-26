@@ -45,4 +45,10 @@ public class ShoppingService {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }
     }
+
+    public ProductDto getById(final Long id) {
+        final Product product = productDao.findById(id);
+        return new ProductDto(product.getId(), product.getName(), product.getImageUrl(),
+                product.getPrice(), product.getCategory());
+    }
 }
