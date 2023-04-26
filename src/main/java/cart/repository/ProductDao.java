@@ -5,7 +5,7 @@ import cart.entity.ProductEntity;
 
 import java.util.List;
 
-public interface ProductRepository {
+public interface ProductDao {
     ProductEntity save(Product product);
 
     ProductEntity update(ProductEntity entity);

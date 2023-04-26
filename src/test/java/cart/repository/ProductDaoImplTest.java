@@ -11,28 +11,28 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-class ProductRepositoryImplTest {
+class ProductDaoImplTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-    ProductRepository productRepository;
+    ProductDao productDao;
 
     @BeforeEach
     void setUp() {
-        productRepository = new ProductRepositoryImpl(jdbcTemplate);
+        productDao = new ProductDaoImpl(jdbcTemplate);
     }
 
     @Test
     void 상품이_정상적으로_저장된다() {
         Product product = new Product("pizza", "url", 10000);
-        ProductEntity created = productRepository.save(product);
+        ProductEntity created = productDao.save(product);
         assertThat(created).isNotNull();
     }
 
     @Test
     void 상품_데이터_정합성_검증() {
         Product product = new Product("pizza", "url", 10000);
-        ProductEntity created = productRepository.save(product);
+        ProductEntity created = productDao.save(product);
         assertThat(product.getName()).isEqualTo(created.getName());
     }
 }
