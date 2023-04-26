@@ -5,8 +5,10 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import cart.entity.Product;
 import io.restassured.RestAssured;
+import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -51,6 +53,21 @@ class IntegrationTest {
     }
 
     @Test
+    @DisplayName("상품 추가 테스트 - 값이 비어있는 경우")
+    void createProductValueEmpty() {
+        final String jsonStrNameEmpty = "{ \"price\":\"321321\", \"imageUrl\":\"apple.png\"}";
+
+        given()
+                .body(jsonStrNameEmpty)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/admin/create")
+                .then()
+                .statusCode(Response.SC_BAD_REQUEST);
+    }
+
+    @Order(2)
+    @Test
     @DisplayName("상품 수정 테스트")
     @Sql({"/test-fixture.sql"})
     void editProduct() {
@@ -66,6 +83,7 @@ class IntegrationTest {
                 .statusCode(200);
     }
 
+    @Order(1)
     @Test
     @DisplayName("상품 삭제 테스트")
     @Sql({"/test-fixture.sql"})

@@ -2,9 +2,12 @@ package cart.controller;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -17,6 +20,14 @@ public class CartControllerAdvice {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> sendErrorMessage(final IllegalArgumentException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> sendErrorMessage(final MethodArgumentNotValidException exception) {
+        final String errorMessages = exception.getFieldErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(System.lineSeparator()));
+        return ResponseEntity.badRequest().body(errorMessages);
     }
 
     @ExceptionHandler(RuntimeException.class)

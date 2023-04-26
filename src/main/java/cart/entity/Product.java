@@ -1,5 +1,8 @@
 package cart.entity;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class Product {
 
     private static final int MAX_NAME_LENGTH = 255;
@@ -7,14 +10,17 @@ public class Product {
     private static final String IMAGE_EXTENSION_FORMAT = ".*\\.(jpg|jpeg|png|webp|avif|gif|svg)$";
 
     private Long id;
+    @NotEmpty(message = "이름이 비어있을 수는 없습니다.")
     private String name;
+    @NotEmpty(message = "imageUrl이 비어있을 수 없습니다.")
     private String imageUrl;
-    private int price;
+    @NotNull(message = "가격은 비어있을 수 없습니다.")
+    private Integer price;
 
     private Product() {
     }
 
-    public Product(final Long id, final String name, final String imageUrl, final int price) {
+    public Product(final Long id, final String name, final String imageUrl, final Integer price) {
         validateImageUrl(imageUrl);
         validatePrice(price);
         validateName(name);

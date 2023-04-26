@@ -50,7 +50,8 @@ public class JdbcProductRepository implements ProductRepository {
     public void update(final Product product) {
         final String sql = "update product set name=:name, price=:price, image_url=:imageUrl where id=:id";
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
-        jdbcTemplate.update(sql, sqlParameterSource);
+        final int update = jdbcTemplate.update(sql, sqlParameterSource);
+        System.out.println(update);
     }
 
     @Override
