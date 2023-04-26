@@ -37,7 +37,7 @@ public class AdminController {
     @PostMapping("/products")
     public ResponseEntity<Void> addProduct(@Valid @RequestBody final ProductRequestDto productRequestDto) {
         Long id = productService.saveProduct(productRequestDto);
-        return ResponseEntity.created(URI.create("admin/products/"+id)).build();
+        return ResponseEntity.created(URI.create("admin/products/" + id)).build();
     }
 
     @PatchMapping("/products/{id}")

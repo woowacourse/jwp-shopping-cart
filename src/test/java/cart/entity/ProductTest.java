@@ -1,10 +1,9 @@
 package cart.entity;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.exception.product.NullOrBlankException;
 import cart.exception.product.PriceNotUnderZeroException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,7 +13,7 @@ class ProductTest {
 
     @ParameterizedTest
     @DisplayName("name과 image_url이 빈 값이나 null이면 에러를 발생한다.")
-    @CsvSource (value = {" , ,1000", "연필, ,1000", " ,이미지,1000"})
+    @CsvSource(value = {" , ,1000", "연필, ,1000", " ,이미지,1000"})
     void validate_null_or_blank_test(String name, String imageUrl, int price) {
         // when + then
         assertThatThrownBy(() -> new Product(name, imageUrl, price))
