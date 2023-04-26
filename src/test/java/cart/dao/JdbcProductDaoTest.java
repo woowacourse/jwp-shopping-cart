@@ -6,17 +6,29 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Sql(scripts = {"classpath:data.sql"})
 class JdbcProductDaoTest {
 
+    private final RowMapper<Product> productRowMapper = (resultSet, rowNum) ->
+            new Product(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getInt("price"),
+                    resultSet.getString("image")
+            );
     private JdbcProductDao jdbcProductDao;
 
+    private JdbcTemplate jdbcTemplate;
+
     private JdbcProductDaoTest(@Autowired JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
         this.jdbcProductDao = new JdbcProductDao(jdbcTemplate);
     }
 
@@ -36,5 +48,23 @@ class JdbcProductDaoTest {
 
         assertThat(jdbcProductDao.findAll()).extracting("name")
                 .containsExactly("IO", "ASH", "BROWN");
+    }
+
+    @Test
+    @DisplayName("Product 갱신 테스트")
+    void updateTest() {
+        Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
+
+        jdbcProductDao.update(new Product(id, "ASH", 1000, "image"));
+
+        Product product = jdbcTemplate.queryForObject("SELECT * FROM product WHERE id = ?", productRowMapper, id);
+
+        assertAll(
+                () -> assertThat(product).isNotNull(),
+                () -> assertThat(product.getId()).isEqualTo(id),
+                () -> assertThat(product.getName()).isEqualTo("ASH"),
+                () -> assertThat(product.getPrice()).isEqualTo(1000),
+                () -> assertThat(product.getImage()).isEqualTo("image")
+        );
     }
 }
