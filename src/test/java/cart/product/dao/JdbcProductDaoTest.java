@@ -36,6 +36,7 @@ class JdbcProductDaoTest {
     @DisplayName("상품 목록 findAll 테스트")
     void findAll() {
         //given
+        final int initialSize = this.jdbcProductDao.findAll().size();
         final Product product1 = new Product(new Name("스파게티"), "https://hello", new Price(1000));
         final Product product2 = new Product(new Name("피자"), "https://hello", new Price(2000));
         final Product product3 = new Product(new Name("치킨"), "https://hello", new Price(3000));
@@ -46,7 +47,7 @@ class JdbcProductDaoTest {
         this.jdbcProductDao.insert(product3);
         
         //then
-        assertEquals(3, this.jdbcProductDao.findAll().size());
+        assertEquals(3, this.jdbcProductDao.findAll().size() - initialSize);
     }
     
     @Test
@@ -81,13 +82,15 @@ class JdbcProductDaoTest {
         final long id1 = this.jdbcProductDao.insert(product1);
         final long id2 = this.jdbcProductDao.insert(product2);
         final long id3 = this.jdbcProductDao.insert(product3);
+        final int initialSize = this.jdbcProductDao.findAll().size(); //6
         
         //when
         this.jdbcProductDao.deleteByID(id1);
         this.jdbcProductDao.deleteByID(id2);
         
-        //then
-        assertEquals(1, this.jdbcProductDao.findAll().size());
+        //then 4
+        final int updatedSize = this.jdbcProductDao.findAll().size(); // 4
+        assertEquals(2, initialSize - updatedSize);
     }
     
     @Test

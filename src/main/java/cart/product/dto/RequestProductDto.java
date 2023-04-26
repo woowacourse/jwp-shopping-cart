@@ -6,7 +6,7 @@ public class RequestProductDto {
     private final String image;
     private final int price;
     
-    private RequestProductDto(final String name, final String image, final int price) {
+    public RequestProductDto(final String name, final String image, final int price) {
         this.name = name;
         this.image = image;
         this.price = price;
