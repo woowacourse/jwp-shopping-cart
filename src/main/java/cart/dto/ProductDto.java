@@ -1,5 +1,7 @@
 package cart.dto;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -12,6 +14,8 @@ public class ProductDto {
     private final String image;
 
     @NotNull
+    @Min(100)
+    @Max(10_000_000)
     private final Integer price;
 
     public ProductDto(final String name, final String image, final Integer price) {
