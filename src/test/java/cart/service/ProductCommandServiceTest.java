@@ -9,19 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Sql("/schema.sql")
 @Sql("/data.sql")
-class ProductServiceTest {
+class ProductCommandServiceTest {
 
     @Autowired
-    private ProductService productService;
+    private ProductCommandService productCommandService;
+
+    @Autowired
+    private ProductQueryService productQueryService;
 
     @Test
     @DisplayName("registerProduct() : 물품을 등록할 수 있다.")
@@ -34,31 +34,14 @@ class ProductServiceTest {
         final ProductRegisterRequest productRegisterRequest = new ProductRegisterRequest(name, price, imageUrl);
 
         //when
-        final int beforeSize = productService.searchAllProducts().size();
+        final int beforeSize = productQueryService.searchAllProducts().size();
 
-        productService.registerProduct(productRegisterRequest);
+        productCommandService.registerProduct(productRegisterRequest);
 
-        final int afterSize = productService.searchAllProducts().size();
+        final int afterSize = productQueryService.searchAllProducts().size();
 
         //then
         assertEquals(afterSize, beforeSize + 1);
-    }
-
-    @Test
-    @DisplayName("searchAllProducts() : 저장된 물품을 모두 조회할 수 있다.")
-    void test_searchAllProducts() throws Exception {
-        //given
-        final int resultSize = 2;
-        final String resultName = "피자";
-
-        //when
-        final List<ProductSearchResponse> productSearchResponses = productService.searchAllProducts();
-
-        //then
-        assertAll(
-                () -> assertThat(productSearchResponses).hasSize(resultSize),
-                () -> assertEquals(resultName, productSearchResponses.get(0).getName())
-        );
     }
 
     @Test
@@ -68,11 +51,11 @@ class ProductServiceTest {
         final Long id = 3L;
 
         //when
-        final int beforeSize = productService.searchAllProducts().size();
+        final int beforeSize = productQueryService.searchAllProducts().size();
 
-        productService.deleteProduct(id);
+        productCommandService.deleteProduct(id);
 
-        final int afterSize = productService.searchAllProducts().size();
+        final int afterSize = productQueryService.searchAllProducts().size();
 
         //then
         assertEquals(afterSize, beforeSize - 1);
@@ -90,13 +73,13 @@ class ProductServiceTest {
         final ProductModifyRequest productModifyRequest = new ProductModifyRequest(name, price, imageUrl);
 
         //when
-        productService.modifyProduct(id, productModifyRequest);
+        productCommandService.modifyProduct(id, productModifyRequest);
 
-        final ProductSearchResponse productSearchResponse = productService.searchAllProducts()
-                                                                          .stream()
-                                                                          .filter(it -> it.getId().equals(id))
-                                                                          .findFirst()
-                                                                          .orElseThrow();
+        final ProductSearchResponse productSearchResponse = productQueryService.searchAllProducts()
+                                                                               .stream()
+                                                                               .filter(it -> it.getId().equals(id))
+                                                                               .findFirst()
+                                                                               .orElseThrow();
 
         //then
         assertAll(

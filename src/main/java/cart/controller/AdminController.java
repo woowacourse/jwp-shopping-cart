@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.service.ProductService;
+import cart.service.ProductQueryService;
 import cart.service.dto.ProductSearchResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,15 +13,15 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final ProductService productService;
+    private final ProductQueryService productQueryService;
 
-    public AdminController(final ProductService productService) {
-        this.productService = productService;
+    public AdminController(final ProductQueryService productQueryService) {
+        this.productQueryService = productQueryService;
     }
 
     @GetMapping
     public String searchProduct(final Model model) {
-        List<ProductSearchResponse> productSearchResponses = productService.searchAllProducts();
+        List<ProductSearchResponse> productSearchResponses = productQueryService.searchAllProducts();
         model.addAttribute("products", productSearchResponses);
         return "admin";
     }

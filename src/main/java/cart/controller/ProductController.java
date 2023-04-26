@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.service.ProductService;
+import cart.service.ProductCommandService;
 import cart.service.dto.ProductModifyRequest;
 import cart.service.dto.ProductRegisterRequest;
 import org.springframework.http.HttpStatus;
@@ -18,16 +18,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductCommandService productCommandService;
 
-    public ProductController(final ProductService productService) {
-        this.productService = productService;
+    public ProductController(final ProductCommandService productCommandService) {
+        this.productCommandService = productCommandService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void registerProduct(@Validated @RequestBody final ProductRegisterRequest productRegisterRequest) {
-        productService.registerProduct(productRegisterRequest);
+        productCommandService.registerProduct(productRegisterRequest);
     }
 
     @PatchMapping("/{product-id}")
@@ -35,14 +35,14 @@ public class ProductController {
             @PathVariable("product-id") final Long productId,
             @Validated @RequestBody final ProductModifyRequest productModifyRequest
     ) {
-        productService.modifyProduct(productId, productModifyRequest);
+        productCommandService.modifyProduct(productId, productModifyRequest);
 
         return "admin";
     }
 
     @DeleteMapping("/{product-id}")
     public String deleteProduct(@PathVariable("product-id") final Long productId) {
-        productService.deleteProduct(productId);
+        productCommandService.deleteProduct(productId);
 
         return "admin";
     }

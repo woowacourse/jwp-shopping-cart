@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.service.ProductService;
+import cart.service.ProductCommandService;
 import cart.service.dto.ProductModifyRequest;
 import cart.service.dto.ProductRegisterRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +31,7 @@ class ProductControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ProductService productService;
+    private ProductCommandService productCommandService;
 
     @Test
     @DisplayName("registerProduct() : 물품을 생성할 수 있다.")
@@ -45,7 +45,7 @@ class ProductControllerTest {
 
         //when
         doNothing()
-                .when(productService)
+                .when(productCommandService)
                 .registerProduct(any());
 
         final String requestBody = objectMapper.writeValueAsString(productRegisterRequest);
@@ -71,7 +71,7 @@ class ProductControllerTest {
 
         //when
         doNothing()
-                .when(productService)
+                .when(productCommandService)
                 .modifyProduct(anyLong(), any());
 
         final String requestBody = objectMapper.writeValueAsString(productModifyRequest);
@@ -91,7 +91,7 @@ class ProductControllerTest {
 
         //when
         doNothing()
-                .when(productService)
+                .when(productCommandService)
                 .deleteProduct(anyLong());
 
         //then

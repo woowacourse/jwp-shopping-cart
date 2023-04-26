@@ -5,20 +5,16 @@ import cart.dao.ProductEntity;
 import cart.domain.Product;
 import cart.service.dto.ProductModifyRequest;
 import cart.service.dto.ProductRegisterRequest;
-import cart.service.dto.ProductSearchResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @Transactional
-public class ProductService {
+public class ProductCommandService {
 
     private final ProductDao productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductCommandService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
@@ -30,20 +26,6 @@ public class ProductService {
         );
 
         productDao.save(productEntity);
-    }
-
-    @Transactional(readOnly = true)
-    public List<ProductSearchResponse> searchAllProducts() {
-        List<ProductEntity> productEntities = productDao.findAll();
-
-        return productEntities.stream()
-                              .map(entity -> new ProductSearchResponse(
-                                      entity.getId(),
-                                      entity.getName(),
-                                      entity.getPrice(),
-                                      entity.getImageUrl())
-                              )
-                              .collect(Collectors.toList());
     }
 
     public void modifyProduct(final Long productId, final ProductModifyRequest productModifyRequest) {
