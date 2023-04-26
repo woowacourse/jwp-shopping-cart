@@ -53,6 +53,12 @@ const createProduct = (product) => {
         window.location.reload();
     }).catch((error) => {
         let message = error.response.data.message;
+
+        if (typeof message === 'string') {
+            alert(message);
+            return;
+        }
+
         let fields = Object.keys(message);
         let alertMessage = "";
 
@@ -75,6 +81,12 @@ const updateProduct = (product) => {
         window.location.reload();
     }).catch((error) => {
         let message = error.response.data.message;
+
+        if (typeof message === 'string') {
+            alert(message);
+            return;
+        }
+
         let fields = Object.keys(message);
         let alertMessage = "";
 
