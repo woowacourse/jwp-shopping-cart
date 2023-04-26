@@ -1,5 +1,7 @@
 package cart.entity;
 
+import cart.dto.ProductDto;
+
 public class ProductEntity {
 
     private final Long id;
@@ -12,6 +14,10 @@ public class ProductEntity {
         this.name = name;
         this.image = image;
         this.price = price;
+    }
+
+    public static ProductEntity from(final ProductDto productDto) {
+        return new ProductEntity(productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice());
     }
 
     public static ProductEntity of(final String name, final String image, final int price) {

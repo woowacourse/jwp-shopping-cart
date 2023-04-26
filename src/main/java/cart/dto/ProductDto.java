@@ -19,10 +19,6 @@ public class ProductDto {
         this.price = price;
     }
 
-    public static ProductDto of(final Long id, final String name, final String image, final int price) {
-        return new ProductDto(id, name, image, price);
-    }
-
     public static ProductDto from(final ProductEntity productEntity) {
         return new ProductDto(productEntity.getId(), productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
     }
@@ -31,6 +27,10 @@ public class ProductDto {
         return productEntities.stream()
                 .map(ProductDto::from)
                 .collect(Collectors.toList());
+    }
+
+    public static ProductDto of(final String name, final String image, final int price) {
+        return new ProductDto(null, name, image, price);
     }
 
     public Long getId() {
