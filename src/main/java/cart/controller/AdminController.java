@@ -16,39 +16,41 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
-public class CartController {
+@RequestMapping("/admin")
+public class AdminController {
 
     private final CartService cartService;
 
-    public CartController(CartService cartService) {
+    public AdminController(CartService cartService) {
         this.cartService = cartService;
     }
 
-    @GetMapping("/admin")
+    @GetMapping
     public String showAllProducts(Model model) {
         List<ProductResponse> allProducts = cartService.findAllProducts();
         model.addAttribute("products", allProducts);
         return "admin";
     }
 
-    @PostMapping("/admin/product")
+    @PostMapping("/product")
     @ResponseBody
     public ResponseEntity<Void> registerProduct(@RequestBody @Valid ProductRequest productRequest) {
         long savedId = cartService.save(productRequest);
         return ResponseEntity.created(URI.create("/admin/product/" + savedId)).build();
     }
 
-    @PutMapping("/admin/product/{id}")
+    @PutMapping("/product/{id}")
     @ResponseBody
     public void modifyProduct(@RequestBody @Valid ProductRequest productRequest, @PathVariable long id) {
         cartService.modifyById(productRequest, id);
     }
 
-    @DeleteMapping("/admin/product/{id}")
+    @DeleteMapping("/product/{id}")
     @ResponseBody
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeProduct(@PathVariable long id) {
