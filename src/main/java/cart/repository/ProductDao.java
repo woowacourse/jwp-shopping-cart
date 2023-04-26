@@ -1,5 +1,6 @@
 package cart.repository;
 
+import cart.dto.ProductRequestDto;
 import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -39,5 +40,15 @@ public class ProductDao {
     public List<ProductEntity> findAll() {
         final String sql = "select * from product";
         return jdbcTemplate.query(sql, productEntityRowMapper);
+    }
+
+    public void update(final ProductRequestDto productRequestDto, final int id) {
+        final String sql = "update product set name = ?, image = ?, price = ? where id = ?";
+        jdbcTemplate.update(sql,
+                productRequestDto.getName(),
+                productRequestDto.getImage(),
+                productRequestDto.getPrice(),
+                id
+        );
     }
 }

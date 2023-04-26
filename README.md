@@ -13,10 +13,10 @@
     - [x] repository 구현
     - [x] service 구현
     - [x] controller 구현
-  - [ ] Update
-    - [ ] repository 구현
-    - [ ] service 구현
-    - [ ] controller 구현
+  - [x] Update
+    - [x] repository 구현
+    - [x] service 구현
+    - [x] controller 구현
   - [ ] Delete
     - [ ] repository 구현
     - [ ] service 구현

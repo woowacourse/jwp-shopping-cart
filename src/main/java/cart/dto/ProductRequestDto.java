@@ -2,7 +2,7 @@ package cart.dto;
 
 import javax.validation.constraints.NotNull;
 
-public class ProductCreateDto {
+public class ProductRequestDto {
     @NotNull
     private final String name;
     @NotNull
@@ -10,7 +10,7 @@ public class ProductCreateDto {
     @NotNull
     private final Integer price;
 
-    public ProductCreateDto(final String name, final String image, final Integer price) {
+    public ProductRequestDto(final String name, final String image, final Integer price) {
         this.name = name;
         this.image = image;
         this.price = price;
