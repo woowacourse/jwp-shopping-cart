@@ -11,7 +11,7 @@
   - [x] Read : GET - /admin
   - [x] Update : POST - /admin/{id}
   - [x] Delete : DELETE - /admin/{id}
-- [ ] 관리자 도구 페이지 연동
-  - [ ] admin.html, admin.js 파일 내 TODO 주석을 참고하여 코드를 변경
-  - [ ] admin.html 파일과 상품 관리 CRUD API를 이용하여 상품 관리 페이지를 완성
-  - [ ] '/admin' url로 접근할 경우 관리자 도구 페이지를 조회
+- [x] 관리자 도구 페이지 연동
+  - [x] admin.html, admin.js 파일 내 TODO 주석을 참고하여 코드를 변경
+  - [x] admin.html 파일과 상품 관리 CRUD API를 이용하여 상품 관리 페이지를 완성
+  - [x] '/admin' url로 접근할 경우 관리자 도구 페이지를 조회
