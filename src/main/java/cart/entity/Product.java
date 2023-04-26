@@ -1,6 +1,8 @@
 package cart.entity;
 
 import cart.dto.ProductRequestDto;
+import cart.exception.product.NullOrBlankException;
+import cart.exception.product.PriceNotUnderZeroException;
 
 public class Product {
 
@@ -10,6 +12,8 @@ public class Product {
     private final int price;
 
     public Product(final Long id, final String name, final String imageUrl, final int price) {
+        validateNullOrBlank(name, imageUrl);
+        validatePriceValue(price);
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -17,17 +21,11 @@ public class Product {
     }
 
     public Product(final String name, final String imageUrl, final int price) {
-        this.id = null;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.price = price;
+        this(null, name, imageUrl, price);
     }
 
     public Product(final ProductRequestDto productRequestDto) {
-        this.id = null;
-        this.name = productRequestDto.getName();
-        this.imageUrl = productRequestDto.getImageUrl();
-        this.price = productRequestDto.getPrice();
+        this(null, productRequestDto.getName(), productRequestDto.getImageUrl(), productRequestDto.getPrice());
     }
 
     public Long getId() {
@@ -44,5 +42,17 @@ public class Product {
 
     public int getPrice() {
         return price;
+    }
+
+    private void validateNullOrBlank(String name, String imageUrl) {
+        if (name == null || imageUrl == null || name.isBlank() || imageUrl.isBlank()) {
+            throw new NullOrBlankException();
+        }
+    }
+
+    private void validatePriceValue(int price) {
+        if (price < 0) {
+            throw new PriceNotUnderZeroException();
+        }
     }
 }
