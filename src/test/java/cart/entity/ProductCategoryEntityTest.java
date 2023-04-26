@@ -1,10 +1,10 @@
 package cart.entity;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ProductCategoryEntityTest {
 
@@ -17,8 +17,8 @@ class ProductCategoryEntityTest {
         //when
         //then
         assertAll(
-            () -> assertThat(productCategoryEntity.getProductId()).isEqualTo(1L),
-            () -> assertThat(productCategoryEntity.getCategoryId()).isEqualTo(1L)
+                () -> assertThat(productCategoryEntity.getProductId()).isEqualTo(1L),
+                () -> assertThat(productCategoryEntity.getCategoryId()).isEqualTo(1L)
         );
     }
 }

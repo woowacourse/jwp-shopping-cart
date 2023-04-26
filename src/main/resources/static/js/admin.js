@@ -22,6 +22,7 @@ const showEditModal = (product, categories) => {
                 category.setAttribute("checked", "checked");
             }
         }
+
         modal.dataset.formType = 'edit';
         modal.dataset.productId = product.id;
         modal.style.display = 'block';

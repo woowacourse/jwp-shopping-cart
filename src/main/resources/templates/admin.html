@@ -1,87 +1,87 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>관리자 페이지</title>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap"
-        rel="stylesheet">
-  <link rel="stylesheet" th:href="@{/css/base.css}">
-  <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <meta charset="UTF-8">
+    <title>관리자 페이지</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
 <header class="gnb">
-  <nav>
-    <ul class="gnb-group">
-      <li><a href="/">상품목록</a></li>
-      <li><a href="/cart">장바구니</a></li>
-      <li><a href="/settings">설정</a></li>
-      <li class="nav-admin"><a href="/admin">관리자</a></li>
-    </ul>
-  </nav>
+    <nav>
+        <ul class="gnb-group">
+            <li><a href="/">상품목록</a></li>
+            <li><a href="/cart">장바구니</a></li>
+            <li><a href="/settings">설정</a></li>
+            <li class="nav-admin"><a href="/admin">관리자</a></li>
+        </ul>
+    </nav>
 </header>
 <div class="container">
-  <div class="btn-group">
-    <button class="add-btn" onclick="showAddModal()">상품 추가</button>
-  </div>
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>이름</th>
-      <th>가격</th>
-      <th>이미지</th>
-      <th>설명</th>
-      <th>카테코리</th>
-      <th>Actions</th>
-    </tr>
-    <tbody id="product-list">
-    <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
-    <tr th:each="product : ${products}">
-      <td th:text="${product.id}"></td>
-      <td th:text="${product.name}"></td> <!-- 상품 이름 -->
-      <td th:text="${product.price}"></td> <!-- 상품 가격 -->
-      <td>
-        <img style="max-width: 100px;" th:src="${product.imageUrl}"> <!-- 상품 이미지 -->
-      </td>
-      <td th:text="${product.description}"></td> <!-- 상품 설명 -->
-      <td th:text="${product.categoryNames}"></td> <!-- 상품 카테코리 -->
-      <td>
-        <button th:onclick="showEditModal([[${product}]],[[${categories}]])">수정</button>
-        <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-
-  <div id="modal" class="modal" data-form-type="add">
-    <div class="modal-content">
-      <span class="close" onclick="hideAddModal()">&times;</span>
-      <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
-      <form id="form">
-        <label for="name">상품명</label><br>
-        <input class="productInfo" type="text" id="name" name="name" required><br>
-
-        <label for="price">가격</label><br>
-        <input class="productInfo" type="number" id="price" name="price" required><br>
-
-        <label for="image-url">이미지 URL</label><br>
-        <input class="productInfo" type="text" id="image-url" name="imageUrl" required><br>
-
-        <label for="description">설명</label><br>
-        <input class="productInfo" type="text" id="description" name="description" required><br>
-
-        <h4>카테고리 (다중 선택 가능)</h4>
-        <div th:each="category : ${categories}" class="form-check">
-          <label th:for="'categoryIds'+${category.id}" class="form-check-lable"
-                 th:text="${category.name}"
-                 style="display: inline-block;"></label>
-          <input class="category form-check-input" type="checkbox"
-                 th:id="'categoryIds'+${category.id}"
-                 th:name="${category.id}" th:value="${category.id}">
-        </div>
-        <button type="submit">제출</button>
-      </form>
+    <div class="btn-group">
+        <button class="add-btn" onclick="showAddModal()">상품 추가</button>
     </div>
-  </div>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>가격</th>
+            <th>이미지</th>
+            <th>설명</th>
+            <th>카테코리</th>
+            <th>Actions</th>
+        </tr>
+        <tbody id="product-list">
+        <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td> <!-- 상품 이름 -->
+            <td th:text="${product.price}"></td> <!-- 상품 가격 -->
+            <td>
+                <img style="max-width: 100px;" th:src="${product.imageUrl}"> <!-- 상품 이미지 -->
+            </td>
+            <td th:text="${product.description}"></td> <!-- 상품 설명 -->
+            <td th:text="${product.categoryNames}"></td> <!-- 상품 카테고리 -->
+            <td>
+                <button th:onclick="showEditModal([[${product}]],[[${categories}]])">수정</button>
+                <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="modal" data-form-type="add" id="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideAddModal()">&times;</span>
+            <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
+            <form id="form">
+                <label for="name">상품명</label><br>
+                <input class="productInfo" id="name" name="name" required type="text"><br>
+
+                <label for="price">가격</label><br>
+                <input class="productInfo" id="price" name="price" required type="number"><br>
+
+                <label for="image-url">이미지 URL</label><br>
+                <input class="productInfo" id="image-url" name="imageUrl" required type="text"><br>
+
+                <label for="description">설명</label><br>
+                <input class="productInfo" id="description" name="description" required type="text"><br>
+
+                <h4>카테고리 (다중 선택 가능)</h4>
+                <div class="form-check" th:each="category : ${categories}">
+                    <label class="form-check-lable" style="display: inline-block;"
+                           th:for="'categoryIds'+${category.id}"
+                           th:text="${category.name}"></label>
+                    <input class="category form-check-input" th:id="'categoryIds'+${category.id}"
+                           th:name="${category.id}"
+                           th:value="${category.id}" type="checkbox">
+                </div>
+                <button type="submit">제출</button>
+            </form>
+        </div>
+    </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/admin.js}"></script>

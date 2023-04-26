@@ -22,8 +22,8 @@ public final class ExceptionAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleException(final MethodArgumentNotValidException exception) {
-        final StringBuilder stringBuilder = new StringBuilder();
         final BindingResult bindingResult = exception.getBindingResult();
+        final StringBuilder stringBuilder = new StringBuilder();
 
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
             stringBuilder.append("[");

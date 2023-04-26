@@ -1,8 +1,5 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import cart.entity.product.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 class ProductDaoTest {
@@ -30,11 +30,11 @@ class ProductDaoTest {
     void save() {
         //given
         final ProductEntity productEntity = new ProductEntity(
-            null,
-            "다즐",
-            "스플릿.com",
-            10000000,
-            "다즐짱"
+                null,
+                "다즐",
+                "스플릿.com",
+                10000000,
+                "다즐짱"
         );
 
         //when
@@ -49,18 +49,18 @@ class ProductDaoTest {
     void findAll() {
         //given
         final ProductEntity firstProductEntity = new ProductEntity(
-            null,
-            "다즐",
-            "스플릿.com",
-            10000000,
-            "다즐짱"
+                null,
+                "다즐",
+                "스플릿.com",
+                10000000,
+                "다즐짱"
         );
         final ProductEntity secondProductEntity = new ProductEntity(
-            null,
-            "다즐",
-            "스플릿.com",
-            10000000,
-            "다즐짱"
+                null,
+                "다즐",
+                "스플릿.com",
+                10000000,
+                "다즐짱"
         );
 
         //when
@@ -70,7 +70,7 @@ class ProductDaoTest {
         //then
         assertThat(productDao.findAll()).hasSize(2);
         assertThat(productDao.findAll()).map(ProductEntity::getId)
-            .containsExactly(savedFirstProductId, savedSecondProductId);
+                .containsExactly(savedFirstProductId, savedSecondProductId);
     }
 
     @Test
@@ -78,11 +78,11 @@ class ProductDaoTest {
     void findById() {
         //given
         final ProductEntity firstProductEntity = new ProductEntity(
-            null,
-            "다즐",
-            "스플릿.com",
-            10000000,
-            "다즐짱"
+                null,
+                "다즐",
+                "스플릿.com",
+                10000000,
+                "다즐짱"
         );
         final Long savedFirstProductId = productDao.save(firstProductEntity);
 
@@ -91,11 +91,11 @@ class ProductDaoTest {
 
         //then
         assertAll(
-            () -> assertThat(findProductEntity.getId()).isEqualTo(savedFirstProductId),
-            () -> assertThat(findProductEntity.getName()).isEqualTo("다즐"),
-            () -> assertThat(findProductEntity.getImageUrl()).isEqualTo("스플릿.com"),
-            () -> assertThat(findProductEntity.getPrice()).isEqualTo(10000000),
-            () -> assertThat(findProductEntity.getDescription()).isEqualTo("다즐짱")
+                () -> assertThat(findProductEntity.getId()).isEqualTo(savedFirstProductId),
+                () -> assertThat(findProductEntity.getName()).isEqualTo("다즐"),
+                () -> assertThat(findProductEntity.getImageUrl()).isEqualTo("스플릿.com"),
+                () -> assertThat(findProductEntity.getPrice()).isEqualTo(10000000),
+                () -> assertThat(findProductEntity.getDescription()).isEqualTo("다즐짱")
         );
     }
 
@@ -108,11 +108,11 @@ class ProductDaoTest {
         void delete() {
             //given
             final ProductEntity productEntity = new ProductEntity(
-                null,
-                "다즐",
-                "스플릿.com",
-                10000000,
-                "다즐짱"
+                    null,
+                    "다즐",
+                    "스플릿.com",
+                    10000000,
+                    "다즐짱"
             );
             final Long savedProductId = productDao.save(productEntity);
 
@@ -132,11 +132,11 @@ class ProductDaoTest {
         void update() {
             //given
             final ProductEntity productEntity = new ProductEntity(
-                null,
-                "다즐",
-                "스플릿.com",
-                10000000,
-                "다즐짱"
+                    null,
+                    "다즐",
+                    "스플릿.com",
+                    10000000,
+                    "다즐짱"
             );
             final Long savedProductId = productDao.save(productEntity);
             final ProductEntity findProductEntity = productDao.findById(savedProductId).get();
@@ -148,10 +148,10 @@ class ProductDaoTest {
 
             //then
             assertAll(
-                () -> assertThat(updatedProductEntity.getName()).isEqualTo("name"),
-                () -> assertThat(updatedProductEntity.getImageUrl()).isEqualTo("imageUrl"),
-                () -> assertThat(updatedProductEntity.getPrice()).isEqualTo(1000),
-                () -> assertThat(updatedProductEntity.getDescription()).isEqualTo("description")
+                    () -> assertThat(updatedProductEntity.getName()).isEqualTo("name"),
+                    () -> assertThat(updatedProductEntity.getImageUrl()).isEqualTo("imageUrl"),
+                    () -> assertThat(updatedProductEntity.getPrice()).isEqualTo(1000),
+                    () -> assertThat(updatedProductEntity.getDescription()).isEqualTo("description")
             );
         }
     }

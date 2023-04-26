@@ -25,19 +25,21 @@ class ProductControllerTest {
     @DisplayName("진입 페이지를 생성한다.")
     void indexPage() {
         RestAssured.given()
-            .accept(MediaType.TEXT_HTML_VALUE)
-            .when().get("/")
-            .then()
-            .statusCode(HttpStatus.OK.value());
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .get("/")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
     @DisplayName("관리자 페이지를 생성한다.")
     void admin() {
         RestAssured.given()
-            .accept(MediaType.TEXT_HTML_VALUE)
-            .when().get("/admin")
-            .then()
-            .statusCode(HttpStatus.OK.value());
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .get("/admin")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     }
 }

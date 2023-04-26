@@ -3,21 +3,15 @@ package cart.controller;
 import cart.dto.request.ProductRequestDto;
 import cart.dto.response.ProductResponseDto;
 import cart.service.ProductService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import javax.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+@RequestMapping("/products")
 @RestController
-@RequestMapping(path = "/products")
 public final class ProductApiController {
 
     private final ProductService productService;
@@ -28,29 +22,29 @@ public final class ProductApiController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponseDto>> findProducts() {
-        final List<ProductResponseDto> productResponseDtos = productService.findProducts();
-        return ResponseEntity.ok(productResponseDtos);
+        final List<ProductResponseDto> result = productService.findProducts();
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody ProductRequestDto productRequestDto) {
-        final Long registeredProductId = productService.register(productRequestDto);
-        return ResponseEntity.created(URI.create("/products/" + registeredProductId)).build();
+    public ResponseEntity<Void> registerProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
+        final Long savedProductId = productService.registerProduct(productRequestDto);
+        return ResponseEntity.created(URI.create("/products/" + savedProductId)).build();
     }
 
-    @PutMapping(path = "/{id}")
-    public ResponseEntity<Void> update(
-        @PathVariable(name = "id") Long productId,
-        @RequestBody ProductRequestDto productRequestDto
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateProduct(
+            @PathVariable(name = "id") Long productId,
+            @RequestBody ProductRequestDto productRequestDto
     ) {
-        productService.update(productId, productRequestDto);
+        productService.updateProduct(productId, productRequestDto);
         return ResponseEntity.ok().build();
     }
 
-
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable(name = "id") Long productId) {
-        productService.delete(productId);
+    public ResponseEntity<Void> removeProduct(@PathVariable(name = "id") Long productId) {
+        productService.removeProduct(productId);
         return ResponseEntity.noContent().build();
     }
 }
+

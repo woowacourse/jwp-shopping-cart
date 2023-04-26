@@ -1,6 +1,7 @@
 package cart.dto.response;
 
 import cart.entity.CategoryEntity;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,8 +17,8 @@ public final class CategoryResponseDto {
 
     public static List<CategoryResponseDto> listOf(final List<CategoryEntity> categoryEntities) {
         return categoryEntities.stream()
-            .map(CategoryResponseDto::from)
-            .collect(Collectors.toList());
+                .map(CategoryResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     public static CategoryResponseDto from(final CategoryEntity categoryEntity) {

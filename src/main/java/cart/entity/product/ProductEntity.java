@@ -14,8 +14,7 @@ public final class ProductEntity {
         this(null, name, imageUrl, price, description);
     }
 
-    public ProductEntity(final Long id, final String name, final String imageUrl, final Integer price,
-        final String description) {
+    public ProductEntity(final Long id, final String name, final String imageUrl, final Integer price, final String description) {
         this.id = id;
         this.name = new Name(name);
         this.imageUrl = new ImageUrl(imageUrl);
@@ -23,8 +22,7 @@ public final class ProductEntity {
         this.description = new Description(description);
     }
 
-    public void update(final String name, final String imageUrl, final Integer price,
-        final String description) {
+    public void update(final String name, final String imageUrl, final Integer price, final String description) {
         this.name = new Name(name);
         this.imageUrl = new ImageUrl(imageUrl);
         this.price = new Price(price);

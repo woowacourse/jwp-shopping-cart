@@ -1,15 +1,16 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cart.entity.CategoryEntity;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 class CategoryDaoTest {
@@ -35,6 +36,6 @@ class CategoryDaoTest {
 
         //then
         assertThat(categoryEntities).map(CategoryEntity::getName)
-            .containsExactly("카페", "일식", "치킨");
+                .containsExactly("카페", "일식", "치킨");
     }
 }

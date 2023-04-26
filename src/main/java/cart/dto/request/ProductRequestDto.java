@@ -1,10 +1,11 @@
 package cart.dto.request;
 
-import java.util.List;
+import org.hibernate.validator.constraints.Range;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.Range;
+import java.util.List;
 
 public final class ProductRequestDto {
 
@@ -25,8 +26,13 @@ public final class ProductRequestDto {
     @NotNull(message = "카테고리를 선택해야 합니다.")
     private final List<Long> categoryIds;
 
-    public ProductRequestDto(final String name, final String imageUrl, final Integer price, final String description,
-        final List<Long> categoryIds) {
+    public ProductRequestDto(
+            final String name,
+            final String imageUrl,
+            final Integer price,
+            final String description,
+            final List<Long> categoryIds
+    ) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
