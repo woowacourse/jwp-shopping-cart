@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dto.ProductDto;
+import cart.dto.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class ProductDaoTest {
     @Test
     void save() {
         //given
-        ProductDto product = new ProductDto("연어", "", 1000);
+        ProductEntity product = new ProductEntity("연어", "", 1000);
 
         //when
         productDao.save(product);
@@ -44,9 +44,9 @@ class ProductDaoTest {
     @Test
     void findAll() {
         //given
-        List<ProductDto> products = List.of(new ProductDto("연어", "", 1000),
-                new ProductDto("오션", "", 1000),
-                new ProductDto("동해", "", 1000));
+        List<ProductEntity> products = List.of(new ProductEntity("연어", "", 1000),
+                new ProductEntity("오션", "", 1000),
+                new ProductEntity("동해", "", 1000));
 
         products.forEach(productDao::save);
 
@@ -58,12 +58,12 @@ class ProductDaoTest {
     @Test
     void update() {
         //given
-        ProductDto original = productDao.save(new ProductDto("오션", "", 1000));
-        ProductDto newProduct = new ProductDto(original.getId(), "연어", "", 1000);
+        ProductEntity original = productDao.save(new ProductEntity("오션", "", 1000));
+        ProductEntity newProduct = new ProductEntity(original.getId(), "연어", "", 1000);
 
         //when
         productDao.update(newProduct);
-        List<ProductDto> products = productDao.findAll();
+        List<ProductEntity> products = productDao.findAll();
 
         //then
         assertThat(products.get(0)).usingRecursiveComparison().isEqualTo(newProduct);
@@ -73,7 +73,7 @@ class ProductDaoTest {
     @Test
     void delete() {
         //given
-        ProductDto original = productDao.save(new ProductDto("오션", "", 1000));
+        ProductEntity original = productDao.save(new ProductEntity("오션", "", 1000));
 
         //when
         productDao.delete(original.getId());

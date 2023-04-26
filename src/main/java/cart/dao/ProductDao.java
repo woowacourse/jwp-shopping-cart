@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dto.ProductDto;
+import cart.dto.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,7 +16,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ProductDto save(final ProductDto product) {
+    public ProductEntity save(final ProductEntity product) {
         final String sql = "INSERT INTO products(name, image, price) VALUES (?, ?, ?)";
 
         final GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
@@ -33,18 +33,18 @@ public class ProductDao {
         return product;
     }
 
-    public List<ProductDto> findAll() {
+    public List<ProductEntity> findAll() {
         final String sql = "SELECT id, name, image, price FROM products";
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new ProductDto(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+                new ProductEntity(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
     }
 
-    public ProductDto update(final ProductDto productDto) {
+    public ProductEntity update(final ProductEntity productEntity) {
         final String sql = "UPDATE products SET id=?, name=?, image=?, price=? WHERE id=?";
 
-        jdbcTemplate.update(sql, productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice(), productDto.getId());
-        return productDto;
+        jdbcTemplate.update(sql, productEntity.getId(), productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), productEntity.getId());
+        return productEntity;
     }
 
     public void delete(final Long id) {

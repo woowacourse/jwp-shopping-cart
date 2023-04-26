@@ -1,17 +1,17 @@
-package cart.dto;
+package cart.dto.entity;
 
-public class ProductDto {
+public class ProductEntity {
 
     private Long id;
     private final String name;
     private final String image;
     private final int price;
 
-    public ProductDto(String name, String image, int price) {
+    public ProductEntity(String name, String image, int price) {
         this(null, name, image, price);
     }
 
-    public ProductDto(Long id, String name, String image, int price) {
+    public ProductEntity(Long id, String name, String image, int price) {
         this.id = id;
         this.name = name;
         this.image = image;
