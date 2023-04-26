@@ -16,9 +16,9 @@
 
 ### Controller
 
-- [ ]  관리자 도구 페이지를 반환한다. ( GET “/admin” )
+- [x]  관리자 도구 페이지를 반환한다. ( GET “/admin” )
     - Response Body : 모든 상품의 정보 ( ID, 이름, 가격, 이미지URL )
-- [ ]  상품 목록 페이지를 반환한다. ( GET “/” )
+- [x]  상품 목록 페이지를 반환한다. ( GET “/” )
     - Response Body : 모든 상품의 정보 ( ID, 이름, 가격, 이미지URL )
 - [x]  상품을 생성하고 해당 URL의 GET 메서드로 리다이렉트한다 . ( POST "/products" )
     - Request Body :  이름, 가격, 이미지URL, 카테고리 아이디 목록
