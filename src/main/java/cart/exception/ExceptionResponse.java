@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.exception;
 
 public class ExceptionResponse {
 

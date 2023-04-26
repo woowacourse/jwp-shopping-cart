@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.exception;
 
 import java.util.stream.Collectors;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
