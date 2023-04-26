@@ -56,4 +56,14 @@ class AdminControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
+
+    @DisplayName("상품을 삭제하면 상태코드 204를 반환하는지 확인한다")
+    @Test
+    void deleteProductsTest() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/admin/products/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
 }
