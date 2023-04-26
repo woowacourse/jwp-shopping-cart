@@ -29,4 +29,23 @@ public class WebController {
         model.addAttribute("products", products);
         return "index";
     }
+
+    @GetMapping("/admin")
+    public String admin(Model model) {
+        List<ProductDto> products = readProductService.perform().stream()
+                .map(product -> new ProductDto(product.getId(),
+                        product.getName(),
+                        product.getUrl(),
+                        product.getProductPrice()))
+                .collect(Collectors.toList());
+
+        products.add(new ProductDto(
+                1,
+                "123",
+                "http://123",
+                123
+        ));
+        model.addAttribute("products", products);
+        return "admin";
+    }
 }
