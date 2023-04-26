@@ -22,7 +22,7 @@
     <ul class="product-grid">
         <li class="product" th:each="product : ${products}">
             <div class="product-image">
-                <img alt="상품 이미지" th:src="${product.image}"> <!-- 상품 이미지 -->
+                <img alt="상품 이미지" th:src="${product.imageUrl}"> <!-- 상품 이미지 -->
             </div>
             <div class="product-info">
                 <div class="product-desc">

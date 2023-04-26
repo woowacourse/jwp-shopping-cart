@@ -38,7 +38,7 @@ public class ProductIntegrationTest {
         jdbcTemplate.execute("CREATE TABLE products ("
                 + "    id BIGINT NOT NULL AUTO_INCREMENT, "
                 + "    name VARCHAR(30) NOT NULL, "
-                + "    image VARCHAR(1000), "
+                + "    image_url VARCHAR(1000), "
                 + "    price INT NOT NULL, "
                 + "    PRIMARY KEY (id)"
                 + ");");
@@ -49,7 +49,7 @@ public class ProductIntegrationTest {
     void create() throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", "일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-                "image", "a".repeat(1000),
+                "image-url", "a".repeat(1000),
                 "price", 0
         ));
 
@@ -70,7 +70,7 @@ public class ProductIntegrationTest {
     void createFailName(String name) throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", name,
-                "image", "url",
+                "image-url", "url",
                 "price", 1000
         ));
 
@@ -90,7 +90,7 @@ public class ProductIntegrationTest {
     void createFailUrl() throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", "name",
-                "image", "a".repeat(1001),
+                "image-url", "a".repeat(1001),
                 "price", 1000
         ));
 
@@ -111,7 +111,7 @@ public class ProductIntegrationTest {
     void createFailPrice(int price) throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", "name",
-                "image", "url",
+                "image-url", "url",
                 "price", price
         ));
 
@@ -129,13 +129,13 @@ public class ProductIntegrationTest {
     @Test
     void update() throws JSONException {
         int updateCount = jdbcTemplate.update(
-                "INSERT INTO products (name, image, price) VALUES ('에밀', 'emil.png', 1000)");
+                "INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000)");
         assertThat(updateCount).isEqualTo(1);
 
         JSONObject productUpdateRequest = parseJSON(Map.of(
                 "id", 1,
                 "name", "도이",
-                "image", "doy.png",
+                "image-url", "doy.png",
                 "price", 10000
         ));
 
@@ -153,7 +153,7 @@ public class ProductIntegrationTest {
     @Test
     void delete() {
         int updateCount = jdbcTemplate.update(
-                "INSERT INTO products (name, image, price) VALUES ('에밀', 'emil.png', 1000)");
+                "INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000)");
         assertThat(updateCount).isEqualTo(1);
 
         ExtractableResponse<Response> response = given()

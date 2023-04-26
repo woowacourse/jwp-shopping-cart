@@ -9,17 +9,17 @@ public class Product {
 
     private Long id;
     private final String name;
-    private final String image;
+    private final String imageUrl;
     private final int price;
 
-    public Product(final Long id, final String name, final String image, final int price) {
+    public Product(final Long id, final String name, final String imageUrl, final int price) {
         this.id = id;
         this.name = name;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.price = price;
     }
 
-    public Product(final String name, final String image, final int price) {
-        this(null, name, image, price);
+    public Product(final String name, final String imageUrl, final int price) {
+        this(null, name, imageUrl, price);
     }
 }

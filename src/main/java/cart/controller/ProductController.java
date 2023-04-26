@@ -3,6 +3,7 @@ package cart.controller;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ErrorDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -43,7 +44,7 @@ public class ProductController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<Void> create(@Valid @RequestBody ProductAddRequest productDto) {
-        productDao.insert(new Product(productDto.getName(), productDto.getImage(), productDto.getPrice()));
+        productDao.insert(new Product(productDto.getName(), productDto.getImageUrl(), productDto.getPrice()));
         return ResponseEntity.ok().build();
     }
 
@@ -52,7 +53,7 @@ public class ProductController {
         productDao.update(new Product(
                 productDto.getId(),
                 productDto.getName(),
-                productDto.getImage(),
+                productDto.getImageUrl(),
                 productDto.getPrice())
         );
         return ResponseEntity.ok().build();
@@ -90,10 +91,11 @@ public class ProductController {
         @NotBlank(message = "상품 이름은 빈 문자열일 수 없습니다")
         @Length(min = 1, max = 30, message = "상품 이름은 최소 1, 최대 30글자입니다.")
         private String name;
+        @JsonProperty("image-url")
         @NotNull
         @NotBlank(message = "이미지 URL은 빈 문자열일 수 없습니다")
         @Length(max = 1000, message = "이미지 URL 길이가 너무 깁니다.")
-        private String image;
+        private String imageUrl;
         @PositiveOrZero
         @Max(value = 1_000_000_000, message = "상품 금액이 너무 큽니다.")
         private int price;
@@ -112,7 +114,8 @@ public class ProductController {
         @NotNull
         @NotBlank(message = "이미지 URL은 빈 문자열일 수 없습니다")
         @Length(max = 1000, message = "이미지 URL 길이가 너무 깁니다.")
-        private String image;
+        @JsonProperty("image-url")
+        private String imageUrl;
         @PositiveOrZero
         @Max(value = 1_000_000_000, message = "상품 금액이 너무 큽니다.")
         private int price;

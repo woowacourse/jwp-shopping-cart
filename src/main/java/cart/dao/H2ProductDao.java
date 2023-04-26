@@ -17,7 +17,7 @@ public class H2ProductDao implements ProductDao {
     private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (rs, rowNum) -> new Product(
             rs.getLong("id"),
             rs.getString("name"),
-            rs.getString("image"),
+            rs.getString("image_url"),
             rs.getInt("price")
     );
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -26,24 +26,23 @@ public class H2ProductDao implements ProductDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-
     @Override
     public Product insert(final Product product) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(
-                "INSERT INTO products (name, image, price) VALUES (:name, :image, :price)",
+                "INSERT INTO products (name, image_url, price) VALUES (:name, :imageUrl, :price)",
                 new BeanPropertySqlParameterSource(product),
                 keyHolder,
                 new String[]{"id"}
         );
         long id = keyHolder.getKey().longValue();
-        return new Product(id, product.getName(), product.getImage(), product.getPrice());
+        return new Product(id, product.getName(), product.getImageUrl(), product.getPrice());
     }
 
     @Override
     public void update(final Product product) {
         namedParameterJdbcTemplate.update(
-                "UPDATE products SET name = :name, image = :image, price = :price WHERE id = :id",
+                "UPDATE products SET name = :name, image_url = :imageUrl, price = :price WHERE id = :id",
                 new BeanPropertySqlParameterSource(product)
         );
     }
@@ -51,7 +50,7 @@ public class H2ProductDao implements ProductDao {
     @Override
     public Optional<Product> findById(final Long id) {
         Product product = namedParameterJdbcTemplate.queryForObject(
-                "SELECT id, name, image, price FROM products WHERE id = :id",
+                "SELECT id, name, image_url, price FROM products WHERE id = :id",
                 new MapSqlParameterSource("id", id),
                 PRODUCT_ROW_MAPPER
         );
@@ -61,7 +60,7 @@ public class H2ProductDao implements ProductDao {
     @Override
     public List<Product> findAll() {
         return namedParameterJdbcTemplate.query(
-                "SELECT id, name, image, price FROM products",
+                "SELECT id, name, image_url, price FROM products",
                 PRODUCT_ROW_MAPPER
         );
     }
