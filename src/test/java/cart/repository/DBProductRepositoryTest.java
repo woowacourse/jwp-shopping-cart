@@ -15,7 +15,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import cart.domain.ProductRepository;
 import cart.dto.ProductDto;
 import cart.dto.ProductRequestDto;
-import cart.dto.ProductResponseDto;
 
 @JdbcTest
 class DBProductRepositoryTest {
