@@ -77,4 +77,25 @@ class ProductApiControllerTest {
             .then()
             .statusCode(HttpStatus.OK.value());
     }
+
+    @Test
+    @DisplayName("상품 ID를 통해 상품을 삭제한다.")
+    void delete() {
+        final ProductRequestDto productRequestDto = new ProductRequestDto(
+            "스플릿",
+            "스프링",
+            15000,
+            "우아한테크코스",
+            List.of(1L, 2L)
+        );
+        final Long registeredId = productService.register(productRequestDto);
+
+        //when
+        //then
+        RestAssured.given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().delete("/products/" + registeredId)
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
+    }
 }

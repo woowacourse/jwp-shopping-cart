@@ -4,6 +4,7 @@ import cart.dto.request.ProductRequestDto;
 import cart.service.ProductService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,5 +35,12 @@ public class ProductApiController {
     ) {
         productService.update(productId, productRequestDto);
         return ResponseEntity.ok().build();
+    }
+
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Long productId) {
+        productService.delete(productId);
+        return ResponseEntity.noContent().build();
     }
 }
