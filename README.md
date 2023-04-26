@@ -13,6 +13,27 @@ CREATE TABLE IF NOT EXISTS ITEM
 ```
 
 ## API SPEC
+* 모든 상품 조회
+  * `GET`: /items
+```text
+request: 
+http://localhost:8080/items
+
+response:
+{
+    {
+        "name": "치킨",
+        "image": "http://images/something/where"
+        "price": "10000"
+    },
+    
+    {
+        "name": "자전거",
+        "image": "http://images/something/where"
+        "price": "50000"
+    }
+}
+```
 
 * 단일 상품 등록
   * `POST`: /items
@@ -22,7 +43,7 @@ http://localhost:8080/items
 
 {
     "name": "치킨",
-    "image": "http://images/somthing/where"
+    "image": "http://images/something/where"
     "price": "10000"
 }
 
@@ -46,7 +67,7 @@ http://localhost:8080/items/1
 
 {
     "name": "치킨",
-    "image": "http://images/somthing/where"
+    "image": "http://images/something/where"
     "price": "15000"
 }
 
@@ -55,7 +76,7 @@ response:
 {
     "id": "1",
     "name": "치킨",
-    "image": "http://images/somthing/where"
+    "image": "http://images/something/where"
     "price": "15000"
 }
 
@@ -71,13 +92,12 @@ http://localhost:8080/items/1
 
 
 ## 기능 목록
-- [ ] 상품 관리 CRUD API를 작성한다.
-  - [ ] 상품 등록 API를 구현한다.
-  - [ ] 상품 조회 API를 구현한다.
-  - [ ] 상품 수정 API를 구현한다.
-  - [ ] 상품 삭제 API를 구현한다.
-- [ ] 상품 전체 조회 API를 구현한다.
-- [ ] 관리자 도구 페이지를 연동한다.
+- [x] 상품 관리 CRUD API를 작성한다.
+  - [x] 상품 등록 API를 구현한다.
+  - [x] 상품 수정 API를 구현한다.
+  - [x] 상품 삭제 API를 구현한다.
+- [x] 상품 전체 조회 API를 구현한다.
+- [x] 관리자 도구 페이지를 연동한다.
 
 
 
