@@ -6,6 +6,7 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequestDto;
+import cart.dto.ProductUpdateRequestDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,10 @@ public class ProductService {
         return productDao.findAll().stream()
                 .map(ProductDto::from)
                 .collect(toUnmodifiableList());
+    }
+
+    public void update(final Long id, final ProductUpdateRequestDto request) {
+        final Product product = new Product(id, request.getName(), request.getImage(), request.getPrice());
+        productDao.update(product);
     }
 }

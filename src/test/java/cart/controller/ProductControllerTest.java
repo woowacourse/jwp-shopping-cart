@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductSaveRequestDto;
+import cart.dto.ProductUpdateRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -59,9 +61,9 @@ class ProductControllerTest {
         // then
         final Product result = productDao.findAll().get(0);
         assertAll(
-                () -> assertThat(result.getName()).isEqualTo(result.getName()),
-                () -> assertThat(result.getImage()).isEqualTo(result.getImage()),
-                () -> assertThat(result.getPrice()).isEqualTo(result.getPrice())
+                () -> assertThat(result.getName()).isEqualTo("허브티"),
+                () -> assertThat(result.getImage()).isEqualTo("tea.jpg"),
+                () -> assertThat(result.getPrice()).isEqualTo(1000L)
         );
     }
 
@@ -123,6 +125,31 @@ class ProductControllerTest {
                         )
                 )))
                 .andDo(print());
+    }
+
+    @Test
+    void 상품을_수정한다() throws Exception {
+        // given
+        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Long id = productDao.saveAndGetId(product).get();
+        final ProductUpdateRequestDto updateRequestDto = new ProductUpdateRequestDto("고양이", "cat.jpg", 1000000L);
+        final String request = objectMapper.writeValueAsString(updateRequestDto);
+
+        // when
+        mockMvc.perform(patch("/products/" + id)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(print());
+
+        // then
+        final Product result = productDao.findAll().get(0);
+        assertAll(
+                () -> assertThat(result.getId()).isEqualTo(id),
+                () -> assertThat(result.getName()).isEqualTo("고양이"),
+                () -> assertThat(result.getImage()).isEqualTo("cat.jpg"),
+                () -> assertThat(result.getPrice()).isEqualTo(1000000L)
+        );
     }
 }
 

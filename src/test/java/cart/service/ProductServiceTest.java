@@ -7,6 +7,7 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequestDto;
+import cart.dto.ProductUpdateRequestDto;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -59,5 +60,25 @@ class ProductServiceTest {
                 new ProductDto(id1, request1.getName(), request1.getImage(), request1.getPrice()),
                 new ProductDto(id2, request2.getName(), request2.getImage(), request2.getPrice())
         ));
+    }
+
+    @Test
+    void 상품을_수정한다() {
+        // given
+        final ProductSaveRequestDto product = new ProductSaveRequestDto("허브티", "tea.jpg", 99L);
+        final Long id = productService.save(product);
+        final ProductUpdateRequestDto request = new ProductUpdateRequestDto("블랙캣", "cat.jpg", 100L);
+
+        // when
+        productService.update(id, request);
+
+        // then
+        final Product result = productDao.findAll().get(0);
+        assertAll(
+                () -> assertThat(result.getId()).isEqualTo(id),
+                () -> assertThat(result.getName()).isEqualTo("블랙캣"),
+                () -> assertThat(result.getImage()).isEqualTo("cat.jpg"),
+                () -> assertThat(result.getPrice()).isEqualTo(100L)
+        );
     }
 }

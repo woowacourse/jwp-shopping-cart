@@ -38,4 +38,9 @@ public class ProductDao {
         final String sql = "select * from product";
         return jdbcTemplate.query(sql, rowMapper);
     }
+
+    public void update(final Product product) {
+        final String sql = "update product set name = ?, image = ?, price = ? where id = ?";
+        jdbcTemplate.update(sql, product.getName(), product.getImage(), product.getPrice(), product.getId());
+    }
 }

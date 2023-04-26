@@ -33,9 +33,9 @@
         <tbody id="product-list">
         <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
         <tr th:each="product : ${products}">
-            <td th:text="${product.id}"></td>
-            <td th:text="${product.name}"></td> <!-- 상품 이름 -->
-            <td th:text="${product.price}"></td> <!-- 상품 가격 -->
+            <td th:text="${product.id}" th:value="${product.id}"></td>
+            <td th:text="${product.name}" th:value="${product.name}"></td> <!-- 상품 이름 -->
+            <td th:text="${product.price}" th:value="${product.price}"></td> <!-- 상품 가격 -->
             <td>
                 <img style="max-width: 100px;" th:src="${product.image}"> <!-- 상품 이미지 -->
             </td>

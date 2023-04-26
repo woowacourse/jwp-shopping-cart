@@ -62,4 +62,24 @@ class ProductDaoTest {
                 new Product(id2, product2.getName(), product2.getImage(), product2.getPrice())
         ));
     }
+
+    @Test
+    void 상품을_수정한다() {
+        // given
+        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Long id = productDao.saveAndGetId(product).get();
+        final Product updatedProduct = new Product(id, "블랙캣", "cat.jpg", 10000L);
+
+        // when
+        productDao.update(updatedProduct);
+
+        // then
+        final Product result = productDao.findAll().get(0);
+        assertAll(
+                () -> assertThat(result.getId()).isEqualTo(id),
+                () -> assertThat(result.getName()).isEqualTo("블랙캣"),
+                () -> assertThat(result.getImage()).isEqualTo("cat.jpg"),
+                () -> assertThat(result.getPrice()).isEqualTo(10000L)
+        );
+    }
 }
