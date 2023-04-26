@@ -76,6 +76,40 @@ class JwpCartApplicationTests {
     }
 
     @Test
+    @Sql("/truncate.sql")
+    @DisplayName("존재하지 않는 상품을 변경하면 예외가 발생한다.")
+    void updateItemRequestFailWithNotExistsID() {
+        ItemRequest itemRequest = createItemRequest("맥북", "http://image.com", 15_000);
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(itemRequest)
+                .when()
+                .put("/items/{id}", 1L)
+                .then().log().all()
+                .contentType(ContentType.JSON)
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("일치하는 상품을 찾을 수 없습니다."));
+    }
+
+    @Test
+    @Sql("/truncate.sql")
+    @DisplayName("존재하지 않는 상품을 삭제하면 예외가 발생한다.")
+    void deleteItemRequestFailWithNotExistsID() {
+        ItemRequest itemRequest = createItemRequest("맥북", "http://image.com", 15_000);
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(itemRequest)
+                .when()
+                .delete("/items/{id}", 1L)
+                .then().log().all()
+                .contentType(ContentType.JSON)
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("일치하는 상품을 찾을 수 없습니다."));
+    }
+
+    @Test
     @DisplayName("상품을 삭제한다.")
     void deleteItemRequestSuccess() {
         when()

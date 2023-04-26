@@ -55,6 +55,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ExceptionResponse> handleException(Exception ex) {
         LOGGER.warn(ex.getMessage());
+        ex.printStackTrace();
         return ResponseEntity.internalServerError().body(new ExceptionResponse<>(INTERNAL_ERROR_MESSAGE));
     }
 }

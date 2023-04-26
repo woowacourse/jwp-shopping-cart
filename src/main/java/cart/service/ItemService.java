@@ -3,6 +3,9 @@ package cart.service;
 import cart.controller.dto.ItemRequest;
 import cart.controller.dto.ItemResponse;
 import cart.dao.ItemDao;
+import cart.dao.dto.ItemDto;
+import cart.exception.ErrorStatus;
+import cart.exception.ItemException;
 import cart.model.Item;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +27,10 @@ public class ItemService {
         Item item = new Item(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
         Long savedId = itemDao.insert(item);
 
-        return ItemResponse.from(itemDao.findById(savedId));
+        ItemDto itemDto = itemDao.findById(savedId)
+                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
+
+        return ItemResponse.from(itemDto);
     }
 
     public List<ItemResponse> findAll() {
@@ -36,14 +42,22 @@ public class ItemService {
 
     @Transactional
     public ItemResponse update(Long id, ItemRequest itemRequest) {
+        itemDao.findById(id)
+                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
+
         Item item = new Item(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
         itemDao.update(id, item);
 
-        return ItemResponse.from(itemDao.findById(id));
+        ItemDto updatedItemDto = itemDao.findById(id)
+                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
+        return ItemResponse.from(updatedItemDto);
     }
 
     @Transactional
     public void delete(Long id) {
+        itemDao.findById(id)
+                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
+
         itemDao.delete(id);
     }
 }

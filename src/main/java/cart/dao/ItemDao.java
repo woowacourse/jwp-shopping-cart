@@ -4,6 +4,7 @@ import cart.dao.dto.ItemDto;
 import cart.model.Item;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -45,10 +46,12 @@ public class ItemDao {
         return keyHolder.getKey().longValue();
     }
 
-    public ItemDto findById(Long id) {
+    public Optional<ItemDto> findById(Long id) {
         String sql = "SELECT item_id, name, image_url, price FROM ITEM WHERE item_id = ?";
 
-        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
+        return jdbcTemplate.query(sql, actorRowMapper, id)
+                .stream()
+                .findAny();
     }
 
     public List<ItemDto> findAll() {

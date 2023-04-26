@@ -1,12 +1,14 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.controller.dto.ItemRequest;
 import cart.controller.dto.ItemResponse;
 import cart.dao.ItemDao;
+import cart.exception.ItemException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -81,6 +83,26 @@ class ItemServiceTest {
         ItemResponse itemResponse = itemService.add(itemRequest);
 
         assertDoesNotThrow(() -> itemService.delete(itemResponse.getId()));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품 ID를 조회하면 예외가 발생한다.")
+    @Sql("/truncate.sql")
+    void updateItemRequestFailWithNotExistID() {
+        ItemRequest itemRequest = createItemRequest();
+
+        assertThatThrownBy(() -> itemService.update(1L, itemRequest))
+                .isInstanceOf(ItemException.class)
+                .hasMessage("일치하는 상품을 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품 ID를 삭제하면 예외가 발생한다.")
+    @Sql("/truncate.sql")
+    void deleteItemRequestFailWithNotExistID() {
+        assertThatThrownBy(() -> itemService.delete(1L))
+                .isInstanceOf(ItemException.class)
+                .hasMessage("일치하는 상품을 찾을 수 없습니다.");
     }
 
     private static ItemRequest createItemRequest() {

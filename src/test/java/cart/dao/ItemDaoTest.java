@@ -41,7 +41,7 @@ class ItemDaoTest {
         Item item = new Item("맥북", "image", 10000);
         Long savedId = itemDao.insert(item);
 
-        ItemDto findItem = itemDao.findById(savedId);
+        ItemDto findItem = itemDao.findById(savedId).get();
 
         assertAll(
                 () -> assertThat(findItem.getId()).isEqualTo(savedId),
@@ -59,7 +59,7 @@ class ItemDaoTest {
         Item updateItem = new Item(originItem.getName(), originItem.getImageUrl(), 50000);
 
         itemDao.update(savedId, updateItem);
-        ItemDto findItem = itemDao.findById(savedId);
+        ItemDto findItem = itemDao.findById(savedId).get();
 
         assertAll(
                 () -> assertThat(findItem.getId()).isEqualTo(savedId),
