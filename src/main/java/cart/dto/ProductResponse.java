@@ -17,14 +17,8 @@ public class ProductResponse {
         this.price = price;
     }
 
-    public static ProductResponse from(final ProductDto productDto) {
-        return new ProductResponse(productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice());
-    }
-
-    public static List<ProductResponse> from(final List<ProductDto> productDtos) {
-        return productDtos.stream()
-                .map(ProductResponse::from)
-                .collect(Collectors.toList());
+    public static ProductResponse of(final Long id, final String name, final String image, final Integer price) {
+        return new ProductResponse(id, name, image, price);
     }
 
     public Long getId() {

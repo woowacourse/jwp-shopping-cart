@@ -3,6 +3,8 @@ package cart.service;
 import cart.dao.ProductDao;
 import cart.dto.ProductDto;
 import cart.entity.ProductEntity;
+import cart.mapper.ProductDtoMapper;
+import cart.mapper.ProductEntityMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,18 +20,18 @@ public class ProductManagementService {
 
     public List<ProductDto> findAll() {
         final List<ProductEntity> productEntities = productDao.selectAll();
-        return ProductDto.from(productEntities);
+        return ProductDtoMapper.from(productEntities);
     }
 
     public void save(final ProductDto productDto) {
-        productDao.insert(ProductEntity.from(productDto));
+        productDao.insert(ProductEntityMapper.from(productDto));
     }
 
     public void update(final ProductDto productDto) {
-        productDao.update(ProductEntity.from(productDto));
+        productDao.update(ProductEntityMapper.from(productDto));
     }
 
     public void delete(final ProductDto productDto) {
-        productDao.delete(ProductEntity.from(productDto));
+        productDao.delete(ProductEntityMapper.from(productDto));
     }
 }

@@ -52,7 +52,7 @@ class AdminControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put("/admin/products")
+                .when().put("/admin/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

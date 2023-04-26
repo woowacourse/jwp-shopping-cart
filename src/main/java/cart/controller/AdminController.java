@@ -4,6 +4,8 @@ import cart.dto.ProductCreationRequest;
 import cart.dto.ProductDto;
 import cart.dto.ProductModificationRequest;
 import cart.dto.ProductResponse;
+import cart.mapper.ProductDtoMapper;
+import cart.mapper.ProductResponseMapper;
 import cart.service.ProductManagementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,21 +31,21 @@ public class AdminController {
 
     @GetMapping
     public ModelAndView admin(ModelAndView modelAndView) {
-        modelAndView.addObject("products", ProductResponse.from(managementService.findAll()));
+        modelAndView.addObject("products", ProductResponseMapper.from(managementService.findAll()));
         modelAndView.setViewName("admin");
         return modelAndView;
     }
 
     @PostMapping("/products")
     public ResponseEntity<Void> postProducts(@RequestBody ProductCreationRequest request) {
-        managementService.save(ProductDto.from(request));
+        managementService.save(ProductDtoMapper.from(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<Void> putProducts(@PathVariable Long id,
                                             @RequestBody ProductModificationRequest request) {
-        managementService.update(ProductDto.from(request));
+        managementService.update(ProductDtoMapper.from(request));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

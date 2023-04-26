@@ -16,10 +16,6 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public static ProductEntity from(final ProductDto productDto) {
-        return new ProductEntity(productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice());
-    }
-
     public static ProductEntity of(final String name, final String image, final Integer price) {
         return new ProductEntity(null, name, image, price);
     }
