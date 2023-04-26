@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
-class AdminApiControllerTest {
+class ProductsApiControllerTest {
 
     private static final String NAME = "name";
     private static final int PRICE = 0;
@@ -48,7 +48,7 @@ class AdminApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new ProductRequestDto(NAME, PRICE, IMAGE))
-                .when().post("/admin/product")
+                .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -59,7 +59,7 @@ class AdminApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
-                .when().post("/admin/product")
+                .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is(errorMessage));
@@ -83,7 +83,7 @@ class AdminApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new ProductRequestDto("달리", PRICE, IMAGE))
-                .when().put("/admin/product/1")
+                .when().put("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -101,7 +101,7 @@ class AdminApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
-                .when().put("/admin/product/1")
+                .when().put("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is(errorMessage));
@@ -113,7 +113,7 @@ class AdminApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new ProductRequestDto("달리", PRICE, IMAGE))
-                .when().put("/admin/product/1")
+                .when().put("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is("해당 상품이 없습니다."));
@@ -126,7 +126,7 @@ class AdminApiControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .when().delete("/admin/product/1")
+                .when().delete("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

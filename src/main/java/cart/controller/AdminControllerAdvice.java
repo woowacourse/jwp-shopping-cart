@@ -7,7 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice(assignableTypes = AdminApiController.class)
+@ControllerAdvice(assignableTypes = ProductsApiController.class)
 public class AdminControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
