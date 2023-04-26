@@ -12,7 +12,7 @@
         - [x] CREATE
         - [x] READ
         - [] UPDATE
-        - [] DELETE
+        - [x] DELETE
           <br><br>
 - [] 상품 목록 페이지 연동
     - [] index.html 파일을 이용해 상품 목록이 노출되는 페이지를 완성한다
