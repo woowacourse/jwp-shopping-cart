@@ -30,18 +30,18 @@
 
 ### API 명세
 
-- [ ] 상품 Create
+- [x] 상품 Create
     - POST "/product"
     - Request: name, price, image
-    - Response: 201 Created
-- [ ] 상품 Read
-    - GET "/proudcts"
+    - Response: 200 OK
+- [x] 상품 Read
+    - GET "/products"
     - Response: products{ {id, name, image, price}, {..}}
-- [ ] 상품 Update
+- [x] 상품 Update
     - PUT "/product"
     - Request: id, name, price, image
     - Response: 200 OK
-- [ ] 상품 Delete
+- [x] 상품 Delete
     - DELETE "/product/{id}"
     - Response: 200 OK
 
