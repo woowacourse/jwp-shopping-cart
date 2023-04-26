@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -20,7 +21,7 @@ public class AdminCartController {
     }
 
     @PostMapping("/products")
-    public String createProduct(@RequestBody final ProductRequest productRequest) {
+    public String createProduct(@Valid @RequestBody final ProductRequest productRequest) {
         productDao.save(productRequest);
 
         return "admin";
@@ -35,7 +36,7 @@ public class AdminCartController {
     }
 
     @PutMapping("/products/{productId}")
-    public String modifyProduct(@PathVariable final Long productId, @RequestBody final ProductRequest productRequest) {
+    public String modifyProduct(@PathVariable final Long productId, @Valid @RequestBody final ProductRequest productRequest) {
         productDao.updateById(productId, productRequest);
 
         return "admin";
