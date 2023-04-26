@@ -76,11 +76,8 @@ const updateProduct = (product) => {
 
 const deleteProduct = (id) => {
     axios.request({
-        url: adminUrl + '/product',
-        method: 'delete',
-        data: {
-            id:  id
-        }
+        url: adminUrl + '/product/' + id,
+        method: 'delete'
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
