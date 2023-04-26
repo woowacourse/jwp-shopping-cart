@@ -52,4 +52,14 @@ public class ProductDaoTest {
         );
     }
 
+
+    @Test
+    @DisplayName("상품 삭제")
+    void deleteById() {
+        System.out.println("abc");
+        assertDoesNotThrow(
+                () -> productDao.deleteById(1)
+        );
+    }
+
 }
