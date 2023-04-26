@@ -1,11 +1,11 @@
 package cart.service;
 
+import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.entity.ProductEntity;
 import cart.fixture.ProductFixture;
-import cart.repository.ProductDao;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -60,7 +60,7 @@ class ProductServiceTest {
         @Test
         void 유효하지_않은_url() {
             ProductRequest request = new ProductRequest(null, "name", 1000);
-            
+
             assertThatThrownBy(() -> productService.create(request))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("이미지 URL은 비어있을 수 없습니다.");

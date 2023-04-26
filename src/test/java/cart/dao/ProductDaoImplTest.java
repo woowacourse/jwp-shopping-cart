@@ -1,4 +1,4 @@
-package cart.repository;
+package cart.dao;
 
 import cart.domain.Product;
 import cart.dto.ProductRequest;
