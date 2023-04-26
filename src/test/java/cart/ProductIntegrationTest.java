@@ -23,17 +23,15 @@ public class ProductIntegrationTest {
         RestAssured.port = port;
     }
 
-    @Disabled
     @Test
     public void getProducts() {
         var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/products")
+                .get("/product")
                 .then()
                 .extract();
 
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
-
 }
