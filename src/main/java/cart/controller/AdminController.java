@@ -3,6 +3,8 @@ package cart.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,10 +31,9 @@ public class AdminController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Void> createProduct(@RequestBody final ProductRequest productRequest) {
-        System.out.println("productRequest = " + productRequest);
-        Long id = cartService.create(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return ResponseEntity.created(URI.create("/product" + id)).build();
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
+        final long id = cartService.create(productRequest);
+        return ResponseEntity.created(URI.create("/admin/product/" + id)).build();
     }
 
     @GetMapping
@@ -44,7 +45,7 @@ public class AdminController {
 
     @PutMapping("/product/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody final ProductRequest productRequest) {
-        cartService.update(id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        cartService.update(id, productRequest);
         return ResponseEntity.ok().build();
     }
 
