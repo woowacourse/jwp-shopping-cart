@@ -29,8 +29,12 @@ public class CartService {
         return productDao.insert(productEntity);
     }
 
-    public void modify(ProductRequest productRequest, long id) {
+    public void modifyById(ProductRequest productRequest, long id) {
         ProductEntity productEntity = productRequest.toEntityBy(id);
         productDao.update(productEntity);
+    }
+
+    public void removeById(long id) {
+        productDao.delete(id);
     }
 }

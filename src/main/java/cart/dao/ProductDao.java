@@ -48,4 +48,9 @@ public class ProductDao {
                 productEntity.getPrice(),
                 productEntity.getId());
     }
+
+    public void delete(long id) {
+        String sql = "DELETE FROM product WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

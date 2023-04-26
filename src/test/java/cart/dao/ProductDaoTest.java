@@ -71,4 +71,17 @@ class ProductDaoTest {
                 .usingRecursiveComparison()
                 .isEqualTo(updateProductEntity);
     }
+
+    @DisplayName("상품을 삭제한다.")
+    @Test
+    void delete() {
+        // given
+        long savedId = productDao.insert(productEntity);
+
+        // when
+        productDao.delete(savedId);
+
+        // then
+        assertThat(productDao.findAll()).hasSize(0);
+    }
 }
