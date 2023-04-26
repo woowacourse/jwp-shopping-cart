@@ -2,10 +2,13 @@ package cart.presentation.dto;
 
 public class ProductDto {
 
-    private final Integer id;
-    private final String name;
-    private final String url;
-    private final Integer price;
+    private Integer id;
+    private String name;
+    private String url;
+    private Integer price;
+
+    public ProductDto() {
+    }
 
     public ProductDto(Integer id, String name, String url, Integer price) {
         this.id = id;
