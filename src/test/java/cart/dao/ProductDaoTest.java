@@ -59,4 +59,14 @@ class ProductDaoTest {
         Product savedProduct = productDao.findProductById(productId);
         assertThat(savedProduct).usingRecursiveComparison().isEqualTo(after);
     }
+
+    @Test
+    void deleteProduct는_상품을_삭제한다() {
+        //todo : 테스트를 위한 사전 상황을 어떻게 할지.
+        Product product = Product.of("chicken", "imagelink", 100);
+        long productId = productDao.save(product);
+
+        productDao.deleteProduct(productId);
+        assertThat(productDao.findAllProducts()).isEmpty();
+    }
 }
