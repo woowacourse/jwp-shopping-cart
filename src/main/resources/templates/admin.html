@@ -33,7 +33,9 @@
         </tr>
         <tbody id="product-list">
         <tr th:each="product : ${products}">
-            <td th:text="${product.getId()}"></td>
+            <td><a href="product.html"
+                   th:href="@{|/${product.getId()}|}"
+                   th:text="${product.getId()}"></a></td>
             <td>[[${product.getCategory()}]]</td> <!-- 상품 카테고리 -->
             <td>[[${product.getName()}]]</td> <!-- 상품 이름 -->
             <td>[[${product.getPrice()}]]</td> <!-- 상품 가격 -->

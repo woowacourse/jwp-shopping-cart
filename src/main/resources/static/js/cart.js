@@ -1,3 +1,7 @@
+const showDetail = (productId) => {
+    window.location.replace(`/${productId}`)
+}
+
 const addCartItem = (productId) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
