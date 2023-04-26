@@ -27,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("/")
-    public String index(final Model model) {
+    public String indexPage(final Model model) {
         final List<Product> products = productService.findAll();
 
         model.addAttribute("products", products);
@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @GetMapping("/admin")
-    public String admin(final Model model) {
+    public String adminPage(final Model model) {
         final List<Product> products = productService.findAll();
 
         model.addAttribute("products", products);
@@ -45,9 +45,13 @@ public class ProductController {
     }
 
     @PostMapping("/admin")
-    public void register(@RequestBody @Valid final ProductRequest productRequest) {
-        final ProductDto productDto = new ProductDto(productRequest.getName(), productRequest.getPrice(),
-                productRequest.getImageUrl());
+    public void createProduct(@RequestBody @Valid final ProductRequest productRequest) {
+        final ProductDto productDto = new ProductDto(
+                productRequest.getName(),
+                productRequest.getPrice(),
+                productRequest.getImageUrl()
+        );
+
         productService.register(productDto);
     }
 

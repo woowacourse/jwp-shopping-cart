@@ -22,13 +22,13 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long insert(final Product product) {
+    public long insert(final Product product) {
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
 
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
-    public Product findById(final Long id) {
+    public Product findById(final long id) {
         final String sql = "select id, name, price, image_url from Product where id = ?";
 
         return jdbcTemplate.queryForObject(sql, productRowMapper(), id);
@@ -51,13 +51,13 @@ public class ProductDao {
         );
     }
 
-    public void delete(final Long id) {
+    public void delete(final long id) {
         final String sql = "delete Product where id = ?";
 
         jdbcTemplate.update(sql, id);
     }
 
-    public boolean isExist(final Long id) {
+    public boolean isExist(final long id) {
         final String sql = "select count(*) from Product where id = ?";
 
         return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
