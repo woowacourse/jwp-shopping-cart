@@ -1,6 +1,9 @@
 package cart.dao;
 
-import cart.dao.entity.Item;
+import cart.domain.ImageUrl;
+import cart.domain.Item;
+import cart.domain.Name;
+import cart.domain.Price;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +23,9 @@ class ItemDaoTest {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Item> actorRowMapper = (resultSet, rowNumber) -> new Item.Builder()
             .id(resultSet.getLong("id"))
-            .name(resultSet.getString("name"))
-            .imageUrl(resultSet.getString("image_url"))
-            .price(resultSet.getInt("price"))
+            .name(new Name(resultSet.getString("name")))
+            .imageUrl(new ImageUrl(resultSet.getString("image_url")))
+            .price(new Price(resultSet.getInt("price")))
             .build();
 
     @Autowired
@@ -50,9 +53,9 @@ class ItemDaoTest {
         //then
         assertThat(findItem).isEqualTo(new Item.Builder()
                 .id(1L)
-                .name("위키드")
-                .imageUrl("https://image.yes24.com/themusical/upFiles/Themusical/Play/post_2013wicked.jpg")
-                .price(150000)
+                .name(new Name("위키드"))
+                .imageUrl(new ImageUrl("https://image.yes24.com/themusical/upFiles/Themusical/Play/post_2013wicked.jpg"))
+                .price(new Price(150000))
                 .build());
     }
 
@@ -62,9 +65,9 @@ class ItemDaoTest {
     void save() {
         // given
         Item item = new Item.Builder()
-                .name("레드북")
-                .imageUrl("url")
-                .price(150000)
+                .name(new Name("레드북"))
+                .imageUrl(new ImageUrl("url"))
+                .price(new Price(150000))
                 .build();
         // when
         Long itemId = itemDao.save(item);
@@ -76,9 +79,9 @@ class ItemDaoTest {
         );
         assertThat(findItem).isEqualTo(new Item.Builder()
                 .id(itemId)
-                .name("레드북")
-                .imageUrl("url")
-                .price(150000)
+                .name(new Name("레드북"))
+                .imageUrl(new ImageUrl("url"))
+                .price(new Price(150000))
                 .build());
     }
 
@@ -89,9 +92,9 @@ class ItemDaoTest {
         //given
         Item editItem = new Item.Builder()
                 .id(1L)
-                .name("위키드2")
-                .price(10000)
-                .imageUrl("수정된 URL")
+                .name(new Name("위키드2"))
+                .imageUrl(new ImageUrl("수정된 URL"))
+                .price(new Price(1000))
                 .build();
         //when
         itemDao.update(editItem);

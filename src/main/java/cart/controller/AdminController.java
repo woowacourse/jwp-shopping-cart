@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dao.entity.Item;
+import cart.controller.dto.ItemResponse;
 import cart.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String showAdmin(final Model model) {
-        List<Item> items = itemService.loadAllItem();
+        List<ItemResponse> items = itemService.loadAllItem();
         model.addAttribute("products", items);
         return "admin";
     }

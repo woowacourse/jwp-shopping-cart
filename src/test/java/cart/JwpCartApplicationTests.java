@@ -1,7 +1,11 @@
 package cart;
 
 import cart.controller.dto.ItemRequest;
-import cart.dao.entity.Item;
+import cart.controller.dto.ItemResponse;
+import cart.domain.ImageUrl;
+import cart.domain.Item;
+import cart.domain.Name;
+import cart.domain.Price;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -28,24 +32,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class JwpCartApplicationTests {
 
-    public static final List<Item> EXPECTED_PRODUCTS = List.of(
-            new Item.Builder().id(1L)
-                              .name("위키드")
-                              .imageUrl("https://image.yes24.com/themusical/upFiles/Themusical/Play/post_2013wicked.jpg")
-                              .price(150000)
-                              .build(),
-            new Item.Builder().id(2L)
-                              .name("마틸다")
-                              .imageUrl("https://ticketimage.interpark" +
-                                      ".com/Play/image/large/22/22009226_p.gif")
-                              .price(100000)
-                              .build(),
-            new Item.Builder().id(3L)
-                              .name("빌리 엘리어트")
-                              .imageUrl("https://t1.daumcdn" +
-                                      ".net/cfile/226F4D4C544F42CF34")
-                              .price(200000)
-                              .build()
+    public static final List<ItemResponse> EXPECTED_PRODUCTS = List.of(
+            ItemResponse.from(new Item.Builder().id(1L)
+                              .name(new Name("위키드"))
+                              .imageUrl(new ImageUrl("https://image.yes24.com/themusical/upFiles/Themusical/Play/post_2013wicked.jpg"))
+                              .price(new Price(150000))
+                              .build()),
+            ItemResponse.from(new Item.Builder().id(2L)
+                              .name(new Name("마틸다"))
+                              .imageUrl(new ImageUrl("https://ticketimage.interpark.com/Play/image/large/22/22009226_p.gif"))
+                              .price(new Price(100000))
+                              .build()),
+            ItemResponse.from(new Item.Builder().id(3L)
+                              .name(new Name("빌리 엘리어트"))
+                              .imageUrl(new ImageUrl("https://t1.daumcdn.net/cfile/226F4D4C544F42CF34"))
+                              .price(new Price(200000))
+                              .build())
     );
 
     @LocalServerPort

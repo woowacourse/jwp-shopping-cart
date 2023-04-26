@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.controller.dto.ItemRequest;
-import cart.dao.entity.Item;
+import cart.controller.dto.ItemResponse;
 import cart.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,16 +33,16 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Item>> loadAllItem() {
-        List<Item> items = itemService.loadAllItem();
+    public ResponseEntity<List<ItemResponse>> loadAllItem() {
+        List<ItemResponse> items = itemService.loadAllItem();
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(items);
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<Item> loadItem(@PathVariable final Long itemId) {
-        Item item = itemService.loadItem(itemId);
+    public ResponseEntity<ItemResponse> loadItem(@PathVariable final Long itemId) {
+        ItemResponse item = itemService.loadItem(itemId);
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(item);

@@ -1,6 +1,9 @@
 package cart.dao;
 
-import cart.dao.entity.Item;
+import cart.domain.ImageUrl;
+import cart.domain.Item;
+import cart.domain.Name;
+import cart.domain.Price;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,9 +26,9 @@ public class ItemDao {
 
     private final RowMapper<Item> actorRowMapper = (resultSet, rowNumber) -> new Item.Builder()
             .id(resultSet.getLong("id"))
-            .name(resultSet.getString("name"))
-            .imageUrl(resultSet.getString("image_url"))
-            .price(resultSet.getInt("price"))
+            .name(new Name(resultSet.getString("name")))
+            .imageUrl(new ImageUrl(resultSet.getString("image_url")))
+            .price(new Price(resultSet.getInt("price")))
             .build();
 
     public List<Item> findAll() {
