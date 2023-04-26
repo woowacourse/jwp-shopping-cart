@@ -1,15 +1,18 @@
 package cart.service;
 
 import cart.dto.ProductRequestDto;
+import cart.dto.ProductResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
+@Transactional
 class CartServiceTest {
 
     private final CartService cartService;
@@ -24,9 +27,9 @@ class CartServiceTest {
     void updateProduct() {
         //given
         cartService.addProduct(new ProductRequestDto("오션", "이미지", 10000));
-
+        ProductResponseDto product = cartService.findProducts().get(0);
         //then
-        assertThatNoException().isThrownBy(() -> cartService.updateProduct(new ProductRequestDto(1L, "연어", "이미지", 100)));
+        assertThatNoException().isThrownBy(() -> cartService.updateProduct(new ProductRequestDto(product.getId(), "연어", "이미지", 100)));
     }
 
     @DisplayName("상품이 없을 때 update 시 예외가 발생한다.")
@@ -42,9 +45,10 @@ class CartServiceTest {
     void deleteProduct() {
         //given
         cartService.addProduct(new ProductRequestDto("오션", "이미지", 10000));
+        ProductResponseDto product = cartService.findProducts().get(0);
 
         //then
-        assertThatNoException().isThrownBy(() -> cartService.deleteProduct(1L));
+        assertThatNoException().isThrownBy(() -> cartService.deleteProduct(product.getId()));
     }
 
     @DisplayName("상품이 없을 때 삭제 시 예외가 발생한다.")
