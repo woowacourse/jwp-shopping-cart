@@ -44,7 +44,10 @@ public class AdminController {
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody final ProductRequest productRequest) {
+    public ResponseEntity<Void> updateProduct(
+        @PathVariable Long id,
+        @RequestBody @Valid final ProductRequest productRequest
+    ) {
         cartService.update(id, productRequest);
         return ResponseEntity.ok().build();
     }
