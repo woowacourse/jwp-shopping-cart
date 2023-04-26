@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -34,7 +35,7 @@ public class AdminController {
     }
 
     @PostMapping
-    public String addProduct(@RequestBody final ProductDto productDto) {
+    public String addProduct(@RequestBody @Valid final ProductDto productDto) {
         shoppingService.save(productDto);
         return "redirect:/admin";
     }
@@ -42,15 +43,15 @@ public class AdminController {
     @PutMapping("/{id}")
     public String updateProduct(
             @PathVariable final Long id,
-            @RequestBody final ProductDto productDto) {
+            @RequestBody @Valid final ProductDto productDto) {
         shoppingService.update(id, productDto);
-        return "admin";
+        return "redirect:/admin";
     }
 
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable final Long id) {
         shoppingService.delete(id);
-        return "admin";
+        return "redirect:/admin";
     }
 
     @ModelAttribute("categorys")
