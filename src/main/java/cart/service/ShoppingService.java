@@ -1,6 +1,8 @@
 package cart.service;
 
 import cart.controller.dto.ProductDto;
+import cart.exception.ErrorCode;
+import cart.exception.GlobalException;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.Product;
 import cart.persistence.entity.ProductCategory;
@@ -31,13 +33,17 @@ public class ShoppingService {
     }
 
     public void update(final Long id, final ProductDto productDto) {
-        productDao.findById(id);
-        productDao.update(new Product(id, productDto.getName(), productDto.getImageUrl(),
+        int updatedCount = productDao.update(new Product(id, productDto.getName(), productDto.getImageUrl(),
                 productDto.getPrice(), ProductCategory.from(productDto.getCategory())));
+        if (updatedCount != 1) {
+            throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
     }
 
     public void delete(final Long id) {
-        productDao.findById(id);
-        productDao.deleteById(id);
+        int deletedCount = productDao.deleteById(id);
+        if (deletedCount != 1) {
+            throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
     }
 }

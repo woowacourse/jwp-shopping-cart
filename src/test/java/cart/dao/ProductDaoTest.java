@@ -96,11 +96,13 @@ class ProductDaoTest {
         // when
         final Product updateProduct = new Product(productId, "탕수육", "imageUrl",
                 30000, ProductCategory.CHINESE);
-        productDao.update(updateProduct);
+        int updatedCount = productDao.update(updateProduct);
 
         // then
         final Product findProduct = productDao.findById(productId);
-        assertAll(() -> assertThat(findProduct.getName()).isEqualTo("탕수육"),
+        assertAll(
+                () ->  assertThat(updatedCount).isEqualTo(1),
+                () -> assertThat(findProduct.getName()).isEqualTo("탕수육"),
                 () -> assertThat(findProduct.getPrice()).isEqualTo(30000),
                 () -> assertThat(findProduct.getImageUrl()).isEqualTo("imageUrl"),
                 () -> assertThat(findProduct.getCategory()).isEqualTo(ProductCategory.CHINESE));
@@ -113,10 +115,9 @@ class ProductDaoTest {
         final Long productId = productDao.insert(product);
 
         // when
-        productDao.deleteById(productId);
+        int deletedCount = productDao.deleteById(productId);
 
         // then
-        assertThatThrownBy(() -> productDao.findById(productId))
-                .isInstanceOf(GlobalException.class);
+        assertThat(deletedCount).isEqualTo(1);
     }
 }

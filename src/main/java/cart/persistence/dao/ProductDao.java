@@ -44,6 +44,18 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    public int update(final Product product) {
+        final String query = "UPDATE product AS p SET p.name = ?, p.image_url = ?, p.price = ?, p.category = ? " +
+                "WHERE p.id = ?";
+        return jdbcTemplate.update(query, product.getName(), product.getImageUrl(), product.getPrice(),
+                product.getCategory().name(), product.getId());
+    }
+
+    public int deleteById(final Long id) {
+        final String query = "DELETE FROM product p WHERE p.id = ?";
+        return jdbcTemplate.update(query, id);
+    }
+
     public Product findById(final Long id) {
         final String query = "SELECT p.id, p.name, p.image_url, p.price, p.category FROM product as p " +
                 "WHERE p.id = ?";
@@ -55,17 +67,5 @@ public class ProductDao {
         } catch (EmptyResultDataAccessException exception) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }
-    }
-
-    public void update(final Product product) {
-        final String query = "UPDATE product AS p SET p.name = ?, p.image_url = ?, p.price = ?, p.category = ? " +
-                "WHERE p.id = ?";
-        jdbcTemplate.update(query, product.getName(), product.getImageUrl(), product.getPrice(),
-                product.getCategory().name(), product.getId());
-    }
-
-    public void deleteById(final Long id) {
-        final String query = "DELETE FROM product p WHERE p.id = ?";
-        jdbcTemplate.update(query, id);
     }
 }
