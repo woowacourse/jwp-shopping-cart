@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cart.domain.Product;
 import cart.dto.ProductDto;
+import cart.controller.request.ProductUpdateRequest;
 import cart.controller.request.ProductCreateRequest;
 import cart.repository.ProductRepository;
 
@@ -42,5 +43,11 @@ public class GeneralProductService implements ProductService {
 		}
 
 		return productId;
+	}
+
+	@Override
+	public ProductDto update(long productId, ProductUpdateRequest request) {
+		final Product product = productRepository.update(productId, request);
+		return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImage());
 	}
 }

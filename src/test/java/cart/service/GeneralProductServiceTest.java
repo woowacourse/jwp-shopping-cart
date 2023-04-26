@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import cart.controller.request.ProductCreateRequest;
 import cart.domain.Product;
 import cart.dto.ProductDto;
+import cart.controller.request.ProductUpdateRequest;
 import cart.repository.ProductRepository;
 
 @SpringBootTest
@@ -66,5 +67,24 @@ class GeneralProductServiceTest {
 
 		// then
 		assertThat(deleteProductId).isEqualTo(1L);
+	}
+
+	@DisplayName("상품 갱신 테스트")
+	@Test
+	void updateProduct(){
+		// given
+		final Product product = new Product(1L, "hyena", 400, "이미지");
+		given(productRepository.update(anyLong(), any())).willReturn(product);
+
+		// when
+		final ProductUpdateRequest request = new ProductUpdateRequest("hyena", 400, "이미지");
+		ProductDto updateProduct = generalProductService.update(1L, request);
+
+		// then
+		assertThat(updateProduct)
+			.hasFieldOrPropertyWithValue("id", 1L)
+			.hasFieldOrPropertyWithValue("name", "hyena")
+			.hasFieldOrPropertyWithValue("price",400.0)
+			.hasFieldOrPropertyWithValue("image","이미지");
 	}
 }
