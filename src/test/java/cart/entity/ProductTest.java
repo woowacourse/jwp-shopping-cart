@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -23,10 +24,10 @@ class ProductTest {
                     .hasMessage("이름은 0자 초과 255미만이어야 합니다.");
         }
 
-        @ParameterizedTest
+        @Test
         @DisplayName("가격의 유효성 검증")
-        @ValueSource(ints = {-100})
-        void validatePrice(int price) {
+        void validatePrice() {
+            int price = -100;
             assertThatThrownBy(() -> new Product("상품", "www.google.co.kr.png", price))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("가격은 0보다 작을 수 없습니다.");
