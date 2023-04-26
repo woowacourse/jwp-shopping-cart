@@ -22,13 +22,6 @@
  | BODY | String: Name,  int: Price, String: ImageUrl |
 
 
-#### 목록 조회
-
-|     URL     |                  /products                  |
-|:---:|:-------------------------------------------:|
-| HTTP METHOD |                     GET                     |
-| BODY |  |
-
 #### 수정
 
 |     URL     |                      /products                       |
