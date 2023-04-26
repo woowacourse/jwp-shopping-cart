@@ -10,21 +10,21 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class UpdateProductServiceTest {
+class ProductUpdateServiceTest {
 
     private StubProductRepository stubProductRepository;
-    private UpdateProductService updateProductService;
+    private ProductUpdateService productUpdateService;
 
     @BeforeEach
     void setUp() {
         this.stubProductRepository = new StubProductRepository();
-        this.updateProductService = new UpdateProductService(stubProductRepository);
+        this.productUpdateService = new ProductUpdateService(stubProductRepository);
     }
 
     @Test
     void 업데이트_테스트() {
         final Product product = stubProductRepository.save(new Product("오도", "naver.com", 1));
-        final Product result = updateProductService.update(product.getProductId().getValue(), "누누", "url", 2);
+        final Product result = productUpdateService.update(product.getProductId().getValue(), "누누", "url", 2);
         final Optional<Product> updatedProduct = stubProductRepository.findById(product.getProductId().getValue());
         assertAll(
                 () -> Assertions.assertThat(result.getProductId().getValue()).isPositive(),

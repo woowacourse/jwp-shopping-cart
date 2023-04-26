@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ProductController {
+
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         final List<ProductResponse> productResponses = List.of(

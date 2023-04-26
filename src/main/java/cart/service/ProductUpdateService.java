@@ -5,11 +5,11 @@ import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UpdateProductService {
+public class ProductUpdateService {
 
     private final ProductRepository productRepository;
 
-    public UpdateProductService(final ProductRepository productRepository) {
+    public ProductUpdateService(final ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
