@@ -32,14 +32,15 @@ public class ProductRepositoryImpl implements ProductRepository {
                 ProductName.from(entity.getName()),
                 ProductPrice.from(entity.getPrice()),
                 ProductCategory.valueOf(entity.getCategory()),
-                ImageUrl.from(entity.getImageUrl())
+                ImageUrl.from(entity.getImageUrl()),
+                entity.getId()
         );
     }
 
     @Override
     public Long save(Product product) {
         ProductEntity productEntity = new ProductEntity(product);
-        
+
         return productDao.insert(productEntity);
     }
 }
