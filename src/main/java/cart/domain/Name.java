@@ -2,6 +2,9 @@ package cart.domain;
 
 public class Name {
 
+    public static final int MAXIMUM_NAME_LENGTH = 10;
+    public static final int MINIMUM_NAME_LENGTH = 1;
+    public static final String NAME_LENGTH_VALID_MESSAGE = "[ERROR] 이름의 길이는 1~10자만 가능합니다.";
     private final String name;
 
     public Name(String name) {
@@ -10,8 +13,8 @@ public class Name {
     }
 
     private void validate(String name) {
-        if (1 > name.length() || name.length() > 10) {
-            throw new IllegalArgumentException("이름의 길이는 1~10자만 가능합니다.");
+        if (MINIMUM_NAME_LENGTH > name.length() || name.length() > MAXIMUM_NAME_LENGTH) {
+            throw new IllegalArgumentException(NAME_LENGTH_VALID_MESSAGE);
         }
     }
 
