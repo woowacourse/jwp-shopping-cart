@@ -84,7 +84,7 @@ class IntegrationTest {
     @Test
     @DisplayName("유저가 유효하지 않는 입력을 하는 경우 테스트")
     void badRequest() {
-        String jsonStr = "{ \"name\"\"홍실\", \"price\":\"321321\", \"imageUrl\":\"ddong.exe\"}";
+        final String jsonStr = "{ \"name\":\"홍실\", \"price\":\"321321\", \"imageUrl\":\"ddong.exe\"}";
 
         given()
                 .body(jsonStr)
