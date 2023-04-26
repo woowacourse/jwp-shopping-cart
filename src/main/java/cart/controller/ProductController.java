@@ -6,9 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +28,8 @@ public class ProductController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<String> productModify(@RequestBody ProductRequest productRequest, @PathVariable int id) {
+    public ResponseEntity<String> productModify(@Validated @RequestBody ProductRequest productRequest,
+                                                @PathVariable int id) {
         productService.update(productRequest, id);
         return new ResponseEntity<>("ok", HttpStatus.OK);
     }
@@ -39,16 +38,5 @@ public class ProductController {
     public ResponseEntity<String> productRemove(@PathVariable int id) {
         productService.delete(id);
         return new ResponseEntity<>("ok", HttpStatus.OK);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        String errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleServerException(Exception e) {
-        return new ResponseEntity<>("server error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
