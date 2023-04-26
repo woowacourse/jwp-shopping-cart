@@ -23,12 +23,7 @@ public class AdminController {
     }
 
     @GetMapping("")
-    public String admin() {
-        return "redirect:/admin/product";
-    }
-
-    @GetMapping("/product")
-    public String getProduct(Model model) {
+    public String admin(Model model) {
         model.addAttribute("products", productService.findAll());
         return "admin";
     }
