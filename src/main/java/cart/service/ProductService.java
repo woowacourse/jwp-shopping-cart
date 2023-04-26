@@ -21,14 +21,19 @@ public class ProductService {
 
     public Long register(final ProductDto productDto) {
         final Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+
         return productDao.insert(product);
     }
 
     public void updateProduct(final long id, final ProductDto productDto) {
         validateExistData(id);
 
-        final Product newProduct = new Product(id, productDto.getName(),
-                productDto.getPrice(), productDto.getImageUrl());
+        final Product newProduct = new Product(
+                id,
+                productDto.getName(),
+                productDto.getPrice(),
+                productDto.getImageUrl()
+        );
 
         productDao.update(newProduct);
     }
@@ -41,7 +46,7 @@ public class ProductService {
 
     private void validateExistData(final long id) {
         if (!productDao.isExist(id)) {
-            throw new IllegalArgumentException("존재하지 않는 id입니다.");
+            throw new IllegalArgumentException("존재하지 않는 id 입니다.");
         }
     }
 }

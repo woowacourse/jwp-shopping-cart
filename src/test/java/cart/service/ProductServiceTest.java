@@ -76,7 +76,7 @@ class ProductServiceTest {
     void 존재하지_않는_상품_수정시_예외_발생() {
         assertThatIllegalArgumentException().isThrownBy(
                 () -> productService.updateProduct(10L, new ProductDto("name", 1234, "imageUrl"))
-        ).withMessage("존재하지 않는 id입니다.");
+        ).withMessage("존재하지 않는 id 입니다.");
     }
 
     @ParameterizedTest
@@ -91,6 +91,6 @@ class ProductServiceTest {
     void 존재하지_않는_상품_삭제시_예외_발생() {
         assertThatIllegalArgumentException().isThrownBy(
                 () -> productService.deleteProduct(3L)
-        ).withMessage("존재하지 않는 id입니다.");
+        ).withMessage("존재하지 않는 id 입니다.");
     }
 }

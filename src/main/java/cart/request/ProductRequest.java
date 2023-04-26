@@ -12,7 +12,7 @@ public class ProductRequest {
     @Range(min = 0, max = 100_000_000, message = "0원 이상 1억 이하의 가격을 입력해주세요.")
     private final int price;
 
-    @URL(protocol = "https")
+    @URL(protocol = "https", message = "https로 시작하는 URL 주소를 사용해주세요.")
     @NotBlank(message = "상품의 사진 url을 입력해주세요.")
     private final String imageUrl;
 

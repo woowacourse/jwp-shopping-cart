@@ -47,7 +47,8 @@ public class ProductDao {
                 newProduct.getName(),
                 newProduct.getPrice(),
                 newProduct.getImageUrl(),
-                newProduct.getId());
+                newProduct.getId()
+        );
     }
 
     public void delete(final Long id) {
