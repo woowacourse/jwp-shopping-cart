@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.dao.ProductEntity;
+import cart.domain.Product;
 import cart.service.dto.ProductModifyRequest;
 import cart.service.dto.ProductRegisterRequest;
 import cart.service.dto.ProductSearchResponse;
@@ -46,11 +47,18 @@ public class ProductService {
     }
 
     public void modifyProduct(final Long productId, final ProductModifyRequest productModifyRequest) {
+        final Product modifiedProduct = Product.of(
+                productModifyRequest.getName(),
+                productModifyRequest.getPrice(),
+                productModifyRequest.getImageUrl()
+        );
+
         final ProductEntity modifiedProductEntity =
-                new ProductEntity(productId,
-                                  productModifyRequest.getName(),
-                                  productModifyRequest.getPrice(),
-                                  productModifyRequest.getImageUrl()
+                new ProductEntity(
+                        productId,
+                        modifiedProduct.getName(),
+                        modifiedProduct.getPrice(),
+                        modifiedProduct.getImageUrl()
                 );
 
         productDao.modify(modifiedProductEntity);
