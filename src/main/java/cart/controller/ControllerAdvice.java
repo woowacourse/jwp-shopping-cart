@@ -47,13 +47,13 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ItemException.class)
-    private ResponseEntity<ExceptionResponse> handleItemException(ItemException ex) {
+    private ResponseEntity<ExceptionResponse<String>> handleItemException(ItemException ex) {
         LOGGER.warn(ex.getMessage());
         return ResponseEntity.status(ex.getErrorStatus()).body(new ExceptionResponse<>(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    private ResponseEntity<ExceptionResponse> handleException(Exception ex) {
+    private ResponseEntity<ExceptionResponse<String>> handleException(Exception ex) {
         LOGGER.warn(ex.getMessage());
         ex.printStackTrace();
         return ResponseEntity.internalServerError().body(new ExceptionResponse<>(INTERNAL_ERROR_MESSAGE));
