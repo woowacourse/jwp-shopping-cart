@@ -4,13 +4,14 @@ import cart.domain.Product;
 import cart.entity.ProductEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductDao {
-    ProductEntity save(Product product);
+    Optional<ProductEntity> save(Product product);
 
     ProductEntity update(ProductEntity entity);
 
-    ProductEntity findById(Long id);
+    Optional<ProductEntity> findById(Long id);
 
     List<ProductEntity> findAll();
 

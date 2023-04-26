@@ -2,6 +2,7 @@ package cart.repository;
 
 import cart.domain.Product;
 import cart.entity.ProductEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -32,7 +34,7 @@ public class ProductDaoImpl implements ProductDao {
             );
 
     @Override
-    public ProductEntity save(Product product) {
+    public Optional<ProductEntity> save(Product product) {
         BeanPropertySqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
         long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
         return findById(id);
@@ -46,9 +48,13 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public ProductEntity findById(Long id) {
+    public Optional<ProductEntity> findById(Long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, productEntityRowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

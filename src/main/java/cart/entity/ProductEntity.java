@@ -16,7 +16,7 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public void update(ProductRequest productRequest) {
+    public void replace(ProductRequest productRequest) {
         this.name = productRequest.getName();
         this.image = productRequest.getImage();
         this.price = productRequest.getPrice();

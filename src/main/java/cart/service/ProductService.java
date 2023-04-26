@@ -4,10 +4,12 @@ import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.entity.ProductEntity;
+import cart.exception.DBException;
 import cart.repository.ProductDao;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +23,8 @@ public class ProductService {
 
     public ProductResponse create(ProductRequest productRequest) {
         Product product = Product.from(productRequest);
-        ProductEntity created = productDao.save(product);
+        ProductEntity created = productDao.save(product)
+                .orElseThrow(() -> new DBException("데이터가 정상적으로 저장되지 않았습니다."));
         return ProductResponse.from(created);
     }
 
@@ -33,8 +36,9 @@ public class ProductService {
     }
 
     public ProductResponse update(ProductRequest productRequest, Long id) {
-        ProductEntity productEntity = productDao.findById(id);
-        productEntity.update(productRequest);
+        ProductEntity productEntity = productDao.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다." + System.lineSeparator() + "id : " + id));
+        productEntity.replace(productRequest);
         productDao.update(productEntity);
         return ProductResponse.from(productEntity);
     }
