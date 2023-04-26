@@ -75,7 +75,7 @@ class CartControllerTest {
                 .body(productRequestDto)
                 .when().post("/product");
 
-        ProductRequestDto updateDto = new ProductRequestDto("오션", "", 50);
+        ProductRequestDto updateDto = new ProductRequestDto(1L, "오션", "hi", 50);
 
         //then
         given().log().uri()
