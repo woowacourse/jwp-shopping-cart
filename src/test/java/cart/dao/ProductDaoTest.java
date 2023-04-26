@@ -101,7 +101,7 @@ class ProductDaoTest {
         // then
         final Product findProduct = productDao.findById(productId);
         assertAll(
-                () ->  assertThat(updatedCount).isEqualTo(1),
+                () -> assertThat(updatedCount).isEqualTo(1),
                 () -> assertThat(findProduct.getName()).isEqualTo("탕수육"),
                 () -> assertThat(findProduct.getPrice()).isEqualTo(30000),
                 () -> assertThat(findProduct.getImageUrl()).isEqualTo("imageUrl"),

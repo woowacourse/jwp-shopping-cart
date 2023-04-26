@@ -56,8 +56,8 @@ form.addEventListener('submit', (event) => {
 const createProduct = (product) => {
     axios.post('/admin', product)
         .then((response) => {
-        window.location.reload();
-    }).catch((error) => {
+            window.location.reload();
+        }).catch((error) => {
         const {data} = error.response;
         window.alert(data.errorMessage)
     });
@@ -68,8 +68,8 @@ const updateProduct = (product) => {
 
     axios.put(`/admin/${id}`, product)
         .then((response) => {
-        window.location.reload();
-    }).catch((error) => {
+            window.location.reload();
+        }).catch((error) => {
         const {data} = error.response;
         window.alert(data.errorMessage)
     });
