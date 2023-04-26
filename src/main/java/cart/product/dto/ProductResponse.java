@@ -16,6 +16,13 @@ public class ProductResponse {
 		this.price = product.getPrice();
 	}
 
+	public ProductResponse(Long id, Product product) {
+		this.id = id;
+		this.name = product.getName();
+		this.image = product.getImage();
+		this.price = product.getPrice();
+	}
+
 	public Long getId() {
 		return id;
 	}

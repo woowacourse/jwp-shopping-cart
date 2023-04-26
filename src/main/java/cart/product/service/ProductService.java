@@ -28,16 +28,20 @@ public class ProductService {
 			.collect(Collectors.toList());
 	}
 
-	public long saveProducts(ProductRequest productRequest) {
+	public ProductResponse saveProducts(ProductRequest productRequest) {
 		Product product = new Product(null, productRequest.getName(), productRequest.getImage(),
 			productRequest.getPrice(), null, null);
-		return productDao.save(product);
+		long savedId = productDao.save(product);
+
+		return new ProductResponse(savedId, product);
 	}
 
-	public long updateProducts(Long id, ProductRequest productRequest) {
+	public ProductResponse updateProducts(Long id, ProductRequest productRequest) {
 		Product product = new Product(null, productRequest.getName(), productRequest.getImage(),
 			productRequest.getPrice(), null, null);
-		return productDao.updateById(id, product);
+		long savedId = productDao.updateById(id, product);
+
+		return new ProductResponse(savedId, product);
 	}
 
 	public void deleteProductsById(Long id) {

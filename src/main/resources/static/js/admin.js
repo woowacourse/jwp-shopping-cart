@@ -49,7 +49,7 @@ const createProduct = (product) => {
         url: '/products',
         method: "POST",
         headers: {
-            "Content-Type": "multipart/form-data"
+            "Content-Type": "application/json"
         },
         data: product
     }).then((response) => {
