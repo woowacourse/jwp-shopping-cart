@@ -7,8 +7,12 @@ public class ProductImage {
 
     private final URL url;
 
-    public ProductImage(String url) throws MalformedURLException {
-        this.url = new URL(url);
+    public ProductImage(String url) {
+        try {
+            this.url = new URL(url);
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("URL 포맷이 맞지 않습니다");
+        }
     }
 
     public String getValue() {
