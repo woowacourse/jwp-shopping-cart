@@ -1,17 +1,17 @@
 package cart.controller;
 
-import cart.controller.dto.ProductRequest;
-import cart.controller.dto.UpdateRequest;
-import cart.dto.ProductDto;
+import cart.controller.dto.ProductRequestDto;
+import cart.service.dto.ProductDto;
 import cart.service.ProductService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -24,26 +24,32 @@ public class AdminApiController {
     }
 
     @PostMapping("/product")
-    public void insertProduct(@RequestBody final ProductRequest productRequest) {
+    public ResponseEntity<Void> insertProduct(@RequestBody final ProductRequestDto productRequestDto) {
         productService.insertProduct(new ProductDto.Builder()
-                .name(productRequest.getName())
-                .price(productRequest.getPrice())
-                .image(productRequest.getImage())
+                .name(productRequestDto.getName())
+                .price(productRequestDto.getPrice())
+                .image(productRequestDto.getImage())
                 .build());
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/product")
-    public void updateProduct(@RequestBody final UpdateRequest updateRequest) {
+    @PutMapping("/product/{id}")
+    public ResponseEntity<Void> updateProduct(@PathVariable final Long id, @RequestBody final ProductRequestDto productRequestDto) {
         productService.updateById(new ProductDto.Builder()
-                .id(updateRequest.getId())
-                .name(updateRequest.getName())
-                .price(updateRequest.getPrice())
-                .image(updateRequest.getImage())
+                .id(id)
+                .name(productRequestDto.getName())
+                .price(productRequestDto.getPrice())
+                .image(productRequestDto.getImage())
                 .build());
+
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/product")
-    public void deleteProduct(@RequestBody final Map<String, Long> id) {
-        productService.deleteById(id.get("id"));
+    @DeleteMapping("/product/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
+        productService.deleteById(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

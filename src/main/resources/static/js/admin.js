@@ -57,12 +57,16 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
-    const { id } = product;
+    const id = product.id;
 
     axios.request({
-        url: adminUrl + '/product',
+        url: adminUrl + '/product/' + id,
         method: 'put',
-        data: product
+        data: {
+            name: product.name,
+            price: product.price,
+            image: product.image
+        }
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
