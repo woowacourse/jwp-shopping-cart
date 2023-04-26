@@ -1,7 +1,6 @@
 package cart.domain;
 
 public class Product {
-    //상품 ID, 상품 이름, 상품 이미지, 상품 가격
     private final Long id;
     private final Name name;
     private final String image;
