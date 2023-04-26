@@ -30,7 +30,7 @@ public class ProductDao {
 
     public List<Product> findAll() {
         final String sql = "SELECT id, name, price, image_url FROM product";
-        List<Product> products = jdbcTemplate.query(sql, (resultSet, rowNumber) -> new Product(
+        List<Product> products = jdbcTemplate.query(sql, (resultSet, rowNumber) -> Product.create(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getLong("price"),

@@ -7,15 +7,23 @@ public class Product {
     private final ProductPrice price;
     private final ProductImageUrl imageUrl;
 
-    public Product(Long id, String name, long price, String imageUrl) {
+    private Product(Long id, ProductName name, ProductPrice price, ProductImageUrl imageUrl) {
         this.id = id;
-        this.name = new ProductName(name);
-        this.price = new ProductPrice(price);
-        this.imageUrl = new ProductImageUrl(imageUrl);
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
-    public Product(String name, long price, String imageUrl) {
-        this(null, name, price, imageUrl);
+    public static Product create(Long id, String name, long price, String imageUrl) {
+        return new Product(
+                id,
+                new ProductName(name),
+                new ProductPrice(price),
+                new ProductImageUrl(imageUrl));
+    }
+
+    public static Product createWithoutId(String name, long price, String imageUrl) {
+        return create(null, name, price, imageUrl);
     }
 
     public long getId() {

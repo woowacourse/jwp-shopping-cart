@@ -30,11 +30,12 @@ class ProductDaoTest {
     @DisplayName("상품을 저장한다.")
     @Test
     void shouldSaveProductWhenRequest() {
-        final var productToSave = new Product("changer", 10, "domain.com");
+        final Product productToSave = Product.createWithoutId("changer", 10, "domain.com");
         final long productId = productDao.save(productToSave);
         final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
 
-        final Product productFromDb = jdbcTemplate.queryForObject(sql, (resultSet, rowNumber) -> new Product(
+        final Product productFromDb = jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNumber) -> Product.create(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getLong("price"),
@@ -81,7 +82,7 @@ class ProductDaoTest {
         }, keyHolder);
 
         long productId = keyHolder.getKey().longValue();
-        Product productToUpdate = new Product(
+        Product productToUpdate = Product.create(
                 productId,
                 "당근",
                 1000,
@@ -93,7 +94,7 @@ class ProductDaoTest {
 
         Product productAfterUpdate = jdbcTemplate.queryForObject(
                 "SELECT id, name, price, image_url FROM product WHERE id = ?",
-                (resultSet, rowNumber) -> new Product(
+                (resultSet, rowNumber) -> Product.create(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getLong("price"),
@@ -132,7 +133,7 @@ class ProductDaoTest {
 
         List<Product> products = jdbcTemplate.query(
                 "SELECT id, name, price, image_url FROM product",
-                (resultSet, rowNumber) -> new Product(
+                (resultSet, rowNumber) -> Product.create(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getLong("price"),
