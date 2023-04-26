@@ -53,8 +53,8 @@ public class ProductDao {
     }
 
     public boolean existById(final Long id) {
-        final String sql = "SELECT count(*) FROM products WHERE id=?";
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
-        return count > 0;
+        final String sql = "SELECT EXISTS(SELECT 1 FROM products WHERE id=?)";
+        
+        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 }
