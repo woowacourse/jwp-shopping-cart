@@ -7,6 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ErrorDto {
 
-    private final String field;
     private final String message;
 }
