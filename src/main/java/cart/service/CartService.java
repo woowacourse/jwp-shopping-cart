@@ -30,12 +30,12 @@ public class CartService {
             .collect(Collectors.toList());
     }
 
-    public void update(final long id, final String name, final int price, final String imageUrl) {
+    public void update(final Long id, final String name, final int price, final String imageUrl) {
         final ProductEntity productEntity = new ProductEntity(name, price, imageUrl);
         productDao.update(id, productEntity);
     }
 
-    public void delete(final long id) {
+    public void delete(final Long id) {
         productDao.deleteById(id);
     }
 }
