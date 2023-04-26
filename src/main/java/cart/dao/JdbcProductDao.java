@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public class JdbcProductDao implements ProductDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    public JdbcProductDao(JdbcTemplate jdbcTemplate) {
+    public JdbcProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -25,25 +25,25 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public List<ProductEntity> selectAll() {
-        String sql = "SELECT * FROM product";
+        final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
     @Override
     public void insert(final ProductEntity productEntity) {
-        String sql = "INSERT INTO product(name, image, price) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO product(name, image, price) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
     }
 
     @Override
     public void updateById(final Long id, final ProductEntity productEntity) {
-        String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
+        final String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
         jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), id);
     }
 
     @Override
     public void deleteById(final Long id) {
-        String sql = "DELETE FROM product WHERE id = ?";
+        final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }
