@@ -21,7 +21,7 @@ public class CartService {
         List<ProductEntity> allProducts = productDao.findAll();
         return allProducts.stream()
                 .map(ProductResponse::fromEntity)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public long save(ProductRequest productRequest) {

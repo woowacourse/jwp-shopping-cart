@@ -1,12 +1,17 @@
 package cart.controller;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.service.dto.ProductRequest;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -14,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class AdminControllerIntegrationTest {
 
     @LocalServerPort
     int port;
@@ -94,5 +99,70 @@ class AdminControllerTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("가격이 0이하의 값이면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 0})
+    void exceptionWhenPriceNotPositive(int price) {
+        // when
+        Response response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
+                        price))
+                .when()
+                .post("/admin/product")
+                .then()
+                .log().all()
+                .extract().response();
+
+        // then
+        assertAll(
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.getBody().asString()).isEqualTo("가격은 0보다 커야합니다.")
+        );
+    }
+
+    @DisplayName("이름이 1자 미만이거나 50자 초과면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"dskjgfdsvesvurevhjdsbvehsbvhjesbvhjesbvfhvsdhvhdsvhfdshv", ""})
+    void exceptionWhenNameWrongLength(String name) {
+        // when
+        Response response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", name,
+                        10000))
+                .when()
+                .post("/admin/product")
+                .then()
+                .log().all()
+                .extract().response();
+
+        // then
+        assertAll(
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.getBody().asString()).isEqualTo("이름은 1글자 이상 50글자 이하여야합니다.")
+        );
+    }
+
+    @DisplayName("이미지 URL이 없으면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    void exceptionWhenBlankImgUrl(String imgUrl) {
+        // when
+        Response response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new ProductRequest(imgUrl, "cuteSeongHa", 10000))
+                .when()
+                .post("/admin/product")
+                .then()
+                .log().all()
+                .extract().response();
+
+        // then
+        assertAll(
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.getBody().asString()).isEqualTo("이미지 URL은 필수입니다.")
+        );
     }
 }
