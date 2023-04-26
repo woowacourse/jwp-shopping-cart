@@ -1,12 +1,19 @@
 package cart.controller;
 
+import cart.dto.ProductsResponseDto;
+import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static cart.factory.ProductFactory.createProduct;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -15,12 +22,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ViewController.class)
 class ViewControllerTest {
 
+    @MockBean
+    ProductService productService;
+
     @Autowired
     MockMvc mockMvc;
 
     @Test
     @DisplayName("Home을 반환한다.")
     void returns_home_view() throws Exception {
+        // given
+        ProductsResponseDto expected = ProductsResponseDto.from(List.of(createProduct()));
+        given(productService.findAll()).willReturn(expected);
+
         // when & then
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -31,6 +45,10 @@ class ViewControllerTest {
     @Test
     @DisplayName("Admin을 반환한다.")
     void returns_admin_view() throws Exception {
+        // given
+        ProductsResponseDto expected = ProductsResponseDto.from(List.of(createProduct()));
+        given(productService.findAll()).willReturn(expected);
+
         // when & then
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())

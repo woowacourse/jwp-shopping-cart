@@ -41,7 +41,7 @@ class NameTest {
         name.edit(expected);
 
         // then
-        assertThat(name).isEqualTo(expected);
+        assertThat(name.getName()).isEqualTo(expected);
     }
 
     @Test
