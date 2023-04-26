@@ -18,7 +18,7 @@ public class ProductResponse {
 
     public static ProductResponse from(final ProductEntity productEntity) {
         return new ProductResponse(productEntity.getId(), productEntity.getName(),
-            productEntity.getPrice(), productEntity.getImageUrl());
+                productEntity.getPrice(), productEntity.getImageUrl());
     }
 
     public Long getId() {

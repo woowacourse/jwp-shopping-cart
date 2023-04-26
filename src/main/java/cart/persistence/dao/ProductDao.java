@@ -1,8 +1,8 @@
 package cart.persistence.dao;
 
-import java.util.List;
-
 import cart.persistence.entity.ProductEntity;
+
+import java.util.List;
 
 public interface ProductDao {
 
