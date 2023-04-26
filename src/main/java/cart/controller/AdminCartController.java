@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
 import cart.controller.dto.ProductRequest;
 import cart.dao.ProductDao;
+import cart.domain.Product;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +28,8 @@ public class AdminCartController {
 
     @GetMapping
     public String findAllProducts(final Model model) {
-        List<ProductDto> productDtos = productDao.findAll();
-        model.addAttribute("products", productDtos);
+        List<Product> products = productDao.findAll();
+        model.addAttribute("products", products);
 
         return "admin";
     }

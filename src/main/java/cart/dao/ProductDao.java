@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.controller.dto.ProductDto;
 import cart.controller.dto.ProductRequest;
+import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -27,19 +27,19 @@ public class ProductDao {
         });
     }
 
-    public List<ProductDto> findAll() {
+    public List<Product> findAll() {
         String sql = "SELECT * FROM product";
 
         return jdbcTemplate.query(sql, resultSet -> {
-            List<ProductDto> products = new ArrayList<>();
+            List<Product> products = new ArrayList<>();
             while (resultSet.next()) {
-                ProductDto productDto = new ProductDto(
+                Product product = new Product(
                         resultSet.getLong(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getInt(4)
                 );
-                products.add(productDto);
+                products.add(product);
             }
             return products;
         });
