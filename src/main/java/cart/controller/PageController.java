@@ -8,11 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class HomeController {
+public class PageController {
 
     private final ProductDao productDao;
 
-    public HomeController(ProductDao productDao) {
+    public PageController(ProductDao productDao) {
         this.productDao = productDao;
     }
 
@@ -23,5 +23,14 @@ public class HomeController {
 
         model.addAttribute("products", products);
         return "index";
+    }
+
+    @GetMapping("/admin")
+    public String loadAdmin(Model model){
+        final List<ProductEntity> productEntities = productDao.findAll();
+        List<ProductResponse> products = ResponseMapper.from(productEntities);
+
+        model.addAttribute("products", products);
+        return "admin";
     }
 }
