@@ -1,12 +1,15 @@
 package cart.repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import cart.domain.Product;
 import cart.controller.request.ProductCreateRequest;
 
 @Repository
@@ -15,6 +18,21 @@ public class ProductJdbcRepository implements ProductRepository {
 
 	public ProductJdbcRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	private final RowMapper<Product> productRowMapper = (resultSet, rowNum) -> {
+		return new Product(
+			resultSet.getLong("id"),
+			resultSet.getString("name"),
+			resultSet.getDouble("price"),
+			resultSet.getString("image")
+		);
+	};
+
+	@Override
+	public List<Product> findAll() {
+		final String sql = "SELECT * FROM products";
+		return jdbcTemplate.query(sql, productRowMapper);
 	}
 
 	@Override

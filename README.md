@@ -35,7 +35,7 @@ PRIMARY KEY(id)
     HttpStatus : 201
     Location : products/1
     ```
-  - [ ] 상품 전체 조회 API
+  - [x] 상품 전체 조회 API
     ```
     GET /products
     
