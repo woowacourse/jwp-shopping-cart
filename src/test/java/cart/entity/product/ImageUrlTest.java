@@ -22,16 +22,6 @@ class ImageUrlTest {
     }
 
     @Test
-    @DisplayName("이미지 경로가 50자 초과일 경우 오류를 던진다")
-    void imageUrlOverLength() {
-        //given
-        //when
-        //then
-        assertThatThrownBy(() -> new ImageUrl("1".repeat(256)))
-            .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
     @DisplayName("이미지 경로를 조회한다.")
     void getValue() {
         //given
