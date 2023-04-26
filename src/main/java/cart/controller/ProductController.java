@@ -7,13 +7,12 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ProductController {
@@ -23,24 +22,11 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @RequestMapping("/")
-    public ModelAndView home() {
-        ModelAndView mav = new ModelAndView("/index");
-
-        ProductDto chicken = new ProductDto(1,
-                "치킨",
-                "https://img.freepik.com/free-photo/crispy-fried-chicken-on-a-plate-with-salad-and-carrot_1150-20212.jpg",
-                10000);
-        ProductDto tteokbokki = new ProductDto(2,
-                "떡볶이",
-                "https://img.freepik.com/free-photo/crispy-fried-chicken-on-a-plate-with-salad-and-carrot_1150-20212.jpg",
-                20000);
-
-        List<ProductDto> products = List.of(chicken, tteokbokki);
-
-        mav.addObject("products", products);
-
-        return mav;
+    @GetMapping("/")
+    public String home(Model model) {
+        List<ProductDto> products = productService.findAll();
+        model.addAttribute("products", products);
+        return "index";
     }
 
     @PostMapping("/admin")
@@ -51,11 +37,10 @@ public class ProductController {
     }
 
     @GetMapping("/admin")
-    public ModelAndView productList() {
-        ModelAndView mav = new ModelAndView("/admin");
+    public String productList(Model model) {
         List<ProductDto> products = productService.findAll();
-        mav.addObject("products", products);
-        return mav;
+        model.addAttribute("products", products);
+        return "admin";
     }
 
     @PostMapping("/admin/{id}")
