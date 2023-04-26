@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class, MethodArgumentNotValidException.class, DataAccessException.class})
-    public ResponseEntity<String> handle(IllegalArgumentException exception) {
+    public ResponseEntity<String> handle(final Exception exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }
