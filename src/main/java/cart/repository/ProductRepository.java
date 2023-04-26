@@ -1,5 +1,6 @@
 package cart.repository;
 
+import cart.domain.Product;
 import cart.entity.ProductEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,9 +22,15 @@ public class ProductRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public long save(ProductEntity productEntity) {
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(productEntity);
-        return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+    public ProductEntity save(Product product) {
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
+        long productId = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+        return ProductEntity.builder()
+                .id(productId)
+                .name(product.getName())
+                .price(product.getPrice())
+                .imageUrl(product.getImageUrl())
+                .build();
     }
 
     public List<ProductEntity> findAll() {
@@ -32,13 +39,12 @@ public class ProductRepository {
     }
 
     private RowMapper<ProductEntity> productRowMapper() {
-        return (rs, rowNum) -> {
-            long id = rs.getLong(1);
-            String name = rs.getString(2);
-            int price = rs.getInt(3);
-            String imageUrl = rs.getString(4);
-            return new ProductEntity(id, name, price, imageUrl);
-        };
+        return (rs, rowNum) -> ProductEntity.builder()
+                .id(rs.getLong(1))
+                .name(rs.getString(2))
+                .price(rs.getInt(3))
+                .imageUrl(rs.getString(4))
+                .build();
     }
 
     public void deleteById(Long id) {

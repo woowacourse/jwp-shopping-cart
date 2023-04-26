@@ -2,6 +2,7 @@ package cart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.domain.Product;
 import cart.entity.ProductEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,37 +29,37 @@ class ProductRepositoryTest {
     @DisplayName("상품이 정상적으로 저장되어야 한다.")
     void save_success() {
         // given
-        ProductEntity product = ProductEntity.builder()
+        Product product = Product.builder()
                 .name("글렌피딕")
                 .price(230_000)
                 .imageUrl("no")
                 .build();
 
         // when
-        long productId = productRepository.save(product);
+        ProductEntity productEntity = productRepository.save(product);
 
         // then
         List<ProductEntity> allProducts = productRepository.findAll();
         assertThat(allProducts)
                 .hasSize(1);
-        assertThat(allProducts.get(0).getId())
-                .isEqualTo(productId);
+        assertThat(allProducts.get(0))
+                .isEqualTo(productEntity);
     }
 
     @Test
     @DisplayName("상품이 정상적으로 수정되어야 한다.")
     void update_success() {
         // given
-        ProductEntity product = ProductEntity.builder()
+        Product product = Product.builder()
                 .name("글렌피딕")
                 .price(230_000)
                 .imageUrl("no")
                 .build();
 
-        long productId = productRepository.save(product);
+        ProductEntity productEntity = productRepository.save(product);
 
         ProductEntity updateProduct = ProductEntity.builder()
-                .id(productId)
+                .id(productEntity.getId())
                 .name("글렌리벳")
                 .price(150_000)
                 .imageUrl("yes")
@@ -77,16 +78,16 @@ class ProductRepositoryTest {
     @DisplayName("상품이 정상적으로 삭제되어야 한다.")
     void delete_success() {
         // given
-        ProductEntity product = ProductEntity.builder()
+        Product product = Product.builder()
                 .name("글렌피딕")
                 .price(230_000)
                 .imageUrl("no")
                 .build();
 
-        long productId = productRepository.save(product);
+        ProductEntity productEntity = productRepository.save(product);
 
         // when
-        productRepository.deleteById(productId);
+        productRepository.deleteById(productEntity.getId());
 
         // then
         List<ProductEntity> allProducts = productRepository.findAll();

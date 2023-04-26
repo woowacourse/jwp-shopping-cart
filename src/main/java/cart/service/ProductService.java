@@ -2,6 +2,7 @@ package cart.service;
 
 import static java.util.stream.Collectors.toList;
 
+import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.entity.ProductEntity;
 import cart.exception.ProductNotFoundException;
@@ -16,19 +17,18 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public ProductDto createProduct(String name, int price, String imageUrl) {
-        ProductEntity productEntity = ProductEntity.builder()
+        Product product = Product.builder()
                 .name(name)
                 .price(price)
                 .imageUrl(imageUrl)
                 .build();
-        long productId = productRepository.save(productEntity);
-        return new ProductDto(productId, name, price, imageUrl);
+        ProductEntity productEntity = productRepository.save(product);
+        return ProductDto.fromEntity(productEntity);
     }
 
     public List<ProductDto> findAllProducts() {
         return productRepository.findAll().stream()
-                .map(productEntity -> new ProductDto(productEntity.getId(), productEntity.getName(),
-                        productEntity.getPrice(), productEntity.getImageUrl()))
+                .map(ProductDto::fromEntity)
                 .collect(toList());
     }
 
@@ -46,7 +46,7 @@ public class ProductService {
                 .imageUrl(imageUrl)
                 .build();
         productRepository.update(productEntity);
-        return new ProductDto(id, name, price, imageUrl);
+        return ProductDto.fromEntity(productEntity);
     }
 
     private void validateId(Long id) {
