@@ -10,7 +10,7 @@
     - [x] 상품 목록 조회 GET
         - [x] home `/`
         - [x] admin `/admin`
-    - [x] 상품 수정 PUT `/admin/products`
+    - [x] 상품 수정 PUT `/admin/products/{id}`
     - [x] 상품 삭제 DELETE `/admin/products/{id}`
 - [x] 관리자 도구 페이지 연동
     - [x] `/admin` url로 접근할 경우 관리자 도구 페이지에 들어가야 한다.

@@ -40,8 +40,9 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/products")
-    public ResponseEntity<Void> putProducts(@RequestBody ProductModificationRequest request) {
+    @PutMapping("/products/{id}")
+    public ResponseEntity<Void> putProducts(@PathVariable Long id,
+                                            @RequestBody ProductModificationRequest request) {
         managementService.update(ProductDto.from(request));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
