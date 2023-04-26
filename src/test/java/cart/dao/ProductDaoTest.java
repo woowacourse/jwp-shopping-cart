@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dto.entity.ProductEntity;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -81,5 +82,20 @@ class ProductDaoTest {
         //then
         assertThat(countRowsInTableWhere(jdbcTemplate, "products", "name LIKE '오션'"))
                 .isEqualTo(0);
+    }
+
+    @DisplayName("해당 id 값의 상품이 존재하는 지 확인할 수 있다")
+    @Test
+    void exist() {
+        //given
+        ProductEntity original = productDao.save(new ProductEntity("오션", "", 1000));
+
+        //when
+        ProductEntity saved = productDao.save(original);
+
+        //then
+        Assertions.assertAll(
+                () -> assertThat(productDao.existById(saved.getId())).isTrue(),
+                () -> assertThat(productDao.existById(null)).isFalse());
     }
 }

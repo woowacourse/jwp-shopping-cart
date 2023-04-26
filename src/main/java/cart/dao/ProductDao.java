@@ -51,4 +51,10 @@ public class ProductDao {
         final String sql = "DELETE FROM products WHERE id=?";
         jdbcTemplate.update(sql, id);
     }
+
+    public boolean existById(final Long id) {
+        final String sql = "SELECT count(*) FROM products WHERE id=?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
+        return count > 0;
+    }
 }
