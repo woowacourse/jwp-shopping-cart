@@ -27,4 +27,9 @@ public class JdbcProductDao implements ProductDao {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
+
+    public void insert(final ProductEntity productEntity){
+        String sql = "INSERT INTO product(name, image, price) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
+    }
 }

@@ -14,6 +14,10 @@ public class ProductEntity {
         this.price = price;
     }
 
+    public static ProductEntity of(final String name, final String image, final int price) {
+        return new ProductEntity(null, name, image, price);
+    }
+
     public static ProductEntity of(final Long id, final String name, final String image, final int price) {
         return new ProductEntity(id, name, image, price);
     }
