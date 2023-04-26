@@ -33,13 +33,13 @@ public class ProductDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void save(Product product) {
+    public Long save(Product product) {
         Map<String, Object> parameters = new HashMap<>(3);
         parameters.put("name", product.getName());
         parameters.put("price", product.getPrice());
         parameters.put("image_url", product.getImageUrl());
 
-        insertActor.execute(parameters);
+        return insertActor.executeAndReturnKey(parameters).longValue();
     }
 
     public List<Product> findAll() {
