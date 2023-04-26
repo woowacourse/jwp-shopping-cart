@@ -9,7 +9,7 @@
 - [ ]  상품 관리 CRUD API
     - [x]  Create
     - [x]  Read
-    - [ ]  Update
+    - [x]  Update
     - [ ]  Delete
 - [ ]  관리자 도구 페이지 연동
     - [x]  `/admin` url로 관리자 도구 페이지 조회

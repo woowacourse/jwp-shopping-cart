@@ -1,15 +1,15 @@
 package cart.controller;
 
 import cart.dto.CreateProductRequest;
+import cart.dto.UpdateProductRequest;
 import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
+@RequestMapping("/product")
 public class ProductController {
 
     private final ProductService productService;
@@ -18,9 +18,15 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping(path = "/product")
-    public ResponseEntity<String> createProduct(@RequestBody @Valid CreateProductRequest request) {
+    @PostMapping
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid CreateProductRequest request) {
         productService.save(request.getName(), request.getPrice(), request.getImage());
-        return ResponseEntity.ok().body("상품 생성 성공.");
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateProduct(@RequestBody @Valid UpdateProductRequest request) {
+        productService.update(request.getId(), request.getName(), request.getPrice(), request.getImage());
+        return ResponseEntity.ok().build();
     }
 }
