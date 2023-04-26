@@ -25,19 +25,21 @@ public class AdminApiController {
 
     @PostMapping("/product")
     public void insertProduct(@RequestBody final ProductRequest productRequest) {
-        productService.insertProduct(ProductDto.createProductDto(
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImage()));
+        productService.insertProduct(new ProductDto.Builder()
+                .name(productRequest.getName())
+                .price(productRequest.getPrice())
+                .image(productRequest.getImage())
+                .build());
     }
 
     @PutMapping("/product")
     public void updateProduct(@RequestBody final UpdateRequest updateRequest) {
-        productService.updateById(ProductDto.createProductDto(
-                updateRequest.getId(),
-                updateRequest.getName(),
-                updateRequest.getPrice(),
-                updateRequest.getImage()));
+        productService.updateById(new ProductDto.Builder()
+                .id(updateRequest.getId())
+                .name(updateRequest.getName())
+                .price(updateRequest.getPrice())
+                .image(updateRequest.getImage())
+                .build());
     }
 
     @DeleteMapping("/product")

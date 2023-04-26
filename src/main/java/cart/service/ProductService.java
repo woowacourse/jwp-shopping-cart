@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.ProductsDao;
-import cart.dto.ProductDto;
+import cart.service.dto.ProductDto;
 import cart.entity.Product;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +25,13 @@ public class ProductService {
         return productsDao.readAll()
                 .stream()
                 .map(product ->
-                        ProductDto.createProductDto(product.getId(),
-                                product.getName(),
-                                product.getPrice(),
-                                product.getImage()))
+                        new ProductDto.Builder()
+                                .id(product.getId())
+                                .name(product.getName())
+                                .price(product.getPrice())
+                                .image(product.getImage())
+                                .build()
+                )
                 .collect(Collectors.toUnmodifiableList());
     }
 
