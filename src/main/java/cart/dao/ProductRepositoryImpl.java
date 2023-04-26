@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
-
     private final ProductDao productDao;
 
     public ProductRepositoryImpl(ProductDao productDao) {
@@ -35,5 +34,12 @@ public class ProductRepositoryImpl implements ProductRepository {
                 ProductCategory.valueOf(entity.getCategory()),
                 ImageUrl.from(entity.getImageUrl())
         );
+    }
+
+    @Override
+    public Long save(Product product) {
+        ProductEntity productEntity = new ProductEntity(product);
+        
+        return productDao.insert(productEntity);
     }
 }

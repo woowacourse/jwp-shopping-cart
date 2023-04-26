@@ -36,6 +36,24 @@ class ProductDaoTest {
                 .contains("Chicken", "Pizza");
         assertThat(all).extracting("price")
                 .contains(18000, 24000);
+    }
 
+    @DisplayName("상품 저장 테스트")
+    @Test
+    void saveProduct() {
+        String productName = "ProductA";
+        ProductEntity productEntity = new ProductEntity(
+                null,
+                productName,
+                10_000,
+                "ETC",
+                "naver.com"
+        );
+
+        productDao.insert(productEntity);
+
+        List<ProductEntity> allEntities = productDao.findAll();
+        assertThat(allEntities).hasSize(1);
+        assertThat(allEntities.get(0).getName()).isEqualTo(productName);
     }
 }
