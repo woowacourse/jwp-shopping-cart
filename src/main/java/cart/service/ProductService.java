@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
-public final class ProductService {
+public class ProductService {
 
     private final ProductDao productDao;
     private final CategoryDao categoryDao;
