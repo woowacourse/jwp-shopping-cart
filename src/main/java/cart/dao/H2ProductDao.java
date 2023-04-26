@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -18,18 +18,18 @@ public class H2ProductDao implements ProductDao {
     }
 
     @Override
-    public void save(final Product product) {
+    public void save(final ProductEntity productEntity) {
         final String sql = "insert into product (name, image_url, price) values(:name, :imageUrl, :price)";
-        final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(product);
+        final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(productEntity);
         jdbcTemplate.update(sql, parameterSource);
     }
 
     @Override
-    public List<Product> findAll() {
+    public List<ProductEntity> findAll() {
         final String sql = "select * from product";
 
         return jdbcTemplate.query(sql, (resultSet, count) ->
-                new Product(
+                new ProductEntity(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getString("image_url"),
@@ -39,9 +39,9 @@ public class H2ProductDao implements ProductDao {
     }
 
     @Override
-    public void update(final Product product) {
+    public void update(final ProductEntity productEntity) {
         final String sql = "update product set name = :name, image_url = :imageUrl, price = :price where id = :id";
-        final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(product);
+        final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(productEntity);
         jdbcTemplate.update(sql, parameterSource);
     }
 

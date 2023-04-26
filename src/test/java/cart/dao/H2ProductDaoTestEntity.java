@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
-class H2ProductDaoTest {
+class H2ProductDaoTestEntity {
 
     private H2ProductDao h2ProductDao;
 
@@ -31,32 +31,32 @@ class H2ProductDaoTest {
     @Test
     void save() {
         //given
-        final Product product = new Product(1L, "포이", "poi", 30000);
+        final ProductEntity productEntity = new ProductEntity(1L, "포이", "poi", 30000);
 
         //when
-        h2ProductDao.save(product);
+        h2ProductDao.save(productEntity);
 
         //then
-        final List<Product> products = getProducts();
-        final Product actual = products.get(0);
+        final List<ProductEntity> productEntities = getProducts();
+        final ProductEntity actual = productEntities.get(0);
         assertAll(
-                () -> assertThat(products).hasSize(1),
+                () -> assertThat(productEntities).hasSize(1),
                 () -> assertThat(actual.getName()).isEqualTo("포이"),
                 () -> assertThat(actual.getImageUrl()).isEqualTo("poi"),
                 () -> assertThat(actual.getPrice()).isEqualTo(30000)
         );
     }
 
-    private List<Product> getProducts() {
+    private List<ProductEntity> getProducts() {
         final String sql = "select * from product";
-        final List<Product> products = jdbcTemplate.getJdbcOperations().query(sql, (resultSet, count) ->
-                new Product(
+        final List<ProductEntity> productEntities = jdbcTemplate.getJdbcOperations().query(sql, (resultSet, count) ->
+                new ProductEntity(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getString("image_url"),
                         resultSet.getInt("price")
                 ));
-        return products;
+        return productEntities;
     }
 
     @Test
@@ -65,12 +65,12 @@ class H2ProductDaoTest {
         saveProduct();
 
         //when
-        final List<Product> products = h2ProductDao.findAll();
+        final List<ProductEntity> productEntities = h2ProductDao.findAll();
 
         //then
-        final Product actual = products.get(0);
+        final ProductEntity actual = productEntities.get(0);
         assertAll(
-                () -> assertThat(products).hasSize(1),
+                () -> assertThat(productEntities).hasSize(1),
                 () -> assertThat(actual.getName()).isEqualTo("포이"),
                 () -> assertThat(actual.getImageUrl()).isEqualTo("poi"),
                 () -> assertThat(actual.getPrice()).isEqualTo(30000)
@@ -78,9 +78,9 @@ class H2ProductDaoTest {
     }
 
     private void saveProduct() {
-        final Product product = new Product(1L, "포이", "poi", 30000);
+        final ProductEntity productEntity = new ProductEntity(1L, "포이", "poi", 30000);
         final String sql = "insert into product (name, image_url, price) values(:name, :imageUrl, :price)";
-        final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(product);
+        final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(productEntity);
         jdbcTemplate.update(sql, parameterSource);
     }
 
@@ -88,16 +88,16 @@ class H2ProductDaoTest {
     void update() {
         //given
         saveProduct();
-        final Product product = new Product(1L, "포이2", "poi2", 50000);
+        final ProductEntity productEntity = new ProductEntity(1L, "포이2", "poi2", 50000);
 
         //when
-        h2ProductDao.update(product);
+        h2ProductDao.update(productEntity);
 
         //then
-        final List<Product> products = getProducts();
-        final Product actual = products.get(0);
+        final List<ProductEntity> productEntities = getProducts();
+        final ProductEntity actual = productEntities.get(0);
         assertAll(
-                () -> assertThat(products).hasSize(1),
+                () -> assertThat(productEntities).hasSize(1),
                 () -> assertThat(actual.getName()).isEqualTo("포이2"),
                 () -> assertThat(actual.getImageUrl()).isEqualTo("poi2"),
                 () -> assertThat(actual.getPrice()).isEqualTo(50000)
@@ -113,7 +113,7 @@ class H2ProductDaoTest {
         h2ProductDao.delete(1L);
 
         //then
-        final List<Product> products = getProducts();
-        assertThat(products).hasSize(0);
+        final List<ProductEntity> productEntities = getProducts();
+        assertThat(productEntities).hasSize(0);
     }
 }

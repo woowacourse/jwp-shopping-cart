@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.dto.ProductRequest;
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,20 +15,20 @@ public class ProductService {
     }
 
     public void addProduct(final ProductRequest productRequest) {
-        final Product product = new Product(
+        final ProductEntity productEntity = new ProductEntity(
                 productRequest.getName(),
                 productRequest.getImageUrl(),
                 productRequest.getPrice());
-        productDao.save(product);
+        productDao.save(productEntity);
     }
 
     public void updateProduct(final long id, final ProductRequest productRequest) {
-        final Product product = new Product(
+        final ProductEntity productEntity = new ProductEntity(
                 id,
                 productRequest.getName(),
                 productRequest.getImageUrl(),
                 productRequest.getPrice());
-        productDao.update(product);
+        productDao.update(productEntity);
     }
 
     public void deleteProduct(final long id) {
