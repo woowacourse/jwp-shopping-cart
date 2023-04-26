@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
+@Sql({"classpath:test_init.sql"})
 class JdbcItemDaoTest {
 
     @Autowired
@@ -24,8 +26,6 @@ class JdbcItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("TRUNCATE TABLE item RESTART IDENTITY;");
-
         itemDao.save(new CreateItem("치킨", "a", 10000));
         itemDao.save(new CreateItem("피자", "b", 20000));
     }
