@@ -1,7 +1,8 @@
 package cart.controller;
 
-import cart.dto.NewProductDto;
-import cart.dto.ProductDto;
+import cart.dto.RequestCreateProductDto;
+import cart.dto.RequestUpdateProductDto;
+import cart.dto.ResponseProductDto;
 import cart.service.CartService;
 import java.util.List;
 import javax.validation.Valid;
@@ -30,20 +31,20 @@ public class AdminController {
 
     @GetMapping
     public String readProducts(final Model model) {
-        final List<ProductDto> productDtos = cartService.findAll();
-        model.addAttribute("products", productDtos);
+        final List<ResponseProductDto> responseProductDtos = cartService.findAll();
+        model.addAttribute("products", responseProductDtos);
         return "admin";
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Void> createProduct(@RequestBody @Valid NewProductDto newProductDto) {
-        cartService.insert(newProductDto);
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid RequestCreateProductDto requestCreateProductDto) {
+        cartService.insert(requestCreateProductDto);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/product")
-    public ResponseEntity<Void> updateProduct(@RequestBody @Valid ProductDto productDto) {
-        cartService.update(productDto);
+    public ResponseEntity<Void> updateProduct(@RequestBody @Valid RequestUpdateProductDto requestUpdateProductDto) {
+        cartService.update(requestUpdateProductDto);
         return ResponseEntity.ok().build();
     }
 

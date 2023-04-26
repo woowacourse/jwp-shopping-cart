@@ -1,7 +1,8 @@
 package cart.service;
 
-import cart.dto.NewProductDto;
-import cart.dto.ProductDto;
+import cart.dto.RequestCreateProductDto;
+import cart.dto.RequestUpdateProductDto;
+import cart.dto.ResponseProductDto;
 import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
 import cart.domain.Product;
@@ -20,21 +21,21 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<ProductDto> findAll() {
+    public List<ResponseProductDto> findAll() {
         final List<ProductEntity> productEntities = productDao.selectAll();
         return productEntities.stream()
-                .map(entity -> new ProductDto(entity.getId(), entity.getName(), entity.getPrice(), entity.getImage()))
+                .map(entity -> new ResponseProductDto(entity.getId(), entity.getName(), entity.getPrice(), entity.getImage()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void insert(final NewProductDto newProductDto) {
-        final Product newProduct = new Product(newProductDto.getName(), newProductDto.getPrice(), newProductDto.getImage());
+    public void insert(final RequestCreateProductDto requestCreateProductDto) {
+        final Product newProduct = new Product(requestCreateProductDto.getName(), requestCreateProductDto.getPrice(), requestCreateProductDto.getImage());
         productDao.insert(newProduct);
     }
 
-    public void update(final ProductDto productDto) {
-        final Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImage());
-        productDao.update(product, productDto.getId());
+    public void update(final RequestUpdateProductDto requestUpdateProductDto) {
+        final Product product = new Product(requestUpdateProductDto.getName(), requestUpdateProductDto.getPrice(), requestUpdateProductDto.getImage());
+        productDao.update(product, requestUpdateProductDto.getId());
     }
 
     public void delete(final Long id) {

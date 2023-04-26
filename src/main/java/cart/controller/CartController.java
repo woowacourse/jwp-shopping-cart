@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
+import cart.dto.ResponseProductDto;
 import cart.service.CartService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +19,9 @@ public class CartController {
     }
 
     @GetMapping("/")
-    public String main(final Model model) {
-        final List<ProductDto> productDtos = cartService.findAll();
-        model.addAttribute("products", productDtos);
+    public String readProducts(final Model model) {
+        final List<ResponseProductDto> responseProductDtos = cartService.findAll();
+        model.addAttribute("products", responseProductDtos);
         return "index";
     }
 }

@@ -30,19 +30,19 @@ public class ProductDao {
         );
     }
 
-    public int insert(final Product newProduct) {
+    public int insert(final Product product) {
         final String sql = "INSERT INTO PRODUCT (name, price, image) VALUES (?, ?, ?)";
         return jdbcTemplate.update(
                 sql,
-                newProduct.getName(),
-                newProduct.getPrice(),
-                newProduct.getImage()
+                product.getName(),
+                product.getPrice(),
+                product.getImage()
         );
     }
 
-    public void update(final Product product, final Long id) {
+    public int update(final Product product, final Long id) {
         final String sql = "UPDATE PRODUCT SET name = ?, price = ?, image = ? WHERE id = ?";
-        jdbcTemplate.update(
+        return jdbcTemplate.update(
                 sql,
                 product.getName(),
                 product.getPrice(),
@@ -51,8 +51,8 @@ public class ProductDao {
         );
     }
 
-    public void delete(final Long id) {
+    public int delete(final Long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 }

@@ -3,7 +3,7 @@ package cart.dto;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class NewProductDto {
+public class RequestCreateProductDto {
 
     @NotEmpty
     private final String name;
@@ -12,7 +12,7 @@ public class NewProductDto {
     @NotEmpty
     private final String image;
 
-    public NewProductDto(final String name, final Integer price, final String image) {
+    public RequestCreateProductDto(final String name, final Integer price, final String image) {
         this.name = name;
         this.price = price;
         this.image = image;
