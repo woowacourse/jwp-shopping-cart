@@ -14,7 +14,13 @@ public class ProductModifyRequest {
     @NotBlank
     private String imageUrl;
 
-    public ProductModifyRequest() {
+    private ProductModifyRequest() {
+    }
+
+    public ProductModifyRequest(final String name, final int price, final String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
