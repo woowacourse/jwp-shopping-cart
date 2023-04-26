@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dto.ProductRequest;
 import cart.service.ProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest) {
         productService.addProduct(productRequest);
-        return ResponseEntity.ok().build(); // TODO: 2023/04/26 created 변경
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{id}")
