@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.util.List;
 
@@ -28,7 +27,9 @@ public class ItemController {
     @PostMapping
     public ResponseEntity addItem(@RequestBody final ItemRequest itemRequest) {
         itemService.saveItem(itemRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .location(URI.create("/"))
+                             .build();
     }
 
     @GetMapping
@@ -52,6 +53,7 @@ public class ItemController {
                                      @RequestBody final ItemRequest itemRequest) {
         itemService.updateItem(itemId, itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
+                             .location(URI.create("/"))
                              .build();
     }
 
@@ -59,6 +61,7 @@ public class ItemController {
     public ResponseEntity deleteItem(@PathVariable final Long itemId) {
         itemService.deleteItem(itemId);
         return ResponseEntity.status(HttpStatus.OK)
+                             .location(URI.create("/"))
                              .build();
     }
 }

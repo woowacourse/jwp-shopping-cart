@@ -54,7 +54,7 @@ const createProduct = (product) => {
             price: product.price
         }
     }).then((response) => {
-        window.location.reload();
+        location.href = response.headers.get("location")
     }).catch((error) => {
         console.error(error);
     });
@@ -73,7 +73,7 @@ const updateProduct = (product) => {
             price: product.price
         }
     }).then((response) => {
-        window.location.reload();
+        location.href = response.headers.get("location")
     }).catch((error) => {
         console.error(error);
     });
@@ -84,7 +84,7 @@ const deleteProduct = (id) => {
         url: '/items/' + id,
         method: 'delete'
     }).then((response) => {
-        window.location.reload();
+        location.href = response.headers.get("location")
     }).catch((error) => {
         console.error(error);
     });
