@@ -12,8 +12,10 @@ import cart.entity.product.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductDao productDao;
@@ -27,6 +29,7 @@ public class ProductService {
         this.productCategoryDao = productCategoryDao;
     }
 
+    @Transactional
     public Long register(final ProductRequestDto productRequestDto) {
         final ProductEntity productEntity = new ProductEntity(
             productRequestDto.getName(),
@@ -64,6 +67,7 @@ public class ProductService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public void update(final Long id, final ProductRequestDto productRequestDto) {
         final ProductEntity productEntity = new ProductEntity(
             id,
@@ -81,6 +85,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public void delete(final Long id) {
         final List<ProductCategoryEntity> productCategoryEntities = productCategoryDao.findAll(id);
         for (ProductCategoryEntity productCategoryEntity : productCategoryEntities) {
