@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.domain.Product;
+import cart.dto.ProductDto;
 import cart.request.ProductRequest;
 import cart.service.ProductService;
 import java.util.List;
@@ -45,14 +46,15 @@ public class ProductController {
 
     @PostMapping("/admin")
     public void register(@RequestBody @Valid final ProductRequest productRequest) {
-        productService.register(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        final ProductDto productDto = new ProductDto(productRequest.getName(), productRequest.getPrice(),
+                productRequest.getImageUrl());
+        productService.register(productDto);
     }
 
     @PutMapping("/admin/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateProduct(@PathVariable final long id, final @RequestBody @Valid ProductRequest productRequest) {
-        productService.updateProduct(id, productRequest.getName(),
-                productRequest.getPrice(), productRequest.getImageUrl());
+        productService.updateProduct(id, new ProductDto(productRequest));
     }
 
     @DeleteMapping("/admin/{id}")

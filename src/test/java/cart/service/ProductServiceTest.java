@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
+import cart.dto.ProductDto;
 import io.restassured.RestAssured;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +54,7 @@ class ProductServiceTest {
     @CsvSource(value = {"applePizza:10000:사과피자 이미지", "salmonSalad:20000:연어 샐러드 이미지"}, delimiter = ':')
     void 상품_등록(final String name, final int price, final String imageUrl) {
         final long expectedId = 3L;
-        final Long savedId = productService.register(name, price, imageUrl);
+        final Long savedId = productService.register(new ProductDto(name, price, imageUrl));
 
         assertThat(savedId).isEqualTo(expectedId);
     }
@@ -61,7 +62,7 @@ class ProductServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"1:applePizza:10000:사과피자 이미지", "2:salmonSalad:20000:연어 샐러드 이미지"}, delimiter = ':')
     void 상품_수정(final long id, final String newName, final int newPrice, final String newImageUrl) {
-        productService.updateProduct(id, newName, newPrice, newImageUrl);
+        productService.updateProduct(id, new ProductDto(newName, newPrice, newImageUrl));
 
         final Product updatedProduct = productDao.findById(id);
         assertAll(
@@ -74,7 +75,7 @@ class ProductServiceTest {
     @Test
     void 존재하지_않는_상품_수정시_예외_발생() {
         assertThatIllegalArgumentException().isThrownBy(
-                () -> productService.updateProduct(10L, "name", 1234, "imageUrl")
+                () -> productService.updateProduct(10L, new ProductDto("name", 1234, "imageUrl"))
         ).withMessage("존재하지 않는 id입니다.");
     }
 
