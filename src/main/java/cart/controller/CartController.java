@@ -18,6 +18,11 @@ public class CartController {
     }
 
     @GetMapping("/")
+    public String index() {
+        return "redirect:/products";
+    }
+
+    @GetMapping("/products")
     public String products(Model model) {
         List<ProductResponse> productsResponse = cartService.readAll();
         model.addAttribute("products", productsResponse);
