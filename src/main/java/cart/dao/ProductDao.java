@@ -13,4 +13,6 @@ public interface ProductDao {
     Product findById(final long id);
 
     void update(final Product product);
+
+    void deleteById(final long id);
 }

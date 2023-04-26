@@ -67,4 +67,14 @@ class JdbcProductDaoTest {
                 () -> assertThat(product.getImage()).isEqualTo("image")
         );
     }
+
+    @Test
+    @DisplayName("Product 삭제 테스트")
+    void deleteTest() {
+        Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
+
+        jdbcProductDao.deleteById(id);
+
+        assertThat(jdbcProductDao.findById(id)).isNull();
+    }
 }

@@ -57,4 +57,10 @@ public class JdbcProductDao implements ProductDao {
         final String sql = "UPDATE product SET name = ?, price = ?, image = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), product.getId());
     }
+
+    @Override
+    public void deleteById(long id) {
+        final String sql = "DELETE FROM product WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }
