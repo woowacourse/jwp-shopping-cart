@@ -69,8 +69,8 @@ public class ProductDbRepository implements ProductRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void delete(Product product) {
         String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, product.getId());
     }
 }

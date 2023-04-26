@@ -4,6 +4,7 @@ import cart.domain.Product;
 import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductEditRequestDto;
 import cart.dto.ProductsResponseDto;
+import cart.exception.ProductNotFoundException;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,19 +34,20 @@ public class ProductService {
 
     @Transactional
     public void editProduct(ProductEditRequestDto productEditRequestDto) {
-        Product product = productRepository.findById(productEditRequestDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("ID가 존재 x"));
-
+        Product product = findProductById(productEditRequestDto.getId());
         product.edit(productEditRequestDto.getName(), productEditRequestDto.getImgUrl(), productEditRequestDto.getPrice());
+
         productRepository.update(product);
     }
 
     @Transactional
     public void deleteById(Long id) {
-        if (productRepository.findById(id).isEmpty()) {
-            throw new IllegalArgumentException("ID가 존재 X");
-        }
+        Product product = findProductById(id);
+        productRepository.delete(product);
+    }
 
-        productRepository.deleteById(id);
+    private Product findProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
     }
 }
