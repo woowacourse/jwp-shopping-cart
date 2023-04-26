@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,7 +25,8 @@ public class ProductDbRepository implements ProductRepository {
     public ProductDbRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("product");
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -45,7 +47,9 @@ public class ProductDbRepository implements ProductRepository {
     @Override
     public void add(final Product product) {
         BeanPropertySqlParameterSource source = new BeanPropertySqlParameterSource(product);
-        simpleJdbcInsert.execute(source);
+        KeyHolder keyHolder = simpleJdbcInsert.executeAndReturnKeyHolder(source);
+        Long generatedId = keyHolder.getKeyAs(Long.class);
+        product.setId(generatedId);
     }
 
     @Override
