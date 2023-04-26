@@ -58,4 +58,16 @@ class ProductManagementServiceTest {
                 () -> verify(productDao, times(1)).insert(any())
         );
     }
+
+    @DisplayName("상품 데이터가 수정되는지 확인한다")
+    @Test
+    void updateTest() {
+        final ProductDto productDto = ProductDto.of(1L,"pobi_doll", "image", 10000000);
+        doNothing().when(productDao).update(any());
+        managementService.update(productDto);
+
+        assertAll(
+                () -> verify(productDao, times(1)).update(any())
+        );
+    }
 }
