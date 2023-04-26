@@ -2,25 +2,28 @@ package cart.dto;
 
 public class ProductRequest {
 
-    private final String name;
-    private final byte[] image;
-    private final int price;
+    private String name;
+    private int price;
+    private String imageUrl;
 
-    public ProductRequest(final String name, final byte[] image, final int price) {
+    private ProductRequest() {
+    }
+
+    public ProductRequest(final String name, final int price, final String imageUrl) {
         this.name = name;
-        this.image = image;
         this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
         return name;
     }
 
-    public byte[] getImage() {
-        return image;
-    }
-
     public int getPrice() {
         return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

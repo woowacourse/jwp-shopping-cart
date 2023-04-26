@@ -4,18 +4,18 @@ public class ProductEntity {
 
     private final Long id;
     private final String name;
-    private final byte[] image;
     private final int price;
+    private final String imageUrl;
 
-    public ProductEntity(final Long id, final String name, final byte[] image, final int price) {
+    public ProductEntity(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;
-        this.image = image;
         this.price = price;
+        this.imageUrl = imageUrl;
     }
 
-    public ProductEntity(final String name, final byte[] image, final int price) {
-        this(null, name, image, price);
+    public ProductEntity(final String name, final int price, final String imageUrl) {
+        this(null, name, price, imageUrl);
     }
 
     public Long getId() {
@@ -26,11 +26,11 @@ public class ProductEntity {
         return name;
     }
 
-    public byte[] getImage() {
-        return image;
+    public int getPrice() {
+        return price;
     }
 
-    public Integer getPrice() {
-        return price;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

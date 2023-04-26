@@ -6,19 +6,19 @@ public class ProductResponse {
 
     private final Long id;
     private final String name;
-    private final byte[] image;
     private final int price;
+    private final String imageUrl;
 
-    private ProductResponse(final Long id, final String name, final byte[] image, final int price) {
+    public ProductResponse(final Long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;
-        this.image = image;
         this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public static ProductResponse from(final ProductEntity productEntity) {
         return new ProductResponse(productEntity.getId(), productEntity.getName(),
-            productEntity.getImage(), productEntity.getPrice());
+            productEntity.getPrice(), productEntity.getImageUrl());
     }
 
     public Long getId() {
@@ -29,11 +29,11 @@ public class ProductResponse {
         return name;
     }
 
-    public byte[] getImage() {
-        return image;
+    public int getPrice() {
+        return price;
     }
 
-    public Integer getPrice() {
-        return price;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
