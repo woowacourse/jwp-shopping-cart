@@ -28,4 +28,9 @@
 
 - [x]  Controller 분리
     - [x]  @RestController와 @Controller
-    - [x]  @RestController의 응답코드 선정  
+    - [x]  @RestController의 응답코드 선정
+
+- [x]  Validate 관련
+    - [x]  @Valid
+- [x]  예외 처리 관련
+    - [x]  @ExceptionHandler
