@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.service.ProductService;
+import cart.repository.ProductRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ShoppingCartController {
 
-    private final ProductService productService;
+    private final ProductRepository productRepository;
 
-    public ShoppingCartController(final ProductService productService) {
-        this.productService = productService;
+    public ShoppingCartController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @GetMapping("/")
     public String productList(final Model model) {
-        model.addAttribute("products", productService.findAll());
+        model.addAttribute("products", productRepository.findAll());
         return "index";
     }
 }

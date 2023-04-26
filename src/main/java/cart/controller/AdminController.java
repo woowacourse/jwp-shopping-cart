@@ -1,50 +1,45 @@
 package cart.controller;
 
 import cart.entity.Product;
-import cart.service.ProductService;
-import java.net.URI;
+import cart.repository.ProductRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final ProductService productService;
+    private final ProductRepository productRepository;
 
-    public AdminController(final ProductService productService) {
-        this.productService = productService;
+    public AdminController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @GetMapping
     public String productList(final Model model) {
-        model.addAttribute("products", productService.findAll());
+        model.addAttribute("products", productRepository.findAll());
         return "admin";
     }
 
     @PostMapping("/create")
     public ResponseEntity<Void> createProduct(@RequestBody Product product) {
-        long id = productService.createProduct(product);
+        long id = productRepository.save(product).getId();
         return ResponseEntity.created(URI.create("/admin/" + id)).build();
     }
 
     @PatchMapping("/edit")
     public ResponseEntity<Void> editProduct(@RequestBody Product product) {
-        productService.updateProduct(product);
+        productRepository.update(product);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
-        productService.deleteById(id);
+        productRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }
