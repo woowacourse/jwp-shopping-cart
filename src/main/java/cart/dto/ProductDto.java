@@ -37,6 +37,10 @@ public class ProductDto {
         return new ProductDto(null, name, image, price);
     }
 
+    public static ProductDto of(final Long id, final String name, final String image, final int price) {
+        return new ProductDto(id, name, image, price);
+    }
+
     public Long getId() {
         return id;
     }
