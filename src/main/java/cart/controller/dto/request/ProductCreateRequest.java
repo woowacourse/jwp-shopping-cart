@@ -1,15 +1,22 @@
 package cart.controller.dto.request;
 
+import javax.validation.constraints.NotEmpty;
+
 public class ProductCreateRequest {
+
+    @NotEmpty(message = "Null을 허용하지 않습니다.")
     private String name;
-    private int price;
+
+    private Integer price;
+
+    @NotEmpty(message = "Null을 허용하지 않습니다.")
     private String imageUrl;
 
     public ProductCreateRequest() {
 
     }
 
-    public ProductCreateRequest(String name, int price, String imageUrl) {
+    public ProductCreateRequest(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -38,4 +45,5 @@ public class ProductCreateRequest {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
 }

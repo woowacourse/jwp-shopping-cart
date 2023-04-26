@@ -1,15 +1,23 @@
 package cart.controller.dto.request;
 
+
+import javax.validation.constraints.NotEmpty;
+
 public class ProductUpdateRequest {
+
+    @NotEmpty(message = "Null을 허용하지 않습니다.")
     private String name;
-    private int price;
+
+    private Integer price;
+
+    @NotEmpty(message = "Null을 허용하지 않습니다.")
     private String imageUrl;
 
     public ProductUpdateRequest() {
 
     }
 
-    public ProductUpdateRequest(String name, int price, String imageUrl) {
+    public ProductUpdateRequest(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -19,7 +27,7 @@ public class ProductUpdateRequest {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 

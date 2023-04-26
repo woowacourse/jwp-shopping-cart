@@ -33,6 +33,7 @@
                     </p>
                     <p class="product-price">
                         <span th:text="${product.price}"></span>
+                        원
                     </p>
                 </div>
                 <button type="submit" class="product-btn" th:onclick="'addCartItem(' + ${product.id} + ')'">담기</button>
