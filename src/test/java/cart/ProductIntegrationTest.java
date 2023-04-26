@@ -21,8 +21,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql("/schema.sql")
 public class ProductIntegrationTest {
 
     @LocalServerPort
@@ -34,14 +36,6 @@ public class ProductIntegrationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        jdbcTemplate.execute("DROP TABLE IF EXISTS products");
-        jdbcTemplate.execute("CREATE TABLE products ("
-                + "    id BIGINT NOT NULL AUTO_INCREMENT, "
-                + "    name VARCHAR(30) NOT NULL, "
-                + "    image_url VARCHAR(1000), "
-                + "    price INT NOT NULL, "
-                + "    PRIMARY KEY (id)"
-                + ");");
     }
 
     @Test
