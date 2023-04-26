@@ -21,4 +21,8 @@ public class ProductService {
     public List<Product> findAllProducts() {
         return productDao.findAllProducts();
     }
+
+    public void updateProduct(Product product) {
+        productDao.updateProduct(product);
+    }
 }

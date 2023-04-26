@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,7 @@ public class ProductController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity saveProduct(@RequestBody Product product) {
+    public ResponseEntity<String> saveProduct(@RequestBody Product product) {
         productService.saveProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -31,4 +32,9 @@ public class ProductController {
         return ResponseEntity.ok().body(products);
     }
 
+    @PutMapping("/product")
+    public ResponseEntity<String> updateProduct(@RequestBody Product product) {
+        productService.updateProduct(product);
+        return ResponseEntity.ok().build();
+    }
 }
