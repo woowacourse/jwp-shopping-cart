@@ -74,4 +74,26 @@ class CartControllerTest {
                 .statusCode(HttpStatus.OK.value());
         // TODO: 2023-04-26 검증 방법 생각
     }
+
+    @DisplayName("상품 삭제 API 호출 시 상품이 삭제된다.")
+    @Test
+    void deleteProduct() {
+        String baseUrl = "/admin/product/";
+        //given
+        String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
+                        "CuteSeonghaDoll", 25000))
+                .when()
+                .post(baseUrl)
+                .then()
+                .extract().response().getHeader("Location");
+        long savedId = Long.parseLong(redirectURI.replace(baseUrl, ""));
+
+        given().log().all()
+                .when()
+                .delete("/admin/product/" + savedId)
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
 }
