@@ -27,7 +27,6 @@ class AdminControllerTest {
     @DisplayName("전체 상품 조회 API 호출 시 전체 상품이 반환된다.")
     @Test
     void showAllProducts() {
-        // post 몇 개 보내고 그 다음에 get으로 검증
         given().log().all()
                 .when()
                 .get("/admin")
