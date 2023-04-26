@@ -1,0 +1,18 @@
+package cart.domain;
+
+public class ProductPrice {
+
+    private static final int MIN_PRICE = 0;
+    private final int price;
+
+    public ProductPrice(int price) {
+        validate(price);
+        this.price = price;
+    }
+
+    private void validate(int price) {
+        if (price < MIN_PRICE){
+            throw new IllegalArgumentException(String.format("가격은 %d이상 이어야 합니다.", MIN_PRICE));
+        }
+    }
+}
