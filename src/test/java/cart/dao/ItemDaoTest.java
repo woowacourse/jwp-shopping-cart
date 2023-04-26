@@ -49,7 +49,7 @@ class ItemDaoTest {
     @Sql("classpath:initializeTestDb.sql")
     void findBy() {
         //when
-        Item findItem = itemDao.findBy(1L);
+        Item findItem = itemDao.findBy(1L).orElseThrow();
         //then
         assertThat(findItem).isEqualTo(new Item.Builder()
                 .id(1L)

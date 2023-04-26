@@ -5,6 +5,7 @@ import cart.domain.Item;
 import cart.domain.Name;
 import cart.domain.Price;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ItemDao {
@@ -36,9 +38,13 @@ public class ItemDao {
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public Item findBy(final Long itemId) {
+    public Optional<Item> findBy(final Long itemId) {
         final String sql = "SELECT id, name, image_url, price FROM items WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, actorRowMapper, itemId);
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, actorRowMapper, itemId));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public Long save(final Item item) {

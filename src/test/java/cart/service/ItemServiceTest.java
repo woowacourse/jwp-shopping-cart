@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -60,6 +61,7 @@ class ItemServiceTest {
     void updateItem() {
         //given
         Item item1 = new Item.Builder().id(1L).name(new Name("1번")).price(new Price(123)).imageUrl(new ImageUrl("1번URL")).build();
+        when(itemDao.findBy(1L)).thenReturn(Optional.of(item1));
         doNothing().when(itemDao).update(item1);
         //when
         itemService.updateItem(1L, new ItemRequest("1번", 123, "1번URL"));
@@ -71,6 +73,8 @@ class ItemServiceTest {
     @Test
     void deleteItem() {
         //given
+        Item item1 = new Item.Builder().id(1L).name(new Name("1번")).price(new Price(123)).imageUrl(new ImageUrl("1번URL")).build();
+        when(itemDao.findBy(1L)).thenReturn(Optional.of(item1));
         doNothing().when(itemDao).deleteBy(1L);
         //when
         itemService.deleteItem(1L);
@@ -83,7 +87,7 @@ class ItemServiceTest {
     void loadItem() {
         //given
         Item item1 = new Item.Builder().id(1L).name(new Name("1번")).price(new Price(123)).imageUrl(new ImageUrl("1번URL")).build();
-        when(itemDao.findBy(1L)).thenReturn(item1);
+        when(itemDao.findBy(1L)).thenReturn(Optional.of(item1));
         //when
         ItemResponse itemResponse = itemService.loadItem(1L);
         //then

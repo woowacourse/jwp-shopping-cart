@@ -7,10 +7,12 @@ import cart.controller.dto.ItemRequest;
 import cart.controller.dto.ItemResponse;
 import cart.dao.ItemDao;
 import cart.domain.Item;
+import cart.exception.NotFoundResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,8 +33,8 @@ public class ItemService {
     }
 
     public ItemResponse loadItem(final Long itemId) {
-        Item item = itemDao.findBy(itemId);
-        return ItemResponse.from(item);
+        Optional<Item> findItem = itemDao.findBy(itemId);
+        return ItemResponse.from(findItem.orElseThrow());
     }
 
     public Long saveItem(final ItemRequest itemRequest) {
@@ -45,6 +47,7 @@ public class ItemService {
     }
 
     public void updateItem(final Long itemId, final ItemRequest itemRequest) {
+        validateExistItem(itemId);
         Item item = new Item.Builder()
                 .id(itemId)
                 .name(new Name(itemRequest.getName()))
@@ -55,6 +58,14 @@ public class ItemService {
     }
 
     public void deleteItem(final Long itemId) {
+        validateExistItem(itemId);
         itemDao.deleteBy(itemId);
+    }
+
+    private void validateExistItem(Long itemId) {
+        Optional<Item> findItem = itemDao.findBy(itemId);
+        if (findItem.isEmpty()) {
+            throw new NotFoundResultException("존재하지 않는 아이템 입니다.");
+        }
     }
 }
