@@ -45,4 +45,18 @@ class ProductDaoTest {
         List<Product> allProducts = productDao.findAllProducts();
         assertThat(allProducts).isNotNull();
     }
+
+
+    @Test
+    void updateProduct는_상품_정보를_수정한다() {
+        //todo : 테스트를 위한 사전 상황을 어떻게 할지.
+        Product before = Product.of("chicken", "imagelink", 100);
+        long productId = productDao.save(before);
+
+        Product after = new Product(productId, "chicken", "imagelink",19000);
+        productDao.updateProduct(after);
+
+        Product savedProduct = productDao.findProductById(productId);
+        assertThat(savedProduct).usingRecursiveComparison().isEqualTo(after);
+    }
 }
