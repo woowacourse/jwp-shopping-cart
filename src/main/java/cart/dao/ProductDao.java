@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.Product;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -40,5 +41,12 @@ public class ProductDao {
         String sql = "UPDATE PRODUCT SET NAME=:name,IMAGE_URL=:imageUrl, PRICE=:price WHERE ID=:id";
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+    }
+    
+    public void delete(final Long id) {
+        final String sql = "DELETE FROM PRODUCT WHERE ID=:id";
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id);
+        namedParameterJdbcTemplate.update(sql, params);
     }
 }

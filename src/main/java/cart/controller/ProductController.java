@@ -39,6 +39,11 @@ public class ProductController {
         productService.update(id, productRequest);
     }
     
+    @DeleteMapping("/product/{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        productService.delete(id);
+    }
+    
     @GetMapping("/products")
     public ResponseEntity<List<ProductDto>> getProducts() {
         return ResponseEntity.ok(productService.findAll());
