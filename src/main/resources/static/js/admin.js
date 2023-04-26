@@ -60,7 +60,7 @@ const createProduct = (product) => {
 const updateProduct = (product) => {
     const {id} = product;
 
-    axios.post(`/products/${id}`, {
+    axios.put(`/products/${id}`, {
             name: product.name,
             imgUrl: product.imgUrl,
             price: product.price
