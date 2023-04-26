@@ -51,10 +51,6 @@ public final class ProductEntity {
         return description.getValue();
     }
 
-    public boolean isPersisted() {
-        return id != null;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
