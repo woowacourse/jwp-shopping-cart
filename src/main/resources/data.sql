@@ -47,3 +47,5 @@ INSERT INTO CATEGORY (id, name)
 VALUES (8, '해산물');
 INSERT INTO CATEGORY (id, name)
 VALUES (9, '샐러드');
+INSERT INTO CATEGORY (id, name)
+VALUES (10, '없음');
