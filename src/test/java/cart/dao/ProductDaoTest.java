@@ -1,7 +1,6 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.entity.product.ProductEntity;
@@ -88,7 +87,7 @@ class ProductDaoTest {
         final Long savedFirstProductId = productDao.save(firstProductEntity);
 
         //when
-        final ProductEntity findProductEntity = productDao.findById(savedFirstProductId);
+        final ProductEntity findProductEntity = productDao.findById(savedFirstProductId).get();
 
         //then
         assertAll(
@@ -103,16 +102,6 @@ class ProductDaoTest {
 
     @Nested
     class Delete {
-
-        @Test
-        @DisplayName("삭제하고자 하는 ID가 null이면 오류를 던진다.")
-        void deleteWithNullID() {
-            //given
-            //when
-            //then
-            assertThatThrownBy(() -> productDao.delete(null))
-                .isInstanceOf(IllegalArgumentException.class);
-        }
 
         @Test
         @DisplayName("상품을 DB에서 삭제한다.")
@@ -139,17 +128,6 @@ class ProductDaoTest {
     class Update {
 
         @Test
-        @DisplayName("수정하고자 하는 데이터의 ID가 null이면 오류를 던진다.")
-        void updateWithNullID() {
-            //given
-            final ProductEntity updateProductEntity = new ProductEntity(null, "name", "imageUrl", 1000, "description");
-            //when
-            //then
-            assertThatThrownBy(() -> productDao.update(updateProductEntity))
-                .isInstanceOf(IllegalArgumentException.class);
-        }
-
-        @Test
         @DisplayName("상품을 수정한다.")
         void update() {
             //given
@@ -161,12 +139,12 @@ class ProductDaoTest {
                 "다즐짱"
             );
             final Long savedProductId = productDao.save(productEntity);
-            final ProductEntity findProductEntity = productDao.findById(savedProductId);
+            final ProductEntity findProductEntity = productDao.findById(savedProductId).get();
             findProductEntity.update("name", "imageUrl", 1000, "description");
 
             //when
             productDao.update(findProductEntity);
-            final ProductEntity updatedProductEntity = productDao.findById(findProductEntity.getId());
+            final ProductEntity updatedProductEntity = productDao.findById(findProductEntity.getId()).get();
 
             //then
             assertAll(

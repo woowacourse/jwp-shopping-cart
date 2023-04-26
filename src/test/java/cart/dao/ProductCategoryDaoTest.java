@@ -1,7 +1,6 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.entity.ProductCategoryEntity;
 import cart.entity.product.ProductEntity;
@@ -50,13 +49,6 @@ class ProductCategoryDaoTest {
 
     @Nested
     class FindAll {
-
-        @Test
-        @DisplayName("상품 ID가 null 일 경우 오류를 던진다.")
-        void findAllWithNullProductId() {
-            assertThatThrownBy(() -> productCategoryDao.findAll(null))
-                .isInstanceOf(IllegalArgumentException.class);
-        }
 
         @Test
         @DisplayName("상품 ID에 대한 상품 카테고리 목록을 조회한다.")

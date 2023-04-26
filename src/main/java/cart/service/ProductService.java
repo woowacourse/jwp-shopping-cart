@@ -55,10 +55,17 @@ public class ProductService {
     }
 
     private List<Long> getCategoryIds(final ProductEntity productEntity) {
-        return productCategoryDao.findAll(productEntity.getId())
+        final ProductEntity savedProductEntity = getSavedProductEntity(productEntity.getId());
+
+        return productCategoryDao.findAll(savedProductEntity.getId())
             .stream()
             .map(ProductCategoryEntity::getCategoryId)
             .collect(Collectors.toList());
+    }
+
+    private ProductEntity getSavedProductEntity(final Long id) {
+        return productDao.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
     }
 
     public List<CategoryResponseDto> findCategories() {
@@ -69,14 +76,14 @@ public class ProductService {
 
     @Transactional
     public void update(final Long id, final ProductRequestDto productRequestDto) {
-        final ProductEntity productEntity = new ProductEntity(
-            id,
+        final ProductEntity savedProductEntity = getSavedProductEntity(id);
+        savedProductEntity.update(
             productRequestDto.getName(),
             productRequestDto.getImageUrl(),
             productRequestDto.getPrice(),
             productRequestDto.getDescription()
         );
-        productDao.update(productEntity);
+        productDao.update(savedProductEntity);
         for (ProductCategoryEntity productCategoryEntity : productCategoryDao.findAll(id)) {
             productCategoryDao.delete(productCategoryEntity.getId());
         }
@@ -87,10 +94,11 @@ public class ProductService {
 
     @Transactional
     public void delete(final Long id) {
+        final ProductEntity savedProductEntity = getSavedProductEntity(id);
         final List<ProductCategoryEntity> productCategoryEntities = productCategoryDao.findAll(id);
         for (ProductCategoryEntity productCategoryEntity : productCategoryEntities) {
             productCategoryDao.delete(productCategoryEntity.getId());
         }
-        productDao.delete(id);
+        productDao.delete(savedProductEntity.getId());
     }
 }

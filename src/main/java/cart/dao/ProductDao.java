@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.product.ProductEntity;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -29,9 +30,6 @@ public class ProductDao {
     }
 
     public void delete(final Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID값이 null일 수 없습니다.");
-        }
         final String sql = "DELETE FROM product WHERE id = ?";
         namedParameterJdbcTemplate.getJdbcTemplate().update(sql, id);
     }
@@ -49,9 +47,9 @@ public class ProductDao {
         );
     }
 
-    public ProductEntity findById(final Long id) {
+    public Optional<ProductEntity> findById(final Long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
-        return namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(
+        final ProductEntity productEntity = namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(
             sql,
             (rs, rowNum) -> new ProductEntity(
                 rs.getLong("id"),
@@ -62,12 +60,10 @@ public class ProductDao {
             ),
             id
         );
+        return Optional.ofNullable(productEntity);
     }
 
     public void update(final ProductEntity productEntity) {
-        if (!productEntity.isPersisted()) {
-            throw new IllegalArgumentException("한 번도 저장되지 않은 데이터는 수정할 수 없습니다.");
-        }
         final String sql = "UPDATE product "
             + "SET name = :name, image_url = :imageUrl, price = :price, description = :description "
             + "WHERE id = :id";
