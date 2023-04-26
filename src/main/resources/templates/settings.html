@@ -26,11 +26,13 @@
             <div class="cart-item-info">
                 <div class="cart-item-name"></div> <!-- 사용자 이메일 -->
                 <div class="cart-item-price"></div> <!-- 사용자 비밀번호 -->
-                <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">Select</button>
+                <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">
+                    Select
+                </button>
             </div>
         </div>
     </div>
 </div>
-<script th:src="@{/js/settings.js}"> </script>
+<script th:src="@{/js/settings.js}"></script>
 </body>
 </html>

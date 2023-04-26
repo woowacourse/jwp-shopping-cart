@@ -1,7 +1,5 @@
 package cart.entity;
 
-import cart.dto.ProductDto;
-
 public class ProductEntity {
 
     private final Long id;

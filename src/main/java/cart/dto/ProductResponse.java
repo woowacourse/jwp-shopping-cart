@@ -1,8 +1,5 @@
 package cart.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class ProductResponse {
 
     private final Long id;

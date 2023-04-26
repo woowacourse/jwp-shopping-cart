@@ -3,7 +3,6 @@ package cart.controller;
 import cart.dto.ProductCreationRequest;
 import cart.dto.ProductDto;
 import cart.dto.ProductModificationRequest;
-import cart.dto.ProductResponse;
 import cart.mapper.ProductDtoMapper;
 import cart.mapper.ProductResponseMapper;
 import cart.service.ProductManagementService;
