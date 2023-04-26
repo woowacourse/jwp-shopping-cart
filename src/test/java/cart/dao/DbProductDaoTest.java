@@ -29,7 +29,7 @@ class DbProductDaoTest {
 
         List<Product> products = productDao.findAll();
 
-        assertThat(products).contains(gitchan);
+        assertThat(products).containsExactly(gitchan);
     }
 
     @Test
@@ -43,13 +43,14 @@ class DbProductDaoTest {
 
     @Test
     void updateTest() {
-        Product boxster = productDao.update(new Product(1L, "박스터", "boxster.img", 500));
+        Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
+
+        Product boxster = productDao.update(new Product(gitchan.getId(), "박스터", "boxster.img", 500));
 
         List<Product> products = productDao.findAll();
-
         assertThat(products)
-                .extracting("name")
-                .contains(boxster.getName());
+                .map(Product::getName)
+                .containsExactly(boxster.getName());
     }
 
     @Test
