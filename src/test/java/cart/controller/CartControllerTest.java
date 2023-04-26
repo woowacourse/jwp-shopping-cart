@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.dto.ProductResponseDto;
 import cart.service.CartService;
 import java.util.List;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,7 +23,6 @@ public class CartControllerTest {
     @MockBean
     private CartService cartService;
 
-    @DisplayName("")
     @Test
     void indexTest() throws Exception {
         when(cartService.getProducts()).thenReturn(List.of(
@@ -38,7 +36,6 @@ public class CartControllerTest {
                 .andExpect(view().name("index"));
     }
 
-    @DisplayName("")
     @Test
     void adminTest() throws Exception {
         when(cartService.getProducts()).thenReturn(List.of(

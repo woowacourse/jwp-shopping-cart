@@ -6,8 +6,6 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cart.entity.ProductEntity;
 import java.util.List;
-import org.assertj.core.api.AssertionsForClassTypes;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +26,6 @@ class JdbcTemplateProductDaoTest {
     void setup() {
         productDao = new JdbcTemplateProductDao(jdbcTemplate);
     }
-
-    private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNumber) -> {
-        ProductEntity productEntity = new ProductEntity(
-                resultSet.getInt("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("price"),
-                resultSet.getString("image")
-        );
-        return productEntity;
-    };
 
     @Test
     void insertTest() {
