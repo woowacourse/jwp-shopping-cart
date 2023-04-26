@@ -17,17 +17,17 @@
 ### Controller
 
 - [x]  관리자 도구 페이지를 반환한다. ( GET “/admin” )
-    - Response Body : 모든 상품의 정보 ( ID, 이름, 가격, 이미지URL )
+    - Response Body : 모든 상품의 정보 ( ID, 이름, 가격, 이미지URL, 카테고리 이름 목록)
 - [x]  상품 목록 페이지를 반환한다. ( GET “/” )
-    - Response Body : 모든 상품의 정보 ( ID, 이름, 가격, 이미지URL )
-- [x]  상품을 생성하고 해당 URL의 GET 메서드로 리다이렉트한다 . ( POST "/products" )
-    - Request Body :  이름, 가격, 이미지URL, 카테고리 아이디 목록
+    - Response Body : 모든 상품의 정보 ( ID, 이름, 가격, 이미지URL, 카테고리 이름 목록)
+- [x]  상품을 생성한다. ( POST "/products" )
+    - Request Body :  상품의 정보 ( 이름, 가격, 이미지URL, 카테고리 아이디 목록 )
     - Response Header Location  : /products/{상품 ID}
-- [x]  상품을 수정하고 해당 URL의 GET 메서드로 리다이렉트한다 . ( PUT "/products/{id}" )
-    - Request Body  : ID, 이름, 가격, 이미지URL, 카테고리 아이디 목록
+- [x]  상품을 수정한다. ( PUT "/products/{id}" )
+    - Request Body  : 상품의 정보 ( 이름, 가격, 이미지URL, 카테고리 아이디 목록 )
     - Response Body : 없음
-- [x]  상품을 삭제하고 해당 URL의 GET 메서드로 리다이렉트한다 . ( DELETE "/products/{id}" )
-    - Request Body  : ID
+- [x]  상품을 삭제한다. ( DELETE "/products/{id}" )
+    - Request Body  : 없음
     - Response Body : 없음
 
 ### Service
@@ -42,9 +42,9 @@
 - PRODUCT
     - [x]  ID  ( INT NOT NULL AUTO_INCREMENT )
     - [x]  NAME ( VARCHAR(50) NOT NULL )
-    - [x]  IMAGE_URL ( VARCHAR(255) NOT NULL )
+    - [x]  IMAGE_URL ( TEXT NOT NULL )
     - [x]  PRICE ( INT NOT NULL )
-    - [x]  DESCRIPTION ( TEXT )
+    - [x]  DESCRIPTION ( VARCHAR(255) )
     - [x]  PRIMARY KEY ( ID )
 
 - CATEGORY

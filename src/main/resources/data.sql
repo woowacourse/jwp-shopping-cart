@@ -4,11 +4,11 @@ DROP TABLE IF EXISTS CATEGORY;
 
 CREATE TABLE PRODUCT
 (
-    id          BIGINT       NOT NULL AUTO_INCREMENT,
-    name        VARCHAR(50)  NOT NULL,
-    image_url   VARCHAR(255) NOT NULL,
-    price       INT          NOT NULL,
-    description TEXT,
+    id          BIGINT      NOT NULL AUTO_INCREMENT,
+    name        VARCHAR(50) NOT NULL,
+    image_url   TEXT        NOT NULL,
+    price       INT         NOT NULL,
+    description VARCHAR(255),
     PRIMARY KEY (id)
 );
 
