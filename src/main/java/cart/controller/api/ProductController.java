@@ -3,6 +3,7 @@ package cart.controller.api;
 import cart.controller.dto.ProductRequest;
 import cart.dao.ProductDao;
 import cart.domain.Product;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,14 +25,16 @@ public class ProductController {
     // TODO /admin/products  VS  /products 가 고민입니다
     @PostMapping("/products")
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody final ProductRequest request) {
+    public void save(
+            @Valid @RequestBody final ProductRequest request
+    ) {
         productDao.save(new Product(request.getName(), request.getImageUrl(), request.getPrice()));
     }
 
     @PutMapping("/products/{id}")
     public void update(
             @PathVariable("id") final Long id,
-            @RequestBody final ProductRequest request) {
+            @Valid @RequestBody final ProductRequest request) {
         productDao.update(new Product(id, request.getName(), request.getImageUrl(), request.getPrice()));
     }
 
