@@ -7,13 +7,13 @@ public class ProductCreationRequest {
 
     private final String name;
     private final String image;
-    private final int price;
+    private final Integer price;
 
     @JsonCreator
     public ProductCreationRequest(
             @JsonProperty(value = "name") final String name,
             @JsonProperty(value = "image") final String image,
-            @JsonProperty(value = "price") final int price) {
+            @JsonProperty(value = "price") final Integer price) {
         this.name = name;
         this.image = image;
         this.price = price;
@@ -27,7 +27,7 @@ public class ProductCreationRequest {
         return image;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 }

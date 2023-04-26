@@ -7,9 +7,9 @@ public class ProductEntity {
     private final Long id;
     private final String name;
     private final String image;
-    private final int price;
+    private final Integer price;
 
-    private ProductEntity(final Long id, final String name, final String image, final int price) {
+    private ProductEntity(final Long id, final String name, final String image, final Integer price) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -20,11 +20,11 @@ public class ProductEntity {
         return new ProductEntity(productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice());
     }
 
-    public static ProductEntity of(final String name, final String image, final int price) {
+    public static ProductEntity of(final String name, final String image, final Integer price) {
         return new ProductEntity(null, name, image, price);
     }
 
-    public static ProductEntity of(final Long id, final String name, final String image, final int price) {
+    public static ProductEntity of(final Long id, final String name, final String image, final Integer price) {
         return new ProductEntity(id, name, image, price);
     }
 
@@ -40,7 +40,7 @@ public class ProductEntity {
         return image;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 }

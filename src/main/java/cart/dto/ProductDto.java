@@ -10,9 +10,9 @@ public class ProductDto {
     private final Long id;
     private final String name;
     private final String image;
-    private final int price;
+    private final Integer price;
 
-    private ProductDto(final Long id, final String name, final String image, final int price) {
+    private ProductDto(final Long id, final String name, final String image, final Integer price) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -37,11 +37,11 @@ public class ProductDto {
                 .collect(Collectors.toList());
     }
 
-    public static ProductDto of(final String name, final String image, final int price) {
+    public static ProductDto of(final String name, final String image, final Integer price) {
         return new ProductDto(null, name, image, price);
     }
 
-    public static ProductDto of(final Long id, final String name, final String image, final int price) {
+    public static ProductDto of(final Long id, final String name, final String image, final Integer price) {
         return new ProductDto(id, name, image, price);
     }
 
@@ -57,7 +57,7 @@ public class ProductDto {
         return image;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 }
