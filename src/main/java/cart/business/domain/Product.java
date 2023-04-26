@@ -17,4 +17,16 @@ public class Product {
     public int getId() {
         return id;
     }
+
+    public String getName() {
+        return name.getValue();
+    }
+
+    public String getUrl() {
+        return image.getValue();
+    }
+
+    public Integer getProductPrice() {
+        return productPrice.getValue();
+    }
 }

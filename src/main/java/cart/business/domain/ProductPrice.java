@@ -16,4 +16,8 @@ public class ProductPrice {
             throw new IllegalArgumentException(String.format("가격은 %d이상 %d이하 이어야 합니다.", MIN_PRICE, MAX_PRICE));
         }
     }
+
+    public int getValue() {
+        return price;
+    }
 }

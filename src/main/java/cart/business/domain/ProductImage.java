@@ -10,4 +10,8 @@ public class ProductImage {
     public ProductImage(String url) throws MalformedURLException {
         this.url = new URL(url);
     }
+
+    public String getValue() {
+        return url.toString();
+    }
 }
