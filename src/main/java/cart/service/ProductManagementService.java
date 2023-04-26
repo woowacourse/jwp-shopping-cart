@@ -24,4 +24,8 @@ public class ProductManagementService {
     public void save(final ProductDto productDto) {
         productDao.insert(ProductEntity.from(productDto));
     }
+
+    public void update(final ProductDto productDto) {
+        productDao.update(ProductEntity.from(productDto));
+    }
 }
