@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public final class CategoryDao {
+public class CategoryDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -23,6 +23,14 @@ public final class CategoryDao {
             sql,
             (rs, rowNum) -> new CategoryEntity(rs.getLong("id"), rs.getString("name")),
             categoryIds.toArray()
+        );
+    }
+
+    public List<CategoryEntity> findAll() {
+        final String sql = "SELECT id, name FROM category";
+        return jdbcTemplate.query(
+            sql,
+            (rs, rowNum) -> new CategoryEntity(rs.getLong("id"), rs.getString("name"))
         );
     }
 }

@@ -3,6 +3,7 @@ package cart.dto.response;
 import cart.entity.CategoryEntity;
 import cart.entity.product.ProductEntity;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductResponseDto {
 
@@ -55,6 +56,12 @@ public class ProductResponseDto {
 
     public String getDescription() {
         return description;
+    }
+
+    public List<String> getCategoryNames() {
+        return categoryResponseDtos.stream()
+            .map(CategoryResponseDto::getName)
+            .collect(Collectors.toList());
     }
 
     public List<CategoryResponseDto> getCategoryResponseDtos() {

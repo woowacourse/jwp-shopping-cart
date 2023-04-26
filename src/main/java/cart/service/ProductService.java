@@ -58,6 +58,12 @@ public class ProductService {
             .collect(Collectors.toList());
     }
 
+    public List<CategoryResponseDto> findCategories() {
+        return categoryDao.findAll().stream()
+            .map(CategoryResponseDto::from)
+            .collect(Collectors.toList());
+    }
+
     public void update(final Long id, final ProductRequestDto productRequestDto) {
         final ProductEntity productEntity = new ProductEntity(
             id,
