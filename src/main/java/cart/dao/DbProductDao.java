@@ -23,6 +23,7 @@ public class DbProductDao implements ProductDao {
             resultSet.getString("img_url"),
             resultSet.getInt("price")
     );
+
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
