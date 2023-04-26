@@ -128,4 +128,16 @@ class AdminControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
+
+    @Test
+    @Sql("/data.sql")
+    @DisplayName("/admin/delete에 id 파라미터를 전달하지 않으면 bad_request 상태코드를 반환한다")
+    void deleteExceptionTest() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/admin/delete")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }
