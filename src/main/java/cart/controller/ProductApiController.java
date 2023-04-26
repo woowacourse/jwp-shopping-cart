@@ -5,6 +5,7 @@ import cart.dto.response.ProductResponseDto;
 import cart.service.ProductService;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +33,7 @@ public final class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> create(@Valid @RequestBody ProductRequestDto productRequestDto) {
         final Long registeredProductId = productService.register(productRequestDto);
         return ResponseEntity.created(URI.create("/products/" + registeredProductId)).build();
     }
