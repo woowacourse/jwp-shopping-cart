@@ -3,6 +3,8 @@ package cart.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +34,7 @@ public class ProductApi {
 	}
 
 	@PostMapping("/products")
-	public ResponseEntity<Void> createProduct(@RequestBody ProductCreateRequest request) {
+	public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductCreateRequest request) {
 		long save = productService.save(request);
 		URI uri = URI.create("/products/" + save);
 		return ResponseEntity.created(uri).build();
@@ -47,7 +49,7 @@ public class ProductApi {
 	@PatchMapping("/products/{id}")
 	public ResponseEntity<ProductDto> updateProduct(
 		@PathVariable(value = "id") long productId,
-		@RequestBody ProductUpdateRequest request
+		@RequestBody @Valid ProductUpdateRequest request
 	) {
 		ProductDto productDto = productService.update(productId, request);
 		return ResponseEntity.ok(productDto);
