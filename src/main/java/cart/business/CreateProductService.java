@@ -2,6 +2,7 @@ package cart.business;
 
 import cart.business.domain.Product;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ public class CreateProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public void perform(Product product) {
         List<Product> allProducts = productRepository.findAll();
 

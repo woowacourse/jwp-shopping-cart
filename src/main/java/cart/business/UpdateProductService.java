@@ -2,6 +2,7 @@ package cart.business;
 
 import cart.business.domain.Product;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UpdateProductService {
@@ -14,6 +15,7 @@ public class UpdateProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public void perform(Product product) {
         productRepository.remove(product.getId());
         createProductService.perform(product);
