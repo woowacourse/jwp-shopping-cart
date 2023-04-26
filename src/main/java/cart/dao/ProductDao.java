@@ -40,11 +40,11 @@ public class ProductDao {
                 new ProductEntity(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
     }
 
-    public ProductEntity update(final ProductEntity productEntity) {
+    public ProductEntity update(final ProductEntity product) {
         final String sql = "UPDATE products SET id=?, name=?, image=?, price=? WHERE id=?";
 
-        jdbcTemplate.update(sql, productEntity.getId(), productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), productEntity.getId());
-        return productEntity;
+        jdbcTemplate.update(sql, product.getId(), product.getName(), product.getImage(), product.getPrice(), product.getId());
+        return product;
     }
 
     public void delete(final Long id) {
