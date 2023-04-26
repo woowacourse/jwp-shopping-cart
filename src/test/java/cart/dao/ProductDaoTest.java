@@ -44,15 +44,16 @@ class ProductDaoTest {
     }
 
     @Test
-    void 데이터를_수정한다() {
+    void 입력한_id를_갖는_데이터를_수정한다() {
         // given
         final Long id = productDao.insert(new Product("돈까스", 10000, "돈까스 이미지 주소"));
 
         // when
-        productDao.update(new Product("치킨", 1000, "치킨 이미지 주소"), id);
+        int updatedRows = productDao.update(new Product("치킨", 1000, "치킨 이미지 주소"), id);
 
         // then
         assertSoftly(softly -> {
+            softly.assertThat(updatedRows).isEqualTo(1);
             ProductEntity productEntity = productDao.findById(id);
             softly.assertThat(productEntity.getName()).isEqualTo("치킨");
             softly.assertThat(productEntity.getPrice()).isEqualTo(1000);
@@ -61,7 +62,16 @@ class ProductDaoTest {
     }
 
     @Test
-    void id로_값을_찾는다() {
+    void 등록되지_않은_데이터를_수정할_수_없다() {
+        // when
+        int updatedRows = productDao.update(new Product("치킨", 1000, "치킨 이미지 주소"), 99999L);
+
+        // then
+        assertThat(updatedRows).isZero();
+    }
+
+    @Test
+    void 입력한_id를_가진_데이터를_찾는다() {
         // given
         final Long id = productDao.insert(new Product("돈까스", 10000, "돈까스 이미지 주소"));
 
@@ -78,7 +88,7 @@ class ProductDaoTest {
     }
 
     @Test
-    void 데이터를_삭제한다() {
+    void 입력한_id를_가진_데이터를_삭제한다() {
         // given
         final Long id = productDao.insert(new Product("돈까스", 10000, "돈까스 이미지 주소"));
 
@@ -91,7 +101,7 @@ class ProductDaoTest {
     }
 
     @Test
-    void 데이터를_모두_읽는다() {
+    void 모든_데이터를_조회한다() {
         // given
         productDao.insert(new Product("치킨", 1000, "치킨 이미지 주소"));
 
