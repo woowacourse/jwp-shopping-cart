@@ -32,7 +32,7 @@ class JdbcProductDaoTest {
 
     @Test
     void save_메서드로_Product를_저장한다() {
-        final ProductEntity productEntity = new ProductEntity("modi", new byte[]{},10000);
+        final ProductEntity productEntity = new ProductEntity("modi", 10000,"");
 
         final Long productId = productDao.save(productEntity);
 
@@ -41,8 +41,8 @@ class JdbcProductDaoTest {
 
     @Test
     void findAll_메서드로_저장된_Product의_목록을_불러온다() {
-        final ProductEntity modi = new ProductEntity("modi", new byte[]{},10000);
-        final ProductEntity jena = new ProductEntity("jena", new byte[]{},100000);
+        final ProductEntity modi = new ProductEntity("modi", 10000, "");
+        final ProductEntity jena = new ProductEntity("jena", 100000, "");
         productDao.save(modi);
         productDao.save(jena);
 
@@ -53,21 +53,21 @@ class JdbcProductDaoTest {
 
     @Test
     void update_메서드로_저장된_Product를_수정한다() {
-        final ProductEntity modi = new ProductEntity("modi", new byte[] {}, 10000);
+        final ProductEntity modi = new ProductEntity("modi", 10000, "");
         final Long productId = productDao.save(modi);
-        final ProductEntity originalJena = new ProductEntity(productId,"jena", new byte[] {}, 10000);
+        final ProductEntity originalJena = new ProductEntity(productId,"jena", 10000, "");
 
-        productDao.update(originalJena);
+        productDao.update(productId, originalJena);
         ProductEntity jena = productDao.findByName("jena");
         assertThat(jena.getName()).isEqualTo("jena");
     }
 
     @Test
     void deleteByName_메서드로_저장된_Product를_삭제한다() {
-        final ProductEntity modi = new ProductEntity("modi", new byte[] {}, 10000);
-        productDao.save(modi);
+        final ProductEntity modi = new ProductEntity("modi", 10000, "");
+        final Long id = productDao.save(modi);
 
-        productDao.deleteByName("modi");
+        productDao.deleteById(id);
 
         assertThatThrownBy(() -> productDao.findByName("modi")).isInstanceOf(EmptyResultDataAccessException.class);
     }

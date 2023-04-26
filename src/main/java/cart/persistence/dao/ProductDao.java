@@ -7,8 +7,12 @@ import cart.persistence.entity.ProductEntity;
 public interface ProductDao {
 
     Long save(ProductEntity productEntity);
+
     ProductEntity findByName(String name);
+
     List<ProductEntity> findAll();
-    void update(ProductEntity productEntity);
-    void deleteByName(String name);
+
+    void update(long id, ProductEntity productEntity);
+
+    void deleteById(long id);
 }

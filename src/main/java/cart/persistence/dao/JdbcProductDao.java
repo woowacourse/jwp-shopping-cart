@@ -19,8 +19,8 @@ public class JdbcProductDao implements ProductDao {
     private final RowMapper<ProductEntity> actorRowMapper = (resultSet, rowNum) -> new ProductEntity(
         resultSet.getLong("product_id"),
         resultSet.getString("name"),
-        resultSet.getBytes("image"),
-        resultSet.getInt("price")
+        resultSet.getInt("price"),
+        resultSet.getString("image_url")
     );
 
     public JdbcProductDao(final JdbcTemplate jdbcTemplate) {
@@ -38,25 +38,25 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public ProductEntity findByName(final String name) {
-        final String sql = "SELECT product_id, name, image, price FROM product WHERE name = ?";
+        final String sql = "SELECT product_id, name, price, image_url FROM product WHERE name = ?";
         return jdbcTemplate.queryForObject(sql, actorRowMapper, name);
     }
 
     @Override
     public List<ProductEntity> findAll() {
-        final String sql = "SELECT product_id, name, image, price FROM product";
+        final String sql = "SELECT product_id, name, price, image_url FROM product";
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
     @Override
-    public void update(final ProductEntity productEntity) {
-        final String sql = "UPDATE product SET name=?, image=?, price=? WHERE product_id=?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), productEntity.getId());
+    public void update(final long id, final ProductEntity productEntity) {
+        final String sql = "UPDATE product SET name=?, price=?, image_url=? WHERE product_id = ?";
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), id);
     }
 
     @Override
-    public void deleteByName(final String name) {
-        final String sql = "DELETE FROM product WHERE name = ?";
-        jdbcTemplate.update(sql, name);
+    public void deleteById(final long id) {
+        final String sql = "DELETE FROM product WHERE product_id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
