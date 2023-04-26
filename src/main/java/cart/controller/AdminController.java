@@ -1,9 +1,11 @@
 package cart.controller;
 
-import cart.dto.ProductRequest;
+import cart.dto.ProductRequestDto;
 import cart.service.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/admin")
@@ -16,14 +18,14 @@ public class AdminController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<String> addProduct(@RequestBody ProductRequest productRequest) {
-        adminService.addProduct(productRequest);
+    public ResponseEntity<String> addProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
+        adminService.addProduct(productRequestDto);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/products/{id}")
-    public ResponseEntity<String> updateProduct(@RequestBody ProductRequest productRequest, @PathVariable int id) {
-        adminService.updateProduct(productRequest, id);
+    public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductRequestDto productRequestDto, @PathVariable int id) {
+        adminService.updateProduct(productRequestDto, id);
         return ResponseEntity.ok().build();
     }
 
