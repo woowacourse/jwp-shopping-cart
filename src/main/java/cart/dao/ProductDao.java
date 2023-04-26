@@ -7,7 +7,7 @@ public interface ProductDao {
 
     List<ProductEntity> findAll();
 
-    void insert(final ProductEntity productEntity);
+    int insert(final ProductEntity productEntity);
 
     Optional<ProductEntity> findById(final int id);
 

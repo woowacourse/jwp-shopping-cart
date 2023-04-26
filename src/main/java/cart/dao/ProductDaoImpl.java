@@ -1,9 +1,12 @@
 package cart.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -32,9 +35,20 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void insert(ProductEntity productEntity) {
-        final String sql = "INSERT INTO PRODUCT(name, image, price) values (?, ?, ?)";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
+    public int insert(ProductEntity productEntity) {
+        final String sql = "INSERT INTO PRODUCT (name, image, price) values (?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement pstmt = con.prepareStatement(
+                    sql, new String[]{"id"});
+            pstmt.setString(1, productEntity.getName());
+            pstmt.setString(2, productEntity.getImage());
+            pstmt.setInt(3, productEntity.getPrice());
+            return pstmt;
+        }, keyHolder);
+        return keyHolder.getKey().intValue();
     }
 
     @Override
