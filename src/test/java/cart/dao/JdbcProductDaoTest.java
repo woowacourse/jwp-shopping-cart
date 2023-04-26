@@ -38,16 +38,17 @@ class JdbcProductDaoTest {
     @DisplayName("상품 수정이 되는지 확인한다")
     @Test
     void updateTest() {
+        Long id = 1L;
         ProductEntity productEntity = ProductEntity.of(1L, "chicken", "image", 10000);
 
-        assertDoesNotThrow(() -> productDao.update(productEntity));
+        assertDoesNotThrow(() -> productDao.updateById(id, productEntity));
     }
 
     @DisplayName("상품 삭제가 되는지 확인한다")
     @Test
     void deleteTest() {
-        ProductEntity productEntity = ProductEntity.of(1L, null, null, null);
+        Long id = 1L;
 
-        assertDoesNotThrow(() -> productDao.delete(productEntity));
+        assertDoesNotThrow(() -> productDao.deleteById(id));
     }
 }

@@ -27,11 +27,11 @@ public class ProductManagementService {
         productDao.insert(ProductEntityMapper.from(productDto));
     }
 
-    public void update(final ProductDto productDto) {
-        productDao.update(ProductEntityMapper.from(productDto));
+    public void updateById(final Long id, final ProductDto productDto) {
+        productDao.updateById(id, ProductEntityMapper.from(productDto));
     }
 
-    public void delete(final ProductDto productDto) {
-        productDao.delete(ProductEntityMapper.from(productDto));
+    public void deleteById(final Long id) {
+        productDao.deleteById(id);
     }
 }

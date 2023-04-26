@@ -10,7 +10,7 @@ public interface ProductDao {
 
     void insert(final ProductEntity productEntity);
 
-    void update(final ProductEntity productEntity);
+    void updateById(final Long id, final ProductEntity productEntity);
 
-    void delete(final ProductEntity productEntity);
+    void deleteById(final Long id);
 }

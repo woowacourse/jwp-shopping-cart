@@ -36,14 +36,14 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public void update(final ProductEntity productEntity) {
+    public void updateById(final Long id, final ProductEntity productEntity) {
         String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), productEntity.getId());
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), id);
     }
 
     @Override
-    public void delete(final ProductEntity productEntity) {
+    public void deleteById(final Long id) {
         String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productEntity.getId());
+        jdbcTemplate.update(sql, id);
     }
 }

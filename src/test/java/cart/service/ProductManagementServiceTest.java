@@ -66,24 +66,27 @@ class ProductManagementServiceTest {
     @DisplayName("상품 데이터가 수정되는지 확인한다")
     @Test
     void updateTest() {
+        Long id = 1L;
         final ProductDto productDto = ProductDto.of(1L, "pobi_doll", "image", 10000000);
-        doNothing().when(productDao).update(any());
-        managementService.update(productDto);
+
+        doNothing().when(productDao).updateById(any(), any());
+        managementService.updateById(id, productDto);
 
         assertAll(
-                () -> verify(productDao, times(1)).update(any())
+                () -> verify(productDao, times(1)).updateById(any(), any())
         );
     }
 
     @DisplayName("상품 데이터가 삭제되는지 확인한다")
     @Test
     void deleteTest() {
-        final ProductDto productDto = ProductDto.of(1L, null, null, null);
-        doNothing().when(productDao).delete(any());
-        managementService.delete(productDto);
+        final Long id = 1L;
+        doNothing().when(productDao).deleteById(any());
+
+        managementService.deleteById(id);
 
         assertAll(
-                () -> verify(productDao, times(1)).delete(any())
+                () -> verify(productDao, times(1)).deleteById(any())
         );
     }
 }
