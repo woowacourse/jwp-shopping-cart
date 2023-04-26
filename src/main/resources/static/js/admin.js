@@ -10,6 +10,15 @@ const showEditModal = (product) => {
     for (const element of elements) {
         element.value = product[element.getAttribute('name')];
     }
+
+    const categorySelect = modal.querySelector('select[name="category"]');
+    for (let i = 0; i < categorySelect.options.length; i++) {
+        if (categorySelect.options[i].value === product.category) {
+            categorySelect.selectedIndex = i;
+            break;
+        }
+    }
+
     modal.dataset.formType = 'edit';
     modal.dataset.productId = product.id;
     modal.style.display = 'block';

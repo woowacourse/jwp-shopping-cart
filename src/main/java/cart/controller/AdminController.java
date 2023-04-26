@@ -1,11 +1,13 @@
 package cart.controller;
 
 import cart.controller.dto.ProductDto;
+import cart.persistence.entity.ProductCategory;
 import cart.service.ShoppingService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,7 +36,7 @@ public class AdminController {
     @PostMapping
     public String addProduct(@RequestBody final ProductDto productDto) {
         shoppingService.save(productDto);
-        return "admin";
+        return "redirect:/admin";
     }
 
     @PutMapping("/{id}")
@@ -46,8 +48,13 @@ public class AdminController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteProduct( @PathVariable final Long id) {
+    public String deleteProduct(@PathVariable final Long id) {
         shoppingService.delete(id);
         return "admin";
+    }
+
+    @ModelAttribute("categorys")
+    public List<ProductCategory> productCategories() {
+        return List.of(ProductCategory.values());
     }
 }

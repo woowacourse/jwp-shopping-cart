@@ -27,6 +27,7 @@
             </div>
             <div class="product-info">
                 <div class="product-desc">
+                    <p class="product-category" th:text="${product.getCategory()}"></p> <!-- 상품 카테고리 -->
                     <p class="product-name" th:text="${product.getName()}"></p> <!-- 상품 이름 -->
                     <p class="product-price" th:text="${product.getPrice()}"></p> <!-- 상품 가격 -->
                 </div>
