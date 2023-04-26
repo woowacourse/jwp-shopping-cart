@@ -4,10 +4,13 @@ import cart.repository.entity.ProductEntity;
 
 public class ProductDto {
 
-    private final Long id;
-    private final String name;
-    private final String imageUrl;
-    private final int price;
+    private Long id;
+    private String name;
+    private String imageUrl;
+    private int price;
+
+    public ProductDto() {
+    }
 
     public ProductDto(final Long id, final String name, final String imageUrl, final int price) {
         this.id = id;
