@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.Product;
 import java.util.List;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -13,6 +14,14 @@ import org.springframework.stereotype.Repository;
 public class ProductDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final RowMapper<Product> productRowMapper = (rs, rowNum) -> {
+        return new Product(
+                rs.getLong("product_id"),
+                rs.getString("name"),
+                rs.getString("image"),
+                rs.getLong("price")
+        );
+    };
 
     public ProductDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -34,28 +43,14 @@ public class ProductDao {
 
     public List<Product> findAllProducts() {
         String sql = "select * from PRODUCT";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            return new Product(
-                    rs.getLong("product_id"),
-                    rs.getString("name"),
-                    rs.getString("image"),
-                    rs.getLong("price")
-            );
-        });
+        return jdbcTemplate.query(sql, productRowMapper);
     }
 
     public Product findProductById(long id) {
         String sql = "select * from PRODUCT where product_id = :product_id";
 
         SqlParameterSource paramSource = new MapSqlParameterSource().addValue("product_id", id);
-        return jdbcTemplate.queryForObject(sql, paramSource, (rs, rowNum) -> {
-            return new Product(
-                    rs.getLong("product_id"),
-                    rs.getString("name"),
-                    rs.getString("image"),
-                    rs.getLong("price")
-            );
-        });
+        return jdbcTemplate.queryForObject(sql, paramSource, productRowMapper);
     }
 
     public void updateProduct(Product after) {
@@ -69,4 +64,11 @@ public class ProductDao {
         jdbcTemplate.update(sql, paramSource);
     }
 
+    public void deleteProduct(Long productId) {
+        String sql = "delete PRODUCT where product_id = :product_id";
+        SqlParameterSource paramSource = new MapSqlParameterSource()
+                .addValue("product_id", productId);
+
+        jdbcTemplate.update(sql, paramSource);
+    }
 }
