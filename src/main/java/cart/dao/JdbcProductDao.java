@@ -35,9 +35,10 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public void insertProduct(ProductEntity productEntity) {
+    public int insertProduct(ProductEntity productEntity) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(productEntity);
-        simpleJdbcInsert.execute(parameterSource);
+        Number id = simpleJdbcInsert.executeAndReturnKey(parameterSource);
+        return id.intValue();
     }
 
     @Override
@@ -56,5 +57,11 @@ public class JdbcProductDao implements ProductDao {
     public void deleteProduct(int productId) {
         String sql = "delete from product where id = ?";
         jdbcTemplate.update(sql, productId);
+    }
+
+    @Override
+    public void deleteAllProduct() {
+        String sql = "delete from product";
+        jdbcTemplate.update(sql);
     }
 }
