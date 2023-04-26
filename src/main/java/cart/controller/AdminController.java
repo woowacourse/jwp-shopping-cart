@@ -36,10 +36,13 @@ public class AdminController {
 
     @PutMapping("/products")
     public ResponseEntity<Void> putProducts(@RequestBody ProductModificationRequest request) {
-        System.out.println("request.getId() = " + request.getId());
-        System.out.println("request.getName() = " + request.getName());
-
         managementService.update(ProductDto.from(request));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<Void> deleteProducts(@PathVariable Long id) {
+        managementService.delete(ProductDto.from(id));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

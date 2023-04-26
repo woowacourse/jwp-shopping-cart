@@ -27,6 +27,10 @@ public class ProductDto {
         return new ProductDto(request.getId(), request.getName(), request.getImage(), request.getPrice());
     }
 
+    public static ProductDto from(final Long id) {
+        return new ProductDto(id, null, null, null);
+    }
+
     public static ProductDto from(final ProductEntity productEntity) {
         return new ProductDto(productEntity.getId(), productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
     }
