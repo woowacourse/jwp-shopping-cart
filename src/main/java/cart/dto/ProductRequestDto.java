@@ -1,19 +1,25 @@
 package cart.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class ProductRequestDto {
     private Long id;
+
+    @NotNull(message = "상품 이름은 비어있으면 안됩니다.")
     private String name;
+    @NotNull(message = "상품 이미지는 비어있으면 안됩니다.")
     private String image;
-    private int price;
+    @NotNull(message = "상품비어있으면 안됩니다.")
+    private Integer price;
 
     public ProductRequestDto() {
     }
 
-    public ProductRequestDto(String name, String image, int price) {
+    public ProductRequestDto(String name, String image, Integer price) {
         this(null, name, image, price);
     }
 
-    public ProductRequestDto(Long id, String name, String image, int price) {
+    public ProductRequestDto(Long id, String name, String image, Integer price) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -32,7 +38,7 @@ public class ProductRequestDto {
         return image;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 }

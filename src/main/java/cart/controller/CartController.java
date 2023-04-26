@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -33,7 +34,7 @@ public class CartController {
 
 
     @PostMapping("/product")
-    public ResponseEntity<String> createProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<String> createProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
         cartService.addProduct(productRequestDto);
         return ResponseEntity.ok().build();
     }
