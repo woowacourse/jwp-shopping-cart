@@ -10,8 +10,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminControllerTest {
 
@@ -21,6 +19,15 @@ class AdminControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+    }
+
+    @DisplayName("상품 전체 목록을 조회하면 상태코드 200을 반환하는지 확인")
+    @Test
+    void getAdminTest() {
+        RestAssured.given().log().all()
+                .when().get("/admin")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("상품을 등록하면 상태코드 201을 반환하는지 확인")
