@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductDto;
-import cart.dto.ProductQueryResponseDto;
 import cart.dto.ProductSaveRequestDto;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -53,10 +52,10 @@ class ProductServiceTest {
         final Long id2 = productService.save(request2);
 
         // when
-        final ProductQueryResponseDto result = productService.findAll();
+        final List<ProductDto> result = productService.findAll();
 
         // then
-        assertThat(result.getProducts()).usingRecursiveComparison().isEqualTo(List.of(
+        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
                 new ProductDto(id1, request1.getName(), request1.getImage(), request1.getPrice()),
                 new ProductDto(id2, request2.getName(), request2.getImage(), request2.getPrice())
         ));

@@ -4,12 +4,12 @@ import cart.dto.ProductSaveRequestDto;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@RequestMapping("/products")
 @Controller
 public class ProductController {
 
@@ -20,9 +20,20 @@ public class ProductController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public String save(@RequestBody final ProductSaveRequestDto request) {
+    @PostMapping("/products")
+    public void save(@RequestBody final ProductSaveRequestDto request) {
         productService.save(request);
+    }
+
+    @GetMapping("/")
+    public String index(final Model model) {
+        model.addAttribute("products", productService.findAll());
+        return "index";
+    }
+
+    @GetMapping("/admin")
+    public String admin(final Model model) {
+        model.addAttribute("products", productService.findAll());
         return "admin";
     }
 }

@@ -1,13 +1,12 @@
 package cart.service;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductDto;
-import cart.dto.ProductQueryResponseDto;
 import cart.dto.ProductSaveRequestDto;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,9 +25,9 @@ public class ProductService {
                 .orElseThrow(() -> new IllegalStateException("상품을 저장할 수 없습니다."));
     }
 
-    public ProductQueryResponseDto findAll() {
+    public List<ProductDto> findAll() {
         return productDao.findAll().stream()
                 .map(ProductDto::from)
-                .collect(collectingAndThen(toList(), ProductQueryResponseDto::new));
+                .collect(toUnmodifiableList());
     }
 }

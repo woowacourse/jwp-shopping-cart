@@ -12,20 +12,16 @@
 ## ✔️ 상품 관리 CRUD API 작성
 
 - [x]  생성 기능
-- [ ]  조회 기능
-    - [ ]  단일 상품 조회 기능
-    - [ ]  전체 상품 조회 기능
+- [x]  전체 상품 조회 기능
 - [ ]  수정 기능
 - [ ]  삭제 기능
 
 ### 📚 API
 
-| 기능 | Method | URL |
-| --- | --- | --- |
-| 생성 | POST | /products |
-| 단일 - 조회 | GET | /products/{id} |
-| 전체 - 조회 | GET | /products |
-| 수정 | PATCH | /products/{id} |
+| 기능 | Method | URL            |
+|----|--------|----------------|
+| 생성 | POST   | /products      |
+| 수정 | PATCH  | /products/{id} |
 | 삭제 | DELETE | /products/{id} |
 
 ## ✔️ 페이지 연동

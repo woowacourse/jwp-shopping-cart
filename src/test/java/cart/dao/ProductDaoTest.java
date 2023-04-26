@@ -48,15 +48,18 @@ class ProductDaoTest {
     @Test
     void 전체_상품을_조회한다() {
         // given
-        final Product product1 = new Product(1L, "허브티", "tea.jpg", 1000L);
-        final Product product2 = new Product(2L, "고양이", "cat.jpg", 1000000L);
-        productDao.saveAndGetId(product1);
-        productDao.saveAndGetId(product2);
+        final Product product1 = new Product("허브티", "tea.jpg", 1000L);
+        final Product product2 = new Product("고양이", "cat.jpg", 1000000L);
+        final Long id1 = productDao.saveAndGetId(product1).get();
+        final Long id2 = productDao.saveAndGetId(product2).get();
 
         // when
         List<Product> result = productDao.findAll();
 
         // then
-        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(product1, product2));
+        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
+                new Product(id1, product1.getName(), product1.getImage(), product1.getPrice()),
+                new Product(id2, product2.getName(), product2.getImage(), product2.getPrice())
+        ));
     }
 }
