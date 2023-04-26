@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
@@ -24,14 +26,14 @@ class ProductDaoImplTest {
 
     @Test
     void 상품이_정상적으로_저장된다() {
-        Product product = new Product("pizza", "url", 10000);
+        Product product = new Product("pizza", "url", BigDecimal.valueOf(10000));
         ProductEntity created = productDao.save(product);
         assertThat(created).isNotNull();
     }
 
     @Test
     void 상품_데이터_정합성_검증() {
-        Product product = new Product("pizza", "url", 10000);
+        Product product = new Product("pizza", "url", BigDecimal.valueOf(10000));
         ProductEntity created = productDao.save(product);
         assertThat(product.getName()).isEqualTo(created.getName());
     }
