@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dto.ProductCreationRequest;
 import cart.dto.ProductDto;
+import cart.dto.ProductModificationRequest;
 import cart.dto.ProductResponse;
 import cart.service.ProductManagementService;
 import org.springframework.http.HttpStatus;
@@ -28,9 +29,17 @@ public class AdminController {
     }
 
     @PostMapping("/products")
-    @ResponseBody
     public ResponseEntity<Void> postProducts(@RequestBody ProductCreationRequest request) {
         managementService.save(ProductDto.from(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PutMapping("/products")
+    public ResponseEntity<Void> putProducts(@RequestBody ProductModificationRequest request) {
+        System.out.println("request.getId() = " + request.getId());
+        System.out.println("request.getName() = " + request.getName());
+
+        managementService.update(ProductDto.from(request));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
