@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS ITEM
 
 ## API SPEC
 * 모든 상품 조회
-  * `GET`: /items
-  * STATUS CODE: `200 OK`
+  * `GET: /items`
+  * `STATUS CODE`: `200 OK`
 ```text
 request: 
 http://localhost:8080/items
@@ -37,8 +37,8 @@ response:
 ```
 
 * 단일 상품 등록
-  * `POST`: /items
-  * * STATUS CODE: `201 CREATED`, `400 BAD REQUEST`
+  * `POST: /items`
+  * `STATUS CODE`: `201 CREATED`, `400 BAD REQUEST`
 ```text
 request: 
 http://localhost:8080/items
@@ -62,8 +62,8 @@ response:
 
 
 * 단일 상품 수정
-  * `PUT`: /items/{id}
-  * STATUS CODE: `200 OK`, `400 BAD REQUEST`
+  * `PUT: /items/{id}`
+  * `STATUS CODE`: `200 OK`, `400 BAD REQUEST`
 ```text
 request: 
 http://localhost:8080/items/1
@@ -87,8 +87,8 @@ response:
 
 
 * 단일 상품 삭제
-  * `DELETE`: /items/{id}
-  * STATUS CODE: `200 OK`, `400 BAD REQUEST`
+  * `DELETE: /items/{id}`
+  * `STATUS CODE`: `200 OK`, `400 BAD REQUEST`
 ```text
 request: 
 http://localhost:8080/items/1
@@ -99,7 +99,9 @@ http://localhost:8080/items/1
 - [x] 상품 관리 CRUD API를 작성한다.
   - [x] 상품 등록 API를 구현한다.
   - [x] 상품 수정 API를 구현한다.
+    - [x] 일치하는 상품이 없는 경우 예외가 발생한다.
   - [x] 상품 삭제 API를 구현한다.
+    - [x] 일치하는 상품이 없는 경우 예외가 발생한다.
 - [x] 상품 전체 조회 API를 구현한다.
 - [x] 관리자 도구 페이지를 연동한다.
 
