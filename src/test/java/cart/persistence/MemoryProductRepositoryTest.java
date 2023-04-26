@@ -80,6 +80,23 @@ class MemoryProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("Product 객체를 통해 ID를 찾을 수 있다")
+    void test_ifAbsentReplace() throws MalformedURLException {
+        //given
+        Product salmon = new Product(
+                new ProductName("salmon"),
+                new ProductImage("https://www.salmonlover.com"),
+                new ProductPrice(17000));
+
+        //when
+        memoryProductRepository.insert(salmon);
+        Integer salmonId = memoryProductRepository.findIdByProduct(salmon);
+
+        //then
+        assertThat(salmonId).isEqualTo(1);
+    }
+
+    @Test
     @DisplayName("해당하는 Product 객체를 삭제할 수 있다")
     void remove() throws MalformedURLException {
         //given
