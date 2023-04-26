@@ -66,10 +66,7 @@ class ProductServiceMockTest {
     @DisplayName("상품을 추가한다.")
     void create_product_success() {
         // given
-        ProductCreateRequestDto req = mock(ProductCreateRequestDto.class);
-        given(req.getName()).willReturn("치킨");
-        given(req.getPrice()).willReturn(1000);
-        given(req.getImgUrl()).willReturn("url");
+        ProductCreateRequestDto req = new ProductCreateRequestDto("치킨", 1000, "url");
 
         // when
         productService.createProduct(req);
@@ -86,10 +83,7 @@ class ProductServiceMockTest {
         Product product = Product.from(id, "치킨", "imgUrl", 1000);
         given(productRepository.findById(id)).willReturn(Optional.of(product));
 
-        ProductEditRequestDto req = mock(ProductEditRequestDto.class);
-        given(req.getName()).willReturn("치킨 수정");
-        given(req.getPrice()).willReturn(10000);
-        given(req.getImgUrl()).willReturn("urlEdit");
+        ProductEditRequestDto req = new ProductEditRequestDto("치킨 수정", 10000, "urlEdit");
 
         // when
         productService.editProduct(id, req);
