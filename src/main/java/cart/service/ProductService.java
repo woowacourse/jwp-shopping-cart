@@ -3,6 +3,7 @@ package cart.service;
 import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.dao.ProductDao;
+import cart.dto.ProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,8 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
     
-    public void save(final Product product) {
-    
+    public void save(final ProductRequest productRequest) {
+        Product product = new Product(null, productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        productDao.save(product);
     }
 }

@@ -1,10 +1,17 @@
 package cart.controller;
 
+import cart.dto.ProductDto;
+import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,5 +23,24 @@ public class ProductController {
         modelAndView.setViewName("index");
         modelAndView.addObject("products", productService.findAll());
         return modelAndView;
+    }
+
+    @GetMapping("/admin")
+    public ModelAndView admin(ModelAndView modelAndView) {
+        modelAndView.setViewName("admin");
+        modelAndView.addObject("products", productService.findAll());
+        return modelAndView;
+    }
+    
+    @PostMapping("/product")
+    public ModelAndView createProduct(ModelAndView modelAndView, @RequestBody ProductRequest productRequest) {
+        productService.save(productRequest);
+        modelAndView.setViewName("redirect:admin");
+        return modelAndView;
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDto>> getProducts() {
+        return ResponseEntity.ok(productService.findAll());
     }
 }
