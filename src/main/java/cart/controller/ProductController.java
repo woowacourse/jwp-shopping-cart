@@ -4,6 +4,7 @@ import cart.domain.Product;
 import cart.request.ProductRequest;
 import cart.service.ProductService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,13 +44,13 @@ public class ProductController {
     }
 
     @PostMapping("/admin")
-    public void register(@RequestBody final ProductRequest productRequest) {
+    public void register(@RequestBody @Valid final ProductRequest productRequest) {
         productService.register(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
     }
 
     @PutMapping("/admin/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void updateProduct(@PathVariable final long id, @RequestBody final ProductRequest productRequest) {
+    public void updateProduct(@PathVariable final long id, final @RequestBody @Valid ProductRequest productRequest) {
         productService.updateProduct(id, productRequest.getName(),
                 productRequest.getPrice(), productRequest.getImageUrl());
     }
