@@ -35,7 +35,7 @@
         <tr th:each="product : ${products}">
             <td th:text="${product.id}"></td>
             <td th:text="${product.name}"></td> <!-- 상품 이름 -->
-            <td th:text="${product.price}"></td> <!-- 상품 가격 -->
+            <td th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + '원'"></td> <!-- 상품 가격 -->
             <td>
                 <img style="max-width: 100px;" th:src="${product.image}"> <!-- 상품 이미지 -->
             </td>

@@ -28,7 +28,7 @@
             <div class="product-info">
                 <div class="product-desc">
                     <p class="product-name" th:text="${product.name}"></p> <!-- 상품 이름 -->
-                    <p class="product-price" th:text="${product.price}"></p> <!-- 상품 가격 -->
+                    <p class="product-price" th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + '원'"></p> <!-- 상품 가격 -->
                 </div>
                 <button type="submit" class="product-btn" th:onclick="addCartItem([[${product.id}]])">담기</button>
             </div>
