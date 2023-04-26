@@ -2,11 +2,8 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.product.ImageUrl;
 import cart.domain.product.Product;
-import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductName;
-import cart.domain.product.ProductPrice;
+import cart.domain.product.TestFixture;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,12 +40,7 @@ class ProductRepositoryImplTest {
     @DisplayName("상품 저장 테스트")
     @Test
     void insert() {
-        Product pizza = new Product(
-                ProductName.from("Pizza"),
-                ProductPrice.from(18_000),
-                ProductCategory.FOOD,
-                ImageUrl.from("www.naver.com")
-        );
+        Product pizza = TestFixture.PIZZA;
 
         productRepository.save(pizza);
 
