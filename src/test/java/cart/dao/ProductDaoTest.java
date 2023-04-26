@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.List;
 import java.util.Optional;
 
 import cart.entiy.ProductEntity;
@@ -78,6 +79,12 @@ class ProductDaoTest {
                     () -> assertThat(result.get().getImage()).isEqualTo("url"),
                     () -> assertThat(result.get().getPrice()).isEqualTo(1)
             );
+        }
+
+        @Test
+        void 조회_테스트() {
+            final List<ProductEntity> result = productDao.find();
+            assertThat(result).hasSize(1);
         }
     }
 }

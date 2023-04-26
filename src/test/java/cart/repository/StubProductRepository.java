@@ -1,6 +1,8 @@
 package cart.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -29,6 +31,11 @@ public class StubProductRepository implements ProductRepository {
         }
         productMap.put(id, product);
         return product;
+    }
+
+    @Override
+    public List<Product> find() {
+        return new ArrayList<>(productMap.values());
     }
 
     @Override

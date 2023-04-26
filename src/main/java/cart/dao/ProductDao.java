@@ -1,6 +1,7 @@
 package cart.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,6 +41,11 @@ public class ProductDao {
         parameters.put("price", productEntity.getPrice());
         final long productId = simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters)).longValue();
         return new ProductEntity(productId, productEntity);
+    }
+
+    public List<ProductEntity> find() {
+        final String sql = "SELECT product_id, name, image, price FROM PRODUCT";
+        return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
     public Optional<ProductEntity> findById(final Long id) {

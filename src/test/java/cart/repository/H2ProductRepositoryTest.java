@@ -3,6 +3,7 @@ package cart.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.List;
 import java.util.Optional;
 
 import cart.dao.ProductDao;
@@ -55,6 +56,12 @@ class H2ProductRepositoryTest {
                     () -> assertThat(result.getProductImage().getValue()).isEqualTo("newUrl"),
                     () -> assertThat(result.getProductPrice().getValue()).isEqualTo(3)
             );
+        }
+
+        @Test
+        void find() {
+            final List<Product> products = h2ProductRepository.find();
+            assertThat(products).hasSize(1);
         }
 
         @Test

@@ -1,6 +1,8 @@
 package cart.repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
@@ -25,6 +27,14 @@ public class H2ProductRepository implements ProductRepository {
     public Product update(final Product product) {
         final ProductEntity productEntity = productDao.update(ProductEntity.from(product));
         return productEntity.toDomain();
+    }
+
+    @Override
+    public List<Product> find() {
+        return productDao.find()
+                .stream()
+                .map(ProductEntity::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
