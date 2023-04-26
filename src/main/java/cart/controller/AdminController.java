@@ -3,6 +3,8 @@ package cart.controller;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.service.ProductService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -24,10 +27,12 @@ public class AdminController {
         this.productService = productService;
     }
 
-    @PostMapping("/admin/create")
-    public String create(@RequestBody @Valid ProductRequest productRequest) {
-        productService.create(productRequest);
-        return "admin";
+    @PostMapping("/admin")
+    public ResponseEntity<String> create(@RequestBody @Valid ProductRequest productRequest) {
+        Long savedId = productService.create(productRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .location(URI.create("/admin"))
+                .body(String.valueOf(savedId));
     }
 
     @GetMapping("/admin")
@@ -38,15 +43,19 @@ public class AdminController {
     }
 
     @PutMapping("/admin/{productId}")
-    public String update(@PathVariable Long productId,
-                         @RequestBody @Valid ProductRequest productRequest) {
+    public ResponseEntity<String> update(@PathVariable Long productId,
+                                         @RequestBody @Valid ProductRequest productRequest) {
         productService.update(productId, productRequest);
-        return "admin";
+        return ResponseEntity.status(HttpStatus.OK)
+                .location(URI.create("/admin"))
+                .body("ok");
     }
 
     @DeleteMapping("/admin/{productId}")
-    public String delete(@PathVariable Long productId) {
+    public ResponseEntity<String> delete(@PathVariable Long productId) {
         productService.deleteById(productId);
-        return "admin";
+        return ResponseEntity.status(HttpStatus.OK)
+                .location(URI.create("/admin"))
+                .body("ok");
     }
 }

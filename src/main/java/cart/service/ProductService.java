@@ -19,9 +19,10 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public void create(ProductRequest productRequest) {
+    public Long create(ProductRequest productRequest) {
         Product product = productRequest.toEntity();
-        productDao.save(product);
+        Long savedId = productDao.save(product);
+        return savedId;
     }
 
     public List<ProductResponse> findAll() {
