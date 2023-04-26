@@ -19,6 +19,10 @@ public class ProductDto {
         this.price = price;
     }
 
+    public static ProductDto from(final ProductCreationRequest request) {
+        return new ProductDto(null, request.getName(), request.getImage(), request.getPrice());
+    }
+
     public static ProductDto from(final ProductEntity productEntity) {
         return new ProductDto(productEntity.getId(), productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
     }
