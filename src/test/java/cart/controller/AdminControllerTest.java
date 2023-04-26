@@ -3,6 +3,7 @@ package cart.controller;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.hamcrest.Matchers.stringContainsInOrder;
 
@@ -20,10 +22,19 @@ class AdminControllerTest {
     @Autowired
     private ProductDao productDao;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @BeforeEach
     void setUp(@LocalServerPort final int port) {
         RestAssured.port = port;
     }
+
+    @AfterEach
+    void clear() {
+        jdbcTemplate.execute("TRUNCATE TABLE product");
+    }
+
 
     @DisplayName("GET /admin")
     @Test
