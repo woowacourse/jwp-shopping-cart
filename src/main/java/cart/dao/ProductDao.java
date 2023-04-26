@@ -1,8 +1,7 @@
 package cart.dao;
 
-import cart.controller.dto.NewProductDto;
-import cart.controller.dto.ProductDto;
 import cart.dao.entity.ProductEntity;
+import cart.domain.Product;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,24 +30,24 @@ public class ProductDao {
         );
     }
 
-    public int insert(final NewProductDto newProductDto) {
+    public int insert(final Product newProduct) {
         final String sql = "INSERT INTO PRODUCT (name, price, image) VALUES (?, ?, ?)";
         return jdbcTemplate.update(
                 sql,
-                newProductDto.getName(),
-                newProductDto.getPrice(),
-                newProductDto.getImage()
+                newProduct.getName(),
+                newProduct.getPrice(),
+                newProduct.getImage()
         );
     }
 
-    public void update(final ProductDto productDto) {
+    public void update(final Product product, final Long id) {
         final String sql = "UPDATE PRODUCT SET name = ?, price = ?, image = ? WHERE id = ?";
         jdbcTemplate.update(
                 sql,
-                productDto.getName(),
-                productDto.getPrice(),
-                productDto.getImage(),
-                productDto.getId()
+                product.getName(),
+                product.getPrice(),
+                product.getImage(),
+                id
         );
     }
 
