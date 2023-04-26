@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> editProduct(@PathVariable Long id, @RequestBody @Valid final ProductEditRequestDto productEditRequestDto) {
+    public ResponseEntity<Void> editProduct(@PathVariable final Long id, @RequestBody @Valid final ProductEditRequestDto productEditRequestDto) {
         productService.editProduct(id, productEditRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK)
