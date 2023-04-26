@@ -4,7 +4,7 @@ import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;
 import cart.dto.response.ProductResponse;
 import cart.service.CartService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,21 +37,20 @@ public class AdminController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> create(@RequestBody @Valid ProductRequest productRequest) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void create(@RequestBody @Valid ProductRequest productRequest) {
         cartService.create(productRequest);
-        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> update(@RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
         cartService.update(productUpdateRequest);
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> delete(@RequestParam Long id) {
-        System.out.println(id);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@RequestParam Long id) {
         cartService.delete(id);
-        return ResponseEntity.ok().build();
     }
 }

@@ -1,4 +1,6 @@
-CREATE TABLE PRODUCT (
+DROP TABLE IF EXISTS PRODUCT;
+
+CREATE TABLE IF NOT EXISTS PRODUCT (
      id          INT         NOT NULL AUTO_INCREMENT,
      name       VARCHAR(11)         NOT NULL,
      image_url      TEXT(500)     NOT NULL,
