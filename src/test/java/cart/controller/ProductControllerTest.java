@@ -45,7 +45,7 @@ public class ProductControllerTest {
                 .body(new Product("족발", 5000, "족발 이미지"))
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/admin")
+                .post("/admin")
                 .then()
                 .contentType(MediaType.TEXT_HTML_VALUE)
                 .statusCode(200);
