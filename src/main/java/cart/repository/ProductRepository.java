@@ -8,4 +8,5 @@ import cart.controller.request.ProductCreateRequest;
 public interface ProductRepository {
 	long save(ProductCreateRequest request);
 	List<Product> findAll();
+	long deleteByProductId(long productId);
 }

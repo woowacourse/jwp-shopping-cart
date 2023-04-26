@@ -47,4 +47,17 @@ class ProductJdbcRepositoryTest {
 		// then
 		assertThat(saveId).isEqualTo(1L);
 	}
+
+	@DisplayName("상품 삭제 테스트")
+	@Test
+	void deleteByProductId() {
+		// given
+		given(productJdbcRepository.deleteByProductId(anyLong())).willReturn(1L);
+
+		// when
+		final long deleteProductId = productJdbcRepository.deleteByProductId(1L);
+
+		// then
+		assertThat(deleteProductId).isEqualTo(1L);
+	}
 }

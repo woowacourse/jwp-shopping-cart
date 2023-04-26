@@ -50,7 +50,7 @@ PRIMARY KEY(id)
     ]
     HttpStatus : 200 Ok
     ```
-  - [ ] 상품 삭제 API
+  - [x] 상품 삭제 API
     ```
     DELETE /products/{id}
     

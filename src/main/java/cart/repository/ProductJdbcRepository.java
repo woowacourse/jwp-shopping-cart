@@ -50,4 +50,12 @@ public class ProductJdbcRepository implements ProductRepository {
 
 		return key.getKey().longValue();
 	}
+
+	@Override
+	public long deleteByProductId(long productId) {
+		final String sql = "DELETE FROM products WHERE id = ?";
+		jdbcTemplate.update(sql, productId);
+		return productId;
+	}
+
 }
