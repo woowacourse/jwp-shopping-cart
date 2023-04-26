@@ -70,4 +70,16 @@ class ProductManagementServiceTest {
                 () -> verify(productDao, times(1)).update(any())
         );
     }
+
+    @DisplayName("상품 데이터가 삭제되는지 확인한다")
+    @Test
+    void deleteTest() {
+        final ProductDto productDto = ProductDto.of(1L,null, null, null);
+        doNothing().when(productDao).delete(any());
+        managementService.delete(productDto);
+
+        assertAll(
+                () -> verify(productDao, times(1)).delete(any())
+        );
+    }
 }
