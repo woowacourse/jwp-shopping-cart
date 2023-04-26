@@ -1,10 +1,11 @@
 package cart.repository;
 
 import cart.entity.ProductEntity;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -17,46 +18,38 @@ public class ProductRepository {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
-                .usingColumns("name", "price", "image_url")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public long save(String name, int price, String imageUrl) {
-        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
-        sqlParameterSource.addValue("name", name);
-        sqlParameterSource.addValue("price", price);
-        sqlParameterSource.addValue("image_url", imageUrl);
+    public long save(ProductEntity productEntity) {
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(productEntity);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
     public List<ProductEntity> findAll() {
         String sql = "SELECT id, name, price, image_url FROM PRODUCT";
-        return jdbcTemplate.query(sql, rs -> {
-            List<ProductEntity> productEntities = new ArrayList<>();
-            while (rs.next()) {
-                long id = rs.getLong(1);
-                String name = rs.getString(2);
-                int price = rs.getInt(3);
-                String imageUrl = rs.getString(4);
-                productEntities.add(new ProductEntity(id, name, price, imageUrl));
-            }
-            return productEntities;
-        });
+        return jdbcTemplate.query(sql, productRowMapper());
+    }
+
+    private RowMapper<ProductEntity> productRowMapper() {
+        return (rs, rowNum) -> {
+            long id = rs.getLong(1);
+            String name = rs.getString(2);
+            int price = rs.getInt(3);
+            String imageUrl = rs.getString(4);
+            return new ProductEntity(id, name, price, imageUrl);
+        };
     }
 
     public void deleteById(Long id) {
         String sql = "DELETE FROM PRODUCT WHERE id = ?";
-        jdbcTemplate.update(sql, ps -> ps.setLong(1, id));
+        jdbcTemplate.update(sql, id);
     }
 
     public void update(ProductEntity productEntity) {
         String sql = "UPDATE PRODUCT SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, ps -> {
-            ps.setString(1, productEntity.getName());
-            ps.setInt(2, productEntity.getPrice());
-            ps.setString(3, productEntity.getImageUrl());
-            ps.setLong(4, productEntity.getId());
-        });
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(),
+                productEntity.getId());
     }
 
     public boolean existsById(Long id) {

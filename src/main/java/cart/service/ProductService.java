@@ -16,7 +16,12 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public ProductDto createProduct(String name, int price, String imageUrl) {
-        long productId = productRepository.save(name, price, imageUrl);
+        ProductEntity productEntity = ProductEntity.builder()
+                .name(name)
+                .price(price)
+                .imageUrl(imageUrl)
+                .build();
+        long productId = productRepository.save(productEntity);
         return new ProductDto(productId, name, price, imageUrl);
     }
 
@@ -34,7 +39,13 @@ public class ProductService {
 
     public void updateProductById(Long id, String name, int price, String imageUrl) {
         validateId(id);
-        productRepository.update(new ProductEntity(id, name, price, imageUrl));
+        ProductEntity productEntity = ProductEntity.builder()
+                .id(id)
+                .name(name)
+                .price(price)
+                .imageUrl(imageUrl)
+                .build();
+        productRepository.update(productEntity);
     }
 
     private void validateId(Long id) {
