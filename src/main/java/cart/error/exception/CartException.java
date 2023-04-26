@@ -4,7 +4,7 @@ public class CartException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
-    public CartException(ErrorCode errorCode) {
+    public CartException(final ErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 

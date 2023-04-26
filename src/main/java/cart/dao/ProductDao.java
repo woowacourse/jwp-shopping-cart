@@ -12,11 +12,11 @@ import java.util.List;
 public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void create(ProductCreateRequest request) {
+    public void create(final ProductCreateRequest request) {
         String sql = "INSERT INTO PRODUCT (name, price, image_url) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, request.getName(), request.getPrice(), request.getImageUrl());
     }
@@ -32,12 +32,12 @@ public class ProductDao {
         );
     }
 
-    public void updateById(Long id, ProductUpdateRequest request) {
+    public void updateById(final Long id, final ProductUpdateRequest request) {
         String sql = "UPDATE PRODUCT SET(name, price, image_url) = (?, ?, ?) WHERE id = ?";
         jdbcTemplate.update(sql, request.getName(), request.getPrice(), request.getImageUrl(), id);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(final Long id) {
         String sql = "DELETE FROM PRODUCT WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

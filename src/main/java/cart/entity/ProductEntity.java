@@ -6,7 +6,12 @@ public class ProductEntity {
     private final String imageUrl;
     private final int price;
 
-    public ProductEntity(Long id, String name, String imageUrl, int price) {
+    public ProductEntity(
+            final Long id,
+            final String name,
+            final String imageUrl,
+            final int price
+    ) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;

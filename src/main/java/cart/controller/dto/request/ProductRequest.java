@@ -17,13 +17,17 @@ public class ProductRequest {
     public ProductRequest() {
     }
 
-    public ProductRequest(String name, int price, String imageUrl) {
+    public ProductRequest(
+            final String name,
+            final int price,
+            final String imageUrl
+    ) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public void validatePrice(int price) {
+    public void validatePrice(final int price) {
         if (price < 0) {
             throw CantSellNegativeQuantity.EXCEPTION;
         }

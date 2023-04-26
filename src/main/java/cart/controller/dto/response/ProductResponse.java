@@ -9,7 +9,7 @@ public class ProductResponse {
     private final String imageUrl;
     private final int price;
 
-    public ProductResponse(ProductEntity entity) {
+    public ProductResponse(final ProductEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.imageUrl = entity.getImageUrl();

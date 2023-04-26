@@ -20,7 +20,7 @@ public class ApiControllerHandler {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(CartException.class)
-    public ResponseEntity<ErrorResponse> handlingApplicationException(CartException e) {
+    public ResponseEntity<ErrorResponse> handlingApplicationException(final CartException e) {
         final ErrorCode errorCode = e.getErrorCode();
         log.error(
                 "\n" + "{\n" +
@@ -39,7 +39,7 @@ public class ApiControllerHandler {
     }
 
     @ExceptionHandler({BindException.class})
-    public ResponseEntity<?> bindException(BindException e) {
+    public ResponseEntity<?> bindException(final BindException e) {
         Map<String, String> errorMap = new HashMap<>();
 
         for (FieldError error : e.getFieldErrors()) {

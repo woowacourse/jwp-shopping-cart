@@ -21,7 +21,7 @@ public class AdminController {
 
     private final ProductService productService;
 
-    public AdminController(ProductService productService) {
+    public AdminController(final ProductService productService) {
         this.productService = productService;
     }
 
@@ -32,22 +32,25 @@ public class AdminController {
     }
 
     @PostMapping
-    public void createProduct(@RequestBody @Valid ProductCreateRequest request) {
+    public void createProduct(@RequestBody @Valid final ProductCreateRequest request) {
+        System.out.println("execute1");
         productService.create(request);
+        System.out.println("execute2");
     }
 
     @PutMapping("{id}")
     public String update(
-            @PathVariable Long id,
-            @RequestBody @Valid ProductUpdateRequest request
+            @PathVariable final Long id,
+            @RequestBody @Valid final ProductUpdateRequest request
     ) {
         productService.update(id, request);
         return "admin";
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable final Long id) {
         productService.delete(id);
         return "admin";
     }
+
 }
