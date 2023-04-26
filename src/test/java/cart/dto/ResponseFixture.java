@@ -1,5 +1,6 @@
 package cart.dto;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class ResponseFixture {
 
     public static final ProductResponse NUNU_RESPONSE = new ProductResponse(1, "누누", "naver.com", 1);

@@ -3,8 +3,10 @@ package cart.service;
 import cart.domain.Product;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ProductCreateService {
 
     private final ProductRepository productRepository;

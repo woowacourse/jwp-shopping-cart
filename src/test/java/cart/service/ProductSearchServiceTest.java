@@ -1,14 +1,15 @@
 package cart.service;
 
+import static cart.domain.ProductFixture.ODO_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
 
 import cart.domain.Product;
 import cart.repository.StubProductRepository;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings({"NonAsciiCharacters"})
 class ProductSearchServiceTest {
 
     private StubProductRepository stubProductRepository;
@@ -16,14 +17,16 @@ class ProductSearchServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.stubProductRepository = new StubProductRepository();
-        this.productSearchService = new ProductSearchService(stubProductRepository);
+        stubProductRepository = new StubProductRepository();
+        productSearchService = new ProductSearchService(stubProductRepository);
     }
 
     @Test
     void 조회_테스트() {
-        stubProductRepository.save(new Product("오도", "naver.com", 1));
+        stubProductRepository.save(ODO_PRODUCT);
+
         final List<Product> result = productSearchService.find();
+
         assertThat(result).hasSize(1);
     }
 }

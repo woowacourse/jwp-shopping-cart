@@ -5,6 +5,7 @@ import java.util.Objects;
 public class ProductImage {
 
     private static final int MAX_IMAGE_LENGTH = 2048;
+
     private final String value;
 
     public ProductImage(final String value) {

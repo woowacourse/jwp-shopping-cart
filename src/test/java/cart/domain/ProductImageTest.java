@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings({"NonAsciiCharacters", "SpellCheckingInspection"})
 class ProductImageTest {
 
     @Test
@@ -15,7 +16,9 @@ class ProductImageTest {
 
     @Test
     void 이미지url은_2048자_이하여야_합니다() {
-        assertThatThrownBy(() -> new ProductImage("a".repeat(2049)))
+        final String input = "a".repeat(2049);
+
+        assertThatThrownBy(() -> new ProductImage(input))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미지 url은 2048자 이하만 가능합니다.");
     }

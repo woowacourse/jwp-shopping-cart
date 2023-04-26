@@ -5,6 +5,7 @@ import java.util.Objects;
 public class ProductPrice {
 
     private static final int MIN_PRICE = 0;
+
     private final int value;
 
     public ProductPrice(final int value) {

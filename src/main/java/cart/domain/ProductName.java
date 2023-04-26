@@ -5,6 +5,7 @@ import java.util.Objects;
 public class ProductName {
 
     private static final int MAX_NAME_LENGTH = 255;
+
     private final String value;
 
     public ProductName(final String value) {
