@@ -25,7 +25,7 @@ class ProductManagementServiceTest {
     @Mock
     JdbcProductDao productDao;
 
-    @DisplayName("모든 상품 데이터를 제대로 가져와서 반환하는지 확인한다")
+    @DisplayName("모든 상품 데이터를 가져와서 반환하는지 확인한다")
     @Test
     void findAllTest() {
         final List<ProductEntity> data = List.of(
@@ -47,7 +47,7 @@ class ProductManagementServiceTest {
         );
     }
 
-    @DisplayName("상품 데이터가 잘 등록되는지 확인한다")
+    @DisplayName("상품 데이터가 등록되는지 확인한다")
     @Test
     void saveTest() {
         final ProductDto productDto = ProductDto.of("pobi_doll", "image", 10000000);

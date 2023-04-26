@@ -21,7 +21,7 @@ class AdminControllerTest {
         RestAssured.port = port;
     }
 
-    @DisplayName("상품 전체 목록을 조회하면 상태코드 200을 반환하는지 확인")
+    @DisplayName("상품 전체 목록을 조회하면 상태코드 200을 반환하는지 확인한다")
     @Test
     void getAdminTest() {
         RestAssured.given().log().all()
@@ -30,7 +30,7 @@ class AdminControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("상품을 등록하면 상태코드 201을 반환하는지 확인")
+    @DisplayName("상품을 등록하면 상태코드 201을 반환하는지 확인한다")
     @Test
     void postProductsTest() {
         ProductCreationRequest request = new ProductCreationRequest("pbo", "image", 10000000);

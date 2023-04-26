@@ -19,7 +19,7 @@ class MainControllerTest {
         RestAssured.port = port;
     }
 
-    @DisplayName("상품 전체 목록을 조회하면 상태코드 200을 반환하는지 확인")
+    @DisplayName("상품 전체 목록을 조회하면 상태코드 200을 반환하는지 확인한다")
     @Test
     void getHomeTest() {
         RestAssured.given().log().all()

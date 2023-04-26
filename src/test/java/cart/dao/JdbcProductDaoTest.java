@@ -19,7 +19,7 @@ class JdbcProductDaoTest {
     @Autowired
     JdbcProductDao productDao;
 
-    @DisplayName("모든 상품 데이터를 제대로 반환하는지 확인한다")
+    @DisplayName("모든 상품 데이터를 반환하는지 확인한다")
     @Test
     void selectAllTest() {
         final List<ProductEntity> productEntities = productDao.selectAll();
@@ -27,7 +27,7 @@ class JdbcProductDaoTest {
         assertThat(productEntities.size()).isEqualTo(2);
     }
 
-    @DisplayName("상품 등록이 제대로 되는지 확인한다")
+    @DisplayName("상품 등록이 되는지 확인한다")
     @Test
     void insertTest() {
         ProductEntity productEntity = ProductEntity.of("chicken", "image", 10000);
@@ -35,7 +35,7 @@ class JdbcProductDaoTest {
         assertDoesNotThrow(() -> productDao.insert(productEntity));
     }
 
-    @DisplayName("상품 수정이 제대로 되는지 확인한다")
+    @DisplayName("상품 수정이 되는지 확인한다")
     @Test
     void updateTest() {
         ProductEntity productEntity = ProductEntity.of(1L, "chicken", "image", 10000);
