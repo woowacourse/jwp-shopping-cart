@@ -34,6 +34,7 @@ public class ProductService {
 
     @Transactional
     public void update(Long id, ProductUpdateRequest request) {
+        request.validatePrice(request.getPrice());
         productDao.updateById(id, request);
     }
 
