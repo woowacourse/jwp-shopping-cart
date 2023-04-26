@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.NewProductDto;
-import cart.controller.dto.ProductDto;
+import cart.dto.NewProductDto;
+import cart.dto.ProductDto;
 import cart.service.CartService;
 import java.util.List;
 import javax.validation.Valid;

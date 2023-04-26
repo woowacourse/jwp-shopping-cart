@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.controller.dto.NewProductDto;
-import cart.controller.dto.ProductDto;
+import cart.dto.NewProductDto;
+import cart.dto.ProductDto;
 import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
 import cart.domain.Product;
