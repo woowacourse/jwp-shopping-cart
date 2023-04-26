@@ -70,11 +70,12 @@ public class ProductServiceTest {
     @DisplayName("상품을 수정한다.")
     void edit_product_success() {
         // given
-        productRepository.add(createProduct());
+        Product product = createProduct();
+        productRepository.add(product);
         ProductEditRequestDto req = createProductEditRequest();
 
         // when
-        productService.editProduct(1L, req);
+        productService.editProduct(product.getId(), req);
 
         // then
         Product result = productRepository.findAll().get(0);

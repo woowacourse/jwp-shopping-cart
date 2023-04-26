@@ -3,7 +3,7 @@ package cart.controller;
 import cart.domain.Product;
 import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductEditRequestDto;
-import cart.repository.ProductDbRepository;
+import cart.repository.ProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class ProductIntegrationTest {
 
     @Autowired
-    private ProductDbRepository productDbRepository;
+    private ProductRepository productRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -54,7 +54,7 @@ public class ProductIntegrationTest {
     public void find_products_success() {
         // given
         Product product = createProduct();
-        productDbRepository.add(product);
+        productRepository.add(product);
 
         // when & then
         given()
@@ -87,7 +87,7 @@ public class ProductIntegrationTest {
     void edit_product_success() {
         // given
         Product product = createProduct();
-        productDbRepository.add(product);
+        productRepository.add(product);
 
         ProductEditRequestDto req = createProductEditRequest();
 
@@ -101,7 +101,7 @@ public class ProductIntegrationTest {
         result.then()
                 .statusCode(HttpStatus.OK.value());
 
-        Product editedProduct = productDbRepository.findById(product.getId()).get();
+        Product editedProduct = productRepository.findById(product.getId()).get();
 
         assertAll(
                 () -> assertThat(editedProduct.getName()).isEqualTo(req.getName()),
@@ -115,8 +115,8 @@ public class ProductIntegrationTest {
     void delete_product_success() {
         // given
         Product product = createProduct();
-        productDbRepository.add(product);
-        List<Product> givenProducts = productDbRepository.findAll();
+        productRepository.add(product);
+        List<Product> givenProducts = productRepository.findAll();
 
         // when
         Response result = given().log().all()
@@ -126,7 +126,7 @@ public class ProductIntegrationTest {
         result.then()
                 .statusCode(HttpStatus.OK.value());
 
-        List<Product> afterProducts = productDbRepository.findAll();
+        List<Product> afterProducts = productRepository.findAll();
         assertThat(afterProducts.size() + 1).isEqualTo(givenProducts.size());
     }
 }
