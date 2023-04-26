@@ -26,11 +26,17 @@
     - [x]  admin.html 파일과 상품 관리 CRUD API를 이용하여 상품 관리 페이지를 완성합니다.
     - [x]  **`/admin`**url로 접근할 경우 관리자 도구 페이지를 조회할 수 있어야 합니다
 
+
+## 요구 사항 완료 후 추가 구현 사항
+
 - [x]  Controller 분리
     - [x]  @RestController와 @Controller
     - [x]  @RestController의 응답코드 선정
 
 - [x]  Validate 관련
     - [x]  @Valid
+   
 - [x]  예외 처리 관련
     - [x]  @ExceptionHandler
+
+- [x]  테스트 구현
