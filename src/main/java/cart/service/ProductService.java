@@ -2,12 +2,12 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductDao productDao;
@@ -16,7 +16,6 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    @Transactional
     public void save(final String name, final int price, final String image) {
         Product product = new Product(name, price, image);
         productDao.insert(product);
@@ -27,7 +26,6 @@ public class ProductService {
         return productDao.findAll();
     }
 
-    @Transactional
     public void update(final Long id, final String name, final int price, final String image) {
         checkExistProductId(id);
         Product product = new Product(id, name, price, image);
@@ -40,7 +38,6 @@ public class ProductService {
         }
     }
 
-    @Transactional
     public void delete(final Long id) {
         checkExistProductId(id);
         productDao.deleteById(id);
