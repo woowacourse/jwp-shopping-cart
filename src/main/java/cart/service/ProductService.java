@@ -28,4 +28,8 @@ public class ProductService {
 
         productDao.update(newProduct);
     }
+
+    public void deleteProduct(final long id) {
+        productDao.delete(id);
+    }
 }

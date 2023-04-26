@@ -74,4 +74,21 @@ public class ProductControllerTest {
                 .then()
                 .statusCode(200);
     }
+
+    @Test
+    void 상품_삭제() {
+        final long id = 1L;
+
+        RestAssured.given()
+                .body(new ProductRequest("족발", 5000, "족발 이미지"))
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/admin");
+
+        RestAssured.given()
+                .when()
+                .delete("/admin/" + id)
+                .then()
+                .statusCode(200);
+    }
 }

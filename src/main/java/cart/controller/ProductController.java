@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,5 +52,11 @@ public class ProductController {
     public void updateProduct(@PathVariable final long id, @RequestBody final ProductRequest productRequest) {
         productService.updateProduct(id, productRequest.getName(),
                 productRequest.getPrice(), productRequest.getImageUrl());
+    }
+
+    @DeleteMapping("/admin/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteProduct(@PathVariable final long id) {
+        productService.deleteProduct(id);
     }
 }
