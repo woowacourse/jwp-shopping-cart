@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -36,14 +38,14 @@ public class AdminController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<Void> postProducts(@RequestBody ProductCreationRequest request) {
+    public ResponseEntity<Void> postProducts(@Valid @RequestBody ProductCreationRequest request) {
         managementService.save(ProductDtoMapper.from(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<Void> putProducts(@PathVariable Long id,
-                                            @RequestBody ProductModificationRequest request) {
+                                            @Valid @RequestBody ProductModificationRequest request) {
         managementService.update(ProductDtoMapper.from(request));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
