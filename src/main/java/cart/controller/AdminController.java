@@ -23,7 +23,7 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/products/{id}")
+    @PutMapping("/products/{id}")
     public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductRequestDto productRequestDto, @PathVariable int id) {
         adminService.updateProduct(productRequestDto, id);
         return ResponseEntity.ok().build();

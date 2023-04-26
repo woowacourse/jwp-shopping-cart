@@ -57,6 +57,7 @@ const createProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data);
         console.error(error);
     });
 };
@@ -64,18 +65,13 @@ const createProduct = (product) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
     const {id} = product;
-
-    axios.request({
-        url: '/admin/products/' + product.id,
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json;charset=UTF-8"
-        },
-        data: JSON.stringify(product)
-    }).then((response) => {
+    axios.put('/admin/products/' + product.id,
+        product
+    ).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
+        alert(error.response.data);
     });
 };
 
@@ -88,5 +84,6 @@ const deleteProduct = (id) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
+        alert(error.response.data);
     });
 };
