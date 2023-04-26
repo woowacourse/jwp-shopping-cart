@@ -12,6 +12,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
     private final ItemService itemService;
 
     public AdminController(final ItemService itemService) {
@@ -34,7 +35,6 @@ public class AdminController {
 
     @PostMapping("/items/edit/{itemId}")
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     public String editItem(@PathVariable Long itemId, @Valid @RequestBody ItemRequest itemRequest) {
         itemService.updateItem(itemId, itemRequest);
         return "ok";
@@ -42,7 +42,6 @@ public class AdminController {
 
     @PostMapping("/items/delete/{itemId}")
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     public String deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);
         return "ok";

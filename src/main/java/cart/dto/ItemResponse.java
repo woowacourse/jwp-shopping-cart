@@ -43,11 +43,11 @@ public class ItemResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemResponse that = (ItemResponse) o;
-        return price == that.price && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(imageUrl, that.imageUrl);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, imageUrl, price);
+        return Objects.hash(id);
     }
 }
