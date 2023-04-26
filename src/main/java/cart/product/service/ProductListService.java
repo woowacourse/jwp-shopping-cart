@@ -33,4 +33,8 @@ public class ProductListService {
         this.productDao.update(product);
         return ProductDto.create(product);
     }
+    
+    public void delete(final long id) {
+        this.productDao.deleteByID(id);
+    }
 }
