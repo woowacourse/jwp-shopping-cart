@@ -42,4 +42,12 @@ class JdbcProductDaoTest {
 
         assertDoesNotThrow(() -> productDao.update(productEntity));
     }
+
+    @DisplayName("상품 삭제가 되는지 확인한다")
+    @Test
+    void deleteTest() {
+        ProductEntity productEntity = ProductEntity.of(1L, null, null, null);
+
+        assertDoesNotThrow(() -> productDao.delete(productEntity));
+    }
 }
