@@ -1,11 +1,16 @@
 package cart.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class CreateItem {
 
+    @JsonProperty("name")
     private final String name;
+    @JsonProperty("image-url")
     private final String imageUrl;
+    @JsonProperty("price")
     private final int price;
 
     public CreateItem(final String name, final String imageUrl, final int price) {
