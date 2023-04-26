@@ -95,7 +95,7 @@ public class ProductController {
         @Length(max = 1000, message = "이미지 URL 길이가 너무 깁니다.")
         private String image;
         @PositiveOrZero
-        @Max(value = Integer.MAX_VALUE, message = "상품 금액이 너무 큽니다.")
+        @Max(value = 1_000_000_000, message = "상품 금액이 너무 큽니다.")
         private int price;
     }
 
@@ -114,7 +114,7 @@ public class ProductController {
         @Length(max = 1000, message = "이미지 URL 길이가 너무 깁니다.")
         private String image;
         @PositiveOrZero
-        @Max(value = Integer.MAX_VALUE, message = "상품 금액이 너무 큽니다.")
+        @Max(value = 1_000_000_000, message = "상품 금액이 너무 큽니다.")
         private int price;
     }
 }
