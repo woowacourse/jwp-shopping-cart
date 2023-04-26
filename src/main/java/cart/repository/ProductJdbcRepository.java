@@ -9,14 +9,16 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import cart.domain.Product;
 import cart.controller.request.ProductCreateRequest;
 import cart.controller.request.ProductUpdateRequest;
+import cart.domain.Product;
 
 @Repository
 public class ProductJdbcRepository implements ProductRepository {
 	private final JdbcTemplate jdbcTemplate;
-	private final RowMapper<Product> productRowMapper = (resultSet, rowNum) ->
+	private final RowMapper<Product> productRowMapper =
+
+		(resultSet, rowNum) ->
 		new Product(
 			resultSet.getLong("id"),
 			resultSet.getString("name"),

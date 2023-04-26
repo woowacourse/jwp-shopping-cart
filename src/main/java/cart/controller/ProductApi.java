@@ -46,7 +46,7 @@ public class ProductApi {
 
 	@PatchMapping("/products/{id}")
 	public ResponseEntity<ProductDto> updateProduct(
-		@PathVariable(name = "id") long productId,
+		@PathVariable(value = "id") long productId,
 		@RequestBody ProductUpdateRequest request
 	) {
 		ProductDto productDto = productService.update(productId, request);

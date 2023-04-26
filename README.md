@@ -77,4 +77,4 @@ PRIMARY KEY(id)
     }
     HttpStatus : 200 Ok
     ```
-- [ ] 관리자 도구 페이지 연동
+- [x] 관리자 도구 페이지 연동
