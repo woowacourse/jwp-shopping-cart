@@ -30,9 +30,8 @@ public class AdminController {
 
     @PostMapping("/product")
     public ResponseEntity<Void> createProduct(@RequestBody final ProductRequest productRequest) {
-        System.out.println("productRequest = " + productRequest);
         long id = cartService.create(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        return ResponseEntity.created(URI.create("/product" + id)).build();
+        return ResponseEntity.created(URI.create("/admin/product/" + id)).build();
     }
 
     @GetMapping
