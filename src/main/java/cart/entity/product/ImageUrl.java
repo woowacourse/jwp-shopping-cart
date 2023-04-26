@@ -1,6 +1,6 @@
 package cart.entity.product;
 
-public class ImageUrl {
+final class ImageUrl {
 
     private static final int MAX_LENGTH = 255;
 

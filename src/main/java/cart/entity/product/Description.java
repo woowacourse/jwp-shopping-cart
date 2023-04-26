@@ -1,6 +1,6 @@
 package cart.entity.product;
 
-class Description {
+final class Description {
 
     private static final int MAX_LENGTH = 255;
 

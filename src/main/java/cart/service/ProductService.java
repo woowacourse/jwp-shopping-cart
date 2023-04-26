@@ -4,6 +4,7 @@ import cart.dao.CategoryDao;
 import cart.dao.ProductCategoryDao;
 import cart.dao.ProductDao;
 import cart.dto.request.ProductRequestDto;
+import cart.dto.response.CategoryResponseDto;
 import cart.dto.response.ProductResponseDto;
 import cart.entity.CategoryEntity;
 import cart.entity.ProductCategoryEntity;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductService {
+public final class ProductService {
 
     private final ProductDao productDao;
     private final CategoryDao categoryDao;

@@ -2,7 +2,7 @@ package cart.entity.product;
 
 import java.util.Objects;
 
-public class ProductEntity {
+public final class ProductEntity {
 
     private Long id;
     private Name name;

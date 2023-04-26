@@ -2,7 +2,7 @@ package cart.dto.request;
 
 import java.util.List;
 
-public class ProductRequestDto {
+public final class ProductRequestDto {
 
     private final String name;
     private final String imageUrl;

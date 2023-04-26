@@ -4,7 +4,7 @@ import cart.entity.CategoryEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CategoryResponseDto {
+public final class CategoryResponseDto {
 
     private final Long id;
     private final String name;

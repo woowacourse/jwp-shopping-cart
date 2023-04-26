@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CategoryDao {
+public final class CategoryDao {
 
     private final JdbcTemplate jdbcTemplate;
 

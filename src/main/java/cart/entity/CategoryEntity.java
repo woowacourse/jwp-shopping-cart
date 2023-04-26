@@ -2,11 +2,11 @@ package cart.entity;
 
 import java.util.Objects;
 
-public class CategoryEntity {
+public final class CategoryEntity {
 
     private Long id;
     private String name;
-    
+
     public CategoryEntity(final Long id, final String name) {
         this.id = id;
         this.name = name;
