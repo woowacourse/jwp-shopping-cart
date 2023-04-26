@@ -77,7 +77,7 @@ class ItemControllerTest {
 
 
     @Test
-    @DisplayName("상품 등록 테스트")
+    @DisplayName("상품을 등록한다.")
     void createItemRequestSuccess() throws Exception {
         ItemRequest itemRequest = createItemRequest("맥북", "http://image.com", 1_500_000);
         ItemResponse itemResponse = createItemResponse();
@@ -96,7 +96,7 @@ class ItemControllerTest {
     }
 
     @Test
-    @DisplayName("상품 전체 조회 테스트")
+    @DisplayName("상품 전체를 조회한다.")
     void findAllItemRequestSuccess() throws Exception {
         ItemResponse itemResponse1 = createItemResponse();
         ItemResponse itemResponse2 = createItemResponse();
@@ -109,7 +109,7 @@ class ItemControllerTest {
     }
 
     @Test
-    @DisplayName("상품 변경 테스트")
+    @DisplayName("상품을 변경한다.")
     void updateItemRequestSuccess() throws Exception {
         ItemRequest itemRequest = createItemRequest("맥북", "http://image.com", 15_000);
         ItemResponse itemResponse = createItemResponse();
@@ -128,7 +128,7 @@ class ItemControllerTest {
     }
 
     @Test
-    @DisplayName("상품 삭제 테스트")
+    @DisplayName("상품을 삭제한다.")
     void deleteItemRequestSuccess() throws Exception{
         mockMvc.perform(delete("/items/{id}", 1L))
                 .andExpect(status().isOk())
