@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -45,16 +45,14 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProduct(
-            @PathVariable("id") Integer id,
+            @PathVariable("id") @NotNull(message = "아이디가 비어있습니다.") Integer id,
             @RequestBody @Valid ProductRequest productRequest) {
-        Objects.requireNonNull(id);
         productService.update(id, productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer id) {
-        Objects.requireNonNull(id);
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") @NotNull(message = "아이디가 비어있습니다.") Integer id) {
         productService.delete(id);
         return ResponseEntity.ok().build();
     }
