@@ -19,7 +19,7 @@ public class ProductEntity {
     }
 
     public ProductEntity(Product product) {
-        this.id = null;
+        this.id = product.getProductId();
         this.name = product.getName();
         this.price = product.getPrice().intValue();
         this.category = product.getCategory().name();

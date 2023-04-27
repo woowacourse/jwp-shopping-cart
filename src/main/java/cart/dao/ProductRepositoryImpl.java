@@ -48,4 +48,13 @@ public class ProductRepositoryImpl implements ProductRepository {
     public void deleteById(Long id) {
         productDao.deleteById(id);
     }
+
+    @Override
+    public Product update(Product product) {
+        ProductEntity productEntity = new ProductEntity(product);
+
+        productDao.update(productEntity);
+
+        return product;
+    }
 }

@@ -2,8 +2,13 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.domain.product.ImageUrl;
 import cart.domain.product.Product;
+import cart.domain.product.ProductCategory;
+import cart.domain.product.ProductName;
+import cart.domain.product.ProductPrice;
 import cart.domain.product.TestFixture;
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,5 +66,31 @@ class ProductRepositoryImplTest {
 
         List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(0);
+    }
+
+    @DisplayName("상품 수정 테스트")
+    @Test
+    void update() {
+        Product pizza = TestFixture.PIZZA;
+        productRepository.save(pizza);
+
+        Product updatedProduct = new Product(
+                ProductName.from("Chicken"),
+                ProductPrice.from(20_000),
+                ProductCategory.FOOD,
+                ImageUrl.from("chicken.com"),
+                pizza.getProductId()
+        );
+
+        productRepository.update(updatedProduct);
+
+        List<Product> allProducts = productRepository.findAll();
+        assertThat(allProducts).hasSize(1);
+        Product savedProduct = allProducts.get(0);
+        assertThat(savedProduct.getProductId()).isEqualTo(pizza.getProductId());
+        assertThat(savedProduct.getName()).isEqualTo("Chicken");
+        assertThat(savedProduct.getPrice()).isEqualTo(BigDecimal.valueOf(20_000));
+        assertThat(savedProduct.getCategory()).isEqualTo(ProductCategory.FOOD);
+        assertThat(savedProduct.getImageUrl()).isEqualTo("chicken.com");
     }
 }
