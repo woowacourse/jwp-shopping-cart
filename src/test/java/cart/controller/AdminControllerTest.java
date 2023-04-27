@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.controller.dto.ProductDto;
 import cart.persistence.entity.ProductCategory;
-import cart.service.ShoppingService;
+import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class AdminControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ShoppingService shoppingService;
+    private ProductService productService;
 
     @BeforeEach
     void setUp() {
@@ -54,7 +54,7 @@ class AdminControllerTest {
                 new ProductDto(2L, "초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
                 new ProductDto(3L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
         );
-        when(shoppingService.getProducts()).thenReturn(productDtos);
+        when(productService.getProducts()).thenReturn(productDtos);
 
         // when, then
         mockMvc.perform(get("/admin")
@@ -65,7 +65,7 @@ class AdminControllerTest {
     @Test
     void addProduct() throws Exception {
         // given
-        when(shoppingService.save(any())).thenReturn(1L);
+        when(productService.save(any())).thenReturn(1L);
 
         // when, then
         mockMvc.perform(post("/admin")
@@ -102,7 +102,7 @@ class AdminControllerTest {
     @Test
     void updateProduct() throws Exception {
         // given
-        doNothing().when(shoppingService).update(any(), any());
+        doNothing().when(productService).update(any(), any());
 
         // when, then
         mockMvc.perform(put("/admin/{id}", 1L)
@@ -137,7 +137,7 @@ class AdminControllerTest {
     @Test
     void deleteProduct() throws Exception {
         // given
-        doNothing().when(shoppingService).delete(any());
+        doNothing().when(productService).delete(any());
 
         // when, then
         mockMvc.perform(delete("/admin/{id}", 1L)

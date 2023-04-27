@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.controller.dto.ProductDto;
 import cart.persistence.entity.ProductCategory;
-import cart.service.ShoppingService;
+import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,36 +23,36 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final ShoppingService shoppingService;
+    private final ProductService productService;
 
-    public AdminController(final ShoppingService shoppingService) {
-        this.shoppingService = shoppingService;
+    public AdminController(final ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
     public String getProducts(final Model model) {
-        final List<ProductDto> products = shoppingService.getProducts();
+        final List<ProductDto> products = productService.getProducts();
         model.addAttribute("products", products);
         return "admin";
     }
 
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody @Valid final ProductDto productDto) {
-        final long productId = shoppingService.save(productDto);
+        final long productId = productService.save(productDto);
         return ResponseEntity.created(URI.create("/admin/" + productId)).build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{productId}")
     public ResponseEntity<Void> updateProduct(
-            @PathVariable final Long id,
+            @PathVariable final Long productId,
             @RequestBody @Valid final ProductDto productDto) {
-        shoppingService.update(id, productDto);
+        productService.update(productId, productDto);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
-        shoppingService.delete(id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId) {
+        productService.delete(productId);
         return ResponseEntity.noContent().build();
     }
 

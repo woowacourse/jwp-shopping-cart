@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.controller.dto.ProductDto;
 import cart.persistence.entity.ProductCategory;
-import cart.service.ShoppingService;
+import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ class ShoppingControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ShoppingService shoppingService;
+    private ProductService productService;
 
     @DisplayName("메인 페이지를 조회한다")
     @Test
@@ -36,7 +36,7 @@ class ShoppingControllerTest {
                 new ProductDto(2L, "초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
                 new ProductDto(3L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
         );
-        when(shoppingService.getProducts()).thenReturn(productDtos);
+        when(productService.getProducts()).thenReturn(productDtos);
 
         // when, then
         mockMvc.perform(get("/")
@@ -49,7 +49,7 @@ class ShoppingControllerTest {
     void getProduct() throws Exception {
         // given
         final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
-        when(shoppingService.getById(any())).thenReturn(productDto);
+        when(productService.getById(any())).thenReturn(productDto);
 
         //when
         mockMvc.perform(get("/{id}", 1L)
