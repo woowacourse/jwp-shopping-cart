@@ -1,7 +1,9 @@
 package cart.controller;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 
+import cart.dto.ProductRequestDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +33,21 @@ public class AdminControllerTest {
         RestAssured.given().log().all()
                 .accept(MediaType.TEXT_HTML_VALUE)
                 .when().get("/admin")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(containsString("<title>관리자 페이지</title>"));
+    }
+
+    @Test
+    @DisplayName("상품 추가 확인")
+    void addProduct() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("밋엉", 10000, "미성씨");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequestDto)
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when().post("/admin/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(containsString("<title>관리자 페이지</title>"));
