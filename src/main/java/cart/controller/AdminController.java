@@ -1,10 +1,11 @@
 package cart.controller;
 
-import cart.controller.dto.SaveRequest;
+import cart.controller.dto.ModifyRequest;
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,11 +28,12 @@ public class AdminController {
     }
 
     @PostMapping("/product")
-    public String saveProduct(@RequestBody final SaveRequest saveRequest, final HttpServletResponse response) {
+    public String saveProduct(@Valid @RequestBody final ModifyRequest modifyRequest,
+                              final HttpServletResponse response) {
         Product product = Product.createWithoutId(
-                saveRequest.getName(),
-                saveRequest.getPrice(),
-                saveRequest.getImageUrl()
+                modifyRequest.getName(),
+                modifyRequest.getPrice(),
+                modifyRequest.getImageUrl()
         );
         productDao.save(product);
         response.setStatus(HttpStatus.CREATED.value());
@@ -46,10 +48,10 @@ public class AdminController {
     }
 
     @PutMapping("/product/{id}")
-    public String updateProduct(@RequestBody final SaveRequest saveRequest, @PathVariable Long id,
+    public String updateProduct(@Valid @RequestBody final ModifyRequest modifyRequest, @PathVariable Long id,
                                 final HttpServletResponse response) {
-        final Product product = Product.create(id, saveRequest.getName(), saveRequest.getPrice(),
-                saveRequest.getImageUrl());
+        final Product product = Product.create(id, modifyRequest.getName(), modifyRequest.getPrice(),
+                modifyRequest.getImageUrl());
         productDao.update(product);
         response.setStatus(HttpServletResponse.SC_CREATED);
         return "admin";
