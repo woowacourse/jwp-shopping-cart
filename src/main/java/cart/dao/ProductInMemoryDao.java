@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
@@ -39,15 +40,18 @@ public class ProductInMemoryDao implements ProductDao {
 
     @Override
     public void deleteById(final Integer id) {
-        products.remove(select(id));
+        Optional<ProductEntity> byId = findById(id);
+        if (byId.isEmpty()) {
+            throw new IllegalArgumentException("아이디를 찾을 수 없습니다.");
+        }
+        products.remove(byId.get());
     }
 
     @Override
-    public ProductEntity select(final Integer id) {
+    public Optional<ProductEntity> findById(final Integer id) {
         return products.stream()
                 .filter(product -> product.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("상품이 없습니다."));
+                .findFirst();
     }
 
     @Override

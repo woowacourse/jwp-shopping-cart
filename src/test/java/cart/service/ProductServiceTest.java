@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,8 +32,9 @@ class ProductServiceTest {
 
     @Test
     void add() {
-        ProductEntity productEntity = productDao.select(getGreatestId());
-        assertThat(productEntity).isEqualTo(new ProductEntity(getGreatestId(), "땡칠", "asdf", 100L));
+        final Optional<ProductEntity> byId = productDao.findById(getGreatestId());
+
+        assertThat(byId.get()).isEqualTo(new ProductEntity(getGreatestId(), "땡칠", "asdf", 100L));
     }
 
     @Test
@@ -49,8 +51,9 @@ class ProductServiceTest {
     void update() {
         productService.update(getGreatestId(), "땡칠", "VERY_BIG_IMAGE", 100L);
 
-        ProductEntity productEntity = productDao.select(getGreatestId());
-        assertThat(productEntity).isEqualTo(new ProductEntity(getGreatestId(), "땡칠", "VERY_BIG_IMAGE", 100L));
+        final Optional<ProductEntity> productDaoById = productDao.findById(getGreatestId());
+
+        assertThat(productDaoById.get()).isEqualTo(new ProductEntity(getGreatestId(), "땡칠", "VERY_BIG_IMAGE", 100L));
     }
 
     @Test

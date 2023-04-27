@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
@@ -34,13 +36,15 @@ class ProductInMemoryDaoTest {
         final ProductEntity productEntity = new ProductEntity(1, "비버", "A", 100000L);
         productInMemoryDao.update(productEntity);
 
-        final ProductEntity result = productInMemoryDao.select(insertedId);
-        assertThat(result.getPrice()).isEqualTo(100000L);
+        final Optional<ProductEntity> byId = productInMemoryDao.findById(insertedId);
+        assertThat(byId.get().getPrice()).isEqualTo(100000L);
     }
 
     @Test
     @DisplayName("삭제 테스트")
     void deleteById() {
+        System.out.println(insertedId);
+
         productInMemoryDao.deleteById(insertedId);
 
         assertThat(productInMemoryDao.findAll().size()).isZero();
@@ -50,9 +54,9 @@ class ProductInMemoryDaoTest {
     @DisplayName("조회 테스트")
     void select() {
         final ProductEntity expectEntity = new ProductEntity(1, "비버", "A", 1000L);
-        final ProductEntity entity = productInMemoryDao.select(insertedId);
+        final Optional<ProductEntity> byId = productInMemoryDao.findById(insertedId);
 
-        assertThat(entity).isEqualTo(expectEntity);
+        assertThat(byId.get()).isEqualTo(expectEntity);
     }
 
     @Test

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
@@ -39,8 +41,8 @@ class ProductJdbcDaoTest {
         final ProductEntity productEntity = new ProductEntity(insertedId, "비버", "A", 100000L);
         productJdbcDao.update(productEntity);
 
-        final ProductEntity result = productJdbcDao.select(insertedId);
-        assertThat(result.getPrice()).isEqualTo(100000L);
+        final Optional<ProductEntity> byId = productJdbcDao.findById(insertedId);
+        assertThat(byId.get().getPrice()).isEqualTo(100000L);
     }
 
     @Test
@@ -55,9 +57,9 @@ class ProductJdbcDaoTest {
     @DisplayName("조회 테스트")
     void select() {
         final ProductEntity expectEntity = new ProductEntity(insertedId, "비버", "A", 1000L);
-        final ProductEntity entity = productJdbcDao.select(insertedId);
+        final Optional<ProductEntity> byId = productJdbcDao.findById(insertedId);
 
-        assertThat(entity).isEqualTo(expectEntity);
+        assertThat(byId.get()).isEqualTo(expectEntity);
     }
 
     @Test
