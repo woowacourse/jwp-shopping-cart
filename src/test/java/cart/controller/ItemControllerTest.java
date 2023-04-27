@@ -131,7 +131,7 @@ class ItemControllerTest {
     @DisplayName("상품을 삭제한다.")
     void deleteItemRequestSuccess() throws Exception{
         mockMvc.perform(delete("/items/{id}", 1L))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 

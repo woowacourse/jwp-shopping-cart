@@ -89,7 +89,7 @@ class JwpCartApplicationTests {
                 .then().log().all()
                 .contentType(ContentType.JSON)
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("일치하는 상품을 찾을 수 없습니다."));
+                .body("response", is("일치하는 상품을 찾을 수 없습니다."));
     }
 
     @Test
@@ -106,7 +106,7 @@ class JwpCartApplicationTests {
                 .then().log().all()
                 .contentType(ContentType.JSON)
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("일치하는 상품을 찾을 수 없습니다."));
+                .body("response", is("일치하는 상품을 찾을 수 없습니다."));
     }
 
     @Test
@@ -115,7 +115,7 @@ class JwpCartApplicationTests {
         when()
                 .delete("/items/{id}", 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private static ItemRequest createItemRequest(String name, String imageUrl, int price) {
