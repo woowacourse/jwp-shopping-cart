@@ -22,4 +22,16 @@ public class Member {
     public void setId(final Long id) {
         this.id = id;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email.getEmail();
+    }
+
+    public String getPassword() {
+        return password.getPassword();
+    }
 }

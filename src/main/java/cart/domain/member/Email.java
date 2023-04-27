@@ -20,4 +20,8 @@ public class Email {
             throw new IllegalArgumentException("이메일의 형식이 맞지 않습니다. 예시) example@example.com");
         }
     }
+
+    public String getEmail() {
+        return email;
+    }
 }
