@@ -5,11 +5,13 @@ import cart.domain.Product;
 import cart.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ProductService {
     private final ProductDao productDao;
 
@@ -31,6 +33,7 @@ public class ProductService {
         productDao.update(toEntity(product));
     }
 
+    @Transactional(readOnly = true)
     public List<Product> getAll() {
         return productDao.findAll().stream()
                 .map(this::fromEntity)
