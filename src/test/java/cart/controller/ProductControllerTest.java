@@ -135,7 +135,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void 등록되지_않은_삼품_수정을_요청하면_404_BadRequest_를_응답한다() throws Exception {
+    void 등록되지_않은_상품_수정을_요청하면_404_BadRequest_를_응답한다() throws Exception {
         // given
         final ProductUpdateRequestDto updateRequestDto = new ProductUpdateRequestDto("고양이", "cat.jpg", 1000000L);
         final String request = objectMapper.writeValueAsString(updateRequestDto);
@@ -149,7 +149,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void 등록되지_않은_삼품_삭제를_요청하면_404_BadRequest_를_응답한다() throws Exception {
+    void 등록되지_않은_상품_삭제를_요청하면_404_BadRequest_를_응답한다() throws Exception {
         // expect
         mockMvc.perform(delete("/products/" + 9999999L)
                         .contentType(MediaType.APPLICATION_JSON))
