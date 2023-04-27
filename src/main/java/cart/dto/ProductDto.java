@@ -7,13 +7,13 @@ import javax.validation.constraints.NotNull;
 
 public class ProductDto {
 
-    @NotBlank
+    @NotBlank(message = "이름을 다시 입력해주세요.")
     private final String name;
 
-    @NotBlank
+    @NotBlank(message = "이미지 주소를 다시 입력해주세요.")
     private final String image;
 
-    @NotNull
+    @NotNull(message = "가격을 다시 입력해주세요.")
     @Min(100)
     @Max(10_000_000)
     private final Integer price;

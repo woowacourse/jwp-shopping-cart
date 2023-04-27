@@ -76,4 +76,11 @@ public class ProductDaoImpl implements ProductDao {
         jdbcTemplate.update(sql, id);
     }
 
+    @Override
+    public void deleteAll() {
+        final String sql = "DELETE FROM PRODUCT";
+
+        jdbcTemplate.execute(sql);
+    }
+
 }

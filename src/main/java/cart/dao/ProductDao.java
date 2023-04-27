@@ -15,4 +15,5 @@ public interface ProductDao {
 
     void delete(int id);
 
+    void deleteAll();
 }

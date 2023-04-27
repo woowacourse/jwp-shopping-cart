@@ -19,10 +19,10 @@ public class ProductService {
         return productDao.findAll();
     }
 
-    public void insert(final ProductDto productDto) {
+    public Integer insert(final ProductDto productDto) {
         ProductEntity productEntity = new ProductEntity(productDto.getName(), productDto.getImage(),
                 productDto.getPrice());
-        productDao.insert(productEntity);
+        return productDao.insert(productEntity);
     }
 
     public void update(final int id, final ProductDto productDto) {

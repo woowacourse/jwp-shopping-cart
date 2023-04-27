@@ -22,26 +22,27 @@ public class ProductApiController {
     }
 
     @PostMapping("/product/insert")
-    public ResponseEntity<String> insert(@Valid @RequestBody ProductDto productDto) {
-        productService.insert(productDto);
-        return ResponseEntity.ok().body("ok");
+    public ResponseEntity<Integer> insert(@Valid @RequestBody ProductDto productDto) {
+        Integer savedId = productService.insert(productDto);
+        return ResponseEntity.ok().body(savedId);
     }
 
     @PostMapping("/product/update/{id}")
-    public ResponseEntity<String> update(@PathVariable int id, @Valid @RequestBody ProductDto productDto) {
+    public ResponseEntity<Integer> update(@PathVariable int id, @Valid @RequestBody ProductDto productDto) {
         productService.update(id, productDto);
-        return ResponseEntity.ok().body(String.valueOf(id));
+        return ResponseEntity.ok().body(id);
     }
 
     @DeleteMapping("/product/delete/{id}")
-    public void delete(@PathVariable int id) {
+    public Integer delete(@PathVariable int id) {
         productService.delete(id);
+        return id;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        String errorMessage = e.getBindingResult().getFieldError().getField() + "을 다시 입력해주세요.";
-        return ResponseEntity.badRequest().body(errorMessage);
+    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        return ResponseEntity.badRequest()
+                .body(exception.getBindingResult().getFieldErrors().get(0).getDefaultMessage());
     }
 
 }
