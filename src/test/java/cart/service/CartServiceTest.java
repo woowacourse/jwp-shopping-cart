@@ -10,23 +10,21 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-@AutoConfigureTestDatabase
 @SpringBootTest
 class CartServiceTest {
 
     @Autowired
     private CartService cartService;
 
-    private ProductRequest cuteSeonghaDoll =
+    private final ProductRequest cuteSeonghaDoll =
             new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteSeonghaDoll", 25000);
 
-    private ProductRequest cuteBaronDoll =
+    private final ProductRequest cuteBaronDoll =
             new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteBaronDoll", 250000);
 

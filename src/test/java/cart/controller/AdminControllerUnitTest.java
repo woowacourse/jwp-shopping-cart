@@ -35,17 +35,16 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @WebMvcTest
 public class AdminControllerUnitTest {
 
-    private ProductResponse cuteSeonghaDoll =
+    private final ProductResponse cuteSeonghaDoll =
             new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteSeonghaDoll", 25000);
 
-    private ProductResponse cuteBaronDoll =
+    private final ProductResponse cuteBaronDoll =
             new ProductResponse(2, "https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteBaronDoll", 250000);
 
     @Autowired
     private WebApplicationContext context;
-
     @Autowired
     private MockMvc mockMvc;
     @Autowired

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase
 class AdminControllerIntegrationTest {
 
     @LocalServerPort
@@ -45,7 +47,7 @@ class AdminControllerIntegrationTest {
     void registerProduct() {
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
+                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDollFromController",
                         25000))
                 .when()
                 .post("/admin/product")
@@ -70,13 +72,12 @@ class AdminControllerIntegrationTest {
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/70891072?v=4", "CuteBaronDoll", 2500))
+                .body(new ProductRequest("https://avatars.githubusercontent.com/u/70891072?v=4", "CuteBaronDollFromController", 2500))
                 .when()
                 .put("/admin/product/" + savedId)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
-        // TODO: 2023-04-26 검증 방법 생각
     }
 
     @DisplayName("상품 삭제 API 호출 시 상품이 삭제된다.")
