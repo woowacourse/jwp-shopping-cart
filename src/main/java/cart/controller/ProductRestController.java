@@ -1,7 +1,8 @@
 package cart.controller;
 
-import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
+import cart.dto.ProductSaveRequestDto;
+import cart.dto.ProductUpdateRequestDto;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,8 @@ public class ProductRestController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<String> createProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
-        cartService.addProduct(productRequestDto);
+    public ResponseEntity<String> createProduct(@RequestBody @Valid ProductSaveRequestDto productSaveRequestDto) {
+        cartService.addProduct(productSaveRequestDto);
         return ResponseEntity.ok().build();
     }
 
@@ -31,8 +32,8 @@ public class ProductRestController {
     }
 
     @PutMapping("/product")
-    public ResponseEntity<String> updateProduct(@RequestBody ProductRequestDto productRequestDto) {
-        cartService.updateProduct(productRequestDto);
+    public ResponseEntity<String> updateProduct(@RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
+        cartService.updateProduct(productUpdateRequestDto);
 
         return ResponseEntity.ok().build();
     }

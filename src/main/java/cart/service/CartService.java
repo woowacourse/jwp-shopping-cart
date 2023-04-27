@@ -2,17 +2,15 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
+import cart.dto.ProductSaveRequestDto;
+import cart.dto.ProductUpdateRequestDto;
 import cart.dto.entity.ProductEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static cart.service.ProductMapper.productToEntity;
-import static cart.service.ProductMapper.requestDtoToProduct;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,25 +24,25 @@ public class CartService {
     }
 
     @Transactional
-    public void addProduct(ProductRequestDto productRequestDto) {
-        Product product = requestDtoToProduct(productRequestDto);
+    public void addProduct(ProductSaveRequestDto productSaveRequestDto) {
+        Product product = new Product(productSaveRequestDto.getName(), productSaveRequestDto.getImage(), productSaveRequestDto.getPrice());
 
-        productDao.save(productToEntity(product));
+        productDao.save(new ProductEntity(product.getId(), product.getName(), product.getImage(), product.getPrice()));
     }
 
     public List<ProductResponseDto> findProducts() {
         List<ProductEntity> products = productDao.findAll();
         return products.stream()
-                .map(ProductMapper::entityToResponseDto)
+                .map(entity -> new ProductResponseDto(entity.getId(), entity.getName(), entity.getImage(), entity.getPrice()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional
-    public void updateProduct(ProductRequestDto productRequestDto) {
-        validateExistence(productRequestDto.getId());
+    public void updateProduct(ProductUpdateRequestDto productUpdateRequestDto) {
+        validateExistence(productUpdateRequestDto.getId());
+        Product product = new Product(productUpdateRequestDto.getName(), productUpdateRequestDto.getImage(), productUpdateRequestDto.getPrice());
 
-        Product product = requestDtoToProduct(productRequestDto);
-        productDao.update(productToEntity(product));
+        productDao.update(new ProductEntity(product.getId(), product.getName(), product.getImage(), product.getPrice()));
     }
 
     private void validateExistence(Long id) {

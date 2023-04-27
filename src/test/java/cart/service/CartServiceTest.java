@@ -1,7 +1,8 @@
 package cart.service;
 
-import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
+import cart.dto.ProductSaveRequestDto;
+import cart.dto.ProductUpdateRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 class CartServiceTest {
 
-    private final CartService cartService;
+    private CartService cartService;
 
     @Autowired
     public CartServiceTest(CartService cartService) {
@@ -26,16 +27,16 @@ class CartServiceTest {
     @Test
     void updateProduct() {
         //given
-        cartService.addProduct(new ProductRequestDto("오션", "이미지", 10000));
+        cartService.addProduct(new ProductSaveRequestDto("오션", "이미지", 10000));
         ProductResponseDto product = cartService.findProducts().get(0);
         //then
-        assertThatNoException().isThrownBy(() -> cartService.updateProduct(new ProductRequestDto(product.getId(), "연어", "이미지", 100)));
+        assertThatNoException().isThrownBy(() -> cartService.updateProduct(new ProductUpdateRequestDto(product.getId(), "연어", "이미지", 100)));
     }
 
     @DisplayName("상품이 없을 때 update 시 예외가 발생한다.")
     @Test
     void updateProduct_Exception() {
-        assertThatThrownBy(() -> cartService.updateProduct(new ProductRequestDto()))
+        assertThatThrownBy(() -> cartService.updateProduct(new ProductUpdateRequestDto()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 상품이 존재하지 않습니다.");
     }
@@ -44,7 +45,7 @@ class CartServiceTest {
     @Test
     void deleteProduct() {
         //given
-        cartService.addProduct(new ProductRequestDto("오션", "이미지", 10000));
+        cartService.addProduct(new ProductSaveRequestDto("오션", "이미지", 10000));
         ProductResponseDto product = cartService.findProducts().get(0);
 
         //then

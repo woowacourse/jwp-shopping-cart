@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductSaveRequestDto;
+import cart.dto.ProductUpdateRequestDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,14 +17,14 @@ import static org.hamcrest.core.Is.is;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CartControllerTest {
 
-    private ProductRequestDto productRequestDto;
+    private ProductSaveRequestDto productSaveRequestDto;
     @LocalServerPort
     int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        productRequestDto = new ProductRequestDto("연어", "https://techblog.woowahan.com/wp-content/uploads/img/2020-04-10/pobi.png", 10000);
+        productSaveRequestDto = new ProductSaveRequestDto("연어", "https://techblog.woowahan.com/wp-content/uploads/img/2020-04-10/pobi.png", 10000);
     }
 
     @DisplayName("상품 추가")
@@ -31,7 +32,7 @@ class CartControllerTest {
     void createProduct() {
         given().log().uri()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
+                .body(productSaveRequestDto)
                 .when().post("/product")
                 .then()
                 .statusCode(HttpStatus.OK.value());
@@ -40,11 +41,11 @@ class CartControllerTest {
     @DisplayName("상품이 null일 경우 예외 발생")
     @Test
     void createProduct_Exception() {
-        productRequestDto = new ProductRequestDto(null, null, null);
+        productSaveRequestDto = new ProductSaveRequestDto(null, null, null);
 
         given().log().uri()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
+                .body(productSaveRequestDto)
                 .when().post("/product")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -55,7 +56,7 @@ class CartControllerTest {
     void getProducts() {
         //given
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
+                .body(productSaveRequestDto)
                 .when().post("/product");
 
         //then
@@ -72,10 +73,10 @@ class CartControllerTest {
     void updateProduct() {
         //given
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
+                .body(productSaveRequestDto)
                 .when().post("/product");
 
-        ProductRequestDto updateDto = new ProductRequestDto(1L, "오션", "", 50);
+        ProductUpdateRequestDto updateDto = new ProductUpdateRequestDto(1L, "오션", "", 50);
 
         //then
         given().log().uri()
@@ -91,7 +92,7 @@ class CartControllerTest {
     void deleteProduct() {
         //given
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
+                .body(productSaveRequestDto)
                 .when().post("/product");
 
         //then
