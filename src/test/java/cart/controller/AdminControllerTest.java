@@ -1,6 +1,7 @@
 package cart.controller;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
 import cart.dao.ProductDao;
@@ -62,7 +63,8 @@ class AdminControllerTest {
             .post("/admin/product")
         .then()
             .log().all()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body(containsString("상품 이름이 입력되지 않았습니다."));
     }
 
     @Test
@@ -90,7 +92,8 @@ class AdminControllerTest {
             .post("/admin/product")
         .then()
             .log().all()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body(containsString("가격이 입력되지 않았습니다."));
     }
 
     @ParameterizedTest
@@ -117,7 +120,8 @@ class AdminControllerTest {
             .post("/admin/product")
         .then()
             .log().all()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body(containsString("상품 이미지 주소가 입력되지 않았습니다."));
     }
 
     @Test
