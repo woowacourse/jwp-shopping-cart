@@ -1,15 +1,15 @@
-package cart.dto;
+package cart.controller.response;
 
-public class ProductDto {
+public class ProductResponse {
 	private long id;
 	private String name;
 	private double price;
 	private String image;
 
-	public ProductDto() {
+	public ProductResponse() {
 	}
 
-	public ProductDto(final long id, final String name, final double price, final String image) {
+	public ProductResponse(final long id, final String name, final double price, final String image) {
 		this.id = id;
 		this.name = name;
 		this.price = price;

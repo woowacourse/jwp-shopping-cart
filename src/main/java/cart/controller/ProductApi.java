@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cart.controller.request.ProductCreateRequest;
 import cart.controller.request.ProductUpdateRequest;
-import cart.dto.ProductDto;
+import cart.controller.response.ProductResponse;
 import cart.service.ProductService;
 
 @RestController
@@ -28,8 +28,8 @@ public class ProductApi {
 	}
 
 	@GetMapping("/products")
-	public ResponseEntity<List<ProductDto>> getProducts() {
-		List<ProductDto> products = productService.findAll();
+	public ResponseEntity<List<ProductResponse>> getProducts() {
+		List<ProductResponse> products = productService.findAll();
 		return ResponseEntity.ok(products);
 	}
 
@@ -47,11 +47,11 @@ public class ProductApi {
 	}
 
 	@PatchMapping("/products/{id}")
-	public ResponseEntity<ProductDto> updateProduct(
+	public ResponseEntity<ProductResponse> updateProduct(
 		@PathVariable(value = "id") long productId,
 		@RequestBody @Valid ProductUpdateRequest request
 	) {
-		ProductDto productDto = productService.update(productId, request);
-		return ResponseEntity.ok(productDto);
+		ProductResponse productResponse = productService.update(productId, request);
+		return ResponseEntity.ok(productResponse);
 	}
 }

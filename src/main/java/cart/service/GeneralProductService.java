@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.domain.Product;
-import cart.dto.ProductDto;
+import cart.controller.response.ProductResponse;
 import cart.controller.request.ProductUpdateRequest;
 import cart.controller.request.ProductCreateRequest;
 import cart.repository.ProductRepository;
@@ -21,10 +21,10 @@ public class GeneralProductService implements ProductService {
 		this.productRepository = productRepository;
 	}
 
-	public List<ProductDto> findAll() {
+	public List<ProductResponse> findAll() {
 		return productRepository.findAll()
 			.stream()
-			.map(product -> new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImage()))
+			.map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImage()))
 			.collect(Collectors.toList());
 	}
 
@@ -48,8 +48,8 @@ public class GeneralProductService implements ProductService {
 
 	@Transactional
 	@Override
-	public ProductDto update(final long productId, final ProductUpdateRequest request) {
+	public ProductResponse update(final long productId, final ProductUpdateRequest request) {
 		final Product product = productRepository.update(productId, request);
-		return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImage());
+		return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImage());
 	}
 }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import cart.dto.ProductDto;
+import cart.controller.response.ProductResponse;
 import cart.service.GeneralProductService;
 
 @Controller
@@ -19,14 +19,14 @@ public class ProductController {
 
 	@GetMapping("/")
 	public String products(Model model) {
-		final List<ProductDto> findAllProducts = generalProductService.findAll();
+		final List<ProductResponse> findAllProducts = generalProductService.findAll();
 		model.addAttribute("products", findAllProducts);
 		return "index";
 	}
 
 	@GetMapping("/admin")
 	public String showAdmin(Model model) {
-		final List<ProductDto> findAllProducts = generalProductService.findAll();
+		final List<ProductResponse> findAllProducts = generalProductService.findAll();
 		model.addAttribute("products", findAllProducts);
 		return "admin";
 	}

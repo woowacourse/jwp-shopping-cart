@@ -13,7 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import cart.controller.request.ProductCreateRequest;
 import cart.domain.Product;
-import cart.dto.ProductDto;
+import cart.controller.response.ProductResponse;
 import cart.controller.request.ProductUpdateRequest;
 import cart.repository.ProductRepository;
 
@@ -34,12 +34,12 @@ class GeneralProductServiceTest {
 		given(productRepository.findAll()).willReturn(products);
 
 		// when
-		final List<ProductDto> findAll = generalProductService.findAll();
+		final List<ProductResponse> findAll = generalProductService.findAll();
 
 		// then
 		assertThat(findAll)
 			.usingRecursiveComparison()
-			.isEqualTo(List.of(new ProductDto(1L, "KIARA", 1000, "이미지")));
+			.isEqualTo(List.of(new ProductResponse(1L, "KIARA", 1000, "이미지")));
 	}
 
 	@DisplayName("상품 저장 테스트")
@@ -78,7 +78,7 @@ class GeneralProductServiceTest {
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("hyena", 400, "이미지");
-		final ProductDto updateProduct = generalProductService.update(1L, request);
+		final ProductResponse updateProduct = generalProductService.update(1L, request);
 
 		// then
 		assertThat(updateProduct)

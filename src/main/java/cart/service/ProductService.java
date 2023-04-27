@@ -4,11 +4,11 @@ import java.util.List;
 
 import cart.controller.request.ProductCreateRequest;
 import cart.controller.request.ProductUpdateRequest;
-import cart.dto.ProductDto;
+import cart.controller.response.ProductResponse;
 
 public interface ProductService {
-	List<ProductDto> findAll();
+	List<ProductResponse> findAll();
 	long save(final ProductCreateRequest request);
 	long deleteByProductId(final long productId);
-	ProductDto update(final long productId, final ProductUpdateRequest request);
+	ProductResponse update(final long productId, final ProductUpdateRequest request);
 }
