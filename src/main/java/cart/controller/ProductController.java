@@ -32,18 +32,20 @@ public class ProductController {
     public ResponseEntity update(@PathVariable Long id,
         @Valid @RequestBody ProductRequest product) {
         final int updateCount = productDao.updateById(id, product);
-        if (updateCount == 0) {
+        validateChange(updateCount);
+        return ResponseEntity.ok().build();
+    }
+
+    private static void validateChange(int changeColumnCount) {
+        if (changeColumnCount == 0) {
             throw new NoSuchElementException();
         }
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
         final int deleteCount = productDao.deleteById(id);
-        if (deleteCount == 0) {
-            throw new NoSuchElementException();
-        }
+        validateChange(deleteCount);
         return ResponseEntity.ok().build();
     }
 }
