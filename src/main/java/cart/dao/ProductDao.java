@@ -1,6 +1,8 @@
 package cart.dao;
 
 import cart.domain.Product;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -8,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -20,6 +23,17 @@ public class ProductDao {
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+    
+    public Product findById(Long id) {
+        final String sql = "SELECT * FROM PRODUCT WHERE ID=:id";
+        final SqlParameterSource params = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> new Product(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("image_url"),
+                rs.getInt("price")
+        ));
     }
     
     public List<Product> findAll() {
@@ -48,5 +62,10 @@ public class ProductDao {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", id);
         namedParameterJdbcTemplate.update(sql, params);
+    }
+    
+    public void deleteAll(){
+        final String sql = "DELETE FROM PRODUCT";
+        namedParameterJdbcTemplate.update(sql, Collections.emptyMap());
     }
 }

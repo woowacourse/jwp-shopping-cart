@@ -4,6 +4,8 @@ import cart.dto.ProductDto;
 import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,16 +32,19 @@ public class ProductController {
     }
     
     @PostMapping("/product")
+    @ResponseStatus(HttpStatus.CREATED)
     public void createProduct(@RequestBody ProductRequest productRequest) {
         productService.save(productRequest);
     }
 
     @PutMapping("/product/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest){
         productService.update(id, productRequest);
     }
     
     @DeleteMapping("/product/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable Long id) {
         productService.delete(id);
     }

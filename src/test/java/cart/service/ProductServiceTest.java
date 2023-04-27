@@ -3,6 +3,7 @@ package cart.service;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductDto;
+import cart.dto.ProductRequest;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.BDDMockito.given;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -33,5 +35,25 @@ class ProductServiceTest {
         final ProductDto firstProductDto = ProductDto.from(firstProduct);
         final ProductDto secondProductDto = ProductDto.from(secondProduct);
         assertThat(productService.findAll()).containsExactly(firstProductDto, secondProductDto);
+    }
+    
+    @Test
+    void 상품을_저장한다() {
+        final ProductRequest productRequest = new ProductRequest("홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 1_000_000_000);
+        assertThatNoException()
+                .isThrownBy(() -> productService.save(productRequest));
+    }
+    
+    @Test
+    void 상품을_수정한다() {
+        final ProductRequest productRequest = new ProductRequest("홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 1_000_000_000);
+        assertThatNoException()
+                .isThrownBy(() -> productService.update(1L, productRequest));
+    }
+    
+    @Test
+    void 상품을_삭제한다() {
+        assertThatNoException()
+                .isThrownBy(() -> productService.delete(1L));
     }
 }
