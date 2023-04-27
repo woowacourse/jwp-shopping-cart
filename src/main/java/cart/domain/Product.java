@@ -2,14 +2,12 @@ package cart.domain;
 
 import cart.dto.ProductRequest;
 
-import java.math.BigDecimal;
-
 public class Product {
     private final String name;
     private final Image image;
     private final Price price;
 
-    public Product(String name, String image, BigDecimal price) {
+    public Product(String name, String image, long price) {
         validateName(name);
         this.name = name;
         this.image = new Image(image);
@@ -29,7 +27,7 @@ public class Product {
         return new Product(
                 productRequest.getName(),
                 productRequest.getImage(),
-                new BigDecimal(productRequest.getPrice())
+                productRequest.getPrice()
         );
     }
 
@@ -41,7 +39,7 @@ public class Product {
         return image.getUrl();
     }
 
-    public Integer getPrice() {
+    public long getPrice() {
         return price.getValue();
     }
 }

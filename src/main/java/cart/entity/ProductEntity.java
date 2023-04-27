@@ -7,9 +7,9 @@ public class ProductEntity {
     private final Long id;
     private String name;
     private String image;
-    private Integer price;
+    private long price;
 
-    public ProductEntity(Long id, String name, String image, Integer price) {
+    public ProductEntity(Long id, String name, String image, long price) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -34,7 +34,7 @@ public class ProductEntity {
         return image;
     }
 
-    public Integer getPrice() {
+    public long getPrice() {
         return price;
     }
 }

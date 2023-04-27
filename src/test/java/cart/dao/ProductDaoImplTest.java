@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.entity.ProductEntity;
+import cart.fixture.ImageFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,14 +35,14 @@ class ProductDaoImplTest {
 
     @Test
     void 상품이_정상적으로_저장된다() {
-        Product product = new Product("pizza", "url", BigDecimal.valueOf(10000));
+        Product product = new Product("pizza", ImageFixture.url, 10000);
         ProductEntity created = productDao.save(product).orElseGet(() -> null);
         assertThat(created).isNotNull();
     }
 
     @Test
     void 상품_데이터_정합성_검증() {
-        Product product = new Product("pizza", "url", BigDecimal.valueOf(10000));
+        Product product = new Product("pizza", "https://www.naver.com", 10000);
         ProductEntity created = productDao.save(product).orElseGet(() -> null);
 
         Assertions.assertAll(
@@ -73,7 +73,7 @@ class ProductDaoImplTest {
         Optional<ProductEntity> saved = productDao.save(ramyeon);
         ProductEntity product = saved.get();
         Long productId = product.getId();
-        ProductRequest updateRequest = new ProductRequest("expectedUrl", "expected", 1000);
+        ProductRequest updateRequest = new ProductRequest(ImageFixture.url, "expected", 1000);
 
         product.replace(updateRequest);
         productDao.update(product);

@@ -5,6 +5,7 @@ import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.entity.ProductEntity;
+import cart.fixture.ImageFixture;
 import cart.fixture.ProductFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -35,7 +36,7 @@ class ProductServiceTest {
 
     @Test
     void 상품을_저장한다() {
-        ProductRequest productRequest = new ProductRequest("image", "name", 1000);
+        ProductRequest productRequest = new ProductRequest(ImageFixture.url, "name", 1000);
         ProductResponse productResponse = productService.create(productRequest);
 
         org.junit.jupiter.api.Assertions.assertAll(
@@ -50,7 +51,7 @@ class ProductServiceTest {
         @Test
         void 유효하지_않은_상품명() {
             final String invalidProductName = "a".repeat(51);
-            ProductRequest request = new ProductRequest("url", invalidProductName, 1000);
+            ProductRequest request = new ProductRequest(ImageFixture.url, invalidProductName, 1000);
 
             assertThatThrownBy(() -> productService.create(request))
                     .isInstanceOf(IllegalArgumentException.class)
@@ -68,7 +69,7 @@ class ProductServiceTest {
 
         @Test
         void 유효하지_않은_가격() {
-            ProductRequest request = new ProductRequest("image", "name", -1);
+            ProductRequest request = new ProductRequest(ImageFixture.url, "name", -1);
 
             assertThatThrownBy(() -> productService.create(request))
                     .isInstanceOf(IllegalArgumentException.class)
@@ -94,7 +95,7 @@ class ProductServiceTest {
         ProductEntity product = saved.get();
         Long productId = product.getId();
 
-        ProductRequest updateRequest = new ProductRequest("expectedUrl", "expected", 1000);
+        ProductRequest updateRequest = new ProductRequest(ImageFixture.url, "expected", 1000);
 
         ProductResponse updatedResponse = productService.update(updateRequest, productId);
 
@@ -108,7 +109,7 @@ class ProductServiceTest {
     @Test
     void 존재하지_않는_상품정보를_수정하면_예외가_발생한다() {
         Long productId = 1L;
-        ProductRequest updateRequest = new ProductRequest("expectedUrl", "expected", 1000);
+        ProductRequest updateRequest = new ProductRequest(ImageFixture.url, "expected", 1000);
 
 
         assertThatThrownBy(() -> productService.update(updateRequest, productId))
