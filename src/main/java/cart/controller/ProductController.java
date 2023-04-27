@@ -30,7 +30,9 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@RequestBody final ProductRequestDto productRequestDto, @PathVariable final int id) {
+    public ResponseEntity<Void> update(
+            @RequestBody @Valid final ProductRequestDto productRequestDto,
+            @PathVariable final int id) {
         productService.update(productRequestDto, id);
         return ResponseEntity.created(URI.create("/admin")).build();
     }

@@ -43,8 +43,9 @@ public class ProductDao {
     }
 
     public void update(final ProductRequestDto productRequestDto, final int id) {
-        final String sql = "update product set name = ?, image = ?, price = ? where id = ?";
-        jdbcTemplate.update(sql,
+        validId(id);
+        final String updateSql = "update product set name = ?, image = ?, price = ? where id = ?";
+        jdbcTemplate.update(updateSql,
                 productRequestDto.getName(),
                 productRequestDto.getImage(),
                 productRequestDto.getPrice(),
@@ -55,5 +56,10 @@ public class ProductDao {
     public void delete(final int id) {
         final String sql = "delete from product where id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    private void validId(final int id) {
+        final String sql = "select * from product where id = ?";
+        jdbcTemplate.query(sql, (rs, rsnum) -> null, id);
     }
 }
