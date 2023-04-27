@@ -30,7 +30,7 @@ class ProductNameTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     @DisplayName("상품 이름이 빈 경우에는 예외를 발생시킨다")
-    void test_productName_blank_exception(String name){
+    void test_productName_blank_exception(String name) {
         //given, when, then
         assertThatThrownBy(() -> new ProductName(name))
                 .isInstanceOf(IllegalArgumentException.class);

@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 class CreateProductServiceTest {
 
-    private ProductRepository productRepository = new MockProductRepository();
-    private CreateProductService createProductService = new CreateProductService(productRepository);
+    private final ProductRepository productRepository = new MockProductRepository();
+    private final CreateProductService createProductService = new CreateProductService(productRepository);
 
     @Test
     @DisplayName("동일한 상품을 repository에 insert할시 예외를 던진다")

@@ -13,16 +13,16 @@ class ProductPriceTest {
 
     @Test
     @DisplayName("가격이 음수라면 예외를 발생시킨다")
-    void test_productPrice_min_price_exception(){
+    void test_productPrice_min_price_exception() {
         //given, when, then
         assertThatThrownBy(() -> new ProductPrice(-10_000))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 10_000,1_000_000})
+    @ValueSource(ints = {0, 10_000, 1_000_000})
     @DisplayName("가격이 0 혹은 양수여야한다")
-    void test_productPrice(int price){
+    void test_productPrice(int price) {
         //given, when, then
         assertThatCode(() -> new ProductPrice(price))
                 .doesNotThrowAnyException();
@@ -30,7 +30,7 @@ class ProductPriceTest {
 
     @Test
     @DisplayName("가격이 1,000,000 초과라면 예외를 발생시킨다")
-    void test_productPrice_max_price_exception(){
+    void test_productPrice_max_price_exception() {
         //given,when,then
         assertThatThrownBy(() -> new ProductPrice(1_000_001))
                 .isInstanceOf(IllegalArgumentException.class);
