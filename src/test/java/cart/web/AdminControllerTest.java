@@ -1,17 +1,23 @@
 package cart.web;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.domain.product.AdminService;
+import cart.domain.product.CartService;
+import cart.domain.product.TestFixture;
+import cart.domain.product.dto.ProductDto;
 import cart.web.dto.ProductCreateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +35,22 @@ class AdminControllerTest {
     @MockBean
     private AdminService adminService;
 
+    @MockBean
+    private CartService cartService;
+
     @DisplayName("/admin 요청시, admin.html을 반환한다.")
     @Test
     void loadAdminPage() throws Exception {
+        List<ProductDto> expectedProducts = List.of(
+                ProductDto.from(TestFixture.PIZZA),
+                ProductDto.from(TestFixture.CHICKEN)
+        );
+        when(cartService.getAllProducts())
+                .thenReturn(expectedProducts);
+
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())
-//                .andExpect(model().attribute("products", hasSize(2)))
+                .andExpect(model().attribute("products", hasSize(2)))
                 .andExpect(view().name("admin"))
                 .andDo(print());
     }
@@ -46,7 +62,8 @@ class AdminControllerTest {
         int productPrice = 18_000;
         ProductCreateRequest request =
                 new ProductCreateRequest(productName, productPrice, "FOOD", "image.com");
-        when(adminService.save(any())).thenReturn(1L);
+        when(adminService.save(any()))
+                .thenReturn(1L);
 
         mockMvc.perform(post("/admin")
                         .contentType(MediaType.APPLICATION_JSON)
