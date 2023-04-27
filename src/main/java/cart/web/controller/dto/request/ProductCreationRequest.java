@@ -31,14 +31,4 @@ public class ProductCreationRequest {
     public String getImageUrl() {
         return imageUrl;
     }
-
-    @Override
-    public String toString() {
-        return "ProductCreationRequest{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", category='" + category + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
-    }
 }

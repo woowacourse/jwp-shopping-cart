@@ -1,7 +1,6 @@
 package cart.web.controller.dto.request;
 
 public class ProductModificationRequest {
-
     private Long id;
     private String name;
     private Integer price;

@@ -1,6 +1,10 @@
 package cart.domain.product.service;
 
+import cart.domain.product.ImageUrl;
 import cart.domain.product.Product;
+import cart.domain.product.ProductCategory;
+import cart.domain.product.ProductName;
+import cart.domain.product.ProductPrice;
 import cart.domain.product.ProductRepository;
 import cart.domain.product.service.dto.ProductCreationDto;
 import cart.domain.product.service.dto.ProductDto;
@@ -19,7 +23,12 @@ public class AdminService {
 
     @Transactional
     public Long save(ProductCreationDto productDto) {
-        Product product = productDto.toProduct();
+        Product product = new Product(
+                ProductName.from(productDto.getName()),
+                ProductPrice.from(productDto.getPrice()),
+                ProductCategory.valueOf(productDto.getCategory()),
+                ImageUrl.from(productDto.getImageUrl())
+        );
 
         return productRepository.save(product);
     }

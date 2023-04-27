@@ -2,6 +2,7 @@ package cart.domain.product;
 
 public class ProductName {
     private static final int MAX_LENGTH = 20;
+
     private final String name;
 
     private ProductName(String name) {

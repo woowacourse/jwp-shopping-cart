@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductDao {
-
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleInsert;
 

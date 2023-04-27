@@ -32,5 +32,4 @@ public class ViewController {
 
         return "admin";
     }
-
 }

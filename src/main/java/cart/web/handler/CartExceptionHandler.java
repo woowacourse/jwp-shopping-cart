@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class CartExceptionHandler {
-
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleIllegalResourceAccess() {
         return ResponseEntity

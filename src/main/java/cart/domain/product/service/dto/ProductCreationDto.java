@@ -1,11 +1,5 @@
 package cart.domain.product.service.dto;
 
-import cart.domain.product.ImageUrl;
-import cart.domain.product.Product;
-import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductName;
-import cart.domain.product.ProductPrice;
-
 public class ProductCreationDto {
     private final String name;
     private final Integer price;
@@ -17,15 +11,6 @@ public class ProductCreationDto {
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
-    }
-
-    public Product toProduct() {
-        return new Product(
-                ProductName.from(name),
-                ProductPrice.from(price),
-                ProductCategory.valueOf(category),
-                ImageUrl.from(imageUrl)
-        );
     }
 
     public String getName() {
