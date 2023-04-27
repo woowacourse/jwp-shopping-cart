@@ -55,7 +55,6 @@ class ProductControllerUnitTest {
 
     @Test
     void updateProduct() throws Exception {
-        //todo : mockBean인 서비스에 동작을 설정하지 않았는데(save, update),컨트롤러 메서드가 정상동작함
         mockMvc.perform(put("/product")
                         .content(objectMapper.writeValueAsBytes(new Product(2L, "pdpd2", "image2", 15000L)))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -64,7 +63,6 @@ class ProductControllerUnitTest {
 
     @Test
     void deleteProduct() throws Exception {
-        //todo : PathVariable을 어떻게 넣어줄 수 있나요?
         mockMvc.perform(delete("/product/2"))
                 .andExpect(status().isOk());
     }
