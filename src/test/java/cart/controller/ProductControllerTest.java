@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -169,6 +170,7 @@ class ProductControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @DisplayName("상품을 삭제하면 상태코드 204를 반환하는지 확인한다")
     @Test
     void deleteProductsTest() {
