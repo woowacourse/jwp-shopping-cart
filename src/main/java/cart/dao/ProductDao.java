@@ -49,13 +49,21 @@ public class ProductDao {
 
     public void deleteById(Long id) {
         String sql = "delete from product where id = ?";
-        jdbcTemplate.update(sql, id);
+        int count = jdbcTemplate.update(sql, id);
+        hasNoMatchingResult(count);
+    }
+
+    private void hasNoMatchingResult(int count) {
+        if (count == 0) {
+            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
+        }
     }
 
     public void updateById(Long id, Product product) {
         String sql = "update product " +
                 "set name = ? , price = ?, image_url = ? " +
                 "where id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
+        int count = jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
+        hasNoMatchingResult(count);
     }
 }

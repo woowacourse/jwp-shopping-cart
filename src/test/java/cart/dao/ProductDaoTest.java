@@ -46,12 +46,12 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("상품 데이터를 저장한다")
-    void save() {
+    void save_success() {
+        //when
         Long id = productDao.save(PRODUCT_A);
-
-        Product findProduct = findProductById(id);
-
-        assertThat(findProduct).usingRecursiveComparison()
+        //then
+        Product savedProduct = findProductById(id);
+        assertThat(savedProduct).usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(PRODUCT_A);
     }
@@ -63,38 +63,55 @@ class ProductDaoTest {
     @Test
     @DisplayName("저장된 모든 상품 데이터를 가져온다")
     void findAll() {
-        jdbcTemplate.update("delete from product");
+        //given
         productDao.save(PRODUCT_A);
         productDao.save(PRODUCT_B);
-
-        List<Product> findProducts = productDao.findAll();
-
-        assertThat(findProducts.size()).isEqualTo(2);
+        //when
+        List<Product> actual = productDao.findAll();
+        //then
+        assertThat(actual.size()).isEqualTo(2);
     }
 
     @Test
     @DisplayName("상품데이터를 삭제한다.")
-    void delete() {
+    void delete_success() {
+        //given
         Long id = productDao.save(PRODUCT_A);
+        //when
         productDao.deleteById(id);
-
-        assertThatThrownBy(
-                () -> findProductById(id)).isInstanceOf(EmptyResultDataAccessException.class);
+        //then
+        assertThatThrownBy(() -> findProductById(id)).isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @Test
-    @DisplayName("상품데이터를 수정한다.")
-    void update() {
+    @DisplayName("존재하지 않는 id의 상품 데이터를 삭제시 예외를 반환한다.")
+    void delete_fail_by_wrong_id() {
+        //when && then
+        assertThatThrownBy(() -> productDao.deleteById(9999L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 상품입니다.");
+    }
+
+    @Test
+    @DisplayName("상품 데이터를 업데이트한다.")
+    void update_success() {
+        //given
         Long id = productDao.save(PRODUCT_A);
+        //when
         productDao.updateById(id, PRODUCT_B);
+        //then
+        Product actual = findProductById(id);
+        assertThat(actual).usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(PRODUCT_B);
+    }
 
-        Product findProduct = findProductById(id);
-
-        assertAll(
-                () -> assertThat(findProduct).usingRecursiveComparison()
-                        .ignoringFields("id")
-                        .isEqualTo(PRODUCT_B),
-
-                () -> assertThat(findProduct.getId()).isEqualTo(id));
+    @Test
+    @DisplayName("존재하지 않는 id의 상품 데이터를 업데이트시 예외를 반환한다.")
+    void update_fail_by_wrong_id() {
+        //when && then
+        assertThatThrownBy(() -> productDao.updateById(9999L, PRODUCT_A))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 상품입니다.");
     }
 }
