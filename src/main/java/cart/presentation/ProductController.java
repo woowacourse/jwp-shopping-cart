@@ -45,7 +45,7 @@ public class ProductController {
 
     @PostMapping(path = "/create")
     public void productCreate(@RequestBody ProductDto request) throws MalformedURLException {
-        Product product = makeProductFromDto(request);
+        Product product = makeProductFromDtoWithoutId(request);
         createProductService.perform(product);
     }
 
@@ -63,20 +63,29 @@ public class ProductController {
     }
 
     @PostMapping(path = "/update")
-    public void productUpdate(ProductDto request) throws MalformedURLException {
-        Product product = makeProductFromDto(request);
+    public void productUpdate(@RequestBody ProductDto request) throws MalformedURLException {
+        Product product = makeProductFromDtoWithId(request);
         updateProductService.perform(product);
     }
 
     @DeleteMapping(path = "/delete")
     public void productDelete(@RequestBody ProductDto request) throws MalformedURLException {
-        Product product = makeProductFromDto(request);
+        Product product = makeProductFromDtoWithId(request);
         deleteProductService.perform(product);
     }
 
-    private Product makeProductFromDto(ProductDto request) throws MalformedURLException {
+    private Product makeProductFromDtoWithoutId(ProductDto request) throws MalformedURLException {
         return new Product(
                 null,
+                new ProductName(request.getName()),
+                new ProductImage(request.getUrl()),
+                new ProductPrice(request.getPrice())
+        );
+    }
+
+    private Product makeProductFromDtoWithId(ProductDto request) throws MalformedURLException {
+        return new Product(
+                request.getId(),
                 new ProductName(request.getName()),
                 new ProductImage(request.getUrl()),
                 new ProductPrice(request.getPrice())
