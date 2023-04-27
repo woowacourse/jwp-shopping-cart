@@ -14,6 +14,12 @@ public final class ExceptionAdvice {
 
     private static final Logger logger = LoggerFactory.getLogger(ExceptionAdvice.class);
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleException(final Exception exception) {
+        logger.error(exception.getMessage());
+        return ResponseEntity.internalServerError().body(new ErrorResponseDto("알 수 없는 서버 예외가 발생하였습니다."));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDto> handleException(final IllegalArgumentException exception) {
         logger.error(exception.getMessage());
