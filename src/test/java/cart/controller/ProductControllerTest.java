@@ -68,12 +68,12 @@ class ProductControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("상품을 등록할 때 잘못된 범위의 가격이 들어오면 상태코드 400을 반환하는지 확인한다")
+    @DisplayName("상품을 등록할 때 잘못된 형식의 이미지 경로가 들어오면 상태코드 400을 반환하는지 확인한다")
     @ParameterizedTest
-    @ValueSource(ints = {0, 10_000_001})
-    void throwExceptionWhenInvalidPricePostProductsTest(final Integer priceInput) {
+    @ValueSource(strings = {" ", "test", "test:."})
+    void throwExceptionWhenInvalidPricePostProductsTest(final String imageInput) {
         final ProductCreationRequest request
-                = new ProductCreationRequest(dummyName, dummyImage, priceInput);
+                = new ProductCreationRequest(dummyName, imageInput, dummyPrice);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -83,12 +83,12 @@ class ProductControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("상품을 등록할 때 잘못된 형식의 이미지 경로가 들어오면 상태코드 400을 반환하는지 확인한다")
+    @DisplayName("상품을 등록할 때 잘못된 범위의 가격이 들어오면 상태코드 400을 반환하는지 확인한다")
     @ParameterizedTest
-    @ValueSource(strings = {" ", "test", "test:."})
-    void throwExceptionWhenInvalidPricePostProductsTest(final String imageInput) {
+    @ValueSource(ints = {0, 10_000_001})
+    void throwExceptionWhenInvalidPricePostProductsTest(final Integer priceInput) {
         final ProductCreationRequest request
-                = new ProductCreationRequest(dummyName, imageInput, dummyPrice);
+                = new ProductCreationRequest(dummyName, dummyImage, priceInput);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -127,12 +127,12 @@ class ProductControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("상품을 수정할 때 잘못된 범위의 가격이 들어오면 상태코드 400을 반환하는지 확인한다")
+    @DisplayName("상품을 수정할 때 잘못된 형식의 이미지 경로가 들어오면 상태코드 400을 반환하는지 확인한다")
     @ParameterizedTest
-    @ValueSource(ints = {0, 10_000_001})
-    void throwExceptionWhenInvalidPricePutProductsTest(final int priceInput) {
+    @ValueSource(strings = {" ", "test", "test:."})
+    void throwExceptionWhenInvalidPricePutProductsTest(final String imageInput) {
         final ProductModificationRequest request
-                = new ProductModificationRequest(dummyId, dummyName, dummyImage, priceInput);
+                = new ProductModificationRequest(dummyId, dummyName, imageInput, dummyPrice);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -142,12 +142,12 @@ class ProductControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("상품을 수정할 때 잘못된 형식의 이미지 경로가 들어오면 상태코드 400을 반환하는지 확인한다")
+    @DisplayName("상품을 수정할 때 잘못된 범위의 가격이 들어오면 상태코드 400을 반환하는지 확인한다")
     @ParameterizedTest
-    @ValueSource(strings = {" ", "test", "test:."})
-    void throwExceptionWhenInvalidPricePutProductsTest(final String imageInput) {
+    @ValueSource(ints = {0, 10_000_001})
+    void throwExceptionWhenInvalidPricePutProductsTest(final int priceInput) {
         final ProductModificationRequest request
-                = new ProductModificationRequest(dummyId, dummyName, imageInput, dummyPrice);
+                = new ProductModificationRequest(dummyId, dummyName, dummyImage, priceInput);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
