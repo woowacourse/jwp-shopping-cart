@@ -6,11 +6,14 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.product.AdminService;
-import cart.web.dto.ProductCreateRequest;
+import cart.domain.product.dto.ProductDto;
+import cart.web.dto.request.ProductCreationRequest;
+import cart.web.dto.request.ProductModificationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,8 +37,8 @@ class AdminRestControllerTest {
     void postProduct() throws Exception {
         String productName = "ProductA";
         int productPrice = 18_000;
-        ProductCreateRequest request =
-                new ProductCreateRequest(productName, productPrice, "FOOD", "image.com");
+        ProductCreationRequest request =
+                new ProductCreationRequest(productName, productPrice, "FOOD", "image.com");
         when(adminService.save(any()))
                 .thenReturn(1L);
 
@@ -55,5 +58,21 @@ class AdminRestControllerTest {
         mockMvc.perform(delete("/admin/{deletedId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.deletedId").value(1L));
+    }
+
+    @DisplayName("Product를 수정할 수 있다.")
+    @Test
+    void updateProduct() throws Exception {
+        ProductModificationRequest request =
+                new ProductModificationRequest(1L, "Chicken", 18_000, "FOOD", "image.com");
+        ProductDto response =
+                new ProductDto(1L, "Chicken", 18_000, "FOOD", "image.com");
+        when(adminService.update(any())).thenReturn(response);
+
+        mockMvc.perform(put("/admin")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsBytes(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Chicken"));
     }
 }

@@ -1,4 +1,4 @@
-package cart.web.dto;
+package cart.web.dto.response;
 
 public class ProductDeleteResponse {
     private Long deletedId;

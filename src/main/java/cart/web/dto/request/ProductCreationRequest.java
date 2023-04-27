@@ -1,15 +1,15 @@
-package cart.web.dto;
+package cart.web.dto.request;
 
-public class ProductCreateRequest {
+public class ProductCreationRequest {
     private String name;
     private Integer price;
     private String category;
     private String imageUrl;
 
-    public ProductCreateRequest() {
+    public ProductCreationRequest() {
     }
 
-    public ProductCreateRequest(String name, Integer price, String category, String imageUrl) {
+    public ProductCreationRequest(String name, Integer price, String category, String imageUrl) {
         this.name = name;
         this.price = price;
         this.category = category;
@@ -34,7 +34,7 @@ public class ProductCreateRequest {
 
     @Override
     public String toString() {
-        return "ProductCreateRequest{" +
+        return "ProductCreationRequest{" +
                 "name='" + name + '\'' +
                 ", price=" + price +
                 ", category='" + category + '\'' +

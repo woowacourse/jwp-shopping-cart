@@ -100,11 +100,10 @@ class ProductDaoTest {
 
         List<ProductEntity> allProducts = productDao.findAll();
         assertThat(allProducts).hasSize(1);
-        ProductEntity savedProduct = allProducts.get(0);
-        assertThat(savedProduct.getId()).isEqualTo(savedId);
-        assertThat(savedProduct.getName()).isEqualTo("Chicken");
-        assertThat(savedProduct.getPrice()).isEqualTo(20_000);
-        assertThat(savedProduct.getCategory()).isEqualTo("FOOD");
-        assertThat(savedProduct.getImageUrl()).isEqualTo("chicken.com");
+        assertThat(allProducts.get(0).getId()).isEqualTo(savedId);
+        assertThat(allProducts.get(0).getName()).isEqualTo("Chicken");
+        assertThat(allProducts.get(0).getPrice()).isEqualTo(20_000);
+        assertThat(allProducts.get(0).getCategory()).isEqualTo("FOOD");
+        assertThat(allProducts.get(0).getImageUrl()).isEqualTo("chicken.com");
     }
 }

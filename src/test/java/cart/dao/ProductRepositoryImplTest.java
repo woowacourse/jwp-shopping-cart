@@ -72,14 +72,14 @@ class ProductRepositoryImplTest {
     @Test
     void update() {
         Product pizza = TestFixture.PIZZA;
-        productRepository.save(pizza);
+        Long savedId = productRepository.save(pizza);
 
         Product updatedProduct = new Product(
                 ProductName.from("Chicken"),
                 ProductPrice.from(20_000),
                 ProductCategory.FOOD,
                 ImageUrl.from("chicken.com"),
-                pizza.getProductId()
+                savedId
         );
 
         productRepository.update(updatedProduct);
@@ -87,7 +87,7 @@ class ProductRepositoryImplTest {
         List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(1);
         Product savedProduct = allProducts.get(0);
-        assertThat(savedProduct.getProductId()).isEqualTo(pizza.getProductId());
+        assertThat(savedProduct.getProductId()).isEqualTo(savedId);
         assertThat(savedProduct.getName()).isEqualTo("Chicken");
         assertThat(savedProduct.getPrice()).isEqualTo(BigDecimal.valueOf(20_000));
         assertThat(savedProduct.getCategory()).isEqualTo(ProductCategory.FOOD);

@@ -56,9 +56,9 @@ class AdminServiceTest {
     @Test
     void updateProduct() {
         Product pizza = TestFixture.PIZZA;
-        productRepository.save(pizza);
+        Long savedId = productRepository.save(pizza);
         ProductModificationDto updatedProduct = new ProductModificationDto(
-                pizza.getProductId(),
+                savedId,
                 "Chicken",
                 20_000,
                 "FOOD",
@@ -70,7 +70,7 @@ class AdminServiceTest {
         List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(1);
         Product savedProduct = allProducts.get(0);
-        assertThat(savedProduct.getProductId()).isEqualTo(pizza.getProductId());
+        assertThat(savedProduct.getProductId()).isEqualTo(savedId);
         assertThat(savedProduct.getName()).isEqualTo("Chicken");
         assertThat(savedProduct.getPrice()).isEqualTo(BigDecimal.valueOf(20_000));
         assertThat(savedProduct.getCategory()).isEqualTo(ProductCategory.FOOD);
