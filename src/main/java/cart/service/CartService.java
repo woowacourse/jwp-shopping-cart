@@ -53,6 +53,7 @@ public class CartService {
         }
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
         validateExistence(id);
 
