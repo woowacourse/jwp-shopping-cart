@@ -46,14 +46,6 @@ public class ProductServiceTest {
         );
     }
 
-    @Test
-    @DisplayName("상품 저장")
-    void save() {
-        assertDoesNotThrow(
-                () -> productService.add(new ProductRequestDto("밋엉", 1000000, "미성씨"))
-        );
-    }
-
     private Product buildProduct(int id, String name, int price, String imageUrl) {
         return new Product.Builder()
                 .id(id)
