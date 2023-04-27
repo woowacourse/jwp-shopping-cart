@@ -2,20 +2,18 @@ package cart.controller;
 
 import cart.controller.dto.ProductRequest;
 import cart.dao.ProductDao;
-import cart.domain.Product;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
@@ -29,54 +27,79 @@ class ProductControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @DisplayName("/admin/products으로 POST 요청을 했을 때 admin template을 반환한다.")
+    @DisplayName("/products으로 POST 요청이 정상적으로 작동한다.")
     @Test
     void createProduct() throws Exception {
         // given
         ProductRequest productRequest = new ProductRequest("치킨", "image.url", 10000);
 
         // when, then
-        mockMvc.perform(post("/admin/products")
+        mockMvc.perform(post("/products")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(productRequest)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin"));
+                .andExpect(status().isOk());
     }
 
-    @DisplayName("/admin으로 GET 요청을 했을 때 admin template을 반환한다.")
-    @Test
-    void findAllProducts() throws Exception {
-        // given
-        Product product = new Product(1, "치킨", "image.img", 10000);
-        given(productDao.findAll()).willReturn(List.of(product));
-
-        // when, then
-        mockMvc.perform(get("/admin"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("products", List.of(product)))
-                .andExpect(view().name("admin"));
-    }
-
-    @DisplayName("/admin/products/{productId}으로 PUT 요청을 했을 때 admin template을 반환한다.")
+    @DisplayName("/products/{productId}으로 PUT 요청이 정상적으로 작동한다.")
     @Test
     void modifyProduct() throws Exception {
         // given
         ProductRequest productRequest = new ProductRequest("치킨", "image.url", 10000);
 
         // when, then
-        mockMvc.perform(put("/admin/products/{productId}", "1")
+        mockMvc.perform(put("/products/{productId}", "1")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(productRequest)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin"));
+                .andExpect(status().isOk());
     }
 
-    @DisplayName("/admin/products/{productId}으로 DELETE 요청을 했을 때 admin template을 반환한다.")
+    @DisplayName("/products/{productId}으로 DELETE 요청이 정상적으로 작동한다.")
     @Test
     void removeProduct() throws Exception {
         // when, then
-        mockMvc.perform(delete("/admin/products/{productId}", "1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin"));
+        mockMvc.perform(delete("/products/{productId}", "1"))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("API요청 시 이름이 공백이 들어온 경우 400")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "  ", "     "})
+    void validateRequestName(String inputName) throws Exception {
+        // given
+        ProductRequest productRequest = new ProductRequest(inputName, "image.url", 10000);
+
+        // when, then
+        mockMvc.perform(post("/products")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("API요청 시 상품 가격이 범위를 벗어난 경우 400")
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 100_000_001})
+    void validateRequestPrice(int inputPrice) throws Exception {
+        // given
+        ProductRequest productRequest = new ProductRequest("치킨", "image.url", inputPrice);
+
+        // when, then
+        mockMvc.perform(post("/products")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("API요청 시 이미지URL에 공백이 들어온 경우 400")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "  ", "     "})
+    void validateRequestImageUrl(String inputImageUrl) throws Exception {
+        // given
+        ProductRequest productRequest = new ProductRequest("치킨", inputImageUrl, 10000);
+
+        // when, then
+        mockMvc.perform(post("/products")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isBadRequest());
     }
 }
