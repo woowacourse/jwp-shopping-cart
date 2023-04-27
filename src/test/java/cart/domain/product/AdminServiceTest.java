@@ -3,6 +3,8 @@ package cart.domain.product;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.product.dto.ProductCreationDto;
+import cart.domain.product.dto.ProductModificationDto;
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,5 +50,30 @@ class AdminServiceTest {
 
         List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(0);
+    }
+
+    @DisplayName("상품 수정 테스트")
+    @Test
+    void updateProduct() {
+        Product pizza = TestFixture.PIZZA;
+        productRepository.save(pizza);
+        ProductModificationDto updatedProduct = new ProductModificationDto(
+                pizza.getProductId(),
+                "Chicken",
+                20_000,
+                "FOOD",
+                "chicken.com"
+        );
+
+        adminService.update(updatedProduct);
+
+        List<Product> allProducts = productRepository.findAll();
+        assertThat(allProducts).hasSize(1);
+        Product savedProduct = allProducts.get(0);
+        assertThat(savedProduct.getProductId()).isEqualTo(pizza.getProductId());
+        assertThat(savedProduct.getName()).isEqualTo("Chicken");
+        assertThat(savedProduct.getPrice()).isEqualTo(BigDecimal.valueOf(20_000));
+        assertThat(savedProduct.getCategory()).isEqualTo(ProductCategory.FOOD);
+        assertThat(savedProduct.getImageUrl()).isEqualTo("chicken.com");
     }
 }

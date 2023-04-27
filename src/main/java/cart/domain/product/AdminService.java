@@ -1,6 +1,8 @@
 package cart.domain.product;
 
 import cart.domain.product.dto.ProductCreationDto;
+import cart.domain.product.dto.ProductDto;
+import cart.domain.product.dto.ProductModificationDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,5 +25,13 @@ public class AdminService {
     @Transactional
     public void delete(Long id) {
         productRepository.deleteById(id);
+    }
+
+    @Transactional
+    public ProductDto update(ProductModificationDto productDto) {
+        Product product = productDto.toProduct();
+        productRepository.update(product);
+
+        return ProductDto.from(product);
     }
 }
