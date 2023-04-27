@@ -5,13 +5,13 @@ import javax.validation.constraints.Positive;
 
 public class ProductRegisterRequest {
 
-    @NotBlank
+    @NotBlank(message = "상품의 이름은 공백일 수 없습니다.")
     private String name;
 
-    @Positive
+    @Positive(message = "상품의 가격은 0보다 커야 합니다.")
     private int price;
 
-    @NotBlank
+    @NotBlank(message = "이미지 url은 공백일 수 없습니다.")
     private String imageUrl;
 
     private ProductRegisterRequest() {
