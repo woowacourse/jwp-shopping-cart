@@ -89,7 +89,7 @@ class JwpCartApplicationTests {
                 .then().log().all()
                 .contentType(ContentType.JSON)
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("response", is("일치하는 상품을 찾을 수 없습니다."));
+                .body("message", is("일치하는 상품을 찾을 수 없습니다."));
     }
 
     @Test
@@ -106,7 +106,7 @@ class JwpCartApplicationTests {
                 .then().log().all()
                 .contentType(ContentType.JSON)
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("response", is("일치하는 상품을 찾을 수 없습니다."));
+                .body("message", is("일치하는 상품을 찾을 수 없습니다."));
     }
 
     @Test
