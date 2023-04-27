@@ -17,8 +17,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AdminCartController.class)
-class AdminCartControllerTest {
+@WebMvcTest(ProductController.class)
+class ProductControllerTest {
 
     @MockBean
     private ProductDao productDao;

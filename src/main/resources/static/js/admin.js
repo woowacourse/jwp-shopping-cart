@@ -45,17 +45,10 @@ form.addEventListener('submit', (event) => {
 });
 
 const createProduct = (product) => {
-    const {name, price, imageUrl} = product;
-
     axios.request({
-        url: '/admin/products',
+        url: '/products',
         method: 'post',
-        data:
-            {
-                name,
-                price,
-                imageUrl
-            },
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -64,17 +57,12 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
-    const {id, name, price, imageUrl} = product;
+    const {id} = product;
 
     axios.request({
-        url: '/admin/products/' + id,
+        url: '/products/' + id,
         method: 'put',
-        data:
-            {
-                name,
-                price,
-                imageUrl
-            },
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -84,7 +72,7 @@ const updateProduct = (product) => {
 
 const deleteProduct = (id) => {
     axios.request({
-        url: '/admin/products/' + id,
+        url: '/products/' + id,
         method: 'delete'
     }).then((response) => {
         window.location.reload();
