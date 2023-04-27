@@ -30,7 +30,7 @@ public class AdminController {
         this.cartService = cartService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public String admin(Model model) {
         List<ProductResponse> productsResponse = cartService.readAll();
         model.addAttribute("products", productsResponse);
