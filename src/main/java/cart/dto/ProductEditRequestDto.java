@@ -20,7 +20,7 @@ public class ProductEditRequestDto {
 
     }
 
-    public ProductEditRequestDto(String name, int price, String imgUrl) {
+    public ProductEditRequestDto(final String name, final int price, final String imgUrl) {
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;

@@ -19,7 +19,7 @@ public class ProductCreateRequestDto {
     public ProductCreateRequestDto() {
     }
 
-    public ProductCreateRequestDto(String name, Integer price, String imgUrl) {
+    public ProductCreateRequestDto(final String name, final Integer price, final String imgUrl) {
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;
