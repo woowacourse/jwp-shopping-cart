@@ -17,6 +17,15 @@ public class ExceptionController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> handleGlobalException(final Exception exception) {
+        log.error(exception.getMessage());
+
+        final ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleValidationException(final MethodArgumentNotValidException exception) {
         log.error(exception.getMessage());
