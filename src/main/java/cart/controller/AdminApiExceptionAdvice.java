@@ -11,6 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import cart.persistence.entity.ProductEntityMappingException;
+
 @ControllerAdvice
 public class AdminApiExceptionAdvice {
 
@@ -18,12 +20,16 @@ public class AdminApiExceptionAdvice {
 
     @ExceptionHandler
     public ResponseEntity<String> handleDataBindException(final MethodArgumentNotValidException exception) {
-        logger.error("MethodArgumentNotValidException: " + exception.getMessage());
         final List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         final String errorMessage = fieldErrors.stream()
             .map(FieldError::getDefaultMessage)
             .collect(Collectors.joining("\n"));
         return ResponseEntity.badRequest().body(errorMessage);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleEntityMappingException(final ProductEntityMappingException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
     @ExceptionHandler
