@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
+    private static final String DOES_NOT_FIND_PRODUCT = "상품을 찾을 수 없습니다.";
     private final ProductDao productDao;
 
     public ProductService(ProductDao productDao) {
@@ -36,18 +37,14 @@ public class ProductService {
     }
 
     public void delete(final Long id) {
-        if (doesNotExist(id)) {
-            throw new NoSuchElementException("상품을 찾을 수 없습니다.");
-        }
+        validateProduct(id);
 
         productDao.delete(id);
     }
 
-    private boolean doesNotExist(final Long id) {
-        return !productDao.existBy(id);
-    }
-
     public void update(final Long id, final ProductRequest request) {
+        validateProduct(id);
+
         productDao.update(id, createProduct(request));
     }
 
@@ -57,5 +54,15 @@ public class ProductService {
                 productRequest.getPrice(),
                 productRequest.getImgUrl()
         );
+    }
+
+    private void validateProduct(final Long id) {
+        if (doesNotExist(id)) {
+            throw new NoSuchElementException(DOES_NOT_FIND_PRODUCT);
+        }
+    }
+
+    private boolean doesNotExist(final Long id) {
+        return !productDao.existBy(id);
     }
 }
