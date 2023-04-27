@@ -27,9 +27,8 @@ public class ProductDaoTest {
     }
 
     @Test
-    @DisplayName("모든 Product 조회")
+    @DisplayName("모든 상품 조회")
     void selectAll() {
-        System.out.println("product");
         List<Product> products = productDao.selectAll();
 
         assertThat(products.size()).isEqualTo(3);
@@ -38,7 +37,6 @@ public class ProductDaoTest {
     @Test
     @DisplayName("상품 저장")
     void save() {
-        System.out.println("roll");
         assertDoesNotThrow(
                 () -> productDao.save(
                         new Product.Builder()
@@ -53,7 +51,6 @@ public class ProductDaoTest {
     @Test
     @DisplayName("상품 삭제")
     void deleteById() {
-        System.out.println("abc");
         assertDoesNotThrow(
                 () -> productDao.deleteById(1)
         );
