@@ -34,6 +34,7 @@ public class GeneralProductService implements ProductService {
 		return productRepository.save(request);
 	}
 
+	@Transactional
 	@Override
 	public long deleteByProductId(final long productId) {
 		final boolean isDelete = productRepository.deleteByProductId(productId) == productId;
@@ -45,6 +46,7 @@ public class GeneralProductService implements ProductService {
 		return productId;
 	}
 
+	@Transactional
 	@Override
 	public ProductDto update(final long productId, final ProductUpdateRequest request) {
 		final Product product = productRepository.update(productId, request);
