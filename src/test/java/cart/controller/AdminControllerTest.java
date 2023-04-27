@@ -4,8 +4,8 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
-import cart.dto.RequestCreateProductDto;
-import cart.dto.RequestUpdateProductDto;
+import cart.dto.request.RequestCreateProductDto;
+import cart.dto.request.RequestUpdateProductDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
