@@ -40,3 +40,4 @@
 4. Test Class에 WebMvcTest를 붙인 이유는 실제 서버를 구동하지 않고 테스트를 작성하기 위함인데, 언제 사용하는게 적절할지?
 5. Service를 CRUD마다 쪼개면 SRP를 쉽게 지킬 수 있다. 쪼갰을 때 응집도가 Product 기준에서는 낮아지지만, CRUD관점에서는 높아지는 느낌이다. 어느 것을 선택할까?
 6. Product 객체에 ID를 처음에는 넣지 않으려다가, 결국 넣게 되었는데 ID를 사용하지 않고 구현하는 방법이 있는가?
+7. WebController, ProductController를 나눈 이유는 CRUD용 컨트롤러랑 뷰용 컨트롤러가 성격이 다르다고 느껴졌기 때문.
