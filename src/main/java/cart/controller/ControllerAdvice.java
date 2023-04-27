@@ -4,14 +4,13 @@ import cart.controller.dto.ExceptionResponse;
 import cart.exception.ItemException;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -20,9 +19,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ControllerAdvice extends ResponseEntityExceptionHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerAdvice.class);
-    private static final String INTERNAL_ERROR_MESSAGE = "예상치 못한 예외가 발생했습니다.";
-    private static final String NOT_READABLE_MESSAGE = "입력 타입을 확인하세요.";
+    private static final String INTERNAL_ERROR_MESSAGE = "서버에서 예상치 못한 문제가 발생했습니다.";
+    private static final String NOT_READABLE_MESSAGE = "잘못된 입력입니다. 입력을 확인하세요.";
+    private static final String PATH_VARIABLE_ERROR_MESSAGE = "요청 URI 형식이 잘못되었습니다.";
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -33,7 +32,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
 
         fieldErrors.values()
-                .forEach(LOGGER::warn);
+                .forEach(logger::warn);
 
         return ResponseEntity.badRequest().body(new ExceptionResponse<>(fieldErrors));
     }
@@ -42,19 +41,26 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
-        LOGGER.warn(ex.getMessage());
+        logger.warn(ex.getMessage());
         return ResponseEntity.badRequest().body(new ExceptionResponse<>(NOT_READABLE_MESSAGE));
     }
 
+    @Override
+    protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers,
+                                                               HttpStatus status, WebRequest request) {
+        logger.warn(ex.getMessage());
+        return ResponseEntity.badRequest().body(new ExceptionResponse<>(PATH_VARIABLE_ERROR_MESSAGE));
+    }
+
     @ExceptionHandler(ItemException.class)
-    private ResponseEntity<ExceptionResponse> handleItemException(ItemException ex) {
-        LOGGER.warn(ex.getMessage());
+    private ResponseEntity<ExceptionResponse<String>> handleItemException(ItemException ex) {
+        logger.warn(ex.getMessage());
         return ResponseEntity.status(ex.getErrorStatus()).body(new ExceptionResponse<>(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    private ResponseEntity<ExceptionResponse> handleException(Exception ex) {
-        LOGGER.warn(ex.getMessage());
+    private ResponseEntity<ExceptionResponse<String>> handleException(Exception ex) {
+        logger.warn(ex.getMessage());
         ex.printStackTrace();
         return ResponseEntity.internalServerError().body(new ExceptionResponse<>(INTERNAL_ERROR_MESSAGE));
     }
