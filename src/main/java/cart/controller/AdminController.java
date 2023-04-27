@@ -3,7 +3,6 @@ package cart.controller;
 import cart.controller.dto.ModifyRequest;
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +23,7 @@ public class AdminController {
 
     private final ProductDao productDao;
 
-    public AdminController(ProductDao productDao) {
+    public AdminController(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
@@ -39,7 +38,7 @@ public class AdminController {
                 modifyRequest.getImageUrl()
         );
         productDao.save(product);
-        response.setStatus(HttpStatus.CREATED.value());
+        response.setStatus(HttpServletResponse.SC_CREATED);
         return "admin";
     }
 
@@ -53,7 +52,7 @@ public class AdminController {
     @PutMapping("/product/{id}")
     public String updateProduct(
             @Valid @RequestBody final ModifyRequest modifyRequest,
-            @PathVariable Long id,
+            @PathVariable final Long id,
             final HttpServletResponse response
     ) {
         final Product product = Product.create(
@@ -68,7 +67,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/product/{id}")
-    public String deleteProduct(@PathVariable Long id) {
+    public String deleteProduct(@PathVariable final Long id) {
         productDao.deleteById(id);
         return "admin";
     }
