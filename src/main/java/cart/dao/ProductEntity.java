@@ -2,7 +2,7 @@ package cart.dao;
 
 public class ProductEntity {
 
-    private int id;
+    private Integer id;
     private String name;
     private String image;
     private int price;
