@@ -23,6 +23,7 @@ public class ProductRequest {
             final int price,
             final String imageUrl
     ) {
+        validatePrice(price);
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

@@ -33,9 +33,7 @@ public class AdminController {
 
     @PostMapping
     public void createProduct(@RequestBody @Valid final ProductCreateRequest request) {
-        System.out.println("execute1");
         productService.create(request);
-        System.out.println("execute2");
     }
 
     @PutMapping("{id}")
