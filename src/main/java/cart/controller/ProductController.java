@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 
 @Controller
 @RequestMapping("/products")
@@ -20,22 +21,28 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@Valid @RequestBody final ProductRequest productRequest) {
-        productDao.save(productRequest);
+        Long productId = productDao.save(productRequest);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity
+                .created(URI.create("/products/" + productId))
+                .build();
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Void> modifyProduct(@PathVariable final Long productId, @Valid @RequestBody final ProductRequest productRequest) {
-        productDao.updateById(productId, productRequest);
+    public ResponseEntity<Integer> modifyProduct(@PathVariable final Long productId, @Valid @RequestBody final ProductRequest productRequest) {
+        int updatedCount = productDao.updateById(productId, productRequest);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity
+                .ok()
+                .body(updatedCount);
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> removeProduct(@PathVariable final Long productId) {
         productDao.deleteById(productId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
