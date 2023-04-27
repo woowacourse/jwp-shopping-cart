@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,12 +73,16 @@ class AdminControllerTest {
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "/admin/1"));
     }
 
     @Test
     void addProduct_fail() throws Exception {
+        // given
         final ProductDto productDto = new ProductDto(1L, "", "", null, null);
+
+        // when, then
         mockMvc.perform(post("/admin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))
@@ -110,7 +115,10 @@ class AdminControllerTest {
 
     @Test
     void updateProduct_fail() throws Exception {
+        // given
         final ProductDto productDto = new ProductDto(1L, "", "", null, null);
+
+        // when, then
         mockMvc.perform(put("/admin/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))

@@ -38,8 +38,10 @@ public class ProductIntegrationTest {
     @DisplayName("상품 상세 페이지 - 단일 상품을 조회한다")
     @Test
     void shoppingController_getProduct() {
+        // given
         final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
 
+        // when
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -48,6 +50,7 @@ public class ProductIntegrationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
+        // then
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -70,8 +73,10 @@ public class ProductIntegrationTest {
     @DisplayName("관리자 상품 추가 모달 - 상품을 추가한다")
     @Test
     void adminController_addProduct() {
+        // given
         final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
 
+        // when, then
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -84,8 +89,10 @@ public class ProductIntegrationTest {
     @DisplayName("관리자 상품 수정 모달 - 상품을 수정한다")
     @Test
     void adminController_updateProduct() {
+        // given
         final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
 
+        // when
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -94,6 +101,7 @@ public class ProductIntegrationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
+        // then
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -106,8 +114,10 @@ public class ProductIntegrationTest {
     @DisplayName("관리자 상품 삭제 모달 - 상품을 삭제한다")
     @Test
     void adminController_deleteProduct() {
+        // given
         final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
 
+        // when
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -116,6 +126,7 @@ public class ProductIntegrationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
+        // then
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
