@@ -4,7 +4,7 @@ import cart.global.exception.ExceptionStatus;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ErrorResponse extends ExceptionResponse {
+public class ErrorResponse extends Response {
 
     private final Map<String, String> validation = new HashMap<>();
 
