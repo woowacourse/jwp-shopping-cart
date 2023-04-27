@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.exception.GlobalException;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.Product;
 import cart.persistence.entity.ProductCategory;
@@ -12,9 +11,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
@@ -42,20 +41,14 @@ class ProductDaoTest {
         final Long productId = productDao.insert(product);
 
         // when
-        final Product findProduct = productDao.findById(productId);
+        final Optional<Product> product = productDao.findById(productId);
+        final Product findProduct = product.get();
 
         // then
         assertAll(() -> assertThat(findProduct.getName()).isEqualTo("치킨"),
                 () -> assertThat(findProduct.getPrice()).isEqualTo(20000),
                 () -> assertThat(findProduct.getImageUrl()).isEqualTo(IMAGE_URL),
                 () -> assertThat(findProduct.getCategory()).isEqualTo(ProductCategory.KOREAN));
-    }
-
-    @DisplayName("존재하지 않는 상품을 조회하면 예외가 발생한다.")
-    @Test
-    void findById_fail() {
-        assertThatThrownBy(() -> productDao.findById(1L))
-                .isInstanceOf(GlobalException.class);
     }
 
     @DisplayName("상품을 저장한다.")
@@ -65,7 +58,8 @@ class ProductDaoTest {
         final Long productId = productDao.insert(product);
 
         // then
-        final Product findProduct = productDao.findById(productId);
+        final Optional<Product> product = productDao.findById(productId);
+        final Product findProduct = product.get();
         assertAll(() -> assertThat(findProduct.getName()).isEqualTo("치킨"),
                 () -> assertThat(findProduct.getPrice()).isEqualTo(20000),
                 () -> assertThat(findProduct.getImageUrl()).isEqualTo(IMAGE_URL),
@@ -99,7 +93,8 @@ class ProductDaoTest {
         int updatedCount = productDao.update(updateProduct);
 
         // then
-        final Product findProduct = productDao.findById(productId);
+        final Optional<Product> product = productDao.findById(productId);
+        final Product findProduct = product.get();
         assertAll(
                 () -> assertThat(updatedCount).isEqualTo(1),
                 () -> assertThat(findProduct.getName()).isEqualTo("탕수육"),

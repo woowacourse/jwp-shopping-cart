@@ -1,7 +1,5 @@
 package cart.persistence.dao;
 
-import cart.exception.ErrorCode;
-import cart.exception.GlobalException;
 import cart.persistence.entity.Product;
 import cart.persistence.entity.ProductCategory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class ProductDao {
@@ -56,16 +55,16 @@ public class ProductDao {
         return jdbcTemplate.update(query, id);
     }
 
-    public Product findById(final Long id) {
+    public Optional<Product> findById(final Long id) {
         final String query = "SELECT p.id, p.name, p.image_url, p.price, p.category FROM product as p " +
                 "WHERE p.id = ?";
         try {
-            return jdbcTemplate.queryForObject(query, (result, count) ->
+            return Optional.of(jdbcTemplate.queryForObject(query, (result, count) ->
                     new Product(result.getLong("id"), result.getString("name"),
                             result.getString("image_url"), result.getInt("price"),
-                            ProductCategory.from(result.getString("category"))), id);
+                            ProductCategory.from(result.getString("category"))), id));
         } catch (EmptyResultDataAccessException exception) {
-            throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
+            return Optional.empty();
         }
     }
 }

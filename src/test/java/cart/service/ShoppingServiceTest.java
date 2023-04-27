@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -123,10 +124,10 @@ class ShoppingServiceTest {
 
     @DisplayName("상품을 조회한다")
     @Test
-    void findById() {
+    void getById_success() {
         // given
         final Product product = new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN);
-        when(productDao.findById(any())).thenReturn(product);
+        when(productDao.findById(any())).thenReturn(Optional.of(product));
 
         // when
         final ProductDto productDto = shoppingService.getById(1L);
@@ -138,5 +139,12 @@ class ShoppingServiceTest {
                 () -> assertThat(productDto.getPrice()).isEqualTo(40000),
                 () -> assertThat(productDto.getCategory()).isEqualTo(ProductCategory.WESTERN)
         );
+    }
+
+    @DisplayName("존재하지 않는 상품을 조회하면 예외가 발생한다.")
+    @Test
+    void getById_fail() {
+        assertThatThrownBy(() -> shoppingService.getById(1L))
+                .isInstanceOf(GlobalException.class);
     }
 }
