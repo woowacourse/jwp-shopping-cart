@@ -21,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -46,18 +47,21 @@ class ProductControllerTest {
         final String request = objectMapper.writeValueAsString(dto);
 
         // when
-        mockMvc.perform(post("/products")
+        final MvcResult mvcResult = mockMvc.perform(post("/products")
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andDo(print());
+                .andDo(print())
+                .andReturn();
 
         // then
         final Product result = productDao.findAll().get(0);
+        final String location = mvcResult.getResponse().getHeader("Location");
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("허브티"),
                 () -> assertThat(result.getImage()).isEqualTo("tea.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(1000L)
+                () -> assertThat(result.getPrice()).isEqualTo(1000L),
+                () -> assertThat(location).isEqualTo("/products/" + result.getId())
         );
     }
 
