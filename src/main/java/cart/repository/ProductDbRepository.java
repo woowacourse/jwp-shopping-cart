@@ -1,6 +1,6 @@
 package cart.repository;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

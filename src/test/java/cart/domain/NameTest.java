@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.product.Name;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
