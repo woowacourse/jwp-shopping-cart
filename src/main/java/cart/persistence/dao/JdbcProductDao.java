@@ -51,12 +51,21 @@ public class JdbcProductDao implements ProductDao {
     @Override
     public void update(final ProductEntity productEntity) {
         final String sql = "UPDATE product SET name=?, price=?, image_url=? WHERE product_id = ?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl(), productEntity.getId());
+        int affected = jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(),
+            productEntity.getImageUrl(), productEntity.getId());
+        assertRowChanged(affected);
     }
 
     @Override
     public void deleteById(final long id) {
         final String sql = "DELETE FROM product WHERE product_id = ?";
-        jdbcTemplate.update(sql, id);
+        int affected = jdbcTemplate.update(sql, id);
+        assertRowChanged(affected);
+    }
+
+    private void assertRowChanged(final int rowAffected) {
+        if (rowAffected < 1) {
+            throw new DbNotAffectedException("변경된 정보가 없습니다.");
+        }
     }
 }
