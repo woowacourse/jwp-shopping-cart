@@ -20,11 +20,11 @@ public class ProductPrice {
 
     private void validate(BigDecimal price) {
         if (isLessThanMinimum(price)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("삼품 가격은 100원 이상이어야 합니다.");
         }
 
         if (isNotProductPriceUnit(price)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("상품 가격은 100원 단위로 구성되어야 합니다.");
         }
     }
 
