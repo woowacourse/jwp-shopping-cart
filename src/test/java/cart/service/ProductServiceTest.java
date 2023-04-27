@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.ProductDto;
+import cart.dto.ProductResponse;
 import cart.dto.ProductRequest;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -32,9 +32,9 @@ class ProductServiceTest {
         final Product secondProduct = new Product(2L, "아벨", "https://ca.slack-edge.com/TFELTJB7V-U04LMNLQ78X-a7ef923d5391-512", 1_000_000_000);
         given(productDao.findAll()).willReturn(List.of(firstProduct, secondProduct));
         
-        final ProductDto firstProductDto = ProductDto.from(firstProduct);
-        final ProductDto secondProductDto = ProductDto.from(secondProduct);
-        assertThat(productService.findAll()).containsExactly(firstProductDto, secondProductDto);
+        final ProductResponse firstProductResponse = ProductResponse.from(firstProduct);
+        final ProductResponse secondProductResponse = ProductResponse.from(secondProduct);
+        assertThat(productService.findAll()).containsExactly(firstProductResponse, secondProductResponse);
     }
     
     @Test

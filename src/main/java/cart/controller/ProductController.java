@@ -1,13 +1,11 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
-import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import cart.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -17,40 +15,15 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     
-    @GetMapping("/")
+    @GetMapping
     public ModelAndView findAll(ModelAndView modelAndView) {
         modelAndView.setViewName("index");
         modelAndView.addObject("products", productService.findAll());
         return modelAndView;
     }
-
-    @GetMapping("/admin")
-    public ModelAndView admin(ModelAndView modelAndView) {
-        modelAndView.setViewName("admin");
-        modelAndView.addObject("products", productService.findAll());
-        return modelAndView;
-    }
-    
-    @PostMapping("/product")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody ProductRequest productRequest) {
-        productService.save(productRequest);
-    }
-
-    @PutMapping("/product/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest){
-        productService.update(id, productRequest);
-    }
-    
-    @DeleteMapping("/product/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduct(@PathVariable Long id) {
-        productService.delete(id);
-    }
     
     @GetMapping("/products")
-    public ResponseEntity<List<ProductDto>> getProducts() {
+    public ResponseEntity<List<ProductResponse>> getProducts() {
         return ResponseEntity.ok(productService.findAll());
     }
 }

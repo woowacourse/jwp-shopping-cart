@@ -7,16 +7,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@EqualsAndHashCode
 @ToString
+@EqualsAndHashCode
 @RequiredArgsConstructor
-public class ProductDto {
+public class ProductResponse {
     private final Long id;
     private final String name;
     private final String imageUrl;
     private final Integer price;
     
-    public static ProductDto from(Product product) {
-        return new ProductDto(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
+    public static ProductResponse from(Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
     }
 }

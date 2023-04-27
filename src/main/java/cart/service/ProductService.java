@@ -1,9 +1,9 @@
 package cart.service;
 
-import cart.domain.Product;
-import cart.dto.ProductDto;
 import cart.dao.ProductDao;
+import cart.domain.Product;
 import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +15,9 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductDao productDao;
     
-    public List<ProductDto> findAll() {
-        List<Product> products = productDao.findAll();
-        return products.stream()
-                .map(ProductDto::from)
+    public List<ProductResponse> findAll() {
+        return productDao.findAll().stream()
+                .map(ProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
     

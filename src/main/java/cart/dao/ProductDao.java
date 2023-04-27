@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.domain.Product;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -17,33 +16,38 @@ import java.util.List;
 public class ProductDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final RowMapper<Product> rowMapper;
     
     public ProductDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
+        this.simpleJdbcInsert = initSimpleJdbcInsert(namedParameterJdbcTemplate);
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.rowMapper = initRowMapper();
+    }
+    
+    private SimpleJdbcInsert initSimpleJdbcInsert(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        return new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+    
+    private RowMapper<Product> initRowMapper() {
+        return (rs, rowNum) -> new Product(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("image_url"),
+                rs.getInt("price")
+        );
     }
     
     public Product findById(Long id) {
         final String sql = "SELECT * FROM PRODUCT WHERE ID=:id";
         final SqlParameterSource params = new MapSqlParameterSource("id", id);
-        return namedParameterJdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> new Product(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("image_url"),
-                rs.getInt("price")
-        ));
+        return namedParameterJdbcTemplate.queryForObject(sql, params, rowMapper);
     }
     
     public List<Product> findAll() {
         final String sql = "SELECT * FROM PRODUCT";
-        return namedParameterJdbcTemplate.query(sql, (rs, rowNum) -> new Product(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("image_url"),
-                rs.getInt("price")
-        ));
+        return namedParameterJdbcTemplate.query(sql, rowMapper);
     }
     
     public long save(final Product product) {
@@ -64,7 +68,7 @@ public class ProductDao {
         namedParameterJdbcTemplate.update(sql, params);
     }
     
-    public void deleteAll(){
+    public void deleteAll() {
         final String sql = "DELETE FROM PRODUCT";
         namedParameterJdbcTemplate.update(sql, Collections.emptyMap());
     }
