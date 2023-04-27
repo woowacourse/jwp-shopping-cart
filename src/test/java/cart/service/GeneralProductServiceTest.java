@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ class GeneralProductServiceTest {
 
 	@DisplayName("상품 저장 테스트")
 	@Test
-	void save(){
+	void save() {
 		// given
 		given(productRepository.save(any())).willReturn(1L);
 
@@ -69,12 +70,13 @@ class GeneralProductServiceTest {
 		assertThat(deleteProductId).isEqualTo(1L);
 	}
 
-	@DisplayName("상품 갱신 테스트")
+	@DisplayName("상품 갱신 후 조회 테스트")
 	@Test
-	void updateProduct(){
+	void updateProduct() {
 		// given
-		final Product product = new Product(1L, "hyena", 400, "이미지");
-		given(productRepository.update(anyLong(), any())).willReturn(product);
+		given(productRepository.updateByProductId(anyLong(), any())).willReturn(1L);
+		given(productRepository.findByProductId(anyLong()))
+			.willReturn(Optional.ofNullable(new Product(1L, "hyena", 400, "이미지")));
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("hyena", 400, "이미지");
@@ -84,7 +86,7 @@ class GeneralProductServiceTest {
 		assertThat(updateProduct)
 			.hasFieldOrPropertyWithValue("id", 1L)
 			.hasFieldOrPropertyWithValue("name", "hyena")
-			.hasFieldOrPropertyWithValue("price",400.0)
-			.hasFieldOrPropertyWithValue("image","이미지");
+			.hasFieldOrPropertyWithValue("price", 400.0)
+			.hasFieldOrPropertyWithValue("image", "이미지");
 	}
 }

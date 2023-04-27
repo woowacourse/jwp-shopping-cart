@@ -67,18 +67,13 @@ class ProductJdbcRepositoryTest {
 	@Test
 	void updateProduct(){
 		// given
-		final Product product = new Product(1L,"kiara", 300.0, "이미지2");
-		given(productJdbcRepository.update(anyLong(), any())).willReturn(product);
+		given(productJdbcRepository.updateByProductId(anyLong(), any())).willReturn(1L);
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("kiara", 300.0, "이미지2");
-		final Product updateProduct = productJdbcRepository.update(1L, request);
+		final long updateProductId = productJdbcRepository.updateByProductId(1L, request);
 
 		// then
-		assertThat(updateProduct)
-			.hasFieldOrPropertyWithValue("id", 1L)
-			.hasFieldOrPropertyWithValue("name", "kiara")
-			.hasFieldOrPropertyWithValue("price",300.0)
-			.hasFieldOrPropertyWithValue("image","이미지2");
+		assertThat(updateProductId).isEqualTo(1L);
 	}
 }

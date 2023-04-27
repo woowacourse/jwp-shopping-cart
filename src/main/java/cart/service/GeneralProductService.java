@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.domain.Product;
-import cart.controller.response.ProductResponse;
-import cart.controller.request.ProductUpdateRequest;
 import cart.controller.request.ProductCreateRequest;
+import cart.controller.request.ProductUpdateRequest;
+import cart.controller.response.ProductResponse;
+import cart.domain.Product;
 import cart.repository.ProductRepository;
 
 @Transactional(readOnly = true)
@@ -24,7 +24,8 @@ public class GeneralProductService implements ProductService {
 	public List<ProductResponse> findAll() {
 		return productRepository.findAll()
 			.stream()
-			.map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImage()))
+			.map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(),
+				product.getImage()))
 			.collect(Collectors.toList());
 	}
 
@@ -49,7 +50,11 @@ public class GeneralProductService implements ProductService {
 	@Transactional
 	@Override
 	public ProductResponse update(final long productId, final ProductUpdateRequest request) {
-		final Product product = productRepository.update(productId, request);
-		return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImage());
+		final long updateProductId = productRepository.updateByProductId(productId, request);
+		final Product findProduct = productRepository.findByProductId(updateProductId)
+			.orElseThrow(() -> new IllegalStateException("갱신된 상품 조회에 실패했습니다."));
+
+		return new ProductResponse(findProduct.getId(), findProduct.getName(), findProduct.getPrice(),
+			findProduct.getImage());
 	}
 }

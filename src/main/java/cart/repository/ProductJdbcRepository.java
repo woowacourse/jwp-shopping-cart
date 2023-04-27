@@ -2,6 +2,7 @@ package cart.repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,6 +16,8 @@ import cart.domain.Product;
 
 @Repository
 public class ProductJdbcRepository implements ProductRepository {
+	private static final int UPDATED_COUNT = 1;
+	private static final int DELETED_COUNT = 1;
 	private final JdbcTemplate jdbcTemplate;
 	private final RowMapper<Product> productRowMapper =
 
@@ -37,6 +40,14 @@ public class ProductJdbcRepository implements ProductRepository {
 	}
 
 	@Override
+	public Optional<Product> findByProductId(final long productId) {
+		final String sql = "SELECT * FROM products WHERE id = ?";
+		final Product findProduct = jdbcTemplate.queryForObject(sql, productRowMapper, productId);
+
+		return Optional.ofNullable(findProduct);
+	}
+
+	@Override
 	public long save(final ProductCreateRequest request) {
 		final String sql = "INSERT INTO products(name, price, image) VALUES(?, ?, ?)";
 		final KeyHolder key = new GeneratedKeyHolder();
@@ -55,17 +66,24 @@ public class ProductJdbcRepository implements ProductRepository {
 	@Override
 	public long deleteByProductId(final long productId) {
 		final String sql = "DELETE FROM products WHERE id = ?";
-		jdbcTemplate.update(sql, productId);
+		final int deleteCount = jdbcTemplate.update(sql, productId);
+
+		if(deleteCount != DELETED_COUNT){
+			throw new IllegalStateException("상품 삭제 도중 오류가 발생하여 실패하였습니다.");
+		}
 		return productId;
 	}
 
 	@Override
-	public Product update(final long productId, final ProductUpdateRequest request) {
+	public long updateByProductId(final long productId, final ProductUpdateRequest request) {
 		final String updateSql = "UPDATE products SET name = ?, price = ?, image = ? WHERE id = ?";
-		jdbcTemplate.update(updateSql, request.getName(), request.getPrice(), request.getImage(), productId);
+		final int updateCount = jdbcTemplate.update(updateSql, request.getName(), request.getPrice(), request.getImage(),
+			productId);
 
-		final String selectSql = "SELECT * FROM products WHERE id = ?";
-		return jdbcTemplate.queryForObject(selectSql, productRowMapper, productId);
+		if(updateCount != UPDATED_COUNT){
+			throw new IllegalStateException("상품 갱신 도충 오류가 발생하여 실패하였습니다.");
+		}
+
+		return productId;
 	}
-
 }

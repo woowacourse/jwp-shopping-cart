@@ -23,20 +23,20 @@ import cart.service.ProductService;
 public class ProductApi {
 	private final ProductService productService;
 
-	public ProductApi(ProductService productService) {
+	public ProductApi(final ProductService productService) {
 		this.productService = productService;
 	}
 
 	@GetMapping("/products")
 	public ResponseEntity<List<ProductResponse>> getProducts() {
-		List<ProductResponse> products = productService.findAll();
+		final List<ProductResponse> products = productService.findAll();
 		return ResponseEntity.ok(products);
 	}
 
 	@PostMapping("/products")
 	public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductCreateRequest request) {
-		long save = productService.save(request);
-		URI uri = URI.create("/products/" + save);
+		final long save = productService.save(request);
+		final URI uri = URI.create("/products/" + save);
 		return ResponseEntity.created(uri).build();
 	}
 
@@ -51,7 +51,7 @@ public class ProductApi {
 		@PathVariable(value = "id") long productId,
 		@RequestBody @Valid ProductUpdateRequest request
 	) {
-		ProductResponse productResponse = productService.update(productId, request);
+		final ProductResponse productResponse = productService.update(productId, request);
 		return ResponseEntity.ok(productResponse);
 	}
 }
