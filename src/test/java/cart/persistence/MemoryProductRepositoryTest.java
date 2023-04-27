@@ -8,11 +8,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 
 class MemoryProductRepositoryTest {
 
@@ -25,7 +24,7 @@ class MemoryProductRepositoryTest {
 
     @Test
     @DisplayName("Product 객체를 넣었을 때 ID를 반환할 수 있다")
-    void test_insert() throws MalformedURLException {
+    void test_insert() {
         //given
         Product salmon = new Product(1,
                 new ProductName("salmon"),
@@ -41,7 +40,7 @@ class MemoryProductRepositoryTest {
 
     @Test
     @DisplayName("모든 Product 객체를 반환할 수 있다")
-    void test_findAll() throws MalformedURLException {
+    void test_findAll() {
         //given
         Product salmon = new Product(1,
                 new ProductName("salmon"),
@@ -64,6 +63,23 @@ class MemoryProductRepositoryTest {
         //then
         assertThat(actualSalmon.getId()).isEqualTo(salmon.getId());
         assertThat(actualPizza.getId()).isEqualTo(pizza.getId());
+    }
+
+    @Test
+    @DisplayName("특정 ID를 가진 Product 객체를 반환할 수 있다")
+    void test_ifAbsentReplace() {
+        //given
+        Product salmon = new Product(1,
+                new ProductName("salmon"),
+                new ProductImage("https://www.salmonlover.com"),
+                new ProductPrice(17000));
+
+        //when
+        Integer productId = memoryProductRepository.insert(salmon);
+        Optional<Product> foundProduct = memoryProductRepository.findById(productId);
+
+        //then
+        assertThat(foundProduct.isPresent()).isTrue();
     }
 
     @Test
@@ -90,7 +106,7 @@ class MemoryProductRepositoryTest {
 
     @Test
     @DisplayName("해당하는 Product 객체를 삭제할 수 있다")
-    void remove() throws MalformedURLException {
+    void remove() {
         //given
         Product salmon = new Product(1,
                 new ProductName("salmon"),
