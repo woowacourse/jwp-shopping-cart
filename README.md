@@ -6,7 +6,7 @@
 
 1. 요청
 
-- URL : localhost:8080/admin/products
+- URL : localhost:8080/products
 - method : POST
 - Body :
 
@@ -14,7 +14,7 @@
 {
   "name": "치킨",
   "price": 10000,
-  "image_url": "https://grepp-programmers.s3.ap-northeast-2.amazonaws.com/files/production/d440b8f4-91c3-4272-8a81-876e9aaffb9c/RisingStarGraphBox.jpg"
+  "imageUrl": "https://grepp-programmers.s3.ap-northeast-2.amazonaws.com/files/production/d440b8f4-91c3-4272-8a81-876e9aaffb9c/RisingStarGraphBox.jpg"
 }
 ```
 
@@ -29,14 +29,14 @@
 
 1. 요청
 
-- URL : localhost:8080/admin/products/:productId
+- URL : localhost:8080/products/:productId
 - method : PUT
 
 ```json
 {
   "name": "치킨",
   "price": 10000,
-  "image_url": "https://grepp-programmers.s3.ap-northeast-2.amazonaws.com/files/production/d440b8f4-91c3-4272-8a81-876e9aaffb9c/RisingStarGraphBox.jpg"
+  "imageUrl": "https://grepp-programmers.s3.ap-northeast-2.amazonaws.com/files/production/d440b8f4-91c3-4272-8a81-876e9aaffb9c/RisingStarGraphBox.jpg"
 }
 ```
 
@@ -44,5 +44,5 @@
 
 1. 요청
 
-- URL : localhost:8080/admin/products/:productId
+- URL : localhost:8080/products/:productId
 - method : DELETE
