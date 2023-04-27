@@ -95,4 +95,22 @@ class ProductDaoTest {
         // then
         assertThat(productDao.findAll()).isEmpty();
     }
+
+    @Test
+    void 단일_상품을_조회한다() {
+        // given
+        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Long id = productDao.saveAndGetId(product).get();
+
+        // when
+        final Product result = productDao.findById(id).get();
+
+        // then
+        assertAll(
+                () -> assertThat(result.getId()).isEqualTo(id),
+                () -> assertThat(result.getName()).isEqualTo("허브티"),
+                () -> assertThat(result.getImage()).isEqualTo("tea.jpg"),
+                () -> assertThat(result.getPrice()).isEqualTo(1000L)
+        );
+    }
 }

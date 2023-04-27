@@ -1,6 +1,7 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.ProductDao;
@@ -9,6 +10,7 @@ import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequestDto;
 import cart.dto.ProductUpdateRequestDto;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -93,5 +95,35 @@ class ProductServiceTest {
 
         // then
         assertThat(productDao.findAll()).isEmpty();
+    }
+
+    @Test
+    void 단일_상품을_조회한다() {
+        // given
+        final ProductSaveRequestDto product = new ProductSaveRequestDto("허브티", "tea.jpg", 99L);
+        final Long id = productService.save(product);
+
+        // when
+        final ProductDto productDto = productService.findById(id);
+
+        // then
+        assertAll(
+                () -> assertThat(productDto.getId()).isEqualTo(id),
+                () -> assertThat(productDto.getName()).isEqualTo("허브티"),
+                () -> assertThat(productDto.getImage()).isEqualTo("tea.jpg"),
+                () -> assertThat(productDto.getPrice()).isEqualTo(99L)
+        );
+    }
+
+    @Test
+    void 없는_상품을_조회_시_NoSuchElementException_을_던진다() {
+        // given
+        final Long id = 999999999999L;
+
+        // expect
+        assertThatThrownBy(() -> productService.findById(id))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("상품을 찾을 수 없습니다.");
+        ;
     }
 }

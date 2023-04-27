@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.Product;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -45,7 +46,16 @@ public class ProductDao {
     }
 
     public void delete(final Long id) {
-        final String sql = " delete from product where id = ?";
+        final String sql = "delete from product where id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public Optional<Product> findById(final Long id) {
+        final String sql = "select * from product where id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

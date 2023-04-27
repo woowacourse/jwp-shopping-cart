@@ -8,6 +8,7 @@ import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequestDto;
 import cart.dto.ProductUpdateRequestDto;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,5 +40,11 @@ public class ProductService {
 
     public void delete(final Long id) {
         productDao.delete(id);
+    }
+
+    public ProductDto findById(final Long id) {
+        final Product product = productDao.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
+        return ProductDto.from(product);
     }
 }

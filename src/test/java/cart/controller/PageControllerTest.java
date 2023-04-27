@@ -91,4 +91,23 @@ class PageControllerTest {
                 )))
                 .andDo(print());
     }
+
+    @Test
+    void 단일_조회_페이지_접근() throws Exception {
+        // given
+        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Long id = productDao.saveAndGetId(product).get();
+
+        // expect
+        mockMvc.perform(get("/products/" + id))
+                .andExpect(model().attribute("product", is(
+                        allOf(
+                                hasProperty("id", is(id)),
+                                hasProperty("name", is("허브티")),
+                                hasProperty("image", is("tea.jpg")),
+                                hasProperty("price", is(1000L))
+                        )
+                )))
+                .andDo(print());
+    }
 }
