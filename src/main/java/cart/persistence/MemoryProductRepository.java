@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -34,11 +33,6 @@ public class MemoryProductRepository implements ProductRepository {
                         new ProductImage(entry.getValue().getUrl()),
                         new ProductPrice(entry.getValue().getPrice())))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public Optional<Product> findById(Integer id) {
-        return Optional.of(store.get(id));
     }
 
     @Override
