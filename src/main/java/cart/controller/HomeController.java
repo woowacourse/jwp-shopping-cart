@@ -17,7 +17,7 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(Model model) {
+    public String getHomePage(Model model) {
         List<ProductEntity> products = productService.findAll();
         model.addAttribute("products", products);
         return "index";

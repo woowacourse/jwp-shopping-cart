@@ -17,7 +17,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String adminHome(Model model) {
+    public String getAdminHomePage(Model model) {
         List<ProductEntity> products = productService.findAll();
         model.addAttribute("products", products);
         return "admin";
