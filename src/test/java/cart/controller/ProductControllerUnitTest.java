@@ -1,24 +1,22 @@
 package cart.controller;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import cart.domain.Product;
 import cart.dto.request.ProductSaveRequest;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
 class ProductControllerUnitTest {
@@ -34,7 +32,6 @@ class ProductControllerUnitTest {
 
     @Test
     void saveProduct는_상품을_저장하고_created상태코드를_반환한다() throws Exception {
-        //when
         mockMvc.perform(post("/product")
                         .content(objectMapper.writeValueAsBytes(new ProductSaveRequest("pd1", "image", 2000L)))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -60,7 +57,7 @@ class ProductControllerUnitTest {
     void updateProduct() throws Exception {
         //todo : mockBean인 서비스에 동작을 설정하지 않았는데(save, update),컨트롤러 메서드가 정상동작함
         mockMvc.perform(put("/product")
-                        .content(objectMapper.writeValueAsBytes(new ProductSaveRequest("pdpd2", "image2", 15000L)))
+                        .content(objectMapper.writeValueAsBytes(new Product(2L, "pdpd2", "image2", 15000L)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
