@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.repository.dto.ProductHttpRequest;
 import cart.service.ProductService;
+import cart.service.dto.ProductHttpRequest;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;

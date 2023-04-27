@@ -2,8 +2,8 @@ package cart.service;
 
 import cart.entity.Product;
 import cart.repository.ProductRepository;
-import cart.repository.dto.ProductHttpRequest;
-import cart.repository.dto.ProductHttpResponse;
+import cart.service.dto.ProductHttpRequest;
+import cart.service.dto.ProductHttpResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,7 @@ package cart.controller;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.notNullValue;
 
-import cart.repository.dto.ProductHttpRequest;
+import cart.service.dto.ProductHttpRequest;
 import io.restassured.RestAssured;
 import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -97,7 +97,7 @@ class IntegrationTest {
     @Test
     @DisplayName("유저가 유효하지 않는 입력을 하는 경우 테스트")
     void badRequest() {
-        final String jsonStr = "{ \"name\":\"홍실\", \"price\":\"321321\", \"imageUrl\":\"ddong.exe\"}";
+        final String jsonStr = "{ \"name\":\"홍실\", \"price\":\"321321\", \"imageUrl\":\"aaa.exe\"}";
 
         given()
                 .body(jsonStr)

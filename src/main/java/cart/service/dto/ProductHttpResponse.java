@@ -1,4 +1,4 @@
-package cart.repository.dto;
+package cart.service.dto;
 
 public class ProductHttpResponse {
 
