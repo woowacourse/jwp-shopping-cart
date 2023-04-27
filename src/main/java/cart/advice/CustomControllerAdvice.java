@@ -3,12 +3,13 @@ package cart.advice;
 import cart.exception.ProductNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Objects;
 
-@org.springframework.web.bind.annotation.ControllerAdvice
-public class ControllerAdvice {
+@ControllerAdvice
+public class CustomControllerAdvice {
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<String> handleProductNotFoundException(final ProductNotFoundException exception) {
