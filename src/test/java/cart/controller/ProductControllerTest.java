@@ -23,40 +23,40 @@ class ProductControllerTest {
         RestAssured
                 .given()
                 .body(new ProductRequest("비버", "a", 100L))
-                .post("/product");
+                .post("/products");
     }
 
     @Test
-    @DisplayName("POST(/product)")
+    @DisplayName("POST(/products)")
     void createProduct() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
                 .body(new ProductRequest("비버", "a", 100L))
-                .when().post("/product")
+                .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
     @Test
-    @DisplayName("PUT(/product/{id})")
+    @DisplayName("PUT(/products/{id})")
     void updateProduct() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
                 .body(new ProductRequest("비버", "a", 100L))
-                .when().put("/product/1")
+                .when().put("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
     @Test
-    @DisplayName("DELETE(/product/{id})")
+    @DisplayName("DELETE(/products/{id})")
     void deleteProduct() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .when().delete("/product/1")
+                .when().delete("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
