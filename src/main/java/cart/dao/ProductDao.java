@@ -35,8 +35,14 @@ public class ProductDao {
 
     public Long insert(ProductEntity productEntity) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(productEntity);
-        
+
         return simpleInsert.executeAndReturnKey(params).longValue();
+    }
+
+    public void deleteById(Long id) {
+        String deleteByIdQuery = "DELETE FROM product where product_id = ?";
+
+        jdbcTemplate.update(deleteByIdQuery, id);
     }
 
 }

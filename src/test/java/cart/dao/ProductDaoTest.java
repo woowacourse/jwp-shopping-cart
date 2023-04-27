@@ -56,4 +56,24 @@ class ProductDaoTest {
         assertThat(allEntities).hasSize(1);
         assertThat(allEntities.get(0).getName()).isEqualTo(productName);
     }
+
+    @DisplayName("단일 상품 삭제 테스트")
+    @Test
+    void deleteProduct() {
+        String productName = "ProductA";
+        ProductEntity productEntity = new ProductEntity(
+                null,
+                productName,
+                10_000,
+                "ETC",
+                "naver.com"
+        );
+        Long savedId = productDao.insert(productEntity);
+        assertThat(productDao.findAll()).hasSize(1);
+
+        productDao.deleteById(savedId);
+
+        List<ProductEntity> allEntities = productDao.findAll();
+        assertThat(allEntities).hasSize(0);
+    }
 }
