@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.controller.dto.ProductRequest;
-import cart.service.ProductService;
+import cart.repository.ProductRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,15 +12,15 @@ import java.util.Objects;
 @RequestMapping("/product")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductRepository productRepository;
 
-    public ProductController(final ProductService productService) {
-        this.productService = productService;
+    public ProductController(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @PostMapping
     public ResponseEntity<String> createProduct(@RequestBody @Valid ProductRequest productRequest) {
-        productService.add(productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
+        productRepository.save(productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
         return ResponseEntity.ok().build();
     }
 
@@ -29,14 +29,14 @@ public class ProductController {
             @PathVariable("id") Integer id,
             @RequestBody @Valid ProductRequest productRequest) {
         Objects.requireNonNull(id);
-        productService.update(id, productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
+        productRepository.update(id, productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer id) {
         Objects.requireNonNull(id);
-        productService.delete(id);
+        productRepository.delete(id);
         return ResponseEntity.ok().build();
     }
 }

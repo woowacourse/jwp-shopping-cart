@@ -1,4 +1,4 @@
-package cart.service;
+package cart.repository;
 
 import cart.dao.ProductJdbcDao;
 import cart.entity.ProductEntity;
@@ -13,20 +13,20 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-class ProductServiceTest {
+class ProductRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     private ProductJdbcDao productDao;
-    private ProductService productService;
+    private ProductRepository productRepository;
 
     @BeforeEach
     void setUp() {
         productDao = new ProductJdbcDao(jdbcTemplate);
-        this.productService = new ProductService(productDao);
+        this.productRepository = new ProductRepository(productDao);
 
-        productService.add("땡칠", "asdf", 100L);
+        productRepository.save("땡칠", "asdf", 100L);
     }
 
     @Test
@@ -37,7 +37,7 @@ class ProductServiceTest {
 
     @Test
     void delete() {
-        productService.delete(getGreatestId());
+        productRepository.delete(getGreatestId());
 
         final List<ProductEntity> result = productDao.findAll();
         ProductEntity deletedItem = new ProductEntity(getGreatestId(), "땡칠", "asdf", 100L);
@@ -47,7 +47,7 @@ class ProductServiceTest {
 
     @Test
     void update() {
-        productService.update(getGreatestId(), "땡칠", "VERY_BIG_IMAGE", 100L);
+        productRepository.update(getGreatestId(), "땡칠", "VERY_BIG_IMAGE", 100L);
 
         ProductEntity productEntity = productDao.select(getGreatestId());
         assertThat(productEntity).isEqualTo(new ProductEntity(getGreatestId(), "땡칠", "VERY_BIG_IMAGE", 100L));
@@ -55,7 +55,7 @@ class ProductServiceTest {
 
     @Test
     void getAll() {
-        productService.add("비버", "SMALL_IMAGE", 100L);
+        productRepository.save("비버", "SMALL_IMAGE", 100L);
 
         final List<ProductEntity> result = productDao.findAll();
         final List<ProductEntity> expectedEntities = List.of(

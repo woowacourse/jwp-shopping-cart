@@ -1,12 +1,14 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import cart.entity.ProductEntity;
+import cart.repository.ProductDto;
 
 @JdbcTest
 class ProductInMemoryDaoTest {
@@ -18,8 +20,8 @@ class ProductInMemoryDaoTest {
     void setUp() {
         this.productInMemoryDao = new ProductInMemoryDao();
 
-        final ProductEntity productEntity = new ProductEntity(1, "비버", "A", 1000L);
-        insertedId = productInMemoryDao.insert(productEntity);
+        final ProductDto productDto = new ProductDto("비버", "A", 1000L);
+        insertedId = productInMemoryDao.insert(productDto);
     }
 
     @Test
@@ -31,8 +33,8 @@ class ProductInMemoryDaoTest {
     @Test
     @DisplayName("수정 테스트")
     void update() {
-        final ProductEntity productEntity = new ProductEntity(1, "비버", "A", 100000L);
-        productInMemoryDao.update(productEntity);
+        final ProductDto productDto = new ProductDto("비버", "A", 100000L);
+        productInMemoryDao.update(insertedId, productDto);
 
         final ProductEntity result = productInMemoryDao.select(insertedId);
         assertThat(result.getPrice()).isEqualTo(100000L);

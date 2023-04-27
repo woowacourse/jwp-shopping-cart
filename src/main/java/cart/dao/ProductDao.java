@@ -1,13 +1,14 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
+import cart.repository.ProductDto;
 
 import java.util.List;
 
 public interface ProductDao {
-    Integer insert(ProductEntity productEntity);
+    Integer insert(ProductDto productEntity);
 
-    void update(ProductEntity productEntity);
+    void update(Integer id, ProductDto productDto);
 
     void deleteById(Integer id);
 

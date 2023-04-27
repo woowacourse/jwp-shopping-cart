@@ -1,8 +1,11 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
+import cart.repository.ProductDto;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -22,20 +25,20 @@ public class ProductJdbcDao implements ProductDao {
     }
 
     @Override
-    public Integer insert(final ProductEntity productEntity) {
-        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(productEntity);
+    public Integer insert(final ProductDto productDto) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(productDto);
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).intValue();
     }
 
     @Override
-    public void update(final ProductEntity productEntity) {
+    public void update(final Integer id, final ProductDto productDto) {
         String sql = "UPDATE product SET name= ?, image= ?, price=? WHERE id= ?";
         jdbcTemplate.update(
                 sql,
-                productEntity.getName(),
-                productEntity.getImage(),
-                productEntity.getPrice(),
-                productEntity.getId()
+                productDto.getName(),
+                productDto.getImage(),
+                productDto.getPrice(),
+                id
         );
     }
 

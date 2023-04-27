@@ -1,11 +1,13 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.springframework.stereotype.Repository;
+
+import cart.entity.ProductEntity;
+import cart.repository.ProductDto;
 
 @Repository
 public class ProductInMemoryDao implements ProductDao {
@@ -18,7 +20,7 @@ public class ProductInMemoryDao implements ProductDao {
     }
 
     @Override
-    public Integer insert(final ProductEntity productEntity) {
+    public Integer insert(final ProductDto productEntity) {
         final int id = sequence.incrementAndGet();
         ProductEntity productEntityWithId = new ProductEntity(
                 id,
@@ -32,9 +34,15 @@ public class ProductInMemoryDao implements ProductDao {
     }
 
     @Override
-    public void update(final ProductEntity productEntity) {
-        final int index = products.indexOf(productEntity);
-        products.set(index, productEntity);
+    public void update(final Integer id, final ProductDto productDto) {
+        final int index = products.indexOf(select(id));
+        products.set(index, new ProductEntity(
+                        id,
+                        productDto.getName(),
+                        productDto.getImage(),
+                        productDto.getPrice()
+                )
+        );
     }
 
     @Override

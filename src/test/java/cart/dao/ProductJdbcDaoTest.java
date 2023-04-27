@@ -1,6 +1,7 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import cart.entity.ProductEntity;
+import cart.repository.ProductDto;
 
 @JdbcTest
 class ProductJdbcDaoTest {
@@ -22,9 +24,8 @@ class ProductJdbcDaoTest {
     void setUp() {
         this.productJdbcDao = new ProductJdbcDao(jdbcTemplate);
 
-        final ProductEntity productEntity = new ProductEntity(null, "비버", "A", 1000L);
-        insertedId = productJdbcDao.insert(productEntity);
-        System.out.println("insertedId = " + insertedId);
+        final ProductDto productDto = new ProductDto("비버", "A", 1000L);
+        insertedId = productJdbcDao.insert(productDto);
     }
 
     @Test
@@ -36,8 +37,8 @@ class ProductJdbcDaoTest {
     @Test
     @DisplayName("수정 테스트")
     void update() {
-        final ProductEntity productEntity = new ProductEntity(insertedId, "비버", "A", 100000L);
-        productJdbcDao.update(productEntity);
+        final ProductDto productDto = new ProductDto("비버", "A", 100000L);
+        productJdbcDao.update(insertedId, productDto);
 
         final ProductEntity result = productJdbcDao.select(insertedId);
         assertThat(result.getPrice()).isEqualTo(100000L);
