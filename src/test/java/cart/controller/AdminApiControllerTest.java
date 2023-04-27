@@ -4,6 +4,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -29,51 +30,136 @@ class AdminApiControllerTest {
         RestAssured.port = port;
     }
 
-    @Test
-    void Product_POST_API_테스트() {
-        final ExtractableResponse<Response> response = saveProduct("modi", 10000, "https://woowacourse.github.io/");
+    @Nested
+    class CRUDSuccessTest {
 
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-            softAssertions.assertThat(response.header("Location")).contains("/admin/product/");
-        });
+        @Test
+        void Product_POST_API_테스트() {
+            final ExtractableResponse<Response> response = saveProduct("modi", 10000, "https://woowacourse.github.io/");
+
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+                softAssertions.assertThat(response.header("Location")).contains("/admin/product/");
+            });
+        }
+
+        @Test
+        void Product_GET_API_테스트() {
+            saveProduct("modi", 10000, "https://woowacourse.github.io/");
+
+            given()
+                .when()
+                .get("/admin")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+        }
+
+        @Test
+        void Product_UPDATE_API_테스트() {
+            final ExtractableResponse<Response> response = saveProduct("modi", 10000, "https://woowacourse.github.io/");
+            final String[] locations = response.header("Location").split("/");
+            final String id = locations[locations.length - 1];
+
+            final ProductPostRequest productPostRequest = new ProductPostRequest("modi", 15000, "https://woowacourse.github.io/");
+            given()
+                .body(productPostRequest)
+                .when().put("/admin/product/" + id)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+        }
+
+        @Test
+        void Product_DELETE_API_테스트() {
+            final ExtractableResponse<Response> response = saveProduct("modi", 10000, "https://woowacourse.github.io/");
+            final String[] locations = response.header("Location").split("/");
+            final String id = locations[locations.length - 1];
+
+            given()
+                .when().delete("/admin/product/" + id)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+        }
     }
 
-    @Test
-    void Product_GET_API_테스트() {
-        saveProduct("modi", 10000, "https://woowacourse.github.io/");
+    @Nested
+    class CRUDRequestExceptionTest {
 
-        given()
-            .when()
-            .get("/admin")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value());
-    }
+        @Test
+        void Product_POST_상품_명_공백_예외_테스트() {
+            final ExtractableResponse<Response> response = saveProduct("", 10000, "https://woowacourse.github.io/");
 
-    @Test
-    void Product_UPDATE_API_테스트() {
-        final ExtractableResponse<Response> response = saveProduct("modi", 10000, "https://woowacourse.github.io/");
-        final String[] locations = response.header("Location").split("/");
-        final String id = locations[locations.length - 1];
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                softAssertions.assertThat(response.body().asString()).contains("상품 명을 입력해주세요");
+            });
+        }
 
-        final ProductPostRequest productPostRequest = new ProductPostRequest("modi", 15000, "https://woowacourse.github.io/");
-        given()
-            .body(productPostRequest)
-            .when().put("/admin/product/" + id)
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value());
-    }
+        @Test
+        void Product_POST_0_미만_가격_예외_테스트() {
+            final ExtractableResponse<Response> response = saveProduct("modi", -1, "https://woowacourse.github.io/");
 
-    @Test
-    void Product_DELETE_API_테스트() {
-        final ExtractableResponse<Response> response = saveProduct("modi", 10000, "https://woowacourse.github.io/");
-        final String[] locations = response.header("Location").split("/");
-        final String id = locations[locations.length - 1];
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                softAssertions.assertThat(response.body().asString()).contains("유효한 가격을 입력해주세요");
+            });
+        }
 
-        given()
-            .when().delete("/admin/product/" + id)
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value());
+        @Test
+        void Product_POST_URL_공백_예외_테스트() {
+            final ExtractableResponse<Response> response = saveProduct("modi", 10000, "");
+
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                softAssertions.assertThat(response.body().asString()).contains("유효한 이미지 URL을 입력해주세요");
+            });
+        }
+
+        @Test
+        void Product_POST_URL_길이_초과_예외_테스트() {
+            final String url = "a".repeat(513);
+            final ExtractableResponse<Response> response = saveProduct("modi", 10, url);
+
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                softAssertions.assertThat(response.body().asString()).contains("유효한 이미지 URL을 입력해주세요");
+            });
+        }
+
+        @Test
+        void Product_POST_상품_명_공백_및_URL_공백_예외_테스트() {
+            final ExtractableResponse<Response> response = saveProduct("", 10000, "");
+
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                softAssertions.assertThat(response.body().asString())
+                    .contains("상품 명을 입력해주세요")
+                    .contains("유효한 이미지 URL을 입력해주세요");
+            });
+        }
+
+        @Test
+        void Product_POST_상품_명_공백_및_0_URL_공백_예외_테스트() {
+            final ExtractableResponse<Response> response = saveProduct("", -10, "");
+
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                softAssertions.assertThat(response.body().asString())
+                    .contains("상품 명을 입력해주세요")
+                    .contains("유효한 가격을 입력해주세요")
+                    .contains("유효한 이미지 URL을 입력해주세요");
+            });
+        }
+
+        @Test
+        void Product_POST_10원_단위_아닌_가격_예외_테스트() {
+            final ExtractableResponse<Response> response = saveProduct("modi", 9, "https://woowacourse.github.io/");
+
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                softAssertions.assertThat(response.body().asString()).contains("금액은 10원 단위여야 합니다.");
+            });
+        }
+
     }
 
     private ExtractableResponse<Response> saveProduct(final String name, final int price, final String imageUrl) {

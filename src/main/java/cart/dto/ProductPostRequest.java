@@ -1,22 +1,23 @@
 package cart.dto;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.URL;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 public class ProductPostRequest {
 
-    @NotBlank(message = "상품 명을 입력해주세요.")
+    @NotBlank(message = "20자 이하의 상품 명을 입력해주세요")
+    @Length(max = 20, message = "20자 이하의 상품 명을 입력해주세요")
     private String name;
 
-    @NotNull
-    @Min(value = 0, message = "{value} 이상의 가격을 입력해주세요")
+    @NotNull(message = "유효한 가격을 입력해주세요")
+    @Range(min = 0, max = Integer.MAX_VALUE, message = "유효한 가격을 입력해주세요")
     private int price;
 
-    @NotBlank
-    @URL(message = "유효한 URL 형식을 입력해주세요")
+    @NotBlank(message = "유효한 이미지 URL을 입력해주세요")
+    @Length(max = 512, message = "유효한 이미지 URL을 입력해주세요")
     private String imageUrl;
 
     private ProductPostRequest() {
