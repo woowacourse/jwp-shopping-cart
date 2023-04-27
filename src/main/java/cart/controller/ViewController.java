@@ -1,6 +1,9 @@
 package cart.controller;
 
+import cart.dto.member.MembersResponseDto;
+import cart.service.MemberService;
 import cart.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,9 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ViewController {
 
     private final ProductService productService;
+    private final MemberService memberService;
 
-    public ViewController(ProductService productService) {
+    @Autowired
+    public ViewController(final ProductService productService, final MemberService memberService) {
         this.productService = productService;
+        this.memberService = memberService;
     }
 
     @GetMapping("/")
@@ -27,7 +33,8 @@ public class ViewController {
     }
 
     @GetMapping("/settings")
-    public String getSettings() {
+    public String getSettings(final Model model) {
+        model.addAttribute("membersDto", memberService.findAll());
         return "settings";
     }
 
