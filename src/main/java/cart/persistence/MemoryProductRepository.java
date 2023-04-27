@@ -36,6 +36,11 @@ public class MemoryProductRepository implements ProductRepository {
     }
 
     @Override
+    public Product update(Product product) {
+        return store.replace(product.getId(), product);
+    }
+
+    @Override
     public Product remove(Integer productId) {
         return store.remove(productId);
     }

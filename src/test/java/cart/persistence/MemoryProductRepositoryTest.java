@@ -67,6 +67,28 @@ class MemoryProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("Product 객체를 업데이트 할 수 있다")
+    void update() {
+        //given
+        Product salmon = new Product(1,
+                new ProductName("salmon"),
+                new ProductImage("https://www.salmonlover.com"),
+                new ProductPrice(17000));
+
+        Product pizza = new Product(1,
+                new ProductName("pizza"),
+                new ProductImage("http://www.pizzalover.com"),
+                new ProductPrice(40000));
+        //when
+        memoryProductRepository.insert(salmon);
+        memoryProductRepository.update(pizza);
+        List<Product> products = memoryProductRepository.findAll();
+
+        //then
+        assertThat(products.get(0).getName()).isEqualTo("pizza");
+    }
+
+    @Test
     @DisplayName("해당하는 Product 객체를 삭제할 수 있다")
     void remove() throws MalformedURLException {
         //given
