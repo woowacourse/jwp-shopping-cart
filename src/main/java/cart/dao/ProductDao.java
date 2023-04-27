@@ -34,6 +34,13 @@ public class ProductDao {
                 ));
     }
 
+    public int countById(Long id) {
+        String findAllQuery = "SELECT count(*) FROM product WHERE product_id = ?";
+
+        return jdbcTemplate.queryForObject(findAllQuery, Integer.class, id);
+    }
+
+
     public Long insert(ProductEntity productEntity) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(productEntity);
 
@@ -49,7 +56,7 @@ public class ProductDao {
     public ProductEntity update(ProductEntity productEntity) {
         String updateProductQuery = "UPDATE product SET name = ?, price = ?, category = ?, image_url =? WHERE product_id = ?";
 
-        jdbcTemplate.update(con -> {
+        int update = jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(updateProductQuery);
 
             preparedStatement.setString(1, productEntity.getName());

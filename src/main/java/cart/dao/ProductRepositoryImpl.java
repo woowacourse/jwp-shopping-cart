@@ -7,6 +7,7 @@ import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
 import cart.domain.product.ProductRepository;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
@@ -46,6 +47,8 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void deleteById(Long id) {
+        validateExistProduct(id);
+
         productDao.deleteById(id);
     }
 
@@ -53,8 +56,17 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Product update(Product product) {
         ProductEntity productEntity = new ProductEntity(product);
 
+        validateExistProduct(product.getProductId());
         productDao.update(productEntity);
 
         return product;
+    }
+
+    private void validateExistProduct(Long id) {
+        int count = productDao.countById(id);
+
+        if (count < 1) {
+            throw new NoSuchElementException();
+        }
     }
 }
