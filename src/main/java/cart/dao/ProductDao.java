@@ -1,16 +1,24 @@
 package cart.dao;
 
 import cart.domain.Product;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 @Repository
 public class ProductDao {
+
+    private static final String ALL_COLUMNS = "id, name, price, image_url";
+    private static final RowMapper<Product> productRowMapper = (resultSet, rowNum) -> new Product(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getInt("price"),
+            resultSet.getString("image_url")
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -29,15 +37,15 @@ public class ProductDao {
     }
 
     public Product findById(final long id) {
-        final String sql = "select id, name, price, image_url from Product where id = ?";
+        final String sql = "select " + ALL_COLUMNS + " from Product where id = ?";
 
-        return jdbcTemplate.queryForObject(sql, productRowMapper(), id);
+        return jdbcTemplate.queryForObject(sql, productRowMapper, id);
     }
 
     public List<Product> findAll() {
-        final String sql = "select id, name, price, image_url from Product";
+        final String sql = "select " + ALL_COLUMNS + " from Product";
 
-        return jdbcTemplate.query(sql, productRowMapper());
+        return jdbcTemplate.query(sql, productRowMapper);
     }
 
     public void update(final Product newProduct) {
@@ -61,14 +69,5 @@ public class ProductDao {
         final String sql = "select count(*) from Product where id = ?";
 
         return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
-    }
-
-    private RowMapper<Product> productRowMapper() {
-        return (resultSet, rowNum) -> new Product(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("price"),
-                resultSet.getString("image_url")
-        );
     }
 }
