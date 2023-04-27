@@ -27,7 +27,7 @@
             <div class="product-info">
                 <div class="product-desc">
                     <p class="product-name" th:text="${product.name}"></p>
-                    <p class="product-price" th:text="${product.price}"></p>
+                    <p class="product-price"><span th:text="${product.price}"></span>원</p>
                 </div>
                 <button type="submit" class="product-btn" th:onclick="addCartItem([[${product.id}]])">담기</button>
             </div>
