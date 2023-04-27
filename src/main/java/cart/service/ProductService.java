@@ -20,8 +20,9 @@ public class ProductService {
     }
 
     public void add(final String name, final String image, final Long price) {
-        final Product product = new Product(name, image, price);
-        productDao.insert(toEntity(product));
+        final ProductEntity productEntity = Product.of(name, image, price);
+
+        productDao.insert(productEntity);
     }
 
     public void delete(final Integer id) {
@@ -29,8 +30,9 @@ public class ProductService {
     }
 
     public void update(final Integer id, final String name, final String image, final Long price) {
-        final Product product = new Product(id, name, image, price);
-        productDao.update(toEntity(product));
+        final ProductEntity productEntity = Product.of(id, name, image, price);
+
+        productDao.update(productEntity);
     }
 
     @Transactional(readOnly = true)
@@ -45,15 +47,6 @@ public class ProductService {
                 productEntity.getName(),
                 productEntity.getImage(),
                 productEntity.getPrice()
-        );
-    }
-
-    private ProductEntity toEntity(Product product) {
-        return new ProductEntity(
-                product.getId(),
-                product.getName(),
-                product.getImage(),
-                product.getPrice()
         );
     }
 }

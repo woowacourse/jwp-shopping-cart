@@ -1,6 +1,5 @@
 package cart.controller;
 
-import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.service.ProductService;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -30,17 +28,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> readProducts() {
-        return ResponseEntity.ok(mapProducts(productService.getAll()));
-    }
-
-    private List<ProductResponse> mapProducts(List<Product> products) {
-        return products.stream()
-                .map(product -> new ProductResponse(
-                        product.getId(),
-                        product.getName(),
-                        product.getImage(),
-                        product.getPrice())
-                ).collect(Collectors.toList());
+        return ResponseEntity.ok(ProductResponse.mapProducts(productService.getAll()));
     }
 
     @PutMapping("/{id}")

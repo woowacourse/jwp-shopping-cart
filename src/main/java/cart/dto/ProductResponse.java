@@ -1,5 +1,10 @@
 package cart.dto;
 
+import cart.domain.Product;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ProductResponse {
     private final Integer id;
     private final String name;
@@ -12,6 +17,16 @@ public class ProductResponse {
         this.name = name;
         this.image = image;
         this.price = price;
+    }
+
+    public static List<ProductResponse> mapProducts(List<Product> products) {
+        return products.stream()
+                .map(product -> new ProductResponse(
+                        product.getId(),
+                        product.getName(),
+                        product.getImage(),
+                        product.getPrice())
+                ).collect(Collectors.toList());
     }
 
     public Integer getId() {

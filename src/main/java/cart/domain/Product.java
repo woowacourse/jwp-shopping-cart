@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.entity.ProductEntity;
+
 import java.util.Objects;
 
 public class Product {
@@ -8,15 +10,19 @@ public class Product {
     private final String image;
     private final Long price;
 
-    public Product(final String name, final String image, final Long price) {
-        this(null, name, image, price);
-    }
-
     public Product(final Integer id, final String name, final String image, final Long price) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
+    }
+
+    public static ProductEntity of(final Integer id, final String name, final String image, final Long price) {
+        return new ProductEntity(id, name, image, price);
+    }
+
+    public static ProductEntity of(final String name, final String image, final Long price) {
+        return new ProductEntity(name, image, price);
     }
 
     public Integer getId() {

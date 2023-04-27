@@ -8,6 +8,10 @@ public class ProductEntity {
     private final String image;
     private final Long price;
 
+    public ProductEntity(final String name, final String image, final Long price) {
+        this(null, name, image, price);
+    }
+
     public ProductEntity(final Integer id, final String name, final String image, final Long price) {
         this.id = id;
         this.name = name;
