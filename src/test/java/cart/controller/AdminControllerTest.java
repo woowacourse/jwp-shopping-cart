@@ -5,6 +5,7 @@ import cart.persistence.entity.ProductCategory;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -46,6 +47,7 @@ class AdminControllerTest {
         productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
     }
 
+    @DisplayName("어드민 상품 리스트 페이지를 조회한다")
     @Test
     void getProducts() throws Exception {
         // given
@@ -62,6 +64,7 @@ class AdminControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("상품 정보를 추가한다")
     @Test
     void addProduct() throws Exception {
         // given
@@ -77,6 +80,7 @@ class AdminControllerTest {
                 .andExpect(header().string("Location", "/admin/1"));
     }
 
+    @DisplayName("상품 정보를 추가 시 잘못된 정보 형식으로 들어오면 예외가 발생한다")
     @Test
     void addProduct_fail() throws Exception {
         // given
@@ -98,7 +102,7 @@ class AdminControllerTest {
                 ));
     }
 
-
+    @DisplayName("상품 정보를 수정한다")
     @Test
     void updateProduct() throws Exception {
         // given
@@ -113,6 +117,7 @@ class AdminControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    @DisplayName("상품 수정 시 잘못된 정보 형식으로 들어오면 예외가 발생한다")
     @Test
     void updateProduct_fail() throws Exception {
         // given
@@ -134,6 +139,7 @@ class AdminControllerTest {
                 ));
     }
 
+    @DisplayName("상품 정보를 삭제한다")
     @Test
     void deleteProduct() throws Exception {
         // given
