@@ -43,16 +43,16 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> putProducts(@PathVariable Long id,
+    @PutMapping("/{productId}")
+    public ResponseEntity<Void> putProducts(@PathVariable Long productId,
                                             @Valid @RequestBody ProductModificationRequest request) {
-        managementService.updateById(id, ProductDtoMapper.from(request));
+        managementService.updateById(productId, ProductDtoMapper.from(request));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProducts(@PathVariable Long id) {
-        managementService.deleteById(id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProducts(@PathVariable Long productId) {
+        managementService.deleteById(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
