@@ -48,8 +48,8 @@ CREATE TABLE product
     - [x] admin 페이지에서 상품을 보여준다.
 
 - 상품 수정
-    - [ ] PATCH /admin/product/id
-    - [ ] admin 페이지에서 상품을 수정한다.
+    - [x] PUT /admin/product/id
+    - [x] admin 페이지에서 상품을 수정한다.
 
 - 상품 삭제
     - [ ] DELETE /admin/product/id

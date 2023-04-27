@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -39,6 +41,16 @@ public class AdminController {
     public String productList(final Model model) {
         final List<Product> products = productDao.findAll();
         model.addAttribute("products", products);
+        return "admin";
+    }
+
+    @PutMapping("/product/{id}")
+    public String updateProduct(@RequestBody final SaveRequest saveRequest, @PathVariable Long id,
+                                final HttpServletResponse response) {
+        final Product product = Product.create(id, saveRequest.getName(), saveRequest.getPrice(),
+                saveRequest.getImageUrl());
+        productDao.update(product);
+        response.setStatus(HttpServletResponse.SC_CREATED);
         return "admin";
     }
 }
