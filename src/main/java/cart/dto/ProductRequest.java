@@ -3,11 +3,13 @@ package cart.dto;
 import cart.domain.ProductImageUrl;
 import cart.domain.ProductName;
 import cart.domain.ProductPrice;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
 
 public class ProductRequest {
 
+    @NotBlank
     @Size(
             min = ProductName.MIN_NAME_LENGTH,
             max = ProductName.MAX_NAME_LENGTH,
