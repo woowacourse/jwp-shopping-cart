@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.dto.ExceptionResponse;
+import cart.dto.ExceptionResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
