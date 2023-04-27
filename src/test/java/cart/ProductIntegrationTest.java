@@ -1,17 +1,12 @@
 package cart;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import cart.controller.dto.ModifyRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
-import io.restassured.path.xml.element.Node;
+import io.restassured.path.xml.XmlPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBodyExtractionOptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
+
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductIntegrationTest {
@@ -77,13 +76,17 @@ public class ProductIntegrationTest {
                 .extract();
 
         // 검증
-        ResponseBodyExtractionOptions body = result.body();
-        Node strings = body.htmlPath().get();
-        assertAll(
-                () -> assertThat(strings.toString()).contains("애플"),
-                () -> assertThat(strings.toString()).doesNotContain("사과"),
-                () -> assertThat(strings.toString()).doesNotContain("당근")
-        );
 
+        final String html = result.asString();
+        final XmlPath xmlPath = new XmlPath(XmlPath.CompatibilityMode.HTML, html);
+        final String expectApple = xmlPath.getString("html.body.div.table.tbody.tr[0].td[1]");
+        final String expectApplePrice = xmlPath.getString("html.body.div.table.tbody.tr[0].td[2]");
+        final String expectNull = xmlPath.getString("html.body.div.table.tbody.tr[1].td[1]");
+
+        assertAll(
+                () -> assertThat(expectApple).isEqualTo("애플"),
+                () -> assertThat(expectApplePrice).isEqualTo("1000"),
+                () -> assertThat(expectNull).isNullOrEmpty()
+        );
     }
 }
