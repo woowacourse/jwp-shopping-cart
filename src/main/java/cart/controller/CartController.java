@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ResponseProductDto;
+import cart.dto.response.ResponseProductDto;
 import cart.service.CartService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

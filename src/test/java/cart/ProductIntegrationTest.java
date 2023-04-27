@@ -6,8 +6,8 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.RequestCreateProductDto;
-import cart.dto.RequestUpdateProductDto;
+import cart.dto.request.RequestCreateProductDto;
+import cart.dto.request.RequestUpdateProductDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
