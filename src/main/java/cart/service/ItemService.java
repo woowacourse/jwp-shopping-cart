@@ -28,7 +28,7 @@ public class ItemService {
         Long savedId = itemDao.insert(item);
 
         ItemDto itemDto = itemDao.findById(savedId)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_SELECT_ERROR));
 
         return ItemResponse.from(itemDto);
     }
@@ -42,22 +42,26 @@ public class ItemService {
 
     @Transactional
     public ItemResponse update(Long id, ItemRequest itemRequest) {
-        itemDao.findById(id)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
+        validateId(id);
 
         Item item = new Item(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
         itemDao.update(id, item);
 
         ItemDto updatedItemDto = itemDao.findById(id)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_SELECT_ERROR));
         return ItemResponse.from(updatedItemDto);
     }
 
     @Transactional
     public void delete(Long id) {
-        itemDao.findById(id)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
+        validateId(id);
 
         itemDao.delete(id);
+    }
+
+    private void validateId(Long id) {
+        if (itemDao.findById(id).isEmpty()) {
+            throw new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR);
+        }
     }
 }
