@@ -13,13 +13,17 @@ public class ErrorResponse {
         this.messages = messages;
     }
 
-    public static ErrorResponse of(final BindingResult bindingResult) {
+    public static ErrorResponse createErrorResponseByMessage(final BindingResult bindingResult) {
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         List<String> filedErrorMessages = fieldErrors.stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.toList());
 
         return new ErrorResponse(filedErrorMessages);
+    }
+
+    public static ErrorResponse createErrorResponseByMessage(final String message) {
+        return new ErrorResponse(List.of(message));
     }
 
     public List<String> getMessages() {

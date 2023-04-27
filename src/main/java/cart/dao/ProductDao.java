@@ -16,4 +16,5 @@ public interface ProductDao {
     void delete(final int id);
 
     void deleteAll();
+
 }

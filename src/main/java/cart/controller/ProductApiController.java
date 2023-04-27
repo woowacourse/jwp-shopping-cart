@@ -22,19 +22,19 @@ public class ProductApiController {
     }
 
     @PostMapping("/products/insert")
-    public ResponseEntity<Integer> insert(@Valid @RequestBody ProductDto productDto) {
+    public ResponseEntity<Integer> insert(@Valid @RequestBody final ProductDto productDto) {
         Integer savedId = productService.insert(productDto);
         return ResponseEntity.created(URI.create("/products/" + savedId)).body(savedId);
     }
 
     @PutMapping("/products/update/{id}")
-    public ResponseEntity<Void> update(@PathVariable int id, @Valid @RequestBody ProductDto productDto) {
+    public ResponseEntity<Void> update(@PathVariable final int id, @Valid @RequestBody final ProductDto productDto) {
         productService.update(id, productDto);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @DeleteMapping("/products/delete/{id}")
-    public Integer delete(@PathVariable int id) {
+    public Integer delete(@PathVariable final int id) {
         productService.delete(id);
         return id;
     }
