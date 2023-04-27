@@ -4,6 +4,7 @@ import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class JdbcProductDao implements ProductDao {
     );
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductEntity> selectAll() {
         final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, productEntityRowMapper);
