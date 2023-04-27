@@ -56,6 +56,6 @@ public class ProductApiController {
     public ResponseEntity<Response> findAllProducts() {
         List<ProductDto> allProducts = productService.findAllProducts();
         return ResponseEntity.ok()
-                .body(ResultResponse.ok("총 " + allProducts.size() + "개의 상품이 조회되었습니다.", allProducts));
+                .body(ResultResponse.ok(allProducts.size() + "개의 상품이 조회되었습니다.", allProducts));
     }
 }

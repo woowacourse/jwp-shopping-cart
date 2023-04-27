@@ -343,7 +343,7 @@ class ProductApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("200"))
-                .andExpect(jsonPath("$.message").value("총 4개의 상품이 조회되었습니다."))
+                .andExpect(jsonPath("$.message").value("4개의 상품이 조회되었습니다."))
                 .andExpect(jsonPath("$.result[0].id").value(1))
                 .andExpect(jsonPath("$.result[0].name").value("글렌피딕"))
                 .andExpect(jsonPath("$.result[0].price").value(100_000))
