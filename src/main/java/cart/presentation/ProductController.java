@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +43,7 @@ public class ProductController {
     }
 
     @PostMapping(path = "/create")
-    public void productCreate(@RequestBody ProductDto request) throws MalformedURLException {
+    public void productCreate(@RequestBody ProductDto request) {
         Product product = makeProductFromDtoWithoutId(request);
         createProductService.perform(product);
     }
@@ -63,18 +62,18 @@ public class ProductController {
     }
 
     @PostMapping(path = "/update")
-    public void productUpdate(@RequestBody ProductDto request) throws MalformedURLException {
+    public void productUpdate(@RequestBody ProductDto request) {
         Product product = makeProductFromDtoWithId(request);
         updateProductService.perform(product);
     }
 
     @DeleteMapping(path = "/delete")
-    public void productDelete(@RequestBody ProductDto request) throws MalformedURLException {
+    public void productDelete(@RequestBody ProductDto request) {
         Product product = makeProductFromDtoWithId(request);
         deleteProductService.perform(product);
     }
 
-    private Product makeProductFromDtoWithoutId(ProductDto request) throws MalformedURLException {
+    private Product makeProductFromDtoWithoutId(ProductDto request) {
         return new Product(
                 null,
                 new ProductName(request.getName()),
@@ -83,7 +82,7 @@ public class ProductController {
         );
     }
 
-    private Product makeProductFromDtoWithId(ProductDto request) throws MalformedURLException {
+    private Product makeProductFromDtoWithId(ProductDto request) {
         return new Product(
                 request.getId(),
                 new ProductName(request.getName()),
