@@ -19,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProductModificationRequestTest {
 
-    private static ValidatorFactory validatorFactory;
-    private static Validator validator;
-
     private final Long dummyId = 1L;
     private final String dummyName = "dummy";
     private final String dummyImage = "dummy";
     private final Integer dummyPrice = 10_000;
+
+    private static ValidatorFactory validatorFactory;
+    private static Validator validator;
 
     @BeforeAll
     static void setUp() {

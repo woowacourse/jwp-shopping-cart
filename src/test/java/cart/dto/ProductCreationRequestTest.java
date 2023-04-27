@@ -19,6 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProductCreationRequestTest {
 
+    private static final String dummyName = "dummy";
+    private static final String dummyImage = "dummy";
+    private static final Integer dummyPrice = 10_000;
+
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
@@ -67,7 +71,7 @@ class ProductCreationRequestTest {
         }
 
         private ProductCreationRequest makeRequest(final String nameInput) {
-            return new ProductCreationRequest(nameInput, "dummy", 1);
+            return new ProductCreationRequest(nameInput, dummyImage, dummyPrice);
         }
     }
 
@@ -104,7 +108,7 @@ class ProductCreationRequestTest {
         }
 
         private ProductCreationRequest makeRequest(final String imageInput) {
-            return new ProductCreationRequest("dummy", imageInput, 1);
+            return new ProductCreationRequest(dummyName, imageInput, dummyPrice);
         }
     }
 
@@ -141,7 +145,7 @@ class ProductCreationRequestTest {
         }
 
         private ProductCreationRequest makeRequest(final Integer priceInput) {
-            return new ProductCreationRequest("dummy", "dummy", priceInput);
+            return new ProductCreationRequest(dummyName, dummyImage, priceInput);
         }
     }
 
