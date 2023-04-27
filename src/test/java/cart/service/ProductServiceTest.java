@@ -42,7 +42,7 @@ class ProductServiceTest {
 
         // then
         verify(productDao, Mockito.atMostOnce())
-                .create(request);
+                .create(request.toEntity());
     }
 
     @DisplayName("상품이 생성시 검증에 실패한다.")
@@ -89,7 +89,7 @@ class ProductServiceTest {
         productService.update(id, request);
 
         // then
-        verify(productDao, atMostOnce()).updateById(id, request);
+        verify(productDao, atMostOnce()).updateById(id, request.toEntity());
     }
 
     @DisplayName("상품이 수정시 검증에 실패한다.")

@@ -22,7 +22,7 @@ public class ProductService {
     @Transactional
     public void create(final ProductCreateRequest request) {
         request.validatePrice(request.getPrice());
-        productDao.create(request);
+        productDao.create(request.toEntity());
     }
 
     public List<ProductResponse> findAll() {
@@ -34,7 +34,7 @@ public class ProductService {
     @Transactional
     public void update(final Long id, final ProductUpdateRequest request) {
         request.validatePrice(request.getPrice());
-        productDao.updateById(id, request);
+        productDao.updateById(id, request.toEntity());
     }
 
     @Transactional

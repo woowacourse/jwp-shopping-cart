@@ -1,7 +1,5 @@
 package cart.dao;
 
-import cart.controller.dto.request.ProductCreateRequest;
-import cart.controller.dto.request.ProductUpdateRequest;
 import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,9 +14,9 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void create(final ProductCreateRequest request) {
+    public void create(final ProductEntity product) {
         String sql = "INSERT INTO PRODUCT (name, price, image_url) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, request.getName(), request.getPrice(), request.getImageUrl());
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public List<ProductEntity> findAll() {
@@ -32,9 +30,9 @@ public class ProductDao {
         );
     }
 
-    public void updateById(final Long id, final ProductUpdateRequest request) {
+    public void updateById(final Long id, final ProductEntity product) {
         String sql = "UPDATE PRODUCT SET(name, price, image_url) = (?, ?, ?) WHERE id = ?";
-        jdbcTemplate.update(sql, request.getName(), request.getPrice(), request.getImageUrl(), id);
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
     }
 
     public void deleteById(final Long id) {

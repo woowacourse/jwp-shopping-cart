@@ -37,7 +37,7 @@ class ProductDaoTest {
         ProductCreateRequest request = new ProductCreateRequest("product", 5000, "image url");
 
         // when
-        productDao.create(request);
+        productDao.create(request.toEntity());
 
         // then
         List<ProductEntity> responses = productDao.findAll();
@@ -56,9 +56,9 @@ class ProductDaoTest {
         ProductCreateRequest request1 = new ProductCreateRequest("product1", 5000, "image url");
         ProductCreateRequest request2 = new ProductCreateRequest("product2", 6000, "image url");
         ProductCreateRequest request3 = new ProductCreateRequest("product3", 7000, "image url");
-        productDao.create(request1);
-        productDao.create(request2);
-        productDao.create(request3);
+        productDao.create(request1.toEntity());
+        productDao.create(request2.toEntity());
+        productDao.create(request3.toEntity());
 
         // when
         List<ProductEntity> responses = productDao.findAll();
@@ -80,10 +80,10 @@ class ProductDaoTest {
         // given
         ProductCreateRequest createRequest = new ProductCreateRequest("product1", 5000, "image url");
         ProductUpdateRequest updateRequest = new ProductUpdateRequest("update product", 2000, "img");
-        productDao.create(createRequest);
+        productDao.create(createRequest.toEntity());
 
         // when
-        productDao.updateById(getResponseId(), updateRequest);
+        productDao.updateById(getResponseId(), updateRequest.toEntity());
 
         ProductEntity response = productDao.findAll().get(0);
 
@@ -109,9 +109,9 @@ class ProductDaoTest {
         ProductCreateRequest createRequest1 = new ProductCreateRequest("product1", 5000, "image url");
         ProductCreateRequest createRequest2 = new ProductCreateRequest("product1", 5000, "image url");
         ProductCreateRequest createRequest3 = new ProductCreateRequest("product1", 5000, "image url");
-        productDao.create(createRequest1);
-        productDao.create(createRequest2);
-        productDao.create(createRequest3);
+        productDao.create(createRequest1.toEntity());
+        productDao.create(createRequest2.toEntity());
+        productDao.create(createRequest3.toEntity());
 
         // when
         int beforeSize = productDao.findAll().size();

@@ -1,5 +1,6 @@
 package cart.controller.dto.request;
 
+import cart.entity.ProductEntity;
 import cart.exception.CantSellNegativeQuantity;
 
 import javax.validation.constraints.NotEmpty;
@@ -43,5 +44,9 @@ public class ProductRequest {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public ProductEntity toEntity() {
+        return ProductEntity.generate(this);
     }
 }

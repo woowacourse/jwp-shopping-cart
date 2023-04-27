@@ -1,5 +1,7 @@
 package cart.controller.dto.request;
 
+import cart.entity.ProductEntity;
+
 public class ProductUpdateRequest extends ProductRequest {
 
     public ProductUpdateRequest() {
@@ -11,6 +13,10 @@ public class ProductUpdateRequest extends ProductRequest {
             final String imageUrl
     ) {
         super(name, price, imageUrl);
+    }
+
+    public ProductEntity toEntity() {
+        return ProductEntity.generate(this);
     }
 
 }
