@@ -41,6 +41,11 @@ public class GlobalExceptionHandler {
 		return info(e);
 	}
 
+	@ExceptionHandler(IllegalStateException.class)
+	public ResponseEntity<ErrorResponse> handleIllegalStateException(IllegalStateException e) {
+		return info(e);
+	}
+
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
 		HttpRequestMethodNotSupportedException e) {
