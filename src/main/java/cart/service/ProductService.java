@@ -10,20 +10,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductDao productDaoImpl;
 
     public ProductService(final ProductDao productDao) {
-        this.productDao = productDao;
+        this.productDaoImpl = productDao;
     }
 
     public List<ProductEntity> findAll() {
-        return productDao.findAll();
+        return productDaoImpl.findAll();
     }
 
     public Integer insert(final ProductDto productDto) {
         Product product = productDto.toProduct();
         ProductEntity productEntity = product.toEntity();
-        return productDao.insert(productEntity);
+        return productDaoImpl.insert(productEntity);
     }
 
     public void update(final int id, final ProductDto productDto) {
@@ -32,17 +32,17 @@ public class ProductService {
 
         ProductEntity updatedEntity = productEntity.update(product.toEntity());
 
-        productDao.update(updatedEntity);
+        productDaoImpl.update(updatedEntity);
     }
 
     private ProductEntity findProductById(final int id) {
-        return productDao.findById(id)
+        return productDaoImpl.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("상품 id를 확인해주세요."));
     }
 
     public void delete(final int id) {
         findProductById(id);
-        productDao.delete(id);
+        productDaoImpl.delete(id);
     }
 
 }
