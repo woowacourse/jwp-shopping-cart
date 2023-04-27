@@ -14,6 +14,13 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
     private static final String DELIMITER = ", ";
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
+
+        return ResponseEntity.internalServerError().body(new ExceptionResponse("처리 중 예외가 발생했습니다"));
+    }
+
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(final IllegalArgumentException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(exception.getMessage()));
