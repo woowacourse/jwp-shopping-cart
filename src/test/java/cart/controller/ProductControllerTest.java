@@ -7,9 +7,10 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -136,7 +137,7 @@ class ProductControllerTest {
         final String request = objectMapper.writeValueAsString(updateRequestDto);
 
         // when
-        mockMvc.perform(patch("/products/" + id)
+        mockMvc.perform(put("/products/" + id)
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
@@ -150,6 +151,22 @@ class ProductControllerTest {
                 () -> assertThat(result.getImage()).isEqualTo("cat.jpg"),
                 () -> assertThat(result.getPrice()).isEqualTo(1000000L)
         );
+    }
+
+    @Test
+    void 상품을_삭제한다() throws Exception {
+        // given
+        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Long id = productDao.saveAndGetId(product).get();
+
+        // when
+        mockMvc.perform(delete("/products/" + id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(print());
+
+        // then
+        assertThat(productDao.findAll()).isEmpty();
     }
 }
 

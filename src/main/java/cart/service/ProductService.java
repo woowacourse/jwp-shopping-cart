@@ -36,4 +36,8 @@ public class ProductService {
         final Product product = new Product(id, request.getName(), request.getImage(), request.getPrice());
         productDao.update(product);
     }
+
+    public void delete(final Long id) {
+        productDao.delete(id);
+    }
 }

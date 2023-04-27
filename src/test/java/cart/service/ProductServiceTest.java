@@ -81,4 +81,17 @@ class ProductServiceTest {
                 () -> assertThat(result.getPrice()).isEqualTo(100L)
         );
     }
+
+    @Test
+    void 상품을_삭제한다() {
+        // given
+        final ProductSaveRequestDto product = new ProductSaveRequestDto("허브티", "tea.jpg", 99L);
+        final Long id = productService.save(product);
+
+        // when
+        productService.delete(id);
+
+        // then
+        assertThat(productDao.findAll()).isEmpty();
+    }
 }

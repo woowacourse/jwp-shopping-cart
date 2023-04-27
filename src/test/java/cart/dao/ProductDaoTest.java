@@ -82,4 +82,17 @@ class ProductDaoTest {
                 () -> assertThat(result.getPrice()).isEqualTo(10000L)
         );
     }
+
+    @Test
+    void 상품을_삭제한다() {
+        // given
+        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Long id = productDao.saveAndGetId(product).get();
+
+        // when
+        productDao.delete(id);
+
+        // then
+        assertThat(productDao.findAll()).isEmpty();
+    }
 }

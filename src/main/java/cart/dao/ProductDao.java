@@ -43,4 +43,9 @@ public class ProductDao {
         final String sql = "update product set name = ?, image = ?, price = ? where id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getImage(), product.getPrice(), product.getId());
     }
+
+    public void delete(final Long id) {
+        final String sql = " delete from product where id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }
