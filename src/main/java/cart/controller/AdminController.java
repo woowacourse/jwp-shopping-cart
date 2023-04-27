@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dao.ProductEntity;
+import cart.dto.ProductDto;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,7 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String getAdminHomePage(final Model model) {
-        List<ProductEntity> products = productService.findAll();
+        List<ProductDto> products = productService.findAll();
         model.addAttribute("products", products);
         return "admin";
     }

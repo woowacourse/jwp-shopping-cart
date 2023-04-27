@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.dao.ProductEntity;
 import cart.domain.Product;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -18,6 +19,10 @@ public class ProductDto {
     @Min(100)
     @Max(10_000_000)
     private final Integer price;
+
+    public ProductDto(final ProductEntity productEntity) {
+        this(productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
+    }
 
     public ProductDto(final String name, final String image, final Integer price) {
         this.name = name;

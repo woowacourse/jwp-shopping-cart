@@ -5,6 +5,7 @@ import cart.dao.ProductEntity;
 import cart.domain.Product;
 import cart.dto.ProductDto;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,8 +17,11 @@ public class ProductService {
         this.productDaoImpl = productDao;
     }
 
-    public List<ProductEntity> findAll() {
-        return productDaoImpl.findAll();
+    public List<ProductDto> findAll() {
+        List<ProductEntity> productEntities = productDaoImpl.findAll();
+        return productEntities.stream()
+                .map(ProductDto::new)
+                .collect(Collectors.toList());
     }
 
     public Integer insert(final ProductDto productDto) {
