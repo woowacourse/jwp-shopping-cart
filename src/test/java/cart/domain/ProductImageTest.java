@@ -5,8 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.net.MalformedURLException;
-
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -18,7 +16,7 @@ class ProductImageTest {
     void test_product_image_prefix_exception(String url) {
         // given, when, then
         assertThatThrownBy(() -> new ProductImage(url))
-                .isInstanceOf(MalformedURLException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest

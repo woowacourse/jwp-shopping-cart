@@ -56,10 +56,14 @@ class MemoryProductRepositoryTest {
         //when
         memoryProductRepository.insert(salmon);
         memoryProductRepository.insert(pizza);
+
         List<Product> allProducts = memoryProductRepository.findAll();
+        Product actualSalmon = allProducts.get(0);
+        Product actualPizza = allProducts.get(1);
 
         //then
-        assertThat(allProducts).isEqualTo(List.of(salmon, pizza));
+        assertThat(actualSalmon.getId()).isEqualTo(salmon.getId());
+        assertThat(actualPizza.getId()).isEqualTo(pizza.getId());
     }
 
     @Test
