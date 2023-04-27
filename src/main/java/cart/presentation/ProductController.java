@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,7 +44,7 @@ public class ProductController {
     }
 
     @PostMapping(path = "/create")
-    public void productCreate(ProductDto request) throws MalformedURLException {
+    public void productCreate(@RequestBody ProductDto request) throws MalformedURLException {
         Product product = makeProductFromDto(request);
         createProductService.perform(product);
     }
@@ -54,7 +55,7 @@ public class ProductController {
         List<ProductDto> productsToResponse = products.stream()
                 .map(product -> new ProductDto(product.getId(),
                         product.getName(),
-                        product.getUrl(),
+                        product.getImage(),
                         product.getProductPrice()))
                 .collect(Collectors.toList());
 
@@ -68,14 +69,14 @@ public class ProductController {
     }
 
     @DeleteMapping(path = "/delete")
-    public void productDelete(ProductDto request) throws MalformedURLException {
+    public void productDelete(@RequestBody ProductDto request) throws MalformedURLException {
         Product product = makeProductFromDto(request);
         deleteProductService.perform(product);
     }
 
     private Product makeProductFromDto(ProductDto request) throws MalformedURLException {
         return new Product(
-                request.getId(),
+                null,
                 new ProductName(request.getName()),
                 new ProductImage(request.getUrl()),
                 new ProductPrice(request.getPrice())
