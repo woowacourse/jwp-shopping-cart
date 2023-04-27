@@ -1,8 +1,9 @@
 package cart.domain.product;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.domain.product.dto.ProductCreationDto;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +30,7 @@ class AdminServiceTest {
         adminService.save(pizza);
 
         List<Product> allProducts = productRepository.findAll();
-        Assertions.assertThat(allProducts).hasSize(1);
-        Assertions.assertThat(allProducts.get(0).getName()).isEqualTo("Pizza");
+        assertThat(allProducts).hasSize(1);
+        assertThat(allProducts.get(0).getName()).isEqualTo("Pizza");
     }
 }

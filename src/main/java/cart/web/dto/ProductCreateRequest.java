@@ -9,6 +9,13 @@ public class ProductCreateRequest {
     public ProductCreateRequest() {
     }
 
+    public ProductCreateRequest(String name, Integer price, String category, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.imageUrl = imageUrl;
+    }
+
     public String getName() {
         return name;
     }

@@ -14,9 +14,9 @@ public class AdminService {
     }
 
     @Transactional
-    public void save(ProductCreationDto productDto) {
+    public Long save(ProductCreationDto productDto) {
         Product product = productDto.toProduct();
 
-        productRepository.save(product);
+        return productRepository.save(product);
     }
 }
