@@ -105,5 +105,56 @@ class ProductControllerTest {
         // then
         assertThat(productDao.findAll()).isEmpty();
     }
+
+    @Test
+    void 이름이_100자_이상인_상품_등록을_요청하면_400_BadRequest_를_응답한다() throws Exception {
+        // given
+        final ProductSaveRequestDto dto = new ProductSaveRequestDto("허".repeat(101), "tea.jpg", 1000L);
+        final String request = objectMapper.writeValueAsString(dto);
+
+        // expect
+        mockMvc.perform(post("/products")
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    void 가격이_음수인_상품_등록을_요청하면_400_BadRequest_를_응답한다() throws Exception {
+        // given
+        final ProductSaveRequestDto dto = new ProductSaveRequestDto("허브티", "tea.jpg", -1L);
+        final String request = objectMapper.writeValueAsString(dto);
+
+        // expect
+        mockMvc.perform(post("/products")
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    void 등록되지_않은_삼품_수정을_요청하면_404_BadRequest_를_응답한다() throws Exception {
+        // given
+        final ProductUpdateRequestDto updateRequestDto = new ProductUpdateRequestDto("고양이", "cat.jpg", 1000000L);
+        final String request = objectMapper.writeValueAsString(updateRequestDto);
+
+        // expect
+        mockMvc.perform(put("/products/" + 9999999L)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
+    void 등록되지_않은_삼품_삭제를_요청하면_404_BadRequest_를_응답한다() throws Exception {
+        // expect
+        mockMvc.perform(delete("/products/" + 9999999L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
 }
 

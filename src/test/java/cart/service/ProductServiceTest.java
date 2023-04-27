@@ -83,15 +83,11 @@ class ProductServiceTest {
     }
 
     @Test
-    void 없는_상품을_조회_시_NoSuchElementException_을_던진다() {
-        // given
-        final Long id = 999999999999L;
-
+    void 없는_상품을_조회하는_경우_NoSuchElementException_을_던진다() {
         // expect
-        assertThatThrownBy(() -> productService.findById(id))
+        assertThatThrownBy(() -> productService.findById(999999999999L))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("상품을 찾을 수 없습니다.");
-        ;
     }
 
     @Test
@@ -115,6 +111,18 @@ class ProductServiceTest {
     }
 
     @Test
+    void 없는_상품을_수정하는_경우_NoSuchElementException_을_던진다() {
+        // given
+        final Long id = 999999999999L;
+        final ProductUpdateRequestDto request = new ProductUpdateRequestDto("블랙캣", "cat.jpg", 100L);
+
+        // expect
+        assertThatThrownBy(() -> productService.update(id, request))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("상품을 찾을 수 없습니다.");
+    }
+
+    @Test
     void 상품을_삭제한다() {
         // given
         final ProductSaveRequestDto product = new ProductSaveRequestDto("허브티", "tea.jpg", 99L);
@@ -125,5 +133,13 @@ class ProductServiceTest {
 
         // then
         assertThat(productDao.findAll()).isEmpty();
+    }
+
+    @Test
+    void 없는_상품을_삭제하는_경우_NoSuchElementException_을_던진다() {
+        // expect
+        assertThatThrownBy(() -> productService.delete(999999999999L))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("상품을 찾을 수 없습니다.");
     }
 }

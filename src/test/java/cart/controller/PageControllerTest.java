@@ -7,7 +7,9 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
@@ -103,6 +105,15 @@ class PageControllerTest {
                         "product",
                         is(generatePropertiesMatcher(id, "허브티", "tea.jpg", 1000L))
                 ))
+                .andDo(print());
+    }
+
+    @Test
+    void 존재하지_않는_상품을_단일_조회_하는_경우_404_NotFound_를_응답한다() throws Exception {
+        // expect
+        mockMvc.perform(get("/products/" + 99999999L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("상품을 찾을 수 없습니다."))
                 .andDo(print());
     }
 }

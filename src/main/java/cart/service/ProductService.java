@@ -40,11 +40,15 @@ public class ProductService {
     }
 
     public void update(final Long id, final ProductUpdateRequestDto request) {
-        final Product product = new Product(id, request.getName(), request.getImage(), request.getPrice());
-        productDao.update(product);
+        productDao.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
+        final Product savedProduct = new Product(id, request.getName(), request.getImage(), request.getPrice());
+        productDao.update(savedProduct);
     }
 
     public void delete(final Long id) {
+        productDao.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
         productDao.delete(id);
     }
 }
