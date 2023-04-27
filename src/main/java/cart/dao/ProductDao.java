@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
-import java.util.List;
+import cart.dto.request.ProductSaveRequest;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class ProductDao {
@@ -27,14 +29,14 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long save(Product product) {
+    public long save(ProductSaveRequest saveRequest) {
         String sql = "insert into PRODUCT(name, image, price) values (:name,:image,:price)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("name", product.getName())
-                .addValue("image", product.getImage())
-                .addValue("price", product.getPrice());
+                .addValue("name", saveRequest.getName())
+                .addValue("image", saveRequest.getImage())
+                .addValue("price", saveRequest.getPrice());
 
         jdbcTemplate.update(sql, paramSource, keyHolder);
 
@@ -53,13 +55,13 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(sql, paramSource, productRowMapper);
     }
 
-    public void updateProduct(Product after) {
+    public void updateProduct(Product product) {
         String sql = "update PRODUCT set name = :name, image = :image, price = :price where product_id = :product_id";
         SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("product_id", after.getProductId())
-                .addValue("name", after.getName())
-                .addValue("image", after.getImage())
-                .addValue("price", after.getPrice());
+                .addValue("product_id", product.getProductId())
+                .addValue("name", product.getName())
+                .addValue("image", product.getImage())
+                .addValue("price", product.getPrice());
 
         jdbcTemplate.update(sql, paramSource);
     }

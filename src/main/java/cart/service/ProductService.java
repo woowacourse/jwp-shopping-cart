@@ -5,6 +5,7 @@ import cart.domain.Product;
 import java.util.List;
 
 import cart.dto.request.ProductSaveRequest;
+import cart.dto.request.ProductUpdateRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +18,7 @@ public class ProductService {
     }
 
     public long saveProduct(ProductSaveRequest productSaveRequest) {
+        // todo: save시에도 validation
         return productDao.save(productSaveRequest);
     }
 
@@ -24,7 +26,8 @@ public class ProductService {
         return productDao.findAllProducts();
     }
 
-    public void updateProduct(Product product) {
+    public void updateProduct(ProductUpdateRequest updateRequest) {
+        Product product = new Product(updateRequest.getProductId(), updateRequest.getName(), updateRequest.getImage(), updateRequest.getPrice());
         productDao.updateProduct(product);
     }
 

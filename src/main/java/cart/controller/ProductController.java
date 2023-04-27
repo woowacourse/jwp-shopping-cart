@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.domain.Product;
 import cart.dto.request.ProductSaveRequest;
+import cart.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -36,8 +37,8 @@ public class ProductController {
     }
 
     @PutMapping("/product")
-    public ResponseEntity<String> updateProduct(@RequestBody Product product) {
-        productService.updateProduct(product);
+    public ResponseEntity<String> updateProduct(@RequestBody ProductUpdateRequest updateRequest) {
+        productService.updateProduct(updateRequest);
         return ResponseEntity.ok().build();
     }
 

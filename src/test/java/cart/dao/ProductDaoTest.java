@@ -1,17 +1,15 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cart.domain.Product;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
+import cart.dto.request.ProductSaveRequest;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @DisplayName("ProductDaoTest 테스트")
@@ -30,14 +28,17 @@ class ProductDaoTest {
 
     @Test
     void save는_상품을_저장한다() {
-        Product product = Product.of("치킨",
+        ProductSaveRequest productSaveRequest = new ProductSaveRequest("치킨",
                 "https://img.freepik.com/free-photo/crispy-fried-chicken-on-a-plate-with-salad-and-carrot_1150-20212.jpg",
-                19000);
+                19000L);
 
-        productDao.save(product);
+        productDao.save(productSaveRequest);
 
         List<Product> allProducts = productDao.findAllProducts();
-        assertThat(allProducts.get(0)).usingRecursiveComparison().ignoringFields("productId").isEqualTo(product);
+        assertThat(allProducts.get(0))
+                .usingRecursiveComparison()
+                .ignoringFields("productId")
+                .isEqualTo(productSaveRequest);
     }
 
     @Test
@@ -46,25 +47,22 @@ class ProductDaoTest {
         assertThat(allProducts).isNotNull();
     }
 
-
     @Test
     void updateProduct는_상품_정보를_수정한다() {
-        //todo : 테스트를 위한 사전 상황을 어떻게 할지.
-        Product before = Product.of("chicken", "imagelink", 100);
-        long productId = productDao.save(before);
+        ProductSaveRequest saveRequest = new ProductSaveRequest("chicken", "imagelink", 1000L);
+        long productId = productDao.save(saveRequest);
 
-        Product after = new Product(productId, "chicken", "imagelink",19000);
-        productDao.updateProduct(after);
+        Product product = new Product(productId, "chicken", "imagelink", 19000L);
+        productDao.updateProduct(product);
 
         Product savedProduct = productDao.findProductById(productId);
-        assertThat(savedProduct).usingRecursiveComparison().isEqualTo(after);
+        assertThat(savedProduct).usingRecursiveComparison().isEqualTo(product);
     }
 
     @Test
     void deleteProduct는_상품을_삭제한다() {
-        //todo : 테스트를 위한 사전 상황을 어떻게 할지.
-        Product product = Product.of("chicken", "imagelink", 100);
-        long productId = productDao.save(product);
+        ProductSaveRequest saveRequest = new ProductSaveRequest("chicken", "imagelink", 1000L);
+        long productId = productDao.save(saveRequest);
         assertThat(productDao.findAllProducts()).hasSize(1);
 
         productDao.deleteProduct(productId);
