@@ -1,10 +1,10 @@
 package cart.dto;
 
-public class ValidationExceptionResponse {
+public class ExceptionResponse {
 
     private final String message;
 
-    public ValidationExceptionResponse(final String message) {
+    public ExceptionResponse(final String message) {
         this.message = message;
     }
 

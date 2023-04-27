@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ValidationExceptionResponse;
+import cart.dto.ExceptionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -18,7 +18,7 @@ public class ExceptionController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationExceptionResponse> handleException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ExceptionResponse> handleValidationException(final MethodArgumentNotValidException exception) {
         log.error(exception.getMessage());
 
         final String errorMessage = exception.getBindingResult()
@@ -27,7 +27,7 @@ public class ExceptionController {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(System.lineSeparator()));
 
-        final ValidationExceptionResponse exceptionResponse = new ValidationExceptionResponse(errorMessage);
+        final ExceptionResponse exceptionResponse = new ExceptionResponse(errorMessage);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
     }
