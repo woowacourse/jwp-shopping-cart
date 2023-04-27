@@ -57,7 +57,8 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
-    axios.patch('http://localhost:8080/products/' + product.id, {
+    const { id } = product;
+    axios.patch(`http://localhost:8080/products/${id}`, {
             "name" : product.name,
             "price" : product.price,
             "image" : product.image
@@ -69,7 +70,7 @@ const updateProduct = (product) => {
 };
 
 const deleteProduct = (id) => {
-    axios.delete('http://localhost:8080/products/' + id)
+    axios.delete(`http://localhost:8080/products/${id}`)
     .then((response) => {
         window.location.reload();
     }).catch((error) => {
