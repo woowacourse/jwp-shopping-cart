@@ -1,11 +1,10 @@
 package cart.dto;
 
-import cart.domain.ProductImage;
+import cart.domain.ProductImageUrl;
 import cart.domain.ProductName;
 import cart.domain.ProductPrice;
-import org.hibernate.validator.constraints.Range;
-
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Range;
 
 public class ProductRequest {
 
@@ -22,14 +21,14 @@ public class ProductRequest {
     private final int price;
 
     @Size(
-            max = ProductImage.MAX_IMAGE_URL_LENGTH,
-            message = ProductImage.IMAGE_URL_LENGTH_ERROR_MESSAGE)
-    private final String image;
+            max = ProductImageUrl.MAX_IMAGE_URL_LENGTH,
+            message = ProductImageUrl.IMAGE_URL_LENGTH_ERROR_MESSAGE)
+    private final String imageUrl;
 
-    public ProductRequest(String name, int price, String image) {
+    public ProductRequest(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
-        this.image = image;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -40,7 +39,7 @@ public class ProductRequest {
         return price;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

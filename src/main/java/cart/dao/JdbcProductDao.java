@@ -21,7 +21,7 @@ public class JdbcProductDao implements ProductDao {
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getInt("price"),
-                    resultSet.getString("image")
+                    resultSet.getString("image_url")
             );
 
     public JdbcProductDao(JdbcTemplate jdbcTemplate) {
@@ -56,8 +56,8 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public void update(Product product) {
-        final String sql = "UPDATE product SET name = ?, price = ?, image = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), product.getId());
+        final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
     }
 
     @Override

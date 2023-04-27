@@ -16,8 +16,8 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public void save(final String name, final int price, final String image) {
-        Product product = new Product(name, price, image);
+    public void save(final String name, final int price, final String imageUrl) {
+        Product product = new Product(name, price, imageUrl);
         productDao.insert(product);
     }
 
@@ -26,9 +26,9 @@ public class ProductService {
         return productDao.findAll();
     }
 
-    public void update(final Long id, final String name, final int price, final String image) {
+    public void update(final Long id, final String name, final int price, final String imageUrl) {
         checkExistProductId(id);
-        Product product = new Product(id, name, price, image);
+        Product product = new Product(id, name, price, imageUrl);
         productDao.update(product);
     }
 

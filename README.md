@@ -29,12 +29,12 @@
 
 Product
 
-| column | type        |                    |
-|--------|-------------|--------------------|
-| id     | BIGINT      | PK, AUTO_INCREMENT |
-| name   | VARCHAR(64) |                    |
-| price  | INT         |                    |
-| image  | TEXT        | NULLABLE           |
+| column    | type        |                    |
+|-----------|-------------|--------------------|
+| id        | BIGINT      | PK, AUTO_INCREMENT |
+| name      | VARCHAR(64) |                    |
+| price     | INT         |                    |
+| image_url | TEXT        | NULLABLE           |
 
 ### API
 
@@ -46,7 +46,7 @@ Product
         {
           "name":"",
           "price":0,
-          "image":""
+          "imageUrl":""
         }
         ```
 
@@ -61,7 +61,7 @@ Product
               "id":0,
               "name":"",
               "price":0,
-              "image":""
+              "imageUrl":""
             },
             ...
           ]
@@ -76,7 +76,7 @@ Product
         {
           "name":"",
           "price":0,
-          "image":""
+          "imageUrl":""
         }
         ```
 

@@ -72,7 +72,7 @@ class ProductControllerTest {
                 () -> assertThat(product.getId()).isEqualTo(id),
                 () -> assertThat(product.getName()).isEqualTo("애쉬"),
                 () -> assertThat(product.getPrice()).isEqualTo(2000),
-                () -> assertThat(product.getImage()).isEqualTo("image")
+                () -> assertThat(product.getImageUrl()).isEqualTo("image")
         );
     }
 

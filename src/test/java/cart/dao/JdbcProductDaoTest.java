@@ -21,7 +21,7 @@ class JdbcProductDaoTest {
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getInt("price"),
-                    resultSet.getString("image")
+                    resultSet.getString("image_url")
             );
     private JdbcProductDao jdbcProductDao;
 
@@ -64,7 +64,7 @@ class JdbcProductDaoTest {
                 () -> assertThat(product.getId()).isEqualTo(id),
                 () -> assertThat(product.getName()).isEqualTo("ASH"),
                 () -> assertThat(product.getPrice()).isEqualTo(1000),
-                () -> assertThat(product.getImage()).isEqualTo("image")
+                () -> assertThat(product.getImageUrl()).isEqualTo("image")
         );
     }
 

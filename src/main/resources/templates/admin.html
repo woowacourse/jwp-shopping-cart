@@ -37,8 +37,8 @@
       <td th:text="${product.price}"></td>
       <td>
         <img style="max-width: 100px;"
-             th:src="${product.image != null && !#strings.isEmpty(product.image)
-                     ? product.image: '/img/default_image.jpeg'}">
+             th:src="${product.imageUrl != null && !#strings.isEmpty(product.imageUrl)
+                     ? product.imageUrl: '/img/default_image.jpeg'}">
       </td>
       <td>
         <button th:onclick="showEditModal([[${product}]])">수정</button>

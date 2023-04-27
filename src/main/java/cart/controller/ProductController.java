@@ -29,7 +29,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest request) {
-        productService.save(request.getName(), request.getPrice(), request.getImage());
+        productService.save(request.getName(), request.getPrice(), request.getImageUrl());
         return ResponseEntity.ok().build();
     }
 
@@ -43,7 +43,7 @@ public class ProductController {
     public ResponseEntity<Void> updateProduct(
             @PathVariable @NotNull Long id,
             @RequestBody @Valid ProductRequest request) {
-        productService.update(id, request.getName(), request.getPrice(), request.getImage());
+        productService.update(id, request.getName(), request.getPrice(), request.getImageUrl());
         return ResponseEntity.ok().build();
     }
 

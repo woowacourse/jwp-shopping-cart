@@ -7,17 +7,17 @@ public class ProductResponse {
     private final Long id;
     private final String name;
     private final int price;
-    private final String image;
+    private final String imageUrl;
 
-    public ProductResponse(Long id, String name, int price, String image) {
+    public ProductResponse(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.image = image;
+        this.imageUrl = imageUrl;
     }
 
     public static ProductResponse of(final Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImage());
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public Long getId() {
@@ -32,7 +32,7 @@ public class ProductResponse {
         return price;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
