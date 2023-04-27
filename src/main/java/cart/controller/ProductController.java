@@ -22,16 +22,16 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping("/product")
-    public ResponseEntity<String> saveProduct(@RequestBody Product product) {
-        productService.saveProduct(product);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
     @GetMapping("/product")
     public ResponseEntity<List<Product>> findAllProducts() {
         List<Product> products = productService.findAllProducts();
         return ResponseEntity.ok().body(products);
+    }
+
+    @PostMapping("/product")
+    public ResponseEntity<String> saveProduct(@RequestBody Product product) {
+        productService.saveProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/product")

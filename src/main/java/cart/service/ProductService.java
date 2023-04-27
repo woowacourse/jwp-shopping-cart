@@ -14,8 +14,8 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public void saveProduct(Product product) {
-        productDao.save(product);
+    public long saveProduct(Product product) {
+        return productDao.save(product);
     }
 
     public List<Product> findAllProducts() {
