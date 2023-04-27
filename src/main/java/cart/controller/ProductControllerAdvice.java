@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class ProductControllerAdvice {
 
     @ExceptionHandler
-    public ResponseEntity<String> handleNotValidInput(MethodArgumentNotValidException exception) {
+    public ResponseEntity<String> handleNotValidInput(final MethodArgumentNotValidException exception) {
         final List<ObjectError> allErrors = exception.getBindingResult().getAllErrors();
         final String errorMessages = allErrors.stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)

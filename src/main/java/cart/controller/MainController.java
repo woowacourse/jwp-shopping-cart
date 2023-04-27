@@ -15,13 +15,13 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String showHome(Model model) {
+    public String showHome(final Model model) {
         model.addAttribute("products", productService.findAll());
         return "index";
     }
 
     @GetMapping("/admin")
-    public String showAdmin(Model model) {
+    public String showAdmin(final Model model) {
         model.addAttribute("products", productService.findAll());
         return "admin";
     }
