@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @Controller
@@ -26,7 +27,7 @@ public class AdminController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createProduct(@RequestBody Product product) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid Product product) {
         long id = productRepository.save(product).getId();
         return ResponseEntity.created(URI.create("/admin/" + id)).build();
     }
