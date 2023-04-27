@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class MainController {
+public class HomeController {
 
     private final ProductManagementService managementService;
 
-    public MainController(final ProductManagementService managementService) {
+    public HomeController(final ProductManagementService managementService) {
         this.managementService = managementService;
     }
 
