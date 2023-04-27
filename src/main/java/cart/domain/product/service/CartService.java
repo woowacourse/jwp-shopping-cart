@@ -1,6 +1,8 @@
-package cart.domain.product;
+package cart.domain.product.service;
 
-import cart.domain.product.dto.ProductDto;
+import cart.domain.product.Product;
+import cart.domain.product.ProductRepository;
+import cart.domain.product.service.dto.ProductDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
-package cart.web.dto.response;
+package cart.web.controller.dto.response;
 
-import cart.web.dto.request.ProductCreationRequest;
+import cart.web.controller.dto.request.ProductCreationRequest;
 
 public class ProductCreationResponse {
     private Long id;

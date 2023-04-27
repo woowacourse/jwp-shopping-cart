@@ -1,4 +1,4 @@
-package cart.web;
+package cart.web.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
@@ -8,9 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import cart.domain.product.CartService;
 import cart.domain.product.TestFixture;
-import cart.domain.product.dto.ProductDto;
+import cart.domain.product.service.CartService;
+import cart.domain.product.service.dto.ProductDto;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

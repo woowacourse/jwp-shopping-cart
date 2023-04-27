@@ -1,4 +1,4 @@
-package cart.web.dto.request;
+package cart.web.controller.dto.request;
 
 public class ProductModificationRequest {
 

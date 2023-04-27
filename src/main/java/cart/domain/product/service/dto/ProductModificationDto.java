@@ -1,4 +1,4 @@
-package cart.domain.product.dto;
+package cart.domain.product.service.dto;
 
 import cart.domain.product.ImageUrl;
 import cart.domain.product.Product;

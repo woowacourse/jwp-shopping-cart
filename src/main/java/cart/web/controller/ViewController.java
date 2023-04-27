@@ -1,7 +1,7 @@
-package cart.web;
+package cart.web.controller;
 
-import cart.domain.product.CartService;
-import cart.domain.product.dto.ProductDto;
+import cart.domain.product.service.CartService;
+import cart.domain.product.service.dto.ProductDto;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

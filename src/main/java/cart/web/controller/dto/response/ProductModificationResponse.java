@@ -1,6 +1,6 @@
-package cart.web.dto.response;
+package cart.web.controller.dto.response;
 
-import cart.web.dto.request.ProductModificationRequest;
+import cart.web.controller.dto.request.ProductModificationRequest;
 
 public class ProductModificationResponse {
     private Long id;

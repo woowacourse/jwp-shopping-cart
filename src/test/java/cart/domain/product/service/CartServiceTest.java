@@ -1,8 +1,11 @@
-package cart.domain.product;
+package cart.domain.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.product.dto.ProductDto;
+import cart.domain.product.Product;
+import cart.domain.product.ProductRepository;
+import cart.domain.product.TestFixture;
+import cart.domain.product.service.dto.ProductDto;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

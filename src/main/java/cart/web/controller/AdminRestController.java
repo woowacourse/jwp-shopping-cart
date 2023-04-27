@@ -1,13 +1,13 @@
-package cart.web;
+package cart.web.controller;
 
-import cart.domain.product.AdminService;
-import cart.domain.product.dto.ProductCreationDto;
-import cart.domain.product.dto.ProductModificationDto;
-import cart.web.dto.request.ProductCreationRequest;
-import cart.web.dto.request.ProductModificationRequest;
-import cart.web.dto.response.ProductCreationResponse;
-import cart.web.dto.response.ProductDeleteResponse;
-import cart.web.dto.response.ProductModificationResponse;
+import cart.domain.product.service.AdminService;
+import cart.domain.product.service.dto.ProductCreationDto;
+import cart.domain.product.service.dto.ProductModificationDto;
+import cart.web.controller.dto.request.ProductCreationRequest;
+import cart.web.controller.dto.request.ProductModificationRequest;
+import cart.web.controller.dto.response.ProductCreationResponse;
+import cart.web.controller.dto.response.ProductDeleteResponse;
+import cart.web.controller.dto.response.ProductModificationResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -65,7 +65,7 @@ public class AdminRestController {
         );
 
         adminService.update(productModificationDto);
-        
+
         return ResponseEntity
                 .ok(new ProductModificationResponse(request));
     }

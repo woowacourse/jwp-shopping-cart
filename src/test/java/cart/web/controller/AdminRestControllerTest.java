@@ -1,4 +1,4 @@
-package cart.web;
+package cart.web.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -10,10 +10,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.product.AdminService;
-import cart.domain.product.dto.ProductDto;
-import cart.web.dto.request.ProductCreationRequest;
-import cart.web.dto.request.ProductModificationRequest;
+import cart.domain.product.service.AdminService;
+import cart.domain.product.service.dto.ProductDto;
+import cart.web.controller.dto.request.ProductCreationRequest;
+import cart.web.controller.dto.request.ProductModificationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
