@@ -6,7 +6,7 @@ import cart.dto.ProductEditRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.dto.ProductsResponseDto;
 import cart.exception.ProductNotFoundException;
-import cart.repository.ProductRepository;
+import cart.repository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

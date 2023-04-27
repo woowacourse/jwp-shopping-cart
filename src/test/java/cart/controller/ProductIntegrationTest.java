@@ -3,7 +3,7 @@ package cart.controller;
 import cart.domain.product.Product;
 import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductEditRequestDto;
-import cart.repository.ProductRepository;
+import cart.repository.product.ProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
