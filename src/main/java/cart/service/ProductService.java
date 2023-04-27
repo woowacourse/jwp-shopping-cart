@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-    private static final String DOES_NOT_FIND_PRODUCT = "상품을 찾을 수 없습니다.";
+    private static final String NO_PRODUCT_EXCEPTION_MESSAGE = "상품을 찾을 수 없습니다.";
 
     private final ProductDao productDao;
     private final ProductMapper productMapper;
@@ -35,24 +35,20 @@ public class ProductService {
     }
 
     public void delete(final Long id) {
-        validateProduct(id);
+        final int affectedRows = productDao.delete(id);
 
-        productDao.delete(id);
+        validateResult(affectedRows);
     }
 
     public void update(final Long id, final ProductRequest request) {
-        validateProduct(id);
+        final int affectedRows = productDao.update(id, productMapper.mapFrom(request));
 
-        productDao.update(id, productMapper.mapFrom(request));
+        validateResult(affectedRows);
     }
 
-    private void validateProduct(final Long id) {
-        if (doesNotExist(id)) {
-            throw new NoSuchElementException(DOES_NOT_FIND_PRODUCT);
+    private static void validateResult(final int affectedRows) {
+        if (affectedRows == 0) {
+            throw new NoSuchElementException(NO_PRODUCT_EXCEPTION_MESSAGE);
         }
-    }
-
-    private boolean doesNotExist(final Long id) {
-        return !productDao.existBy(id);
     }
 }

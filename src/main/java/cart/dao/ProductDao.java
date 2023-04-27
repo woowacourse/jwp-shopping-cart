@@ -9,9 +9,9 @@ public interface ProductDao {
 
     List<Product> findAll();
 
-    void delete(final Long id);
+    int delete(final Long id);
 
-    void update(final Long id, final Product product);
+    int update(final Long id, final Product product);
 
     boolean existBy(final Long id);
 }

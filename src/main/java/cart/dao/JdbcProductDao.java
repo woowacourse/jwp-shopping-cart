@@ -44,15 +44,15 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public void delete(Long id) {
+    public int delete(Long id) {
         final String sql = "DELETE FROM product WHERE id = :id";
 
         final Map<String, Long> params = Collections.singletonMap("id", id);
-        jdbcTemplate.update(sql, params);
+        return jdbcTemplate.update(sql, params);
     }
 
     @Override
-    public void update(Long id, Product product) {
+    public int update(Long id, Product product) {
         final String sql = "UPDATE product SET name = :name, price = :price, img_url = :imgUrl WHERE id = :id";
 
         final SqlParameterSource params = new MapSqlParameterSource()
@@ -61,7 +61,7 @@ public class JdbcProductDao implements ProductDao {
                 .addValue("price", product.getPrice())
                 .addValue("imgUrl", product.getImgUrl());
 
-        jdbcTemplate.update(sql, params);
+        return jdbcTemplate.update(sql, params);
     }
 
     @Override
