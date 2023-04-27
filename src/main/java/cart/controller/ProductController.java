@@ -4,17 +4,15 @@ import cart.dto.ProductSaveRequestDto;
 import cart.dto.ProductUpdateRequestDto;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class ProductController {
 
     private final ProductService productService;
@@ -23,33 +21,21 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/products")
-    public void save(@RequestBody final ProductSaveRequestDto request) {
+    public ResponseEntity<Void> save(@RequestBody final ProductSaveRequestDto request) {
         productService.save(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/")
-    public String index(final Model model) {
-        model.addAttribute("products", productService.findAll());
-        return "index";
-    }
-
-    @GetMapping("/admin")
-    public String admin(final Model model) {
-        model.addAttribute("products", productService.findAll());
-        return "admin";
-    }
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/products/{id}")
-    public void update(@PathVariable final Long id, @RequestBody ProductUpdateRequestDto request) {
+    public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody ProductUpdateRequestDto request) {
         productService.update(id, request);
+        return ResponseEntity.noContent().build();
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/products/{id}")
-    public void delete(@PathVariable final Long id) {
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
         productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
