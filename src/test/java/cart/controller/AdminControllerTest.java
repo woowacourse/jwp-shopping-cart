@@ -4,12 +4,13 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
 import cart.dto.RequestCreateProductDto;
 import cart.dto.RequestUpdateProductDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -23,6 +24,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -33,7 +38,7 @@ class AdminControllerTest {
     int port;
 
     @Autowired
-    private ProductDao productDao;
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
@@ -141,7 +146,7 @@ class AdminControllerTest {
 
     @Test
     void 상품을_수정할_수_있다() {
-        final Long insertedId = productDao.insert(new Product("치킨", 1_000, "치킨 사진"));
+        final Long insertedId = insertProduct("치킨", 1000, "치킨 사진");
 
         given()
             .log().all().contentType(ContentType.JSON)
@@ -151,6 +156,25 @@ class AdminControllerTest {
         .then()
             .log().all()
             .statusCode(HttpStatus.OK.value());
+    }
+
+    private Long insertProduct(final String name, final Integer price, final String image) {
+        final String sql = "INSERT INTO PRODUCT (name, price, image) VALUES (?, ?, ?)";
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(final Connection con) throws SQLException {
+                final PreparedStatement preparedStatement = con.prepareStatement(
+                        sql, new String[]{"ID"}
+                );
+                preparedStatement.setString(1, name);
+                preparedStatement.setInt(2, price);
+                preparedStatement.setString(3, image);
+                return preparedStatement;
+            }
+        }, keyHolder);
+        Long insertedId = keyHolder.getKey().longValue();
+        return insertedId;
     }
 
     @Test
@@ -167,7 +191,7 @@ class AdminControllerTest {
 
     @Test
     void 상품을_삭제할_수_있다() {
-        final Long insertedId = productDao.insert(new Product("치킨", 1_000, "치킨 사진"));
+        final Long insertedId = insertProduct("치킨", 1000, "치킨 사진");
 
         given()
             .log().all()
