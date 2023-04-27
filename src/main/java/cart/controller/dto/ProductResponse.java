@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.controller.dto;
 
 public class ProductResponse {
     private final Integer id;

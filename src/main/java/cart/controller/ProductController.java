@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductRequest;
+import cart.controller.dto.ProductRequest;
 import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
