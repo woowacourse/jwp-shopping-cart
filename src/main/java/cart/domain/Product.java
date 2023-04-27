@@ -1,6 +1,7 @@
 package cart.domain;
 
-import cart.exception.ErrorMessage;
+import cart.exception.BusinessIllegalArgumentException;
+import cart.ErrorCode;
 
 public class Product {
 
@@ -14,6 +15,7 @@ public class Product {
         this.name = name;
         this.image = image;
         this.price = price;
+        validate(productId, price);
     }
 
     public long getProductId() {
@@ -32,12 +34,12 @@ public class Product {
         return price;
     }
 
-    private void validate(Long productId, String name, String image, long price) {
+    private void validate(Long productId, long price) {
         if (productId < 0) {
-            throw new IllegalArgumentException(ErrorMessage.NOT_VALID_ID.getMessage());
+            throw new BusinessIllegalArgumentException(ErrorCode.NOT_VALID_ID);
         }
         if (price < 0) {
-            throw new IllegalArgumentException(ErrorMessage.NOT_VALID_PRICE.getMessage());
+            throw new BusinessIllegalArgumentException(ErrorCode.NOT_VALID_PRICE);
         }
     }
 }
