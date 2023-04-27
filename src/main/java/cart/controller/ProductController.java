@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dao.ProductDao;
 import java.util.NoSuchElementException;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,13 +23,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity create(@RequestBody ProductRequest product) {
+    public ResponseEntity create(@Valid @RequestBody ProductRequest product) {
         productDao.add(product);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@PathVariable Long id, @RequestBody ProductRequest product) {
+    public ResponseEntity update(@PathVariable Long id,
+        @Valid @RequestBody ProductRequest product) {
         final int updateCount = productDao.updateById(id, product);
         if (updateCount == 0) {
             throw new NoSuchElementException();
