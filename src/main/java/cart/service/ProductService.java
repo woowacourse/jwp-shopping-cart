@@ -3,6 +3,8 @@ package cart.service;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import java.util.List;
+
+import cart.dto.request.ProductSaveRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,8 +16,8 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public long saveProduct(Product product) {
-        return productDao.save(product);
+    public long saveProduct(ProductSaveRequest productSaveRequest) {
+        return productDao.save(productSaveRequest);
     }
 
     public List<Product> findAllProducts() {

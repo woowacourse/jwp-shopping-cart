@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.Product;
+import cart.dto.request.ProductSaveRequest;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -35,7 +36,7 @@ class ProductControllerUnitTest {
     void saveProduct는_상품을_저장하고_created상태코드를_반환한다() throws Exception {
         //when
         mockMvc.perform(post("/product")
-                        .content(objectMapper.writeValueAsBytes(new Product(1l, "pd1", "image", 2000)))
+                        .content(objectMapper.writeValueAsBytes(new ProductSaveRequest("pd1", "image", 2000L)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
@@ -59,7 +60,7 @@ class ProductControllerUnitTest {
     void updateProduct() throws Exception {
         //todo : mockBean인 서비스에 동작을 설정하지 않았는데(save, update),컨트롤러 메서드가 정상동작함
         mockMvc.perform(put("/product")
-                        .content(objectMapper.writeValueAsBytes(new Product(2L, "pdpd2", "image2", 15000)))
+                        .content(objectMapper.writeValueAsBytes(new ProductSaveRequest("pdpd2", "image2", 15000L)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

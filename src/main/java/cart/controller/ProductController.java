@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.domain.Product;
+import cart.dto.request.ProductSaveRequest;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,8 @@ public class ProductController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<String> saveProduct(@RequestBody Product product) {
-        productService.saveProduct(product);
+    public ResponseEntity<String> saveProduct(@RequestBody ProductSaveRequest productSaveRequest) {
+        productService.saveProduct(productSaveRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
