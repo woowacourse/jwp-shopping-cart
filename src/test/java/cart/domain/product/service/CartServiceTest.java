@@ -7,6 +7,8 @@ import cart.domain.product.ProductRepository;
 import cart.domain.product.TestFixture;
 import cart.domain.product.service.dto.ProductDto;
 import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +25,7 @@ class CartServiceTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @DisplayName("모든 상품들을 조회할 수 있다.")
     @Test
     void getAllProducts() {
         Product pizza = TestFixture.PIZZA;
