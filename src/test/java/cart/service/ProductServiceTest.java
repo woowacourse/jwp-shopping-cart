@@ -2,19 +2,15 @@ package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.ProductDao;
-import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.entity.Product;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 
 public class ProductServiceTest {
@@ -23,7 +19,7 @@ public class ProductServiceTest {
     private ProductDao productDao;
 
     @BeforeEach
-    void setUp() {
+    void beforeEach() {
         productDao = Mockito.mock(ProductDao.class);
         productService = new ProductService(productDao);
     }

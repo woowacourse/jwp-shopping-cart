@@ -18,7 +18,7 @@ public class ProductIntegrationTest {
     private int port;
 
     @BeforeEach
-    void setUp() {
+    void beforeEach() {
         RestAssured.port = port;
     }
 

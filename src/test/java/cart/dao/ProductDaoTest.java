@@ -22,7 +22,7 @@ public class ProductDaoTest {
     private ProductDao productDao;
 
     @BeforeEach
-    void setUp() {
+    void beforeEach() {
         productDao = new ProductDao(jdbcTemplate);
     }
 

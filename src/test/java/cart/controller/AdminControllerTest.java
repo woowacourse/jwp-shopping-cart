@@ -1,30 +1,32 @@
 package cart.controller;
 
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 
 import cart.dto.ProductRequestDto;
-import cart.entity.Product;
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:sql/initProducts.sql"})
 public class AdminControllerTest {
 
     @LocalServerPort
     private int port;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @BeforeEach
-    void setUp() {
+    void beforeEach() {
         RestAssured.port = port;
     }
 
@@ -72,13 +74,17 @@ public class AdminControllerTest {
     @Test
     @DisplayName("상품 삭제 확인")
     void removeProduct() {
-
         RestAssured.given().log().all()
                 .accept(MediaType.TEXT_HTML_VALUE)
                 .when().delete("/admin/products/2")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(containsString("<title>관리자 페이지</title>"));
+    }
+
+    @AfterEach
+    void afterEach() {
+        jdbcTemplate.update("TRUNCATE TABLE product");
     }
 
 }
