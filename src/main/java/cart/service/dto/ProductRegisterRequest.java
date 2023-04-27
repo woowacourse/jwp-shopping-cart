@@ -14,7 +14,7 @@ public class ProductRegisterRequest {
     @NotBlank
     private String imageUrl;
 
-    public ProductRegisterRequest() {
+    private ProductRegisterRequest() {
     }
 
     public ProductRegisterRequest(final String name, final int price, final String imageUrl) {
