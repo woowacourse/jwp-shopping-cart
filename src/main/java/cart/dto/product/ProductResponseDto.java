@@ -17,11 +17,7 @@ public class ProductResponseDto {
     }
 
     public static ProductResponseDto from(final Product product) {
-        return new ProductResponseDto(product.getId(),
-                product.getName(),
-                product.getImgUrl(),
-                product.getPrice()
-        );
+        return new ProductResponseDto(product.getId(), product.getName(), product.getImgUrl(), product.getPrice());
     }
 
     public Long getId() {
