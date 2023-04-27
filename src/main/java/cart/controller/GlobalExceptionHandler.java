@@ -16,7 +16,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<List<ErrorResponse>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        List<ErrorResponse> responses = exception.getBindingResult().getAllErrors().stream().map(error -> new ErrorResponse(((FieldError) error).getField() + " : " + error.getDefaultMessage(), LocalDateTime.now())).collect(Collectors.toList());
+        List<ErrorResponse> responses = exception
+                .getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(error -> new ErrorResponse(
+                        ((FieldError) error).getField() + " : " + error.getDefaultMessage(), LocalDateTime.now()
+                        )
+                )
+                .collect(Collectors.toList());
 
         return ResponseEntity.badRequest().body(responses);
     }
