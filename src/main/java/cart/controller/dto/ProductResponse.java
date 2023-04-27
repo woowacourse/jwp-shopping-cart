@@ -4,7 +4,6 @@ public class ProductResponse {
     private final Integer id;
     private final String name;
     private final String image;
-
     private final Long price;
 
     public ProductResponse(final Integer id, final String name, final String image, final Long price) {
