@@ -33,8 +33,8 @@ CREATE TABLE product
 ### Web
 
 - 상품 조회
-    - [ ] GET /
-    - [ ] index.html 반환
+    - [x] GET /
+    - [x] index.html 반환
 
 - 상품 추가
     - [x] POST /admin/product
