@@ -40,10 +40,20 @@ public class Item {
     }
 
     private Item(Builder builder) {
+        validate(builder);
         this.id = builder.id;
         this.name =  builder.name;
         this.imageUrl = builder.imageUrl;
         this.price = builder.price;
+    }
+
+    private void validate(Builder builder) {
+        if (builder.name == null) {
+            throw new IllegalArgumentException("이름은 빈 값일 수 없습니다.");
+        }
+        if (builder.price == null) {
+            throw new IllegalArgumentException("가격은 빈 값일 수 없습니다.");
+        }
     }
 
     public Long getId() {

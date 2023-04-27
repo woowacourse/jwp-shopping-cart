@@ -8,15 +8,18 @@ public class ImageUrl {
     private final String value;
 
     public ImageUrl(final String value) {
+        validateNotEmpty(value);
         validateLength(value);
         this.value = value;
     }
 
-    private void validateLength(final String value) {
-        // TODO: 2023/04/26 nullable
-        if (value.isEmpty()) {
-            return;
+    private static void validateNotEmpty(String value) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("이미지 URL은 빈 값일 수 없습니다.");
         }
+    }
+
+    private void validateLength(final String value) {
         if(value.length() > MAX_LENGTH) {
             throw new IllegalArgumentException("이미지 URL은 5000자 이하여야 합니다.");
         }

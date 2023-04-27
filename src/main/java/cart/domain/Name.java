@@ -15,7 +15,7 @@ public class Name {
     }
 
     private void validateNotEmpty(final String value) {
-        if (value.isBlank()) {
+        if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("이름은 빈 값일 수 없습니다.");
         }
     }
