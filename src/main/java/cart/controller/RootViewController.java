@@ -22,7 +22,7 @@ public class RootViewController {
 
     @GetMapping
     public String getProductList(final Model model) {
-        List<ProductResponse> products = cartService.read();
+        List<ProductResponse> products = cartService.readAll();
         model.addAttribute("products", products);
         return "index";
     }

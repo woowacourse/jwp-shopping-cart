@@ -27,7 +27,7 @@ public class CartService {
         return productDao.save(productEntity);
     }
 
-    public List<ProductResponse> read() {
+    public List<ProductResponse> readAll() {
         final List<ProductEntity> products = productDao.findAll();
         return products.stream()
             .map(ProductResponse::from)

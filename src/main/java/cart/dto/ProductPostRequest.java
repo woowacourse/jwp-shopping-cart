@@ -14,7 +14,7 @@ public class ProductPostRequest {
 
     @NotNull(message = "유효한 가격을 입력해주세요")
     @Range(min = 0, max = Integer.MAX_VALUE, message = "유효한 가격을 입력해주세요")
-    private int price;
+    private Integer price;
 
     @NotBlank(message = "유효한 이미지 URL을 입력해주세요")
     @Length(max = 512, message = "유효한 이미지 URL을 입력해주세요")

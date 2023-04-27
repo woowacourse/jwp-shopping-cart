@@ -20,7 +20,7 @@ public class AdminViewController {
 
     @GetMapping("/admin")
     public String getProductList(final Model model) {
-        List<ProductResponse> products = cartService.read();
+        List<ProductResponse> products = cartService.readAll();
         model.addAttribute("products", products);
         return "admin";
     }

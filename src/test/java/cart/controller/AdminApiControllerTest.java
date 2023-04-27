@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 import cart.dto.ProductPostRequest;
 import io.restassured.RestAssured;
@@ -18,6 +19,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = "classpath:schema-truncate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AdminApiControllerTest {
@@ -36,7 +38,6 @@ class AdminApiControllerTest {
         @Test
         void Product_POST_API_테스트() {
             final ExtractableResponse<Response> response = saveProduct("modi", 10000, "https://woowacourse.github.io/");
-
             SoftAssertions.assertSoftly(softAssertions -> {
                 softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
                 softAssertions.assertThat(response.header("Location")).contains("/admin/product/");
