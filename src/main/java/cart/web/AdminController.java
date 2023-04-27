@@ -6,12 +6,15 @@ import cart.domain.product.dto.ProductCreationDto;
 import cart.domain.product.dto.ProductDto;
 import cart.web.dto.ProductCreateRequest;
 import cart.web.dto.ProductCreateResponse;
+import cart.web.dto.ProductDeleteResponse;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,5 +58,14 @@ public class AdminController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(productCreateResponse);
+    }
+
+    @ResponseBody
+    @DeleteMapping("/{deleteId}")
+    public ResponseEntity<ProductDeleteResponse> deleteProduct(@PathVariable Long deleteId) {
+        adminService.delete(deleteId);
+
+        return ResponseEntity
+                .ok(new ProductDeleteResponse(deleteId));
     }
 }
