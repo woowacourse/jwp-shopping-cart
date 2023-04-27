@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ProductCreationRequestTest {
 
     private static final String dummyName = "dummy";
-    private static final String dummyImage = "dummy";
+    private static final String dummyImage = "http:";
     private static final Integer dummyPrice = 10_000;
 
     private static ValidatorFactory validatorFactory;
@@ -83,7 +83,7 @@ class ProductCreationRequestTest {
         @Test
         void image_validInput_Success() {
             // given
-            final String imageInput = "test";
+            final String imageInput = "http:";
             final ProductCreationRequest request = makeRequest(imageInput);
 
             // when
@@ -93,10 +93,24 @@ class ProductCreationRequestTest {
             assertTrue(violations.isEmpty());
         }
 
-        @DisplayName("공백인 문자열이 들어오면 에러를 반환한다")
-        @ValueSource(strings = {"", " "})
-        @ParameterizedTest(name = "공백 문자열 {index}: {0}")
-        void throwExceptionWhenImageHasBlank(final String imageInput) {
+        @DisplayName("null이 들어오면 에러를 반환한다")
+        @Test
+        void throwExceptionWhenImageIsNull() {
+            // given
+            final String imageInput = null;
+            final ProductCreationRequest request = makeRequest(imageInput);
+
+            // when
+            final Set<ConstraintViolation<ProductCreationRequest>> violations = makeViolation(request);
+
+            // then
+            assertFalse(violations.isEmpty());
+        }
+
+        @DisplayName("URL 형식이 아닌 경로가 들어오면 에러를 반환한다")
+        @ValueSource(strings = {" ", "test", "test:."})
+        @ParameterizedTest(name = "URL 형식이 아닌 문자열 {index}: {0}")
+        void throwExceptionWhenImageInvalidURL(final String imageInput) {
             // given
             final ProductCreationRequest request = makeRequest(imageInput);
 

@@ -2,6 +2,7 @@ package cart.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
@@ -16,7 +17,8 @@ public class ProductModificationRequest {
     @NotBlank
     private final String name;
 
-    @NotBlank
+    @NotNull
+    @URL
     private final String image;
 
     @Max(value = 10_000_000, message = "상품 등록은 최대 천만원까지 가능합니다.")
