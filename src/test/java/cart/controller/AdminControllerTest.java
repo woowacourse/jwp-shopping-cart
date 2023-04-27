@@ -16,8 +16,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(CartController.class)
-class CartControllerTest {
+@WebMvcTest(AdminController.class)
+class AdminControllerTest {
 
     @MockBean
     private ProductDao productDao;
@@ -25,7 +25,7 @@ class CartControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @DisplayName("'/'로 GET 요청을 했을 때 index template을 반환한다.")
+    @DisplayName("/admin으로 GET 요청을 했을 때 admin template을 반환한다.")
     @Test
     void findAllProducts() throws Exception {
         // given
@@ -33,13 +33,13 @@ class CartControllerTest {
         given(productDao.findAll()).willReturn(List.of(product));
 
         // when, then
-        mockMvc.perform(get("/"))
+        mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("products"))
                 .andExpect(model().attribute("products", hasItem(hasProperty("id", is(1L)))))
                 .andExpect(model().attribute("products", hasItem(hasProperty("name", is("치킨")))))
                 .andExpect(model().attribute("products", hasItem(hasProperty("imageUrl", is("image.url")))))
                 .andExpect(model().attribute("products", hasItem(hasProperty("price", is(10000)))))
-                .andExpect(view().name("index"));
+                .andExpect(view().name("admin"));
     }
 }
