@@ -48,7 +48,7 @@ class ProductControllerTest {
                 .body(request)
                 .when().post("/product")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("PUT /product/{id}")
@@ -63,7 +63,7 @@ class ProductControllerTest {
                 .body(request)
                 .when().put("/product/" + id)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
 
         Product product = productDao.findById(id).orElse(null);
 

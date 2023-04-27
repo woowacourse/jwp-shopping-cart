@@ -7,6 +7,7 @@ import cart.service.ProductService;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest request) {
         productService.save(request.getName(), request.getPrice(), request.getImageUrl());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
@@ -44,7 +45,7 @@ public class ProductController {
             @PathVariable @NotNull Long id,
             @RequestBody @Valid ProductRequest request) {
         productService.update(id, request.getName(), request.getPrice(), request.getImageUrl());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{id}")
