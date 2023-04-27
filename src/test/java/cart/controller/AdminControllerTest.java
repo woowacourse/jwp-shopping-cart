@@ -84,8 +84,6 @@ public class AdminControllerTest {
     void 상품을_삭제한다() throws Exception {
         final Long id = 1L;
 
-        final ProductDto productDto =  new ProductDto("  ", "woe", -100);
-
         doNothing()
                 .when(productManagementService)
                 .deleteProduct(anyLong());
