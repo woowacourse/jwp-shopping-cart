@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,6 +58,16 @@ class ItemDaoTest {
                 .imageUrl(new ImageUrl("https://image.yes24.com/themusical/upFiles/Themusical/Play/post_2013wicked.jpg"))
                 .price(new Price(150000))
                 .build());
+    }
+
+    @DisplayName("없는 아이디를 조회하면 빈값을 반환한다")
+    @Test
+    @Sql("classpath:initializeTestDb.sql")
+    void findByNotExistId() {
+        //when
+        Optional<Item> findItem = itemDao.findBy(100L);
+        //then
+        assertThat(findItem).isEmpty();
     }
 
     @DisplayName("아이템을 저장한다.")
