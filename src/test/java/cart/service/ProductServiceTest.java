@@ -46,7 +46,7 @@ class ProductServiceTest {
 
         final List<Product> result = productService.getAll();
 
-        assertThat(result).hasSize(0);
+        assertThat(result.size()).isEqualTo(0);
     }
 
     @Test
