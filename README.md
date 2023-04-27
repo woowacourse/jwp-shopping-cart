@@ -1,5 +1,11 @@
 # jwp-shopping-cart
 
+## 페어
+
+| <img src="https://avatars.githubusercontent.com/u/51906604?v=4" alt="" width=200> | <img src="https://avatars.githubusercontent.com/u/64852591?v=4" alt="" width=200/> |
+|:---------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------:|
+|                         [저문](https://github.com/jeomxon)                          |                          [라온](https://github.com/mcodnjs)                          | |
+
 # 상품 관리 API 명세
 
 ## 상품 생성
