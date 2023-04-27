@@ -24,6 +24,9 @@ const hideAddModal = () => {
 }
 
 const form = document.getElementById('form');
+const error_name = document.getElementById('error_name');
+const error_price = document.getElementById('error_price');
+const error_image = document.getElementById('error_image');
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -55,13 +58,14 @@ const createProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        showAllError(error.response.data.validation);
         console.error(error);
     });
 };
 
 const updateProduct = (product) => {
     const { id } = product;
-    console.log(id);
+
     axios.request({
         url: '/products/' + id,
         method: 'patch',
@@ -72,6 +76,7 @@ const updateProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        showAllError(error.response.data.validation);
         console.error(error);
     });
 };
@@ -86,6 +91,17 @@ const deleteProduct = (id) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        showAllError(error.response.data.validation);
         console.error(error);
     });
 };
+
+const showError = (component, message) => {
+    component.innerHTML = message;
+}
+
+const showAllError = (error) => {
+    showError(error_name, error.name);
+    showError(error_price, error.price);
+    showError(error_image, error.imageUrl);
+}

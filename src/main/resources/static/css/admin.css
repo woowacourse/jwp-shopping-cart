@@ -89,3 +89,8 @@ input[type="submit"] {
     cursor: pointer;
     font-size: 16px;
 }
+#error_image,
+#error_name,
+#error_price {
+    color: red;
+}
