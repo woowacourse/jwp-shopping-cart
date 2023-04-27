@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.product.dto.ProductCreationDto;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,5 +35,18 @@ class AdminServiceTest {
         List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(1);
         assertThat(allProducts.get(0).getName()).isEqualTo("Pizza");
+    }
+
+    @DisplayName("단일 상품 삭제 테스트")
+    @Test
+    void deleteProduct() {
+        Product pizza = TestFixture.PIZZA;
+        Long savedId = productRepository.save(pizza);
+        assertThat(productRepository.findAll()).hasSize(1);
+
+        adminService.delete(savedId);
+
+        List<Product> allProducts = productRepository.findAll();
+        assertThat(allProducts).hasSize(0);
     }
 }
