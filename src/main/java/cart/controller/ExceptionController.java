@@ -17,8 +17,7 @@ public class ExceptionController {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Response> handle(RuntimeException e) {
         log.error("알 수 없는 문제가 발생했습니다.", e);
-        return ResponseEntity
-                .internalServerError()
+        return ResponseEntity.internalServerError()
                 .body(SimpleResponse.internalServerError("알 수 없는 문제가 발생했습니다."));
     }
 
@@ -28,16 +27,14 @@ public class ExceptionController {
         for (FieldError fieldError : e.getFieldErrors()) {
             errorResponse.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
         }
-        return ResponseEntity
-                .badRequest()
+        return ResponseEntity.badRequest()
                 .body(errorResponse);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<Response> handle(ProductNotFoundException e) {
         Response response = SimpleResponse.badRequest(e.getMessage());
-        return ResponseEntity
-                .badRequest()
+        return ResponseEntity.badRequest()
                 .body(response);
     }
 }

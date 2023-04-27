@@ -31,16 +31,15 @@ public class ProductApiController {
     public ResponseEntity<Response> createProduct(@RequestBody @Valid ProductCreateRequest request) {
         ProductDto productDto = productService.createProduct(request.getName(), request.getPrice(),
                 request.getImageUrl());
-        return ResponseEntity
-                .created(URI.create("/products/" + productDto.getId()))
+        return ResponseEntity.created(URI.create("/products/" + productDto.getId()))
                 .body(ResultResponse.created("상품이 생성되었습니다.", productDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Response> deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
-        return ResponseEntity
-                .ok(SimpleResponse.ok("상품이 삭제되었습니다."));
+        return ResponseEntity.ok()
+                .body(SimpleResponse.ok("상품이 삭제되었습니다."));
     }
 
     @PatchMapping("/{id}")
@@ -48,8 +47,8 @@ public class ProductApiController {
                                                   @RequestBody @Valid ProductUpdateRequest request) {
         ProductDto productDto = productService.updateProductById(id, request.getName(), request.getPrice(),
                 request.getImageUrl());
-        return ResponseEntity
-                .ok(ResultResponse.ok("상품이 수정되었습니다.", productDto));
+        return ResponseEntity.ok()
+                .body(ResultResponse.ok("상품이 수정되었습니다.", productDto));
     }
 
     @GetMapping
