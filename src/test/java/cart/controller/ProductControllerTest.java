@@ -13,6 +13,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductControllerTest {
 
@@ -36,7 +39,16 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .when().get("/products")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("", hasSize(2))
+                .body("[0].id", is(1))
+                .body("[0].name", is("mouse"))
+                .body("[0].image", is("https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg"))
+                .body("[0].price", is(100_000))
+                .body("[1].id", is(2))
+                .body("[1].name", is("keyboard"))
+                .body("[1].image", is("https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1"))
+                .body("[1].price", is(250_000));
     }
 
     @DisplayName("상품을 등록하면 상태코드 201을 반환하는지 확인한다")
