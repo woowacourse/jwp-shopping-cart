@@ -12,9 +12,7 @@ public class ExceptionAdvice {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @ExceptionHandler({
-            IllegalArgumentException.class
-    })
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException e) {
         ExceptionResponse exception = new ExceptionResponse(e.getMessage());
         logger.info(e.getMessage());
