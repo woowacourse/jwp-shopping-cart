@@ -6,7 +6,6 @@ import cart.service.dto.ProductResponse;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
 @RequestMapping("/admin")
@@ -38,22 +35,22 @@ public class AdminController {
     }
 
     @PostMapping("/product")
-    @ResponseBody
     public ResponseEntity<Void> registerProduct(@RequestBody @Valid ProductRequest productRequest) {
         long savedId = cartService.save(productRequest);
         return ResponseEntity.created(URI.create("/admin/product/" + savedId)).build();
     }
 
     @PutMapping("/product/{id}")
-    @ResponseBody
-    public void modifyProduct(@RequestBody @Valid ProductRequest productRequest, @PathVariable long id) {
+    public ResponseEntity<Void> modifyProduct(@RequestBody @Valid ProductRequest productRequest,
+                                              @PathVariable long id) {
         cartService.modifyById(productRequest, id);
+        return ResponseEntity.ok().build();
+
     }
 
     @DeleteMapping("/product/{id}")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeProduct(@PathVariable long id) {
+    public ResponseEntity<Void> removeProduct(@PathVariable long id) {
         cartService.removeById(id);
+        return ResponseEntity.noContent().build();
     }
 }

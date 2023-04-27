@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.exceptionhandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
