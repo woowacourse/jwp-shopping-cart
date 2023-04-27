@@ -41,8 +41,8 @@ class ProductJdbcDaoTest {
         final ProductEntity productEntity = new ProductEntity(insertedId, "비버", "A", 100000L);
         productJdbcDao.update(productEntity);
 
-        final Optional<ProductEntity> byId = productJdbcDao.findById(insertedId);
-        assertThat(byId.get().getPrice()).isEqualTo(100000L);
+        final Optional<ProductEntity> ProductEntityById = productJdbcDao.findById(insertedId);
+        assertThat(ProductEntityById.get().getPrice()).isEqualTo(100000L);
     }
 
     @Test
@@ -57,9 +57,9 @@ class ProductJdbcDaoTest {
     @DisplayName("조회 테스트")
     void select() {
         final ProductEntity expectEntity = new ProductEntity(insertedId, "비버", "A", 1000L);
-        final Optional<ProductEntity> byId = productJdbcDao.findById(insertedId);
+        final Optional<ProductEntity> ProductEntityById = productJdbcDao.findById(insertedId);
 
-        assertThat(byId.get()).isEqualTo(expectEntity);
+        assertThat(ProductEntityById.get()).isEqualTo(expectEntity);
     }
 
     @Test
