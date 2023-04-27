@@ -13,26 +13,24 @@ import org.springframework.stereotype.Service;
 public class ProductService {
 
     private static final String DOES_NOT_FIND_PRODUCT = "상품을 찾을 수 없습니다.";
-    private final ProductDao productDao;
 
-    public ProductService(ProductDao productDao) {
+    private final ProductDao productDao;
+    private final ProductMapper productMapper;
+
+    public ProductService(final ProductDao productDao, final ProductMapper productMapper) {
         this.productDao = productDao;
+        this.productMapper = productMapper;
     }
 
-    public Long save(ProductRequest productRequest) {
-        final Product product = createProduct(productRequest);
+    public Long save(final ProductRequest productRequest) {
+        final Product product = productMapper.mapFrom(productRequest);
         return productDao.save(product);
     }
 
     public List<ProductResponse> findAll() {
         final List<Product> products = productDao.findAll();
         return products.stream()
-                .map(product -> new ProductResponse(
-                        product.getId(),
-                        product.getName(),
-                        product.getPrice(),
-                        product.getImgUrl())
-                )
+                .map(productMapper::mapToProductResponse)
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -45,15 +43,7 @@ public class ProductService {
     public void update(final Long id, final ProductRequest request) {
         validateProduct(id);
 
-        productDao.update(id, createProduct(request));
-    }
-
-    private Product createProduct(ProductRequest productRequest) {
-        return new Product(
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImgUrl()
-        );
+        productDao.update(id, productMapper.mapFrom(request));
     }
 
     private void validateProduct(final Long id) {

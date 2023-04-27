@@ -33,7 +33,7 @@ class ProductServiceTest {
     @BeforeEach
     void init() {
         productDao = new JdbcProductDao(jdbcTemplate);
-        productService = new ProductService(productDao);
+        productService = new ProductService(productDao, new ProductMapper());
     }
 
     @Test
