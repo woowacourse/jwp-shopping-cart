@@ -69,4 +69,16 @@ public class AdminControllerTest {
                 .body(containsString("<title>관리자 페이지</title>"));
     }
 
+    @Test
+    @DisplayName("상품 삭제 확인")
+    void removeProduct() {
+
+        RestAssured.given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when().delete("/admin/products/2")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(containsString("<title>관리자 페이지</title>"));
+    }
+
 }
