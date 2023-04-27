@@ -1,5 +1,7 @@
 package cart.dto;
 
+import cart.entity.Product;
+
 import javax.validation.constraints.NotNull;
 
 public class ProductRequestDto {
@@ -24,6 +26,10 @@ public class ProductRequestDto {
         this.name = name;
         this.image = image;
         this.price = price;
+    }
+
+    public Product toEntity() {
+        return new Product(id, name, image, price);
     }
 
     public Long getId() {

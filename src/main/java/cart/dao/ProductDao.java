@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dto.entity.ProductEntity;
+import cart.entity.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,7 +16,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ProductEntity save(final ProductEntity product) {
+    public Product save(final Product product) {
         final String sql = "INSERT INTO products(name, image, price) VALUES (?, ?, ?)";
 
         final GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
@@ -29,18 +29,18 @@ public class ProductDao {
             return preparedStatement;
         }, generatedKeyHolder);
 
-        product.setId(generatedKeyHolder.getKey().longValue());
-        return product;
+        return new Product((Long) generatedKeyHolder.getKey(),
+                product.getName(), product.getImage(), product.getPrice());
     }
 
-    public List<ProductEntity> findAll() {
+    public List<Product> findAll() {
         final String sql = "SELECT id, name, image, price FROM products";
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new ProductEntity(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+                new Product(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
     }
 
-    public ProductEntity update(final ProductEntity product) {
+    public Product update(final Product product) {
         final String sql = "UPDATE products SET id=?, name=?, image=?, price=? WHERE id=?";
 
         jdbcTemplate.update(sql, product.getId(), product.getName(), product.getImage(), product.getPrice(), product.getId());
@@ -54,7 +54,7 @@ public class ProductDao {
 
     public boolean existById(final Long id) {
         final String sql = "SELECT EXISTS(SELECT 1 FROM products WHERE id=?)";
-        
+
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 }

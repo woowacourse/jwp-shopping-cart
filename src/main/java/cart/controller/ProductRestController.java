@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
-import cart.service.CartService;
+import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,35 +11,35 @@ import java.util.List;
 
 @RestController
 public final class ProductRestController {
-    private final CartService cartService;
+    private final ProductService productService;
 
-    public ProductRestController(CartService cartService) {
-        this.cartService = cartService;
+    public ProductRestController(ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping("/product")
     public ResponseEntity<String> createProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
-        cartService.addProduct(productRequestDto);
+        productService.addProduct(productRequestDto);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponseDto>> getProducts() {
-        List<ProductResponseDto> products = cartService.findProducts();
+        List<ProductResponseDto> products = productService.findProducts();
 
         return ResponseEntity.ok().body(products);
     }
 
     @PutMapping("/product")
     public ResponseEntity<String> updateProduct(@RequestBody ProductRequestDto productRequestDto) {
-        cartService.updateProduct(productRequestDto);
+        productService.updateProduct(productRequestDto);
 
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/product/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
-        cartService.deleteProduct(id);
+        productService.deleteProduct(id);
 
         return ResponseEntity.ok().build();
     }

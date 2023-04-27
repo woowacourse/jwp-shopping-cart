@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.entity;
 
 public class Product {
     private static final int MAX_NAME_LENGTH = 20;
@@ -52,4 +52,6 @@ public class Product {
     public int getPrice() {
         return price;
     }
+
+
 }

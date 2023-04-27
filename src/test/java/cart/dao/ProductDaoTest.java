@@ -1,7 +1,6 @@
 package cart.dao;
 
-import cart.dto.entity.ProductEntity;
-import org.junit.jupiter.api.Assertions;
+import cart.entity.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTableWhere;
 
 @JdbcTest
@@ -31,7 +31,7 @@ class ProductDaoTest {
     @Test
     void save() {
         //given
-        ProductEntity product = new ProductEntity("연어", "", 1000);
+        Product product = new Product("연어", "", 1000);
 
         //when
         productDao.save(product);
@@ -45,9 +45,9 @@ class ProductDaoTest {
     @Test
     void findAll() {
         //given
-        List<ProductEntity> products = List.of(new ProductEntity("연어", "", 1000),
-                new ProductEntity("오션", "", 1000),
-                new ProductEntity("동해", "", 1000));
+        List<Product> products = List.of(new Product("연어", "", 1000),
+                new Product("오션", "", 1000),
+                new Product("동해", "", 1000));
 
         products.forEach(productDao::save);
 
@@ -59,12 +59,12 @@ class ProductDaoTest {
     @Test
     void update() {
         //given
-        ProductEntity original = productDao.save(new ProductEntity("오션", "", 1000));
-        ProductEntity newProduct = new ProductEntity(original.getId(), "연어", "", 1000);
+        Product original = productDao.save(new Product("오션", "", 1000));
+        Product newProduct = new Product(original.getId(), "연어", "", 1000);
 
         //when
         productDao.update(newProduct);
-        List<ProductEntity> products = productDao.findAll();
+        List<Product> products = productDao.findAll();
 
         //then
         assertThat(products.get(0)).usingRecursiveComparison().isEqualTo(newProduct);
@@ -74,7 +74,7 @@ class ProductDaoTest {
     @Test
     void delete() {
         //given
-        ProductEntity original = productDao.save(new ProductEntity("오션", "", 1000));
+        Product original = productDao.save(new Product("오션", "", 1000));
 
         //when
         productDao.delete(original.getId());
@@ -88,13 +88,13 @@ class ProductDaoTest {
     @Test
     void exist() {
         //given
-        ProductEntity original = productDao.save(new ProductEntity("오션", "", 1000));
+        Product original = productDao.save(new Product("오션", "", 1000));
 
         //when
-        ProductEntity saved = productDao.save(original);
+        Product saved = productDao.save(original);
 
         //then
-        Assertions.assertAll(
+        assertAll(
                 () -> assertThat(productDao.existById(saved.getId())).isTrue(),
                 () -> assertThat(productDao.existById(null)).isFalse());
     }
