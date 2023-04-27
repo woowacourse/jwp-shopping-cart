@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductsResponseDto;
+import cart.dto.product.ProductCreateRequestDto;
+import cart.dto.product.ProductEditRequestDto;
+import cart.dto.product.ProductsResponseDto;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

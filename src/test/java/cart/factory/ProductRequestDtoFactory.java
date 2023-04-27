@@ -1,7 +1,7 @@
 package cart.factory;
 
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
+import cart.dto.product.ProductCreateRequestDto;
+import cart.dto.product.ProductEditRequestDto;
 
 public class ProductRequestDtoFactory {
 

@@ -1,10 +1,10 @@
 package cart.service;
 
 import cart.domain.product.Product;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductResponseDto;
-import cart.dto.ProductsResponseDto;
+import cart.dto.product.ProductCreateRequestDto;
+import cart.dto.product.ProductEditRequestDto;
+import cart.dto.product.ProductResponseDto;
+import cart.dto.product.ProductsResponseDto;
 import cart.exception.ProductNotFoundException;
 import cart.repository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
