@@ -49,7 +49,7 @@ class AdminControllerTest {
     void 상품을_등록할_수_있다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 10000, "치킨 사진"))
+                .body(new RequestCreateProductDto("치킨", 10_000, "치킨 사진"))
                 .when()
                 .post("/admin/product")
                 .then()
@@ -62,7 +62,7 @@ class AdminControllerTest {
     void 빈_상품을_등록할_수_없다(final String name) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto(name, 10000, "치킨 사진"))
+                .body(new RequestCreateProductDto(name, 10_000, "치킨 사진"))
                 .when()
                 .post("/admin/product")
                 .then()
@@ -77,7 +77,7 @@ class AdminControllerTest {
 
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto(overName, 10000, "치킨 사진"))
+                .body(new RequestCreateProductDto(overName, 10_000, "치킨 사진"))
                 .when()
                 .post("/admin/product")
                 .then()
@@ -119,7 +119,7 @@ class AdminControllerTest {
     void 이미지_주소가_없는_상품을_등록할_수_없다(final String image) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 1000, image))
+                .body(new RequestCreateProductDto("치킨", 1_000, image))
                 .when()
                 .post("/admin/product")
                 .then()
@@ -145,7 +145,7 @@ class AdminControllerTest {
 
     @Test
     void 상품을_수정할_수_있다() {
-        final Long insertedId = insertProduct("치킨", 1000, "치킨 사진");
+        final Long insertedId = insertProduct("치킨", 1_000, "치킨 사진");
 
         given()
                 .log().all().contentType(ContentType.JSON)
@@ -172,15 +172,14 @@ class AdminControllerTest {
                 return preparedStatement;
             }
         }, keyHolder);
-        Long insertedId = keyHolder.getKey().longValue();
-        return insertedId;
+        return keyHolder.getKey().longValue();
     }
 
     @Test
     void 존재하지_않는_id의_상품은_수정할_수_없다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestUpdateProductDto(0L, "치킨", 10000, "치킨 사진"))
+                .body(new RequestUpdateProductDto(0L, "치킨", 10_000, "치킨 사진"))
                 .when()
                 .put("/admin/product")
                 .then()
@@ -190,7 +189,7 @@ class AdminControllerTest {
 
     @Test
     void 상품을_삭제할_수_있다() {
-        final Long insertedId = insertProduct("치킨", 1000, "치킨 사진");
+        final Long insertedId = insertProduct("치킨", 1_000, "치킨 사진");
 
         given()
                 .log().all()

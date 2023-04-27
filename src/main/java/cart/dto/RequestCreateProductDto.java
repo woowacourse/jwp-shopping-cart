@@ -29,13 +29,4 @@ public class RequestCreateProductDto {
     public String getImage() {
         return image;
     }
-
-    @Override
-    public String toString() {
-        return "NewProductDto{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", image='" + image + '\'' +
-                '}';
-    }
 }

@@ -24,7 +24,7 @@ class ProductTest {
         final String nameOver50 = "치킨".repeat(50);
 
         // expect
-        assertThatThrownBy(() -> new Product(nameOver50, 10000, "치킨사진"))
+        assertThatThrownBy(() -> new Product(nameOver50, 10_000, "치킨사진"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("상품 이름은 50자를 넘길 수 없습니다.");
     }
@@ -44,7 +44,7 @@ class ProductTest {
         final String imageOver2000 = "치킨사진".repeat(1_001);
 
         // expect
-        assertThatThrownBy(() -> new Product("치킨", 10000, imageOver2000))
+        assertThatThrownBy(() -> new Product("치킨", 10_000, imageOver2000))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미지 주소는 2000자를 넘길 수 없습니다.");
     }
