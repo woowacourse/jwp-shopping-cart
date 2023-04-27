@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 
 import cart.dto.ProductRequestDto;
+import cart.entity.Product;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,6 +49,21 @@ public class AdminControllerTest {
                 .body(productRequestDto)
                 .accept(MediaType.TEXT_HTML_VALUE)
                 .when().post("/admin/products")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(containsString("<title>관리자 페이지</title>"));
+    }
+
+    @Test
+    @DisplayName("상품 수정 확인")
+    void modifyProduct() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("샐러드", 10000, "밋밋엉");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequestDto)
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when().put("/admin/products/2")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(containsString("<title>관리자 페이지</title>"));
