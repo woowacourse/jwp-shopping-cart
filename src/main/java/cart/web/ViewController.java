@@ -8,10 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class CartController {
+public class ViewController {
     private final CartService cartService;
 
-    public CartController(CartService cartService) {
+    public ViewController(CartService cartService) {
         this.cartService = cartService;
     }
 
@@ -23,4 +23,14 @@ public class CartController {
 
         return "index";
     }
+
+    @GetMapping("/admin")
+    public String loadAdminPage(Model model) {
+        List<ProductDto> allProducts = cartService.getAllProducts();
+
+        model.addAttribute("products", allProducts);
+
+        return "admin";
+    }
+
 }

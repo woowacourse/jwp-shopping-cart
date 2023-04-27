@@ -14,12 +14,13 @@ import cart.domain.product.dto.ProductDto;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(AdminViewController.class)
+@WebMvcTest(ViewController.class)
 class AdminViewControllerTest {
 
     @Autowired
@@ -27,6 +28,19 @@ class AdminViewControllerTest {
 
     @MockBean
     private CartService cartService;
+
+    @DisplayName("루트 경로 요청시, index.html을 반환한다.")
+    @Test
+    void loadIndexPage() throws Exception {
+        Mockito.when(cartService.getAllProducts())
+                .thenReturn(List.of(ProductDto.from(TestFixture.CHICKEN), ProductDto.from(TestFixture.PIZZA)));
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("products", hasSize(2)))
+                .andExpect(view().name("index"))
+                .andDo(print());
+    }
 
     @DisplayName("/admin 요청시, admin.html을 반환한다.")
     @Test
