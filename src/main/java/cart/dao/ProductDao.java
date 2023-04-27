@@ -1,12 +1,13 @@
 package cart.dao;
 
 import cart.domain.product.Product;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class ProductDao {
@@ -14,7 +15,7 @@ public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
@@ -40,7 +41,7 @@ public class ProductDao {
         return products;
     }
 
-    public void update(Product productToUpdate) {
+    public void update(final Product productToUpdate) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(
                 sql,
@@ -51,7 +52,7 @@ public class ProductDao {
         );
     }
 
-    public void deleteById(long id) {
+    public void deleteById(final long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

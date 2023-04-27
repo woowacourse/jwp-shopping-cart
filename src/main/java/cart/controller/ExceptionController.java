@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionController {
 
     @ExceptionHandler
-    public ResponseEntity<String> handleException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<String> handleException(final MethodArgumentNotValidException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }
