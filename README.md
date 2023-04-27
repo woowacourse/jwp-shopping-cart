@@ -52,5 +52,5 @@ CREATE TABLE product
     - [x] admin 페이지에서 상품을 수정한다.
 
 - 상품 삭제
-    - [ ] DELETE /admin/product/id
-    - [ ] admin 페이지에서 상품을 삭제한다.
+    - [x] DELETE /admin/product/id
+    - [x] admin 페이지에서 상품을 삭제한다.

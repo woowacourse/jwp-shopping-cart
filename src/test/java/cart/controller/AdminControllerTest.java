@@ -51,7 +51,7 @@ class AdminControllerTest {
                 .contentType(ContentType.HTML);
     }
 
-    @DisplayName("PUT /admin/product/{id} 요청시 수정")
+    @DisplayName("PUT /admin/product/{id} 요청 시 Status Created 및 HTML 반환")
     @Test
     void shouldResponseHtmlWithStatusCreatedWhenRequestPutToAdminProductId() {
         given().log().all()
@@ -61,6 +61,17 @@ class AdminControllerTest {
                 .put("/admin/product/1")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
+                .contentType(ContentType.HTML);
+    }
+
+    @DisplayName("DELETE /admin/product/{id} 요청 시 Status OK 및 HTML 반환")
+    @Test
+    void shouldResponseHtmlWithStatusOkWhenRequestDeleteToAdminProductId() {
+        given().log().all()
+                .when()
+                .delete("/admin/product/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.HTML);
     }
 }

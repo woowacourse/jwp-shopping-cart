@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +52,12 @@ public class AdminController {
                 saveRequest.getImageUrl());
         productDao.update(product);
         response.setStatus(HttpServletResponse.SC_CREATED);
+        return "admin";
+    }
+
+    @DeleteMapping("/product/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+        productDao.deleteById(id);
         return "admin";
     }
 }
