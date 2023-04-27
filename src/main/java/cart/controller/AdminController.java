@@ -38,13 +38,13 @@ public class AdminController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Void> createProduct(@RequestBody @Valid RequestCreateProductDto requestCreateProductDto) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid final RequestCreateProductDto requestCreateProductDto) {
         cartService.insert(requestCreateProductDto);
         return ResponseEntity.created(URI.create("/product")).build();
     }
 
     @PutMapping("/product")
-    public ResponseEntity<Void> updateProduct(@RequestBody @Valid RequestUpdateProductDto requestUpdateProductDto) {
+    public ResponseEntity<Void> updateProduct(@RequestBody @Valid final RequestUpdateProductDto requestUpdateProductDto) {
         cartService.update(requestUpdateProductDto);
         return ResponseEntity.ok().build();
     }
