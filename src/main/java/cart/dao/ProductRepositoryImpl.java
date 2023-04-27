@@ -43,4 +43,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         return productDao.insert(productEntity);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        productDao.deleteById(id);
+    }
 }

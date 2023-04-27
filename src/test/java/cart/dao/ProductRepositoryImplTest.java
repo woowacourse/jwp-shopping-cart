@@ -49,4 +49,17 @@ class ProductRepositoryImplTest {
         assertThat(allProducts).extractingResultOf("getName")
                 .contains("Pizza");
     }
+
+    @DisplayName("단일 상품 삭제 테스트")
+    @Test
+    void deleteById() {
+        Product pizza = TestFixture.PIZZA;
+        Long savedId = productRepository.save(pizza);
+        assertThat(productRepository.findAll()).hasSize(1);
+
+        productRepository.deleteById(savedId);
+
+        List<Product> allProducts = productRepository.findAll();
+        assertThat(allProducts).hasSize(0);
+    }
 }
