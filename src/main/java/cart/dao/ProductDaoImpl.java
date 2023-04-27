@@ -18,14 +18,7 @@ public class ProductDaoImpl implements ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public List<ProductEntity> findAll() {
-        final String sql = "SELECT * FROM PRODUCT";
-
-        return jdbcTemplate.query(sql, productEntityRowMapper());
-    }
-
-    private RowMapper<ProductEntity> productEntityRowMapper() {
+    private RowMapper<ProductEntity> getProductEntityRowMapper() {
         return (rs, rowNum) -> new ProductEntity(
                 rs.getInt("id"),
                 rs.getString("name"),
@@ -35,7 +28,14 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public int insert(ProductEntity productEntity) {
+    public List<ProductEntity> findAll() {
+        final String sql = "SELECT * FROM PRODUCT";
+
+        return jdbcTemplate.query(sql, getProductEntityRowMapper());
+    }
+
+    @Override
+    public int insert(final ProductEntity productEntity) {
         final String sql = "INSERT INTO PRODUCT (name, image, price) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -54,7 +54,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Optional<ProductEntity> findById(final int id) {
         final String sql = "SELECT * FROM PRODUCT WHERE id = ?";
-        ProductEntity productEntity = jdbcTemplate.queryForObject(sql, productEntityRowMapper(), id);
+        ProductEntity productEntity = jdbcTemplate.queryForObject(sql, getProductEntityRowMapper(), id);
         if (productEntity == null) {
             return Optional.empty();
         }

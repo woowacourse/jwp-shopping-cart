@@ -1,7 +1,6 @@
 package cart.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.Is.is;
 
 import cart.dao.ProductDao;
 import cart.dao.ProductEntity;
@@ -50,9 +49,9 @@ class ProductApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productDto)
-                .when().post("http://localhost:" + port + "/product/insert")
+                .when().post("http://localhost:" + port + "/products/insert")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
 
         List<ProductEntity> productEntities = productDao.findAll();
 
@@ -71,10 +70,9 @@ class ProductApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productDto)
-                .when().post("http://localhost:" + port + "/product/update/" + createdProductId)
+                .when().put("http://localhost:" + port + "/products/update/" + createdProductId)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body(is(String.valueOf(createdProductId)));
+                .statusCode(HttpStatus.CREATED.value());
 
         Optional<ProductEntity> findById = productDao.findById(createdProductId);
         ProductEntity findEntity = findById.get();
@@ -90,7 +88,7 @@ class ProductApiControllerTest {
         int createdProductId = productDao.insert(productEntity);
 
         RestAssured.given().log().all()
-                .when().delete("http://localhost:" + port + "/product/delete/" + createdProductId)
+                .when().delete("http://localhost:" + port + "/products/delete/" + createdProductId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
@@ -111,7 +109,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productDto)
-                    .when().post("http://localhost:" + port + "/product/insert")
+                    .when().post("http://localhost:" + port + "/products/insert")
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
@@ -124,7 +122,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productDto)
-                    .when().post("http://localhost:" + port + "/product/insert")
+                    .when().post("http://localhost:" + port + "/products/insert")
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
@@ -138,7 +136,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productDto)
-                    .when().post("http://localhost:" + port + "/product/insert")
+                    .when().post("http://localhost:" + port + "/products/insert")
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
@@ -156,7 +154,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productDto)
-                    .when().post("http://localhost:" + port + "/product/update/" + createdProductId)
+                    .when().put("http://localhost:" + port + "/products/update/" + createdProductId)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
@@ -174,7 +172,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productDto)
-                    .when().post("http://localhost:" + port + "/product/update/" + createdProductId)
+                    .when().put("http://localhost:" + port + "/products/update/" + createdProductId)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
@@ -193,7 +191,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productDto)
-                    .when().post("http://localhost:" + port + "/product/update/" + createdProductId)
+                    .when().put("http://localhost:" + port + "/products/update/" + createdProductId)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }

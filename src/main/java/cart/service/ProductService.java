@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.dao.ProductEntity;
+import cart.domain.Product;
 import cart.dto.ProductDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -20,15 +21,16 @@ public class ProductService {
     }
 
     public Integer insert(final ProductDto productDto) {
-        ProductEntity productEntity = new ProductEntity(productDto.getName(), productDto.getImage(),
-                productDto.getPrice());
+        Product product = productDto.toProduct();
+        ProductEntity productEntity = product.toEntity();
         return productDao.insert(productEntity);
     }
 
     public void update(final int id, final ProductDto productDto) {
         ProductEntity productEntity = findProductById(id);
+        Product product = productDto.toProduct();
 
-        ProductEntity updatedEntity = productEntity.update(productDto);
+        ProductEntity updatedEntity = productEntity.update(product.toEntity());
 
         productDao.update(updatedEntity);
     }

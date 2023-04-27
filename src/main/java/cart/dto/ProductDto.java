@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.domain.Product;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -36,4 +37,7 @@ public class ProductDto {
         return price;
     }
 
+    public Product toProduct() {
+        return new Product(name, image, price);
+    }
 }

@@ -2,13 +2,13 @@ package cart.controller;
 
 import cart.dto.ProductDto;
 import cart.service.ProductService;
+import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,28 +21,22 @@ public class ProductApiController {
         this.productService = productService;
     }
 
-    @PostMapping("/product/insert")
+    @PostMapping("/products/insert")
     public ResponseEntity<Integer> insert(@Valid @RequestBody ProductDto productDto) {
         Integer savedId = productService.insert(productDto);
-        return ResponseEntity.ok().body(savedId);
+        return ResponseEntity.created(URI.create("/products/" + savedId)).body(savedId);
     }
 
-    @PostMapping("/product/update/{id}")
-    public ResponseEntity<Integer> update(@PathVariable int id, @Valid @RequestBody ProductDto productDto) {
+    @PutMapping("/products/update/{id}")
+    public ResponseEntity<Void> update(@PathVariable int id, @Valid @RequestBody ProductDto productDto) {
         productService.update(id, productDto);
-        return ResponseEntity.ok().body(id);
+        return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
-    @DeleteMapping("/product/delete/{id}")
+    @DeleteMapping("/products/delete/{id}")
     public Integer delete(@PathVariable int id) {
         productService.delete(id);
         return id;
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        return ResponseEntity.badRequest()
-                .body(exception.getBindingResult().getFieldErrors().get(0).getDefaultMessage());
     }
 
 }

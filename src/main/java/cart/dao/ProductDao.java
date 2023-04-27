@@ -13,7 +13,7 @@ public interface ProductDao {
 
     void update(final ProductEntity updatedEntity);
 
-    void delete(int id);
+    void delete(final int id);
 
     void deleteAll();
 }
