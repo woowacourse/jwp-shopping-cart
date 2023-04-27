@@ -1,5 +1,6 @@
 package cart.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -45,4 +46,20 @@ public class ProductDao {
         jdbcTemplate.update(deleteByIdQuery, id);
     }
 
+    public ProductEntity update(ProductEntity productEntity) {
+        String updateProductQuery = "UPDATE product SET name = ?, price = ?, category = ?, image_url =? WHERE product_id = ?";
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(updateProductQuery);
+
+            preparedStatement.setString(1, productEntity.getName());
+            preparedStatement.setInt(2, productEntity.getPrice());
+            preparedStatement.setString(3, productEntity.getCategory());
+            preparedStatement.setString(4, productEntity.getImageUrl());
+            preparedStatement.setLong(5, productEntity.getId());
+            return preparedStatement;
+        });
+
+        return productEntity;
+    }
 }

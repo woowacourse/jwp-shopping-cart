@@ -76,4 +76,35 @@ class ProductDaoTest {
         List<ProductEntity> allEntities = productDao.findAll();
         assertThat(allEntities).hasSize(0);
     }
+
+    @DisplayName("상품 수정 테스트")
+    @Test
+    void updateProduct() {
+        ProductEntity productEntity = new ProductEntity(
+                null,
+                "Pizza",
+                10_000,
+                "FOOD",
+                "pizza.com"
+        );
+        Long savedId = productDao.insert(productEntity);
+
+        ProductEntity updatedProductEntity = new ProductEntity(
+                savedId,
+                "Chicken",
+                20_000,
+                "FOOD",
+                "chicken.com"
+        );
+        productDao.update(updatedProductEntity);
+
+        List<ProductEntity> allProducts = productDao.findAll();
+        assertThat(allProducts).hasSize(1);
+        ProductEntity savedProduct = allProducts.get(0);
+        assertThat(savedProduct.getId()).isEqualTo(savedId);
+        assertThat(savedProduct.getName()).isEqualTo("Chicken");
+        assertThat(savedProduct.getPrice()).isEqualTo(20_000);
+        assertThat(savedProduct.getCategory()).isEqualTo("FOOD");
+        assertThat(savedProduct.getImageUrl()).isEqualTo("chicken.com");
+    }
 }
