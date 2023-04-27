@@ -27,8 +27,8 @@ public class ShoppingService {
                         product.getPrice(), product.getCategory())).collect(Collectors.toList());
     }
 
-    public void save(final ProductDto productDto) {
-        productDao.insert(new Product(productDto.getId(), productDto.getName(), productDto.getImageUrl(),
+    public long save(final ProductDto productDto) {
+        return productDao.insert(new Product(productDto.getId(), productDto.getName(), productDto.getImageUrl(),
                 productDto.getPrice(), productDto.getCategory()));
     }
 
