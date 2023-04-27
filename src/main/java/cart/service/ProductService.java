@@ -33,6 +33,12 @@ public class ProductService {
                 .collect(toUnmodifiableList());
     }
 
+    public ProductDto findById(final Long id) {
+        final Product product = productDao.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
+        return ProductDto.from(product);
+    }
+
     public void update(final Long id, final ProductUpdateRequestDto request) {
         final Product product = new Product(id, request.getName(), request.getImage(), request.getPrice());
         productDao.update(product);
@@ -40,11 +46,5 @@ public class ProductService {
 
     public void delete(final Long id) {
         productDao.delete(id);
-    }
-
-    public ProductDto findById(final Long id) {
-        final Product product = productDao.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
-        return ProductDto.from(product);
     }
 }

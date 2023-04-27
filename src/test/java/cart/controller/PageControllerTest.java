@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -32,8 +33,22 @@ class PageControllerTest {
     @Autowired
     private ProductDao productDao;
 
+    private Matcher<Object> generatePropertiesMatcher(
+            final Long id,
+            final String name,
+            final String image,
+            final long price
+    ) {
+        return allOf(
+                hasProperty("id", is(id)),
+                hasProperty("name", is(name)),
+                hasProperty("image", is(image)),
+                hasProperty("price", is(price))
+        );
+    }
+
     @Test
-    void 메인_페이지_접근() throws Exception {
+    void 메인_페이지에_접근한다() throws Exception {
         // given
         final Product product1 = new Product("허브티", "tea.jpg", 1000L);
         final Product product2 = new Product("고양이", "cat.jpg", 1000000L);
@@ -43,27 +58,19 @@ class PageControllerTest {
         // expect
         mockMvc.perform(get("/"))
                 .andExpect(model().attribute("products", hasSize(2)))
-                .andExpect(model().attribute("products", hasItem(
-                        allOf(
-                                hasProperty("id", is(id1)),
-                                hasProperty("name", is("허브티")),
-                                hasProperty("image", is("tea.jpg")),
-                                hasProperty("price", is(1000L))
-                        )
-                )))
-                .andExpect(model().attribute("products", hasItem(
-                        allOf(
-                                hasProperty("id", is(id2)),
-                                hasProperty("name", is("고양이")),
-                                hasProperty("image", is("cat.jpg")),
-                                hasProperty("price", is(1000000L))
-                        )
-                )))
+                .andExpect(model().attribute(
+                        "products",
+                        hasItem(generatePropertiesMatcher(id1, "허브티", "tea.jpg", 1000L))
+                ))
+                .andExpect(model().attribute(
+                        "products",
+                        hasItem(generatePropertiesMatcher(id2, "고양이", "cat.jpg", 1000000L))
+                ))
                 .andDo(print());
     }
 
     @Test
-    void 관리자_페이지_접근() throws Exception {
+    void 관리자_페이지에_접근한다() throws Exception {
         // given
         final Product product1 = new Product("허브티", "tea.jpg", 1000L);
         final Product product2 = new Product("고양이", "cat.jpg", 1000000L);
@@ -73,41 +80,29 @@ class PageControllerTest {
         // expect
         mockMvc.perform(get("/admin"))
                 .andExpect(model().attribute("products", hasSize(2)))
-                .andExpect(model().attribute("products", hasItem(
-                        allOf(
-                                hasProperty("id", is(id1)),
-                                hasProperty("name", is("허브티")),
-                                hasProperty("image", is("tea.jpg")),
-                                hasProperty("price", is(1000L))
-                        )
-                )))
-                .andExpect(model().attribute("products", hasItem(
-                        allOf(
-                                hasProperty("id", is(id2)),
-                                hasProperty("name", is("고양이")),
-                                hasProperty("image", is("cat.jpg")),
-                                hasProperty("price", is(1000000L))
-                        )
-                )))
+                .andExpect(model().attribute(
+                        "products",
+                        hasItem(generatePropertiesMatcher(id1, "허브티", "tea.jpg", 1000L))
+                ))
+                .andExpect(model().attribute(
+                        "products",
+                        hasItem(generatePropertiesMatcher(id2, "고양이", "cat.jpg", 1000000L))
+                ))
                 .andDo(print());
     }
 
     @Test
-    void 단일_조회_페이지_접근() throws Exception {
+    void 단일_조회_페이지에_접근한다() throws Exception {
         // given
         final Product product = new Product("허브티", "tea.jpg", 1000L);
         final Long id = productDao.saveAndGetId(product).get();
 
         // expect
         mockMvc.perform(get("/products/" + id))
-                .andExpect(model().attribute("product", is(
-                        allOf(
-                                hasProperty("id", is(id)),
-                                hasProperty("name", is("허브티")),
-                                hasProperty("image", is("tea.jpg")),
-                                hasProperty("price", is(1000L))
-                        )
-                )))
+                .andExpect(model().attribute(
+                        "product",
+                        is(generatePropertiesMatcher(id, "허브티", "tea.jpg", 1000L))
+                ))
                 .andDo(print());
     }
 }
