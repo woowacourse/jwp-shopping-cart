@@ -1,8 +1,5 @@
 package cart.controller;
 
-import cart.controller.dto.ProductRequest;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import cart.controller.dto.ProductRequest;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductControllerTest {
@@ -22,6 +23,7 @@ class ProductControllerTest {
         RestAssured.port = port;
         RestAssured
                 .given()
+                .contentType(ContentType.JSON)
                 .body(new ProductRequest("비버", "a", 100L))
                 .post("/product");
     }
