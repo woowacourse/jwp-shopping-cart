@@ -1,8 +1,10 @@
 package cart.entity;
 
+import java.util.Objects;
+
 public class ProductEntity {
 
-    private long id;
+    private Long id;
     private final String name;
     private final String imageUrl;
     private final int price;
@@ -13,14 +15,15 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public ProductEntity(final long id, final String name, final String imageUrl, final int price) {
+    public ProductEntity(final Long id, final String name, final String imageUrl, final int price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
     }
 
-    public long getId() {
+    public Long getId() {
+        Objects.requireNonNull(id, "id가 null입니다.");
         return id;
     }
 
