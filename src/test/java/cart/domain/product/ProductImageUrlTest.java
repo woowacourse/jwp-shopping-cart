@@ -27,5 +27,4 @@ class ProductImageUrlTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 상품 이미지 url이 비어있습니다.");
     }
-
 }

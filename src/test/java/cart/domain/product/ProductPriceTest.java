@@ -16,5 +16,4 @@ class ProductPriceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 상품 가격은 %d원 이상이어야 합니다.", MINIMUM_AMOUNT);
     }
-
 }

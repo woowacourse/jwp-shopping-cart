@@ -176,7 +176,6 @@ class AdminControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
-
     }
 
     @DisplayName("DELETE /admin/product/{id} 요청 시 Status OK 및 HTML 반환")
