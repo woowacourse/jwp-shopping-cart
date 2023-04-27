@@ -4,6 +4,7 @@ import cart.dto.RequestCreateProductDto;
 import cart.dto.RequestUpdateProductDto;
 import cart.dto.ResponseProductDto;
 import cart.service.CartService;
+import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class AdminController {
     @PostMapping("/product")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid RequestCreateProductDto requestCreateProductDto) {
         cartService.insert(requestCreateProductDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(URI.create("/product")).build();
     }
 
     @PutMapping("/product")

@@ -1,21 +1,36 @@
 package cart;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
+import cart.dao.ProductDao;
+import cart.domain.Product;
+import cart.dto.RequestCreateProductDto;
+import cart.dto.RequestUpdateProductDto;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductIntegrationTest {
+class ProductIntegrationTest {
 
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private ProductDao productDao;
 
     @BeforeEach
     void setUp() {
@@ -23,15 +38,146 @@ public class ProductIntegrationTest {
     }
 
     @Test
-    public void getProducts() {
-        var result = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+    void 메인화면에_네비게이션_바가_표시된다() {
+        final Response response = given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
                 .when()
-                .get("/products")
+                .get("/")
                 .then()
-                .extract();
+                .log().all()
+                .extract().response();
 
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getBody().asString()).contains("상품목록", "장바구니", "설정", "관리자");
     }
 
+    @Test
+    void 메인화면에서_관리자를_클릭하면_관리자_페이지가_반환된다() {
+        final Response response = given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .get("/admin")
+                .then()
+                .log().all()
+                .extract().response();
+
+        assertThat(response.getBody().asString()).contains("ID", "이름", "가격", "이미지", "Actions", "상품 추가");
+    }
+
+    @Test
+    void 상품을_등록하면_상품_목록_페이지와_관리자_페이지에_추가된다() {
+        // given
+        final Response createResponse = given()
+                .log().all().contentType(ContentType.JSON)
+                .body(new RequestCreateProductDto("치킨", 10000, "치킨 사진"))
+                .when()
+                .post("/admin/product")
+                .then()
+                .log().all()
+                .extract().response();
+
+        // when
+        final Response userResponse = given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .get("/")
+                .then()
+                .log().all()
+                .extract().response();
+
+        final Response adminResponse = given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .get("/admin")
+                .then()
+                .log().all()
+                .extract().response();
+        // then
+        assertSoftly(softly -> {
+            softly.assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+            softly.assertThat(userResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(userResponse.body().asString()).contains("치킨", "10000", "치킨 사진");
+            softly.assertThat(adminResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(adminResponse.body().asString()).contains("치킨", "10000", "치킨 사진");
+        });
+
+    }
+
+    @Test
+    void 상품을_삭제하면_상품_목록_페이지와_관리자_페이지에서_사라진다() {
+        // given
+        final Long insertedId = productDao.insert(new Product("치킨", 10000, "치킨 사진"));
+
+        final Response deleteResponse = given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .delete("/admin/product/" + insertedId)
+                .then()
+                .log().all()
+                .extract().response();
+
+        // when
+        final Response userResponse = given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .get("/")
+                .then()
+                .log().all()
+                .extract().response();
+
+        final Response adminResponse = given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .get("/admin")
+                .then()
+                .log().all()
+                .extract().response();
+        // then
+        assertSoftly(softly -> {
+            softly.assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(userResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(userResponse.body().asString()).doesNotContain("치킨", "10000", "치킨 사진");
+            softly.assertThat(adminResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(adminResponse.body().asString()).doesNotContain("치킨", "10000", "치킨 사진");
+        });
+    }
+
+    @Test
+    void 등록한_상품을_수정하면_상품_목록_페이지와_관리자_페이지에서_수정된다() {
+        // given
+        final Long insertedId = productDao.insert(new Product("치킨", 10000, "치킨 사진"));
+
+        final Response updateResponse = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new RequestUpdateProductDto(insertedId, "피자", 1000, "피자 사진"))
+                .when()
+                .put("/admin/product/")
+                .then()
+                .log().all()
+                .extract().response();
+
+        // when
+        final Response userResponse = given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .get("/")
+                .then()
+                .log().all()
+                .extract().response();
+
+        final Response adminResponse = given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .get("/admin")
+                .then()
+                .log().all()
+                .extract().response();
+        // then
+        assertSoftly(softly -> {
+            softly.assertThat(updateResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(userResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(userResponse.body().asString()).contains("피자", "1000", "피자 사진");
+            softly.assertThat(adminResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(adminResponse.body().asString()).contains("피자", "1000", "피자 사진");
+        });
+    }
 }

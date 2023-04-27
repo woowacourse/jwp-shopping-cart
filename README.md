@@ -56,12 +56,16 @@ Dto에 response/request 추가 x
 URI 컨벤션 찾기 x
 DTO 양방향 의존성이 생기는 문제 해결해보기 x 
 --valid의 필요성? -> 오버엔지니어링? 안전하게 가야하는지-- x
+dao → key holder 사용해서 id 반환하도록 하기 x
+service에서 insert, update return값 다시 생각해보기(지금 void) x
 
-dao → key holder 사용해서 id 반환하도록 하기
-service에서 insert, update return값 다시 생각해보기(지금 void)
 테스트 (컨트롤러, 서비스, 다오)
   전체테스트를 먼저 해야하는 이유
   전체테스트 -> 컨트롤러 보고 해야하는가...?
+컨트롤러에서의 dao 주입 -> jdbctemplate으로 대체 가능 x
+ExceptionHandler -> 메서드 분리 x
+README.md API 명세서 작성하기
+200 아닌 201 사인 리턴하기 x
 ```
 ---
 
