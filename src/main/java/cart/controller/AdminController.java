@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.entity.Product;
+import cart.repository.dto.ProductHttpRequest;
 import cart.service.ProductService;
 import java.net.URI;
 import javax.validation.Valid;
@@ -32,14 +32,14 @@ public class AdminController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createProduct(@RequestBody @Valid Product product) {
-        long id = productService.createProduct(product);
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductHttpRequest productHttpRequest) {
+        long id = productService.createProduct(productHttpRequest);
         return ResponseEntity.created(URI.create("/admin/" + id)).build();
     }
 
     @PatchMapping("/edit")
-    public ResponseEntity<Void> editProduct(@RequestBody @Valid Product product) {
-        productService.updateProduct(product);
+    public ResponseEntity<Void> editProduct(@RequestBody @Valid ProductHttpRequest productHttpRequest) {
+        productService.updateProduct(productHttpRequest);
         return ResponseEntity.ok().build();
     }
 
