@@ -24,7 +24,7 @@ public class AdminController {
     
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody ProductRequest productRequest) {
+    public void createProduct(@RequestBody @Valid ProductRequest productRequest) {
         productService.save(productRequest);
     }
     
