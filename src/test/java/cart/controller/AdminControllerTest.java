@@ -5,13 +5,13 @@ import static io.restassured.RestAssured.given;
 import cart.controller.dto.SaveRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminControllerTest {
@@ -34,7 +34,7 @@ class AdminControllerTest {
                 .when()
                 .get("/admin")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.HTML);
     }
 
@@ -47,7 +47,7 @@ class AdminControllerTest {
                 .when()
                 .post("/admin/product")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.SC_CREATED)
                 .contentType(ContentType.HTML);
     }
 
@@ -60,7 +60,7 @@ class AdminControllerTest {
                 .when()
                 .put("/admin/product/1")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.SC_CREATED)
                 .contentType(ContentType.HTML);
     }
 
@@ -71,7 +71,7 @@ class AdminControllerTest {
                 .when()
                 .delete("/admin/product/1")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.HTML);
     }
 }
