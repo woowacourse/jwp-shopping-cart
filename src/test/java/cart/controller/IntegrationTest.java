@@ -1,6 +1,7 @@
 package cart.controller;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 import cart.entity.Product;
@@ -84,14 +85,15 @@ class IntegrationTest {
     @Test
     @DisplayName("유저가 유효하지 않는 입력을 하는 경우 테스트")
     void badRequest() {
-        String jsonStr = "{ \"name\"\"홍실\", \"price\":\"321321\", \"imageUrl\":\"ddong.exe\"}";
+        String jsonStr = "{ \"name\":\"홍실\", \"price\":\"321321\", \"imageUrl\":\"ddong.exe\"}";
 
         given()
-                .body(jsonStr)
+                .body(jsonStr).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/admin/create")
                 .then()
-                .statusCode(400);
+                .statusCode(400)
+                .body(equalTo("유효한 이미지 확장자가 아닙니다."));
     }
 }
