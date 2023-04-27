@@ -1,6 +1,8 @@
 package cart.controller;
 
+import cart.dto.ProductDto;
 import cart.service.ProductService;
+import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,13 @@ public class PageController {
     public String index(final Model model) {
         model.addAttribute("products", productService.findAll());
         return "index";
+    }
+
+    @GetMapping("/products/{id}")
+    public String product(final Model model) {
+        final List<ProductDto> result = productService.findAll();
+        model.addAttribute("product", result.get(0));
+        return "product";
     }
 
     @GetMapping("/admin")

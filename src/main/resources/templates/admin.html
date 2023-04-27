@@ -40,6 +40,7 @@
                 <img style="max-width: 100px;" th:src="${product.image}"> <!-- 상품 이미지 -->
             </td>
             <td>
+                <button th:attr="onclick=|location.href='/products/' + ${product.id}|">상품 보기</button>
                 <button th:onclick="showEditModal([[${product}]])">수정</button>
                 <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
             </td>
