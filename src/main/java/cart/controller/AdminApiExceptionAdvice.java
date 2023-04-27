@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class AdminExceptionAdvice {
+public class AdminApiExceptionAdvice {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 

@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.URL;
 
-public class ProductRequest {
+public class ProductPostRequest {
 
     @NotBlank(message = "상품 명을 입력해주세요.")
     private String name;
@@ -19,10 +19,10 @@ public class ProductRequest {
     @URL(message = "유효한 URL 형식을 입력해주세요")
     private String imageUrl;
 
-    private ProductRequest() {
+    private ProductPostRequest() {
     }
 
-    public ProductRequest(final String name, final int price, final String imageUrl) {
+    public ProductPostRequest(final String name, final int price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
