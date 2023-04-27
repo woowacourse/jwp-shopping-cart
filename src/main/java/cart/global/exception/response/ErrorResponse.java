@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ErrorResponse extends ExceptionResponse {
-    private final Map<String, String> validation = new HashMap<>();
 
+    private final Map<String, String> validation = new HashMap<>();
 
     public ErrorResponse(ExceptionStatus exceptionResponse) {
         super(exceptionResponse.getStatus(), exceptionResponse.getMessage(),
