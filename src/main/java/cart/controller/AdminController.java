@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.controller.dto.ProductDto;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import org.springframework.stereotype.Controller;
@@ -7,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class AdminController {
@@ -20,7 +22,10 @@ public class AdminController {
     @GetMapping("/admin")
     public String findAllProducts(final Model model) {
         List<Product> products = productDao.findAll();
-        model.addAttribute("products", products);
+        List<ProductDto> productDtos = products.stream()
+                .map(ProductDto::from)
+                .collect(Collectors.toList());
+        model.addAttribute("products", productDtos);
 
         return "admin";
     }
