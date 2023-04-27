@@ -18,46 +18,34 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/admin")
-public class AdminController {
+@RestController
+@RequestMapping("/product")
+public class ProductApiController {
 
     private final ProductService productService;
 
-    public AdminController(ProductService productService) {
+    public ProductApiController(ProductService productService) {
         this.productService = productService;
     }
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody @Valid ProductRequest productRequest) {
-        Long savedId = productService.create(productRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .location(URI.create("/admin"))
-                .build();
-    }
-
-    @GetMapping
-    public String admin(Model model) {
-        List<ProductResponse> products = productService.findAll();
-        model.addAttribute("products", products);
-        return "admin";
+        productService.create(productRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{productId}")
     public ResponseEntity<String> update(@PathVariable Long productId,
                                          @RequestBody @Valid ProductRequest productRequest) {
         productService.update(productId, productRequest);
-        return ResponseEntity.status(HttpStatus.OK)
-                .location(URI.create("/admin"))
-                .body("ok");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<String> delete(@PathVariable Long productId) {
         productService.deleteById(productId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .location(URI.create("/admin"))
-                .body("ok");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

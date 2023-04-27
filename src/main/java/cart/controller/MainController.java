@@ -18,9 +18,16 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String hello(Model model) {
+    public String index(Model model) {
         List<ProductResponse> products = productService.findAll();
         model.addAttribute("products", products);
         return "index";
+    }
+
+    @GetMapping("/admin")
+    public String admin(Model model) {
+        List<ProductResponse> products = productService.findAll();
+        model.addAttribute("products", products);
+        return "admin";
     }
 }
