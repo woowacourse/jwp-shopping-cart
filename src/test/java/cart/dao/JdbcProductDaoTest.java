@@ -3,10 +3,10 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.dao.entity.Product;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,8 +15,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
-import cart.dao.entity.Product;
 
 @JdbcTest
 class JdbcProductDaoTest {
@@ -91,6 +89,19 @@ class JdbcProductDaoTest {
                 () -> assertThat(result.getName()).isEqualTo("샐러드"),
                 () -> assertThat(result.getPrice()).isEqualTo(20000),
                 () -> assertThat(result.getImgUrl()).isEqualTo("changeImgUrl")
+        );
+    }
+
+    @Test
+    void id로_상품의_유무를_확인할_수_있다() {
+        // given
+        final Long id = saveProduct("치킨", 10000);
+        final long noneSavedId = 1000L;
+
+        // when, then
+        assertAll(
+                () -> assertThat(productDao.existBy(id)).isTrue(),
+                () -> assertThat(productDao.existBy(noneSavedId)).isFalse()
         );
     }
 

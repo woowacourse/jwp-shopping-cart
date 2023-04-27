@@ -1,14 +1,13 @@
 package cart.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
 import cart.dao.ProductDao;
 import cart.dao.entity.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
@@ -37,7 +36,15 @@ public class ProductService {
     }
 
     public void delete(final Long id) {
+        if (doesNotExist(id)) {
+            throw new NoSuchElementException("상품을 찾을 수 없습니다.");
+        }
+
         productDao.delete(id);
+    }
+
+    private boolean doesNotExist(final Long id) {
+        return !productDao.existBy(id);
     }
 
     public void update(final Long id, final ProductRequest request) {

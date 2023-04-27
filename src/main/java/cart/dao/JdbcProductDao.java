@@ -1,9 +1,9 @@
 package cart.dao;
 
+import cart.dao.entity.Product;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -13,8 +13,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import cart.dao.entity.Product;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
@@ -64,5 +62,12 @@ public class JdbcProductDao implements ProductDao {
                 .addValue("imgUrl", product.getImgUrl());
 
         jdbcTemplate.update(sql, params);
+    }
+
+    @Override
+    public boolean existBy(final Long id) {
+        final String sql = "SELECT EXISTS(SELECT 1 FROM product WHERE id = :id)";
+
+        return jdbcTemplate.queryForObject(sql, Map.of("id", id), Boolean.class);
     }
 }

@@ -1,8 +1,7 @@
 package cart.dao;
 
-import java.util.List;
-
 import cart.dao.entity.Product;
+import java.util.List;
 
 public interface ProductDao {
 
@@ -13,4 +12,6 @@ public interface ProductDao {
     void delete(final Long id);
 
     void update(final Long id, final Product product);
+
+    boolean existBy(final Long id);
 }

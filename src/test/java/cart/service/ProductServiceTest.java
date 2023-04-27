@@ -1,25 +1,36 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.util.List;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-
+import cart.dao.ProductDao;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import java.util.List;
+import java.util.NoSuchElementException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+@JdbcTest
 @Transactional
+@SuppressWarnings("NonAsciiCharacters")
 class ProductServiceTest {
 
+    private ProductService productService;
+
     @Autowired
-    ProductService productService;
+    private ProductDao productDao;
+
+    @BeforeEach
+    void init() {
+        productService = new ProductService(productDao);
+    }
 
     @Test
     @DisplayName("저장된 결과를 반환한다.")
@@ -35,18 +46,31 @@ class ProductServiceTest {
         );
     }
 
-    @Test
-    @DisplayName("상품을 삭제한다.")
-    void delete() {
-        // given
-        final Long id = saveProduct("샐러드", 20000);
+    @Nested
+    @DisplayName("삭제 테스트를 진행한다.")
+    class Delete {
 
-        // when
-        productService.delete(id);
+        @Test
+        void 상품을_삭제를_성공한다() {
+            // given
+            final Long id = saveProduct("샐러드", 20000);
 
-        // then
-        final List<ProductResponse> results = productService.findAll();
-        assertThat(results).isEmpty();
+            // when
+            productService.delete(id);
+
+            // then
+            final List<ProductResponse> results = productService.findAll();
+            assertThat(results).isEmpty();
+        }
+
+        @Test
+        void id가_없는_상품을_삭제하려면_에러를_반환한다() {
+            // when, then
+            final Long noneSavedId = 100L;
+
+            assertThatThrownBy(() -> productService.delete(noneSavedId))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
     }
 
     @Test
