@@ -64,7 +64,7 @@ class AdminControllerTest {
     @Test
     void addProduct() throws Exception {
         // given
-        doNothing().when(shoppingService).save(any());
+        when(shoppingService.save(any())).thenReturn(1L);
 
         // when, then
         mockMvc.perform(post("/admin")
@@ -72,7 +72,7 @@ class AdminControllerTest {
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -105,7 +105,7 @@ class AdminControllerTest {
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -134,6 +134,6 @@ class AdminControllerTest {
         // when, then
         mockMvc.perform(delete("/admin/{id}", 1L)
                         .contentType(MediaType.TEXT_HTML))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 }
