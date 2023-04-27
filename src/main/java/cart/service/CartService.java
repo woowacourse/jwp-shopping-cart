@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartService {
@@ -24,7 +23,6 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    @Transactional(readOnly = true)
     public List<ResponseProductDto> findAll() {
         final List<ProductEntity> productEntities = productDao.selectAll();
         return productEntities.stream()
@@ -36,7 +34,6 @@ public class CartService {
                 ).collect(Collectors.toUnmodifiableList());
     }
 
-    @Transactional
     public void insert(final RequestCreateProductDto requestCreateProductDto) {
         final Product newProduct = new Product(
                 requestCreateProductDto.getName(),
@@ -46,7 +43,6 @@ public class CartService {
         productDao.insert(newProduct);
     }
 
-    @Transactional
     public void update(final RequestUpdateProductDto requestUpdateProductDto) {
         final Product product = new Product(
                 requestUpdateProductDto.getName(),
@@ -63,7 +59,6 @@ public class CartService {
         }
     }
 
-    @Transactional
     public void delete(final Long id) {
         final int affectedRows = productDao.delete(id);
         validateAffectedRowsCount(affectedRows);
