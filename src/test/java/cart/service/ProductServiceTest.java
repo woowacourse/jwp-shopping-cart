@@ -1,75 +1,82 @@
 package cart.service;
 
-import cart.dao.ProductJdbcDao;
-import cart.entity.ProductEntity;
-import org.junit.jupiter.api.BeforeEach;
+import cart.domain.Product;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-@JdbcTest
+@SpringBootTest
 class ProductServiceTest {
 
     @Autowired
+    private ProductService productService;
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private ProductJdbcDao productDao;
-    private ProductService productService;
-
-    @BeforeEach
-    void setUp() {
-        productDao = new ProductJdbcDao(jdbcTemplate);
-        this.productService = new ProductService(productDao);
-
-        productService.add("땡칠", "asdf", 100L);
+    @AfterEach
+    void clear() {
+        jdbcTemplate.execute("TRUNCATE TABLE product");
     }
 
     @Test
     void add() {
-        final Optional<ProductEntity> byId = productDao.findById(getGreatestId());
+        productService.add("땡칠", "asdf", 100L);
 
-        assertThat(byId.get()).isEqualTo(new ProductEntity(getGreatestId(), "땡칠", "asdf", 100L));
+        final List<Product> result = productService.getAll();
+        assertAll(
+                () -> assertThat(result.get(0).getName()).isEqualTo("땡칠"),
+                () -> assertThat(result.get(0).getImage()).isEqualTo("asdf"),
+                () -> assertThat(result.get(0).getPrice()).isEqualTo(100L)
+        );
     }
+
 
     @Test
     void delete() {
-        productService.delete(getGreatestId());
+        productService.add("땡칠", "asdf", 100L);
 
-        final List<ProductEntity> result = productDao.findAll();
-        ProductEntity deletedItem = new ProductEntity(getGreatestId(), "땡칠", "asdf", 100L);
+        productService.delete(1);
 
-        assertThat(result).doesNotContain(deletedItem);
+        final List<Product> result = productService.getAll();
+
+        assertThat(result).hasSize(0);
     }
 
     @Test
     void update() {
-        productService.update(getGreatestId(), "땡칠", "VERY_BIG_IMAGE", 100L);
+        productService.add("땡칠", "asdf", 100L);
+        productService.update(1, "비버", "VERY_BIG_IMAGE", 10000L);
 
-        final Optional<ProductEntity> productDaoById = productDao.findById(getGreatestId());
+        final List<Product> result = productService.getAll();
 
-        assertThat(productDaoById.get()).isEqualTo(new ProductEntity(getGreatestId(), "땡칠", "VERY_BIG_IMAGE", 100L));
+        assertAll(
+                () -> assertThat(result.get(0).getName()).isEqualTo("비버"),
+                () -> assertThat(result.get(0).getImage()).isEqualTo("VERY_BIG_IMAGE"),
+                () -> assertThat(result.get(0).getPrice()).isEqualTo(10000L)
+        );
     }
 
     @Test
     void getAll() {
         productService.add("비버", "SMALL_IMAGE", 100L);
+        productService.add("땡칠", "asdf", 100L);
 
-        final List<ProductEntity> result = productDao.findAll();
-        final List<ProductEntity> expectedEntities = List.of(
-                new ProductEntity(getGreatestId() - 1, "비버", "SMALL_IMAGE", 100L),
-                new ProductEntity(getGreatestId(), "땡칠", "asdf", 100L)
+        final List<Product> result = productService.getAll();
+
+        assertAll(
+                () -> assertThat(result.get(0).getName()).isEqualTo("비버"),
+                () -> assertThat(result.get(0).getImage()).isEqualTo("SMALL_IMAGE"),
+                () -> assertThat(result.get(0).getPrice()).isEqualTo(100L),
+                () -> assertThat(result.get(1).getName()).isEqualTo("땡칠"),
+                () -> assertThat(result.get(1).getImage()).isEqualTo("asdf"),
+                () -> assertThat(result.get(1).getPrice()).isEqualTo(100L)
         );
-
-        assertThat(result).containsExactlyInAnyOrderElementsOf(expectedEntities);
-    }
-
-    private Integer getGreatestId() {
-        return jdbcTemplate.queryForObject("SELECT MAX(id) FROM product", Integer.class);
     }
 }
