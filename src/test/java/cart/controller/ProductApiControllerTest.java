@@ -54,7 +54,7 @@ class ProductApiControllerTest {
         // given
         ProductCreateRequest request = new ProductCreateRequest("글렌피딕", 230_000, "url");
 
-        willReturn(new ProductDto(1, "글렌피딕", 230_000, "url"))
+        willReturn(new ProductDto(1L, "글렌피딕", 230_000, "url"))
                 .given(productService)
                 .createProduct(anyString(), anyInt(), anyString());
 
@@ -328,10 +328,10 @@ class ProductApiControllerTest {
     void findAllProducts_success() throws Exception {
         // given
         List<ProductDto> productDtos = List.of(
-                new ProductDto(1, "글렌피딕", 100_000, "image1"),
-                new ProductDto(2, "글렌리벳", 200_000, "image2"),
-                new ProductDto(3, "글렌모렌지", 300_000, "image3"),
-                new ProductDto(4, "글렌드로낙", 400_000, "image4")
+                new ProductDto(1L, "글렌피딕", 100_000, "image1"),
+                new ProductDto(2L, "글렌리벳", 200_000, "image2"),
+                new ProductDto(3L, "글렌모렌지", 300_000, "image3"),
+                new ProductDto(4L, "글렌드로낙", 400_000, "image4")
         );
 
         willReturn(productDtos)
