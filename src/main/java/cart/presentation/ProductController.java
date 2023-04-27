@@ -55,8 +55,8 @@ public class ProductController {
         List<ProductDto> productsToResponse = products.stream()
                 .map(product -> new ProductDto(product.getId(),
                         product.getName(),
-                        product.getImage(),
-                        product.getProductPrice()))
+                        product.getUrl(),
+                        product.getPrice()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(productsToResponse);

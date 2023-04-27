@@ -21,7 +21,7 @@ public class CreateProductService {
         List<Product> allProducts = productRepository.findAll();
 
         Optional<Product> foundProduct = allProducts.stream()
-                .filter(eachProduct -> eachProduct.getProductPrice().equals(product.getProductPrice()))
+                .filter(eachProduct -> eachProduct.getPrice().equals(product.getPrice()))
                 .filter(eachProduct -> eachProduct.getName().equals(product.getName()))
                 .findAny();
 

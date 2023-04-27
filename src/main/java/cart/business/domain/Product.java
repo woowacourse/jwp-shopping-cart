@@ -4,14 +4,14 @@ public class Product {
 
     private final Integer id;
     private final ProductName name;
-    private final ProductImage image;
-    private final ProductPrice productPrice;
+    private final ProductImage url;
+    private final ProductPrice price;
 
-    public Product(Integer id, ProductName name, ProductImage image, ProductPrice productPrice) {
+    public Product(Integer id, ProductName name, ProductImage url, ProductPrice price) {
         this.id = id;
         this.name = name;
-        this.image = image;
-        this.productPrice = productPrice;
+        this.url = url;
+        this.price = price;
     }
 
     public Integer getId() {
@@ -22,11 +22,11 @@ public class Product {
         return name.getValue();
     }
 
-    public String getImage() {
-        return image.getValue();
+    public String getUrl() {
+        return url.getValue();
     }
 
-    public Integer getProductPrice() {
-        return productPrice.getValue();
+    public Integer getPrice() {
+        return price.getValue();
     }
 }

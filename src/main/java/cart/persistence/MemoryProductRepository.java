@@ -30,8 +30,8 @@ public class MemoryProductRepository implements ProductRepository {
                 .stream()
                 .map(entry -> new Product(entry.getKey(),
                         new ProductName(entry.getValue().getName()),
-                        new ProductImage(entry.getValue().getImage()),
-                        new ProductPrice(entry.getValue().getProductPrice())))
+                        new ProductImage(entry.getValue().getUrl()),
+                        new ProductPrice(entry.getValue().getPrice())))
                 .collect(Collectors.toList());
     }
 

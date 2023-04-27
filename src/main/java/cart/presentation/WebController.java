@@ -23,8 +23,8 @@ public class WebController {
         List<ProductDto> products = readProductService.perform().stream()
                 .map(product -> new ProductDto(product.getId(),
                         product.getName(),
-                        product.getImage(),
-                        product.getProductPrice()))
+                        product.getUrl(),
+                        product.getPrice()))
                 .collect(Collectors.toList());
         model.addAttribute("products", products);
         return "index";
@@ -35,8 +35,8 @@ public class WebController {
         List<ProductDto> products = readProductService.perform().stream()
                 .map(product -> new ProductDto(product.getId(),
                         product.getName(),
-                        product.getImage(),
-                        product.getProductPrice()))
+                        product.getUrl(),
+                        product.getPrice()))
                 .collect(Collectors.toList());
         model.addAttribute("products", products);
         return "admin";
