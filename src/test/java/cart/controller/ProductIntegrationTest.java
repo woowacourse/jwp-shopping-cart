@@ -1,11 +1,20 @@
 package cart.controller;
 
+import static cart.factory.ProductFactory.createProduct;
+import static cart.factory.ProductRequestDtoFactory.createProductCreateRequest;
+import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import cart.domain.Product;
 import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductEditRequestDto;
 import cart.repository.ProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,16 +25,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.util.List;
-
-import static cart.factory.ProductFactory.createProduct;
-import static cart.factory.ProductRequestDtoFactory.createProductCreateRequest;
-import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductIntegrationTest {

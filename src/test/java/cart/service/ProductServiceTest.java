@@ -1,5 +1,12 @@
 package cart.service;
 
+import static cart.factory.ProductFactory.createOtherProduct;
+import static cart.factory.ProductFactory.createProduct;
+import static cart.factory.ProductRequestDtoFactory.createProductCreateRequest;
+import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import cart.domain.Product;
 import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductEditRequestDto;
@@ -10,13 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import static cart.factory.ProductFactory.createOtherProduct;
-import static cart.factory.ProductFactory.createProduct;
-import static cart.factory.ProductRequestDtoFactory.createProductCreateRequest;
-import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional

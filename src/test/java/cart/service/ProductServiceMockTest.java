@@ -1,23 +1,5 @@
 package cart.service;
 
-import cart.domain.Product;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductResponseDto;
-import cart.dto.ProductsResponseDto;
-import cart.exception.ProductNotFoundException;
-import cart.repository.ProductRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import static cart.factory.ProductFactory.createOtherProduct;
 import static cart.factory.ProductFactory.createProduct;
 import static cart.factory.ProductRequestDtoFactory.createProductCreateRequest;
@@ -28,6 +10,23 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+
+import cart.domain.Product;
+import cart.dto.ProductCreateRequestDto;
+import cart.dto.ProductEditRequestDto;
+import cart.dto.ProductResponseDto;
+import cart.dto.ProductsResponseDto;
+import cart.exception.ProductNotFoundException;
+import cart.repository.ProductRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceMockTest {
