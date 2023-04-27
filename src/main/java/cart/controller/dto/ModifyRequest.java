@@ -5,8 +5,16 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
 public class ModifyRequest {
+
+    @NotNull
+    @NotBlank
     private final String name;
+
+    @PositiveOrZero
     private final long price;
+
+    @NotNull
+    @NotBlank
     private final String imageUrl;
 
     public ModifyRequest(String name, long price, String imageUrl) {
@@ -15,19 +23,14 @@ public class ModifyRequest {
         this.imageUrl = imageUrl;
     }
 
-    @NotNull
-    @NotBlank
     public String getName() {
         return name;
     }
 
-    @PositiveOrZero
     public long getPrice() {
         return price;
     }
 
-    @NotNull
-    @NotBlank
     public String getImageUrl() {
         return imageUrl;
     }
