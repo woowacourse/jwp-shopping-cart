@@ -38,7 +38,7 @@ public class ProductApiController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<String> delete(@PathVariable Long productId) {
+    public ResponseEntity<String> delete(@PathVariable @NotNull Long productId) {
         productService.deleteById(productId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

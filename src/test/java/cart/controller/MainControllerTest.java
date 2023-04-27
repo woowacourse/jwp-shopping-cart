@@ -1,8 +1,9 @@
 package cart.controller;
 
+import static cart.fixture.ProductRequestFixture.PRODUCT_REQUEST_A;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dto.request.ProductRequest;
+import cart.dao.ProductDao;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.jsoup.Jsoup;
@@ -19,15 +20,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MainControllerTest {
 
-    private static final ProductRequest PRODUCT_REQUEST = new ProductRequest("test", 1000, "testUrl");
     private static final String ADMIN_PAGE_PRODUCT_LIST_HTML_TAG = "#product-list tr";
     private static final String INDEX_PAGE_PRODUCT_LIST_HTML_TAG = "ul.product-grid li.product";
 
     @LocalServerPort
-    int port;
+    private int port;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ProductDao productDao;
 
     @BeforeEach
     void setUp() {
@@ -44,7 +47,7 @@ class MainControllerTest {
         //when
         Response response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(PRODUCT_REQUEST)
+                .body(PRODUCT_REQUEST_A)
                 .when().get("/admin");
         //then
         Document doc = Jsoup.parse(response.getBody().asString());
@@ -62,7 +65,7 @@ class MainControllerTest {
         //when
         Response response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(PRODUCT_REQUEST)
+                .body(PRODUCT_REQUEST_A)
                 .when().get("/");
         //then
         Document doc = Jsoup.parse(response.getBody().asString());
@@ -73,10 +76,7 @@ class MainControllerTest {
 
     private void createProductsByCount(int count) {
         for (int i = 0; i < count; i++) {
-            RestAssured.given().log().all()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(PRODUCT_REQUEST)
-                    .when().post("/product");
+            productDao.save(PRODUCT_REQUEST_A.toEntity());
         }
     }
 }
