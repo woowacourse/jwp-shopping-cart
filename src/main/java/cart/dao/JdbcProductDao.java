@@ -1,6 +1,8 @@
 package cart.dao;
 
 import cart.domain.Product;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,10 +11,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public class JdbcProductDao implements ProductDao {
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
     private final RowMapper<Product> productRowMapper = (resultSet, rowNum) ->
@@ -43,12 +44,13 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public Product findById(long id) {
+    public Optional<Product> findById(long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, productRowMapper, id);
+            Product product = jdbcTemplate.queryForObject(sql, productRowMapper, id);
+            return Optional.of(product);
         } catch (IncorrectResultSizeDataAccessException exception) {
-            return null;
+            return Optional.empty();
         }
     }
 

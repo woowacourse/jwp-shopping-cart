@@ -1,8 +1,8 @@
 package cart.dao;
 
 import cart.domain.Product;
-
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductDao {
 
@@ -10,7 +10,7 @@ public interface ProductDao {
 
     List<Product> findAll();
 
-    Product findById(final long id);
+    Optional<Product> findById(final long id);
 
     void update(final Product product);
 

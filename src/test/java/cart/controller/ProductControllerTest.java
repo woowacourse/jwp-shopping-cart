@@ -1,5 +1,8 @@
 package cart.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
@@ -14,9 +17,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductControllerTest {
@@ -65,7 +65,7 @@ class ProductControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
-        Product product = productDao.findById(id);
+        Product product = productDao.findById(id).orElse(null);
 
         assertAll(
                 () -> assertThat(product).isNotNull(),
@@ -86,6 +86,6 @@ class ProductControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
-        assertThat(productDao.findById(id)).isNull();
+        assertThat(productDao.findById(id)).isEmpty();
     }
 }
