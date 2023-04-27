@@ -31,7 +31,7 @@ class ProductControllerTest {
         RestAssured.given().log().headers()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestDto)
-                .when().post("/admin")
+                .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .headers("Location", "/admin");
@@ -47,7 +47,7 @@ class ProductControllerTest {
         RestAssured.given().log().headers()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestDto)
-                .when().post("/admin")
+                .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
