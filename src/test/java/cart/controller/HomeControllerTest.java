@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.controller.dto.ProductResponse;
 import cart.service.ProductService;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,8 +25,9 @@ class HomeControllerTest {
     @MockBean
     private ProductService productService;
 
+    @DisplayName("상품 목록을 보여준다 index.html")
     @Test
-    public void 상품목록을_보여준다() throws Exception {
+    public void showProductsList() throws Exception {
         final ProductResponse 햄버거 = new ProductResponse(1, "햄버거", "image", 1000);
         final ProductResponse 돈까스 = new ProductResponse(2, "돈까스", "image", 2000);
         final List<ProductResponse> list = List.of(햄버거, 돈까스);
