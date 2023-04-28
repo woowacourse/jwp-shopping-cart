@@ -1,0 +1,2 @@
+ALTER TABLE product AUTO_INCREMENT = 1;
+TRUNCATE TABLE product;
