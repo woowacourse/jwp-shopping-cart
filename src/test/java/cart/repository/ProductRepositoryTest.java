@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import java.util.List;
 
 @SpringBootTest
 @Sql("classpath:schema.sql")
@@ -34,33 +33,33 @@ class ProductRepositoryTest {
 
     @Test
     void 상품_데이터_삽입() {
-        long id = productRepository.insert(product);
+        var id = productRepository.insert(product);
 
         assertThat(id).isEqualTo(3L);
     }
 
     @Test
     void 단일_상품_데이터_조회() {
-        Product product = productRepository.findById(1L);
+        var product = productRepository.findById(1L);
 
         assertThat(product.getName()).isEqualTo("pizza");
     }
 
     @Test
     void 모든_상품_데이터_조회() {
-        List<Product> products = productRepository.findAll();
+        var products = productRepository.findAll();
 
         assertThat(products.size()).isEqualTo(2);
     }
 
     @Test
     void 상품_데이터_수정() {
-        long id = 1L;
-        Product newProduct = new Product("apple pizza", 10000, "https://");
+        var id = 1L;
+        var newProduct = new Product("apple pizza", 10000, "https://");
 
         productRepository.update(id, newProduct);
 
-        Product updatedProduct = productRepository.findById(id);
+        var updatedProduct = productRepository.findById(id);
         assertThat(updatedProduct.getName()).isEqualTo("apple pizza");
     }
 

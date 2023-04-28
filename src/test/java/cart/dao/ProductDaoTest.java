@@ -3,7 +3,6 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.util.List;
 import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,20 +30,20 @@ class ProductDaoTest {
 
     @Test
     void 상품_데이터_삽입() {
-        final ProductEntity product = new ProductEntity("chicken", 3000,
+        final var product = new ProductEntity("chicken", 3000,
                 "https://cdn.britannica.com/18/137318-050-29F7072E/rooster-Rhode-Island-Red-roosters-chicken"
                         + "-domestication.jpg");
 
-        final Long id = productDao.insert(product);
+        final var id = productDao.insert(product);
 
         assertThat(id).isEqualTo(3L);
     }
 
     @Test
     void 상품_데이터_조회() {
-        final long id = 2L;
+        final var id = 2L;
 
-        final ProductEntity foundProduct = productDao.findById(id);
+        final var foundProduct = productDao.findById(id);
 
         assertAll(
                 () -> assertThat(foundProduct.getName()).isEqualTo("salad"),
@@ -54,15 +53,15 @@ class ProductDaoTest {
 
     @Test
     void 모든_상품_데이터_조회() {
-        final List<ProductEntity> results = productDao.findAll();
+        final var results = productDao.findAll();
 
         assertThat(results.size()).isEqualTo(2);
     }
 
     @Test
     void 상품_데이터_수정() {
-        final Long id = 2L;
-        final ProductEntity newProduct = new ProductEntity(id, "new salad", 3000, "url");
+        final var id = 2L;
+        final var newProduct = new ProductEntity(id, "new salad", 3000, "url");
 
         productDao.update(newProduct);
         final ProductEntity foundProduct = productDao.findById(id);
@@ -75,7 +74,7 @@ class ProductDaoTest {
 
     @Test
     void 상품_데이터_삭제() {
-        final Long id = 2L;
+        final var id = 2L;
 
         productDao.delete(id);
 

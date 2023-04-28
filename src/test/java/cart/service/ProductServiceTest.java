@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import java.util.List;
 
 @SpringBootTest
 @Sql("classpath:schema.sql")
@@ -34,15 +33,15 @@ class ProductServiceTest {
 
     @Test
     void 모든_상품_목록_조회() {
-        final List<Product> products = productService.findAll();
+        final var products = productService.findAll();
 
         assertThat(products.size()).isEqualTo(2);
     }
 
     @Test
     void 상품_등록() {
-        final long expectedId = 3L;
-        final Long savedId = productService.register(new ProductDto("item1", 1000, "item1 image"));
+        final var expectedId = 3L;
+        final var savedId = productService.register(new ProductDto("item1", 1000, "item1 image"));
 
         assertThat(savedId).isEqualTo(expectedId);
     }
@@ -51,7 +50,7 @@ class ProductServiceTest {
     void 상품_수정() {
         productService.updateProduct(1L, new ProductDto("new Name", 10, "new Image Url"));
 
-        final Product updatedProduct = productRepository.findById(1L);
+        final var updatedProduct = productRepository.findById(1L);
 
         assertAll(
                 () -> assertThat(updatedProduct.getName()).isEqualTo("new Name"),
