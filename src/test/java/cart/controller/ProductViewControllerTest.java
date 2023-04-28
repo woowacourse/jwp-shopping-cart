@@ -17,7 +17,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
-@SuppressWarnings({"NonAsciiCharacters", "SpellCheckingInspection"})
+@SuppressWarnings({"NonAsciiCharacters"})
 class ProductViewControllerTest extends AbstractProductControllerTest {
 
     @Test

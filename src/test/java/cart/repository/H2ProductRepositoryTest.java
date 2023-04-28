@@ -46,12 +46,11 @@ class H2ProductRepositoryTest {
         void update() {
             final Product product = new Product(productId, "누누", "newUrl", 3);
             final Product result = h2ProductRepository.update(product);
+            final Product expect = new Product(productId, product);
 
             assertAll(
                     () -> assertThat(result.getProductId()).isEqualTo(productId),
-                    () -> assertThat(result.getProductNameValue()).isEqualTo("누누"),
-                    () -> assertThat(result.getProductImage().getValue()).isEqualTo("newUrl"),
-                    () -> assertThat(result.getProductPrice().getValue()).isEqualTo(3)
+                    () -> assertThat(result).usingRecursiveComparison().isEqualTo(expect)
             );
         }
 
@@ -64,13 +63,11 @@ class H2ProductRepositoryTest {
         @Test
         void findById() {
             final Optional<Product> result = h2ProductRepository.findById(productId);
+            final Product expect = new Product(productId, result.get());
 
             assertAll(
                     () -> assertThat(result).isPresent(),
-                    () -> assertThat(result.get().getProductId()).isEqualTo(productId),
-                    () -> assertThat(result.get().getProductNameValue()).isEqualTo("오도"),
-                    () -> assertThat(result.get().getProductImage().getValue()).isEqualTo("naver.com"),
-                    () -> assertThat(result.get().getProductPrice().getValue()).isEqualTo(1)
+                    () -> assertThat(result.get()).usingRecursiveComparison().isEqualTo(expect)
             );
         }
 

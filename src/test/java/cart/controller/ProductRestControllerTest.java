@@ -16,11 +16,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.Product;
-import cart.domain.ProductFixture;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.dto.RequestFixture;
-import cart.dto.ResponseFixture;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -30,12 +28,10 @@ class ProductRestControllerTest extends AbstractProductControllerTest {
     @Test
     void 상품_생성_테스트() throws Exception {
         // given
-        final Product product = ProductFixture.NUNU_ID_PRODUCT;
-        given(productCommandService.create(anyString(), anyString(), anyInt())).willReturn(product);
+        given(productCommandService.create(anyString(), anyString(), anyInt())).willReturn(NUNU_ID_PRODUCT);
         final ProductRequest productRequest = RequestFixture.NUNU_REQUEST;
         final String request = objectMapper.writeValueAsString(productRequest);
-        final ProductResponse productResponse = ResponseFixture.NUNU_RESPONSE;
-        final String result = objectMapper.writeValueAsString(productResponse);
+        final String result = objectMapper.writeValueAsString(NUNU_RESPONSE);
 
         // when
         mockMvc.perform(post("/products")
@@ -59,8 +55,7 @@ class ProductRestControllerTest extends AbstractProductControllerTest {
         given(productCommandService.update(anyLong(), anyString(), anyString(), anyInt())).willReturn(NUNU_ID_PRODUCT);
         final ProductRequest productRequest = RequestFixture.NUNU_REQUEST;
         final String request = objectMapper.writeValueAsString(productRequest);
-        final ProductResponse productResponse = ResponseFixture.NUNU_RESPONSE;
-        final String result = objectMapper.writeValueAsString(productResponse);
+        final String result = objectMapper.writeValueAsString(NUNU_RESPONSE);
         final int id = 1;
 
         // when

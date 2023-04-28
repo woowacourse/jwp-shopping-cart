@@ -56,17 +56,12 @@ class ProductCommandServiceTest {
         final Product result = productCommandService.update(product.getProductId(), "누누", "url", 2);
 
         //then
+        final Product expect = new Product(product.getProductId(), product);
         final Optional<Product> updatedProduct = stubProductRepository.findById(product.getProductId());
         assertAll(
-                () -> assertThat(result.getProductId()).isPositive(),
-                () -> assertThat(result.getProductNameValue()).isEqualTo("누누"),
-                () -> assertThat(result.getProductImage().getValue()).isEqualTo("url"),
-                () -> assertThat(result.getProductPrice().getValue()).isEqualTo(2),
+                () -> assertThat(result).usingRecursiveComparison().isEqualTo(expect),
                 () -> assertThat(updatedProduct).isPresent(),
-                () -> assertThat(updatedProduct.get().getProductId()).isPositive(),
-                () -> assertThat(updatedProduct.get().getProductNameValue()).isEqualTo("누누"),
-                () -> assertThat(updatedProduct.get().getProductImage().getValue()).isEqualTo("url"),
-                () -> assertThat(updatedProduct.get().getProductPrice().getValue()).isEqualTo(2)
+                () -> assertThat(updatedProduct.get()).usingRecursiveComparison().isEqualTo(expect)
         );
     }
 }
