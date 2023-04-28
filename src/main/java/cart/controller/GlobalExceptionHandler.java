@@ -27,14 +27,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(final IllegalArgumentException exception) {
-        logger.info("[IllegalArgumentException] ", exception);
+        logger.warn("[IllegalArgumentException] ", exception);
 
         return ResponseEntity.badRequest().body(new ExceptionResponse(exception.getMessage()));
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class})
     public ResponseEntity<ExceptionResponse> handleValidationException(final MethodArgumentNotValidException exception) {
-        logger.info("[MethodArgumentException] ", exception);
+        logger.warn("[MethodArgumentException] ", exception);
 
         final String exceptionMessage = exception.getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
