@@ -20,7 +20,7 @@ class ProductSearchControllerTest extends AbstractProductControllerTest {
     @Test
     void 상품_조회_테스트() throws Exception {
         final List<Product> given = List.of(NUNU_ID_PRODUCT, ODO_ID_PRODUCT);
-        given(productSearchService.find()).willReturn(given);
+        given(productQueryService.find()).willReturn(given);
         final List<ProductResponse> productResponses = List.of(NUNU_RESPONSE, ODO_RESPONSE);
         final String result = objectMapper.writeValueAsString(productResponses);
 

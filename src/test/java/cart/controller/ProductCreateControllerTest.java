@@ -23,7 +23,7 @@ class ProductCreateControllerTest extends AbstractProductControllerTest {
     void 상품_생성_테스트() throws Exception {
         // given
         final Product product = ProductFixture.NUNU_ID_PRODUCT;
-        given(productCreateService.create(anyString(), anyString(), anyInt())).willReturn(product);
+        given(productCommandService.create(anyString(), anyString(), anyInt())).willReturn(product);
         final ProductRequest productRequest = RequestFixture.NUNU_REQUEST;
         final String request = objectMapper.writeValueAsString(productRequest);
         final ProductResponse productResponse = ResponseFixture.NUNU_RESPONSE;

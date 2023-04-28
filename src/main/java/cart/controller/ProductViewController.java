@@ -1,10 +1,9 @@
 package cart.controller;
 
+import cart.dto.ProductResponse;
+import cart.service.ProductQueryService;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import cart.dto.ProductResponse;
-import cart.service.ProductSearchService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ProductViewController {
 
-    private final ProductSearchService productSearchService;
+    private final ProductQueryService productSearchService;
 
-    public ProductViewController(final ProductSearchService productSearchService) {
+    public ProductViewController(final ProductQueryService productSearchService) {
         this.productSearchService = productSearchService;
     }
 

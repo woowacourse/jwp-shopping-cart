@@ -1,9 +1,7 @@
 package cart.controller;
 
-import cart.service.ProductCreateService;
-import cart.service.ProductDeleteService;
-import cart.service.ProductSearchService;
-import cart.service.ProductUpdateService;
+import cart.service.ProductCommandService;
+import cart.service.ProductQueryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,13 +12,9 @@ import org.springframework.test.web.servlet.MockMvc;
 public class AbstractProductControllerTest {
 
     @MockBean
-    protected ProductSearchService productSearchService;
+    protected ProductQueryService productQueryService;
     @MockBean
-    protected ProductUpdateService productUpdateService;
-    @MockBean
-    protected ProductCreateService productCreateService;
-    @MockBean
-    protected ProductDeleteService productDeleteService;
+    protected ProductCommandService productCommandService;
     @Autowired
     protected ObjectMapper objectMapper;
     @Autowired

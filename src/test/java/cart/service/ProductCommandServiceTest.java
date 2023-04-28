@@ -10,16 +10,41 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({"NonAsciiCharacters"})
-class ProductUpdateServiceTest {
+@SuppressWarnings({"NonAsciiCharacters", "SpellCheckingInspection"})
+class ProductCommandServiceTest {
 
     private StubProductRepository stubProductRepository;
-    private ProductUpdateService productUpdateService;
+    private ProductCommandService productCommandService;
 
     @BeforeEach
     void setUp() {
         stubProductRepository = new StubProductRepository();
-        productUpdateService = new ProductUpdateService(stubProductRepository);
+        productCommandService = new ProductCommandService(stubProductRepository);
+    }
+
+    @Test
+    void 생성_테스트() {
+        final Product result = productCommandService.create("오도", "naver.com", 1);
+
+        final Optional<Product> product = stubProductRepository.findById(1L);
+        assertAll(
+                () -> assertThat(result.getProductId().getValue()).isPositive(),
+                () -> assertThat(product).isPresent()
+        );
+    }
+
+    @Test
+    void 제거_테스트() {
+        //given
+        final Product product = stubProductRepository.save(ODO_PRODUCT);
+        final long productId = product.getProductId().getValue();
+
+        //when
+        productCommandService.delete(productId);
+
+        //then
+        final Optional<Product> result = stubProductRepository.findById(productId);
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -28,7 +53,7 @@ class ProductUpdateServiceTest {
         final Product product = stubProductRepository.save(ODO_PRODUCT);
 
         //when
-        final Product result = productUpdateService.update(product.getProductId().getValue(), "누누", "url", 2);
+        final Product result = productCommandService.update(product.getProductId().getValue(), "누누", "url", 2);
 
         //then
         final Optional<Product> updatedProduct = stubProductRepository.findById(product.getProductId().getValue());

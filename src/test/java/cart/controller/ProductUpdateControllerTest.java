@@ -22,7 +22,7 @@ class ProductUpdateControllerTest extends AbstractProductControllerTest {
     @Test
     void 상품_업데이트_테스트() throws Exception {
         // given
-        given(productUpdateService.update(anyLong(), anyString(), anyString(), anyInt())).willReturn(NUNU_ID_PRODUCT);
+        given(productCommandService.update(anyLong(), anyString(), anyString(), anyInt())).willReturn(NUNU_ID_PRODUCT);
         final ProductRequest productRequest = RequestFixture.NUNU_REQUEST;
         final String request = objectMapper.writeValueAsString(productRequest);
         final ProductResponse productResponse = ResponseFixture.NUNU_RESPONSE;

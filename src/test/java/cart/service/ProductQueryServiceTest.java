@@ -10,15 +10,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({"NonAsciiCharacters"})
-class ProductSearchServiceTest {
+class ProductQueryServiceTest {
 
     private StubProductRepository stubProductRepository;
-    private ProductSearchService productSearchService;
+    private ProductQueryService productSearchService;
 
     @BeforeEach
     void setUp() {
         stubProductRepository = new StubProductRepository();
-        productSearchService = new ProductSearchService(stubProductRepository);
+        productSearchService = new ProductQueryService(stubProductRepository);
     }
 
     @Test
