@@ -37,7 +37,7 @@ class AdminControllerTest {
     }
 
     @Test
-    @DisplayName("/admin/create에 정상적인 request를 전송하면 created 상태코드를 반환한다")
+    @DisplayName("/admin/product에 정상적인 POST request를 전송하면 created 상태코드를 반환한다")
     void createTest() {
         ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
 
@@ -45,13 +45,13 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
-                .post("/admin/create")
+                .post("/admin/product")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
-    @DisplayName("/admin/create에 비정상적인 request를 전송하면 bad_request를 반환하고 에러 메시지의 size는 비정상적인 파라미터의 개수와 같다")
+    @DisplayName("/admin/product에 비정상적인 POST request를 전송하면 bad_request를 반환하고 에러 메시지의 size는 비정상적인 파라미터의 개수와 같다")
     void createExceptionTest() {
         ProductRequest productRequest = new ProductRequest("", null, "");
 
@@ -59,7 +59,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
-                .post("/admin/create")
+                .post("/admin/product")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("size()", is(3));
@@ -67,35 +67,40 @@ class AdminControllerTest {
 
     @Test
     @Sql("/data.sql")
-    @DisplayName("/admin/update에 정상적인 request를 전송하면 no_content 상태코드를 반환한다")
+    @DisplayName("/admin/product에 정상적인 PUT request를 전송하면 ok 상태코드를 반환한다")
     void updateTest() {
         ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
-                .post("/admin/create");
+                .post("/admin/product");
 
-        ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "테스트", 10000, "http://testtest");
+        ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(
+                1L,
+                "테스트",
+                10000,
+                "http://testtest"
+        );
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest)
                 .when()
-                .put("/admin/update")
+                .put("/admin/product")
                 .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
-    @DisplayName("/admin/update에 비정상적인 request를 전송하면 bad_request를 반환하고 에러 메시지의 size는 비정상적인 파라미터의 개수와 같다")
+    @DisplayName("/admin/product에 비정상적인 PUT request를 전송하면 bad_request를 반환하고 에러 메시지의 size는 비정상적인 파라미터의 개수와 같다")
     void updateExceptionTest() {
         ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
-                .post("/admin/create");
+                .post("/admin/product");
 
         ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(null, "", null, "");
 
@@ -103,7 +108,7 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest)
                 .when()
-                .put("/admin/update")
+                .put("/admin/product")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("size()", is(4));
@@ -119,12 +124,12 @@ class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
-                .post("/admin/create");
+                .post("/admin/product");
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/admin/delete?id=1")
+                .delete("/admin/product?id=1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

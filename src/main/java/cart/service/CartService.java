@@ -21,24 +21,36 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public void create(ProductRequest productRequest) {
+    public ProductResponse create(ProductRequest productRequest) {
         Product product = new Product(
                 productRequest.getName(),
                 productRequest.getImageUrl(),
                 productRequest.getPrice()
         );
 
-        productDao.create(product);
+        Long createdId = productDao.create(product);
+        Product created = productDao.find(createdId);
+
+        return new ProductResponse(
+                created.getId(),
+                created.getName(),
+                created.getPrice(),
+                created.getImageUrl());
     }
 
     public List<ProductResponse> readAll() {
         List<Product> products = productDao.findAll();
         return products.stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImage()))
+                .map(product -> new ProductResponse(
+                        product.getId(),
+                        product.getName(),
+                        product.getPrice(),
+                        product.getImageUrl()
+                ))
                 .collect(Collectors.toList());
     }
 
-    public void update(ProductUpdateRequest productUpdateRequest) {
+    public ProductResponse update(ProductUpdateRequest productUpdateRequest) {
         Product product = new Product(
                 productUpdateRequest.getId(),
                 productUpdateRequest.getName(),
@@ -46,7 +58,15 @@ public class CartService {
                 productUpdateRequest.getPrice()
         );
 
-        productDao.update(product);
+        Long updatedId = productDao.update(product);
+        Product updated = productDao.find(updatedId);
+
+        return new ProductResponse(
+                updated.getId(),
+                updated.getName(),
+                updated.getPrice(),
+                updated.getImageUrl()
+        );
     }
 
     public void delete(Long id) {
