@@ -1,4 +1,4 @@
-package cart.product.service;
+package cart.service.product;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.product.dao.ProductDao;
-import cart.product.dto.ProductRequest;
-import cart.product.dto.ProductResponse;
-import cart.product.entity.Product;
+import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductResponse;
+import cart.dao.ProductDao;
+import cart.domain.product.Product;
 
 @Service
 @Transactional

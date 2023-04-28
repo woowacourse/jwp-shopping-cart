@@ -1,4 +1,4 @@
-package cart.product.controller;
+package cart.controller;
 
 import javax.validation.Valid;
 
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cart.product.dto.ExceptionResponse;
-import cart.product.dto.ProductRequest;
-import cart.product.dto.ProductResponse;
-import cart.product.service.ProductService;
+import cart.controller.dto.ExceptionResponse;
+import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductResponse;
+import cart.service.product.ProductService;
 
 @RestController
 @RequestMapping("/products")

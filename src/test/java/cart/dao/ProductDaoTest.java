@@ -1,4 +1,4 @@
-package cart.product.dao;
+package cart.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -13,7 +13,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import cart.product.entity.Product;
+import cart.domain.product.Product;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

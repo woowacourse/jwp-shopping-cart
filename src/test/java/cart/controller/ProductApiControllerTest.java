@@ -1,4 +1,4 @@
-package cart.product.controller;
+package cart.controller;
 
 import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.*;
@@ -14,7 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import cart.product.dto.ProductRequest;
+import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;

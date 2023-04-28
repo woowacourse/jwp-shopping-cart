@@ -1,14 +1,12 @@
-package cart.product.controller;
+package cart.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import cart.product.service.ProductService;
+import cart.service.product.ProductService;
 
 @Controller
-@RequestMapping("/")
 public class ProductViewController {
 
 	private final ProductService productService;

@@ -1,4 +1,4 @@
-package cart.product.controller;
+package cart.controller;
 
 import static io.restassured.RestAssured.*;
 

@@ -1,4 +1,4 @@
-package cart.product.dao;
+package cart.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.product.entity.Product;
+import cart.domain.product.Product;
 
 @Component
 public class ProductDao {
