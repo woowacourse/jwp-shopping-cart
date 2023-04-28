@@ -1,12 +1,11 @@
 package cart.service;
 
-import cart.controller.dto.AddItemRequest;
-import cart.controller.dto.ItemResponse;
 import cart.controller.dto.UpdateItemRequest;
 import cart.dao.ItemDao;
 import cart.exception.ErrorStatus;
 import cart.exception.ItemException;
 import cart.model.Item;
+import cart.service.dto.ItemDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -24,22 +23,22 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemResponse add(AddItemRequest addItemRequest) {
-        Item item = new Item(addItemRequest.getName(), addItemRequest.getImageUrl(), addItemRequest.getPrice());
+    public ItemDto add(String name, String imageUrl, int price) {
+        Item item = new Item(name, imageUrl, price);
         Item savedItem = itemDao.insert(item);
 
-        return ItemResponse.from(savedItem);
+        return new ItemDto(savedItem);
     }
 
-    public List<ItemResponse> findAll() {
+    public List<ItemDto> findAll() {
         return itemDao.findAll()
                 .stream()
-                .map(ItemResponse::from)
+                .map(ItemDto::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public ItemResponse update(Long id, UpdateItemRequest updateItemRequest) {
+    public ItemDto update(Long id, UpdateItemRequest updateItemRequest) {
         Item updateItem = new Item(id, updateItemRequest.getName(), updateItemRequest.getImageUrl(),
                 updateItemRequest.getPrice());
 
@@ -49,7 +48,7 @@ public class ItemService {
             throw new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR);
         }
 
-        return ItemResponse.from(updateItem);
+        return new ItemDto(updateItem);
     }
 
     @Transactional

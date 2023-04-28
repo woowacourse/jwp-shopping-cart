@@ -2,6 +2,7 @@ package cart.fixture;
 
 import cart.controller.dto.ItemResponse;
 import cart.model.Item;
+import cart.service.dto.ItemDto;
 
 public final class ResponseFactory {
 
@@ -9,7 +10,7 @@ public final class ResponseFactory {
             createItemResponse(1L, "맥북", "http://image.url", 1_500_000);
 
     public static ItemResponse createItemResponse(Long id, String name, String imageUrl, int price) {
-        return ItemResponse.from(new Item(id, name, imageUrl, price));
+        return ItemResponse.from(new ItemDto(new Item(id, name, imageUrl, price)));
     }
 
     private ResponseFactory() {

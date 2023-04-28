@@ -4,8 +4,10 @@ import cart.controller.dto.AddItemRequest;
 import cart.controller.dto.ItemResponse;
 import cart.controller.dto.UpdateItemRequest;
 import cart.service.ItemService;
+import cart.service.dto.ItemDto;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,15 +31,21 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<List<ItemResponse>> findAllItems() {
-        List<ItemResponse> itemResponses = itemService.findAll();
+        List<ItemResponse> itemResponses = itemService.findAll()
+                .stream()
+                .map(ItemResponse::from)
+                .collect(Collectors.toList());
+
         return ResponseEntity.ok(itemResponses);
     }
 
     @PostMapping
     public ResponseEntity<ItemResponse> addItem(@RequestBody @Valid AddItemRequest addItemRequest) {
-        ItemResponse itemResponse = itemService.add(addItemRequest);
-        return ResponseEntity.created(URI.create("/items/" + itemResponse.getId()))
-                .body(itemResponse);
+        ItemDto itemDto = itemService.add(addItemRequest.getName(), addItemRequest.getImageUrl(),
+                addItemRequest.getPrice());
+
+        return ResponseEntity.created(URI.create("/items/" + itemDto.getId()))
+                .body(ItemResponse.from(itemDto));
     }
 
     @PutMapping("/{id}")
@@ -45,13 +53,15 @@ public class ItemController {
             @RequestBody @Valid UpdateItemRequest updateItemRequest,
             @PathVariable Long id
     ) {
-        ItemResponse itemResponse = itemService.update(id, updateItemRequest);
-        return ResponseEntity.ok(itemResponse);
+        ItemDto itemDto = itemService.update(id, updateItemRequest);
+
+        return ResponseEntity.ok(ItemResponse.from(itemDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
         itemService.delete(id);
+
         return ResponseEntity.noContent()
                 .build();
     }

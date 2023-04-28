@@ -1,9 +1,11 @@
 package cart.controller;
 
+import static cart.fixture.ItemDtoFactory.createItemDto;
 import static cart.fixture.RequestFactory.ADD_MAC_BOOK_REQUEST;
 import static cart.fixture.RequestFactory.UPDATE_MAC_BOOK_REQUEST;
 import static cart.fixture.RequestFactory.createAddItemRequest;
 import static cart.fixture.ResponseFactory.MAC_BOOK_RESPONSE;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.when;
@@ -63,7 +65,7 @@ class ItemControllerTest {
         @Test
         @DisplayName("상품을 등록한다.")
         void createItemRequestSuccess() throws Exception {
-            when(itemService.add(any(AddItemRequest.class))).thenReturn(MAC_BOOK_RESPONSE);
+            when(itemService.add(any(String.class), any(String.class), anyInt())).thenReturn(createItemDto());
 
             mockMvc.perform(post("/items")
                             .content(objectMapper.writeValueAsString(ADD_MAC_BOOK_REQUEST))
@@ -79,7 +81,7 @@ class ItemControllerTest {
         @Test
         @DisplayName("상품 전체를 조회한다.")
         void findAllItemRequestSuccess() throws Exception {
-            when(itemService.findAll()).thenReturn(List.of(MAC_BOOK_RESPONSE, MAC_BOOK_RESPONSE));
+            when(itemService.findAll()).thenReturn(List.of(createItemDto(), createItemDto()));
 
             mockMvc.perform(get("/items"))
                     .andExpect(status().isOk())
@@ -89,7 +91,7 @@ class ItemControllerTest {
         @Test
         @DisplayName("상품을 변경한다.")
         void updateItemRequestSuccess() throws Exception {
-            when(itemService.update(anyLong(), any(UpdateItemRequest.class))).thenReturn(MAC_BOOK_RESPONSE);
+            when(itemService.update(anyLong(), any(UpdateItemRequest.class))).thenReturn(createItemDto());
 
             mockMvc.perform(put("/items/{id}", 1)
                             .content(objectMapper.writeValueAsString(UPDATE_MAC_BOOK_REQUEST))
@@ -108,7 +110,6 @@ class ItemControllerTest {
             mockMvc.perform(delete("/items/{id}", 1L))
                     .andExpect(status().isNoContent());
         }
-
     }
 
     @Nested
@@ -119,7 +120,7 @@ class ItemControllerTest {
         @ValueSource(strings = {"", " "})
         @DisplayName("상품 요청 이름에 공백이 입력되면 BAD REQUEST가 반횐된다.")
         void createItemRequestFailWithBlankName(String name) throws Exception {
-            AddItemRequest addItemRequest = createAddItemRequest(name, "http://image.com", 15_000);
+            AddItemRequest addItemRequest = createAddItemRequest(name, "https://image.com", 15_000);
 
             mockMvc.perform(post("/items")
                             .content(objectMapper.writeValueAsString(addItemRequest))
@@ -145,7 +146,7 @@ class ItemControllerTest {
         @ValueSource(ints = {-1, 0})
         @DisplayName("상품 요청 가격에 양수가 아니면 BAD REQUEST가 반횐된다.")
         void createItemRequestFailWithNonPositivePrice(int price) throws Exception {
-            AddItemRequest addItemRequest = createAddItemRequest("맥북", "http://image.com", price);
+            AddItemRequest addItemRequest = createAddItemRequest("맥북", "https://image.com", price);
 
             mockMvc.perform(post("/items")
                             .content(objectMapper.writeValueAsString(addItemRequest))

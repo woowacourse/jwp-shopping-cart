@@ -9,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.controller.dto.AddItemRequest;
-import cart.controller.dto.ItemResponse;
 import cart.controller.dto.UpdateItemRequest;
 import cart.dao.ItemDao;
 import cart.exception.ItemException;
+import cart.service.dto.ItemDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,13 +46,14 @@ class ItemServiceTest {
         void addItemSuccess() {
             AddItemRequest addItemRequest = ADD_MAC_BOOK_REQUEST;
 
-            ItemResponse itemResponse = itemService.add(addItemRequest);
+            ItemDto itemDto = itemService.add(ADD_MAC_BOOK_REQUEST.getName(), ADD_MAC_BOOK_REQUEST.getImageUrl(),
+                    ADD_MAC_BOOK_REQUEST.getPrice());
 
             assertAll(
-                    () -> assertThat(itemResponse.getId()).isPositive(),
-                    () -> assertThat(itemResponse.getName()).isEqualTo(addItemRequest.getName()),
-                    () -> assertThat(itemResponse.getImageUrl()).isEqualTo(addItemRequest.getImageUrl()),
-                    () -> assertThat(itemResponse.getPrice()).isEqualTo(addItemRequest.getPrice())
+                    () -> assertThat(itemDto.getId()).isPositive(),
+                    () -> assertThat(itemDto.getName()).isEqualTo(addItemRequest.getName()),
+                    () -> assertThat(itemDto.getImageUrl()).isEqualTo(addItemRequest.getImageUrl()),
+                    () -> assertThat(itemDto.getPrice()).isEqualTo(addItemRequest.getPrice())
             );
         }
 
@@ -60,19 +61,20 @@ class ItemServiceTest {
         @DisplayName("상품 RUD 성공 테스트")
         class ItemServiceRUDSuccessTest {
 
-            private ItemResponse itemResponse;
+            private ItemDto itemDto;
 
             @BeforeEach
             void setUp() {
-                itemResponse = itemService.add(ADD_MAC_BOOK_REQUEST);
+                itemDto = itemService.add(ADD_MAC_BOOK_REQUEST.getName(), ADD_MAC_BOOK_REQUEST.getImageUrl(),
+                        ADD_MAC_BOOK_REQUEST.getPrice());
             }
 
             @Test
             @DisplayName("모든 상품을 찾는다.")
             void findAllItemSuccess() {
-                List<ItemResponse> itemResponses = itemService.findAll();
+                final List<ItemDto> itemDtos = itemService.findAll();
 
-                assertThat(itemResponses).hasSizeGreaterThanOrEqualTo(1);
+                assertThat(itemDtos).hasSizeGreaterThanOrEqualTo(1);
             }
 
             @Test
@@ -80,18 +82,18 @@ class ItemServiceTest {
             void updateItemSuccess() {
                 UpdateItemRequest updateAddItemRequest = createUpdateItemRequest("자전거", "http://image.url", 1_500_000);
 
-                ItemResponse updateItemResponse = itemService.update(itemResponse.getId(), updateAddItemRequest);
+                final ItemDto updateItemDto = itemService.update(itemDto.getId(), updateAddItemRequest);
 
                 assertAll(
-                        () -> assertThat(updateItemResponse.getId()).isEqualTo(itemResponse.getId()),
-                        () -> assertThat(updateItemResponse.getName()).isEqualTo(updateAddItemRequest.getName())
+                        () -> assertThat(updateItemDto.getId()).isEqualTo(itemDto.getId()),
+                        () -> assertThat(updateItemDto.getName()).isEqualTo(updateAddItemRequest.getName())
                 );
             }
 
             @Test
             @DisplayName("상품을 삭제한다.")
             void deleteItemSuccess() {
-                assertDoesNotThrow(() -> itemService.delete(itemResponse.getId()));
+                assertDoesNotThrow(() -> itemService.delete(itemDto.getId()));
             }
         }
     }

@@ -1,6 +1,6 @@
 package cart.controller.dto;
 
-import cart.model.Item;
+import cart.service.dto.ItemDto;
 
 public class ItemResponse {
 
@@ -16,8 +16,8 @@ public class ItemResponse {
         this.price = price;
     }
 
-    public static ItemResponse from(Item item) {
-        return new ItemResponse(item.getId(), item.getName(), item.getImageUrl(), item.getPrice());
+    public static ItemResponse from(ItemDto itemDto) {
+        return new ItemResponse(itemDto.getId(), itemDto.getName(), itemDto.getImageUrl(), itemDto.getPrice());
     }
 
     public Long getId() {
