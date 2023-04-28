@@ -1,6 +1,5 @@
-package cart.controller;
+package cart.controller.admin;
 
-import cart.controller.admin.AdminController;
 import cart.controller.dto.ProductDto;
 import cart.persistence.entity.ProductCategory;
 import cart.service.ShoppingService;
@@ -14,21 +13,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AdminController.class)
-class AdminControllerTest {
+@WebMvcTest(AdminProductController.class)
+class AdminProductControllerTest {
 
     private ProductDto productDto;
 
@@ -46,40 +43,26 @@ class AdminControllerTest {
         productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
     }
 
-    @Test
-    void getProducts() throws Exception {
-        // given
-        final List<ProductDto> productDtos = List.of(
-                new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN),
-                new ProductDto(2L, "초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
-                new ProductDto(3L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
-        );
-        when(shoppingService.getProducts()).thenReturn(productDtos);
-
-        // when, then
-        mockMvc.perform(get("/admin")
-                        .contentType(MediaType.TEXT_HTML))
-                .andExpect(status().isOk());
-    }
 
     @Test
     void addProduct() throws Exception {
         // given
-        doNothing().when(shoppingService).save(any());
+//        doNothing().when(shoppingService).save(any());
+        when(shoppingService.save(any())).thenReturn(1L);
 
         // when, then
-        mockMvc.perform(post("/admin")
+        mockMvc.perform(post("/admin/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
     void addProduct_fail() throws Exception {
         final ProductDto productDto = new ProductDto(1L, "", "", null, null);
-        mockMvc.perform(post("/admin")
+        mockMvc.perform(post("/admin/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -101,18 +84,18 @@ class AdminControllerTest {
         doNothing().when(shoppingService).update(any(), any());
 
         // when, then
-        mockMvc.perform(put("/admin/{id}", 1L)
+        mockMvc.perform(put("/admin/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
     void updateProduct_fail() throws Exception {
         final ProductDto productDto = new ProductDto(1L, "", "", null, null);
-        mockMvc.perform(put("/admin/{id}", 1L)
+        mockMvc.perform(put("/admin/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -133,8 +116,7 @@ class AdminControllerTest {
         doNothing().when(shoppingService).delete(any());
 
         // when, then
-        mockMvc.perform(delete("/admin/{id}", 1L)
-                        .contentType(MediaType.TEXT_HTML))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/admin/products/{productId}", 1L))
+                .andExpect(status().isNoContent());
     }
 }

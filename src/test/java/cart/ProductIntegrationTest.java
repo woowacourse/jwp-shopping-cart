@@ -44,9 +44,9 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .body(productDto)
-                .post("/admin")
+                .post("/admin/products")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -76,9 +76,9 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .body(productDto)
-                .post("/admin")
+                .post("/admin/products")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("관리자 상품 수정 모달 - 상품을 수정한다")
@@ -90,17 +90,17 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .body(productDto)
-                .post("/admin")
+                .post("/admin/products")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .body(productDto)
-                .put("/admin/{id}", 1L)
+                .put("/admin/products/{id}", 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("관리자 상품 삭제 모달 - 상품을 삭제한다")
@@ -112,15 +112,15 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .body(productDto)
-                .post("/admin")
+                .post("/admin/products")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/admin/{id}", 1L)
+                .delete("/admin/products/{id}", 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
