@@ -1,15 +1,13 @@
-package cart.controller;
+package cart.exception;
 
-import cart.controller.dto.ExceptionResponse;
-import cart.exception.ItemException;
-import java.util.Map;
+import cart.exception.dto.ExceptionResponse;
 import java.util.stream.Collectors;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -19,18 +17,19 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class ControllerAdvice extends ResponseEntityExceptionHandler {
+public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatus status, WebRequest request) {
-        logger.info("MethodArgumentNotValid : {}", ex);
+        logger.info("MethodArgumentNotValid : ", ex);
 
-        Map<String, String> fieldErrors = ex.getBindingResult().getFieldErrors()
+        String fieldErrorMessages = ex.getBindingResult().getFieldErrors()
                 .stream()
-                .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(System.lineSeparator()));
 
-        return ResponseEntity.badRequest().body(new ExceptionResponse<>(fieldErrors));
+        return ResponseEntity.badRequest().body(new ExceptionResponse(fieldErrorMessages));
     }
 
     @Override
@@ -38,7 +37,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
             HttpHeaders headers, HttpStatus status, WebRequest request) {
         logger.info("HttpMessageNotReadable : ", ex);
 
-        return ResponseEntity.badRequest().body(new ExceptionResponse<>("다시 접속해주세요."));
+        return ResponseEntity.badRequest().body(new ExceptionResponse("다시 접속해주세요."));
     }
 
     @Override
@@ -46,7 +45,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
             final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
         logger.info("MissingPathVariable : ", ex);
 
-        return ResponseEntity.badRequest().body(new ExceptionResponse<>("존재하지 않는 상품입니다."));
+        return ResponseEntity.badRequest().body(new ExceptionResponse("존재하지 않는 상품입니다."));
     }
 
     @Override
@@ -54,7 +53,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
             final HttpStatus status, final WebRequest request) {
         logger.info("TypeMismatch : ", ex);
 
-        return ResponseEntity.badRequest().body(new ExceptionResponse<>("잘못된 경로입니다."));
+        return ResponseEntity.badRequest().body(new ExceptionResponse("잘못된 경로입니다."));
     }
 
     @Override
@@ -63,20 +62,20 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
             final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
         logger.info("HttpRequestMethodNotSupported : ", ex);
 
-        return ResponseEntity.badRequest().body(new ExceptionResponse<>("정상적인 경로로 다시 시도해주세요."));
+        return ResponseEntity.badRequest().body(new ExceptionResponse("정상적인 경로로 다시 시도해주세요."));
     }
 
     @ExceptionHandler(ItemException.class)
-    private ResponseEntity<ExceptionResponse<String>> handleItemException(ItemException ex) {
+    private ResponseEntity<ExceptionResponse> handleItemException(ItemException ex) {
         logger.info(ex.getMessage());
 
-        return ResponseEntity.status(ex.getErrorStatus()).body(new ExceptionResponse<>(ex.getMessage()));
+        return ResponseEntity.status(ex.getErrorStatus()).body(new ExceptionResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    private ResponseEntity<ExceptionResponse<String>> handleException(Exception ex) {
+    private ResponseEntity<ExceptionResponse> handleException(Exception ex) {
         logger.warn("Exception : ", ex);
 
-        return ResponseEntity.internalServerError().body(new ExceptionResponse<>("예상치 못한 문제가 발생했습니다."));
+        return ResponseEntity.internalServerError().body(new ExceptionResponse("예상치 못한 문제가 발생했습니다."));
     }
 }
