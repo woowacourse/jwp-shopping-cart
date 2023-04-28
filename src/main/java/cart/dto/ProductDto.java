@@ -3,6 +3,7 @@ package cart.dto;
 import cart.request.ProductRequest;
 
 public class ProductDto {
+
     private final String name;
     private final int price;
     private final String imageUrl;
@@ -13,10 +14,8 @@ public class ProductDto {
         this.imageUrl = imageUrl;
     }
 
-    public ProductDto(final ProductRequest productRequest) {
-        this.name = productRequest.getName();
-        this.price = productRequest.getPrice();
-        this.imageUrl = productRequest.getImageUrl();
+    public static ProductDto from(final ProductRequest productRequest) {
+        return new ProductDto(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
     }
 
     public String getName() {
