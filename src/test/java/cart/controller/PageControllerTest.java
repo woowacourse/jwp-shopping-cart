@@ -35,6 +35,20 @@ class PageControllerTest {
     @Autowired
     private ProductDao productDao;
 
+    private Matcher<Object> generatePropertiesMatcher(
+            final Long id,
+            final String name,
+            final String image,
+            final long price
+    ) {
+        return allOf(
+                hasProperty("id", is(id)),
+                hasProperty("name", is(name)),
+                hasProperty("image", is(image)),
+                hasProperty("price", is(price))
+        );
+    }
+
     @Test
     void 메인_페이지에_접근한다() throws Exception {
         // given
@@ -55,20 +69,6 @@ class PageControllerTest {
                         hasItem(generatePropertiesMatcher(id2, "고양이", "cat.jpg", 1000000L))
                 ))
                 .andDo(print());
-    }
-
-    private Matcher<Object> generatePropertiesMatcher(
-            final Long id,
-            final String name,
-            final String image,
-            final long price
-    ) {
-        return allOf(
-                hasProperty("id", is(id)),
-                hasProperty("name", is(name)),
-                hasProperty("image", is(image)),
-                hasProperty("price", is(price))
-        );
     }
 
     @Test
