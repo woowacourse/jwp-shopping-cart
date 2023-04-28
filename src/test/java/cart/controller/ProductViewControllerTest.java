@@ -26,7 +26,7 @@ class ProductViewControllerTest {
 	void displayHomeTest() {
 		given()
 			.when()
-			.get("/")
+			.get()
 			.then()
 			.statusCode(HttpStatus.OK.value())
 			.contentType(ContentType.HTML);

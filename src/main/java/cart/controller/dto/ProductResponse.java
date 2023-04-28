@@ -4,10 +4,20 @@ import cart.domain.product.Product;
 
 public class ProductResponse {
 
-	private final Long id;
-	private final String name;
-	private final String image;
-	private final Integer price;
+	private Long id;
+	private String name;
+	private String image;
+	private Integer price;
+
+	public ProductResponse() {
+	}
+
+	public ProductResponse(Long id, String name, String image, Integer price) {
+		this.id = id;
+		this.name = name;
+		this.image = image;
+		this.price = price;
+	}
 
 	public ProductResponse(Product product) {
 		this.id = product.getId();

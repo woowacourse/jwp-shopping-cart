@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import cart.controller.dto.ExceptionResponse;
 import cart.controller.dto.ProductRequest;
 import cart.controller.dto.ProductResponse;
 import io.restassured.RestAssured;
@@ -36,11 +37,12 @@ class ProductApiControllerTest {
 	class CrudTest {
 		@Test
 		void createProductsTest() {
-			ProductRequest productRequest = new ProductRequest("name", 1000, "image");
+			ProductRequest request = new ProductRequest("name", 1000, "image");
+			ProductResponse response = saveProducts(request, HttpStatus.CREATED.value()).as(ProductResponse.class);
 
-			ExtractableResponse<Response> response = saveProducts(productRequest);
-
-			assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+			assertThat(response.getName()).isEqualTo(request.getName());
+			assertThat(response.getPrice()).isEqualTo(request.getPrice());
+			assertThat(response.getImage()).isEqualTo(request.getImage());
 		}
 
 		@Test
@@ -48,9 +50,9 @@ class ProductApiControllerTest {
 			ProductRequest productRequest = new ProductRequest("name", 1000, "image");
 			ProductRequest updatedRequest = new ProductRequest("name", 10, "image");
 
-			saveProducts(productRequest);
+			saveProducts(productRequest, HttpStatus.CREATED.value());
 
-			given()
+			ProductResponse response = given()
 				.log().all()
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.body(updatedRequest)
@@ -59,7 +61,12 @@ class ProductApiControllerTest {
 				.then()
 				.log().all()
 				.statusCode(HttpStatus.OK.value())
-				.contentType(ContentType.JSON);
+				.contentType(ContentType.JSON)
+				.extract().as(ProductResponse.class);
+
+			assertThat(response.getName()).isEqualTo(updatedRequest.getName());
+			assertThat(response.getPrice()).isEqualTo(updatedRequest.getPrice());
+			assertThat(response.getImage()).isEqualTo(updatedRequest.getImage());
 
 		}
 
@@ -67,7 +74,7 @@ class ProductApiControllerTest {
 		void deleteProductsTest() {
 			ProductRequest productRequest = new ProductRequest("name", 1000, "image");
 
-			saveProducts(productRequest);
+			saveProducts(productRequest, HttpStatus.CREATED.value());
 
 			when()
 				.delete("/products/1")
@@ -86,27 +93,30 @@ class ProductApiControllerTest {
 		void nameNullTest(String name) {
 			ProductRequest productRequest = new ProductRequest(name, 1000, "image");
 
-			ExtractableResponse<Response> response = saveProducts(productRequest);
+			ExceptionResponse response = saveProducts(productRequest, HttpStatus.BAD_REQUEST.value()).as(
+				ExceptionResponse.class);
 
-			assertThat(response.body().asPrettyString()).contains("상품명을 입력해주세요.");
+			assertThat(response.getExceptionMessage()).isEqualTo("상품명을 입력해주세요.");
 		}
 
 		@Test
 		void nameSizeTest() {
-			ProductRequest productRequest = new ProductRequest("fsd;kljgnad;ofgadfs;kgjadsfkjhsadflk", 1000, "image");
+			ProductRequest productRequest = new ProductRequest("thisIs20OverLengthString", 1000, "image");
 
-			ExtractableResponse<Response> response = saveProducts(productRequest);
+			ExceptionResponse response = saveProducts(productRequest, HttpStatus.BAD_REQUEST.value()).as(
+				ExceptionResponse.class);
 
-			assertThat(response.body().asPrettyString()).contains("20 글자 이하만 입력 가능합니다.");
+			assertThat(response.getExceptionMessage()).isEqualTo("20 글자 이하만 입력 가능합니다.");
 		}
 
 		@Test
 		void priceNullTest() {
 			ProductRequest productRequest = new ProductRequest("name", null, "image");
 
-			ExtractableResponse<Response> response = saveProducts(productRequest);
+			ExceptionResponse response = saveProducts(productRequest, HttpStatus.BAD_REQUEST.value()).as(
+				ExceptionResponse.class);
 
-			assertThat(response.body().asPrettyString()).contains("상품가격을 입력해주세요.");
+			assertThat(response.getExceptionMessage()).isEqualTo("상품가격을 입력해주세요.");
 		}
 
 		@ParameterizedTest
@@ -114,14 +124,15 @@ class ProductApiControllerTest {
 		void nameRangeTest(int price) {
 			ProductRequest productRequest = new ProductRequest("name", price, "image");
 
-			ExtractableResponse<Response> response = saveProducts(productRequest);
+			ExceptionResponse response = saveProducts(productRequest, HttpStatus.BAD_REQUEST.value()).as(
+				ExceptionResponse.class);
 
-			assertThat(response.body().asPrettyString()).contains("상품 금액은 0원 이상의 정수만 입력가능 합니다.");
+			assertThat(response.getExceptionMessage()).isEqualTo("상품 금액은 0원 이상의 정수만 입력가능 합니다.");
 		}
 
 	}
 
-	private ExtractableResponse<Response> saveProducts(ProductRequest productRequest) {
+	private ExtractableResponse<Response> saveProducts(ProductRequest productRequest, int httpStatusCode) {
 
 		//given
 		return given()
@@ -130,6 +141,7 @@ class ProductApiControllerTest {
 			.when()
 			.post("/products")
 			.then()
+			.statusCode(httpStatusCode)
 			.extract();
 	}
 }
