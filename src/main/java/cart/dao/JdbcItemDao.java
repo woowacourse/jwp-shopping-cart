@@ -4,24 +4,42 @@ import cart.domain.Item;
 import cart.entity.ItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
 public class JdbcItemDao implements ItemDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    public static final String TABLE_NAME = "item";
+    public static final String KEY_COLUMN_NAME = "id";
 
-    public JdbcItemDao(final JdbcTemplate jdbcTemplate) {
+    private final JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert simpleJdbcInsert;
+
+
+    public JdbcItemDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns(KEY_COLUMN_NAME)
+                .usingColumns("name", "item_url", "price");
     }
 
     @Override
-    public void save(final Item item) {
-        String sql = "insert into item(name, item_url, price) values (?, ?, ?)";
+    public ItemEntity save(final Item item) {
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", item.getName())
+                .addValue("item_url", item.getImageUrl())
+                .addValue("price", item.getPrice());
 
-        jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice());
+        long itemId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+
+        return new ItemEntity(itemId,item.getName(),item.getImageUrl(), item.getPrice());
     }
 
     @Override
