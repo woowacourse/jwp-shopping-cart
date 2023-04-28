@@ -39,13 +39,13 @@ class ProductDaoTest {
     @Test
     @DisplayName("상품 생성 성공")
     void create_success() {
-        //given
+        // given
         final ProductEntity request = new ProductEntity(
                 "홍실",
                 "https://velog.velcdn.com/images/hong-sile/post/e794b8e7-ad0e-4373-9eae-8f9eb823f89e/image.png",
                 100);
 
-        //when
+        // when
         final int id = productDao.create(request);
         final String sql = "select * from product";
         final ProductEntity result = jdbcTemplate.queryForObject(sql,
@@ -56,7 +56,7 @@ class ProductDaoTest {
                         rs.getInt("price")
                 ));
 
-        //then
+        // then
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(id),
                 () -> assertThat(result.getName()).isEqualTo(request.getName()),
@@ -69,10 +69,10 @@ class ProductDaoTest {
     @DisplayName("상품 전체 조회 성공")
     @Sql(scripts = "/dummy_data.sql")
     void findALl_success() {
-        //given,when
+        // given, when
         final List<ProductEntity> allProducts = productDao.findAll();
 
-        //then
+        // then
         assertAll(
                 () -> assertThat(allProducts).hasSize(3),
                 () -> assertThat(allProducts.get(0).getName()).isEqualTo("pooh"),
@@ -86,11 +86,11 @@ class ProductDaoTest {
     @DisplayName("상품 수정 성공")
     @Sql(scripts = "/dummy_data.sql")
     void update_success() {
-        //given
+        // given
         final ProductRequestDto requestDto = new ProductRequestDto("푸우", "pooh.png", 1_000_001);
         final Integer targetId = findPoohId();
 
-        //when
+        // when
         productDao.update(requestDto, targetId);
         final String sql = "select * from product where id = ?";
         final ProductEntity updatedProduct = jdbcTemplate.queryForObject(sql,
@@ -101,7 +101,7 @@ class ProductDaoTest {
                 ),
                 targetId);
 
-        //then
+        // then
         assertAll(
                 () -> assertThat(updatedProduct.getName()).isEqualTo("푸우"),
                 () -> assertThat(updatedProduct.getImage()).isEqualTo("pooh.png"),
@@ -113,11 +113,11 @@ class ProductDaoTest {
     @DisplayName("상품 수정 실패 - 존재하지 않는 상품 id")
     @Sql(scripts = "/dummy_data.sql")
     void update_fail_invalid_product_id() {
-        //given
+        // given
         final ProductRequestDto requestDto = new ProductRequestDto("푸우", "pooh.png", 1_000_001);
         final int invalidId = 0;
 
-        //expect
+        // expect
         assertThatThrownBy(() -> productDao.update(requestDto, invalidId))
                 .isInstanceOf(DataAccessException.class);
     }
@@ -126,13 +126,13 @@ class ProductDaoTest {
     @DisplayName("상품 삭제 성공")
     @Sql(scripts = "/dummy_data.sql")
     void delete_success() {
-        //given
+        // given
         final Integer poohId = findPoohId();
 
-        //when
+        // when
         productDao.delete(poohId);
 
-        //then
+        // then
         String sql = "select * from product where id = ?";
         assertThatThrownBy(() -> jdbcTemplate.queryForObject(sql, Integer.class, poohId))
                 .isInstanceOf(DataAccessException.class);
@@ -142,10 +142,10 @@ class ProductDaoTest {
     @DisplayName("상품 삭제 실패 - 존재하지 않는 상품 id")
     @Sql(scripts = "/dummy_data.sql")
     void delete_fail() {
-        //given
+        // given
         final int invalidId = 0;
 
-        //expect
+        // expect
         assertThatThrownBy(() -> productDao.delete(invalidId))
                 .isInstanceOf(DataAccessException.class);
     }
