@@ -15,16 +15,12 @@ import org.springframework.stereotype.Component;
 public class ItemDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    private final RowMapper<ItemDto> actorRowMapper = (resultSet, rowNum) -> {
-        ItemDto itemDto = new ItemDto(
-                resultSet.getLong("item_id"),
-                resultSet.getString("name"),
-                resultSet.getString("image_url"),
-                resultSet.getInt("price")
-        );
-        return itemDto;
-    };
+    private final RowMapper<ItemDto> actorRowMapper = (resultSet, rowNum) -> new ItemDto(
+            resultSet.getLong("item_id"),
+            resultSet.getString("name"),
+            resultSet.getString("image_url"),
+            resultSet.getInt("price")
+    );
 
     public ItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
