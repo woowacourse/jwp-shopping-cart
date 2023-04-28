@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(DataAccessException ex) {
+    public ResponseEntity<Map<String, String>> handleDataAccessExceptionException(DataAccessException ex) {
 
         Map<String, String> error = new HashMap<>();
         error.put("message", "데이터베이스에 접근할 수 없습니다.");
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(BindException ex) {
+    public ResponseEntity<Map<String, String>> handleBindExceptionException(BindException ex) {
         Map<String, String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
