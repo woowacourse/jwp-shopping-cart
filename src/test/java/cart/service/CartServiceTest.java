@@ -16,12 +16,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 class CartServiceTest {
 
-    private CartService cartService;
-
     @Autowired
-    public CartServiceTest(CartService cartService) {
-        this.cartService = cartService;
-    }
+    private CartService cartService;
 
     @DisplayName("상품이 있을 때 update 할 수 있다.")
     @Test
