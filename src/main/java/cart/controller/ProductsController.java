@@ -25,13 +25,13 @@ public class ProductsController {
         Product product = new Product(productRequest.getName(), productRequest.getImgUrl(), productRequest.getPrice());
         Product createdProduct = productService.createProduct(product);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/")
+                .path("/" + createdProduct.getId())
                 .build()
                 .toUri();
         return ResponseEntity.created(location).body(createdProduct);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable long id, @Valid @RequestBody ProductRequest productRequest) {
         Product product = new Product(id, productRequest.getName(), productRequest.getImgUrl(), productRequest.getPrice());
         productService.updateProduct(product);
@@ -41,6 +41,6 @@ public class ProductsController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
         productService.deleteProductBy(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
