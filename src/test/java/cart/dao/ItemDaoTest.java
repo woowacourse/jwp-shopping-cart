@@ -28,9 +28,7 @@ class ItemDaoTest {
     @Test
     @DisplayName("상품을 저장한다")
     void insertSuccess() {
-        Item item = new Item("맥북", "image", 10000);
-
-        Long savedId = itemDao.insert(item);
+        Long savedId = itemDao.insert(createMacBookItem());
 
         assertThat(savedId).isNotNull();
     }
@@ -38,7 +36,7 @@ class ItemDaoTest {
     @Test
     @DisplayName("지정된 id의 상품을 조회한다")
     void selectSuccess() {
-        Item item = new Item("맥북", "image", 10000);
+        Item item = createMacBookItem();
         Long savedId = itemDao.insert(item);
 
         ItemDto findItem = itemDao.findById(savedId).get();
@@ -54,7 +52,7 @@ class ItemDaoTest {
     @Test
     @DisplayName("지정된 id의 상품을 변경한다")
     void updateSuccess() {
-        Item originItem = new Item("맥북", "image", 10000);
+        Item originItem = createMacBookItem();
         Long savedId = itemDao.insert(originItem);
         Item updateItem = new Item(originItem.getName(), originItem.getImageUrl(), 50000);
 
@@ -72,11 +70,14 @@ class ItemDaoTest {
     @Test
     @DisplayName("지정된 id의 상품을 삭제한다")
     void deleteSuccess() {
-        Item item = new Item("맥북", "image", 10000);
-        Long savedId = itemDao.insert(item);
+        Long savedId = itemDao.insert(createMacBookItem());
 
         int deletedCount = itemDao.delete(savedId);
 
         assertThat(deletedCount).isEqualTo(1);
+    }
+
+    private Item createMacBookItem() {
+        return new Item("맥북", "http://image.com", 10_000);
     }
 }
