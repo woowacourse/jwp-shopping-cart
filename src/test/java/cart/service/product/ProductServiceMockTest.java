@@ -1,4 +1,4 @@
-package cart.service;
+package cart.service.product;
 
 import cart.domain.product.Product;
 import cart.dto.product.ProductCreateRequestDto;
@@ -7,6 +7,7 @@ import cart.dto.product.ProductResponseDto;
 import cart.dto.product.ProductsResponseDto;
 import cart.exception.ProductNotFoundException;
 import cart.repository.product.ProductRepository;
+import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,10 +19,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static cart.factory.ProductFactory.createOtherProduct;
-import static cart.factory.ProductFactory.createProduct;
-import static cart.factory.ProductRequestDtoFactory.createProductCreateRequest;
-import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
+import static cart.factory.product.ProductFactory.createOtherProduct;
+import static cart.factory.product.ProductFactory.createProduct;
+import static cart.factory.product.ProductRequestDtoFactory.createProductCreateRequest;
+import static cart.factory.product.ProductRequestDtoFactory.createProductEditRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;

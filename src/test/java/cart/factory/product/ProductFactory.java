@@ -1,4 +1,4 @@
-package cart.factory;
+package cart.factory.product;
 
 import cart.domain.product.Product;
 

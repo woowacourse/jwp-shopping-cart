@@ -1,5 +1,6 @@
-package cart.controller;
+package cart.controller.cart;
 
+import cart.controller.CartController;
 import cart.dto.member.MemberLoginRequestDto;
 import cart.dto.product.ProductsResponseDto;
 import cart.service.CartService;
@@ -13,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static cart.factory.ProductFactory.createProduct;
+import static cart.factory.product.ProductFactory.createProduct;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;

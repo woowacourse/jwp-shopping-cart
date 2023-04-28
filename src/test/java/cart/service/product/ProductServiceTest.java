@@ -1,20 +1,21 @@
-package cart.service;
+package cart.service.product;
 
 import cart.domain.product.Product;
 import cart.dto.product.ProductCreateRequestDto;
 import cart.dto.product.ProductEditRequestDto;
 import cart.dto.product.ProductsResponseDto;
 import cart.repository.product.ProductRepository;
+import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static cart.factory.ProductFactory.createOtherProduct;
-import static cart.factory.ProductFactory.createProduct;
-import static cart.factory.ProductRequestDtoFactory.createProductCreateRequest;
-import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
+import static cart.factory.product.ProductFactory.createOtherProduct;
+import static cart.factory.product.ProductFactory.createProduct;
+import static cart.factory.product.ProductRequestDtoFactory.createProductCreateRequest;
+import static cart.factory.product.ProductRequestDtoFactory.createProductEditRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -23,10 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class ProductServiceTest {
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Test
     @DisplayName("상품을 조회한다.")

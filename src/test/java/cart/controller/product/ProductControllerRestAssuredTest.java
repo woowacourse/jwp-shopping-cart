@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.product;
 
 import cart.domain.product.Product;
 import cart.dto.product.ProductCreateRequestDto;
@@ -19,9 +19,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-import static cart.factory.ProductFactory.createProduct;
-import static cart.factory.ProductRequestDtoFactory.createProductCreateRequest;
-import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
+import static cart.factory.product.ProductFactory.createProduct;
+import static cart.factory.product.ProductRequestDtoFactory.createProductCreateRequest;
+import static cart.factory.product.ProductRequestDtoFactory.createProductEditRequest;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.hasSize;

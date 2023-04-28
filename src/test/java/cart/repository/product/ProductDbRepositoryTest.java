@@ -1,4 +1,4 @@
-package cart.repository;
+package cart.repository.product;
 
 import cart.domain.product.Product;
 import cart.repository.product.ProductDbRepository;
@@ -14,8 +14,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.util.List;
 
-import static cart.factory.ProductFactory.createOtherProduct;
-import static cart.factory.ProductFactory.createProduct;
+import static cart.factory.product.ProductFactory.createOtherProduct;
+import static cart.factory.product.ProductFactory.createProduct;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 

@@ -1,4 +1,4 @@
-package cart.factory;
+package cart.factory.product;
 
 import cart.dto.product.ProductCreateRequestDto;
 import cart.dto.product.ProductEditRequestDto;

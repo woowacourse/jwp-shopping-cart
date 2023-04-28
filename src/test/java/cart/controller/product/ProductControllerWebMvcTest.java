@@ -1,5 +1,6 @@
-package cart.controller;
+package cart.controller.product;
 
+import cart.controller.ProductController;
 import cart.dto.product.ProductCreateRequestDto;
 import cart.dto.product.ProductEditRequestDto;
 import cart.dto.product.ProductsResponseDto;
@@ -15,9 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static cart.factory.ProductFactory.createProduct;
-import static cart.factory.ProductRequestDtoFactory.createProductCreateRequest;
-import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
+import static cart.factory.product.ProductFactory.createProduct;
+import static cart.factory.product.ProductRequestDtoFactory.createProductCreateRequest;
+import static cart.factory.product.ProductRequestDtoFactory.createProductEditRequest;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
