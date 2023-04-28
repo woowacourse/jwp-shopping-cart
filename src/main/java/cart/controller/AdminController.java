@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dto.ItemRequest;
+import cart.dto.ItemUpdateRequest;
 import cart.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +34,11 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Item has been added successfully.");
     }
 
-    @PutMapping("/item/{itemId}")
-    public ResponseEntity<String> editItem(@PathVariable Long itemId, @Valid @RequestBody ItemRequest itemRequest) {
-        itemService.updateItem(itemId, itemRequest.toItem());
+    @PutMapping("/item")
+    public ResponseEntity<String> editItem(@Valid @RequestBody ItemUpdateRequest itemUpdateRequest) {
+        Long itemId = itemUpdateRequest.getId();
+
+        itemService.updateItem(itemId, itemUpdateRequest.toItem());
         return ResponseEntity.ok("Item with ID " + itemId + " has been updated successfully.");
     }
 
