@@ -2,12 +2,10 @@ package cart.controller;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import cart.dto.ProductRequest.AddDto;
+import cart.dto.ProductRequest.UpdateDto;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +32,7 @@ public class ProductController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void create(@Valid @RequestBody ProductAddRequest productDto) {
+    public void create(@Valid @RequestBody AddDto productDto) {
         productDao.insert(new Product(
                 productDto.getName(),
                 productDto.getImageUrl(),
@@ -44,7 +42,7 @@ public class ProductController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping
-    public void update(@Valid @RequestBody ProductUpdateRequest productDto) {
+    public void update(@Valid @RequestBody UpdateDto productDto) {
         productDao.update(new Product(
                 productDto.getId(),
                 productDto.getName(),
@@ -57,33 +55,5 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") @Positive Long id) {
         productDao.deleteById(id);
-    }
-
-    @Getter
-    @NoArgsConstructor
-    private static class ProductAddRequest {
-
-        @NotNull
-        private String name;
-        @JsonProperty("image-url")
-        @NotNull
-        private String imageUrl;
-        @NotNull
-        private Integer price;
-    }
-
-    @Getter
-    @NoArgsConstructor
-    private static class ProductUpdateRequest {
-
-        @NotNull
-        private Long id;
-        @NotNull
-        private String name;
-        @JsonProperty("image-url")
-        @NotNull
-        private String imageUrl;
-        @NotNull
-        private Integer price;
     }
 }
