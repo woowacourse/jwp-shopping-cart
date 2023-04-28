@@ -6,7 +6,8 @@ import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.entity.ProductEntity;
 import cart.fixture.ImageFixture;
-import cart.fixture.ProductFixture;
+import cart.fixture.ProductFixture.COFFEE;
+import cart.fixture.ProductFixture.RAMYEON;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,8 +19,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static cart.fixture.ProductFixture.COFFEE;
-import static cart.fixture.ProductFixture.RAMYEON;
+import static cart.fixture.ProductFixture.WATER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -78,7 +78,7 @@ class ProductServiceTest {
 
     @Test
     void 상품_목록을_조회한다() {
-        List<Product> products = List.of(ProductFixture.RAMYEON, ProductFixture.WATER, ProductFixture.COFFEE);
+        List<Product> products = List.of(RAMYEON.PRODUCT, WATER.PRODUCT, COFFEE.PRODUCT);
         for (Product product : products) {
             productDao.save(product);
         }
@@ -89,7 +89,7 @@ class ProductServiceTest {
 
     @Test
     void 상품정보를_수정한다() {
-        Product ramyeon = RAMYEON;
+        Product ramyeon = RAMYEON.PRODUCT;
         Optional<ProductEntity> saved = productDao.save(ramyeon);
         ProductEntity product = saved.get();
         Long productId = product.getId();
@@ -118,7 +118,7 @@ class ProductServiceTest {
 
     @Test
     void 상품을_삭제한다() {
-        ProductEntity product = productDao.save(COFFEE).get();
+        ProductEntity product = productDao.save(COFFEE.PRODUCT).get();
         Long productId = product.getId();
 
         Assertions.assertDoesNotThrow(() -> productService.deleteById(productId));

@@ -13,8 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static cart.fixture.ProductFixture.CHICKEN_RESPONSE;
-import static cart.fixture.ProductFixture.SNACK_RESPONSE;
+import static cart.fixture.ProductFixture.CHICKEN;
+import static cart.fixture.ProductFixture.SNACK;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -42,7 +42,7 @@ class ProductControllerTest {
         String jsonRequest = objectMapper.writeValueAsString(request);
 
         when(productService.findAll())
-                .thenReturn(List.of(SNACK_RESPONSE));
+                .thenReturn(List.of(SNACK.RESPONSE));
 
         mockMvc.perform(post("/products")
                         .content(jsonRequest)
@@ -56,7 +56,7 @@ class ProductControllerTest {
         ProductRequest request = new ProductRequest(ImageFixture.url, "name", 1000);
         String jsonRequest = objectMapper.writeValueAsString(request);
 
-        when(productService.update(any(), any())).thenReturn(CHICKEN_RESPONSE);
+        when(productService.update(any(), any())).thenReturn(CHICKEN.RESPONSE);
 
         mockMvc.perform(put("/products/{id}", 1L)
                         .content(jsonRequest)

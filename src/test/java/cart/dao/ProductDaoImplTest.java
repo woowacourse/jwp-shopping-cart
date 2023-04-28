@@ -4,6 +4,11 @@ import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.entity.ProductEntity;
 import cart.fixture.ImageFixture;
+import cart.fixture.ProductFixture.COFFEE;
+import cart.fixture.ProductFixture.PIZZA;
+import cart.fixture.ProductFixture.RAMYEON;
+import cart.fixture.ProductFixture.SNACK;
+import cart.fixture.ProductFixture.WATER;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,11 +19,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 import java.util.Optional;
 
-import static cart.fixture.ProductFixture.COFFEE;
-import static cart.fixture.ProductFixture.PIZZA;
-import static cart.fixture.ProductFixture.RAMYEON;
-import static cart.fixture.ProductFixture.SNACK;
-import static cart.fixture.ProductFixture.WATER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
@@ -53,7 +53,7 @@ class ProductDaoImplTest {
 
     @Test
     void 모든_상품을_조회한다() {
-        List<Product> products = List.of(RAMYEON, WATER, PIZZA, SNACK);
+        List<Product> products = List.of(RAMYEON.PRODUCT, WATER.PRODUCT, PIZZA.PRODUCT, SNACK.PRODUCT);
         for (Product product : products) {
             productDao.save(product);
         }
@@ -69,7 +69,7 @@ class ProductDaoImplTest {
 
     @Test
     void 상품_정보_업데이트() {
-        Product ramyeon = RAMYEON;
+        Product ramyeon = RAMYEON.PRODUCT;
         Optional<ProductEntity> saved = productDao.save(ramyeon);
         ProductEntity product = saved.get();
         Long productId = product.getId();
@@ -89,7 +89,7 @@ class ProductDaoImplTest {
 
     @Test
     void 상품_삭제() {
-        ProductEntity product = productDao.save(COFFEE).get();
+        ProductEntity product = productDao.save(COFFEE.PRODUCT).get();
         Long productId = product.getId();
 
         productDao.deleteById(productId);
