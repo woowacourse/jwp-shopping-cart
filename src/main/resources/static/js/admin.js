@@ -54,7 +54,7 @@ form.addEventListener('submit', (event) => {
 });
 
 const createProduct = (product) => {
-    axios.post('/admin', product)
+    axios.post('/admin/products', product)
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
@@ -66,7 +66,7 @@ const createProduct = (product) => {
 const updateProduct = (product) => {
     const {id} = product;
 
-    axios.put(`/admin/${id}`, product)
+    axios.put(`/admin/products/${id}`, product)
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
@@ -76,7 +76,7 @@ const updateProduct = (product) => {
 };
 
 const deleteProduct = (id) => {
-    axios.delete(`/admin/${id}`)
+    axios.delete(`/admin/products/${id}`)
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
