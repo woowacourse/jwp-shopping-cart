@@ -19,11 +19,13 @@ public class ProductEntity {
     }
 
     public ProductEntity(Product product) {
-        this.id = product.getProductId();
-        this.name = product.getName();
-        this.price = product.getPrice().intValue();
-        this.category = product.getCategory().name();
-        this.imageUrl = product.getImageUrl();
+        this(
+                product.getProductId(),
+                product.getName(),
+                product.getPrice().intValue(),
+                product.getCategory().name(),
+                product.getImageUrl()
+        );
     }
 
     public Long getId() {

@@ -43,6 +43,6 @@ public class AdminService {
         Product product = productDto.toProduct();
         productRepository.update(product);
 
-        return ProductDto.from(product);
+        return new ProductDto(product);
     }
 }

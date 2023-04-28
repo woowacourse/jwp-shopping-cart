@@ -17,8 +17,8 @@ public class ProductDto {
         this.imageUrl = imageUrl;
     }
 
-    public static ProductDto from(Product product) {
-        return new ProductDto(
+    public ProductDto(Product product) {
+        this(
                 product.getProductId(),
                 product.getName(),
                 product.getPrice().intValue(),

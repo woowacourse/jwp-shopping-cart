@@ -21,7 +21,7 @@ public class CartService {
         List<Product> allProducts = productRepository.findAll();
 
         return allProducts.stream()
-                .map(ProductDto::from)
+                .map(ProductDto::new)
                 .collect(Collectors.toList());
     }
 }

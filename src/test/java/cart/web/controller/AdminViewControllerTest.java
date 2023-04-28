@@ -33,7 +33,7 @@ class AdminViewControllerTest {
     @Test
     void loadIndexPage() throws Exception {
         Mockito.when(cartService.getAllProducts())
-                .thenReturn(List.of(ProductDto.from(TestFixture.CHICKEN), ProductDto.from(TestFixture.PIZZA)));
+                .thenReturn(List.of(new ProductDto(TestFixture.CHICKEN), new ProductDto(TestFixture.PIZZA)));
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -46,8 +46,8 @@ class AdminViewControllerTest {
     @Test
     void loadAdminPage() throws Exception {
         List<ProductDto> expectedProducts = List.of(
-                ProductDto.from(TestFixture.PIZZA),
-                ProductDto.from(TestFixture.CHICKEN)
+                new ProductDto(TestFixture.PIZZA),
+                new ProductDto(TestFixture.CHICKEN)
         );
         when(cartService.getAllProducts())
                 .thenReturn(expectedProducts);
