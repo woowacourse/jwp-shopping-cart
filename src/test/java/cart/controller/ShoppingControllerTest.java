@@ -51,7 +51,7 @@ class ShoppingControllerTest {
         final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
         when(productService.getById(any())).thenReturn(productDto);
 
-        //when
+        // when, then
         mockMvc.perform(get("/{id}", 1L)
                         .contentType(MediaType.TEXT_HTML))
                 .andExpect(status().isOk());

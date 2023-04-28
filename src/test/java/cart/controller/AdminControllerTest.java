@@ -31,8 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AdminController.class)
 class AdminControllerTest {
 
-    private ProductDto productDto;
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -41,11 +39,6 @@ class AdminControllerTest {
 
     @MockBean
     private ProductService productService;
-
-    @BeforeEach
-    void setUp() {
-        productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
-    }
 
     @DisplayName("어드민 상품 리스트 페이지를 조회한다")
     @Test
@@ -68,6 +61,7 @@ class AdminControllerTest {
     @Test
     void addProduct() throws Exception {
         // given
+        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
         when(productService.save(any())).thenReturn(1L);
 
         // when, then
@@ -106,6 +100,7 @@ class AdminControllerTest {
     @Test
     void updateProduct() throws Exception {
         // given
+        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
         doNothing().when(productService).update(any(), any());
 
         // when, then
