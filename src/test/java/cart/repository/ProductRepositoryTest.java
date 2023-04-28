@@ -5,21 +5,16 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.entity.ProductEntity;
-import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @Sql("classpath:schema.sql")
 class ProductRepositoryTest {
-
-    @LocalServerPort
-    private int port;
 
     @Autowired
     private ProductDao productDao;
@@ -31,8 +26,6 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        RestAssured.port = port;
-
         productDao.insert(new ProductEntity("pizza", 1000,
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg/800px-Eq_it-na_pizza-margherita_sep2005_sml.jpg"));
         productDao.insert(new ProductEntity("salad", 2000,

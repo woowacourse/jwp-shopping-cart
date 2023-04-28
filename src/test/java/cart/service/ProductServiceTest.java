@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.repository.ProductRepository;
-import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,27 +14,21 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @Sql("classpath:schema.sql")
 class ProductServiceTest {
 
-    @LocalServerPort
-    private int port;
-
     @Autowired
     private ProductService productService;
+
     @Autowired
     private ProductRepository productRepository;
 
     @BeforeEach
     void setUp() {
-        RestAssured.port = port;
-
         productRepository.insert(new Product("pizza", 1000,
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg/800px-Eq_it-na_pizza-margherita_sep2005_sml.jpg"));
         productRepository.insert(new Product("salad", 2000,
