@@ -1,9 +1,7 @@
 package cart.controller;
 
-import cart.dto.ItemRequest;
-import cart.dto.ItemUpdateRequest;
-import cart.dto.ResultResponse;
-import cart.dto.SuccessCode;
+import cart.domain.Item;
+import cart.dto.*;
 import cart.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -32,17 +30,18 @@ public class AdminController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public ResultResponse addItem(@Valid @RequestBody ItemRequest itemRequest) {
-        itemService.save(itemRequest.toItem());
-        return new ResultResponse(SuccessCode.CREATE_ITEM, itemRequest.toItem());
+        ItemResponse saveItem = itemService.save(itemRequest.toItem());
+        return new ResultResponse(SuccessCode.CREATE_ITEM, saveItem);
     }
 
     @ResponseBody
     @PutMapping("/item")
     public ResultResponse editItem(@Valid @RequestBody ItemUpdateRequest itemUpdateRequest) {
         Long itemId = itemUpdateRequest.getId();
+        Item item = itemUpdateRequest.toItem();
 
-        itemService.updateItem(itemId, itemUpdateRequest.toItem());
-        return new ResultResponse(SuccessCode.UPDATE_ITEM, itemUpdateRequest.toItem());
+        itemService.updateItem(itemId, item);
+        return new ResultResponse(SuccessCode.UPDATE_ITEM, item);
     }
 
     @ResponseBody

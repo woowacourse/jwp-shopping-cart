@@ -18,8 +18,9 @@ public class ItemService {
         this.itemDao = itemDao;
     }
 
-    public void save(Item item) {
-        itemDao.save(item);
+    public ItemResponse save(Item item) {
+        ItemEntity save = itemDao.save(item);
+        return new ItemResponse(save.getId(), save.getName(), save.getImageUrl(), save.getPrice());
     }
 
     public List<ItemResponse> findAll() {

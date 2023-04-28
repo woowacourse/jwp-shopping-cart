@@ -6,7 +6,7 @@ import cart.entity.ItemEntity;
 import java.util.List;
 
 public interface ItemDao {
-    void save(Item item);
+    ItemEntity save(Item item);
 
     List<ItemEntity> findAll();
 
