@@ -11,7 +11,6 @@ import java.util.List;
 public class ProductService {
 
     private final ProductDao productDao;
-
     public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }

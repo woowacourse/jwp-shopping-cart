@@ -17,6 +17,9 @@ import java.net.URI;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+
+    private static final String REDIRECT_URL = "/admin";
+
     private final ProductService productService;
 
     public ProductController(final ProductService productService) {
@@ -24,9 +27,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> create(@RequestBody @Valid final ProductRequestDto productRequestDto) {
         productService.create(productRequestDto);
-        return ResponseEntity.created(URI.create("/admin")).build();
+        return ResponseEntity.created(URI.create(REDIRECT_URL)).build();
     }
 
     @PatchMapping("/{id}")
@@ -34,7 +37,7 @@ public class ProductController {
             @RequestBody @Valid final ProductRequestDto productRequestDto,
             @PathVariable final int id) {
         productService.update(productRequestDto, id);
-        return ResponseEntity.created(URI.create("/admin")).build();
+        return ResponseEntity.created(URI.create(REDIRECT_URL)).build();
     }
 
     @DeleteMapping("/{id}")
@@ -42,5 +45,4 @@ public class ProductController {
         productService.delete(id);
         return ResponseEntity.ok().build();
     }
-
 }

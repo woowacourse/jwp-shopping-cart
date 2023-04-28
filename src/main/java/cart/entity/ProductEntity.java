@@ -3,6 +3,7 @@ package cart.entity;
 import java.util.Objects;
 
 public class ProductEntity {
+
     private final Integer id;
     private final String name;
     private final String image;
