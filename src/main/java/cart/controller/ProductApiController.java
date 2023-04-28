@@ -30,7 +30,7 @@ public class ProductApiController {
     @PutMapping("/products/update/{id}")
     public ResponseEntity<Void> update(@PathVariable final int id, @Valid @RequestBody final ProductDto productDto) {
         productService.update(id, productDto);
-        return ResponseEntity.created(URI.create("/products/" + id)).build();
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/products/delete/{id}")
