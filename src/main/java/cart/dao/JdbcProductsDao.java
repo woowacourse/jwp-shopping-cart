@@ -41,21 +41,27 @@ public class JdbcProductsDao implements ProductsDao {
                                 rs.getString("product_name"),
                                 rs.getInt("product_price"),
                                 rs.getString("product_image"))
-
         );
     }
 
     @Override
     public void update(final Product product) {
+        validateIfProductExist(product.getId());
+
         final String sql = "UPDATE products SET product_name = ?, product_price = ? , product_image = ? where id = ?";
-        final int updatedCount = jdbcTemplate.update(sql,
+        jdbcTemplate.update(sql,
                 product.getName(),
                 product.getPrice(),
                 product.getImage(),
                 product.getId()
         );
-        if (updatedCount == 0) {
-            throw new NoSuchProductException("해당 상품이 없습니다.");
+    }
+
+    public void validateIfProductExist(long id) {
+        final String sql = "select count(*) from products where id = ?";
+
+        if (jdbcTemplate.queryForObject(sql, Integer.class, id) == 0) {
+            throw new NoSuchProductException("해당 상품이 없습니다. 입략된 상품 id : " + id);
         }
     }
 
