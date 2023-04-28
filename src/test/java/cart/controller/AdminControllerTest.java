@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 import cart.dto.ProductCreateRequest;
 import cart.dto.ProductUpdateRequest;
@@ -20,6 +21,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@Sql({"/dropTable.sql", "/data.sql"})
 class AdminControllerTest {
 
     @BeforeEach

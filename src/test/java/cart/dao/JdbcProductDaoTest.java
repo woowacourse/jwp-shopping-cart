@@ -15,10 +15,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import cart.dao.entity.Product;
 
 @JdbcTest
+@Sql({"/dropTable.sql", "/data.sql"})
 class JdbcProductDaoTest {
 
     @Autowired
