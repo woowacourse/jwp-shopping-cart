@@ -17,22 +17,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductDao productDao;
+    private final ProductDao mySQLProductDao;
 
-    public ProductController(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductController(ProductDao mySQLProductDao) {
+        this.mySQLProductDao = mySQLProductDao;
     }
 
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody ProductRequest product) {
-        productDao.add(product);
+        mySQLProductDao.add(product);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable Long id,
         @Valid @RequestBody ProductRequest product) {
-        final int updateCount = productDao.updateById(id, product);
+        final int updateCount = mySQLProductDao.updateById(id, product);
         if (updateCount == 0) {
             throw new NoSuchElementException();
         }
@@ -41,7 +41,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        final int deleteCount = productDao.deleteById(id);
+        final int deleteCount = mySQLProductDao.deleteById(id);
         if (deleteCount == 0) {
             throw new NoSuchElementException();
         }

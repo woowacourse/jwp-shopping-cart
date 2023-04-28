@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PageController {
 
-    private final ProductDao productDao;
+    private final ProductDao mySQLProductDao;
 
-    public PageController(ProductDao productDao) {
-        this.productDao = productDao;
+    public PageController(ProductDao mySQLProductDao) {
+        this.mySQLProductDao = mySQLProductDao;
     }
 
     @GetMapping
     public String loadHome(Model model) {
-        final List<ProductEntity> productEntities = productDao.findAll();
+        final List<ProductEntity> productEntities = mySQLProductDao.findAll();
 
         List<ProductResponse> products = ProductResponse.from(productEntities);
 
@@ -29,7 +29,7 @@ public class PageController {
 
     @GetMapping("/admin")
     public String loadAdmin(Model model) {
-        final List<ProductEntity> productEntities = productDao.findAll();
+        final List<ProductEntity> productEntities = mySQLProductDao.findAll();
         List<ProductResponse> products = ProductResponse.from(productEntities);
 
         model.addAttribute("products", products);

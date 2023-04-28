@@ -16,9 +16,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
-public class ProductDaoTest {
+public class MySQLProductDaoTest {
 
-    private ProductDao productDao;
+    private ProductDao mySQLProductDao;
     private ProductEntity firstRecord;
     private Long firstRecordId;
 
@@ -27,7 +27,7 @@ public class ProductDaoTest {
 
     @BeforeEach
     void setUp() {
-        productDao = new ProductDao(jdbcTemplate);
+        mySQLProductDao = new MySQLProductDao(jdbcTemplate);
         String productDropQuery = "DROP TABLE product IF EXISTS";
         String productCreateQuery = "CREATE TABLE product(id BIGINT NOT NULL AUTO_INCREMENT,name VARCHAR(20) NOT NULL,price INT NOT NULL,image_url TEXT NOT NULL, PRIMARY KEY(id))";
         String sampleQuery1 = "INSERT INTO product(name, price, image_url) VALUES ('피자', 13000, 'https://searchad-phinf.pstatic.net/MjAyMjEyMjdfMTE1/MDAxNjcyMTAxNTI0Nzg4.WfiSlsy9fTUQJ6q2FTGOaaOVU0QpSB0U1LvplKZQXzIg.H4UgI0VbKUszP7mzC3qhwpSMe15DluJnxjxVGDq_QUgg.PNG/451708-1fa87663-02e3-4303-b8a9-d7eea3676018.png?type=f160_160')";
@@ -40,7 +40,7 @@ public class ProductDaoTest {
         jdbcTemplate.update(sampleQuery2);
         jdbcTemplate.update(sampleQuery3);
 
-        firstRecord = productDao.findAll().get(0);
+        firstRecord = mySQLProductDao.findAll().get(0);
         firstRecordId = firstRecord.getId();
     }
 
@@ -48,16 +48,16 @@ public class ProductDaoTest {
     @DisplayName("add() 메서드를 호출하면 하나의 데이터가 product에 추가된다")
     void add() {
         final ProductRequest request = new ProductRequest("test", 15_000, "test/image/url");
-        final int beforeSize = productDao.findAll().size();
-        productDao.add(request);
-        final int afterSize = productDao.findAll().size();
+        final int beforeSize = mySQLProductDao.findAll().size();
+        mySQLProductDao.add(request);
+        final int afterSize = mySQLProductDao.findAll().size();
         assertThat(afterSize).isEqualTo(beforeSize + 1);
     }
 
     @Test
     @DisplayName("findAll() 메서드를 호출하면 3개의 초기 product 데이터를 반환한다")
     void findAll() {
-        final List<ProductEntity> productEntities = productDao.findAll();
+        final List<ProductEntity> productEntities = mySQLProductDao.findAll();
 
         assertThat(productEntities.size()).isEqualTo(3);
     }
@@ -68,7 +68,7 @@ public class ProductDaoTest {
         // given
 
         // when
-        final ProductEntity actual = productDao.findById(firstRecordId).get();
+        final ProductEntity actual = mySQLProductDao.findById(firstRecordId).get();
 
         // then
         assertThat(actual).isEqualTo(firstRecord);
@@ -85,10 +85,10 @@ public class ProductDaoTest {
             requestUrl);
 
         // when
-        final int updateCount = productDao.updateById(firstRecordId, updateRequest);
+        final int updateCount = mySQLProductDao.updateById(firstRecordId, updateRequest);
 
         // then
-        final ProductEntity actual = productDao.findById(firstRecordId).get();
+        final ProductEntity actual = mySQLProductDao.findById(firstRecordId).get();
         assertAll(
             () -> assertThat(updateCount).isEqualTo(1),
             () -> assertThat(actual.getName()).isEqualTo(requestName),
@@ -103,8 +103,8 @@ public class ProductDaoTest {
         // given
 
         // when
-        final int deleteCount = productDao.deleteById(firstRecordId);
-        final Optional<ProductEntity> deletedRecord = productDao.findById(firstRecordId);
+        final int deleteCount = mySQLProductDao.deleteById(firstRecordId);
+        final Optional<ProductEntity> deletedRecord = mySQLProductDao.findById(firstRecordId);
 
         // then
         assertAll(
