@@ -1,6 +1,8 @@
 package cart.product.service;
 
 import cart.product.dao.ProductDao;
+import cart.product.domain.Name;
+import cart.product.domain.Price;
 import cart.product.domain.Product;
 import cart.product.dto.RequestProductDto;
 import cart.product.dto.ResponseProductDto;
@@ -25,15 +27,16 @@ public class ProductListService {
     }
     
     public void create(final RequestProductDto requestProductDto) {
-        final Product product = Product.create(requestProductDto);
+        final Product product = new Product(new Name(requestProductDto.getName()), requestProductDto.getImage(),
+                new Price(requestProductDto.getPrice()));
         productDao.insert(product);
     }
     
     public ResponseProductDto update(final long id, final RequestProductDto requestProductDto) {
-        final Product originalProduct = productDao.findByID(id);
-        final Product updatedProduct = originalProduct.update(requestProductDto);
-        productDao.update(updatedProduct);
-        return ResponseProductDto.create(updatedProduct);
+        final Product product = new Product(id, new Name(requestProductDto.getName()), requestProductDto.getImage(),
+                new Price(requestProductDto.getPrice()));
+        productDao.update(product);
+        return ResponseProductDto.create(product);
     }
     
     public void delete(final long id) {
