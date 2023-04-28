@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import cart.dao.ProductDao;
-import cart.dto.ProductDto;
+import cart.entity.ProductEntity;
 import cart.dto.ProductAddRequest;
 import cart.dto.ProductModifyRequest;
 import io.restassured.RestAssured;
@@ -60,7 +60,7 @@ class ProductControllerTest {
                     .statusCode(HttpStatus.CREATED.value())
                     .header("Location", "/products/1");
 
-            ProductDto product = productDao.findById(1).get();
+            ProductEntity product = productDao.findById(1).get();
             assertThat(product.getName()).isEqualTo(productAddRequest.getName());
             assertThat(product.getImgUrl()).isEqualTo(productAddRequest.getImgUrl());
             assertThat(product.getPrice()).isEqualTo(productAddRequest.getPrice());
@@ -121,7 +121,7 @@ class ProductControllerTest {
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     10000
             );
-            productDao.save(productAddRequest);
+            productDao.save(new ProductEntity(productAddRequest.getName(), productAddRequest.getImgUrl(), productAddRequest.getPrice()));
         }
 
         @DisplayName("성공")
@@ -145,7 +145,7 @@ class ProductControllerTest {
                     .log().all()
                     .statusCode(HttpStatus.OK.value());
 
-            ProductDto product = productDao.findById(1).get();
+            ProductEntity product = productDao.findById(1).get();
 
             assertThat(product.getName()).isEqualTo(productModifyRequest.getName());
             assertThat(product.getImgUrl()).isEqualTo(productModifyRequest.getImgUrl());
@@ -229,7 +229,7 @@ class ProductControllerTest {
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     10000
             );
-            productDao.save(productAddRequest);
+            productDao.save(new ProductEntity(productAddRequest.getName(), productAddRequest.getImgUrl(), productAddRequest.getPrice()));
         }
 
         @DisplayName("성공")

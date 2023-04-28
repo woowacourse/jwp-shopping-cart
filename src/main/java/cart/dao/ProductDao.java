@@ -1,8 +1,6 @@
 package cart.dao;
 
-import cart.dto.ProductDto;
-import cart.dto.ProductAddRequest;
-import cart.dto.ProductModifyRequest;
+import cart.entity.ProductEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -25,18 +23,18 @@ public class ProductDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public int save(ProductAddRequest productAddRequest) {
+    public int save(ProductEntity productEntity) {
         GeneratedKeyHolder keyholder = new GeneratedKeyHolder();
         String sql = "INSERT INTO product (name, imgUrl, price) VALUES (:name, :imgUrl, :price)";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(productAddRequest);
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(productEntity);
         namedParameterJdbcTemplate.update(sql, namedParameters, keyholder, new String[]{"id"});
 
         return keyholder.getKey().intValue();
     }
 
-    public Optional<ProductDto> findById(int id) {
+    public Optional<ProductEntity> findById(int id) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        BeanPropertyRowMapper<ProductDto> mapper = BeanPropertyRowMapper.newInstance(ProductDto.class);
+        BeanPropertyRowMapper<ProductEntity> mapper = BeanPropertyRowMapper.newInstance(ProductEntity.class);
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, mapper, id));
         } catch (final EmptyResultDataAccessException e) {
@@ -44,20 +42,16 @@ public class ProductDao {
         }
     }
 
-    public List<ProductDto> findAll() {
+    public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM product";
-        BeanPropertyRowMapper<ProductDto> mapper = BeanPropertyRowMapper.newInstance(ProductDto.class);
+        BeanPropertyRowMapper<ProductEntity> mapper = BeanPropertyRowMapper.newInstance(ProductEntity.class);
         return jdbcTemplate.query(sql, mapper);
     }
 
-    public int update(ProductModifyRequest productModifyRequest, int id) {
+    public int update(ProductEntity productEntity) {
         String sql = "UPDATE product SET name=:name, imgUrl=:imgUrl, price=:price WHERE id=:id";
-        MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource()
-                .addValue("name", productModifyRequest.getName())
-                .addValue("imgUrl", productModifyRequest.getImgUrl())
-                .addValue("price", productModifyRequest.getPrice())
-                .addValue("id", id);
-        return namedParameterJdbcTemplate.update(sql, mapSqlParameters);
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(productEntity);
+        return namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
     public int delete(int id) {
