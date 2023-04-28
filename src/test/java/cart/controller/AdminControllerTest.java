@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -39,6 +41,24 @@ class AdminControllerTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
                 () -> assertThat(response.header("Location")).contains("/admin/product/")
         );
+    }
+
+    @Test
+    @DisplayName("product의 이름이 스무글자가 넘으면 400을 응답한다.")
+    void saveFailProductName() {
+        final ExtractableResponse<Response> response = saveProduct("치킨치킨치킨치킨치킨치킨치킨치킨치킨치킨치킨", 10000, "img");
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ParameterizedTest(name = "product의 가격이 10원이상 1,000,000 이하가 아니면 예외가 발생한다.")
+    @ValueSource(ints = {9, 0, -1, 1_000_001})
+    void saveFailProductPrice(int price) {
+        final ExtractableResponse<Response> response = saveProduct("치킨", price, "img");
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
