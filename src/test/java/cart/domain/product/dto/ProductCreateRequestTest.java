@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class ProductRequestTest {
+class ProductCreateRequestTest {
 
     private Validator validator;
 
@@ -23,10 +23,10 @@ class ProductRequestTest {
     @DisplayName("NotBlank에서 null을 체크한다.")
     public void testNotBlank() {
         //given
-        final ProductRequest request = new ProductRequest(null, 10, "imageUrl");
+        final ProductCreateRequest request = new ProductCreateRequest(null, 10, "imageUrl");
 
         //when
-        final Optional<ConstraintViolation<ProductRequest>> result = validator.validate(request)
+        final Optional<ConstraintViolation<ProductCreateRequest>> result = validator.validate(request)
             .stream()
             .findFirst();
 

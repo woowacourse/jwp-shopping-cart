@@ -6,7 +6,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class ProductRequest {
+public class ProductUpdateRequest {
+
+    @NotBlank
+    private final Long id;
 
     @NotBlank
     @Max(value = 20, message = "상품의 이름은 20글자를 넘을 수 없습니다.")
@@ -21,13 +24,15 @@ public class ProductRequest {
     @NotBlank
     private final String imageUrl;
 
-    public ProductRequest(final String name, final int price, final String imageUrl) {
+    public ProductUpdateRequest(final Long id, final String name, final int price,
+        final String imageUrl) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
     public Product makeProduct() {
-        return new Product(null, name, price, imageUrl, null, null);
+        return new Product(id, name, price, imageUrl, null, null);
     }
 }

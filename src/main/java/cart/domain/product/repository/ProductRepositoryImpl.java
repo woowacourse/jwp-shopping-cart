@@ -23,4 +23,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     public List<Product> findAll() {
         return productDao.findAll();
     }
+
+    @Override
+    public int update(final Product product) {
+        return 0;
+    }
 }

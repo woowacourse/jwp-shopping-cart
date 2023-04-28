@@ -1,7 +1,8 @@
 package cart.domain.product.service;
 
-import cart.domain.product.dto.ProductRequest;
+import cart.domain.product.dto.ProductCreateRequest;
 import cart.domain.product.dto.ProductResponse;
+import cart.domain.product.dto.ProductUpdateRequest;
 import cart.domain.product.entity.Product;
 import cart.domain.product.repository.ProductRepository;
 import java.util.List;
@@ -17,8 +18,8 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public ProductResponse create(final ProductRequest productRequest) {
-        final Product product = productRequest.makeProduct();
+    public ProductResponse create(final ProductCreateRequest productCreateRequest) {
+        final Product product = productCreateRequest.makeProduct();
         final Product savedProduct = productRepository.save(product);
         return ProductResponse.of(savedProduct);
     }
@@ -28,5 +29,12 @@ public class ProductService {
         return products.stream()
             .map(ProductResponse::of)
             .collect(Collectors.toUnmodifiableList());
+    }
+
+    public void update(final ProductUpdateRequest productUpdateRequest) {
+        final int count = productRepository.update(productUpdateRequest.makeProduct());
+        if (count == 0) {
+            throw new IllegalArgumentException("존재하지 않는 아이템입니다.");
+        }
     }
 }

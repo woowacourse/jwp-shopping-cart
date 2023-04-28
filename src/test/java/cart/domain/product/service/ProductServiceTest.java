@@ -1,11 +1,14 @@
 package cart.domain.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import cart.domain.product.dto.ProductRequest;
+import cart.domain.product.dto.ProductCreateRequest;
 import cart.domain.product.dto.ProductResponse;
+import cart.domain.product.dto.ProductUpdateRequest;
 import cart.domain.product.entity.Product;
 import cart.domain.product.repository.ProductRepository;
 import java.time.LocalDateTime;
@@ -37,7 +40,7 @@ class ProductServiceTest {
 
         //when
         final ProductResponse result = productService.create(
-            new ProductRequest("name", 1000, "imageUrl"));
+            new ProductCreateRequest("name", 1000, "imageUrl"));
 
         //then
         assertThat(result.getId()).isEqualTo(savedProduct.getId());
@@ -63,5 +66,28 @@ class ProductServiceTest {
 
         //then
         assertThat(result.size()).isEqualTo(products.size());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품을 수정한다.")
+    public void testUpdateNotExistProduct() {
+        //given
+        given(productRepository.update(any())).willReturn(0);
+
+        //when + then
+        assertThatThrownBy(
+            () -> productService.update(new ProductUpdateRequest(1L, "name", 2000, "image_url")))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("상품을 수정한다.")
+    public void testUpdate() {
+        //given
+        given(productRepository.update(any())).willReturn(1);
+
+        //when + then
+        assertDoesNotThrow(
+            () -> productService.update(new ProductUpdateRequest(1L, "name", 2000, "image_url")));
     }
 }
