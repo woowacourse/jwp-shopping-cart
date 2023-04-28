@@ -28,17 +28,23 @@ class ProductDaoTest {
 
     @Test
     void save는_상품을_저장한다() {
+        //given
         ProductSaveRequest productSaveRequest = new ProductSaveRequest("치킨",
                 "https://img.freepik.com/free-photo/crispy-fried-chicken-on-a-plate-with-salad-and-carrot_1150-20212.jpg",
                 19000L);
 
+        //when
         productDao.save(productSaveRequest);
+
+        //then
+        Product expected = new Product(1L, "치킨",
+                "https://img.freepik.com/free-photo/crispy-fried-chicken-on-a-plate-with-salad-and-carrot_1150-20212.jpg", 19000L);
 
         List<Product> allProducts = productDao.findAllProducts();
         assertThat(allProducts.get(0))
                 .usingRecursiveComparison()
                 .ignoringFields("productId")
-                .isEqualTo(productSaveRequest);
+                .isEqualTo(expected);
     }
 
     @Test

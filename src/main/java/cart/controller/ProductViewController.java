@@ -1,11 +1,13 @@
 package cart.controller;
 
-import cart.domain.Product;
+import cart.dto.ProductDto;
 import cart.service.ProductService;
-import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
+
 @Controller
 public class ProductViewController {
 
@@ -17,14 +19,14 @@ public class ProductViewController {
 
     @GetMapping("/")
     public String productPageView(Model model) {
-        List<Product> products = productService.findAllProducts();
+        List<ProductDto> products = productService.findAllProducts();
         model.addAttribute("products", products);
         return "index";
     }
 
     @GetMapping("/admin")
     public String adminPageView(Model model) {
-        List<Product> products = productService.findAllProducts();
+        List<ProductDto> products = productService.findAllProducts();
         model.addAttribute("products", products);
         return "admin";
     }

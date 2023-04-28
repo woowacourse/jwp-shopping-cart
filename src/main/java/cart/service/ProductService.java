@@ -3,7 +3,9 @@ package cart.service;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import cart.dto.ProductDto;
 import cart.dto.request.ProductSaveRequest;
 import cart.dto.request.ProductUpdateRequest;
 import org.springframework.stereotype.Service;
@@ -18,12 +20,14 @@ public class ProductService {
     }
 
     public long saveProduct(ProductSaveRequest productSaveRequest) {
-        // todo: save시에도 validation
         return productDao.save(productSaveRequest);
     }
 
-    public List<Product> findAllProducts() {
-        return productDao.findAllProducts();
+    public List<ProductDto> findAllProducts() {
+        List<Product> products = productDao.findAllProducts();
+        return products.stream()
+                .map(ProductDto::new)
+                .collect(Collectors.toList());
     }
 
     public void updateProduct(ProductUpdateRequest updateRequest) {

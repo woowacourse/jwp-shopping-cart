@@ -16,14 +16,12 @@ import java.util.List;
 public class ProductDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final RowMapper<Product> productRowMapper = (rs, rowNum) -> {
-        return new Product(
-                rs.getLong("product_id"),
-                rs.getString("name"),
-                rs.getString("image"),
-                rs.getLong("price")
-        );
-    };
+    private final RowMapper<Product> productRowMapper = (rs, rowNum) -> new Product(
+            rs.getLong("product_id"),
+            rs.getString("name"),
+            rs.getString("image"),
+            rs.getLong("price")
+    );
 
     public ProductDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -59,9 +57,9 @@ public class ProductDao {
         String sql = "update PRODUCT set name = :name, image = :image, price = :price where product_id = :product_id";
         SqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("product_id", product.getProductId())
-                .addValue("name", product.getName())
+                .addValue("name", product.getName().getName())
                 .addValue("image", product.getImage())
-                .addValue("price", product.getPrice());
+                .addValue("price", product.getPrice().getPrice());
 
         jdbcTemplate.update(sql, paramSource);
     }

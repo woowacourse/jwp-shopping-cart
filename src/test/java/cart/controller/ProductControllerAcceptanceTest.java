@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.Product;
+import cart.dto.request.ProductSaveRequest;
 import cart.dto.request.ProductUpdateRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,14 +30,14 @@ class ProductControllerAcceptanceTest {
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new Product(1L, "pizza", "image", 12000))
+                .body(new ProductSaveRequest("pizza", "image", 12000L))
                 .when().post("/product")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new Product(1L, "chicken!!!!!!", "image2", 12000))
+                .body(new ProductUpdateRequest(1L, "chicken!!!!!!", "image2", 12000L))
                 .when().put("/product")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());

@@ -5,41 +5,39 @@ import cart.ErrorCode;
 
 public class Product {
 
-    private Long productId;
-    private final String name;
+    private final Long productId;
+    private final Name name;
     private final String image;
-    private final Long price;
+    private final Price price;
 
     public Product(Long productId, String name, String image, long price) {
         this.productId = productId;
-        this.name = name;
+        this.name = Name.from(name);
         this.image = image;
-        this.price = price;
-        validate(productId, price);
+        this.price = Price.from(price);
+        validate(productId);
     }
 
     public long getProductId() {
         return productId;
     }
 
-    public String getName() {
+    public Name getName() {
         return name;
+    }
+
+    public Price getPrice() {
+        return price;
     }
 
     public String getImage() {
         return image;
     }
 
-    public long getPrice() {
-        return price;
-    }
 
-    private void validate(Long productId, long price) {
+    private void validate(Long productId) {
         if (productId < 0) {
             throw new BusinessIllegalArgumentException(ErrorCode.NOT_VALID_ID);
-        }
-        if (price < 0) {
-            throw new BusinessIllegalArgumentException(ErrorCode.NOT_VALID_PRICE);
         }
     }
 }

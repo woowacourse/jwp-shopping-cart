@@ -1,7 +1,8 @@
 package cart.controller;
 
-import cart.domain.Product;
+import cart.dto.ProductDto;
 import cart.dto.request.ProductSaveRequest;
+import cart.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -36,27 +37,26 @@ class ProductControllerUnitTest {
                         .content(objectMapper.writeValueAsBytes(new ProductSaveRequest("pd1", "image", 2000L)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
-
     }
 
     @Test
     void findAllProducts는_모든_상품들을_조회한다() throws Exception {
         //given
         given(productService.findAllProducts())
-                .willReturn(List.of(new Product(2L, "pdpd2", "image2", 15000)));
+                .willReturn(List.of(new ProductDto(2L, "pdpd2", "image2", 15000L)));
 
         mockMvc.perform(get("/product"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].productId").value(2L))
                 .andExpect(jsonPath("$[0].name").value("pdpd2"))
                 .andExpect(jsonPath("$[0].image").value("image2"))
-                .andExpect(jsonPath("$[0].price").value(15000));
+                .andExpect(jsonPath("$[0].price").value(15000L));
     }
 
     @Test
     void updateProduct() throws Exception {
         mockMvc.perform(put("/product")
-                        .content(objectMapper.writeValueAsBytes(new Product(2L, "pdpd2", "image2", 15000L)))
+                        .content(objectMapper.writeValueAsBytes(new ProductUpdateRequest(2L, "pdpd2", "image2", 15000L)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
