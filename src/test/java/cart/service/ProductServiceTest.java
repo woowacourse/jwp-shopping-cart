@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import cart.dao.ProductDao;
 import cart.dto.request.ProductRequest;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -94,6 +95,8 @@ class ProductServiceTest {
         @DisplayName("정상적으로 수정한다.")
         @Test
         void update_success() {
+            when(productDao.updateById(any(), any()))
+                    .thenReturn(1);
             //when && then
             assertThatNoException().isThrownBy(() -> productService.updateById(1L, PRODUCT_REQUEST_A));
         }
@@ -133,6 +136,18 @@ class ProductServiceTest {
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("상품의 최소 가격은 1000원 이상입니다.");
         }
+
+        @Test
+        @DisplayName("존재하지 않는 id의 상품 데이터를 수정시 예외를 반환한다.")
+        void update_fail_by_no_id() {
+            //given
+            when(productDao.updateById(any(), any()))
+                    .thenReturn(0);
+            //when && then
+            assertThatThrownBy(() -> productService.updateById(9999L, PRODUCT_REQUEST_A))
+                    .isInstanceOf(NoSuchElementException.class)
+                    .hasMessage("존재하지 않는 상품입니다.");
+        }
     }
 
     @Nested
@@ -142,7 +157,22 @@ class ProductServiceTest {
         @Test
         @DisplayName("정상적으로 삭제한다.")
         void delete_success() {
+            when(productDao.deleteById(any()))
+                    .thenReturn(1);
+
             assertThatNoException().isThrownBy(() -> productService.deleteById(1L));
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 id의 상품 데이터를 삭제시 예외를 반환한다.")
+        void delete_fail_by_no_id() {
+            //given
+            when(productDao.deleteById(any()))
+                    .thenReturn(0);
+            //when && then
+            assertThatThrownBy(() -> productService.deleteById(1L))
+                    .isInstanceOf(NoSuchElementException.class)
+                    .hasMessage("존재하지 않는 상품입니다.");
         }
     }
 }
