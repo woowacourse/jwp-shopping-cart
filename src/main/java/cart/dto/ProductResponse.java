@@ -1,10 +1,10 @@
 package cart.dto;
 
+import cart.domain.Product;
 import java.util.Objects;
 
-import cart.domain.Product;
-
 public class ProductResponse {
+
     private final long id;
     private final String name;
     private final String image;
@@ -51,7 +51,8 @@ public class ProductResponse {
             return false;
         }
         final ProductResponse that = (ProductResponse) o;
-        return id == that.id && price == that.price && Objects.equals(name, that.name) && Objects.equals(image, that.image);
+        return id == that.id && price == that.price && Objects.equals(name, that.name) && Objects.equals(image,
+                that.image);
     }
 
     @Override

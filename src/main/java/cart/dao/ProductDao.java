@@ -1,11 +1,10 @@
 package cart.dao;
 
+import cart.entiy.ProductEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import cart.entiy.ProductEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductDao {
+
     private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) -> {
         long productId = resultSet.getLong("product_id");
         String name = resultSet.getString("name");
@@ -28,7 +28,7 @@ public class ProductDao {
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+        simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("product_id");
     }
@@ -65,7 +65,8 @@ public class ProductDao {
 
     public ProductEntity update(final ProductEntity productEntity) {
         final String sql = "UPDATE PRODUCT SET name=?, image=?, price=? WHERE product_id=?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), productEntity.getId().getValue());
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(),
+                productEntity.getId().getValue());
         return productEntity;
     }
 }

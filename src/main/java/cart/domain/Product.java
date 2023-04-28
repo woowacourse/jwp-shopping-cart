@@ -16,10 +16,12 @@ public class Product {
     }
 
     public Product(final Long productId, final String productName, final String productImage, final int productPrice) {
-        this(new ProductId(productId), new ProductName(productName), new ProductImage(productImage), new ProductPrice(productPrice));
+        this(new ProductId(productId), new ProductName(productName), new ProductImage(productImage),
+                new ProductPrice(productPrice));
     }
 
-    public Product(final ProductId productId, final ProductName productName, final ProductImage productImage, final ProductPrice productPrice) {
+    public Product(final ProductId productId, final ProductName productName, final ProductImage productImage,
+            final ProductPrice productPrice) {
         this.productId = productId;
         this.productName = productName;
         this.productImage = productImage;

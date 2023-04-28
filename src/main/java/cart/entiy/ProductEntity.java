@@ -3,6 +3,7 @@ package cart.entiy;
 import cart.domain.Product;
 
 public class ProductEntity {
+
     private final ProductEntityId id;
     private final String name;
     private final String image;
