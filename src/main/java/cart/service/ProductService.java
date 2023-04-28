@@ -10,7 +10,9 @@ import cart.dto.ProductUpdateRequest;
 import cart.exception.ProductNotFoundException;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -25,12 +27,14 @@ public class ProductService {
         return productDao.saveAndGetId(product);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findAll() {
         return productDao.findAll().stream()
                 .map(ProductDto::from)
                 .collect(toUnmodifiableList());
     }
 
+    @Transactional(readOnly = true)
     public ProductDto findById(final Long id) {
         final Product product = productDao.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
