@@ -4,9 +4,8 @@ import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.request.ProductRequest;
 import cart.service.ProductService;
-import java.util.List;
-import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import javax.validation.Valid;
+import java.net.URI;
+import java.util.List;
 
 @Controller
 public class ProductController {
@@ -45,14 +47,16 @@ public class ProductController {
     }
 
     @PostMapping("/admin")
-    public void createProduct(@RequestBody @Valid final ProductRequest productRequest) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
         final ProductDto productDto = new ProductDto(
                 productRequest.getName(),
                 productRequest.getPrice(),
                 productRequest.getImageUrl()
         );
 
-        productService.register(productDto);
+        Long id = productService.register(productDto);
+
+        return ResponseEntity.created(URI.create("/admin/" + id)).build();
     }
 
     @PutMapping("/admin/{id}")

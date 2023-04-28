@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -52,8 +53,7 @@ public class ProductControllerTest {
                 .when()
                 .post("/admin")
                 .then()
-                .contentType(MediaType.TEXT_HTML_VALUE)
-                .statusCode(200);
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
