@@ -3,8 +3,8 @@ package cart.service;
 import cart.dao.ItemDao;
 import cart.dto.ItemRequest;
 import cart.dto.ItemResponse;
-import cart.entity.CreateItem;
-import cart.entity.Item;
+import cart.domain.Item;
+import cart.entity.ItemEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,28 +20,28 @@ public class ItemService {
     }
 
     public void save(ItemRequest itemRequest) {
-        CreateItem createItem = convertItemRequestToCreateItem(itemRequest);
-        itemDao.save(createItem);
+        Item item = convertItemRequestToCreateItem(itemRequest);
+        itemDao.save(item);
     }
 
-    private CreateItem convertItemRequestToCreateItem(final ItemRequest itemRequest) {
-        return new CreateItem(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
+    private Item convertItemRequestToCreateItem(final ItemRequest itemRequest) {
+        return new Item(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
     }
 
     public List<ItemResponse> findAll() {
-        List<Item> items = itemDao.findAll();
-        return convertItemsToItemResponses(items);
+        List<ItemEntity> itemEntities = itemDao.findAll();
+        return convertItemsToItemResponses(itemEntities);
     }
 
-    private List<ItemResponse> convertItemsToItemResponses(final List<Item> items) {
-        return items.stream()
-                .map(item -> new ItemResponse(item.getId(), item.getName(), item.getImageUrl(), item.getPrice()))
+    private List<ItemResponse> convertItemsToItemResponses(final List<ItemEntity> itemEntities) {
+        return itemEntities.stream()
+                .map(itemEntity -> new ItemResponse(itemEntity.getId(), itemEntity.getName(), itemEntity.getImageUrl(), itemEntity.getPrice()))
                 .collect(Collectors.toList());
     }
 
     public void updateItem(Long itemId, ItemRequest itemRequest) {
-        CreateItem createItem = convertItemRequestToCreateItem(itemRequest);
-        itemDao.update(itemId, createItem);
+        Item item = convertItemRequestToCreateItem(itemRequest);
+        itemDao.update(itemId, item);
     }
 
     public void deleteItem(Long itemId) {

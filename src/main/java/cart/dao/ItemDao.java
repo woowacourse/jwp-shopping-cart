@@ -1,16 +1,16 @@
 package cart.dao;
 
-import cart.entity.CreateItem;
-import cart.entity.Item;
+import cart.domain.Item;
+import cart.entity.ItemEntity;
 
 import java.util.List;
 
 public interface ItemDao {
-    void save(CreateItem createItem);
+    void save(Item item);
 
-    List<Item> findAll();
+    List<ItemEntity> findAll();
 
-    void update(Long id, CreateItem createItem);
+    void update(Long id, Item item);
 
     void delete(Long id);
 }

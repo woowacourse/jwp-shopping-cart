@@ -1,12 +1,12 @@
-package cart.entity;
+package cart.domain;
 
-public class CreateItem {
+public class Item {
 
     private final String name;
     private final String imageUrl;
     private final int price;
 
-    public CreateItem(final String name, final String imageUrl, final int price) {
+    public Item(final String name, final String imageUrl, final int price) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;

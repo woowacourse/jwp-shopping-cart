@@ -1,13 +1,13 @@
 package cart.entity;
 
-public class Item {
+public class ItemEntity {
 
     private final Long id;
     private final String name;
     private final String imageUrl;
     private final int price;
 
-    public Item(final Long id, final String name, final String imageUrl, final int price) {
+    public ItemEntity(final Long id, final String name, final String imageUrl, final int price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;

@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.dao.ItemDao;
 import cart.dto.ItemRequest;
-import cart.entity.CreateItem;
+import cart.domain.Item;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,8 +33,8 @@ class AdminControllerTest {
 
     @BeforeEach
     void setUp() {
-        itemDao.save(new CreateItem("치킨", "a", 10000));
-        itemDao.save(new CreateItem("피자", "b", 20000));
+        itemDao.save(new Item("치킨", "a", 10000));
+        itemDao.save(new Item("피자", "b", 20000));
     }
 
     @Test

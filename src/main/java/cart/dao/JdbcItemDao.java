@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.entity.CreateItem;
-import cart.entity.Item;
+import cart.domain.Item;
+import cart.entity.ItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -18,32 +18,32 @@ public class JdbcItemDao implements ItemDao {
     }
 
     @Override
-    public void save(final CreateItem createItem) {
+    public void save(final Item item) {
         String sql = "insert into item(name, item_url, price) values (?, ?, ?)";
 
-        jdbcTemplate.update(sql, createItem.getName(), createItem.getImageUrl(), createItem.getPrice());
+        jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice());
     }
 
     @Override
-    public List<Item> findAll() {
+    public List<ItemEntity> findAll() {
         String sql = "select * from item";
 
         return jdbcTemplate.query(sql, mapRow());
     }
 
-    public RowMapper<Item> mapRow() {
+    public RowMapper<ItemEntity> mapRow() {
         return (rs, rowNum) -> {
             Long id = rs.getLong(1);
             String name = rs.getString(2);
             String itemUrl = rs.getString(3);
             int price = rs.getInt(4);
 
-            return new Item(id, name, itemUrl, price);
+            return new ItemEntity(id, name, itemUrl, price);
         };
     }
 
     @Override
-    public void update(final Long id, final CreateItem item) {
+    public void update(final Long id, final Item item) {
         String sql = "update item set name = ?, item_url = ?, price = ? where id = ?";
 
         jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice(), id);
