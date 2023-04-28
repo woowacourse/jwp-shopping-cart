@@ -26,6 +26,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public int update(final Product product) {
-        return 0;
+        return productDao.update(product);
     }
 }

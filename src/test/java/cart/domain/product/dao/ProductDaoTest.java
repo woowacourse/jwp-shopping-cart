@@ -55,4 +55,21 @@ class ProductDaoTest {
         assertThat(result.get(0).getId()).isEqualTo(savedProduct1.getId());
         assertThat(result.get(1).getId()).isEqualTo(savedProduct2.getId());
     }
+
+    @Test
+    @DisplayName("db에서 상품을 수정한다.")
+    public void testUpdate() {
+        //given
+        final ProductDao productDao = new ProductDao(jdbcTemplate);
+        final Product givenProduct = new Product(null, "연필", 1000, "imageUrl1", null, null);
+        final Product savedProduct = productDao.add(givenProduct);
+        final Product updateProduct = new Product(savedProduct.getId(), "지우개", 2000, "imageUrl2",
+            null, null);
+
+        //when
+        int result = productDao.update(updateProduct);
+
+        //then
+        assertThat(result).isEqualTo(1);
+    }
 }

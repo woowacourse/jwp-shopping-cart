@@ -58,4 +58,14 @@ public class ProductDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public int update(final Product product) {
+        final String sql = "UPDATE product SET name = ?, image_url = ?, price = ?, updated_at = ? WHERE id = ?";
+        return jdbcTemplate.update(sql,
+            product.getName(),
+            product.getImageUrl(),
+            product.getPrice(),
+            Timestamp.valueOf(LocalDateTime.now()),
+            product.getId()
+        );
+    }
 }
