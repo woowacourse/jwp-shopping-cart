@@ -5,11 +5,14 @@ import cart.entity.ProductEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -18,7 +21,7 @@ public class ProductDaoImpl implements ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) ->
-            new ProductEntity(
+            ProductEntity.create(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("image"),
@@ -34,8 +37,14 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Optional<ProductEntity> save(Product product) {
-        BeanPropertySqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
-        long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        Map<String, Object> parameterSource = new HashMap<>();
+
+        parameterSource.put("name", product.getName());
+        parameterSource.put("image", product.getImage());
+        parameterSource.put("price", product.getPrice());
+        parameterSource.put("created_at", Timestamp.valueOf(LocalDateTime.now()));
+
+        long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
         return findById(id);
     }
 
