@@ -32,7 +32,7 @@
             <th>Actions</th>
         </tr>
         <tbody id="product-list">
-        <tr th:each="product : ${products}" th:onclick="showDetail([[${product.id}]])">
+        <tr th:each="product : ${products}">
             <td>
                 <a href="product.html" th:href="@{|/${product.getId()}|}">
                     [[${product.getId()}]]

@@ -1,9 +1,5 @@
 const modal = document.getElementById('modal');
 
-const showDetail = (productId) => {
-    window.location.href = `/${productId}`;
-}
-
 const showAddModal = () => {
     modal.dataset.formType = 'add';
     modal.style.display = 'block';
