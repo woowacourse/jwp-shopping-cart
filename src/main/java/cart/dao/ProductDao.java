@@ -20,7 +20,9 @@ public class ProductDao {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("image"),
-            resultSet.getLong("price")
+            resultSet.getLong("price"),
+            resultSet.getTimestamp("created_at").toLocalDateTime(),
+            resultSet.getTimestamp("updated_at").toLocalDateTime()
     );
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
@@ -42,7 +44,13 @@ public class ProductDao {
 
     public int update(final Product product) {
         final String sql = "update product set name = ?, image = ?, price = ? where id = ?";
-        return jdbcTemplate.update(sql, product.getName(), product.getImage(), product.getPrice(), product.getId());
+        return jdbcTemplate.update(
+                sql,
+                product.getName(),
+                product.getImage(),
+                product.getPrice(),
+                product.getId()
+        );
     }
 
     public int delete(final Long id) {

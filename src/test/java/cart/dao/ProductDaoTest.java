@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -56,7 +57,7 @@ class ProductDaoTest {
         List<Product> result = productDao.findAll();
 
         // then
-        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
+        assertThat(result).usingRecursiveComparison().ignoringFieldsOfTypes(LocalDateTime.class).isEqualTo(List.of(
                 new Product(id1, product1.getName(), product1.getImage(), product1.getPrice()),
                 new Product(id2, product2.getName(), product2.getImage(), product2.getPrice())
         ));
