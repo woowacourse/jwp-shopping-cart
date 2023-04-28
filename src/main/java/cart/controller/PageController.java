@@ -20,16 +20,17 @@ public class PageController {
     @GetMapping
     public String loadHome(Model model) {
         final List<ProductEntity> productEntities = productDao.findAll();
-        List<ProductResponse> products = ResponseMapper.from(productEntities);
+
+        List<ProductResponse> products = ProductResponse.from(productEntities);
 
         model.addAttribute("products", products);
         return "index";
     }
 
     @GetMapping("/admin")
-    public String loadAdmin(Model model){
+    public String loadAdmin(Model model) {
         final List<ProductEntity> productEntities = productDao.findAll();
-        List<ProductResponse> products = ResponseMapper.from(productEntities);
+        List<ProductResponse> products = ProductResponse.from(productEntities);
 
         model.addAttribute("products", products);
         return "admin";
