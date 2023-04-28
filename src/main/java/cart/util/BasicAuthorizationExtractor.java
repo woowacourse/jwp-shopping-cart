@@ -1,15 +1,15 @@
 package cart.util;
 
-import cart.dto.member.MemberResponseDto;
+import cart.dto.member.MemberLoginRequestDto;
 import org.apache.tomcat.util.codec.binary.Base64;
 
-public class BasicAuthorizationExtractor implements AuthorizationExtractor<MemberResponseDto> {
+public class BasicAuthorizationExtractor implements AuthorizationExtractor<MemberLoginRequestDto> {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
     @Override
-    public MemberResponseDto extractHeader(final String authorization) {
+    public MemberLoginRequestDto extractHeader(final String authorization) {
         if (!IsBasicAuthorization(authorization) || authorization.isEmpty()) {
             throw new IllegalArgumentException("Basic 인증이 올바른지 확인해주세요.");
         }
@@ -19,11 +19,11 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<Membe
         String decodedString = new String(decodedBytes);
 
         String[] credentials = decodedString.split(DELIMITER);
-        
+
         String email = credentials[0];
         String password = credentials[1];
 
-        return MemberResponseDto.from(email, password);
+        return MemberLoginRequestDto.from(email, password);
     }
 
     private boolean IsBasicAuthorization(final String authorization) {
