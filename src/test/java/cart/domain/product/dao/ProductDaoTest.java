@@ -3,6 +3,7 @@ package cart.domain.product.dao;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import cart.domain.product.entity.Product;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,11 @@ class ProductDaoTest {
     @DisplayName("db에 상품을 추가한다.")
     public void testAdd() {
         //given
-        ProductDao productDao = new ProductDao(jdbcTemplate);
-        Product givenProduct = new Product(null, "연필", 1000, "imageUrl", null, null);
+        final ProductDao productDao = new ProductDao(jdbcTemplate);
+        final Product givenProduct = new Product(null, "연필", 1000, "imageUrl", null, null);
 
         //when
-        Product savedProduct = productDao.add(givenProduct);
+        final Product savedProduct = productDao.add(givenProduct);
 
         //then
         assertThat(savedProduct.getId()).isEqualTo(1);
@@ -36,4 +37,22 @@ class ProductDaoTest {
         assertThat(savedProduct.getUpdatedAt()).isNotNull();
     }
 
+    @Test
+    @DisplayName("db에서 모든 상품을 조회한다.")
+    public void testFindAll() {
+        //given
+        final ProductDao productDao = new ProductDao(jdbcTemplate);
+        final Product givenProduct1 = new Product(null, "연필", 1000, "imageUrl1", null, null);
+        final Product givenProduct2 = new Product(null, "지우개", 2000, "imageUrl2", null, null);
+        final Product savedProduct1 = productDao.add(givenProduct1);
+        final Product savedProduct2 = productDao.add(givenProduct2);
+
+        //when
+        final List<Product> result = productDao.findAll();
+
+        //then
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).getId()).isEqualTo(savedProduct1.getId());
+        assertThat(result.get(1).getId()).isEqualTo(savedProduct2.getId());
+    }
 }

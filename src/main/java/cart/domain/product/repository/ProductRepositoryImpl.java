@@ -21,6 +21,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<Product> findAll() {
-        return null;
+        return productDao.findAll();
     }
 }

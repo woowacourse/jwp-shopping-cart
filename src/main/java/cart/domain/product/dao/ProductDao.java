@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,14 @@ import org.springframework.stereotype.Component;
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Product> rowMapper = (resultSet, rowNum) -> new Product(
+        resultSet.getLong("id"),
+        resultSet.getString("name"),
+        resultSet.getInt("price"),
+        resultSet.getString("image_url"),
+        resultSet.getTimestamp("created_at").toLocalDateTime(),
+        resultSet.getTimestamp("updated_at").toLocalDateTime()
+    );
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -42,4 +52,10 @@ public class ProductDao {
     private long getId(final KeyHolder keyHolder) {
         return Long.parseLong(Objects.requireNonNull(keyHolder.getKeys()).get("id").toString());
     }
+
+    public List<Product> findAll() {
+        final String sql = "SELECT id, name, image_url, price, created_at, updated_at FROM product";
+        return jdbcTemplate.query(sql, rowMapper);
+    }
+
 }
