@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.customer;
 
 import cart.controller.dto.ProductDto;
 import cart.persistence.entity.ProductCategory;
@@ -18,8 +18,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ShoppingController.class)
-class ShoppingControllerTest {
+@WebMvcTest(CustomerProductController.class)
+class CustomerProductControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
