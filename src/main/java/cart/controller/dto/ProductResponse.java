@@ -1,13 +1,13 @@
 package cart.controller.dto;
 
-public class ProductResponseDto {
+public class ProductResponse {
 
     private final Long id;
     private final String name;
     private final Integer price;
     private final String imageUrl;
 
-    public ProductResponseDto(final long id, final String name, final int price, final String imageUrl) {
+    public ProductResponse(final long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;

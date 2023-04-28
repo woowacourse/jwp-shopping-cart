@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 
-public class ProductRequestDto {
+public class ProductRequest {
 
     @NotNull(message = "name 필드가 있어야 합니다.")
     private final String name;
@@ -20,7 +20,7 @@ public class ProductRequestDto {
     )
     private final String imageUrl;
 
-    public ProductRequestDto(final String name, final Integer price, final String imageUrl) {
+    public ProductRequest(final String name, final Integer price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

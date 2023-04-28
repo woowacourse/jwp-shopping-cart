@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.ProductRequestDto;
-import cart.controller.dto.ProductResponseDto;
+import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductResponse;
 import cart.service.ProductService;
 import cart.service.dto.ProductDto;
 import org.springframework.http.HttpStatus;
@@ -33,24 +33,24 @@ public class ProductsApiController {
 
     @PostMapping
     public void insertProduct(
-            @Valid @RequestBody final ProductRequestDto productRequestDto,
+            @Valid @RequestBody final ProductRequest productRequest,
             final HttpServletResponse httpServletResponse
     ) {
         final Long productId = productService.insertProduct(new ProductDto.Builder()
-                .name(productRequestDto.getName())
-                .price(productRequestDto.getPrice())
-                .imageUrl(productRequestDto.getImageUrl())
+                .name(productRequest.getName())
+                .price(productRequest.getPrice())
+                .imageUrl(productRequest.getImageUrl())
                 .build());
         httpServletResponse.setStatus(HttpStatus.CREATED.value());
         httpServletResponse.setHeader("Location", PRODUCTS_LOCATION_PREFIX + productId);
     }
 
     @GetMapping
-    public List<ProductResponseDto> readAllProducts(final HttpServletResponse httpServletResponse) {
+    public List<ProductResponse> readAllProducts(final HttpServletResponse httpServletResponse) {
         httpServletResponse.setStatus(HttpStatus.OK.value());
         return productService.findAll()
                 .stream()
-                .map(productDto -> new ProductResponseDto(
+                .map(productDto -> new ProductResponse(
                         productDto.getId(),
                         productDto.getName(),
                         productDto.getPrice(),
@@ -62,14 +62,14 @@ public class ProductsApiController {
     @PutMapping("/{id}")
     public void updateProduct(
             @PathVariable final Long id,
-            @Valid @RequestBody final ProductRequestDto productRequestDto,
+            @Valid @RequestBody final ProductRequest productRequest,
             final HttpServletResponse httpServletResponse
     ) {
         productService.updateById(new ProductDto.Builder()
                 .id(id)
-                .name(productRequestDto.getName())
-                .price(productRequestDto.getPrice())
-                .imageUrl(productRequestDto.getImageUrl())
+                .name(productRequest.getName())
+                .price(productRequest.getPrice())
+                .imageUrl(productRequest.getImageUrl())
                 .build());
         httpServletResponse.setStatus(HttpStatus.OK.value());
     }

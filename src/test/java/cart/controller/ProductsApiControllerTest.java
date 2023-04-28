@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.dto.ProductRequestDto;
+import cart.controller.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +47,7 @@ class ProductsApiControllerTest {
     void insertProductSuccess_test() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ProductRequestDto(NAME, PRICE, IMAGE))
+                .body(new ProductRequest(NAME, PRICE, IMAGE))
                 .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -55,7 +55,7 @@ class ProductsApiControllerTest {
 
     @ParameterizedTest(name = "상품 추가시 {0} 실패 테스트")
     @MethodSource("invalidParameterProvider")
-    void insertProductFail_test(final String wrongCase, final ProductRequestDto requestBody, final String errorMessage) {
+    void insertProductFail_test(final String wrongCase, final ProductRequest requestBody, final String errorMessage) {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
@@ -67,11 +67,11 @@ class ProductsApiControllerTest {
 
     private static Stream<Arguments> invalidParameterProvider() {
         return Stream.of(
-                Arguments.of("이름 누락",new ProductRequestDto(null, PRICE, IMAGE), "name 필드가 있어야 합니다."),
-                Arguments.of("금액 누락",new ProductRequestDto(NAME, null, IMAGE), "price 필드가 있어야 합니다."),
-                Arguments.of("금액 음수",new ProductRequestDto(NAME, -1000, IMAGE), "price는 음수가 될 수 없습니다."),
-                Arguments.of("이미지 누락",new ProductRequestDto(NAME, PRICE, null), "image 필드가 있어야 합니다."),
-                Arguments.of("이미지 주소 형식 오류",new ProductRequestDto(NAME, PRICE, "wrongImageSource"), "image가 url형식에 맞지 않습니다.")
+                Arguments.of("이름 누락",new ProductRequest(null, PRICE, IMAGE), "name 필드가 있어야 합니다."),
+                Arguments.of("금액 누락",new ProductRequest(NAME, null, IMAGE), "price 필드가 있어야 합니다."),
+                Arguments.of("금액 음수",new ProductRequest(NAME, -1000, IMAGE), "price는 음수가 될 수 없습니다."),
+                Arguments.of("이미지 누락",new ProductRequest(NAME, PRICE, null), "image 필드가 있어야 합니다."),
+                Arguments.of("이미지 주소 형식 오류",new ProductRequest(NAME, PRICE, "wrongImageSource"), "image가 url형식에 맞지 않습니다.")
         );
     }
 
@@ -82,7 +82,7 @@ class ProductsApiControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ProductRequestDto("달리", PRICE, IMAGE))
+                .body(new ProductRequest("달리", PRICE, IMAGE))
                 .when().put("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -95,7 +95,7 @@ class ProductsApiControllerTest {
 
     @ParameterizedTest(name = "상품 정보 변경 시 {0} 실패 테스트")
     @MethodSource("invalidParameterProvider")
-    void updateProductFail_test(final String wrongCase, final ProductRequestDto requestBody, final String errorMessage) {
+    void updateProductFail_test(final String wrongCase, final ProductRequest requestBody, final String errorMessage) {
         insertTestData();
 
         RestAssured.given().log().all()
@@ -112,7 +112,7 @@ class ProductsApiControllerTest {
     void nonProductUpdateFail_test(){
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ProductRequestDto("달리", PRICE, IMAGE))
+                .body(new ProductRequest("달리", PRICE, IMAGE))
                 .when().put("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
