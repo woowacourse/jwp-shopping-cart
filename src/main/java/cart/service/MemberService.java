@@ -3,6 +3,8 @@ package cart.service;
 import cart.domain.member.Member;
 import cart.dto.member.MemberLoginRequestDto;
 import cart.dto.member.MembersResponseDto;
+import cart.exception.MemberNotFoundException;
+import cart.exception.PasswordInvalidException;
 import cart.repository.member.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findMember(final MemberLoginRequestDto memberLoginRequestDto) {
         Member member = memberRepository.findByEmail(memberLoginRequestDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+                .orElseThrow(MemberNotFoundException::new);
 
         validateMemberLogin(memberLoginRequestDto, member);
 
@@ -37,11 +39,11 @@ public class MemberService {
 
     private static void validateMemberLogin(final MemberLoginRequestDto memberLoginRequestDto, final Member member) {
         if (!memberLoginRequestDto.getEmail().equals(member.getEmail())) {
-            throw new IllegalArgumentException("유저가 존재하지 않습니다2");
+            throw new MemberNotFoundException();
         }
 
         if (!memberLoginRequestDto.getPassword().equals(member.getPassword())) {
-            throw new IllegalArgumentException("패스워드 불일치");
+            throw new PasswordInvalidException();
         }
     }
 }
