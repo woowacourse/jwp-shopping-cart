@@ -18,11 +18,6 @@ public class CartControllerAdvice {
     private static final String UNEXPECTED_ERROR_LOG_FORMAT = "예상치 못한 에러 발생 : " + System.lineSeparator() + "{}";
     private static final Logger LOGGER = LoggerFactory.getLogger(CartControllerAdvice.class);
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> sendErrorMessage(final IllegalArgumentException exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> sendErrorMessage(final MethodArgumentNotValidException exception) {
         final String errorMessages = exception.getFieldErrors().stream()
@@ -31,16 +26,16 @@ public class CartControllerAdvice {
         return ResponseEntity.badRequest().body(errorMessages);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> loggingUnexpectedException(final RuntimeException runtimeException) {
-        LOGGER.error(UNEXPECTED_ERROR_LOG_FORMAT, convertToString(runtimeException));
-        return ResponseEntity.internalServerError().build();
-    }
-
     @ExceptionHandler(CartCustomException.class)
     public ResponseEntity<String> handleCustomException(final CartCustomException cartCustomException) {
         final ExceptionInfo info = ExceptionInfo.from(cartCustomException.getClass());
         return ResponseEntity.status(info.getErrorCode()).body(info.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> loggingUnexpectedException(final RuntimeException runtimeException) {
+        LOGGER.error(UNEXPECTED_ERROR_LOG_FORMAT, convertToString(runtimeException));
+        return ResponseEntity.internalServerError().build();
     }
 
     private String convertToString(final Exception e) {
