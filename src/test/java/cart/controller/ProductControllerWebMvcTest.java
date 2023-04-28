@@ -28,16 +28,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
-public class ProductControllerMockMvcTest {
+public class ProductControllerWebMvcTest {
 
     @MockBean
-    ProductService productService;
+    private ProductService productService;
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     @Test
     @DisplayName("모든 상품을 찾는다.")
