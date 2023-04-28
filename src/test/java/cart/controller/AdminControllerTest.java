@@ -94,6 +94,18 @@ class AdminControllerTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
+    @Test
+    @DisplayName("id가 존재하지 않는 경우 400을 응답한다.")
+    void deleteFailProduct() {
+        final ExtractableResponse<Response> response = given()
+                .when()
+                .delete("/admin/product/{id}", 1L)
+                .then().log().all()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     private ExtractableResponse<Response> saveProduct(final String name, final int price, final String img) {
         final ProductCreateRequest request = new ProductCreateRequest(name, price, img);
 

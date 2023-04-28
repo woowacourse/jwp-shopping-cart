@@ -21,7 +21,7 @@ public class AdminControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleBindException(MethodArgumentNotValidException exception) {
         final FieldError fieldError = exception.getBindingResult().getFieldError();
-        if(fieldError == null) {
+        if (fieldError == null) {
             logger.info(UNKNOWN_ERROR_MESSAGE);
             return ResponseEntity.badRequest().body(new ErrorResponse(UNKNOWN_ERROR_MESSAGE));
         }
@@ -36,5 +36,12 @@ public class AdminControllerAdvice {
         final String errorMessage = exception.getMessage();
         logger.error("error : {}", errorMessage);
         return ResponseEntity.internalServerError().body(new ErrorResponse(errorMessage));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
+        final String errorMessage = exception.getMessage();
+        logger.info(errorMessage);
+        return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
     }
 }

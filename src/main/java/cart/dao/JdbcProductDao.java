@@ -20,6 +20,7 @@ import cart.dao.entity.Product;
 @Repository
 public class JdbcProductDao implements ProductDao {
 
+    public static final String UNEXISTED_ERROR_MESSAGE = "존재하지 않는 상품입니다.";
     private final NamedParameterJdbcOperations jdbcTemplate;
 
     public JdbcProductDao(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -51,7 +52,10 @@ public class JdbcProductDao implements ProductDao {
         final String sql = "DELETE FROM product WHERE id = :id";
 
         final Map<String, Long> params = Collections.singletonMap("id", id);
-        jdbcTemplate.update(sql, params);
+        final int deletedRow = jdbcTemplate.update(sql, params);
+        if(deletedRow == 0) {
+            throw new IllegalArgumentException(UNEXISTED_ERROR_MESSAGE);
+        }
     }
 
     @Override
@@ -64,6 +68,9 @@ public class JdbcProductDao implements ProductDao {
                 .addValue("price", product.getPrice())
                 .addValue("imgUrl", product.getImgUrl());
 
-        jdbcTemplate.update(sql, params);
+        final int updatedRow = jdbcTemplate.update(sql, params);
+        if(updatedRow == 0) {
+            throw new IllegalArgumentException(UNEXISTED_ERROR_MESSAGE);
+        }
     }
 }
