@@ -27,9 +27,6 @@ public class MemberServiceTest {
     private MemberService memberService;
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
