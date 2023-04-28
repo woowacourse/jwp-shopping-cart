@@ -1,6 +1,6 @@
 package cart.config;
 
-import cart.exception.ResourceNotFoundException;
+import cart.exception.ApiException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> handleDBException(ResourceNotFoundException e) {
+    public ResponseEntity<?> handleDBException(ApiException e) {
         return ResponseEntity.internalServerError().body(e.getMessage());
     }
 
@@ -37,6 +37,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<?> handleException(Exception e) {
-        return ResponseEntity.internalServerError().body(e.getMessage());
+        String message = "서버에서 오류가 발생했습니다";
+        return ResponseEntity.internalServerError().body(message);
     }
 }
