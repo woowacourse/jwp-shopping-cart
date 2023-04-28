@@ -12,9 +12,10 @@ public class ProductInitializer implements ApplicationRunner {
     private final ProductDao productDao;
 
     @Autowired
-    public ProductInitializer(final ProductDao productDao){
+    public ProductInitializer(final ProductDao productDao) {
         this.productDao = productDao;
     }
+
     @Override
     public void run(final ApplicationArguments args) throws Exception {
         final ProductEntity productEntity1 = ProductEntity.of("mouse", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 100000);
