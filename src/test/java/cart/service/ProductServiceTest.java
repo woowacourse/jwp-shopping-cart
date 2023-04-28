@@ -9,8 +9,8 @@ import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
+import cart.exception.ProductNotFoundException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -86,7 +86,7 @@ class ProductServiceTest {
     void 없는_상품을_조회하는_경우_NoSuchElementException_을_던진다() {
         // expect
         assertThatThrownBy(() -> productService.findById(999999999999L))
-                .isInstanceOf(NoSuchElementException.class)
+                .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("상품을 찾을 수 없습니다.");
     }
 
@@ -118,7 +118,7 @@ class ProductServiceTest {
 
         // expect
         assertThatThrownBy(() -> productService.update(id, request))
-                .isInstanceOf(NoSuchElementException.class)
+                .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("상품을 찾을 수 없습니다.");
     }
 
@@ -139,7 +139,7 @@ class ProductServiceTest {
     void 없는_상품을_삭제하는_경우_NoSuchElementException_을_던진다() {
         // expect
         assertThatThrownBy(() -> productService.delete(999999999999L))
-                .isInstanceOf(NoSuchElementException.class)
+                .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("상품을 찾을 수 없습니다.");
     }
 }

@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.ProductNotValidException;
+
 public class Product {
 
     private static final int MAX_NAME_LENGTH = 100;
@@ -30,19 +32,19 @@ public class Product {
 
     private void validateName(final String name) {
         if (name.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("상품명의 길이는 " + MAX_NAME_LENGTH + "자 이하여야합니다.");
+            throw new ProductNotValidException("상품명의 길이는 " + MAX_NAME_LENGTH + "자 이하여야합니다.");
         }
     }
 
     private void validateImage(final String image) {
         if (image.isBlank()) {
-            throw new IllegalArgumentException("이미지는 공백일 수 없습니다.");
+            throw new ProductNotValidException("이미지는 공백일 수 없습니다.");
         }
     }
 
     private void validatePrice(final long price) {
         if (price < MIN_PRICE_VALUE) {
-            throw new IllegalArgumentException("상품 가격은 " + MIN_PRICE_VALUE + "원 이상이여야 합니다.");
+            throw new ProductNotValidException("상품 가격은 " + MIN_PRICE_VALUE + "원 이상이여야 합니다.");
         }
     }
 

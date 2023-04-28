@@ -40,14 +40,14 @@ public class ProductDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public void update(final Product product) {
+    public int update(final Product product) {
         final String sql = "update product set name = ?, image = ?, price = ? where id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getImage(), product.getPrice(), product.getId());
+        return jdbcTemplate.update(sql, product.getName(), product.getImage(), product.getPrice(), product.getId());
     }
 
-    public void delete(final Long id) {
+    public int delete(final Long id) {
         final String sql = "delete from product where id = ?";
-        jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 
     public Optional<Product> findById(final Long id) {

@@ -7,8 +7,8 @@ import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
+import cart.exception.ProductNotFoundException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,9 +22,7 @@ public class ProductService {
 
     public Long save(final ProductSaveRequest request) {
         final Product product = new Product(request.getName(), request.getImage(), request.getPrice());
-
-        return productDao.saveAndGetId(product)
-                .orElseThrow(() -> new IllegalStateException("상품을 저장할 수 없습니다."));
+        return productDao.saveAndGetId(product);
     }
 
     public List<ProductDto> findAll() {
@@ -35,20 +33,22 @@ public class ProductService {
 
     public ProductDto findById(final Long id) {
         final Product product = productDao.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
+                .orElseThrow(ProductNotFoundException::new);
         return ProductDto.from(product);
     }
 
     public void update(final Long id, final ProductUpdateRequest request) {
-        productDao.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
         final Product savedProduct = new Product(id, request.getName(), request.getImage(), request.getPrice());
-        productDao.update(savedProduct);
+        final int affectedCount = productDao.update(savedProduct);
+        if (affectedCount == 0) {
+            throw new ProductNotFoundException();
+        }
     }
 
     public void delete(final Long id) {
-        productDao.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
-        productDao.delete(id);
+        final int affectedCount = productDao.delete(id);
+        if (affectedCount == 0) {
+            throw new ProductNotFoundException();
+        }
     }
 }

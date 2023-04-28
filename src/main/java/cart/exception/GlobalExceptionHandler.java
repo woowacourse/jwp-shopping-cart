@@ -1,6 +1,5 @@
 package cart.exception;
 
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -20,14 +19,14 @@ public class GlobalExceptionHandler {
                 .body(new ExceptionResponse("서버가 응답할 수 없습니다."));
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
-    public ResponseEntity<ExceptionResponse> handleIllegalException(final RuntimeException e) {
+    @ExceptionHandler(CartException.class)
+    public ResponseEntity<ExceptionResponse> handleCartException(final CartException e) {
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ExceptionResponse> handleNoSuchElementException(final NoSuchElementException e) {
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleProductNotFoundException(final ProductNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ExceptionResponse(e.getMessage()));
     }
