@@ -33,7 +33,8 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestDto)
                 .when().post("/products")
-                .then().statusCode(HttpStatus.CREATED.value());
+                .then().statusCode(HttpStatus.CREATED.value())
+                .headers("Location", "/admin");
     }
 
     @Test
