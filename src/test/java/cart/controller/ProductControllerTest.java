@@ -57,8 +57,14 @@ class ProductControllerTest {
                     .post("/products")
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .body(equalTo("" + 1));
+                    .statusCode(HttpStatus.CREATED.value())
+                    .header("Location", "/products/1");
+
+            ProductDto product = productDao.findById(1).get();
+            assertThat(product.getName()).isEqualTo(productAddRequest.getName());
+            assertThat(product.getImgUrl()).isEqualTo(productAddRequest.getImgUrl());
+            assertThat(product.getPrice()).isEqualTo(productAddRequest.getPrice());
+
         }
 
         @DisplayName("상품 가격이 음수일 경우 예외가 발생한다.")
@@ -139,11 +145,11 @@ class ProductControllerTest {
                     .log().all()
                     .statusCode(HttpStatus.OK.value());
 
-            ProductDto product = productDao.findAll().get(0);
+            ProductDto product = productDao.findById(1).get();
 
-            assertThat(product.getId()).isEqualTo(1);
-            assertThat(product.getName()).isEqualTo("토리");
-            assertThat(product.getPrice()).isEqualTo(20000);
+            assertThat(product.getName()).isEqualTo(productModifyRequest.getName());
+            assertThat(product.getImgUrl()).isEqualTo(productModifyRequest.getImgUrl());
+            assertThat(product.getPrice()).isEqualTo(productModifyRequest.getPrice());
         }
 
         @DisplayName("실패")
@@ -238,7 +244,7 @@ class ProductControllerTest {
                     .delete("/products/{id}", 1)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.NO_CONTENT.value());
 
             assertThat(productDao.findAll().size()).isEqualTo(0);
         }

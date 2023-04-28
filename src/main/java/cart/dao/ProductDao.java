@@ -4,6 +4,8 @@ import cart.dto.ProductDto;
 import cart.dto.ProductAddRequest;
 import cart.dto.ProductModifyRequest;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -31,6 +33,18 @@ public class ProductDao {
 
         return keyholder.getKey().intValue();
     }
+
+    public Optional<ProductDto> findById(int id) {
+        String sql = "SELECT * FROM product WHERE id = ?";
+        BeanPropertyRowMapper<ProductDto> mapper = BeanPropertyRowMapper.newInstance(ProductDto.class);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, mapper, id));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+
 
     public List<ProductDto> findAll() {
         String sql = "SELECT * FROM product";
