@@ -51,7 +51,7 @@
         <div class="modal-content">
             <span class="close" onclick="hideAddModal()">&times;</span>
             <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
-            <form id="form" action="/product" method="post">
+            <form id="form">
                 <label for="name">상품명</label><br>
                 <input type="text" id="name" name="name" required><br>
 
@@ -67,7 +67,7 @@
     </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script th:src="@{/js/admin.js}"> </script>
+<script th:src="@{/js/admin.js?ver=1}"> </script>
 </body>
 </html>
 

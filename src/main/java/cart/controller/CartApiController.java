@@ -28,7 +28,7 @@ public class CartApiController {
         return cartService.getProducts();
     }
 
-    @PutMapping("/product")
+    @PatchMapping("/product")
     public void updateProduct(@RequestBody UpdateRequestDto updateRequestDto) {
         validatePrice(updateRequestDto.getPrice());
         cartService.updateProduct(updateRequestDto);

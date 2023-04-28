@@ -59,15 +59,15 @@ const createProduct = (product) => {
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id} = product;
 
-    axios.put("/product", {
+    axios.patch("/product", {
         id: id,
         name: product.name,
         price: product.price,
         image: product.image
     }).then((response) => {
-        window.location.reload();
+        //window.location.reload();
     }).catch((error) => {
         console.error(error);
     });
@@ -75,8 +75,7 @@ const updateProduct = (product) => {
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
-    axios.delete(`/product/${id}`, {
-    }).then((response) => {
+    axios.delete(`/product/${id}`, {}).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);

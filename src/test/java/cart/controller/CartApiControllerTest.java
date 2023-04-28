@@ -1,10 +1,7 @@
 package cart.controller;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,7 +59,7 @@ public class CartApiControllerTest {
 
     @Test
     void updateTest() throws Exception {
-        this.mockMvc.perform(put("/product")
+        this.mockMvc.perform(patch("/product")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"image\", \"price\": \"1000\"}"))
                 .andExpect(status().isOk());
