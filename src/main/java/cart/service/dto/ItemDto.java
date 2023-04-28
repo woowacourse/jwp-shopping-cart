@@ -1,6 +1,6 @@
 package cart.service.dto;
 
-import cart.model.Item;
+import cart.domain.item.Item;
 
 public class ItemDto {
 

@@ -2,7 +2,7 @@ package cart.fixture;
 
 import static cart.fixture.ResponseFactory.MAC_BOOK_RESPONSE;
 
-import cart.model.Item;
+import cart.domain.item.Item;
 import cart.service.dto.ItemDto;
 
 public final class ItemDtoFactory {

@@ -1,4 +1,4 @@
-package cart.model;
+package cart.domain.item;
 
 import java.math.BigInteger;
 

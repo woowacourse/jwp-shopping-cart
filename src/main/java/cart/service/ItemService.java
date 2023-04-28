@@ -3,7 +3,7 @@ package cart.service;
 import cart.controller.dto.UpdateItemRequest;
 import cart.dao.ItemDao;
 import cart.exception.item.ItemNotFoundException;
-import cart.model.Item;
+import cart.domain.item.Item;
 import cart.service.dto.ItemDto;
 import java.util.List;
 import java.util.stream.Collectors;
