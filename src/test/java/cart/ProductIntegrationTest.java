@@ -2,6 +2,7 @@ package cart;
 
 import cart.dto.ProductRequestDto;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,7 +68,8 @@ public class ProductIntegrationTest {
         RestAssured
                 .given()
                 .when().get("")
-                .then().statusCode(HttpStatus.OK.value());
+                .then().statusCode(HttpStatus.OK.value())
+                .contentType(ContentType.HTML);
     }
 
     @Test
@@ -76,7 +78,8 @@ public class ProductIntegrationTest {
         RestAssured
                 .given()
                 .when().get("/admin")
-                .then().statusCode(HttpStatus.OK.value());
+                .then().statusCode(HttpStatus.OK.value())
+                .contentType(ContentType.HTML);
     }
 
     @Test
