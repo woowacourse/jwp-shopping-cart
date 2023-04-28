@@ -22,12 +22,13 @@ public class AdminControllerAdvice {
     public ResponseEntity<ErrorResponse> handleBindException(MethodArgumentNotValidException exception) {
         final FieldError fieldError = exception.getBindingResult().getFieldError();
         if(fieldError == null) {
+            logger.info(UNKNOWN_ERROR_MESSAGE);
             return ResponseEntity.badRequest().body(new ErrorResponse(UNKNOWN_ERROR_MESSAGE));
         }
 
-        final String errorMessage = fieldError.getDefaultMessage();
-        return ResponseEntity.badRequest()
-                .body(new ErrorResponse(Objects.requireNonNullElse(errorMessage, UNKNOWN_ERROR_MESSAGE)));
+        final String errorMessage = Objects.requireNonNullElse(fieldError.getDefaultMessage(), UNKNOWN_ERROR_MESSAGE);
+        logger.info(UNKNOWN_ERROR_MESSAGE);
+        return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
     }
 
     @ExceptionHandler
