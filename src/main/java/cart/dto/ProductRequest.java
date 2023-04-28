@@ -1,7 +1,8 @@
 package cart.dto;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 public class ProductRequest {
 
@@ -12,7 +13,8 @@ public class ProductRequest {
     private final String name;
 
     @NotNull(message = "가격은 비어있을 수 없습니다.")
-    @Size(min = 0, max = 1_000_000_000, message = "가격은 {min} 이상 {max} 이하여야 합니다.")
+    @Min(value = 0, message = "가격은 {min} 이상이여야 합니다.")
+    @Max(value = 1_000_000_000, message = "가격은 {max} 이하여야 합니다.")
     private final long price;
 
     public ProductRequest(String image, String name, long price) {
