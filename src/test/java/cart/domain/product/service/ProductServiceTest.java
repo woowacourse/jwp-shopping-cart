@@ -9,6 +9,7 @@ import cart.domain.product.dto.ProductResponse;
 import cart.domain.product.entity.Product;
 import cart.domain.product.repository.ProductRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,5 +46,22 @@ class ProductServiceTest {
         assertThat(result.getImageUrl()).isEqualTo(savedProduct.getImageUrl());
         assertThat(result.getCreatedAt()).isEqualTo(savedProduct.getCreatedAt());
         assertThat(result.getUpdatedAt()).isEqualTo(savedProduct.getUpdatedAt());
+    }
+
+    @Test
+    @DisplayName("모든 상품을 조회한다.")
+    public void testFindAll() {
+        //given
+        final LocalDateTime now = LocalDateTime.now();
+        final List<Product> products = List.of(
+            new Product(1L, "name1", 1000, "imgUrl1", now, now),
+            new Product(2L, "name2", 2000, "imgUrl2", now, now));
+        given(productRepository.findAll()).willReturn(products);
+
+        //when
+        final List<ProductResponse> result = productService.findAll();
+
+        //then
+        assertThat(result.size()).isEqualTo(products.size());
     }
 }
