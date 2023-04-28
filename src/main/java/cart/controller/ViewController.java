@@ -24,7 +24,7 @@ public class ViewController {
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
         model.addAttribute("products", products);
-        return "index";
+        return "index.html";
     }
 
     @GetMapping("/admin")
@@ -33,6 +33,6 @@ public class ViewController {
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
         model.addAttribute("products", products);
-        return "admin";
+        return "admin.html";
     }
 }
