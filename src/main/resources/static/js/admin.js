@@ -44,23 +44,27 @@ form.addEventListener('submit', (event) => {
     createProduct(product);
 });
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
+//// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '',
-    }).then((response) => {
+    url: 'product/create',
+     method: 'POST',
+     data: product
+     }).then((response) => {
         window.location.reload();
-    }).catch((error) => {
+    })
+    .catch((error) => {
         console.error(error);
     });
 };
+
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
-
     axios.request({
-        url: '',
+        url: 'product/update',
+        method: 'POST',
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -69,9 +73,11 @@ const updateProduct = (product) => {
 };
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
-const deleteProduct = (id) => {
+const deleteProduct = (product) => {
     axios.request({
-        url: '',
+        url: 'product/delete',
+        method: 'DELETE',
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
