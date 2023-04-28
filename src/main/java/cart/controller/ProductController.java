@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dto.ProductRequest;
 import cart.service.ProductService;
+import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,19 +26,19 @@ public class ProductController {
     @PostMapping()
     public ResponseEntity<Integer> productAdd(@Validated @RequestBody ProductRequest productRequest) {
         int productId = productService.save(productRequest);
-        return new ResponseEntity<>(productId, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> productModify(@Validated @RequestBody ProductRequest productRequest,
+    public ResponseEntity<Object> productModify(@Validated @RequestBody ProductRequest productRequest,
                                                 @PathVariable int id) {
         productService.update(productRequest, id);
-        return new ResponseEntity<>("ok", HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> productRemove(@PathVariable int id) {
+    public ResponseEntity<Object> productRemove(@PathVariable int id) {
         productService.delete(id);
-        return new ResponseEntity<>("ok", HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
