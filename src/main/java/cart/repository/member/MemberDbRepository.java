@@ -38,10 +38,10 @@ public class MemberDbRepository implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findById(final Long id) {
-        String sql = "SELECT id, email, password FROM member WHERE id = :id";
+    public Optional<Member> findByEmail(final String email) {
+        String sql = "SELECT id, email, password FROM member WHERE email = :email";
 
-        return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource("id", id), getMemberRowMapper()).stream()
+        return namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource("email", email), getMemberRowMapper()).stream()
                 .findAny();
     }
 

@@ -18,6 +18,10 @@ public class MemberResponseDto {
         return new MemberResponseDto(member.getId(), member.getEmail(), member.getPassword());
     }
 
+    public static MemberResponseDto from(final String email, final String password) {
+        return new MemberResponseDto(null, email, password);
+    }
+
     public Long getId() {
         return id;
     }
