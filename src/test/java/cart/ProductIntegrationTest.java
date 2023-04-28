@@ -70,7 +70,7 @@ class ProductIntegrationTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/admin/products")
                 .then()
                 .log().all()
                 .extract().response();
@@ -110,7 +110,7 @@ class ProductIntegrationTest {
         final Response deleteResponse = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
-                .delete("/admin/product/" + insertedId)
+                .delete("/admin/products/" + insertedId)
                 .then()
                 .log().all()
                 .extract().response();
@@ -151,7 +151,7 @@ class ProductIntegrationTest {
                 .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new RequestUpdateProductDto(insertedId, "피자", 1_000, "피자 사진"))
                 .when()
-                .put("/admin/product/")
+                .put("/admin/products/")
                 .then()
                 .log().all()
                 .extract().response();
