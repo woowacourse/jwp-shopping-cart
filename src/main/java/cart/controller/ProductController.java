@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,31 +37,31 @@ public class ProductController {
         this.productDao = productDao;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/add")
-    public ResponseEntity<Void> create(@Valid @RequestBody ProductAddRequest productDto) {
+    public void create(@Valid @RequestBody ProductAddRequest productDto) {
         productDao.insert(new Product(
                 productDto.getName(),
                 productDto.getImageUrl(),
                 productDto.getPrice()
         ));
-        return ResponseEntity.ok().build();
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping(path = "/edit")
-    public ResponseEntity<Void> update(@Valid @RequestBody ProductUpdateRequest productDto) {
+    public void update(@Valid @RequestBody ProductUpdateRequest productDto) {
         productDao.update(new Product(
                 productDto.getId(),
                 productDto.getName(),
                 productDto.getImageUrl(),
                 productDto.getPrice()
         ));
-        return ResponseEntity.ok().build();
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") @Positive Long id) {
+    public void delete(@PathVariable("id") @Positive Long id) {
         productDao.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
