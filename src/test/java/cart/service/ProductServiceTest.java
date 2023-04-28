@@ -8,6 +8,8 @@ import cart.persistence.entity.ProductCategory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -142,10 +144,11 @@ class ProductServiceTest {
     }
 
     @DisplayName("상품 삭제가 실패하면 예외가 발생한다")
-    @Test
-    void delete_fail() {
+    @ParameterizedTest
+    @ValueSource(ints = {0, 2, 3,4})
+    void delete_fail(int count) {
         // given
-        when(productDao.deleteById(any())).thenReturn(0);
+        when(productDao.deleteById(any())).thenReturn(count);
 
         // when, then
         assertThatThrownBy(() -> productService.delete(1L))
