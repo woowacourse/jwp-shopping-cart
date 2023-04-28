@@ -27,7 +27,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     private ResponseEntity<String> handleIllegalArgumentException(final IllegalArgumentException exception) {
-        log.debug("잘못된 인자가 들어왔습니다", exception);
+        log.warn("잘못된 인자가 들어왔습니다", exception);
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             final MethodArgumentNotValidException exception, final HttpHeaders headers, final HttpStatus status,
             final WebRequest request) {
-        log.debug("유효성 검사에 실패했습니다.", exception);
+        log.warn("유효성 검사에 실패했습니다.", exception);
         final Map<String, String> body = exception.getFieldErrors()
                 .stream()
                 .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
