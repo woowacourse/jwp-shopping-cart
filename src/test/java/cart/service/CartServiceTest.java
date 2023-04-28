@@ -6,18 +6,48 @@ import cart.dto.ProductUpdateRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional
+@AutoConfigureTestDatabase
 class CartServiceTest {
 
     @Autowired
     private CartService cartService;
+
+    @DisplayName("상품을 추가할 수 있다.")
+    @Test
+    void addProduct() {
+        //given
+        ProductSaveRequestDto productSaveRequestDto = new ProductSaveRequestDto("ocean", "image", 1000);
+
+        //when & then
+        assertThatNoException().isThrownBy(() -> cartService.addProduct(productSaveRequestDto));
+    }
+
+    @DisplayName("상품을 찾을 수 있다.")
+    @Test
+    void findProducts() {
+        //given
+        ProductSaveRequestDto productSaveRequestDto = new ProductSaveRequestDto("ocean", "image", 1000);
+
+        //when
+        cartService.addProduct(productSaveRequestDto);
+
+        //then
+        ProductResponseDto productResponseDto = cartService.findProducts().get(0);
+        assertAll(
+                () -> assertThat(productResponseDto.getName()).isEqualTo(productSaveRequestDto.getName()),
+                () -> assertThat(productResponseDto.getImage()).isEqualTo(productSaveRequestDto.getImage()),
+                () -> assertThat(productResponseDto.getPrice()).isEqualTo(productSaveRequestDto.getPrice())
+        );
+    }
 
     @DisplayName("상품이 있을 때 update 할 수 있다.")
     @Test
