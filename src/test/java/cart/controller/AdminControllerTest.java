@@ -28,15 +28,6 @@ public class AdminControllerTest {
     }
 
     @Test
-    void 상품_목록_조회() {
-        RestAssured.when()
-                .get("/")
-                .then()
-                .contentType(MediaType.TEXT_HTML_VALUE)
-                .statusCode(200);
-    }
-
-    @Test
     void 어드민_페이지_조회() {
         RestAssured.when()
                 .get("/admin")
@@ -51,7 +42,7 @@ public class AdminControllerTest {
                 .body(new ProductRequest("족발", 5000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin")
+                .post("/admin/product")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -64,13 +55,13 @@ public class AdminControllerTest {
                 .body(new ProductRequest("족발", 5000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin");
+                .post("/admin/product");
 
         RestAssured.given()
                 .body(new ProductRequest("피자", 3000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .put("/admin/" + id)
+                .put("/admin/product/" + id)
                 .then()
                 .statusCode(200);
     }
@@ -83,11 +74,11 @@ public class AdminControllerTest {
                 .body(new ProductRequest("족발", 5000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin");
+                .post("/admin/product");
 
         RestAssured.given()
                 .when()
-                .delete("/admin/" + id)
+                .delete("/admin/product/" + id)
                 .then()
                 .statusCode(200);
     }
@@ -100,7 +91,7 @@ public class AdminControllerTest {
                 .body(new ProductRequest(name, 1000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin")
+                .post("/admin/product")
                 .then()
                 .assertThat()
                 .statusCode(400);
@@ -113,7 +104,7 @@ public class AdminControllerTest {
                 .body(new ProductRequest("상품 이름", price, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin")
+                .post("/admin/product")
                 .then()
                 .assertThat()
                 .statusCode(400);
@@ -127,7 +118,7 @@ public class AdminControllerTest {
                 .body(new ProductRequest("상품 이름", 1000, imageUrl))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin")
+                .post("/admin/product")
                 .then()
                 .assertThat()
                 .statusCode(400);
@@ -142,7 +133,7 @@ public class AdminControllerTest {
                 .body(new ProductRequest("상품 이름", 1000, url))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin")
+                .post("/admin/product")
                 .then()
                 .assertThat()
                 .statusCode(400);

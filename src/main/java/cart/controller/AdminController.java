@@ -39,7 +39,7 @@ public class AdminController {
         return "admin";
     }
 
-    @PostMapping
+    @PostMapping("/product")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
         final ProductDto productDto = new ProductDto(
                 productRequest.getName(),
@@ -52,13 +52,13 @@ public class AdminController {
         return ResponseEntity.created(URI.create("/admin/" + id)).build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/product/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateProduct(@PathVariable final long id, final @RequestBody @Valid ProductRequest productRequest) {
         productService.updateProduct(id, new ProductDto(productRequest));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/product/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteProduct(@PathVariable final long id) {
         productService.deleteProduct(id);

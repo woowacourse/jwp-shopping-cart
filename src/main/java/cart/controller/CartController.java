@@ -16,7 +16,7 @@ public class CartController {
         this.productService = productService;
     }
 
-    @GetMapping("/")
+    @GetMapping(value = {"/products", "/"})
     public String indexPage(final Model model) {
         final List<Product> products = productService.findAll();
 
