@@ -10,9 +10,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-//TODO: 추가적인 예외처리
 @RestControllerAdvice
 public class ProductExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse("서버가 응답할 수 없습니다.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
@@ -34,5 +39,4 @@ public class ProductExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
-
 }
