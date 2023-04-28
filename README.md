@@ -28,7 +28,7 @@
 - [x] [수정 모달 폼 이미지 URL undefined 버그 해결](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178012078)
 - DB 관련
     - [ ] [DB 생성 경로 설정, gitignore 수정](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178018723)
-    - [ ] [DB auto increment에 unsigned 사용 관련 학습 후 적용](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178024440)
+    - [x] [DDL id에 정수값 unsigned 적용](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178024440)
 - [ ] [Model과 ModelAndView의 차이 학습 뒤 선택하기](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178008480)
 - 응답 상태 코드 검토
     - [x] [자원 생성 응답 코드는 무엇으로 해야 할까?](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178009514)
