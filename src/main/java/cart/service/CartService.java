@@ -58,12 +58,12 @@ public class CartService {
         Product product = productService.findById(productId);
         List<Cart> memberCarts = cartRepository.findAllByMember(member);
 
-        validateCartHasProduct(product, memberCarts);
+        validateCartHasRequestProduct(product, memberCarts);
 
         cartRepository.delete(product);
     }
 
-    private void validateCartHasProduct(final Product product, final List<Cart> memberCarts) {
+    private void validateCartHasRequestProduct(final Product product, final List<Cart> memberCarts) {
         List<Product> memberCartProducts = memberCarts.stream()
                 .map(Cart::getProduct)
                 .collect(Collectors.toList());
