@@ -7,7 +7,7 @@ import javax.validation.constraints.*;
 
 public class ItemUpdateRequest {
 
-    @NotBlank(message = "id는 공백일 수 없습니다.")
+    @NotNull(message = "id는 공백일 수 없습니다.")
     private final Long id;
 
     @NotBlank(message = "상품명은 공백일 수 없습니다.")
