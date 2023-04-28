@@ -2,10 +2,13 @@ package cart.dto.response;
 
 public class ResponseProductDto {
 
-    private final Long id;
-    private final String name;
-    private final Integer price;
-    private final String image;
+    private Long id;
+    private String name;
+    private Integer price;
+    private String image;
+
+    public ResponseProductDto() {
+    }
 
     public ResponseProductDto(final Long id, final String name, final Integer price, final String image) {
         this.id = id;
