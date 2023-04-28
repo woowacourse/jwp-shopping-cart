@@ -1,13 +1,12 @@
 package cart.repository;
 
+import cart.domain.Product;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-
-import cart.domain.Product;
 
 public class StubProductRepository implements ProductRepository {
 
@@ -25,7 +24,7 @@ public class StubProductRepository implements ProductRepository {
 
     @Override
     public Product update(final Product product) {
-        final Long id = product.getProductId().getValue();
+        final Long id = product.getProductId();
         if (id == null || productMap.get(id) == null) {
             return product;
         }

@@ -28,7 +28,7 @@ class ProductCommandServiceTest {
 
         final Optional<Product> product = stubProductRepository.findById(1L);
         assertAll(
-                () -> assertThat(result.getProductId().getValue()).isPositive(),
+                () -> assertThat(result.getProductId()).isPositive(),
                 () -> assertThat(product).isPresent()
         );
     }
@@ -37,7 +37,7 @@ class ProductCommandServiceTest {
     void 제거_테스트() {
         //given
         final Product product = stubProductRepository.save(ODO_PRODUCT);
-        final long productId = product.getProductId().getValue();
+        final long productId = product.getProductId();
 
         //when
         productCommandService.delete(productId);
@@ -53,17 +53,17 @@ class ProductCommandServiceTest {
         final Product product = stubProductRepository.save(ODO_PRODUCT);
 
         //when
-        final Product result = productCommandService.update(product.getProductId().getValue(), "누누", "url", 2);
+        final Product result = productCommandService.update(product.getProductId(), "누누", "url", 2);
 
         //then
-        final Optional<Product> updatedProduct = stubProductRepository.findById(product.getProductId().getValue());
+        final Optional<Product> updatedProduct = stubProductRepository.findById(product.getProductId());
         assertAll(
-                () -> assertThat(result.getProductId().getValue()).isPositive(),
+                () -> assertThat(result.getProductId()).isPositive(),
                 () -> assertThat(result.getProductName().getValue()).isEqualTo("누누"),
                 () -> assertThat(result.getProductImage().getValue()).isEqualTo("url"),
                 () -> assertThat(result.getProductPrice().getValue()).isEqualTo(2),
                 () -> assertThat(updatedProduct).isPresent(),
-                () -> assertThat(updatedProduct.get().getProductId().getValue()).isPositive(),
+                () -> assertThat(updatedProduct.get().getProductId()).isPositive(),
                 () -> assertThat(updatedProduct.get().getProductName().getValue()).isEqualTo("누누"),
                 () -> assertThat(updatedProduct.get().getProductImage().getValue()).isEqualTo("url"),
                 () -> assertThat(updatedProduct.get().getProductPrice().getValue()).isEqualTo(2)

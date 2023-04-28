@@ -2,7 +2,7 @@ package cart.domain;
 
 public class Product {
 
-    private final ProductId productId;
+    private final Long productId;
     private final ProductName productName;
     private final ProductImage productImage;
     private final ProductPrice productPrice;
@@ -12,15 +12,15 @@ public class Product {
     }
 
     public Product(final Long productId, final Product product) {
-        this(new ProductId(productId), product.productName, product.productImage, product.productPrice);
+        this(productId, product.productName, product.productImage, product.productPrice);
     }
 
     public Product(final Long productId, final String productName, final String productImage, final int productPrice) {
-        this(new ProductId(productId), new ProductName(productName), new ProductImage(productImage),
+        this(productId, new ProductName(productName), new ProductImage(productImage),
                 new ProductPrice(productPrice));
     }
 
-    public Product(final ProductId productId, final ProductName productName, final ProductImage productImage,
+    public Product(final Long productId, final ProductName productName, final ProductImage productImage,
             final ProductPrice productPrice) {
         this.productId = productId;
         this.productName = productName;
@@ -28,7 +28,7 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public ProductId getProductId() {
+    public Long getProductId() {
         return productId;
     }
 

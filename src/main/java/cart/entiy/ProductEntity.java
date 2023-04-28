@@ -26,7 +26,7 @@ public class ProductEntity {
 
     public static ProductEntity from(final Product product) {
         return new ProductEntity(
-                product.getProductId().getValue(),
+                product.getProductId(),
                 product.getProductName().getValue(),
                 product.getProductImage().getValue(),
                 product.getProductPrice().getValue());
