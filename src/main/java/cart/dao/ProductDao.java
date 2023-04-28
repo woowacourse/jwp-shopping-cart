@@ -44,8 +44,6 @@ public class ProductDao {
         }
     }
 
-
-
     public List<ProductDto> findAll() {
         String sql = "SELECT * FROM product";
         BeanPropertyRowMapper<ProductDto> mapper = BeanPropertyRowMapper.newInstance(ProductDto.class);
