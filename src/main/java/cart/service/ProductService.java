@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.ProductDao;
+import cart.dao.Dao;
 import cart.domain.Product;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final Dao<Product> productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(final Dao<Product> productDao) {
         this.productDao = productDao;
     }
 

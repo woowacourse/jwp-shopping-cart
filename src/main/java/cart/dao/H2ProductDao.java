@@ -13,7 +13,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class H2ProductDao implements ProductDao {
+public class H2ProductDao implements Dao<Product> {
 
     private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (rs, rowNum) -> new Product(
             rs.getLong("id"),

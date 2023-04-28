@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class H2ProductDaoTest {
 
-    private ProductDao productDao;
+    private Dao<Product> productDao;
 
     @Autowired
     H2ProductDaoTest(final JdbcTemplate jdbcTemplate) {

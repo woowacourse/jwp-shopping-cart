@@ -1,16 +1,16 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import cart.dao.ProductDao;
+import cart.dao.Dao;
 import cart.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -20,12 +20,12 @@ class ProductServiceTest {
     private static final Product FIXTURE_NEW_PRODUCT = new Product("빙봉치킨", "bingbong.jpg", 10000);
     private static final Product FIXTURE_UPDATED_PRODUCT = new Product(FIXTURE_ID, "도이치킨", "doy.jpg", 10000);
 
-    private ProductDao productDao;
+    @Mock
+    private Dao<Product> productDao;
     private ProductService productService;
 
     @BeforeEach
     void setUp() {
-        productDao = mock(ProductDao.class);
         productService = new ProductService(productDao);
     }
 

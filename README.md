@@ -39,5 +39,5 @@
     - /product/.../... 와 같이 여러 계층이 존재한다면 RequestMapping이 없는게 파악하기 더 좋을 것 같다.
     - 하지만 현재 코드에서는 모두 같은 깊이의 계층이므로 (delete 요청의 자원 명시 제외) RequestMapping이 가독성을 높여준다고 볼 수 있지 않을까?
 - [x] [URI에 불필요한 path 없애기](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178005150)
-- [ ] [Dao 제네릭 적용](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178016852)
+- [x] [Dao 제네릭 적용](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178016852)
 - [ ] 실행 테스트의 편의를 위해 더미 데이터 저장하기
