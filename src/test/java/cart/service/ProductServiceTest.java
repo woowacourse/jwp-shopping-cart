@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@WebMvcTest(ShoppingService.class)
-class ShoppingServiceTest {
+@WebMvcTest(ProductService.class)
+class ProductServiceTest {
 
     private ProductDto productDto;
 
@@ -31,7 +31,7 @@ class ShoppingServiceTest {
     private ProductDao productDao;
 
     @Autowired
-    private ShoppingService shoppingService;
+    private ProductService productService;
 
     @BeforeEach
     void setUp() {
@@ -47,10 +47,10 @@ class ShoppingServiceTest {
         when(productDao.findAll()).thenReturn(products);
 
         // when
-        shoppingService.save(productDto);
+        productService.save(productDto);
 
         // then
-        final List<ProductDto> resultProducts = shoppingService.getProducts();
+        final List<ProductDto> resultProducts = productService.getProducts();
         assertAll(
                 () -> assertThat(resultProducts).hasSize(1),
                 () -> assertThat(resultProducts.get(0).getName()).isEqualTo("스테이크")
@@ -65,7 +65,7 @@ class ShoppingServiceTest {
         when(productDao.findById(any())).thenReturn(Optional.of(product));
 
         // when
-        final ProductDto productDto = shoppingService.getById(1L);
+        final ProductDto productDto = productService.getById(1L);
 
         // then
         assertAll(
@@ -83,7 +83,7 @@ class ShoppingServiceTest {
         when(productDao.findById(any())).thenReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> shoppingService.getById(1L))
+        assertThatThrownBy(() -> productService.getById(1L))
                 .isInstanceOf(GlobalException.class);
     }
 
@@ -99,7 +99,7 @@ class ShoppingServiceTest {
         when(productDao.findAll()).thenReturn(products);
 
         // when
-        final List<ProductDto> resultProducts = shoppingService.getProducts();
+        final List<ProductDto> resultProducts = productService.getProducts();
 
         // then
         assertAll(
@@ -117,7 +117,7 @@ class ShoppingServiceTest {
         when(productDao.update(any())).thenReturn(1);
 
         // when, then
-        assertDoesNotThrow(() -> shoppingService.update(1L, productDto));
+        assertDoesNotThrow(() -> productService.update(1L, productDto));
     }
 
     @DisplayName("상품 수정이 실패하면 예외가 발생한다")
@@ -127,7 +127,7 @@ class ShoppingServiceTest {
         when(productDao.update(any())).thenReturn(0);
 
         // when, then
-        assertThatThrownBy(() -> shoppingService.update(1L, productDto))
+        assertThatThrownBy(() -> productService.update(1L, productDto))
                 .isInstanceOf(GlobalException.class);
     }
 
@@ -138,7 +138,7 @@ class ShoppingServiceTest {
         when(productDao.deleteById(any())).thenReturn(1);
 
         // when, then
-        assertDoesNotThrow(() -> shoppingService.delete(1L));
+        assertDoesNotThrow(() -> productService.delete(1L));
     }
 
     @DisplayName("상품 삭제가 실패하면 예외가 발생한다")
@@ -148,7 +148,7 @@ class ShoppingServiceTest {
         when(productDao.deleteById(any())).thenReturn(0);
 
         // when, then
-        assertThatThrownBy(() -> shoppingService.delete(1L))
+        assertThatThrownBy(() -> productService.delete(1L))
                 .isInstanceOf(GlobalException.class);
     }
 }

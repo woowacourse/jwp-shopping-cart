@@ -12,11 +12,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ShoppingService {
+public class ProductService {
 
     private final ProductDao productDao;
 
-    public ShoppingService(final ProductDao productDao) {
+    public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 

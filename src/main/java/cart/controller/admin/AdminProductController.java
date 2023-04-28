@@ -1,7 +1,7 @@
 package cart.controller.admin;
 
 import cart.controller.dto.ProductDto;
-import cart.service.ShoppingService;
+import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,28 +18,28 @@ import java.net.URI;
 @RequestMapping("/admin/products")
 public class AdminProductController {
 
-    private final ShoppingService shoppingService;
+    private final ProductService productService;
 
-    public AdminProductController(final ShoppingService shoppingService) {
-        this.shoppingService = shoppingService;
+    public AdminProductController(final ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody @Valid final ProductDto productDto) {
-        final Long productId = shoppingService.save(productDto);
+        final Long productId = productService.save(productDto);
         return ResponseEntity.created(URI.create("/admin/" + productId)).build();
     }
 
     @PutMapping("/{productId}")
     public ResponseEntity<Void> updateProduct(@PathVariable final Long productId,
                                               @RequestBody @Valid final ProductDto productDto) {
-        shoppingService.update(productId, productDto);
+        productService.update(productId, productDto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId) {
-        shoppingService.delete(productId);
+        productService.delete(productId);
         return ResponseEntity.noContent().build();
     }
 }

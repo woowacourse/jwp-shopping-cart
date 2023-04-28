@@ -2,7 +2,7 @@ package cart.controller.admin;
 
 import cart.controller.dto.ProductDto;
 import cart.persistence.entity.ProductCategory;
-import cart.service.ShoppingService;
+import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class AdminControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ShoppingService shoppingService;
+    private ProductService productService;
 
     @BeforeEach
     void setUp() {
@@ -44,7 +44,7 @@ class AdminControllerTest {
                 new ProductDto(2L, "초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
                 new ProductDto(3L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
         );
-        when(shoppingService.getProducts()).thenReturn(productDtos);
+        when(productService.getProducts()).thenReturn(productDtos);
 
         // when, then
         mockMvc.perform(get("/admin"))

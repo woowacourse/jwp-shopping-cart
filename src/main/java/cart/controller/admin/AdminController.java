@@ -2,7 +2,7 @@ package cart.controller.admin;
 
 import cart.controller.dto.ProductDto;
 import cart.persistence.entity.ProductCategory;
-import cart.service.ShoppingService;
+import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +15,15 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final ShoppingService shoppingService;
+    private final ProductService productService;
 
-    public AdminController(final ShoppingService shoppingService) {
-        this.shoppingService = shoppingService;
+    public AdminController(final ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
     public String getProducts(final Model model) {
-        final List<ProductDto> products = shoppingService.getProducts();
+        final List<ProductDto> products = productService.getProducts();
         model.addAttribute("products", products);
         return "admin";
     }
