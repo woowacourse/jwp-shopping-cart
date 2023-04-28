@@ -16,7 +16,7 @@
 
 #### 생성
 
-|     URL     |                  /productEntities                  |
+|     URL     |                  /products                  |
 |:---:|:-------------------------------------------:|
 | HTTP METHOD |                    POST                     |
  | BODY | String: Name,  int: Price, String: ImageUrl |
@@ -24,14 +24,14 @@
 
 #### 수정
 
-|     URL     |                      /productEntities                       |
+|     URL     |                      /products                       |
 |:---:|:----------------------------------------------------:|
 | HTTP METHOD |                         PUT                          |
 | BODY | int: Id, String: Name,  int: Price, String: ImageUrl |
 
 #### 삭제
 
-|     URL     | /productEntities |
+|     URL     | /products |
 |:---:|:---------:|
 | HTTP METHOD |  DELETE   |
 | BODY |  int: Id  |
