@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.entity.Product;
+import cart.exception.ProductNotFoundException;
 import cart.repository.ProductRepository;
 import cart.service.dto.ProductHttpRequest;
 import cart.service.dto.ProductHttpResponse;
@@ -29,7 +30,10 @@ public class ProductService {
     }
 
     public void updateProduct(final ProductHttpRequest productHttpRequest) {
-        productRepository.update(toProduct(productHttpRequest));
+        final int updatedCount = productRepository.update(toProduct(productHttpRequest));
+        if (updatedCount == 0) {
+            throw new ProductNotFoundException();
+        }
     }
 
     public void deleteById(final long id) {
