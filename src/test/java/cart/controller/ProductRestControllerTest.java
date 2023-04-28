@@ -23,6 +23,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+@SuppressWarnings({"NonAsciiCharacters", "SpellCheckingInspection"})
 class ProductRestControllerTest extends AbstractProductControllerTest {
 
     @Test
@@ -78,5 +79,126 @@ class ProductRestControllerTest extends AbstractProductControllerTest {
 
                 .andExpect(status().isOk())
                 .andExpect(content().json(result));
+    }
+
+    @Test
+    void PUT_시에_상품_이름_길이_초과_테스트() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("a".repeat(256), "naver.com", 1);
+        final String request = objectMapper.writeValueAsString(productRequest);
+
+        mockMvc.perform(put("/products/1")
+                        .contentType("application/json")
+                        .content(request))
+
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void PUT_시에_상품_이름_공백_테스트() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("", "naver.com", 1);
+        final String request = objectMapper.writeValueAsString(productRequest);
+
+        mockMvc.perform(put("/products/1")
+                        .contentType("application/json")
+                        .content(request))
+
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void PUT_시에_이미지_url_길이_초과_테스트() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("누누", "a".repeat(2049), 1);
+        final String request = objectMapper.writeValueAsString(productRequest);
+
+        mockMvc.perform(put("/products/1")
+                        .contentType("application/json")
+                        .content(request))
+
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void PUT_시에_이미지_url_공백_테스트() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("누누", "", 1);
+        final String request = objectMapper.writeValueAsString(productRequest);
+
+        mockMvc.perform(put("/products/1")
+                        .contentType("application/json")
+                        .content(request))
+
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void PUT_시에_상품_가격_음수_예외_테스트() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("누누", "naver.com", -1);
+        final String request = objectMapper.writeValueAsString(productRequest);
+
+        mockMvc.perform(put("/products/1")
+                        .contentType("application/json")
+                        .content(request))
+
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    void POST_시에_상품_이름_길이_초과_테스트() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("a".repeat(256), "naver.com", 1);
+        final String request = objectMapper.writeValueAsString(productRequest);
+
+        mockMvc.perform(post("/products")
+                        .contentType("application/json")
+                        .content(request))
+
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void POST_시에_상품_이름_공백_테스트() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("", "naver.com", 1);
+        final String request = objectMapper.writeValueAsString(productRequest);
+
+        mockMvc.perform(post("/products")
+                        .contentType("application/json")
+                        .content(request))
+
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void POST_시에_이미지_url_길이_초과_테스트() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("누누", "a".repeat(2049), 1);
+        final String request = objectMapper.writeValueAsString(productRequest);
+
+        mockMvc.perform(post("/products")
+                        .contentType("application/json")
+                        .content(request))
+
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void POST_시에_이미지_url_공백_테스트() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("누누", "", 1);
+        final String request = objectMapper.writeValueAsString(productRequest);
+
+        mockMvc.perform(post("/products")
+                        .contentType("application/json")
+                        .content(request))
+
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void POST_시에_상품_가격_음수_예외_테스트() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("누누", "naver.com", -1);
+        final String request = objectMapper.writeValueAsString(productRequest);
+
+        mockMvc.perform(post("/products")
+                        .contentType("application/json")
+                        .content(request))
+
+                .andExpect(status().isBadRequest());
     }
 }

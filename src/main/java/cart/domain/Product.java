@@ -46,7 +46,7 @@ public class Product {
         return productId;
     }
 
-    public String getProductNameValue() {
+    public String getProductName() {
         return productName;
     }
 

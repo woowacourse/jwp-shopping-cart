@@ -53,7 +53,11 @@ class ProductCommandServiceTest {
         final Product product = stubProductRepository.save(ODO_PRODUCT);
 
         //when
-        final Product result = productCommandService.update(product.getProductId(), "누누", "url", 2);
+        final Product result = productCommandService.update(
+                product.getProductId(),
+                ODO_PRODUCT.getProductName(),
+                ODO_PRODUCT.getProductImage().getValue(),
+                ODO_PRODUCT.getProductPrice().getValue());
 
         //then
         final Product expect = new Product(product.getProductId(), product);
