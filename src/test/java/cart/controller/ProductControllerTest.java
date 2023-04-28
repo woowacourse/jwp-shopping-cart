@@ -1,120 +1,159 @@
 package cart.controller;
 
 import cart.dto.ProductRequestDto;
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
+import cart.exception.ProductNotFoundException;
+import cart.service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
-    @LocalServerPort
-    int port;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @MockBean
+    private ProductService productService;
 
     @Test
-    @DisplayName("정상 요청을 테스트한다")
-    void valid_create() {
+    @DisplayName("상품 생성 성공")
+    void create_success() throws Exception {
         //given
         final ProductRequestDto requestDto = new ProductRequestDto("test", "image.jpg", 100);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
+        given(productService.create(requestDto))
+                .willReturn(1);
 
         //expect
-        RestAssured.given().log().headers()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestDto)
-                .when().post("/products")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value())
-                .headers("Location", "/admin");
+        mockMvc.perform(post("/products")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(header().string("Location", "/admin"))
+                .andExpect(status().isCreated());
     }
 
     @Test
-    @DisplayName("RequestDto 에 null 이 포함되면 예외가 발생한다")
-    void invalid_create_byBadRequestDto() {
+    @DisplayName("상품 생성 실패 - 모든 값 입력 안함")
+    void create_fail_not_all_argument_input() throws Exception {
         //given
         final ProductRequestDto requestDto = new ProductRequestDto(null, "image.jpg", 100);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //expect
-        RestAssured.given().log().headers()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestDto)
-                .when().post("/products")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+        mockMvc.perform(post("/products")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    @DisplayName("수정 요청에 빈 값이 들어오면 예외가 발생한다")
-    void invalid_update() {
+    @DisplayName("상품 생성 실패 - 가격이 음수")
+    void create_fail_negative_price() throws Exception {
+        //given
+        final ProductRequestDto requestDto = new ProductRequestDto("ditoo", "image.jpg", -100);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
+
+        //expect
+        mockMvc.perform(post("/products")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("상품 수정 성공")
+    void update_success() throws Exception {
+        //given
+        final ProductRequestDto requestDto = new ProductRequestDto("ditoo", "image.jpg", 100);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
+
+        //expect
+        mockMvc.perform(patch("/products/1")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("상품 수정 실패 - 모든 값 입력 안함")
+    void update_not_all_argument_input() throws Exception {
         //given
         final ProductRequestDto requestDto = new ProductRequestDto(null, "image.jpg", 100);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //expect
-        RestAssured.given().log().headers()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestDto)
-                .pathParam("id", 1)
-                .when().patch("/products/{id}")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+        mockMvc.perform(patch("/products/1")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    @DisplayName("수정 요청 파라미터에 존재하지 않는 id가 들어오면 예외가 발생한다")
-    void invalid_update_notExistingId() {
+    @DisplayName("상품 수정 실패 - 가격이 음수")
+    void update_fail_negative_price() throws Exception {
         //given
-        final ProductRequestDto requestDto = new ProductRequestDto("update", "image.jpg", 100);
+        final ProductRequestDto requestDto = new ProductRequestDto("ditoo", "image.jpg", -100);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //expect
-        RestAssured.given().log().headers()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestDto)
-                .pathParam("id", 1001)
-                .when().patch("/products/{id}")
-                .then().log().all()
-                .statusCode(HttpStatus.NOT_FOUND.value());
+        mockMvc.perform(patch("/products/1")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    @DisplayName("수정 성공")
-    @Sql("/dummy_data.sql")
-    void valid_update() {
+    @DisplayName("상품 수정 실패 - 없는 상품 id")
+    void update_fail_product_not_found() throws Exception {
         //given
-        final ProductRequestDto requestDto = new ProductRequestDto("hello", "image.jpg", 100);
+        final ProductRequestDto requestDto = new ProductRequestDto("ditoo", "image.jpg", 100);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
+        doThrow(ProductNotFoundException.class)
+                .when(productService)
+                .update(any(), anyInt());
 
         //expect
-        RestAssured.given().log().headers()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestDto)
-                .pathParam("id", 1)
-                .when().patch("/products/{id}")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+        mockMvc.perform(patch("/products/0")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("삭제 성공")
-    @Sql("/dummy_data.sql")
-    void valid_delete() {
+    @DisplayName("상품 삭제 성공")
+    void delete_success() throws Exception {
+        //expect
+        mockMvc.perform(delete("/products/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("상품 삭제 실패 - 없는 상품 id")
+    void delete_fail_product_not_found() throws Exception {
         //given
-        final int id = 1;
+        doThrow(ProductNotFoundException.class)
+                .when(productService)
+                .delete(0);
 
         //expect
-        RestAssured.given().log().headers()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .pathParam("id", id)
-                .when().delete("/products/{id}")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+        mockMvc.perform(delete("/products/0"))
+                .andExpect(status().isNotFound());
     }
 }
