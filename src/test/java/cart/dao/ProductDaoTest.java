@@ -124,7 +124,7 @@ class ProductDaoTest {
 	@DisplayName("이름이 32자 넘는 경우 요청 실패")
 	@Test
 	@Rollback
-	void create_32_over_name_length_fail () {
+	void create32OverNameLengthFail () {
 		// given
         final String name = "012345678901234567890123456789012";
 		ProductCreateRequest request = new ProductCreateRequest(name, 5000, "image url");
