@@ -44,7 +44,7 @@ public class AdminController {
     }
 
     @PutMapping("/products/{productId}")
-    public ResponseEntity<Void> putProducts(@PathVariable Long productIdd,
+    public ResponseEntity<Void> putProducts(@PathVariable Long productId,
                                             @Valid @RequestBody ProductModificationRequest request) {
         managementService.update(ProductDtoMapper.from(request));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
