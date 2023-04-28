@@ -12,7 +12,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import cart.dto.ProductRequest;
+import cart.dto.ProductCreateRequest;
+import cart.dto.ProductUpdateRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -43,13 +44,13 @@ class AdminControllerTest {
     void updateProduct() {
         // given
         saveProduct("치킨", 10000, "img");
-        final ProductRequest request = new ProductRequest("샐러드", 20000, "changedImg");
+        final ProductUpdateRequest request = new ProductUpdateRequest("샐러드", 20000, "changedImg");
 
         // when
         final ExtractableResponse<Response> response = given()
                 .body(request)
                 .when()
-                .patch("/admin/product/{id}", 1L)
+                .put("/admin/product/{id}", 1L)
                 .then().log().all()
                 .extract();
 
@@ -72,7 +73,7 @@ class AdminControllerTest {
     }
 
     private ExtractableResponse<Response> saveProduct(final String name, final int price, final String img) {
-        final ProductRequest request = new ProductRequest(name, price, img);
+        final ProductCreateRequest request = new ProductCreateRequest(name, price, img);
 
         return given()
                 .body(request)

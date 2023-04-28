@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cart.dto.ProductRequest;
+import cart.dto.ProductCreateRequest;
 import cart.dto.ProductResponse;
+import cart.dto.ProductUpdateRequest;
 import cart.service.ProductService;
 
 @Controller
@@ -38,16 +39,16 @@ public class AdminController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Void> saveProduct(@Valid @RequestBody final ProductRequest productRequest) {
-        final Long id = productService.save(productRequest);
+    public ResponseEntity<Void> saveProduct(@Valid @RequestBody final ProductCreateRequest productCreateRequest) {
+        final Long id = productService.save(productCreateRequest);
         return ResponseEntity.created(URI.create("/admin/product/" + id)).build();
     }
 
     @PutMapping("/product/{id}")
     public ResponseEntity<Void> updateProduct(
             @PathVariable final Long id,
-            @Valid @RequestBody final ProductRequest productRequest) {
-        productService.update(id, productRequest);
+            @Valid @RequestBody final ProductUpdateRequest productUpdateRequest) {
+        productService.update(id, productUpdateRequest);
         return ResponseEntity.ok().build();
     }
 

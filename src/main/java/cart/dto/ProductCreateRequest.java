@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Range;
 
-public class ProductRequest {
+public class ProductCreateRequest {
     @NotBlank(message = "상품의 이름이 입력되지 않았습니다.")
     @Size(min = 1, max = 20, message = "{min}글자 이상 {max}글자 이하로만 입력가능 합니다.")
     private final String name;
@@ -18,7 +18,7 @@ public class ProductRequest {
     @NotNull(message = "상품의 사진을 등록해주세요.")
     private final String imgUrl;
 
-    public ProductRequest(String name, Integer price, String imgUrl) {
+    public ProductCreateRequest(String name, Integer price, String imgUrl) {
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;

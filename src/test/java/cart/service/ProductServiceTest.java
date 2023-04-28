@@ -11,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.dto.ProductRequest;
+import cart.dto.ProductCreateRequest;
 import cart.dto.ProductResponse;
+import cart.dto.ProductUpdateRequest;
 
 @SpringBootTest
 @Transactional
@@ -54,7 +55,7 @@ class ProductServiceTest {
     void update() {
         // given
         final Long id = saveProduct("샐러드", 20000);
-        final ProductRequest request = new ProductRequest("치킨", 10000, "changedImg");
+        final ProductUpdateRequest request = new ProductUpdateRequest("치킨", 10000, "changedImg");
 
         // when
         productService.update(id, request);
@@ -69,7 +70,7 @@ class ProductServiceTest {
     }
 
     private Long saveProduct(final String name, final int price) {
-        final ProductRequest request = new ProductRequest(name, price, "img");
+        final ProductCreateRequest request = new ProductCreateRequest(name, price, "img");
         return productService.save(request);
     }
 }
