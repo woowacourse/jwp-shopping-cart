@@ -34,6 +34,7 @@ form.addEventListener('submit', (event) => {
         const [key, value] = entry;
         product[key] = value;
     }
+    console.log(product);
 
     if (modal.dataset.formType === 'edit') {
         product['id'] = modal.dataset.productId;
@@ -47,34 +48,42 @@ form.addEventListener('submit', (event) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '',
+        url: '/admin/products/',
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+        },
+        data: JSON.stringify(product)
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data);
         console.error(error);
     });
 };
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
-
-    axios.request({
-        url: '',
-    }).then((response) => {
+    const {id} = product;
+    axios.put('/admin/products/' + product.id,
+        product
+    ).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
+        alert(error.response.data);
     });
 };
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: '',
+        url: '/admin/products/' + id,
+        method: "DELETE",
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
+        alert(error.response.data);
     });
 };
