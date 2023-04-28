@@ -5,11 +5,11 @@ import javax.validation.constraints.PositiveOrZero;
 
 public class ProductRequestDto {
 
-    @NotNull
+    @NotNull(message = "name은 null이면 안됩니다.")
     private final String name;
-    @NotNull
+    @NotNull(message = "image가 null이면 안됩니다.")
     private final String image;
-    @NotNull
+    @NotNull(message = "price가 null이면 안됩니다.")
     @PositiveOrZero(message = "가격은 음수가 될 수 없습니다.")
     private final Integer price;
 
