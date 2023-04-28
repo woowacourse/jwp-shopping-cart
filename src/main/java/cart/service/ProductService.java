@@ -21,6 +21,12 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
+    public Product findById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
     public ProductsResponseDto findAll() {
         List<Product> products = productRepository.findAll();
         return ProductsResponseDto.from(products);

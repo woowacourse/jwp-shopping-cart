@@ -1,23 +1,41 @@
 package cart.service;
 
+import cart.domain.cart.Cart;
 import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.member.MemberLoginRequestDto;
-import cart.dto.member.MemberResponseDto;
-import cart.dto.member.MembersResponseDto;
+import cart.repository.cart.CartRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CartService {
 
+    private final CartRepository cartRepository;
     private final MemberService memberService;
+    private final ProductService productService;
 
-    private CartService(final MemberService memberService) {
+    @Autowired
+    public CartService(final CartRepository cartRepository, final MemberService memberService, final ProductService productService) {
+        this.cartRepository = cartRepository;
         this.memberService = memberService;
+        this.productService = productService;
     }
 
+    @Transactional(readOnly = true)
+    public void findAll(final MemberLoginRequestDto memberLoginRequestDto) {
+        Member member = memberService.findMember(memberLoginRequestDto);
+        List<Cart> carts = cartRepository.findAllByMember(member);
+    }
+
+    @Transactional
     public void addCart(final MemberLoginRequestDto memberLoginRequestDto, final Long productId) {
         Member member = memberService.findMember(memberLoginRequestDto);
-
-
+        Product product = productService.findById(productId);
+        Cart cart = Cart.from(null, member, product);
+        cartRepository.save(cart);
     }
 }
