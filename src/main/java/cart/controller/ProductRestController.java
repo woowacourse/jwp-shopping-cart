@@ -33,14 +33,14 @@ public class ProductRestController {
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<Long> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
         cartService.updateProduct(id, productUpdateRequestDto);
 
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<Long> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         cartService.deleteProduct(id);
 
         return ResponseEntity.noContent().build();
