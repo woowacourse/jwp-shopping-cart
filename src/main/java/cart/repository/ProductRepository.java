@@ -10,7 +10,7 @@ public interface ProductRepository {
 
     Product save(Product product);
 
-    void update(Product product);
+    int update(Product product);
 
     Optional<Product> findById(long id);
 
