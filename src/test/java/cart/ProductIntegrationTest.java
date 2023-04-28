@@ -105,7 +105,7 @@ class ProductIntegrationTest {
     @Test
     void 상품을_삭제하면_상품_목록_페이지와_관리자_페이지에서_사라진다() {
         // given
-        final Long insertedId = productDao.insert(new Product("치킨", 10_000, "치킨 사진"));
+        final Long insertedId = productDao.insert(new Product("족발", 10_0000, "족발 사진"));
 
         final Response deleteResponse = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
@@ -136,9 +136,9 @@ class ProductIntegrationTest {
         assertSoftly(softly -> {
             softly.assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.ACCEPTED.value());
             softly.assertThat(userResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(userResponse.body().asString()).doesNotContain("치킨", "10000", "치킨 사진");
+            softly.assertThat(userResponse.body().asString()).doesNotContain("족발", "100000", "족발 사진");
             softly.assertThat(adminResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(adminResponse.body().asString()).doesNotContain("치킨", "10000", "치킨 사진");
+            softly.assertThat(adminResponse.body().asString()).doesNotContain("족발", "100000", "족발 사진");
         });
     }
 
