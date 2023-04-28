@@ -1,18 +1,24 @@
 package cart.controller;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
 import cart.dto.ProductPostRequest;
+import cart.persistence.dao.ProductDao;
+import cart.persistence.entity.ProductEntity;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -25,7 +31,10 @@ import io.restassured.specification.RequestSpecification;
 class AdminApiControllerTest {
 
     @LocalServerPort
-    int port;
+    private int port;
+
+    @Autowired
+    private ProductDao productDao;
 
     @BeforeEach
     void setUp() {
@@ -38,9 +47,15 @@ class AdminApiControllerTest {
         @Test
         void Product_POST_API_테스트() {
             final ExtractableResponse<Response> response = saveProduct("modi", 10000, "https://woowacourse.github.io/");
+
+            final ProductEntity savedEntity = productDao.findByName("modi");
+
             SoftAssertions.assertSoftly(softAssertions -> {
                 softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
                 softAssertions.assertThat(response.header("Location")).contains("/admin/product/");
+                softAssertions.assertThat(savedEntity.getName()).isEqualTo("modi");
+                softAssertions.assertThat(savedEntity.getPrice()).isEqualTo(10000);
+                softAssertions.assertThat(savedEntity.getImageUrl()).isEqualTo("https://woowacourse.github.io/");
             });
         }
 
@@ -61,12 +76,21 @@ class AdminApiControllerTest {
             final String[] locations = response.header("Location").split("/");
             final String id = locations[locations.length - 1];
 
-            final ProductPostRequest productPostRequest = new ProductPostRequest("modi", 15000, "https://woowacourse.github.io/");
+            final ProductPostRequest productPostRequest = new ProductPostRequest("modi", 15000, "https://changed.com/");
             given()
                 .body(productPostRequest)
                 .when().put("/admin/product/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+
+            final ProductEntity changedEntity = productDao.findByName("modi");
+            SoftAssertions.assertSoftly(softAssertions -> {
+                softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+                softAssertions.assertThat(response.header("Location")).contains("/admin/product/" + changedEntity.getId());
+                softAssertions.assertThat(changedEntity.getName()).isEqualTo("modi");
+                softAssertions.assertThat(changedEntity.getPrice()).isEqualTo(15000);
+                softAssertions.assertThat(changedEntity.getImageUrl()).isEqualTo("https://changed.com/");
+            });
         }
 
         @Test
@@ -79,6 +103,8 @@ class AdminApiControllerTest {
                 .when().delete("/admin/product/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+
+            assertThrows(EmptyResultDataAccessException.class, () -> productDao.findByName("modi"));
         }
     }
 
