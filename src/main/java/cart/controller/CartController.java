@@ -38,7 +38,7 @@ public class CartController {
     public ResponseEntity<Void> deleteCart(@PathVariable final Long productId,
                                            @RequestHeader("Authorization") final String authHeaderValue) {
         cartService.deleteCart(getMember(authHeaderValue), productId);
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .build();
     }
 
