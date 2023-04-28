@@ -37,10 +37,18 @@ public class CartService {
     public void update(final long id, final ProductPutRequest productPutRequest) {
         final ProductEntity productEntity =
             new ProductEntity(id, productPutRequest.getName(), productPutRequest.getPrice(), productPutRequest.getImageUrl());
-        productDao.update(productEntity);
+        int affected = productDao.update(productEntity);
+        assertRowChanged(affected);
     }
 
     public void delete(final long id) {
-        productDao.deleteById(id);
+        int affected = productDao.deleteById(id);
+        assertRowChanged(affected);
+    }
+
+    private void assertRowChanged(final int rowAffected) {
+        if (rowAffected < 1) {
+            throw new DbNotAffectedException("변경된 정보가 없습니다.");
+        }
     }
 }

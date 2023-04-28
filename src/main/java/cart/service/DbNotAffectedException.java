@@ -1,4 +1,4 @@
-package cart.persistence.dao;
+package cart.service;
 
 public class DbNotAffectedException extends RuntimeException {
 

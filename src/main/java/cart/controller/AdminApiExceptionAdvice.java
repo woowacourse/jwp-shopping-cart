@@ -12,7 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import cart.persistence.dao.DbNotAffectedException;
+import cart.service.DbNotAffectedException;
 import cart.persistence.entity.ProductEntityMappingException;
 
 @ControllerAdvice

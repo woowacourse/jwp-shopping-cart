@@ -3,6 +3,7 @@ package cart.service;
 import java.util.List;
 
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -73,5 +74,21 @@ class CartServiceTest {
             softAssertions.assertThat(changedEntity.getPrice()).isEqualTo(changeRequest.getPrice());
             softAssertions.assertThat(changedEntity.getImageUrl()).isEqualTo(changeRequest.getImageUrl());
         });
+    }
+
+    @Test
+    void 존재하지_않는_id를_update_하면_예외가_발생한다() {
+        final ProductPutRequest changeRequest = new ProductPutRequest("modi", 2000, "https://changed.com/");
+        final long wrongId = 1L;
+
+        Assertions.assertThrows(DbNotAffectedException.class,
+            () -> cartService.update(wrongId, changeRequest));
+    }
+
+    @Test
+    void 존재하지_않는_id를_delete_하면_예외가_발생한다() {
+        final long wrongId = 0L;
+
+        Assertions.assertThrows(DbNotAffectedException.class, () -> cartService.delete(wrongId));
     }
 }
