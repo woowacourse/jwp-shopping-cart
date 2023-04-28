@@ -41,11 +41,7 @@ public class AdminController {
 
     @PostMapping("/product")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
-        final ProductDto productDto = new ProductDto(
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImageUrl()
-        );
+        ProductDto productDto = ProductDto.from(productRequest);
 
         Long id = productService.register(productDto);
 
@@ -55,7 +51,7 @@ public class AdminController {
     @PutMapping("/product/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateProduct(@PathVariable final long id, final @RequestBody @Valid ProductRequest productRequest) {
-        productService.updateProduct(id, new ProductDto(productRequest));
+        productService.updateProduct(id, ProductDto.from(productRequest));
     }
 
     @DeleteMapping("/product/{id}")
