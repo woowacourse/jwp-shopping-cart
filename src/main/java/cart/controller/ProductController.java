@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.dto.ProductRequest;
+import cart.dto.ProductAddRequest;
+import cart.dto.ProductModifyRequest;
 import cart.service.ProductService;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
@@ -24,15 +25,15 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity<Integer> productAdd(@Validated @RequestBody ProductRequest productRequest) {
-        int productId = productService.save(productRequest);
+    public ResponseEntity<Integer> productAdd(@Validated @RequestBody ProductAddRequest productAddRequest) {
+        int productId = productService.save(productAddRequest);
         return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> productModify(@Validated @RequestBody ProductRequest productRequest,
+    public ResponseEntity<Object> productModify(@Validated @RequestBody ProductModifyRequest productModifyRequest,
                                                 @PathVariable int id) {
-        productService.update(productRequest, id);
+        productService.update(productModifyRequest, id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

@@ -5,7 +5,8 @@ import static org.hamcrest.Matchers.equalTo;
 
 import cart.dao.ProductDao;
 import cart.dto.ProductDto;
-import cart.dto.ProductRequest;
+import cart.dto.ProductAddRequest;
+import cart.dto.ProductModifyRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +42,7 @@ class ProductControllerTest {
         @DisplayName("성공")
         @Test
         void Should_Success_When_SaveProduct() {
-            ProductRequest productRequest = new ProductRequest(
+            ProductAddRequest productAddRequest = new ProductAddRequest(
                     "오잉",
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     10000
@@ -51,7 +52,7 @@ class ProductControllerTest {
                     .given()
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequest)
+                    .body(productAddRequest)
                     .when()
                     .post("/products")
                     .then()
@@ -63,7 +64,7 @@ class ProductControllerTest {
         @DisplayName("상품 가격이 음수일 경우 예외가 발생한다.")
         @Test
         void Should_Exception_When_PriceLessThanZero() {
-            ProductRequest productRequest = new ProductRequest(
+            ProductAddRequest productAddRequest = new ProductAddRequest(
                     "오잉",
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     -10000
@@ -73,7 +74,7 @@ class ProductControllerTest {
                     .given()
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequest)
+                    .body(productAddRequest)
                     .when()
                     .post("/products")
                     .then()
@@ -85,7 +86,7 @@ class ProductControllerTest {
         @DisplayName("상품명이 비어있을 경우 예외가 발생한다.")
         @Test
         void Should_Exception_When_NameBlank() {
-            ProductRequest productRequest = new ProductRequest(
+            ProductAddRequest productAddRequest = new ProductAddRequest(
                     " ",
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     10000
@@ -95,7 +96,7 @@ class ProductControllerTest {
                     .given()
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequest)
+                    .body(productAddRequest)
                     .when()
                     .post("/products")
                     .then()
@@ -109,19 +110,19 @@ class ProductControllerTest {
     @Nested
     class 상품_수정_테스트 {
         void before() {
-            ProductRequest productRequest = new ProductRequest(
+            ProductAddRequest productAddRequest = new ProductAddRequest(
                     "오잉",
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     10000
             );
-            productDao.save(productRequest);
+            productDao.save(productAddRequest);
         }
 
         @DisplayName("성공")
         @Test
         void Should_Success_When_UpdateProduct() {
             before();
-            ProductRequest productRequest = new ProductRequest(
+            ProductModifyRequest productModifyRequest = new ProductModifyRequest(
                     "토리",
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     20000
@@ -131,7 +132,7 @@ class ProductControllerTest {
                     .given()
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequest)
+                    .body(productModifyRequest)
                     .when()
                     .put("/products/{id}", 1)
                     .then()
@@ -148,7 +149,7 @@ class ProductControllerTest {
         @DisplayName("실패")
         @Test
         void Should_Exception_When_UpdateProduct() {
-            ProductRequest productRequest = new ProductRequest(
+            ProductModifyRequest productModifyRequest = new ProductModifyRequest(
                     "토리",
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     20000
@@ -158,7 +159,7 @@ class ProductControllerTest {
                     .given()
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequest)
+                    .body(productModifyRequest)
                     .when()
                     .put("/products/{id}", 1)
                     .then()
@@ -171,7 +172,7 @@ class ProductControllerTest {
         @Test
         void Should_Exception_When_PriceLessThanZero() {
             before();
-            ProductRequest productRequest = new ProductRequest(
+            ProductModifyRequest productModifyRequest = new ProductModifyRequest(
                     "토리",
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     -20000
@@ -181,7 +182,7 @@ class ProductControllerTest {
                     .given()
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequest)
+                    .body(productModifyRequest)
                     .when()
                     .put("/products/{id}", 1)
                     .then()
@@ -193,7 +194,7 @@ class ProductControllerTest {
         @DisplayName("상품명이 비어있을 경우 예외가 발생한다.")
         @Test
         void Should_Exception_When_NameBlank() {
-            ProductRequest productRequest = new ProductRequest(
+            ProductModifyRequest productModifyRequest = new ProductModifyRequest(
                     " ",
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     20000
@@ -203,7 +204,7 @@ class ProductControllerTest {
                     .given()
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequest)
+                    .body(productModifyRequest)
                     .when()
                     .put("/products/{id}", 1)
                     .then()
@@ -217,12 +218,12 @@ class ProductControllerTest {
     @Nested
     class 상품_삭제_테스트 {
         void before() {
-            ProductRequest productRequest = new ProductRequest(
+            ProductAddRequest productAddRequest = new ProductAddRequest(
                     "오잉",
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     10000
             );
-            productDao.save(productRequest);
+            productDao.save(productAddRequest);
         }
 
         @DisplayName("성공")

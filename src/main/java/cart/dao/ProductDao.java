@@ -1,7 +1,8 @@
 package cart.dao;
 
 import cart.dto.ProductDto;
-import cart.dto.ProductRequest;
+import cart.dto.ProductAddRequest;
+import cart.dto.ProductModifyRequest;
 import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,10 +23,10 @@ public class ProductDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public int save(ProductRequest productRequest) {
+    public int save(ProductAddRequest productAddRequest) {
         GeneratedKeyHolder keyholder = new GeneratedKeyHolder();
         String sql = "INSERT INTO product (name, imgUrl, price) VALUES (:name, :imgUrl, :price)";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(productRequest);
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(productAddRequest);
         namedParameterJdbcTemplate.update(sql, namedParameters, keyholder, new String[]{"id"});
 
         return keyholder.getKey().intValue();
@@ -37,12 +38,12 @@ public class ProductDao {
         return jdbcTemplate.query(sql, mapper);
     }
 
-    public int update(ProductRequest productRequest, int id) {
+    public int update(ProductModifyRequest productModifyRequest, int id) {
         String sql = "UPDATE product SET name=:name, imgUrl=:imgUrl, price=:price WHERE id=:id";
         MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource()
-                .addValue("name", productRequest.getName())
-                .addValue("imgUrl", productRequest.getImgUrl())
-                .addValue("price", productRequest.getPrice())
+                .addValue("name", productModifyRequest.getName())
+                .addValue("imgUrl", productModifyRequest.getImgUrl())
+                .addValue("price", productModifyRequest.getPrice())
                 .addValue("id", id);
         return namedParameterJdbcTemplate.update(sql, mapSqlParameters);
     }
