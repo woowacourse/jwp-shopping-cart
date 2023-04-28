@@ -37,10 +37,13 @@ class ProductDaoTest {
     }
 
     @Test
-    @DisplayName("상품 생성 테스트")
-    void create() {
+    @DisplayName("상품 생성 성공")
+    void create_success() {
         //given
-        final ProductEntity request = new ProductEntity("test", "dully.jpg", 100);
+        final ProductEntity request = new ProductEntity(
+                "홍실",
+                "https://velog.velcdn.com/images/hong-sile/post/e794b8e7-ad0e-4373-9eae-8f9eb823f89e/image.png",
+                100);
 
         //when
         final int id = productDao.create(request);
@@ -63,9 +66,9 @@ class ProductDaoTest {
     }
 
     @Test
-    @DisplayName("상품 전체 조회 테스트")
+    @DisplayName("상품 전체 조회 성공")
     @Sql(scripts = "/dummy_data.sql")
-    void findALl() {
+    void findALl_success() {
         //given,when
         final List<ProductEntity> allProducts = productDao.findAll();
 
@@ -80,17 +83,17 @@ class ProductDaoTest {
     }
 
     @Test
-    @DisplayName("수정 테스트")
+    @DisplayName("상품 수정 성공")
     @Sql(scripts = "/dummy_data.sql")
-    void update() {
+    void update_success() {
         //given
         final ProductRequestDto requestDto = new ProductRequestDto("푸우", "pooh.png", 1_000_001);
         final Integer targetId = findPoohId();
 
         //when
         productDao.update(requestDto, targetId);
-        final String findUpdatedUserSql = "select * from product where id = ?";
-        final ProductEntity updatedProduct = jdbcTemplate.queryForObject(findUpdatedUserSql,
+        final String sql = "select * from product where id = ?";
+        final ProductEntity updatedProduct = jdbcTemplate.queryForObject(sql,
                 (rs, rowNum) -> new ProductEntity(
                         rs.getString("name"),
                         rs.getString("image"),
@@ -107,9 +110,22 @@ class ProductDaoTest {
     }
 
     @Test
-    @DisplayName("유저의 정보를 삭제한다")
+    @DisplayName("상품 수정 실패 - 존재하지 않는 상품 id")
     @Sql(scripts = "/dummy_data.sql")
-    void delete() {
+    void update_fail_invalid_product_id() {
+        //given
+        final ProductRequestDto requestDto = new ProductRequestDto("푸우", "pooh.png", 1_000_001);
+        final int invalidId = 0;
+
+        //expect
+        assertThatThrownBy(() -> productDao.update(requestDto, invalidId))
+                .isInstanceOf(DataAccessException.class);
+    }
+
+    @Test
+    @DisplayName("상품 삭제 성공")
+    @Sql(scripts = "/dummy_data.sql")
+    void delete_success() {
         //given
         final Integer poohId = findPoohId();
 
@@ -119,6 +135,18 @@ class ProductDaoTest {
         //then
         String sql = "select * from product where id = ?";
         assertThatThrownBy(() -> jdbcTemplate.queryForObject(sql, Integer.class, poohId))
+                .isInstanceOf(DataAccessException.class);
+    }
+
+    @Test
+    @DisplayName("상품 삭제 실패 - 존재하지 않는 상품 id")
+    @Sql(scripts = "/dummy_data.sql")
+    void delete_fail() {
+        //given
+        final int invalidId = 0;
+
+        //expect
+        assertThatThrownBy(() -> productDao.delete(invalidId))
                 .isInstanceOf(DataAccessException.class);
     }
 
