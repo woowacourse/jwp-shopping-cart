@@ -7,6 +7,7 @@ public class ProductRequest {
 
     @NotBlank(message = "상품명은 공백일 수 없습니다.")
     private final String name;
+    @NotBlank(message = "Url은 공백일 수 없습니다.")
     private final String imageUrl;
     @Positive(message = "가격은 0보다 커야 합니다.")
     private final int price;
