@@ -182,7 +182,7 @@ class ProductApiControllerTest {
                     .body(PRODUCT_REQUEST_A)
                     .when().put("/product/" + 100000L)
                     .then().log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("message", equalTo("존재하지 않는 상품입니다."));
         }
 
@@ -316,7 +316,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .when().delete("/product/" + 100000L)
                     .then().log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("message", equalTo("존재하지 않는 상품입니다."));
         }
     }

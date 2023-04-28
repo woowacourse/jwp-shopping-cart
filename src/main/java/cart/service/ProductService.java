@@ -7,6 +7,7 @@ import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +37,20 @@ public class ProductService {
 
     @Transactional
     public void deleteById(Long id) {
-        productDao.deleteById(id);
+        int deleteCount = productDao.deleteById(id);
+        hasNoMatchingResult(deleteCount);
     }
 
     @Transactional
     public void updateById(Long id, ProductRequest productRequest) {
         Product product = productRequest.toEntity();
-        productDao.updateById(id, product);
+        int updateCount = productDao.updateById(id, product);
+        hasNoMatchingResult(updateCount);
+    }
+
+    private void hasNoMatchingResult(int count) {
+        if (count == 0) {
+            throw new NoSuchElementException("존재하지 않는 상품입니다.");
+        }
     }
 }

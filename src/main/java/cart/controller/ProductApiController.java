@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+//TODO: BOdy 담아주는것 고민
 @RestController
 @RequestMapping("/product")
 public class ProductApiController {

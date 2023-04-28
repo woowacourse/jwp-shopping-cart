@@ -45,23 +45,15 @@ public class ProductDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public void deleteById(Long id) {
+    public int deleteById(Long id) {
         String sql = "delete from product where id = ?";
-        int count = jdbcTemplate.update(sql, id);
-        hasNoMatchingResult(count);
+        return jdbcTemplate.update(sql, id);
     }
 
-    private void hasNoMatchingResult(int count) {
-        if (count == 0) {
-            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
-        }
-    }
-
-    public void updateById(Long id, Product product) {
+    public int updateById(Long id, Product product) {
         String sql = "update product " +
                 "set name = ? , price = ?, image_url = ? " +
                 "where id = ?";
-        int count = jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
-        hasNoMatchingResult(count);
+        return jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
     }
 }

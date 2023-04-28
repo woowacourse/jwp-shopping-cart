@@ -84,15 +84,6 @@ class ProductDaoTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 id의 상품 데이터를 삭제시 예외를 반환한다.")
-    void delete_fail_by_wrong_id() {
-        //when && then
-        assertThatThrownBy(() -> productDao.deleteById(9999L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 상품입니다.");
-    }
-
-    @Test
     @DisplayName("상품 데이터를 업데이트한다.")
     void update_success() {
         //given
@@ -105,15 +96,4 @@ class ProductDaoTest {
                 .ignoringFields("id")
                 .isEqualTo(PRODUCT_B);
     }
-
-    @Test
-    @DisplayName("존재하지 않는 id의 상품 데이터를 업데이트시 예외를 반환한다.")
-    void update_fail_by_wrong_id() {
-        //when && then
-        assertThatThrownBy(() -> productDao.updateById(9999L, PRODUCT_A))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 상품입니다.");
-    }
-
-
 }
