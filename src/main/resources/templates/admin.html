@@ -25,41 +25,52 @@
     <table>
         <tr>
             <th>ID</th>
+            <th>카테고리</th>
             <th>이름</th>
             <th>가격</th>
             <th>이미지</th>
             <th>Actions</th>
         </tr>
         <tbody id="product-list">
-            <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
-            <tr th:each="product : ${products}">
-                <td th:text="${product.id}"></td>
-                <td></td> <!-- 상품 이름 -->
-                <td></td> <!-- 상품 가격 -->
-                <td>
-                    <img style="max-width: 100px;"> <!-- 상품 이미지 -->
-                </td>
-                <td>
-                    <button th:onclick="showEditModal([[${product}]])">수정</button>
-                    <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
-                </td>
-            </tr>
+        <tr th:each="product : ${products}">
+            <td>
+                <a href="product.html" th:href="@{|/admin/products/${product.getId()}|}">
+                    [[${product.getId()}]]
+                </a>
+            </td>
+            <td>[[${product.getCategory()}]]</td> <!-- 상품 카테고리 -->
+            <td>[[${product.getName()}]]</td> <!-- 상품 이름 -->
+            <td>[[${product.getPrice()}]]</td> <!-- 상품 가격 -->
+            <td>
+                <img style="max-width: 100px;" th:src="${product.getImageUrl()}"> <!-- 상품 이미지 -->
+            </td>
+            <td>
+                <button th:onclick="showEditModal([[${product}]])">수정</button>
+                <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
+            </td>
+        </tr>
         </tbody>
     </table>
 
     <div id="modal" class="modal" data-form-type="add">
         <div class="modal-content">
             <span class="close" onclick="hideAddModal()">&times;</span>
-            <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
             <form id="form">
+                <label>카테고리</label>
+                <select name="category" class="form-select">
+                    <option th:each="category : ${categorys}"
+                            th:value="${category.name()}"
+                            th:text="${category.name()}">
+                    </option>
+                </select>
                 <label for="name">상품명</label><br>
-                <input type="text" id="name" name="" required><br>
+                <input type="text" id="name" name="name"><br>
 
                 <label for="price">가격</label><br>
-                <input type="number" id="price" name="" required><br>
+                <input type="number" id="price" name="price"><br>
 
                 <label for="image-url">이미지 URL</label><br>
-                <input type="text" id="image-url" name="" required><br>
+                <input type="text" id="image-url" name="imageUrl"><br>
 
                 <button type="submit">제출</button>
             </form>
@@ -67,7 +78,7 @@
     </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script th:src="@{/js/admin.js}"> </script>
+<script th:src="@{/js/admin.js}"></script>
 </body>
 </html>
 
