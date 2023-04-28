@@ -1,7 +1,8 @@
 package cart.controller;
 
-import cart.controller.dto.ItemRequest;
+import cart.controller.dto.AddItemRequest;
 import cart.controller.dto.ItemResponse;
+import cart.controller.dto.UpdateItemRequest;
 import cart.service.ItemService;
 import java.net.URI;
 import java.util.List;
@@ -33,15 +34,18 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemResponse> addItem(@RequestBody @Valid ItemRequest itemRequest) {
-        ItemResponse itemResponse = itemService.add(itemRequest);
+    public ResponseEntity<ItemResponse> addItem(@RequestBody @Valid AddItemRequest addItemRequest) {
+        ItemResponse itemResponse = itemService.add(addItemRequest);
         return ResponseEntity.created(URI.create("/items/" + itemResponse.getId()))
                 .body(itemResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ItemResponse> updateItem(@RequestBody @Valid ItemRequest itemRequest, @PathVariable Long id) {
-        ItemResponse itemResponse = itemService.update(id, itemRequest);
+    public ResponseEntity<ItemResponse> updateItem(
+            @RequestBody @Valid UpdateItemRequest updateItemRequest,
+            @PathVariable Long id
+    ) {
+        ItemResponse itemResponse = itemService.update(id, updateItemRequest);
         return ResponseEntity.ok(itemResponse);
     }
 

@@ -5,7 +5,7 @@ import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
-import cart.controller.dto.ItemRequest;
+import cart.controller.dto.AddItemRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,11 +27,11 @@ class JwpCartApplicationTests {
     @Test
     @DisplayName("상품을 등록한다.")
     void createItemRequestSuccess() {
-        ItemRequest itemRequest = createItemRequest("맥북", "http://image.com", 15_000);
+        AddItemRequest addItemRequest = createItemRequest("맥북", "http://image.com", 15_000);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(itemRequest)
+                .body(addItemRequest)
                 .when()
                 .post("/items")
                 .then().log().all()
@@ -59,11 +59,11 @@ class JwpCartApplicationTests {
     @Sql(value = {"/truncate.sql", "/insert.sql"})
     @DisplayName("상품을 변경한다.")
     void updateItemRequestSuccess() {
-        ItemRequest itemRequest = createItemRequest("맥북프로", "http://image.com", 35_000);
+        AddItemRequest addItemRequest = createItemRequest("맥북프로", "http://image.com", 35_000);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(itemRequest)
+                .body(addItemRequest)
                 .when()
                 .put("/items/{id}", 1L)
                 .then().log().all()
@@ -79,11 +79,11 @@ class JwpCartApplicationTests {
     @Sql("/truncate.sql")
     @DisplayName("존재하지 않는 상품을 변경하면 예외가 발생한다.")
     void updateItemRequestFailWithNotExistsID() {
-        ItemRequest itemRequest = createItemRequest("맥북", "http://image.com", 15_000);
+        AddItemRequest addItemRequest = createItemRequest("맥북", "http://image.com", 15_000);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(itemRequest)
+                .body(addItemRequest)
                 .when()
                 .put("/items/{id}", 1L)
                 .then().log().all()
@@ -96,11 +96,11 @@ class JwpCartApplicationTests {
     @Sql("/truncate.sql")
     @DisplayName("존재하지 않는 상품을 삭제하면 예외가 발생한다.")
     void deleteItemRequestFailWithNotExistsID() {
-        ItemRequest itemRequest = createItemRequest("맥북", "http://image.com", 15_000);
+        AddItemRequest addItemRequest = createItemRequest("맥북", "http://image.com", 15_000);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(itemRequest)
+                .body(addItemRequest)
                 .when()
                 .delete("/items/{id}", 1L)
                 .then().log().all()
@@ -118,8 +118,8 @@ class JwpCartApplicationTests {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private static ItemRequest createItemRequest(String name, String imageUrl, int price) {
-        return new ItemRequest(name, imageUrl, price);
+    private static AddItemRequest createItemRequest(String name, String imageUrl, int price) {
+        return new AddItemRequest(name, imageUrl, price);
     }
 
 }

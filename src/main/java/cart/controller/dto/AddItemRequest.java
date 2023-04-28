@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-public class ItemRequest {
+public class AddItemRequest {
 
     @NotBlank(message = "이름에 공백이 입력될 수 없습니다.")
     private String name;
@@ -16,10 +16,10 @@ public class ItemRequest {
     @NotNull(message = "빈 값은 입력될 수 없습니다.")
     private Integer price;
 
-    private ItemRequest() {
+    private AddItemRequest() {
     }
 
-    public ItemRequest(String name, String imageUrl, int price) {
+    public AddItemRequest(String name, String imageUrl, int price) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;

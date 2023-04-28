@@ -1,7 +1,8 @@
 package cart.service;
 
-import cart.controller.dto.ItemRequest;
+import cart.controller.dto.AddItemRequest;
 import cart.controller.dto.ItemResponse;
+import cart.controller.dto.UpdateItemRequest;
 import cart.dao.ItemDao;
 import cart.dao.dto.ItemDto;
 import cart.exception.ErrorStatus;
@@ -23,8 +24,8 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemResponse add(ItemRequest itemRequest) {
-        Item item = new Item(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
+    public ItemResponse add(AddItemRequest addItemRequest) {
+        Item item = new Item(addItemRequest.getName(), addItemRequest.getImageUrl(), addItemRequest.getPrice());
         Long savedId = itemDao.insert(item);
 
         ItemDto itemDto = itemDao.findById(savedId)
@@ -41,11 +42,12 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemResponse update(Long id, ItemRequest itemRequest) {
-        itemDao.findById(id)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
+    public ItemResponse update(Long id, UpdateItemRequest updateItemRequest) {
+        if (itemDao.findById(id).isEmpty()) {
+            throw new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR);
+        }
 
-        Item item = new Item(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
+        Item item = new Item(updateItemRequest.getName(), updateItemRequest.getImageUrl(), updateItemRequest.getPrice());
         itemDao.update(id, item);
 
         ItemDto updatedItemDto = itemDao.findById(id)
