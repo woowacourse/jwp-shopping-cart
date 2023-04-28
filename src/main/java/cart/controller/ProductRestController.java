@@ -19,29 +19,30 @@ public class ProductRestController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<String> createProduct(@RequestBody @Valid ProductSaveRequestDto productSaveRequestDto) {
-        cartService.addProduct(productSaveRequestDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Long> createProduct(@RequestBody @Valid ProductSaveRequestDto productSaveRequestDto) {
+        Long createdProductId = cartService.addProduct(productSaveRequestDto);
+
+        return ResponseEntity.ok(createdProductId);
     }
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponseDto>> getProducts() {
         List<ProductResponseDto> products = cartService.findProducts();
 
-        return ResponseEntity.ok().body(products);
+        return ResponseEntity.ok(products);
     }
 
     @PutMapping("/product")
-    public ResponseEntity<String> updateProduct(@RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
-        cartService.updateProduct(productUpdateRequestDto);
+    public ResponseEntity<Long> updateProduct(@RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
+        Long updatedProductId = cartService.updateProduct(productUpdateRequestDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(updatedProductId);
     }
 
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
-        cartService.deleteProduct(id);
+    public ResponseEntity<Long> deleteProduct(@PathVariable Long id) {
+        Long deletedProductId = cartService.deleteProduct(id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(deletedProductId);
     }
 }

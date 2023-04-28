@@ -24,10 +24,11 @@ public class CartService {
     }
 
     @Transactional
-    public void addProduct(ProductSaveRequestDto productSaveRequestDto) {
+    public Long addProduct(ProductSaveRequestDto productSaveRequestDto) {
         Product product = new Product(productSaveRequestDto.getName(), productSaveRequestDto.getImage(), productSaveRequestDto.getPrice());
 
-        productDao.save(new ProductEntity(product.getId(), product.getName(), product.getImage(), product.getPrice()));
+        ProductEntity save = productDao.save(new ProductEntity(product.getId(), product.getName(), product.getImage(), product.getPrice()));
+        return save.getId();
     }
 
     public List<ProductResponseDto> findProducts() {
@@ -38,11 +39,12 @@ public class CartService {
     }
 
     @Transactional
-    public void updateProduct(ProductUpdateRequestDto productUpdateRequestDto) {
+    public Long updateProduct(ProductUpdateRequestDto productUpdateRequestDto) {
         validateExistence(productUpdateRequestDto.getId());
         Product product = new Product(productUpdateRequestDto.getName(), productUpdateRequestDto.getImage(), productUpdateRequestDto.getPrice());
 
-        productDao.update(new ProductEntity(product.getId(), product.getName(), product.getImage(), product.getPrice()));
+        ProductEntity update = productDao.update(new ProductEntity(product.getId(), product.getName(), product.getImage(), product.getPrice()));
+        return update.getId();
     }
 
     private void validateExistence(Long id) {
@@ -52,9 +54,10 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteProduct(Long id) {
+    public Long deleteProduct(Long id) {
         validateExistence(id);
 
         productDao.delete(id);
+        return id;
     }
 }
