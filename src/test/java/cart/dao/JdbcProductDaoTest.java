@@ -12,7 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@Import(JdbcProductDao.class)
+@Import({JdbcProductDao.class, ProductInitializer.class})
 @JdbcTest
 class JdbcProductDaoTest {
 
@@ -30,7 +30,7 @@ class JdbcProductDaoTest {
     @DisplayName("상품 등록이 되는지 확인한다")
     @Test
     void insertTest() {
-        final ProductEntity productEntity = ProductEntity.of("chicken", "image", 10000);
+        final ProductEntity productEntity = ProductEntity.of("chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
 
         assertDoesNotThrow(() -> productDao.insert(productEntity));
     }
@@ -38,7 +38,7 @@ class JdbcProductDaoTest {
     @DisplayName("상품 수정이 되는지 확인한다")
     @Test
     void updateTest() {
-        final ProductEntity productEntity = ProductEntity.of(1L, "chicken", "image", 10000);
+        final ProductEntity productEntity = ProductEntity.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
 
         assertDoesNotThrow(() -> productDao.update(productEntity));
     }

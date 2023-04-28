@@ -33,8 +33,8 @@ class ProductManagementServiceTest {
     @Test
     void findAllTest() {
         final List<ProductEntity> data = List.of(
-                ProductEntity.of(1L, "chicken", "image", 10000),
-                ProductEntity.of(2L, "pizza", "image2", 20000)
+                ProductEntity.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000),
+                ProductEntity.of(2L, "pizza", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 20000)
         );
         when(productDao.selectAll()).thenReturn(data);
 
@@ -43,10 +43,10 @@ class ProductManagementServiceTest {
         assertAll(
                 () -> assertThat(productDtos.size()).isEqualTo(data.size()),
                 () -> assertThat(productDtos.get(0).getName()).isEqualTo("chicken"),
-                () -> assertThat(productDtos.get(0).getImage()).isEqualTo("image"),
+                () -> assertThat(productDtos.get(0).getImage()).isEqualTo("https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg"),
                 () -> assertThat(productDtos.get(0).getPrice()).isEqualTo(10000),
                 () -> assertThat(productDtos.get(1).getName()).isEqualTo("pizza"),
-                () -> assertThat(productDtos.get(1).getImage()).isEqualTo("image2"),
+                () -> assertThat(productDtos.get(1).getImage()).isEqualTo("https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg"),
                 () -> assertThat(productDtos.get(1).getPrice()).isEqualTo(20000)
         );
     }
@@ -54,7 +54,7 @@ class ProductManagementServiceTest {
     @DisplayName("상품 데이터가 등록되는지 확인한다")
     @Test
     void saveTest() {
-        final ProductDto productDto = ProductDto.of("pobi_doll", "image", 10000000);
+        final ProductDto productDto = ProductDto.of("pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
         doNothing().when(productDao).insert(any());
         managementService.save(productDto);
 
@@ -66,7 +66,7 @@ class ProductManagementServiceTest {
     @DisplayName("상품 데이터가 수정되는지 확인한다")
     @Test
     void updateTest() {
-        final ProductDto productDto = ProductDto.of(1L, "pobi_doll", "image", 10000000);
+        final ProductDto productDto = ProductDto.of(1L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
         doNothing().when(productDao).update(any());
         managementService.update(productDto);
 
