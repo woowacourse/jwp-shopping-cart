@@ -29,12 +29,13 @@ public class ProductDao {
     }
 
     private RowMapper<ProductEntity> getProductRowMapper() {
-        return (resultSet, rowNum) -> new ProductEntity(
+        final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) -> new ProductEntity(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getInt("price"),
                 resultSet.getString("image")
         );
+        return productEntityRowMapper;
     }
 
     public Long insert(final Product product) {
