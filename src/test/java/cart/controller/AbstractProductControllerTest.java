@@ -9,7 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest
-public class AbstractProductControllerTest {
+public abstract class AbstractProductControllerTest {
 
     @MockBean
     protected ProductQueryService productQueryService;
