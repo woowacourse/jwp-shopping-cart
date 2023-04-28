@@ -72,4 +72,19 @@ class ProductDaoTest {
         //then
         assertThat(result).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("db에서 상품을 삭제한다.")
+    public void testDelete() {
+        //given
+        final ProductDao productDao = new ProductDao(jdbcTemplate);
+        final Product givenProduct = new Product(null, "연필", 1000, "imageUrl1", null, null);
+        final Product savedProduct = productDao.add(givenProduct);
+
+        //when
+        int result = productDao.delete(savedProduct.getId());
+
+        //then
+        assertThat(result).isEqualTo(1);
+    }
 }
