@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import cart.controller.dto.AddItemRequest;
 import cart.controller.dto.UpdateItemRequest;
 import cart.dao.ItemDao;
-import cart.exception.ItemException;
+import cart.exception.item.ItemException;
 import cart.service.dto.ItemDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

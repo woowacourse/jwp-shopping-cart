@@ -1,6 +1,7 @@
 package cart.exception;
 
 import cart.exception.dto.ExceptionResponse;
+import cart.exception.item.ItemException;
 import java.util.stream.Collectors;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -69,7 +70,7 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
     private ResponseEntity<ExceptionResponse> handleItemException(ItemException ex) {
         logger.info(ex.getMessage());
 
-        return ResponseEntity.status(ex.getErrorStatus()).body(new ExceptionResponse(ex.getMessage()));
+        return ResponseEntity.status(ex.getHttpStatus()).body(new ExceptionResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

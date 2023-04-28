@@ -1,7 +1,6 @@
 package cart.model;
 
-import cart.exception.ErrorStatus;
-import cart.exception.ItemException;
+import cart.exception.item.ItemFieldNotValidException;
 
 public class ItemUrl {
 
@@ -16,7 +15,7 @@ public class ItemUrl {
 
     private void validateUrl(String url) {
         if (!url.contains(PREFIX)) {
-            throw new ItemException(ErrorStatus.IMAGE_URL_PREFIX_ERROR);
+            throw new ItemFieldNotValidException("이미지 링크는 HTTP, HTTPS 형식으로만 입력할 수 있습니다.");
         }
     }
 

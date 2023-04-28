@@ -1,7 +1,6 @@
 package cart.model;
 
-import cart.exception.ErrorStatus;
-import cart.exception.ItemException;
+import cart.exception.item.ItemFieldNotValidException;
 
 public class ItemName {
 
@@ -20,7 +19,7 @@ public class ItemName {
         int length = name.length();
 
         if (length < MIN_LENGTH || length > MAX_LENGTH) {
-            throw new ItemException(ErrorStatus.NAME_RANGE_ERROR);
+            throw new ItemFieldNotValidException("상품의 이름은 최소 1자, 최대 50자까지 입력할 수 있습니다.");
         }
     }
 

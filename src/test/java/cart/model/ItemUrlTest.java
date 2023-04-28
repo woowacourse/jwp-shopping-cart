@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import cart.exception.ItemException;
+import cart.exception.item.ItemException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +23,6 @@ class ItemUrlTest {
     void createItemUrlFailWithHasNotHttpPrefix() {
         assertThatThrownBy(() -> new ItemUrl("hello.world"))
                 .isInstanceOf(ItemException.class)
-                .hasMessage("이미지 경로는 URL 형식으로 입력해야 합니다.");
+                .hasMessage("이미지 링크는 HTTP, HTTPS 형식으로만 입력할 수 있습니다.");
     }
 }

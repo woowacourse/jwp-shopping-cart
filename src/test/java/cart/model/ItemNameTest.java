@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import cart.exception.ItemException;
+import cart.exception.item.ItemException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,6 +26,6 @@ class ItemNameTest {
     void createItemNameFailWithWrongName(String name) {
         assertThatThrownBy(() -> new ItemName(name))
                 .isInstanceOf(ItemException.class)
-                .hasMessage("상품의 이름은 최소 1자, 최대 50자까지 가능합니다.");
+                .hasMessage("상품의 이름은 최소 1자, 최대 50자까지 입력할 수 있습니다.");
     }
 }

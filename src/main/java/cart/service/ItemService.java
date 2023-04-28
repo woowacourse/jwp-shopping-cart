@@ -2,8 +2,7 @@ package cart.service;
 
 import cart.controller.dto.UpdateItemRequest;
 import cart.dao.ItemDao;
-import cart.exception.ErrorStatus;
-import cart.exception.ItemException;
+import cart.exception.item.ItemNotFoundException;
 import cart.model.Item;
 import cart.service.dto.ItemDto;
 import java.util.List;
@@ -15,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ItemService {
 
+    private static final String NOT_FOUND_MESSAGE = "일치하는 상품을 찾을 수 없습니다.";
     private static final int CORRECT_ROW_COUNT = 1;
+
     private final ItemDao itemDao;
 
     public ItemService(ItemDao itemDao) {
@@ -45,7 +46,7 @@ public class ItemService {
         int updateRecordCount = itemDao.update(updateItem);
 
         if (updateRecordCount != CORRECT_ROW_COUNT) {
-            throw new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR);
+            throw new ItemNotFoundException(NOT_FOUND_MESSAGE);
         }
 
         return new ItemDto(updateItem);
@@ -56,7 +57,7 @@ public class ItemService {
         int deleteRecordCount = itemDao.delete(id);
 
         if (deleteRecordCount != CORRECT_ROW_COUNT) {
-            throw new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR);
+            throw new ItemNotFoundException(NOT_FOUND_MESSAGE);
         }
     }
 }

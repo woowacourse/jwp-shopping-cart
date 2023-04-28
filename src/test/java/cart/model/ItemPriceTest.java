@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import cart.exception.ItemException;
+import cart.exception.item.ItemException;
 import java.math.BigInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +27,6 @@ class ItemPriceTest {
     void createItemFailWithWrongPrice(int price) {
         assertThatThrownBy(() -> new ItemPrice(BigInteger.valueOf(price)))
                 .isInstanceOf(ItemException.class)
-                .hasMessage("상품의 금액은 최소 10원, 최대 1억원 까지 가능합니다.");
+                .hasMessage("상품의 금액은 최소 10원, 최대 1억원까지 입력할 수 있습니다.");
     }
 }
