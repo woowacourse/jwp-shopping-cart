@@ -101,6 +101,6 @@ public class CartServiceMockTest {
         cartService.deleteCart(req, productId);
 
         // then
-        verify(cartRepository).delete(product);
+        verify(cartRepository).delete(member ,product);
     }
 }

@@ -60,7 +60,7 @@ public class CartService {
 
         validateCartHasRequestProduct(product, memberCarts);
 
-        cartRepository.delete(product);
+        cartRepository.delete(member, product);
     }
 
     private void validateCartHasRequestProduct(final Product product, final List<Cart> memberCarts) {

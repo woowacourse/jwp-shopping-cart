@@ -77,9 +77,9 @@ public class CartDbRepository implements CartRepository {
     }
 
     @Override
-    public void delete(final Product product) {
-        String sql = "DELETE FROM cart WHERE product_id = ?";
-        jdbcTemplate.update(sql, product.getId());
+    public void delete(final Member member, final Product product) {
+        String sql = "DELETE FROM cart WHERE member_id = ? AND product_id = ?";
+        jdbcTemplate.update(sql, member.getId(), product.getId());
     }
 
     private RowMapper<CartDbResponseDto> getCartRowMapper() {

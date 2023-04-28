@@ -12,5 +12,5 @@ public interface CartRepository {
 
     void save(Cart cart);
 
-    void delete(Product product);
+    void delete(Member member, Product product);
 }
