@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dto.member.MemberLoginRequestDto;
+import cart.dto.product.ProductsResponseDto;
 import cart.service.CartService;
 import cart.util.AuthorizationExtractor;
 import cart.util.BasicAuthorizationExtractor;
@@ -17,7 +18,13 @@ public class CartController {
 
     public CartController(final CartService cartService) {
         this.cartService = cartService;
-        this.authorizationExtractor = new BasicAuthorizationExtractor();;
+        this.authorizationExtractor = new BasicAuthorizationExtractor();
+    }
+
+    @GetMapping
+    public ResponseEntity<ProductsResponseDto> findMemberCarts(@RequestHeader("Authorization") final String authHeaderValue) {
+        MemberLoginRequestDto member = getMember(authHeaderValue);
+        return ResponseEntity.ok(cartService.findAll(member));
     }
 
     @PostMapping("/{productId}")
