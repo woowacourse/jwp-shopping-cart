@@ -1,10 +1,14 @@
 package cart.entity;
 
+import javax.validation.constraints.Max;
+
 public class ProductEntity {
 
     private final Long id;
     private final String name;
     private final String image;
+
+    @Max(value = 10_000_000, message = "상품 등록은 최대 천만원까지 가능합니다.")
     private final Integer price;
 
     private ProductEntity(final Long id, final String name, final String image, final Integer price) {

@@ -15,7 +15,6 @@ public class ProductCreationRequest {
     @NotBlank
     private final String image;
 
-    @Max(value = 10_000_000, message = "상품 등록은 최대 천만원까지 가능합니다.")
     @Positive
     private final Integer price;
 
