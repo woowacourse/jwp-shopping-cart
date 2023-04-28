@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS ITEM
 (
-    item_id     BIGINT    AUTO_INCREMENT  NOT NULL,
-    name        VARCHAR(255)     NOT NULL,
-    image_url   VARCHAR(255)     NOT NULL,
-    price       INT         NOT NULL,
+    item_id     BIGINT    AUTO_INCREMENT    NOT NULL,
+    name        VARCHAR(255)                NOT NULL,
+    image_url   CLOB                        NOT NULL,
+    price       INT                         NOT NULL,
 
     primary key (item_id)
 );
