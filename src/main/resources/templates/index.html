@@ -20,15 +20,15 @@
 </header>
 <div class="container">
     <ul class="product-grid">
-        <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
-        <li class="product" th:each="product : ${products}">
+        <li class="product" th:each="product : ${products}" th:onclick="showDetail([[${product.id}]])">
             <div class="product-image">
-                <img alt="상품 이미지"> <!-- 상품 이미지 -->
+                <img alt="상품 이미지" th:src="${product.getImageUrl()}"> <!-- 상품 이미지 -->
             </div>
             <div class="product-info">
                 <div class="product-desc">
-                    <p class="product-name"></p> <!-- 상품 이름 -->
-                    <p class="product-price"></p> <!-- 상품 가격 -->
+                    <p class="product-category" th:text="${product.getCategory()}"></p> <!-- 상품 카테고리 -->
+                    <p class="product-name" th:text="${product.getName()}"></p> <!-- 상품 이름 -->
+                    <p class="product-price" th:text="${product.getPrice()} + '원'"></p> <!-- 상품 가격 -->
                 </div>
                 <button type="submit" class="product-btn" th:onclick="addCartItem([[${product.id}]])">담기</button>
             </div>
