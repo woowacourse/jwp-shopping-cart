@@ -15,17 +15,28 @@ public class Product {
     }
 
     public Product(final Long id, final String name, final String image, final long price) {
-        validateName(name);
-        validatePrice(price);
+        validate(name, image, price);
         this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
     }
 
+    private void validate(final String name, final String image, final long price) {
+        validateName(name);
+        validateImage(image);
+        validatePrice(price);
+    }
+
     private void validateName(final String name) {
         if (name.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("상품명의 길이는 " + MAX_NAME_LENGTH + "자 이하여야합니다.");
+        }
+    }
+
+    private void validateImage(final String image) {
+        if (image.isBlank()) {
+            throw new IllegalArgumentException("이미지는 공백일 수 없습니다.");
         }
     }
 

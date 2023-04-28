@@ -18,6 +18,13 @@ class ProductTest {
     }
 
     @Test
+    void 상품_이미지_값이_공백이라면_예외를_던진다() {
+        assertThatThrownBy(() -> new Product(1L, "텀블러", "", 1000L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미지는 공백일 수 없습니다.");
+    }
+
+    @Test
     void 상품_가격은_0원_이상이_아니라면_예외를_던진다() {
         assertThatThrownBy(() -> new Product(1L, "텀블러", "1.jpg", -1))
                 .isInstanceOf(IllegalArgumentException.class)
