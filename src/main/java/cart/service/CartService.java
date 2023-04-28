@@ -46,4 +46,22 @@ public class CartService {
         Cart cart = Cart.from(null, member, product);
         cartRepository.save(cart);
     }
+
+    @Transactional
+    public void deleteCart(final MemberLoginRequestDto memberLoginRequestDto, final Long productId) {
+        Member member = memberService.findMember(memberLoginRequestDto);
+        Product product = productService.findById(productId);
+
+        List<Cart> memberCarts = cartRepository.findAllByMember(member);
+
+        List<Product> memberCartProducts = memberCarts.stream()
+                .map(Cart::getProduct)
+                .collect(Collectors.toList());
+
+        if (!memberCartProducts.contains(product)) {
+            throw new IllegalArgumentException("올바르지 않은 요청입니다.");
+        }
+
+        cartRepository.delete(product);
+    }
 }

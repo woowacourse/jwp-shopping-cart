@@ -23,15 +23,22 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<ProductsResponseDto> findMemberCarts(@RequestHeader("Authorization") final String authHeaderValue) {
-        MemberLoginRequestDto member = getMember(authHeaderValue);
-        return ResponseEntity.ok(cartService.findAll(member));
+        return ResponseEntity.ok(cartService.findAll(getMember(authHeaderValue)));
     }
 
     @PostMapping("/{productId}")
     public ResponseEntity<Void> addCart(@PathVariable final Long productId,
                                         @RequestHeader("Authorization") final String authHeaderValue) {
         cartService.addCart(getMember(authHeaderValue), productId);
-        cartService.findAll(getMember(authHeaderValue));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteCart(@PathVariable final Long productId,
+                                           @RequestHeader("Authorization") final String authHeaderValue) {
+        System.out.println("hi");
+        cartService.deleteCart(getMember(authHeaderValue), productId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
