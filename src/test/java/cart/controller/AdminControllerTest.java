@@ -44,6 +44,19 @@ class AdminControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("32자 이상 이름 상품 추가 실패")
+    @Test
+    void createProductNameLengthOver32() {
+        ProductCreateRequest request = new ProductCreateRequest("012345678901234567890123456789012", 1000, "url");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/admin")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("상품 수정")
     @Test
     void updateProduct() {
