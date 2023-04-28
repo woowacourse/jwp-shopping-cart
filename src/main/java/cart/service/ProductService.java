@@ -21,7 +21,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Product findById(Long id) {
+    public Product findById(final Long id) {
         return productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
     }
