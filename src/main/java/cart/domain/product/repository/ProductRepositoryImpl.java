@@ -31,7 +31,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public int delete(final Long id) {
-
-        return 0;
+        return productDao.delete(id);
     }
 }
