@@ -41,7 +41,7 @@ class ProductServiceTest {
 
     }
 
-    @DisplayName("상품 수정 시 전달받은 DB에 존재하면 정보를 업데이트한다")
+    @DisplayName("상품 수정 시 전달받은 id가 DB에 존재하면 정보를 업데이트한다")
     @Test
     void update() {
         // given
@@ -54,7 +54,7 @@ class ProductServiceTest {
         verify(productDao).update(FIXTURE_UPDATED_PRODUCT);
     }
 
-    @DisplayName("상품 수정 시 전달받은 DB에 없으면 예외를 던진다")
+    @DisplayName("상품 수정 시 전달받은 id가 DB에 없으면 예외를 던진다")
     @Test
     void updateFail() {
         // given
