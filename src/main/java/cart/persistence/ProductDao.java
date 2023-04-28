@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface ProductDao {
 
-//    void create(Product product);
     Long create(Product product);
 
     Product find(Long id);
