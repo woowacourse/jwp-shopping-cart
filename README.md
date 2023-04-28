@@ -22,7 +22,7 @@
 ## 코드리뷰 피드백 및 리팩터링 목록
 
 - [x] @RestController의 반환 타입 코드 중복 수정
-- [ ] 수정, 삭제 검증 로직 추가
+- [x] 수정, 삭제 id 검증 로직 추가
 - [ ] 서비스 계층 추가
 - [ ] 서비스 테스트 작성
 - [x] [수정 모달 폼 이미지 URL undefined 버그 해결](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178012078)

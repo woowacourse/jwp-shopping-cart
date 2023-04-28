@@ -10,6 +10,8 @@ public interface ProductDao {
 
     void update(Product product);
 
+    boolean isExist(Long id);
+
     Optional<Product> findById(Long id);
 
     List<Product> findAll();

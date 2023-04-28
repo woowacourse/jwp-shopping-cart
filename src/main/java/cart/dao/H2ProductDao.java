@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.Product;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -35,7 +36,7 @@ public class H2ProductDao implements ProductDao {
                 keyHolder,
                 new String[]{"id"}
         );
-        long id = keyHolder.getKey().longValue();
+        Long id = keyHolder.getKey().longValue();
         return new Product(id, product.getName(), product.getImageUrl(), product.getPrice());
     }
 
@@ -45,6 +46,15 @@ public class H2ProductDao implements ProductDao {
                 "UPDATE products SET name = :name, image_url = :imageUrl, price = :price WHERE id = :id",
                 new BeanPropertySqlParameterSource(product)
         );
+    }
+
+    @Override
+    public boolean isExist(final Long id) {
+        return Boolean.TRUE.equals(namedParameterJdbcTemplate.queryForObject(
+                "SELECT EXISTS (SELECT id FROM products WHERE id = :id limit 1) AS SUCCESS",
+                Map.of("id", id),
+                Boolean.class
+        ));
     }
 
     @Override
