@@ -4,11 +4,10 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductDto;
+import cart.repository.ProductRepository;
 import io.restassured.RestAssured;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
+import java.util.List;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql("classpath:schema.sql")
@@ -30,17 +30,16 @@ class ProductServiceTest {
     @Autowired
     private ProductService productService;
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
 
-        productDao.insert(new Product("pizza", 1000,
+        productRepository.insert(new Product("pizza", 1000,
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg/800px-Eq_it-na_pizza-margherita_sep2005_sml.jpg"));
-        productDao.insert(
-                new Product("salad", 2000,
-                        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Salad_platter.jpg/1200px-Salad_platter.jpg"));
+        productRepository.insert(new Product("salad", 2000,
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Salad_platter.jpg/1200px-Salad_platter.jpg"));
     }
 
     @Test
@@ -64,7 +63,7 @@ class ProductServiceTest {
     void 상품_수정(final long id, final String newName, final int newPrice, final String newImageUrl) {
         productService.updateProduct(id, new ProductDto(newName, newPrice, newImageUrl));
 
-        final Product updatedProduct = productDao.findById(id);
+        final Product updatedProduct = productRepository.findById(id);
         assertAll(
                 () -> assertThat(updatedProduct.getName()).isEqualTo(newName),
                 () -> assertThat(updatedProduct.getPrice()).isEqualTo(newPrice),
