@@ -18,7 +18,7 @@ public class ProductRepository {
     }
 
     public long insert(final Product product) {
-        ProductEntity productEntity = ProductEntity.from(product);
+        ProductEntity productEntity = new ProductEntity(product.getName(), product.getPrice(), product.getImageUrl());
 
         return productDao.insert(productEntity);
     }
