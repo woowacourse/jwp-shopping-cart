@@ -5,6 +5,7 @@ import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.member.MemberLoginRequestDto;
 import cart.dto.product.ProductsResponseDto;
+import cart.exception.ProductNotFoundException;
 import cart.repository.cart.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,10 @@ public class CartService {
     public ProductsResponseDto findAll(final MemberLoginRequestDto memberLoginRequestDto) {
         Member member = memberService.findMember(memberLoginRequestDto);
         List<Cart> carts = cartRepository.findAllByMember(member);
+        return getProductsResponseDto(carts);
+    }
 
+    private ProductsResponseDto getProductsResponseDto(final List<Cart> carts) {
         List<Product> products = carts.stream()
                 .map(Cart::getProduct)
                 .collect(Collectors.toList());
@@ -43,7 +47,8 @@ public class CartService {
     public void addCart(final MemberLoginRequestDto memberLoginRequestDto, final Long productId) {
         Member member = memberService.findMember(memberLoginRequestDto);
         Product product = productService.findById(productId);
-        Cart cart = Cart.from(null, member, product);
+
+        Cart cart = Cart.from(member, product);
         cartRepository.save(cart);
     }
 
@@ -51,17 +56,20 @@ public class CartService {
     public void deleteCart(final MemberLoginRequestDto memberLoginRequestDto, final Long productId) {
         Member member = memberService.findMember(memberLoginRequestDto);
         Product product = productService.findById(productId);
-
         List<Cart> memberCarts = cartRepository.findAllByMember(member);
 
+        validateCartHasProduct(product, memberCarts);
+
+        cartRepository.delete(product);
+    }
+
+    private void validateCartHasProduct(final Product product, final List<Cart> memberCarts) {
         List<Product> memberCartProducts = memberCarts.stream()
                 .map(Cart::getProduct)
                 .collect(Collectors.toList());
 
         if (!memberCartProducts.contains(product)) {
-            throw new IllegalArgumentException("올바르지 않은 요청입니다.");
+            throw new ProductNotFoundException();
         }
-
-        cartRepository.delete(product);
     }
 }

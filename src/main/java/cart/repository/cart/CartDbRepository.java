@@ -4,6 +4,7 @@ import cart.domain.cart.Cart;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.cart.CartDbResponseDto;
+import cart.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -46,6 +47,10 @@ public class CartDbRepository implements CartRepository {
             return new ArrayList<>();
         }
 
+        return getCarts(member, cartDbResponses, productIds);
+    }
+
+    private List<Cart> getCarts(final Member member, final List<CartDbResponseDto> cartDbResponses, final List<Long> productIds) {
         String loadingProductSql = "SELECT id, name, price, img_url FROM product WHERE id IN (:productIds)";
         List<Product> products = namedParameterJdbcTemplate.query(loadingProductSql, new MapSqlParameterSource("productIds", productIds), getProductRowMapper());
 
@@ -56,7 +61,7 @@ public class CartDbRepository implements CartRepository {
                     Product foundProduct = products.stream()
                             .filter(product -> product.isSameId(productId))
                             .findAny()
-                            .orElseThrow(() -> new IllegalStateException("id 값으로 Product를 찾을 수 없습니다."));
+                            .orElseThrow(ProductNotFoundException::new);
                     return Cart.from(cartId, member, foundProduct);
                 })
                 .collect(Collectors.toList());

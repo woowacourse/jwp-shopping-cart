@@ -19,6 +19,10 @@ public class Cart {
         return new Cart(id, member, product);
     }
 
+    public static Cart from(final Member member, final Product product) {
+        return new Cart(null, member, product);
+    }
+
     public void setId(final Long id) {
         this.id = id;
     }
