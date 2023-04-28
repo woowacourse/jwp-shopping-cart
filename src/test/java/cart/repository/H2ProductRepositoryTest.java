@@ -49,7 +49,7 @@ class H2ProductRepositoryTest {
 
             assertAll(
                     () -> assertThat(result.getProductId()).isEqualTo(productId),
-                    () -> assertThat(result.getProductName().getValue()).isEqualTo("누누"),
+                    () -> assertThat(result.getProductNameValue()).isEqualTo("누누"),
                     () -> assertThat(result.getProductImage().getValue()).isEqualTo("newUrl"),
                     () -> assertThat(result.getProductPrice().getValue()).isEqualTo(3)
             );
@@ -68,7 +68,7 @@ class H2ProductRepositoryTest {
             assertAll(
                     () -> assertThat(result).isPresent(),
                     () -> assertThat(result.get().getProductId()).isEqualTo(productId),
-                    () -> assertThat(result.get().getProductName().getValue()).isEqualTo("오도"),
+                    () -> assertThat(result.get().getProductNameValue()).isEqualTo("오도"),
                     () -> assertThat(result.get().getProductImage().getValue()).isEqualTo("naver.com"),
                     () -> assertThat(result.get().getProductPrice().getValue()).isEqualTo(1)
             );

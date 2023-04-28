@@ -59,12 +59,12 @@ class ProductCommandServiceTest {
         final Optional<Product> updatedProduct = stubProductRepository.findById(product.getProductId());
         assertAll(
                 () -> assertThat(result.getProductId()).isPositive(),
-                () -> assertThat(result.getProductName().getValue()).isEqualTo("누누"),
+                () -> assertThat(result.getProductNameValue()).isEqualTo("누누"),
                 () -> assertThat(result.getProductImage().getValue()).isEqualTo("url"),
                 () -> assertThat(result.getProductPrice().getValue()).isEqualTo(2),
                 () -> assertThat(updatedProduct).isPresent(),
                 () -> assertThat(updatedProduct.get().getProductId()).isPositive(),
-                () -> assertThat(updatedProduct.get().getProductName().getValue()).isEqualTo("누누"),
+                () -> assertThat(updatedProduct.get().getProductNameValue()).isEqualTo("누누"),
                 () -> assertThat(updatedProduct.get().getProductImage().getValue()).isEqualTo("url"),
                 () -> assertThat(updatedProduct.get().getProductPrice().getValue()).isEqualTo(2)
         );
