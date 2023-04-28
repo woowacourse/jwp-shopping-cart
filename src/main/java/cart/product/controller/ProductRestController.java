@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminController {
+public class ProductRestController {
     
     private final ProductListService productListService;
     
-    public AdminController(final ProductListService productListService) {
+    public ProductRestController(final ProductListService productListService) {
         this.productListService = productListService;
     }
     

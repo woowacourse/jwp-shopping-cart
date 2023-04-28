@@ -43,7 +43,7 @@
 
 ## 1단계 리팩토링 요구사항
 
-- [ ] Controller 네이밍 변경
+- [x] Controller 네이밍 변경
 - [ ] path에서 http method에 대한 키워드 삭제
 - [ ] Update의 반환 상태 코드 변경
 - [ ] @Valid 어노테이션 사용

@@ -6,11 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ProductListController {
+public class PageController {
     
     private final ProductListService productListService;
     
-    public ProductListController(final ProductListService productListService) {
+    public PageController(final ProductListService productListService) {
         this.productListService = productListService;
     }
     
