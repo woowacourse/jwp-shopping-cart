@@ -5,7 +5,7 @@ import cart.entity.Product;
 import java.util.List;
 
 public interface ProductsDao {
-    void create(final String name, final int price, final String image);
+    Long create(final String name, final int price, final String image);
 
     List<Product> readAll();
 

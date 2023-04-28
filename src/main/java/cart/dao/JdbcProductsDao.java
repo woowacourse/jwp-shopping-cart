@@ -23,13 +23,13 @@ public class JdbcProductsDao implements ProductsDao {
     }
 
     @Override
-    public void create(final String name, final int price, final String image) {
+    public Long create(final String name, final int price, final String image) {
         final MapSqlParameterSource parameterMap = new MapSqlParameterSource()
                 .addValue("product_name", name)
                 .addValue("product_price", price)
                 .addValue("product_image", image);
 
-        simpleJdbcInsert.execute(parameterMap);
+        return simpleJdbcInsert.executeAndReturnKey(parameterMap).longValue();
     }
 
     @Override

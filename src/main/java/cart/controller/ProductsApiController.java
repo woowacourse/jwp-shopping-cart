@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/products")
 public class ProductsApiController {
 
+    private static final String PRODUCTS_LOCATION_PREFIX = "/products/";
+
     private final ProductService productService;
 
     public ProductsApiController(final ProductService productService) {
@@ -34,12 +36,13 @@ public class ProductsApiController {
             @Valid @RequestBody final ProductRequestDto productRequestDto,
             final HttpServletResponse httpServletResponse
     ) {
-        productService.insertProduct(new ProductDto.Builder()
+        final Long productId = productService.insertProduct(new ProductDto.Builder()
                 .name(productRequestDto.getName())
                 .price(productRequestDto.getPrice())
                 .imageUrl(productRequestDto.getImageUrl())
                 .build());
         httpServletResponse.setStatus(HttpStatus.CREATED.value());
+        httpServletResponse.setHeader("Location", PRODUCTS_LOCATION_PREFIX + productId);
     }
 
     @GetMapping

@@ -17,8 +17,8 @@ public class ProductService {
         this.productsDao = productsDao;
     }
 
-    public void insertProduct(final ProductDto productDto) {
-        productsDao.create(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+    public Long insertProduct(final ProductDto productDto) {
+        return productsDao.create(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
     }
 
     public List<ProductDto> findAll() {
