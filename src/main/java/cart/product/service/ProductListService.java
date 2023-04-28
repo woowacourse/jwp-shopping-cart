@@ -18,7 +18,7 @@ public class ProductListService {
     }
     
     public List<ResponseProductDto> display() {
-        final List<Product> products = this.productDao.findAll();
+        final List<Product> products = productDao.findAll();
         return products.stream()
                 .map(ResponseProductDto::create)
                 .collect(Collectors.toList());
@@ -26,17 +26,17 @@ public class ProductListService {
     
     public void create(final RequestProductDto requestProductDto) {
         final Product product = Product.create(requestProductDto);
-        this.productDao.insert(product);
+        productDao.insert(product);
     }
     
     public ResponseProductDto update(final long id, final RequestProductDto requestProductDto) {
-        final Product originalProduct = this.productDao.findByID(id);
+        final Product originalProduct = productDao.findByID(id);
         final Product updatedProduct = originalProduct.update(requestProductDto);
-        this.productDao.update(updatedProduct);
+        productDao.update(updatedProduct);
         return ResponseProductDto.create(updatedProduct);
     }
     
     public void delete(final long id) {
-        this.productDao.deleteByID(id);
+        productDao.deleteByID(id);
     }
 }

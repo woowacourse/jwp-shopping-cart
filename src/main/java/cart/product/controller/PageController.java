@@ -16,13 +16,13 @@ public class PageController {
     
     @GetMapping("/")
     public String renderProductListPage(final Model model) {
-        model.addAttribute("products", this.productListService.display());
+        model.addAttribute("products", productListService.display());
         return "index";
     }
     
     @GetMapping("/admin")
     public String renderAdminPage(final Model model) {
-        model.addAttribute("products", this.productListService.display());
+        model.addAttribute("products", productListService.display());
         return "admin";
     }
 }

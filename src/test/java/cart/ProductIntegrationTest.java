@@ -64,7 +64,6 @@ public class ProductIntegrationTest {
         
         //then
         final String productLiteral = result.body().asString();
-        System.out.println("productLiteral = " + productLiteral);
         final String name = JsonPath.with(productLiteral).getString("name");
         
         assertThat(name).isEqualTo(requestProductDto.getName());

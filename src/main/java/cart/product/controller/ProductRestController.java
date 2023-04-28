@@ -26,25 +26,25 @@ public class ProductRestController {
     @GetMapping("/products")
     @ResponseStatus(HttpStatus.OK)
     public List<ResponseProductDto> display() {
-        return this.productListService.display();
+        return productListService.display();
     }
     
     @PostMapping("/products")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody final RequestProductDto requestProductDto) {
-        this.productListService.create(requestProductDto);
+        productListService.create(requestProductDto);
     }
     
     @PutMapping("/products/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseProductDto update(@PathVariable final long id,
             @RequestBody final RequestProductDto requestProductDto) {
-        return this.productListService.update(id, requestProductDto);
+        return productListService.update(id, requestProductDto);
     }
     
     @DeleteMapping("/products/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable final long id) {
-        this.productListService.delete(id);
+        productListService.delete(id);
     }
 }

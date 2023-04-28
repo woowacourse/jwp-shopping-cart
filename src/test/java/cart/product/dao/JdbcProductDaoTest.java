@@ -25,8 +25,8 @@ class JdbcProductDaoTest {
         final Product product = new Product(new Name("스파게티"), "https://hello", new Price(1000));
         
         //when
-        final long id = this.jdbcProductDao.insert(product);
-        final Product insertedProduct = this.jdbcProductDao.findByID(id);
+        final long id = jdbcProductDao.insert(product);
+        final Product insertedProduct = jdbcProductDao.findByID(id);
         
         //then
         assertEquals(product.getName().getValue(), insertedProduct.getName().getValue());
@@ -36,18 +36,18 @@ class JdbcProductDaoTest {
     @DisplayName("상품 목록 findAll 테스트")
     void findAll() {
         //given
-        final int initialSize = this.jdbcProductDao.findAll().size();
+        final int initialSize = jdbcProductDao.findAll().size();
         final Product product1 = new Product(new Name("스파게티"), "https://hello", new Price(1000));
         final Product product2 = new Product(new Name("피자"), "https://hello", new Price(2000));
         final Product product3 = new Product(new Name("치킨"), "https://hello", new Price(3000));
         
         //when
-        this.jdbcProductDao.insert(product1);
-        this.jdbcProductDao.insert(product2);
-        this.jdbcProductDao.insert(product3);
+        jdbcProductDao.insert(product1);
+        jdbcProductDao.insert(product2);
+        jdbcProductDao.insert(product3);
         
         //then
-        assertEquals(3, this.jdbcProductDao.findAll().size() - initialSize);
+        assertEquals(3, jdbcProductDao.findAll().size() - initialSize);
     }
     
     @Test
@@ -58,12 +58,12 @@ class JdbcProductDaoTest {
         final Product product2 = new Product(new Name("에코"), "https://echo", new Price(2000));
         final Product product3 = new Product(new Name("포비"), "https://pobi", new Price(3000));
         
-        this.jdbcProductDao.insert(product1);
-        this.jdbcProductDao.insert(product2);
-        this.jdbcProductDao.insert(product3);
+        jdbcProductDao.insert(product1);
+        jdbcProductDao.insert(product2);
+        jdbcProductDao.insert(product3);
         
         //when
-        final Product result = this.jdbcProductDao.findByName("망고");
+        final Product result = jdbcProductDao.findByName("망고");
         
         //then
         assertEquals(product1.getName().getValue(), result.getName().getValue());
@@ -79,17 +79,17 @@ class JdbcProductDaoTest {
         final Product product2 = new Product(new Name("에코"), "https://echo", new Price(2000));
         final Product product3 = new Product(new Name("포비"), "https://pobi", new Price(3000));
         
-        final long id1 = this.jdbcProductDao.insert(product1);
-        final long id2 = this.jdbcProductDao.insert(product2);
-        final long id3 = this.jdbcProductDao.insert(product3);
-        final int initialSize = this.jdbcProductDao.findAll().size(); //6
+        final long id1 = jdbcProductDao.insert(product1);
+        final long id2 = jdbcProductDao.insert(product2);
+        final long id3 = jdbcProductDao.insert(product3);
+        final int initialSize = jdbcProductDao.findAll().size(); //6
         
         //when
-        this.jdbcProductDao.deleteByID(id1);
-        this.jdbcProductDao.deleteByID(id2);
+        jdbcProductDao.deleteByID(id1);
+        jdbcProductDao.deleteByID(id2);
         
         //then 4
-        final int updatedSize = this.jdbcProductDao.findAll().size(); // 4
+        final int updatedSize = jdbcProductDao.findAll().size(); // 4
         assertEquals(2, initialSize - updatedSize);
     }
     
@@ -101,15 +101,15 @@ class JdbcProductDaoTest {
         final Product product2 = new Product(new Name("에코"), "https://echo", new Price(2000));
         final Product product3 = new Product(new Name("포비"), "https://pobi", new Price(3000));
         
-        final long id1 = this.jdbcProductDao.insert(product1);
-        final long id2 = this.jdbcProductDao.insert(product2);
-        final long id3 = this.jdbcProductDao.insert(product3);
+        final long id1 = jdbcProductDao.insert(product1);
+        final long id2 = jdbcProductDao.insert(product2);
+        final long id3 = jdbcProductDao.insert(product3);
         
         //when
         final Product updatedProduct = new Product(id2, new Name("에코"), "https://echo", new Price(5000));
-        this.jdbcProductDao.update(updatedProduct);
+        jdbcProductDao.update(updatedProduct);
         
         //then
-        assertEquals(5000, this.jdbcProductDao.findByID(id2).getPrice().getValue());
+        assertEquals(5000, jdbcProductDao.findByID(id2).getPrice().getValue());
     }
 }

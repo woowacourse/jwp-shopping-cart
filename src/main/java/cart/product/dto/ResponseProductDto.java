@@ -20,20 +20,20 @@ public class ResponseProductDto {
         return new ResponseProductDto(product.getId(), product.getName().getValue(), product.getImage(),
                 product.getPrice().getValue());
     }
-    
+
     public long getId() {
-        return this.id;
+        return id;
     }
-    
+
     public String getName() {
-        return this.name;
+        return name;
     }
     
     public String getImage() {
-        return this.image;
+        return image;
     }
     
     public int getPrice() {
-        return this.price;
+        return price;
     }
 }

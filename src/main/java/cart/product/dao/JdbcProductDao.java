@@ -36,7 +36,7 @@ public class JdbcProductDao implements ProductDao {
     
     public void update(final Product product) {
         final String sql = "update product_list set name = ?, image = ?, price = ? where id = ?";
-        this.jdbcTemplate.update(con -> {
+        jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, product.getName().getValue());
             preparedStatement.setString(2, product.getImage());
@@ -53,30 +53,30 @@ public class JdbcProductDao implements ProductDao {
         parameters.put("image", product.getImage());
         parameters.put("price", product.getPrice().getValue());
         
-        return this.simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
     
     @Override
     public Product findByID(final long id) {
         final String sql = "select * from product_list where id = ?";
-        return this.jdbcTemplate.queryForObject(sql, this.productRowMapper, id);
+        return jdbcTemplate.queryForObject(sql, productRowMapper, id);
     }
     
     @Override
     public Product findByName(final String name) {
         final String sql = "select * from product_list where name = ?";
-        return this.jdbcTemplate.queryForObject(sql, this.productRowMapper, name);
+        return jdbcTemplate.queryForObject(sql, productRowMapper, name);
     }
     
     @Override
     public void deleteByID(final long id) {
         final String sql = "delete from product_list where id = ?";
-        this.jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
     
     @Override
     public List<Product> findAll() {
         final String sql = "select * from product_list";
-        return this.jdbcTemplate.query(sql, this.productRowMapper);
+        return jdbcTemplate.query(sql, productRowMapper);
     }
 }

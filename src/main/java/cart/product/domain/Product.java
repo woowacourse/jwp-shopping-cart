@@ -30,22 +30,22 @@ public class Product {
     public Product update(final RequestProductDto requestProductDto) {
         final Name name = new Name(requestProductDto.getName());
         final Price price = new Price(requestProductDto.getPrice());
-        return new Product(this.id, name, requestProductDto.getImage(), price);
+        return new Product(id, name, requestProductDto.getImage(), price);
     }
     
     public long getId() {
-        return this.id;
+        return id;
     }
     
     public Name getName() {
-        return this.name;
+        return name;
     }
     
     public String getImage() {
-        return this.image;
+        return image;
     }
     
     public Price getPrice() {
-        return this.price;
+        return price;
     }
 }
