@@ -37,19 +37,19 @@ public class AdminController {
         return "admin";
     }
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final RequestCreateProductDto requestCreateProductDto) {
         cartService.insert(requestCreateProductDto);
         return ResponseEntity.created(URI.create("/product")).build();
     }
 
-    @PutMapping("/product")
+    @PutMapping("/products")
     public ResponseEntity<Void> updateProduct(@RequestBody @Valid final RequestUpdateProductDto requestUpdateProductDto) {
         cartService.update(requestUpdateProductDto);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
         cartService.delete(id);
         return ResponseEntity.ok().build();
