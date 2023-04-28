@@ -5,6 +5,7 @@ import cart.persistence.entity.ProductCategory;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -43,8 +44,9 @@ class AdminProductControllerTest {
         productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
     }
 
+    @DisplayName("상품을 정상적으로 추가한다")
     @Test
-    void addProduct() throws Exception {
+    void addProduct_success() throws Exception {
         // given
         when(productService.save(any())).thenReturn(1L);
 
@@ -57,9 +59,13 @@ class AdminProductControllerTest {
                 .andExpect(status().isCreated());
     }
 
+    @DisplayName("상품의 정보를 정상적으로 입력하지 않으면 예외가 발생한다")
     @Test
     void addProduct_fail() throws Exception {
+        // given
         final ProductDto productDto = new ProductDto(1L, "", "", null, null);
+
+        // when, then
         mockMvc.perform(post("/admin/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))
@@ -76,8 +82,9 @@ class AdminProductControllerTest {
     }
 
 
+    @DisplayName("상품을 정상적으로 수정한다")
     @Test
-    void updateProduct() throws Exception {
+    void updateProduct_success() throws Exception {
         // given
         doNothing().when(productService).update(any(), any());
 
@@ -90,9 +97,13 @@ class AdminProductControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    @DisplayName("수정할 상품의 정보를 잘못 입력하면 예외가 발생한다")
     @Test
     void updateProduct_fail() throws Exception {
+        // given
         final ProductDto productDto = new ProductDto(1L, "", "", null, null);
+
+        // when, then
         mockMvc.perform(put("/admin/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))
@@ -108,8 +119,9 @@ class AdminProductControllerTest {
                 ));
     }
 
+    @DisplayName("상품을 정상적으로 삭제한다")
     @Test
-    void deleteProduct() throws Exception {
+    void deleteProduct_success() throws Exception {
         // given
         doNothing().when(productService).delete(any());
 

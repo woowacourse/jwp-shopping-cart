@@ -5,6 +5,7 @@ import cart.persistence.entity.ProductCategory;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -36,6 +37,7 @@ class AdminControllerTest {
         productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
     }
 
+    @DisplayName("상품 목록을 조회한다")
     @Test
     void getProducts() throws Exception {
         // given

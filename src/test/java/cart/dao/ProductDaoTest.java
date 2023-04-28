@@ -26,7 +26,7 @@ class ProductDaoTest {
 
     private final Product product = new Product("치킨", IMAGE_URL, 20000, ProductCategory.KOREAN);
 
-    @DisplayName("존재하는 상품을 조회하면, 성공적으로 가져온다.")
+    @DisplayName("존재하는 상품을 조회하면, 성공적으로 가져온다")
     @Test
     void findById_success() {
         // given
