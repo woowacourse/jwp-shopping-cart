@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,7 +54,7 @@ class JdbcProductDaoTest {
     @DisplayName("전체 상품을 조회한다.")
     void findAll() {
         // given
-        saveProduct("치킨", 10000,"chickenImage");
+        saveProduct("치킨", 10000, "chickenImage");
         saveProduct("샐러드", 30000, "saladImage");
 
         // when
@@ -74,7 +75,10 @@ class JdbcProductDaoTest {
         productDao.delete(id);
 
         // then
-        assertThat(productDao.findAll()).hasSize(1);
+        final List<Product> products = productDao.findAll();
+        final boolean isDeleted = products.stream()
+                .anyMatch(product -> Objects.equals(product.getId(), id));
+        assertThat(isDeleted).isFalse();
     }
 
     @Test
