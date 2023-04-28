@@ -2,6 +2,7 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 
@@ -126,18 +128,12 @@ class ProductDaoTest {
 	@Rollback
 	void create32OverNameLengthFail () {
 		// given
-        final String name = "012345678901234567890123456789012";
+		final String name = "012345678901234567890123456789012";
 		ProductCreateRequest request = new ProductCreateRequest(name, 5000, "image url");
 
 		// when
-		productDao.create(request);
 
 		// then
-		List<ProductEntity> responses = productDao.findAll();
-		assertAll(
-				() -> assertThat(responses).hasSize(1),
-				() -> assertThat(responses.get(0).getName()).isEqualTo("product"),
-				() -> assertThat(responses.get(0).getPrice()).isEqualTo(5000)
-		);
+		assertThrows(DataIntegrityViolationException.class, () -> productDao.create(request));
 	}
 }
