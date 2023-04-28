@@ -25,7 +25,7 @@ public class ItemDao {
     public ItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("ITEM")
+                .withTableName("ITEMS")
                 .usingGeneratedKeyColumns("item_id");
     }
 
@@ -41,7 +41,7 @@ public class ItemDao {
     }
 
     public Optional<Item> findById(Long id) {
-        String sql = "SELECT item_id, name, image_url, price FROM ITEM WHERE item_id = ?";
+        String sql = "SELECT item_id, name, image_url, price FROM ITEMS WHERE item_id = ?";
 
         return jdbcTemplate.query(sql, actorRowMapper, id)
                 .stream()
@@ -49,19 +49,19 @@ public class ItemDao {
     }
 
     public List<Item> findAll() {
-        String sql = "SELECT item_id, name, image_url, price FROM ITEM";
+        String sql = "SELECT item_id, name, image_url, price FROM ITEMS";
 
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
     public int update(Item item) {
-        String sql = "UPDATE ITEM SET name = ?, image_url = ?, price = ? WHERE item_id = ?";
+        String sql = "UPDATE ITEMS SET name = ?, image_url = ?, price = ? WHERE item_id = ?";
 
         return jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice(), item.getId());
     }
 
     public int delete(Long id) {
-        String sql = "DELETE FROM ITEM WHERE item_id = ?";
+        String sql = "DELETE FROM ITEMS WHERE item_id = ?";
 
         return jdbcTemplate.update(sql, id);
     }
