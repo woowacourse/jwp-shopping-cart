@@ -51,7 +51,7 @@ public class ProductIntegrationTest {
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/{id}", 1L)
+                .get("/products/{id}", 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

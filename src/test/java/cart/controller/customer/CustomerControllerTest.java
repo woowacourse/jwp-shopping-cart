@@ -18,8 +18,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CustomerProductController.class)
-class CustomerProductControllerTest {
+@WebMvcTest(CustomerController.class)
+class CustomerControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,7 +52,7 @@ class CustomerProductControllerTest {
         when(productService.getById(any())).thenReturn(productDto);
 
         //when
-        mockMvc.perform(get("/{id}", 1L)
+        mockMvc.perform(get("/products/{id}", 1L)
                         .contentType(MediaType.TEXT_HTML))
                 .andExpect(status().isOk());
     }

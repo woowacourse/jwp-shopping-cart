@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 @Controller
-public class CustomerProductController {
+public class CustomerController {
 
     private final ProductService productService;
 
-    public CustomerProductController(final ProductService productService) {
+    public CustomerController(final ProductService productService) {
         this.productService = productService;
     }
 
@@ -25,9 +25,9 @@ public class CustomerProductController {
         return "index";
     }
 
-    @GetMapping("/{id}")
-    public String getProduct(@PathVariable Long id, final Model model) {
-        final ProductDto productDto = productService.getById(id);
+    @GetMapping("products/{productId}")
+    public String getProduct(@PathVariable Long productId, final Model model) {
+        final ProductDto productDto = productService.getById(productId);
         model.addAttribute("product", productDto);
         return "product";
     }
