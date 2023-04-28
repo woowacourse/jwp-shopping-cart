@@ -32,9 +32,9 @@ public class ProductRestController {
         return ResponseEntity.ok(products);
     }
 
-    @PutMapping("/product")
-    public ResponseEntity<Long> updateProduct(@RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
-        Long updatedProductId = cartService.updateProduct(productUpdateRequestDto);
+    @PutMapping("/product/{id}")
+    public ResponseEntity<Long> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
+        Long updatedProductId = cartService.updateProduct(id, productUpdateRequestDto);
 
         return ResponseEntity.ok(updatedProductId);
     }

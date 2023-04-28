@@ -25,32 +25,45 @@ public class CartService {
 
     @Transactional
     public Long addProduct(ProductSaveRequestDto productSaveRequestDto) {
-        Product product = new Product(productSaveRequestDto.getName(), productSaveRequestDto.getImage(), productSaveRequestDto.getPrice());
+        Product product = new Product(
+                productSaveRequestDto.getName(),
+                productSaveRequestDto.getImage(),
+                productSaveRequestDto.getPrice());
 
-        ProductEntity save = productDao.save(new ProductEntity(product.getId(), product.getName(), product.getImage(), product.getPrice()));
+        ProductEntity save = productDao.save(
+                new ProductEntity(product.getId(),
+                        product.getName(),
+                        product.getImage(),
+                        product.getPrice()));
+
         return save.getId();
     }
 
     public List<ProductResponseDto> findProducts() {
         List<ProductEntity> products = productDao.findAll();
         return products.stream()
-                .map(entity -> new ProductResponseDto(entity.getId(), entity.getName(), entity.getImage(), entity.getPrice()))
+                .map(entity -> new ProductResponseDto(
+                        entity.getId(),
+                        entity.getName(),
+                        entity.getImage(),
+                        entity.getPrice()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional
-    public Long updateProduct(ProductUpdateRequestDto productUpdateRequestDto) {
-        validateExistence(productUpdateRequestDto.getId());
-        Product product = new Product(productUpdateRequestDto.getName(), productUpdateRequestDto.getImage(), productUpdateRequestDto.getPrice());
+    public Long updateProduct(Long id, ProductUpdateRequestDto productUpdateRequestDto) {
+        validateExistence(id);
+        Product product = new Product(
+                productUpdateRequestDto.getName(),
+                productUpdateRequestDto.getImage(),
+                productUpdateRequestDto.getPrice());
 
-        ProductEntity update = productDao.update(new ProductEntity(product.getId(), product.getName(), product.getImage(), product.getPrice()));
+        ProductEntity update = productDao.update(new ProductEntity(
+                id, product.getName(),
+                product.getImage(),
+                product.getPrice()));
+
         return update.getId();
-    }
-
-    private void validateExistence(Long id) {
-        if (!productDao.existById(id)) {
-            throw new IllegalArgumentException(NOT_EXIST_PRODUCT);
-        }
     }
 
     @Transactional
@@ -59,5 +72,11 @@ public class CartService {
 
         productDao.delete(id);
         return id;
+    }
+
+    private void validateExistence(Long id) {
+        if (!productDao.existById(id)) {
+            throw new IllegalArgumentException(NOT_EXIST_PRODUCT);
+        }
     }
 }

@@ -56,13 +56,13 @@ class CartServiceTest {
         cartService.addProduct(new ProductSaveRequestDto("오션", "이미지", 10000));
         ProductResponseDto product = cartService.findProducts().get(0);
         //then
-        assertThatNoException().isThrownBy(() -> cartService.updateProduct(new ProductUpdateRequestDto(product.getId(), "연어", "이미지", 100)));
+        assertThatNoException().isThrownBy(() -> cartService.updateProduct(1L, new ProductUpdateRequestDto(product.getId(), "연어", "이미지", 100)));
     }
 
     @DisplayName("상품이 없을 때 update 시 예외가 발생한다.")
     @Test
     void updateProduct_Exception() {
-        assertThatThrownBy(() -> cartService.updateProduct(new ProductUpdateRequestDto()))
+        assertThatThrownBy(() -> cartService.updateProduct(null, new ProductUpdateRequestDto()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 상품이 존재하지 않습니다.");
     }

@@ -82,7 +82,7 @@ class CartControllerTest {
         given().log().uri()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(updateDto)
-                .when().put("/product")
+                .when().put("/product/{id}", 1L)
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
