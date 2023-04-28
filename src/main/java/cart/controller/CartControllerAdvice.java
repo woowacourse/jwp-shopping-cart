@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.exception.CartCustomException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.stream.Collectors;
@@ -34,6 +35,12 @@ public class CartControllerAdvice {
     public ResponseEntity<String> loggingUnexpectedException(final RuntimeException runtimeException) {
         LOGGER.error(UNEXPECTED_ERROR_LOG_FORMAT, convertToString(runtimeException));
         return ResponseEntity.internalServerError().build();
+    }
+
+    @ExceptionHandler(CartCustomException.class)
+    public ResponseEntity<String> handleCustomException(final CartCustomException cartCustomException) {
+        final ExceptionInfo info = ExceptionInfo.from(cartCustomException.getClass());
+        return ResponseEntity.status(info.getErrorCode()).body(info.getMessage());
     }
 
     private String convertToString(final Exception e) {
