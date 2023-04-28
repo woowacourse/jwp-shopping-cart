@@ -1,5 +1,5 @@
 const showDetail = (productId) => {
-    window.location.replace(`/${productId}`)
+    window.location.href = `/${productId}`;
 }
 
 const addCartItem = (productId) => {
