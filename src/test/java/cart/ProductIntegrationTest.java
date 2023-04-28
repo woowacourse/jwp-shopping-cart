@@ -33,5 +33,4 @@ public class ProductIntegrationTest {
 
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
-
 }
