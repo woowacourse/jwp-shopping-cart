@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.controller.dto.AddItemRequest;
 import cart.controller.dto.ItemResponse;
-import cart.dao.dto.ItemDto;
+import cart.model.Item;
 import cart.service.ItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
@@ -140,6 +140,6 @@ class ItemControllerTest {
     }
 
     private ItemResponse createItemResponse() {
-        return ItemResponse.from(new ItemDto(1L, "맥북", "http://image.com", 20_000));
+        return ItemResponse.from(new Item(1L, "맥북", "http://image.com", 20_000));
     }
 }

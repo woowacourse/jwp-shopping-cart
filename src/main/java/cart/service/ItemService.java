@@ -4,7 +4,6 @@ import cart.controller.dto.AddItemRequest;
 import cart.controller.dto.ItemResponse;
 import cart.controller.dto.UpdateItemRequest;
 import cart.dao.ItemDao;
-import cart.dao.dto.ItemDto;
 import cart.exception.ErrorStatus;
 import cart.exception.ItemException;
 import cart.model.Item;
@@ -17,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ItemService {
 
+    private static final int CORRECT_ROW_COUNT = 1;
     private final ItemDao itemDao;
 
     public ItemService(ItemDao itemDao) {
@@ -26,12 +26,9 @@ public class ItemService {
     @Transactional
     public ItemResponse add(AddItemRequest addItemRequest) {
         Item item = new Item(addItemRequest.getName(), addItemRequest.getImageUrl(), addItemRequest.getPrice());
-        Long savedId = itemDao.insert(item);
+        Item savedItem = itemDao.insert(item);
 
-        ItemDto itemDto = itemDao.findById(savedId)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
-
-        return ItemResponse.from(itemDto);
+        return ItemResponse.from(savedItem);
     }
 
     public List<ItemResponse> findAll() {
@@ -43,23 +40,24 @@ public class ItemService {
 
     @Transactional
     public ItemResponse update(Long id, UpdateItemRequest updateItemRequest) {
-        if (itemDao.findById(id).isEmpty()) {
+        Item updateItem = new Item(id, updateItemRequest.getName(), updateItemRequest.getImageUrl(),
+                updateItemRequest.getPrice());
+
+        int updateRecordCount = itemDao.update(updateItem);
+
+        if (updateRecordCount != CORRECT_ROW_COUNT) {
             throw new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR);
         }
 
-        Item item = new Item(updateItemRequest.getName(), updateItemRequest.getImageUrl(), updateItemRequest.getPrice());
-        itemDao.update(id, item);
-
-        ItemDto updatedItemDto = itemDao.findById(id)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
-        return ItemResponse.from(updatedItemDto);
+        return ItemResponse.from(updateItem);
     }
 
     @Transactional
     public void delete(Long id) {
-        itemDao.findById(id)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
+        int deleteRecordCount = itemDao.delete(id);
 
-        itemDao.delete(id);
+        if (deleteRecordCount != CORRECT_ROW_COUNT) {
+            throw new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR);
+        }
     }
 }
