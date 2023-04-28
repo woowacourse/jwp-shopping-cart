@@ -4,10 +4,11 @@ import static cart.domain.ProductFixture.ODO_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
 import java.util.List;
 import java.util.Optional;
+
+import cart.dao.ProductDao;
+import cart.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -57,8 +58,8 @@ class H2ProductRepositoryTest {
         }
 
         @Test
-        void find() {
-            final List<Product> result = h2ProductRepository.find();
+        void findAll() {
+            final List<Product> result = h2ProductRepository.findAll();
             assertThat(result).hasSize(1);
         }
 

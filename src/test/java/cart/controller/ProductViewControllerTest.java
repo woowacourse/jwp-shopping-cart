@@ -11,9 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import cart.domain.Product;
 import cart.dto.ProductResponse;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
@@ -24,7 +25,7 @@ class ProductViewControllerTest extends AbstractProductControllerTest {
     void 상품_조회_테스트() throws Exception {
         //given
         final List<Product> products = List.of(NUNU_ID_PRODUCT, ODO_ID_PRODUCT);
-        given(productSearchService.find()).willReturn(products);
+        given(productSearchService.findAll()).willReturn(products);
         final List<ProductResponse> expected = List.of(NUNU_RESPONSE, ODO_RESPONSE);
 
         //when
@@ -40,7 +41,7 @@ class ProductViewControllerTest extends AbstractProductControllerTest {
     void 어드민_페이지_조회_테스트() throws Exception {
         //given
         final List<Product> products = List.of(NUNU_ID_PRODUCT, ODO_ID_PRODUCT);
-        given(productSearchService.find()).willReturn(products);
+        given(productSearchService.findAll()).willReturn(products);
         final List<ProductResponse> expected = List.of(NUNU_RESPONSE, ODO_RESPONSE);
 
         //when

@@ -20,7 +20,7 @@ public class ProductSearchController {
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        final List<ProductResponse> productResponses = productSearchService.find()
+        final List<ProductResponse> productResponses = productSearchService.findAll()
                 .stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());

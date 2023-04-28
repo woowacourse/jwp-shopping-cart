@@ -30,7 +30,7 @@ public class H2ProductRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> find() {
+    public List<Product> findAll() {
         return productDao.find()
                 .stream()
                 .map(ProductEntity::toDomain)

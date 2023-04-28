@@ -1,8 +1,9 @@
 package cart.service;
 
+import java.util.List;
+
 import cart.domain.Product;
 import cart.repository.ProductRepository;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,7 @@ public class ProductSearchService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> find() {
-        return productRepository.find();
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 }
