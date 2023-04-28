@@ -5,11 +5,11 @@ import cart.controller.request.ProductUpdateRequest;
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +19,13 @@ public class ProductJdbcRepository implements ProductRepository {
     private static final int DELETED_COUNT = 1;
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ProductJdbcRepository(final JdbcTemplate jdbcTemplate) {
+    public ProductJdbcRepository(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("products")
+                .usingGeneratedKeyColumns("id");
     }
 
     private final RowMapper<Product> productRowMapper = (resultSet, rowNum) -> {
@@ -49,18 +53,11 @@ public class ProductJdbcRepository implements ProductRepository {
 
     @Override
     public long save(final ProductCreateRequest request) {
-        final String sql = "INSERT INTO products(name, price, image) VALUES(?, ?, ?)";
-        final KeyHolder key = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(con -> {
-            final PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, request.getName());
-            ps.setDouble(2, request.getPrice());
-            ps.setString(3, request.getImage());
-            return ps;
-        }, key);
-
-        return key.getKey().longValue();
+        return simpleJdbcInsert.execute(new MapSqlParameterSource()
+                .addValue("name", request.getName())
+                .addValue("price", request.getPrice())
+                .addValue("image", request.getImage())
+        );
     }
 
     @Override
