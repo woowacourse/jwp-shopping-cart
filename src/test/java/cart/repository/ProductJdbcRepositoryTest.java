@@ -1,19 +1,18 @@
 package cart.repository;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
-
-import java.util.List;
-
+import cart.controller.request.ProductCreateRequest;
+import cart.controller.request.ProductUpdateRequest;
+import cart.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import cart.controller.request.ProductCreateRequest;
-import cart.controller.request.ProductUpdateRequest;
-import cart.domain.Product;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductJdbcRepositoryTest {

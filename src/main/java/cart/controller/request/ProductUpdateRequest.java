@@ -1,10 +1,10 @@
 package cart.controller.request;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
-
-import org.hibernate.validator.constraints.Length;
 
 public class ProductUpdateRequest {
 	@NotBlank(message = "상품명은 공백일 수 없습니다.")
