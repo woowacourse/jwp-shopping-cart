@@ -69,7 +69,7 @@ class ProductControllerTest {
     void 상품을_수정한다() throws Exception {
         // given
         final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product).get();
+        final Long id = productDao.saveAndGetId(product);
         final ProductUpdateRequest updateRequestDto = new ProductUpdateRequest("고양이", "cat.jpg", 1000000L);
         final String request = objectMapper.writeValueAsString(updateRequestDto);
 
@@ -94,7 +94,7 @@ class ProductControllerTest {
     void 상품을_삭제한다() throws Exception {
         // given
         final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product).get();
+        final Long id = productDao.saveAndGetId(product);
 
         // when
         mockMvc.perform(delete("/products/" + id)

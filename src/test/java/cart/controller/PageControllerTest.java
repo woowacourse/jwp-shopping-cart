@@ -35,27 +35,13 @@ class PageControllerTest {
     @Autowired
     private ProductDao productDao;
 
-    private Matcher<Object> generatePropertiesMatcher(
-            final Long id,
-            final String name,
-            final String image,
-            final long price
-    ) {
-        return allOf(
-                hasProperty("id", is(id)),
-                hasProperty("name", is(name)),
-                hasProperty("image", is(image)),
-                hasProperty("price", is(price))
-        );
-    }
-
     @Test
     void 메인_페이지에_접근한다() throws Exception {
         // given
         final Product product1 = new Product("허브티", "tea.jpg", 1000L);
         final Product product2 = new Product("고양이", "cat.jpg", 1000000L);
-        final Long id1 = productDao.saveAndGetId(product1).get();
-        final Long id2 = productDao.saveAndGetId(product2).get();
+        final Long id1 = productDao.saveAndGetId(product1);
+        final Long id2 = productDao.saveAndGetId(product2);
 
         // expect
         mockMvc.perform(get("/"))
@@ -71,13 +57,27 @@ class PageControllerTest {
                 .andDo(print());
     }
 
+    private Matcher<Object> generatePropertiesMatcher(
+            final Long id,
+            final String name,
+            final String image,
+            final long price
+    ) {
+        return allOf(
+                hasProperty("id", is(id)),
+                hasProperty("name", is(name)),
+                hasProperty("image", is(image)),
+                hasProperty("price", is(price))
+        );
+    }
+
     @Test
     void 관리자_페이지에_접근한다() throws Exception {
         // given
         final Product product1 = new Product("허브티", "tea.jpg", 1000L);
         final Product product2 = new Product("고양이", "cat.jpg", 1000000L);
-        final Long id1 = productDao.saveAndGetId(product1).get();
-        final Long id2 = productDao.saveAndGetId(product2).get();
+        final Long id2 = productDao.saveAndGetId(product2);
+        final Long id1 = productDao.saveAndGetId(product1);
 
         // expect
         mockMvc.perform(get("/admin"))
@@ -97,7 +97,7 @@ class PageControllerTest {
     void 단일_조회_페이지에_접근한다() throws Exception {
         // given
         final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product).get();
+        final Long id = productDao.saveAndGetId(product);
 
         // expect
         mockMvc.perform(get("/products/" + id))

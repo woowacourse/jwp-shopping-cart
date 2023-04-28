@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -35,13 +34,13 @@ class ProductDaoTest {
         final Product product = new Product("허브티", "tea.jpg", 1000L);
 
         // when
-        final Optional<Long> id = productDao.saveAndGetId(product);
+        final Long id = productDao.saveAndGetId(product);
 
         // then
         final List<Product> result = productDao.findAll();
         assertAll(
                 () -> assertThat(result).hasSize(1),
-                () -> assertThat(id).isPresent()
+                () -> assertThat(id).isPositive()
         );
     }
 
@@ -50,8 +49,8 @@ class ProductDaoTest {
         // given
         final Product product1 = new Product("허브티", "tea.jpg", 1000L);
         final Product product2 = new Product("고양이", "cat.jpg", 1000000L);
-        final Long id1 = productDao.saveAndGetId(product1).get();
-        final Long id2 = productDao.saveAndGetId(product2).get();
+        final Long id1 = productDao.saveAndGetId(product1);
+        final Long id2 = productDao.saveAndGetId(product2);
 
         // when
         List<Product> result = productDao.findAll();
@@ -67,7 +66,7 @@ class ProductDaoTest {
     void 단일_상품을_조회한다() {
         // given
         final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product).get();
+        final Long id = productDao.saveAndGetId(product);
 
         // when
         final Product result = productDao.findById(id).get();
@@ -85,7 +84,7 @@ class ProductDaoTest {
     void 상품을_수정한다() {
         // given
         final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product).get();
+        final Long id = productDao.saveAndGetId(product);
         final Product updatedProduct = new Product(id, "블랙캣", "cat.jpg", 10000L);
 
         // when
@@ -105,7 +104,7 @@ class ProductDaoTest {
     void 상품을_삭제한다() {
         // given
         final Product product = new Product("허브티", "tea.jpg", 1000L);
-        final Long id = productDao.saveAndGetId(product).get();
+        final Long id = productDao.saveAndGetId(product);
 
         // when
         productDao.delete(id);

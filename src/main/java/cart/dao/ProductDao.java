@@ -30,9 +30,9 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Optional<Long> saveAndGetId(final Product product) {
+    public Long saveAndGetId(final Product product) {
         final SqlParameterSource params = new BeanPropertySqlParameterSource(product);
-        return Optional.of(jdbcInsert.executeAndReturnKey(params).longValue());
+        return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public List<Product> findAll() {
