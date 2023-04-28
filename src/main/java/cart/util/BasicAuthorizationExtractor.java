@@ -11,20 +11,26 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<Membe
 
     @Override
     public MemberLoginRequestDto extractHeader(final String authorization) {
-        if (!IsBasicAuthorization(authorization) || authorization.isEmpty()) {
-            throw new AuthorizationInvalidException();
-        }
+        validateAuthorization(authorization);
+        return getMemberLoginRequestDto(authorization);
+    }
 
+    private MemberLoginRequestDto getMemberLoginRequestDto(final String authorization) {
         String authHeaderValue = authorization.substring(BASIC_TYPE.length()).trim();
         byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
         String decodedString = new String(decodedBytes);
 
         String[] credentials = decodedString.split(DELIMITER);
-
         String email = credentials[0];
         String password = credentials[1];
 
         return MemberLoginRequestDto.from(email, password);
+    }
+
+    private void validateAuthorization(final String authorization) {
+        if (!IsBasicAuthorization(authorization) || authorization.isEmpty()) {
+            throw new AuthorizationInvalidException();
+        }
     }
 
     private boolean IsBasicAuthorization(final String authorization) {
