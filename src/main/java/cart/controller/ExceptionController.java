@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleException(final MethodArgumentNotValidException exception) {
+    public ResponseEntity<String> handleMethodArgumentException(final MethodArgumentNotValidException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(final IllegalArgumentException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }
