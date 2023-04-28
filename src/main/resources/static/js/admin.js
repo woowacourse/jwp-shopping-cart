@@ -55,6 +55,7 @@ const createProduct = (product) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
+        showError(error.response['data']);
     });
 };
 
