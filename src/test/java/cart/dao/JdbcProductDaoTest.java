@@ -37,7 +37,7 @@ class JdbcProductDaoTest {
     @DisplayName("상품의 내용을 저장한다.")
     void save() {
         // given
-        final Long id = saveProduct("치킨", 10000);
+        final Long id = saveProduct("치킨", 10000, "imgUrl");
 
         // then
         final Product result = findById(id);
@@ -53,8 +53,8 @@ class JdbcProductDaoTest {
     @DisplayName("전체 상품을 조회한다.")
     void findAll() {
         // given
-        saveProduct("치킨", 10000);
-        saveProduct("샐러드", 30000);
+        saveProduct("치킨", 10000,"chickenImage");
+        saveProduct("샐러드", 30000, "saladImage");
 
         // when
         final List<Product> products = productDao.findAll();
@@ -67,8 +67,8 @@ class JdbcProductDaoTest {
     @DisplayName("id가 일치하는 상품을 삭제한다.")
     void delete() {
         // given
-        final Long id = saveProduct("치킨", 10000);
-        saveProduct("치킨", 10000);
+        final Long id = saveProduct("치킨", 10000, "chickenImage");
+        saveProduct("피자", 30000, "pizzaImage");
 
         // when
         productDao.delete(id);
@@ -81,8 +81,8 @@ class JdbcProductDaoTest {
     @DisplayName("id가 일치하는 상품을 수정한다.")
     void update() {
         // given
-        final Long id = saveProduct("치킨", 10000);
-        final Product updateProduct = new Product("샐러드", 20000, "changeImgUrl");
+        final Long id = saveProduct("치킨", 10000, "chickenImage");
+        final Product updateProduct = new Product("샐러드", 20000, "saladImg");
 
         // when
         productDao.update(id, updateProduct);
@@ -92,12 +92,12 @@ class JdbcProductDaoTest {
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("샐러드"),
                 () -> assertThat(result.getPrice()).isEqualTo(20000),
-                () -> assertThat(result.getImgUrl()).isEqualTo("changeImgUrl")
+                () -> assertThat(result.getImgUrl()).isEqualTo("saladImg")
         );
     }
 
-    private Long saveProduct(final String name, final int price) {
-        final Product product = new Product(name, price, "imgUrl");
+    private Long saveProduct(final String name, final int price, String imgUrl) {
+        final Product product = new Product(name, price, imgUrl);
         return productDao.save(product);
     }
 
