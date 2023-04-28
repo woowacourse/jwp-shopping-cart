@@ -111,7 +111,7 @@ class PageControllerTest {
     @Test
     void 존재하지_않는_상품을_단일_조회_하는_경우_404_NotFound_를_응답한다() throws Exception {
         // expect
-        mockMvc.perform(get("/products/" + 99999999L))
+        mockMvc.perform(get("/products/" + Long.MAX_VALUE))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("상품을 찾을 수 없습니다."))
                 .andDo(print());

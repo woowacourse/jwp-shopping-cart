@@ -141,7 +141,7 @@ class ProductControllerTest {
         final String request = objectMapper.writeValueAsString(updateRequestDto);
 
         // expect
-        mockMvc.perform(put("/products/" + 9999999L)
+        mockMvc.perform(put("/products/" + Long.MAX_VALUE)
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -151,7 +151,7 @@ class ProductControllerTest {
     @Test
     void 등록되지_않은_상품_삭제를_요청하면_404_BadRequest_를_응답한다() throws Exception {
         // expect
-        mockMvc.perform(delete("/products/" + 9999999L)
+        mockMvc.perform(delete("/products/" + Long.MAX_VALUE)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andDo(print());
