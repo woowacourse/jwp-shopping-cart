@@ -57,8 +57,6 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
-    const {id} = product;
-
     axios.request({
         url: '/product/edit',
         method: 'put',
