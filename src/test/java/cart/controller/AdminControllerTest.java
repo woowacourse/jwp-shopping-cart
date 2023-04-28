@@ -197,7 +197,7 @@ class AdminControllerTest {
                 .delete("/admin/products/" + insertedId)
                 .then()
                 .log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.ACCEPTED.value());
     }
 
     @Test

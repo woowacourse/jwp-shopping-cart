@@ -134,7 +134,7 @@ class ProductIntegrationTest {
 
         // then
         assertSoftly(softly -> {
-            softly.assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.ACCEPTED.value());
             softly.assertThat(userResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(userResponse.body().asString()).doesNotContain("치킨", "10000", "치킨 사진");
             softly.assertThat(adminResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
