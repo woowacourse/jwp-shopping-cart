@@ -144,8 +144,19 @@ class ProductServiceTest {
     }
 
     @DisplayName("상품 삭제가 실패하면 예외가 발생한다")
+    @Test
+    void delete_fail() {
+        // given
+        when(productDao.deleteById(any())).thenReturn(0);
+
+        // when, then
+        assertThatThrownBy(() -> productService.delete(1L))
+                .isInstanceOf(GlobalException.class);
+    }
+
+    @DisplayName("상품이 2개 이상 삭제되면 예외가 발생한다")
     @ParameterizedTest
-    @ValueSource(ints = {0, 2, 3,4})
+    @ValueSource(ints = {2, 3, 4})
     void delete_fail(int count) {
         // given
         when(productDao.deleteById(any())).thenReturn(count);

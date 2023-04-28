@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Product {
-    private Long id;
+    private final Long id;
     private final String name;
     private final String imageUrl;
     private final int price;

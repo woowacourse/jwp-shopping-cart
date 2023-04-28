@@ -5,6 +5,8 @@ import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.Product;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
+
+    public final Logger log = LoggerFactory.getLogger(getClass());
 
     private final ProductDao productDao;
 
@@ -40,8 +44,12 @@ public class ProductService {
 
     public void delete(final Long id) {
         int deletedCount = productDao.deleteById(id);
-        if (deletedCount != 1) {
+        if (deletedCount == 0) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+        if (deletedCount > 1) {
+            log.error("error = {}", "delete count is more than 2");
+            throw new GlobalException(ErrorCode.INVALID_DELETE);
         }
     }
 
