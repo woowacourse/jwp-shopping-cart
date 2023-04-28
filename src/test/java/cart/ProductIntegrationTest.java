@@ -18,7 +18,7 @@ public class ProductIntegrationTest {
     private int port;
 
     @BeforeEach
-    void setUp() {
+    void beforeEach() {
         RestAssured.port = port;
     }
 
@@ -27,7 +27,7 @@ public class ProductIntegrationTest {
         var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/products")
+                .get("/")
                 .then()
                 .extract();
 
