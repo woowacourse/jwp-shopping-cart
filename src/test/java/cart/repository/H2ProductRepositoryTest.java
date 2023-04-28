@@ -4,7 +4,6 @@ import static cart.domain.ProductFixture.ODO_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.ProductDao;
 import cart.domain.Product;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +22,7 @@ class H2ProductRepositoryTest {
 
     @Autowired
     private void setUp(final JdbcTemplate jdbcTemplate) {
-        h2ProductRepository = new H2ProductRepository(new ProductDao(jdbcTemplate));
+        h2ProductRepository = new H2ProductRepository(jdbcTemplate);
     }
 
     @Test
