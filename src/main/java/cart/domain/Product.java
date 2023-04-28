@@ -1,5 +1,6 @@
 package cart.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -16,6 +17,7 @@ public class Product {
 
     private final Long id;
     private final String name;
+    @JsonProperty("image-url")
     private final String imageUrl;
     private final int price;
 
@@ -32,7 +34,7 @@ public class Product {
     public Product(final String name, final String imageUrl, final int price) {
         this(null, name, imageUrl, price);
     }
-    
+
     private void validate(final String name, final String imageUrl, final int price) {
         validateName(name);
         validateImageUrl(imageUrl);
