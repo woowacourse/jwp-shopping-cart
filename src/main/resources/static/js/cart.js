@@ -23,8 +23,6 @@ const addCartItem = (productId) => {
 }
 
 const removeCartItem = (productId) => {
-    console.log("dsadsadsa")
-    alert("asd");
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
