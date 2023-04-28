@@ -35,7 +35,9 @@
     - [x] [아무것도 반환하지 않는다면 어떤 응답 코드를 반환해야 할까?](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178013053)
 - [ ] [DTO 요청 클래스로 분리](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178005150)
 - [ ] [ExceptionHandler 클래스 분리](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178005150)
-- [ ] [RequestMapping 어노테이션 제거 검토](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178010139)
+- [x] [RequestMapping 어노테이션 제거 검토](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178010139)
+    - /product/.../... 와 같이 여러 계층이 존재한다면 RequestMapping이 없는게 파악하기 더 좋을 것 같다.
+    - 하지만 현재 코드에서는 모두 같은 깊이의 계층이므로 (delete 요청의 자원 명시 제외) RequestMapping이 가독성을 높여준다고 볼 수 있지 않을까?
 - [x] [URI에 불필요한 path 없애기](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178005150)
 - [ ] [Dao 제네릭 적용](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178016852)
 - [ ] 실행 테스트의 편의를 위해 더미 데이터 저장하기
