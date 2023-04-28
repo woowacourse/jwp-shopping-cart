@@ -2,9 +2,9 @@
 
 ## 2단계 흐름 정리
 
-- USERS 테이블에 이메일과 비밀번호 저장
-- 해당 데이터를 Settings.html에 넘겨주기 `userService.findAll()`
-- Select 버튼 클릭 시, LocalStroage credentials에 이메일:비밀번호 저장
+- `USERS` 테이블에 이메일과 비밀번호 저장 (Mock Data)
+- 해당 데이터를 `Settings.html`에 넘겨주기 `userService.findAll()`
+- Select 버튼 클릭 시, LocalStroage `credentials`에 이메일:비밀번호 저장
 - 장바구니 담기 클릭 시, HTTP Request Header의 `Authorization`에 Basic Credentials 입력 및 요청
 - Controller가 해당 값을 받은 후 디코딩 (학습테스트 - `BasicAuthorizationExtractor` 참고)
 - select 된 유저가 맞는 지 검증
@@ -19,7 +19,7 @@
     - [ ]  사용자 기본 정보
         - name
         - email
-        - phoneNumber
+        - phone_number
         - password
     - [ ]  사용자 설정 페이지 연동
         - [ ]  `/settings` ****url로 접근
@@ -46,13 +46,13 @@
 ### 기능 요구 사항 분석 후 추가 구현 사항
 
 - [ ]  사용자
-    - [ ]  @LoginUser 어노테이션 구현
+    - [ ]  `@LoginUser` 어노테이션 구현
 - [ ]  장바구니
     - [ ]  quantity 칼럼을 만들어서 Update 수량 변경 기능 추가 (PATCH)
 - [ ]  그 외
     - [ ]  Entity 내 필드에 VO 설정
-    - [ ]  Valid
-    - [ ]  @ControllerAdvice 와 @RestControllerAdvice
+    - [ ]  `@Valid`
+    - [ ]  `@ControllerAdvice`와 `@RestControllerAdvice` 분리
 
 ### ProductAPI
 
@@ -74,9 +74,9 @@
 
 ### UsersAPI
 
-| HTTP Method | URL | 설명 | HTTP Status |
-| --- | --- | --- | --- |
-| get | /users | 유저 목록 조회 | 200 |
-| post | /users | 유저 회원 가입 | 201 |
-| patch | /cart/{id} | 유저 정보 수정 | 200 |
-| delete | /cart/{id} | 유저 탈퇴 | 204 |
+| HTTP Method | URL         | 설명       | HTTP Status |
+|-------------|-------------|----------|-------------|
+| get         | /users      | 유저 목록 조회 | 200         |
+| post        | /users      | 유저 회원 가입 | 201         |
+| patch       | /users/{id} | 유저 정보 수정 | 200         |
+| delete      | /users/{id} | 유저 탈퇴    | 204         |
