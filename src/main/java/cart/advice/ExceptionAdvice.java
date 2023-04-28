@@ -1,8 +1,10 @@
 package cart.advice;
 
+import cart.exception.AuthorizationInvalidException;
 import cart.exception.MemberNotFoundException;
 import cart.exception.PasswordInvalidException;
 import cart.exception.ProductNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +38,12 @@ public class ExceptionAdvice {
     @ExceptionHandler(PasswordInvalidException.class)
     public ResponseEntity<String> handlePasswordInvalidException(final PasswordInvalidException exception) {
         return ResponseEntity.badRequest()
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(AuthorizationInvalidException.class)
+    public ResponseEntity<String> handleAuthorizationInvalidException(final AuthorizationInvalidException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(exception.getMessage());
     }
 }

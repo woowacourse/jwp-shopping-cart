@@ -1,6 +1,7 @@
 package cart.util;
 
 import cart.dto.member.MemberLoginRequestDto;
+import cart.exception.AuthorizationInvalidException;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 public class BasicAuthorizationExtractor implements AuthorizationExtractor<MemberLoginRequestDto> {
@@ -11,7 +12,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<Membe
     @Override
     public MemberLoginRequestDto extractHeader(final String authorization) {
         if (!IsBasicAuthorization(authorization) || authorization.isEmpty()) {
-            throw new IllegalArgumentException("Basic 인증이 올바른지 확인해주세요.");
+            throw new AuthorizationInvalidException();
         }
 
         String authHeaderValue = authorization.substring(BASIC_TYPE.length()).trim();
