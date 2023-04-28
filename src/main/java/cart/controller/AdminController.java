@@ -26,23 +26,20 @@ public class AdminController {
         return "admin";
     }
 
-    @PostMapping("/items/add")
-    @ResponseBody
+    @PostMapping("/item")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> addItem(@Valid @RequestBody ItemRequest itemRequest) {
         itemService.save(itemRequest.toItem());
         return ResponseEntity.status(HttpStatus.CREATED).body("Item has been added successfully.");
     }
 
-    @PutMapping("/items/edit/{itemId}")
-    @ResponseBody
+    @PutMapping("/item/{itemId}")
     public ResponseEntity<String> editItem(@PathVariable Long itemId, @Valid @RequestBody ItemRequest itemRequest) {
         itemService.updateItem(itemId, itemRequest.toItem());
         return ResponseEntity.ok("Item with ID " + itemId + " has been updated successfully.");
     }
 
-    @DeleteMapping("/items/delete/{itemId}")
-    @ResponseBody
+    @DeleteMapping("/item/{itemId}")
     public ResponseEntity<String> deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);
         return ResponseEntity.ok("Item with ID " + itemId + " has been deleted successfully.");
