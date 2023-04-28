@@ -1,5 +1,6 @@
-package cart.controller;
+package cart;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.assertj.core.api.SoftAssertions;
@@ -17,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
 import cart.dto.ProductPostRequest;
+import cart.dto.ProductPutRequest;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.ProductEntity;
 import io.restassured.RestAssured;
@@ -28,7 +30,7 @@ import io.restassured.specification.RequestSpecification;
 @Sql(scripts = "classpath:schema-truncate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class AdminApiControllerTest {
+class AdminApiEndToEndTest {
 
     @LocalServerPort
     private int port;
@@ -39,6 +41,22 @@ class AdminApiControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+    }
+
+    private ExtractableResponse<Response> saveProduct(final String name, final int price, final String imageUrl) {
+        final ProductPostRequest request = new ProductPostRequest(name, price, imageUrl);
+
+        return given()
+            .body(request)
+            .when()
+            .post("/admin/product")
+            .then()
+            .extract();
+    }
+
+    private RequestSpecification given() {
+        return RestAssured.given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
     }
 
     @Nested
@@ -61,12 +79,13 @@ class AdminApiControllerTest {
 
         @Test
         void Product_GET_API_테스트() {
-            saveProduct("modi", 10000, "https://woowacourse.github.io/");
+            final ProductEntity productEntity = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
+            productDao.save(productEntity);
 
             given()
                 .when()
                 .get("/admin")
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.OK.value());
         }
 
@@ -80,7 +99,7 @@ class AdminApiControllerTest {
             given()
                 .body(productPostRequest)
                 .when().put("/admin/product/" + id)
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.OK.value());
 
             final ProductEntity changedEntity = productDao.findByName("modi");
@@ -101,7 +120,7 @@ class AdminApiControllerTest {
 
             given()
                 .when().delete("/admin/product/" + id)
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.OK.value());
 
             assertThrows(EmptyResultDataAccessException.class, () -> productDao.findByName("modi"));
@@ -187,21 +206,37 @@ class AdminApiControllerTest {
             });
         }
 
-    }
+        @Test
+        void Product_PUT_없는_ID_예외_테스트() {
+            final ProductEntity request = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
+            productDao.save(request);
 
-    private ExtractableResponse<Response> saveProduct(final String name, final int price, final String imageUrl) {
-        final ProductPostRequest request = new ProductPostRequest(name, price, imageUrl);
+            final Long wrongId = 0L;
+            final ProductPutRequest putRequest = new ProductPutRequest("modi", 7770, "https://woowacourse.github.io/");
 
-        return given()
-            .body(request)
-            .when()
-            .post("/admin/product")
-            .then().log().all()
-            .extract();
-    }
+            final ExtractableResponse<Response> response = given()
+                .body(putRequest)
+                .when()
+                .put("/admin/product/" + wrongId)
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract();
 
-    private RequestSpecification given() {
-        return RestAssured.given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE);
+            assertThat(response.body().asString()).contains("변경된 정보가 없습니다.");
+        }
+
+        @Test
+        void Product_DELETE_없는_ID_예외_테스트() {
+            final Long wrongId = 0L;
+
+            final ExtractableResponse<Response> response = given()
+                .when()
+                .delete("/admin/product/" + wrongId)
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract();
+
+            assertThat(response.body().asString()).contains("변경된 정보가 없습니다.");
+        }
     }
 }

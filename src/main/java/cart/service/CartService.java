@@ -36,8 +36,7 @@ public class CartService {
 
     public void update(final long id, final ProductPutRequest productPutRequest) {
         final ProductEntity productEntity =
-            new ProductEntity(id, productPutRequest.getName(), productPutRequest.getPrice(),
-                productPutRequest.getImageUrl());
+            new ProductEntity(id, productPutRequest.getName(), productPutRequest.getPrice(), productPutRequest.getImageUrl());
         productDao.update(productEntity);
     }
 
