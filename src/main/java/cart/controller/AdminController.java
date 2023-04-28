@@ -14,30 +14,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
 @Controller
-public class ProductController {
+@RequestMapping("/admin")
+public class AdminController {
 
     private final ProductService productService;
 
-    public ProductController(final ProductService productService) {
+    public AdminController(final ProductService productService) {
         this.productService = productService;
     }
 
-    @GetMapping("/")
-    public String indexPage(final Model model) {
-        final List<Product> products = productService.findAll();
-
-        model.addAttribute("products", products);
-
-        return "index";
-    }
-
-    @GetMapping("/admin")
+    @GetMapping
     public String adminPage(final Model model) {
         final List<Product> products = productService.findAll();
 
@@ -46,7 +39,7 @@ public class ProductController {
         return "admin";
     }
 
-    @PostMapping("/admin")
+    @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
         final ProductDto productDto = new ProductDto(
                 productRequest.getName(),
@@ -59,13 +52,13 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/admin/" + id)).build();
     }
 
-    @PutMapping("/admin/{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateProduct(@PathVariable final long id, final @RequestBody @Valid ProductRequest productRequest) {
         productService.updateProduct(id, new ProductDto(productRequest));
     }
 
-    @DeleteMapping("/admin/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteProduct(@PathVariable final long id) {
         productService.deleteProduct(id);

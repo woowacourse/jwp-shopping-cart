@@ -17,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql("classpath:schema.sql")
-public class ProductControllerTest {
+public class AdminControllerTest {
 
     @LocalServerPort
     private int port;
