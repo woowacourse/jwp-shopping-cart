@@ -16,7 +16,7 @@ public class ProductModificationRequest {
     @NotBlank
     private final String name;
 
-    @NotNull
+    @NotBlank
     @URL
     private final String image;
 
