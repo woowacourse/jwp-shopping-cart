@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import cart.domain.product.dto.ProductCreateRequest;
@@ -89,5 +90,28 @@ class ProductServiceTest {
         //when + then
         assertDoesNotThrow(
             () -> productService.update(new ProductUpdateRequest(1L, "name", 2000, "image_url")));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품을 삭제한다.")
+    public void testDeleteNotExistProduct() {
+        //given
+        given(productRepository.delete(anyLong())).willReturn(0);
+
+        //when + then
+        assertThatThrownBy(
+            () -> productService.delete(anyLong()))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("상품을 삭제한다.")
+    public void testDelete() {
+        //given
+        given(productRepository.delete(anyLong())).willReturn(1);
+
+        //when + then
+        assertDoesNotThrow(
+            () -> productService.delete(anyLong()));
     }
 }

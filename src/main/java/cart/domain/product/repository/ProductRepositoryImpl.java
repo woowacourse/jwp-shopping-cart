@@ -28,4 +28,10 @@ public class ProductRepositoryImpl implements ProductRepository {
     public int update(final Product product) {
         return productDao.update(product);
     }
+
+    @Override
+    public int delete(final Long id) {
+
+        return 0;
+    }
 }

@@ -33,6 +33,15 @@ public class ProductService {
 
     public void update(final ProductUpdateRequest productUpdateRequest) {
         final int count = productRepository.update(productUpdateRequest.makeProduct());
+        checkProductExist(count);
+    }
+
+    public void delete(final Long id) {
+        final int count = productRepository.delete(id);
+        checkProductExist(count);
+    }
+
+    private void checkProductExist(final int count) {
         if (count == 0) {
             throw new IllegalArgumentException("존재하지 않는 아이템입니다.");
         }

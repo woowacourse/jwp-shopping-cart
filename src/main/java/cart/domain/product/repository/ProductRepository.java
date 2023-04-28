@@ -10,4 +10,6 @@ public interface ProductRepository {
     List<Product> findAll();
 
     int update(final Product product);
+
+    int delete(final Long id);
 }
