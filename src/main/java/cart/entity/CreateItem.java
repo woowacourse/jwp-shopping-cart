@@ -1,7 +1,5 @@
 package cart.entity;
 
-import java.util.Objects;
-
 public class CreateItem {
 
     private final String name;
@@ -24,18 +22,5 @@ public class CreateItem {
 
     public int getPrice() {
         return price;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CreateItem that = (CreateItem) o;
-        return price == that.price && Objects.equals(name, that.name) && Objects.equals(imageUrl, that.imageUrl);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, imageUrl, price);
     }
 }
