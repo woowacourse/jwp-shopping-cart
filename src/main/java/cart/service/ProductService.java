@@ -5,7 +5,7 @@ import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.entity.ProductEntity;
-import cart.exception.DBException;
+import cart.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class ProductService {
     public ProductResponse create(ProductRequest productRequest) {
         Product product = Product.from(productRequest);
         ProductEntity created = productDao.save(product)
-                .orElseThrow(() -> new DBException("데이터가 정상적으로 저장되지 않았습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("데이터가 정상적으로 저장되지 않았습니다."));
         return ProductResponse.from(created);
     }
 

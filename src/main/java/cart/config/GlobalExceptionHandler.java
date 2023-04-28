@@ -1,6 +1,6 @@
 package cart.config;
 
-import cart.exception.DBException;
+import cart.exception.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> handleDBException(DBException e) {
+    public ResponseEntity<?> handleDBException(ResourceNotFoundException e) {
         return ResponseEntity.internalServerError().body(e.getMessage());
     }
 
