@@ -91,7 +91,7 @@ public class ProductIntegrationTest {
                 .body(requestDto)
                 .pathParam("id", 1)
                 .when().patch("/products/{id}")
-                .then().statusCode(HttpStatus.CREATED.value());
+                .then().statusCode(HttpStatus.OK.value());
     }
 
     @Test

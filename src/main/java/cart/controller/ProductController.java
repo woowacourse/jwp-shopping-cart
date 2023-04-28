@@ -37,7 +37,7 @@ public class ProductController {
             @RequestBody @Valid final ProductRequestDto productRequestDto,
             @PathVariable final int id) {
         productService.update(productRequestDto, id);
-        return ResponseEntity.created(URI.create(REDIRECT_URL)).build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
