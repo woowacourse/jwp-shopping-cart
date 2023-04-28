@@ -3,7 +3,6 @@ package cart.dao;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.Product;
 import cart.persistence.entity.ProductCategory;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +21,10 @@ class ProductDaoTest {
 
     private static final String IMAGE_URL = "https://barunchicken.com/wp-content/uploads/2022/07/%EA%B3%A8%EB%93%9C%EC%B9%98%ED%82%A8-2-1076x807.jpg";
 
-    private Product product;
-
     @Autowired
     private ProductDao productDao;
 
-    @BeforeEach
-    void setUp() {
-        product = new Product("치킨",
-                IMAGE_URL,
-                20000, ProductCategory.KOREAN);
-    }
+    private final Product product = new Product("치킨", IMAGE_URL, 20000, ProductCategory.KOREAN);
 
     @DisplayName("존재하는 상품을 조회하면, 성공적으로 가져온다.")
     @Test
