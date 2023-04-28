@@ -2,9 +2,10 @@ package cart.controller;
 
 import cart.dto.ItemRequest;
 import cart.dto.ItemUpdateRequest;
+import cart.dto.ResultResponse;
+import cart.dto.SuccessCode;
 import cart.service.ItemService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,23 +29,26 @@ public class AdminController {
     }
 
     @PostMapping("/item")
+    @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addItem(@Valid @RequestBody ItemRequest itemRequest) {
+    public ResultResponse addItem(@Valid @RequestBody ItemRequest itemRequest) {
         itemService.save(itemRequest.toItem());
-        return ResponseEntity.status(HttpStatus.CREATED).body("Item has been added successfully.");
+        return new ResultResponse(SuccessCode.CREATE_ITEM, itemRequest.toItem());
     }
 
+    @ResponseBody
     @PutMapping("/item")
-    public ResponseEntity<String> editItem(@Valid @RequestBody ItemUpdateRequest itemUpdateRequest) {
+    public ResultResponse editItem(@Valid @RequestBody ItemUpdateRequest itemUpdateRequest) {
         Long itemId = itemUpdateRequest.getId();
 
         itemService.updateItem(itemId, itemUpdateRequest.toItem());
-        return ResponseEntity.ok("Item with ID " + itemId + " has been updated successfully.");
+        return new ResultResponse(SuccessCode.UPDATE_ITEM, itemUpdateRequest.toItem());
     }
 
+    @ResponseBody
     @DeleteMapping("/item/{itemId}")
-    public ResponseEntity<String> deleteItem(@PathVariable Long itemId) {
+    public ResultResponse deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);
-        return ResponseEntity.ok("Item with ID " + itemId + " has been deleted successfully.");
+        return new ResultResponse(SuccessCode.DELETE_ITEM, itemId);
     }
 }

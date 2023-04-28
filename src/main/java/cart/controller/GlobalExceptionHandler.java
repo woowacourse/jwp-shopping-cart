@@ -1,35 +1,29 @@
 package cart.controller;
 
+import cart.dto.ErrorCode;
+import cart.dto.ErrorResponse;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<Map<String, String>> handleDataAccessExceptionException(DataAccessException ex) {
-
-        Map<String, String> error = new HashMap<>();
-        error.put("message", "데이터베이스에 접근할 수 없습니다.");
-
-        return ResponseEntity.internalServerError().body(error);
+    public ResponseEntity<ErrorResponse> handleDataAccessExceptionException(DataAccessException ex) {
+        return new ResponseEntity<>(new ErrorResponse(ErrorCode.INVALID_DATABASE_ACCESS), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<Map<String, String>> handleBindExceptionException(BindException ex) {
-        Map<String, String> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
-
-        return ResponseEntity.badRequest().body(errors);
+    public ResponseEntity<ErrorResponse> handleBindExceptionException(BindException ex) {
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+        return new ResponseEntity<>(new ErrorResponse(ErrorCode.INVALID_INPUT_VALUE, fieldErrors), HttpStatus.BAD_REQUEST);
     }
 }
+
