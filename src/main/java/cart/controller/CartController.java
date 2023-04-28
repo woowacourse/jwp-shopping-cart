@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.Product;
+import cart.response.ProductResponse;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +18,7 @@ public class CartController {
 
     @GetMapping(value = {"/products", "/"})
     public String indexPage(final Model model) {
-        final List<Product> products = productService.findAll();
+        final List<ProductResponse> products = productService.findAll();
 
         model.addAttribute("products", products);
 

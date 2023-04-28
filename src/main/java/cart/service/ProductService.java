@@ -3,7 +3,9 @@ package cart.service;
 import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.repository.ProductRepository;
+import cart.response.ProductResponse;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,8 +17,16 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductResponse> findAll() {
+        List<Product> products = productRepository.findAll();
+        List<ProductResponse> result = new ArrayList<>();
+
+        long id = 1L;
+        for (final Product product : products) {
+            result.add(new ProductResponse(id, product.getName(), product.getPrice(), product.getImageUrl()));
+        }
+
+        return result;
     }
 
     public Long register(final ProductDto productDto) {
