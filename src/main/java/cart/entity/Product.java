@@ -1,5 +1,9 @@
 package cart.entity;
 
+import cart.exception.ImageUrlExtensionNotValidException;
+import cart.exception.NegativePriceException;
+import cart.exception.ProductNameLengthOverException;
+
 public class Product {
 
     private static final int MAX_NAME_LENGTH = 255;
@@ -27,19 +31,19 @@ public class Product {
 
     private void validateName(final String name) {
         if (name.length() > MAX_NAME_LENGTH || name.length() == MIN_NAME_LENGTH) {
-            throw new IllegalArgumentException("이름은 0자 초과 255미만이어야 합니다.");
+            throw new ProductNameLengthOverException();
         }
     }
 
     private void validatePrice(final int price) {
         if (price < 0) {
-            throw new IllegalArgumentException("가격은 0보다 작을 수 없습니다.");
+            throw new NegativePriceException();
         }
     }
 
     private void validateImageUrl(final String imageUrl) {
         if (!imageUrl.matches(IMAGE_EXTENSION_FORMAT)) {
-            throw new IllegalArgumentException("유효한 이미지 확장자가 아닙니다.");
+            throw new ImageUrlExtensionNotValidException();
         }
     }
 

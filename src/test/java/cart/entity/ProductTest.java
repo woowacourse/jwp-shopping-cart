@@ -2,6 +2,9 @@ package cart.entity;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.exception.ImageUrlExtensionNotValidException;
+import cart.exception.NegativePriceException;
+import cart.exception.ProductNameLengthOverException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,8 +23,7 @@ class ProductTest {
         void validateNameTest(int length) {
             String name = ".".repeat(length);
             assertThatThrownBy(() -> new Product(name, "www.google.co.kr.png", 4000))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("이름은 0자 초과 255미만이어야 합니다.");
+                    .isInstanceOf(ProductNameLengthOverException.class);
         }
 
         @Test
@@ -29,8 +31,7 @@ class ProductTest {
         void validatePrice() {
             int price = -100;
             assertThatThrownBy(() -> new Product("상품", "www.google.co.kr.png", price))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("가격은 0보다 작을 수 없습니다.");
+                    .isInstanceOf(NegativePriceException.class);
         }
 
         @ParameterizedTest
@@ -38,8 +39,7 @@ class ProductTest {
         @ValueSource(strings = {"www.google.co.kr.mp4", "www.google.co.kr.exe"})
         void validateImageUrl(String url) {
             assertThatThrownBy(() -> new Product("상품", url, 4000))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("유효한 이미지 확장자가 아닙니다.");
+                    .isInstanceOf(ImageUrlExtensionNotValidException.class);
         }
     }
 }
