@@ -1,5 +1,6 @@
-package cart.exception;
+package cart.config;
 
+import cart.exception.DBException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
