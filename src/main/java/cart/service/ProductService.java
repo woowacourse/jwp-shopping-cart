@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import cart.dao.ProductDao;
 import cart.dao.entity.Product;
 import cart.dto.ProductCreateRequest;
+import cart.dto.ProductMapper;
 import cart.dto.ProductResponse;
 import cart.dto.ProductUpdateRequest;
 
 @Service
 public class ProductService {
-
+    private final static ProductMapper MAPPER = new ProductMapper();
     private final ProductDao productDao;
 
     public ProductService(ProductDao productDao) {
@@ -21,19 +22,14 @@ public class ProductService {
     }
 
     public Long save(ProductCreateRequest productCreateRequest) {
-        final Product product = toProduct(productCreateRequest);
+        final Product product = MAPPER.toProduct(productCreateRequest);
         return productDao.save(product);
     }
 
     public List<ProductResponse> findAll() {
         final List<Product> products = productDao.findAll();
         return products.stream()
-                .map(product -> new ProductResponse(
-                        product.getId(),
-                        product.getName(),
-                        product.getPrice(),
-                        product.getImgUrl())
-                )
+                .map(MAPPER::toResponse)
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -42,22 +38,6 @@ public class ProductService {
     }
 
     public void update(final Long id, final ProductUpdateRequest productUpdateRequest) {
-        productDao.update(id, toProduct(productUpdateRequest));
-    }
-
-    private Product toProduct(ProductUpdateRequest productUpdateRequest) {
-        return new Product(
-                productUpdateRequest.getName(),
-                productUpdateRequest.getPrice(),
-                productUpdateRequest.getImgUrl()
-        );
-    }
-
-    private Product toProduct(ProductCreateRequest productCreateRequest) {
-        return new Product(
-                productCreateRequest.getName(),
-                productCreateRequest.getPrice(),
-                productCreateRequest.getImgUrl()
-        );
+        productDao.update(id, MAPPER.toProduct(productUpdateRequest));
     }
 }
