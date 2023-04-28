@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,10 @@ public class CartDbRepository implements CartRepository {
                 .map(CartDbResponseDto::getProductId)
                 .collect(Collectors.toList());
 
+        if (productIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         String loadingProductSql = "SELECT id, name, price, img_url FROM product WHERE id IN (:productIds)";
         List<Product> products = namedParameterJdbcTemplate.query(loadingProductSql, new MapSqlParameterSource("productIds", productIds), getProductRowMapper());
 
@@ -49,7 +54,7 @@ public class CartDbRepository implements CartRepository {
                     Long cartId = cartDbResponse.getId();
                     Long productId = cartDbResponse.getProductId();
                     Product foundProduct = products.stream()
-                            .filter(product -> product.getId().equals(productId))
+                            .filter(product -> product.isSameId(productId))
                             .findAny()
                             .orElseThrow(() -> new IllegalStateException("id 값으로 Product를 찾을 수 없습니다."));
                     return Cart.from(cartId, member, foundProduct);

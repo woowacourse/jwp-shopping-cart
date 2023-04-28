@@ -31,6 +31,10 @@ public class Product {
         this.price.edit(price);
     }
 
+    public boolean isSameId(final Long id) {
+        return Objects.equals(this.id, id);
+    }
+
     public void setId(final Long id) {
         this.id = id;
     }
