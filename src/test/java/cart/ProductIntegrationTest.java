@@ -37,7 +37,7 @@ public class ProductIntegrationTest {
     }
 
     @Test
-    @DisplayName("상품이 추가되었을 때 OK 응답 코드를 반환한다")
+    @DisplayName("상품이 추가되었을 때 CREATED 응답 코드를 반환한다")
     void create() throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", "일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
@@ -49,11 +49,11 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productAddRequest.toString())
                 .when()
-                .post("/product/add")
+                .post("/product")
                 .then()
                 .extract();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @ParameterizedTest
@@ -70,7 +70,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productAddRequest.toString())
                 .when()
-                .post("/product/add")
+                .post("/product")
                 .then()
                 .extract();
 
@@ -90,7 +90,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productAddRequest.toString())
                 .when()
-                .post("/product/add")
+                .post("/product")
                 .then()
                 .extract();
 
@@ -111,7 +111,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productAddRequest.toString())
                 .when()
-                .post("/product/add")
+                .post("/product")
                 .then()
                 .extract();
 
@@ -119,7 +119,7 @@ public class ProductIntegrationTest {
     }
 
     @Test
-    @DisplayName("상품 수정 성공 시 OK 응답 코드를 반환한다")
+    @DisplayName("상품 수정 성공 시 NO CONTENT 응답 코드를 반환한다")
     void update() throws JSONException {
         int updateCount = jdbcTemplate.update(
                 "INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000)");
@@ -136,15 +136,15 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest.toString())
                 .when()
-                .put("/product/edit")
+                .put("/product")
                 .then()
                 .extract();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
-    @DisplayName("상품 식제 성공 시 OK 응답 코드를 반환한다")
+    @DisplayName("상품 식제 성공 시 NO CONTENT 응답 코드를 반환한다")
     void delete() {
         int updateCount = jdbcTemplate.update(
                 "INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000)");
@@ -152,11 +152,11 @@ public class ProductIntegrationTest {
 
         ExtractableResponse<Response> response = given()
                 .when()
-                .delete("/product/delete/1")
+                .delete("/product/1")
                 .then()
                 .extract();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     private JSONObject parseJSON(Map<String, Object> parameters) throws JSONException {

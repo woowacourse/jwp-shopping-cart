@@ -38,7 +38,7 @@ public class ProductController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(path = "/add")
+    @PostMapping
     public void create(@Valid @RequestBody ProductAddRequest productDto) {
         productDao.insert(new Product(
                 productDto.getName(),
@@ -48,7 +48,7 @@ public class ProductController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping(path = "/edit")
+    @PutMapping
     public void update(@Valid @RequestBody ProductUpdateRequest productDto) {
         productDao.update(new Product(
                 productDto.getId(),
@@ -59,7 +59,7 @@ public class ProductController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") @Positive Long id) {
         productDao.deleteById(id);
     }
