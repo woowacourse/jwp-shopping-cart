@@ -1,52 +1,46 @@
 package cart.controller;
 
-import cart.dao.ProductDao;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import cart.domain.Product;
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import cart.dto.ProductsResponse;
+import cart.service.ProductService;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.stringContainsInOrder;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WebMvcTest(AdminController.class)
 class AdminControllerTest {
 
     @Autowired
-    private ProductDao productDao;
+    private MockMvc mockMvc;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setUp(@LocalServerPort final int port) {
-        RestAssured.port = port;
-    }
-
-    @AfterEach
-    void clear() {
-        jdbcTemplate.execute("TRUNCATE TABLE product");
-    }
-
+    @MockBean
+    private ProductService productService;
 
     @DisplayName("GET /admin")
     @Test
-    void getAdmin() {
-        productDao.insert(new Product("이오", 1000, null));
-        productDao.insert(new Product("애쉬", 2000, null));
+    void getAdmin() throws Exception {
+        List<Product> products = List.of(
+                new Product("이오", 1000, null),
+                new Product("애쉬", 2000, null));
+        given(productService.findAll()).willReturn(products);
+        ProductsResponse response = ProductsResponse.of(products);
 
-        RestAssured.given().log().all()
-                .accept(MediaType.TEXT_HTML_VALUE)
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body(stringContainsInOrder("이오", "1000", "애쉬", "2000"));
+        mockMvc.perform(get("/admin"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE))
+                .andExpect(view().name("admin"))
+                .andExpect(model().attribute("products", response));
     }
 }
