@@ -7,6 +7,7 @@ public class Member {
     private final Password password;
 
     private Member(final Long id, final Email email, final Password password) {
+        this.id = id;
         this.email = email;
         this.password = password;
     }

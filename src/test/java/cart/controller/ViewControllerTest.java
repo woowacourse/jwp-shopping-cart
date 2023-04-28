@@ -1,6 +1,8 @@
 package cart.controller;
 
+import cart.dto.member.MembersResponseDto;
 import cart.dto.product.ProductsResponseDto;
+import cart.service.MemberService;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static cart.factory.MemberFactory.createMember;
 import static cart.factory.ProductFactory.createProduct;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,6 +27,9 @@ class ViewControllerTest {
 
     @MockBean
     ProductService productService;
+
+    @MockBean
+    MemberService memberService;
 
     @Autowired
     MockMvc mockMvc;
@@ -59,6 +65,10 @@ class ViewControllerTest {
     @Test
     @DisplayName("Settings를 반환한다.")
     void returns_settings_view() throws Exception {
+        // given
+        MembersResponseDto expected = MembersResponseDto.from(List.of(createMember()));
+        given(memberService.findAll()).willReturn(expected);
+
         // when & then
         mockMvc.perform(get("/settings"))
                 .andExpect(status().isOk())
