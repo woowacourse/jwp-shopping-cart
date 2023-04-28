@@ -9,19 +9,26 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class CartController {
+public class PageController {
 
     private final CartService cartService;
 
     @Autowired
-    public CartController(final CartService cartService) {
+    public PageController(final CartService cartService) {
         this.cartService = cartService;
     }
 
     @GetMapping("/")
-    public String readProducts(final Model model) {
+    public String readMainPage(final Model model) {
         final List<ResponseProductDto> responseProductDtos = cartService.findAll();
         model.addAttribute("products", responseProductDtos);
         return "index";
+    }
+
+    @GetMapping("/admin")
+    public String readAdminPage(final Model model) {
+        final List<ResponseProductDto> responseProductDtos = cartService.findAll();
+        model.addAttribute("products", responseProductDtos);
+        return "admin";
     }
 }

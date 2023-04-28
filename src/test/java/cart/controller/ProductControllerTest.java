@@ -33,7 +33,7 @@ import org.springframework.jdbc.support.KeyHolder;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class ProductControllerTest {
 
     @LocalServerPort
     int port;
@@ -52,7 +52,7 @@ class AdminControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/products")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -65,7 +65,7 @@ class AdminControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto(name, 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/products")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -80,7 +80,7 @@ class AdminControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto(overName, 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/products")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -94,7 +94,7 @@ class AdminControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
                 .when()
-                .post("/admin/products")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -108,7 +108,7 @@ class AdminControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
                 .when()
-                .post("/admin/products")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -122,7 +122,7 @@ class AdminControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 1_000, image))
                 .when()
-                .post("/admin/products")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -137,7 +137,7 @@ class AdminControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 1_000, image))
                 .when()
-                .post("/admin/products")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -152,7 +152,7 @@ class AdminControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestUpdateProductDto(insertedId, "피자", 10_000, "피자 사진"))
                 .when()
-                .put("/admin/products")
+                .put("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -182,7 +182,7 @@ class AdminControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestUpdateProductDto(0L, "치킨", 10_000, "치킨 사진"))
                 .when()
-                .put("/admin/products")
+                .put("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -195,7 +195,7 @@ class AdminControllerTest {
         given()
                 .log().all()
                 .when()
-                .delete("/admin/products/" + insertedId)
+                .delete("/products/" + insertedId)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.ACCEPTED.value());
@@ -206,7 +206,7 @@ class AdminControllerTest {
         given()
                 .log().all()
                 .when()
-                .delete("/admin/products/" + 0)
+                .delete("/products/" + 0)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
