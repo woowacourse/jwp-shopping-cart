@@ -103,7 +103,10 @@ class AdminControllerTest {
                 .then().log().all()
                 .extract();
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                () -> assertThat(response.jsonPath().getString("message")).isEqualTo("존재하지 않는 상품입니다.")
+        );
     }
 
     private ExtractableResponse<Response> saveProduct(final String name, final int price, final String img) {

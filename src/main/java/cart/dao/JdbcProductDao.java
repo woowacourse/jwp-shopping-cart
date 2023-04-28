@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -14,6 +15,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import cart.dao.entity.Product;
 
@@ -54,7 +56,7 @@ public class JdbcProductDao implements ProductDao {
         final Map<String, Long> params = Collections.singletonMap("id", id);
         final int deletedRow = jdbcTemplate.update(sql, params);
         if(deletedRow == 0) {
-            throw new IllegalArgumentException(UNEXISTED_ERROR_MESSAGE);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, UNEXISTED_ERROR_MESSAGE);
         }
     }
 
@@ -70,7 +72,7 @@ public class JdbcProductDao implements ProductDao {
 
         final int updatedRow = jdbcTemplate.update(sql, params);
         if(updatedRow == 0) {
-            throw new IllegalArgumentException(UNEXISTED_ERROR_MESSAGE);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, UNEXISTED_ERROR_MESSAGE);
         }
     }
 }

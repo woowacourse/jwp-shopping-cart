@@ -9,6 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 
 import cart.dto.ErrorResponse;
 
@@ -39,9 +40,9 @@ public class AdminControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
-        final String errorMessage = exception.getMessage();
-        logger.info(errorMessage);
-        return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(ResponseStatusException exception) {
+        final String errorMessage = exception.getReason();
+        logger.info("info : {}", errorMessage);
+        return ResponseEntity.status(exception.getStatus()).body(new ErrorResponse(errorMessage));
     }
 }
