@@ -1,0 +1,71 @@
+package cart.dao;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import cart.entity.ProductEntity;
+import cart.repository.ProductDto;
+
+@JdbcTest
+class ProductJdbcDaoTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    private ProductJdbcDao productJdbcDao;
+    private Integer insertedId;
+
+    @BeforeEach
+    void setUp() {
+        this.productJdbcDao = new ProductJdbcDao(jdbcTemplate);
+
+        final ProductDto productDto = new ProductDto("비버", "A", 1000L);
+        insertedId = productJdbcDao.insert(productDto);
+    }
+
+    @Test
+    @DisplayName("삽입 테스트")
+    void insert() {
+        assertThat(insertedId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("수정 테스트")
+    void update() {
+        final ProductDto productDto = new ProductDto("비버", "A", 100000L);
+        productJdbcDao.update(insertedId, productDto);
+
+        final ProductEntity result = productJdbcDao.select(insertedId);
+        assertThat(result.getPrice()).isEqualTo(100000L);
+    }
+
+    @Test
+    @DisplayName("삭제 테스트")
+    void deleteById() {
+        productJdbcDao.deleteById(insertedId);
+
+        assertThat(productJdbcDao.findAll().size()).isZero();
+    }
+
+    @Test
+    @DisplayName("조회 테스트")
+    void select() {
+        final ProductEntity expectEntity = new ProductEntity(insertedId, "비버", "A", 1000L);
+        final ProductEntity entity = productJdbcDao.select(insertedId);
+
+        assertThat(entity).isEqualTo(expectEntity);
+    }
+
+    @Test
+    @DisplayName("전체조회 테스트")
+    void findAll() {
+        final ProductEntity expectEntity = new ProductEntity(insertedId, "비버", "A", 1000L);
+
+        assertThat(productJdbcDao.findAll()).containsOnly(expectEntity);
+    }
+}
