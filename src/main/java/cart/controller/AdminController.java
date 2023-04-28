@@ -45,7 +45,7 @@ public class AdminController {
 
         Long id = productService.register(productDto);
 
-        return ResponseEntity.created(URI.create("/admin/" + id)).build();
+        return ResponseEntity.created(URI.create("/admin/product/" + id)).build();
     }
 
     @PutMapping("/product/{id}")
