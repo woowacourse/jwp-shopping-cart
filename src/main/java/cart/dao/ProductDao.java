@@ -1,29 +1,27 @@
 package cart.dao;
 
 import cart.domain.Product;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Repository
 public class ProductDao {
 
     private final SimpleJdbcInsert insertActor;
     private final JdbcTemplate jdbcTemplate;
-
+    
     private final RowMapper<Product> rowMapper = (resultSet, rowNum) -> {
-        Product product = new Product(
+        return new Product(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getInt("price"),
                 resultSet.getString("image_url"));
-        return product;
     };
 
     public ProductDao(DataSource dataSource) {
