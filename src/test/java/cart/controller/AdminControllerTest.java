@@ -48,7 +48,7 @@ class AdminControllerTest {
         final ExtractableResponse<Response> response = given()
                 .body(request)
                 .when()
-                .patch("/admin/product/{id}", 1L)
+                .put("/admin/product/{id}", 1L)
                 .then().log().all()
                 .extract();
 
