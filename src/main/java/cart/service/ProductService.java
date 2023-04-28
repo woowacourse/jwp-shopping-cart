@@ -6,6 +6,7 @@ import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.entity.ProductEntity;
 import cart.exception.ResourceNotFoundException;
+import cart.mapper.ProductMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,16 +17,18 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductDao productDao;
+    private final ProductMapper productMapper;
 
-    public ProductService(ProductDao productDao) {
+    public ProductService(ProductDao productDao, ProductMapper productMapper) {
         this.productDao = productDao;
+        this.productMapper = productMapper;
     }
 
     public ProductResponse create(ProductRequest productRequest) {
-        Product product = Product.from(productRequest);
+        Product product = productMapper.requestToProduct(productRequest);
         ProductEntity created = productDao.save(product)
                 .orElseThrow(() -> new ResourceNotFoundException("데이터가 정상적으로 저장되지 않았습니다."));
-        return ProductResponse.from(created);
+        return productMapper.entityToResponse(created);
     }
 
     public List<ProductResponse> findAll() {
@@ -40,7 +43,7 @@ public class ProductService {
                 .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다." + System.lineSeparator() + "id : " + id));
         productEntity.replace(productRequest);
         productDao.update(productEntity);
-        return ProductResponse.from(productEntity);
+        return productMapper.entityToResponse(productEntity);
     }
 
     public void deleteById(Long id) {

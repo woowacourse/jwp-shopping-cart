@@ -1,6 +1,7 @@
 package cart.config;
 
 import cart.exception.ResourceNotFoundException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +17,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<?> handleValidException(MethodArgumentNotValidException e) {
         List<String> errors = e.getBindingResult().getAllErrors()
-                .stream().map(ex -> ex.getDefaultMessage())
+                .stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
         Map<String, List<String>> errorsResult = Map.of("errors", errors);
