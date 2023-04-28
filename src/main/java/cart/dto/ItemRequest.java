@@ -38,7 +38,7 @@ public class ItemRequest {
         return price;
     }
 
-    public Item toDto() {
+    public Item toItem() {
         return new Item(name, imageUrl, price);
     }
 }

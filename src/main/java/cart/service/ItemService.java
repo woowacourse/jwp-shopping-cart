@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.dao.ItemDao;
-import cart.dto.ItemRequest;
 import cart.dto.ItemResponse;
 import cart.domain.Item;
 import cart.entity.ItemEntity;
@@ -19,13 +18,8 @@ public class ItemService {
         this.itemDao = itemDao;
     }
 
-    public void save(ItemRequest itemRequest) {
-        Item item = convertItemRequestToCreateItem(itemRequest);
+    public void save(Item item) {
         itemDao.save(item);
-    }
-
-    private Item convertItemRequestToCreateItem(final ItemRequest itemRequest) {
-        return new Item(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
     }
 
     public List<ItemResponse> findAll() {
@@ -39,8 +33,7 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public void updateItem(Long itemId, ItemRequest itemRequest) {
-        Item item = convertItemRequestToCreateItem(itemRequest);
+    public void updateItem(Long itemId, Item item) {
         itemDao.update(itemId, item);
     }
 
