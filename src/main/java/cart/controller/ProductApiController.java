@@ -1,9 +1,12 @@
 package cart.controller;
 
+import java.util.Objects;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,31 +33,38 @@ public class ProductApiController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ProductResponse> createProducts(@Valid @RequestBody ProductRequest productRequest) {
-		ProductResponse productResponse = productService.saveProducts(productRequest);
-		return ResponseEntity.status(HttpStatus.CREATED).body(productResponse);
+	public ResponseEntity<ProductResponse> createProducts(@Valid @RequestBody final ProductRequest productRequest) {
+		final ProductResponse productResponse = productService.saveProducts(productRequest);
+
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(productResponse);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ProductResponse> updateProducts(@PathVariable Long id,
-		@Valid @RequestBody ProductRequest productRequest) {
-		ProductResponse productResponse = productService.updateProducts(id, productRequest);
+	public ResponseEntity<ProductResponse> updateProducts(@PathVariable final Long id,
+		@Valid @RequestBody final ProductRequest productRequest) {
+		final ProductResponse productResponse = productService.updateProducts(id, productRequest);
 
-		return ResponseEntity.status(HttpStatus.OK).body(productResponse);
+		return ResponseEntity.ok()
+			.body(productResponse);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> deleteProducts(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteProducts(@PathVariable final Long id) {
 		productService.deleteProductsById(id);
 
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		return ResponseEntity.noContent()
+			.build();
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<ExceptionResponse> handleBindException(MethodArgumentNotValidException exception) {
-		final String exceptionMessage = exception.getBindingResult()
-			.getFieldError()
+	public ResponseEntity<ExceptionResponse> handleBindException(final MethodArgumentNotValidException exception) {
+		final FieldError fieldError = exception.getBindingResult()
+			.getFieldError();
+		final String exceptionMessage = Objects.requireNonNull(fieldError)
 			.getDefaultMessage();
-		return ResponseEntity.badRequest().body(new ExceptionResponse(exceptionMessage));
+
+		return ResponseEntity.badRequest()
+			.body(new ExceptionResponse(exceptionMessage));
 	}
 }
