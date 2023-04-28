@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.dao.ProductEntity;
+import cart.controller.dto.ProductResponse;
+import cart.dao.entity.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.controller.dto.ErrorResponse;
 import java.util.NoSuchElementException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

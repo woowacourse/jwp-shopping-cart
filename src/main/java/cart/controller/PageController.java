@@ -1,7 +1,8 @@
 package cart.controller;
 
+import cart.controller.dto.ProductResponse;
 import cart.dao.ProductDao;
-import cart.dao.ProductEntity;
+import cart.dao.entity.ProductEntity;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

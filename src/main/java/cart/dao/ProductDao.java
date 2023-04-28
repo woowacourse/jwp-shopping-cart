@@ -1,6 +1,7 @@
 package cart.dao;
 
-import cart.controller.ProductRequest;
+import cart.controller.dto.ProductRequest;
+import cart.dao.entity.ProductEntity;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;

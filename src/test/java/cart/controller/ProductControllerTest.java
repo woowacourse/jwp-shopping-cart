@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.controller.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
