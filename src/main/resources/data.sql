@@ -18,6 +18,15 @@ CREATE TABLE member
     PRIMARY KEY (id)
 );
 
+CREATE TABLE cart
+(
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    member_id  BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (product_id) REFERENCES product (id),
+);
+
 INSERT INTO product(id, name, price, img_url)
 VALUES (1, '상품명 테스트1', 100, 'https://cdn.pixabay.com/photo/2014/06/03/19/38/test-361512_960_720.jpg'),
        (2, '상품명 테스트2', 101, 'https://t1.daumcdn.net/cartoon/7520d517fbe0271cdceb64e57ff1b26aa2abb680');
