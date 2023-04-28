@@ -6,14 +6,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Component
 public class DbProductDao implements ProductDao {
@@ -26,22 +25,21 @@ public class DbProductDao implements ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public DbProductDao(JdbcTemplate jdbcTemplate) {
+    public DbProductDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("product")
+                .usingColumns("name", "img_url", "price")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
     public Product save(Product product) {
-        String sql = "INSERT INTO product (name, img_url, price) VALUES (:name, :imgUrl, :price)";
-
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(sql, parameters, keyHolder);
-
-        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
         return new Product(id, product.getName(), product.getImgUrl(), product.getPrice());
     }
 

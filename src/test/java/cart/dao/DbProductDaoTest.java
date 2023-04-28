@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,11 +17,14 @@ class DbProductDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private DataSource dataSource;
     private ProductDao productDao;
 
     @BeforeEach
     void setUp() {
-        productDao = new DbProductDao(jdbcTemplate);
+        productDao = new DbProductDao(jdbcTemplate, dataSource);
     }
 
     @Test
