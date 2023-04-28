@@ -4,6 +4,7 @@ import cart.persistence.entity.Product;
 import cart.persistence.entity.ProductCategory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,14 @@ public class ProductDao {
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    final RowMapper<Product> productRowMapper = (result, count) ->
+            new Product(result.getLong("id"),
+                    result.getString("name"),
+                    result.getString("image_url"),
+                    result.getInt("price"),
+                    ProductCategory.from(result.getString("category"))
+            );
 
     public Long insert(final Product product) {
         final String query = "INSERT INTO product(name, image_url, price, category) VALUES(?, ?, ?, ?)";
@@ -38,10 +47,7 @@ public class ProductDao {
     public Optional<Product> findById(final Long id) {
         final String query = "SELECT p.id, p.name, p.image_url, p.price, p.category FROM product p WHERE p.id = ?";
         try {
-            final Product product = jdbcTemplate.queryForObject(query, (result, count) ->
-                    new Product(result.getLong("id"), result.getString("name"),
-                            result.getString("image_url"), result.getInt("price"),
-                            ProductCategory.from(result.getString("category"))), id);
+            final Product product = jdbcTemplate.queryForObject(query, productRowMapper, id);
             return Optional.of(product);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -50,10 +56,7 @@ public class ProductDao {
 
     public List<Product> findAll() {
         final String query = "SELECT p.id, p.name, p.image_url, p.price, p.category FROM product p";
-        return jdbcTemplate.query(query, (result, count) ->
-                new Product(result.getLong("id"), result.getString("name"),
-                        result.getString("image_url"), result.getInt("price"),
-                        ProductCategory.from(result.getString("category"))));
+        return jdbcTemplate.query(query, productRowMapper);
     }
 
     public int update(final Product product) {
