@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.controller.dto.ProductResponse;
 import cart.dao.ProductDao;
 import cart.dao.ProductEntity;
 import cart.domain.Product;
@@ -17,10 +18,11 @@ public class ProductService {
         this.productDaoImpl = productDao;
     }
 
-    public List<ProductDto> findAll() {
+    public List<ProductResponse> findAll() {
         List<ProductEntity> productEntities = productDaoImpl.findAll();
         return productEntities.stream()
-                .map(ProductDto::new)
+                .map(entity -> new ProductResponse(entity.getId(), entity.getName(), entity.getImage(),
+                        entity.getPrice()))
                 .collect(Collectors.toList());
     }
 

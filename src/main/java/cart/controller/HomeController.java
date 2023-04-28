@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
+import cart.controller.dto.ProductResponse;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String getHomePage(final Model model) {
-        List<ProductDto> products = productService.findAll();
+        List<ProductResponse> products = productService.findAll();
         model.addAttribute("products", products);
         return "index";
     }
