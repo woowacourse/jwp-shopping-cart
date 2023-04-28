@@ -36,7 +36,7 @@ public class ProductRestController {
     }
     
     @PutMapping("/products/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseProductDto update(@PathVariable final long id,
             @RequestBody final RequestProductDto requestProductDto) {
         return this.productListService.update(id, requestProductDto);

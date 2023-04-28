@@ -68,7 +68,7 @@ public class ProductIntegrationTest {
         final String name = JsonPath.with(productLiteral).getString("name");
         
         assertThat(name).isEqualTo(requestProductDto.getName());
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
     
     @Test
