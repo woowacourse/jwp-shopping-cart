@@ -6,14 +6,14 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Component
+@Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -41,7 +41,7 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public int update(final Product product, final Long id) {
+    public int updateById(final Product product, final Long id) {
         final String query = "UPDATE product AS p SET p.name = ?, p.image_url = ?, p.price = ?, p.category = ? " +
                 "WHERE p.id = ?";
         return jdbcTemplate.update(query, product.getName(), product.getImageUrl(), product.getPrice(),

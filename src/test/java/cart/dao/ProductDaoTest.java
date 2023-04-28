@@ -14,13 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.tuple;
 
 @JdbcTest
 @Import(ProductDao.class)
 class ProductDaoTest {
-
-    private static final String IMAGE_URL = "https://barunchicken.com/wp-content/uploads/2022/07/%EA%B3%A8%EB%93%9C%EC%B9%98%ED%82%A8-2-1076x807.jpg";
 
     private Product product;
 
@@ -30,7 +28,7 @@ class ProductDaoTest {
     @BeforeEach
     void setUp() {
         product = new Product("치킨",
-                IMAGE_URL,
+                "chicken_image_url",
                 20000, ProductCategory.KOREAN);
     }
 
@@ -42,13 +40,23 @@ class ProductDaoTest {
 
         // when
         final Optional<Product> product = productDao.findById(productId);
-        final Product findProduct = product.get();
 
         // then
-        assertAll(() -> assertThat(findProduct.getName()).isEqualTo("치킨"),
-                () -> assertThat(findProduct.getPrice()).isEqualTo(20000),
-                () -> assertThat(findProduct.getImageUrl()).isEqualTo(IMAGE_URL),
-                () -> assertThat(findProduct.getCategory()).isEqualTo(ProductCategory.KOREAN));
+        final Product findProduct = product.get();
+
+        assertThat(findProduct)
+                .extracting("name", "price", "imageUrl", "category")
+                .contains("치킨", 20000, "chicken_image_url", ProductCategory.KOREAN);
+    }
+
+    @DisplayName("존재하지 않는 상품을 가져오면, 빈 값을 반환한다.")
+    @Test
+    void findById_empty() {
+        // when
+        final Optional<Product> findProduct = productDao.findById(1L);
+
+        // then
+        assertThat(findProduct).isEmpty();
     }
 
     @DisplayName("상품을 저장한다.")
@@ -60,10 +68,10 @@ class ProductDaoTest {
         // then
         final Optional<Product> product = productDao.findById(productId);
         final Product findProduct = product.get();
-        assertAll(() -> assertThat(findProduct.getName()).isEqualTo("치킨"),
-                () -> assertThat(findProduct.getPrice()).isEqualTo(20000),
-                () -> assertThat(findProduct.getImageUrl()).isEqualTo(IMAGE_URL),
-                () -> assertThat(findProduct.getCategory()).isEqualTo(ProductCategory.KOREAN));
+
+        assertThat(findProduct)
+                .extracting("name", "price", "imageUrl", "category")
+                .contains("치킨", 20000, "chicken_image_url", ProductCategory.KOREAN);
     }
 
     @DisplayName("상품 전체를 조회한다.")
@@ -71,41 +79,42 @@ class ProductDaoTest {
     void findAll() {
         // given
         productDao.insert(product);
-        productDao.insert(product);
+        productDao.insert(new Product("탕수육", "pork_image_url", 30000, ProductCategory.CHINESE));
 
         // when
         final List<Product> products = productDao.findAll();
 
         // then
+        assertThat(products).hasSize(2);
         assertThat(products)
-                .hasSize(2);
+                .extracting("name", "price", "imageUrl", "category")
+                .contains(tuple("치킨", 20000, "chicken_image_url", ProductCategory.KOREAN),
+                        tuple("탕수육", 30000, "pork_image_url", ProductCategory.CHINESE));
     }
 
     @DisplayName("상품을 수정한다.")
     @Test
-    void update() {
+    void updateById() {
         // given
         final Long productId = productDao.insert(product);
 
         // when
-        final Product updateProduct = new Product(productId, "탕수육", "imageUrl",
-                30000, ProductCategory.CHINESE);
-        int updatedCount = productDao.update(updateProduct, productId);
+        final Product updateProduct = new Product(productId, "탕수육", "pork_image_url", 30000, ProductCategory.CHINESE);
+        int updatedCount = productDao.updateById(updateProduct, productId);
 
         // then
         final Optional<Product> product = productDao.findById(productId);
         final Product findProduct = product.get();
-        assertAll(
-                () -> assertThat(updatedCount).isEqualTo(1),
-                () -> assertThat(findProduct.getName()).isEqualTo("탕수육"),
-                () -> assertThat(findProduct.getPrice()).isEqualTo(30000),
-                () -> assertThat(findProduct.getImageUrl()).isEqualTo("imageUrl"),
-                () -> assertThat(findProduct.getCategory()).isEqualTo(ProductCategory.CHINESE));
+
+        assertThat(updatedCount).isEqualTo(1);
+        assertThat(findProduct)
+                .extracting("name", "price", "imageUrl", "category")
+                .contains("탕수육", 30000, "pork_image_url", ProductCategory.CHINESE);
     }
 
     @DisplayName("상품을 삭제한다.")
     @Test
-    void delete() {
+    void deleteById() {
         // given
         final Long productId = productDao.insert(product);
 
@@ -113,6 +122,9 @@ class ProductDaoTest {
         int deletedCount = productDao.deleteById(productId);
 
         // then
+        final Optional<Product> product = productDao.findById(productId);
+
+        assertThat(product).isEmpty();
         assertThat(deletedCount).isEqualTo(1);
     }
 }
