@@ -22,16 +22,16 @@ public class PageController {
         return "index";
     }
 
-    @GetMapping("/products/{id}")
-    public String product(@PathVariable final Long id, final Model model) {
-        final ProductDto result = productService.findById(id);
-        model.addAttribute("product", result);
-        return "product";
-    }
-
     @GetMapping("/admin")
     public String admin(final Model model) {
         model.addAttribute("products", productService.findAll());
         return "admin";
+    }
+
+    @GetMapping("/products/{id}")
+    public String productDetail(@PathVariable final Long id, final Model model) {
+        final ProductDto result = productService.findById(id);
+        model.addAttribute("product", result);
+        return "product";
     }
 }
