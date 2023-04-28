@@ -7,12 +7,15 @@ import cart.product.domain.Product;
 import cart.product.dto.RequestProductDto;
 import cart.product.dto.ResponseProductDto;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductListService {
-    
+
+    private static final String NO_SUCH_PRODUCT_ERROR = "해당하는 상품이 없습니다.";
+
     private final ProductDao productDao;
     
     public ProductListService(final ProductDao productDao) {
@@ -33,6 +36,7 @@ public class ProductListService {
     }
     
     public ResponseProductDto update(final long id, final RequestProductDto requestProductDto) {
+        productDao.findByID(id).orElseThrow(() -> new NoSuchElementException(NO_SUCH_PRODUCT_ERROR));
         final Product product = new Product(id, new Name(requestProductDto.getName()), requestProductDto.getImage(),
                 new Price(requestProductDto.getPrice()));
         productDao.update(product);
@@ -40,6 +44,7 @@ public class ProductListService {
     }
     
     public void delete(final long id) {
+        productDao.findByID(id).orElseThrow(() -> new NoSuchElementException(NO_SUCH_PRODUCT_ERROR));
         productDao.deleteByID(id);
     }
 }

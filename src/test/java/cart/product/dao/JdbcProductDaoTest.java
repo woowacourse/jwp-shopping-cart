@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import cart.product.domain.Name;
 import cart.product.domain.Price;
 import cart.product.domain.Product;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ class JdbcProductDaoTest {
         
         //when
         final long id = jdbcProductDao.insert(product);
-        final Product insertedProduct = jdbcProductDao.findByID(id);
+        final Product insertedProduct = jdbcProductDao.findByID(id).orElseThrow(NoSuchElementException::new);
         
         //then
         assertEquals(product.getName().getValue(), insertedProduct.getName().getValue());
@@ -110,6 +111,7 @@ class JdbcProductDaoTest {
         jdbcProductDao.update(updatedProduct);
         
         //then
-        assertEquals(5000, jdbcProductDao.findByID(id2).getPrice().getValue());
+        final Product result = jdbcProductDao.findByID(id2).orElseThrow(NoSuchElementException::new);
+        assertEquals(5000, result.getPrice().getValue());
     }
 }

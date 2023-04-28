@@ -8,6 +8,7 @@ import cart.product.domain.Price;
 import cart.product.domain.Product;
 import cart.product.dto.ResponseProductDto;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +22,8 @@ class ProductListServiceTest {
         }
         
         @Override
-        public Product findByID(final long id) {
-            return null;
+        public Optional<Product> findByID(final long id) {
+            return Optional.empty();
         }
         
         @Override

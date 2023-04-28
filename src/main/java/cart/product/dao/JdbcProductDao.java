@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -55,11 +57,15 @@ public class JdbcProductDao implements ProductDao {
         
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
-    
+
     @Override
-    public Product findByID(final long id) {
+    public Optional<Product> findByID(final long id) {
         final String sql = "select * from product_list where id = ?";
-        return jdbcTemplate.queryForObject(sql, productRowMapper, id);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, productRowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
     
     @Override

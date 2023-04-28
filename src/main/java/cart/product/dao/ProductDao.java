@@ -2,12 +2,13 @@ package cart.product.dao;
 
 import cart.product.domain.Product;
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductDao {
     
     long insert(Product product);
     
-    Product findByID(long id);
+    Optional<Product> findByID(long id);
     
     Product findByName(String name);
     

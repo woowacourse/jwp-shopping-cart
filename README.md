@@ -53,7 +53,7 @@
 - [ ] 엔드포인트간 DTO 분리
 - [x] 필요없는 this 제거
 - [ ] ExceptionHandler 추가
-- [ ] findById에서 null 처리
+- [x] findById() Optional 처리
 - [ ] fake 객체의 저장, 조회가 정상적으로 동작하는지 테스트
 - [ ] service 테스트 추가
 - [x] 필요없는 출력문 제거
