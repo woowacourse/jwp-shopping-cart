@@ -28,13 +28,11 @@ public class ProductService {
     }
 
     public Long save(final ProductDto productDto) {
-        return productDao.insert(new Product(productDto.getId(), productDto.getName(), productDto.getImageUrl(),
-                productDto.getPrice(), productDto.getCategory()));
+        return productDao.insert(productDto.toEntity());
     }
 
     public void update(final Long id, final ProductDto productDto) {
-        int updatedCount = productDao.update(new Product(id, productDto.getName(), productDto.getImageUrl(),
-                productDto.getPrice(), productDto.getCategory()));
+        int updatedCount = productDao.update(productDto.toEntity());
         if (updatedCount != 1) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }

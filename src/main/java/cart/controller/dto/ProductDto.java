@@ -1,5 +1,6 @@
 package cart.controller.dto;
 
+import cart.persistence.entity.Product;
 import cart.persistence.entity.ProductCategory;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
@@ -48,5 +49,9 @@ public class ProductDto {
 
     public ProductCategory getCategory() {
         return category;
+    }
+
+    public Product toEntity() {
+        return new Product(id, name, imageUrl, price, category);
     }
 }
