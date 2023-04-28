@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,14 +71,11 @@ class JdbcProductsDaoTest {
         final long id = 2L;
         final String newName = "newName";
         final int newPrice = 1000;
-        final String newImage = "newSource";
-        final Product updateProduct = new Product(id, newName, newPrice, newImage);
-
-        final List<Long> selectIdFromProducts = jdbcTemplate.queryForList("SELECT id FROM products", Long.class);
-        System.out.println(selectIdFromProducts);
+        final String newImage = "https://test.com/new/image/source";
+        final Product originalProduct = productsDao.findById(id);
 
         //when
-        productsDao.update(updateProduct);
+        productsDao.update(originalProduct, newName, newPrice, newImage);
 
         //then
         final Map<String, Object> actual = jdbcTemplate.queryForMap("SELECT * FROM products where id = ?", id);
@@ -87,6 +83,9 @@ class JdbcProductsDaoTest {
             softly.assertThat(actual.get("product_name")).isEqualTo(newName);
             softly.assertThat(actual.get("product_price")).isEqualTo(newPrice);
             softly.assertThat(actual.get("product_image")).isEqualTo(newImage);
+            softly.assertThat(originalProduct.getName()).isEqualTo(newName);
+            softly.assertThat(originalProduct.getPrice()).isEqualTo(newPrice);
+            softly.assertThat(originalProduct.getImageUrl()).isEqualTo(newImage);
         });
     }
 

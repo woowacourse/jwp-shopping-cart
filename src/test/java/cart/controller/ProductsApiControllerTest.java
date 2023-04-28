@@ -70,8 +70,8 @@ class ProductsApiControllerTest {
                 Arguments.of("이름 누락",new ProductRequest(null, PRICE, IMAGE), "name 필드가 있어야 합니다."),
                 Arguments.of("금액 누락",new ProductRequest(NAME, null, IMAGE), "price 필드가 있어야 합니다."),
                 Arguments.of("금액 음수",new ProductRequest(NAME, -1000, IMAGE), "price는 음수가 될 수 없습니다."),
-                Arguments.of("이미지 누락",new ProductRequest(NAME, PRICE, null), "image 필드가 있어야 합니다."),
-                Arguments.of("이미지 주소 형식 오류",new ProductRequest(NAME, PRICE, "wrongImageSource"), "image가 url형식에 맞지 않습니다.")
+                Arguments.of("이미지 누락",new ProductRequest(NAME, PRICE, null), "imageUrl 필드가 있어야 합니다."),
+                Arguments.of("이미지 주소 형식 오류",new ProductRequest(NAME, PRICE, "wrongImageSource"), "imageUrl형식에 맞지 않습니다.")
         );
     }
 
@@ -116,7 +116,7 @@ class ProductsApiControllerTest {
                 .when().put("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("해당 상품이 없습니다."));
+                .body("message", is("해당 상품이 없습니다. 입략된 상품 id : 1"));
     }
 
     @Test

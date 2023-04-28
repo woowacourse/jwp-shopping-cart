@@ -29,17 +29,19 @@ public class ProductService {
                                 .id(product.getId())
                                 .name(product.getName())
                                 .price(product.getPrice())
-                                .imageUrl(product.getImage())
+                                .imageUrl(product.getImageUrl())
                                 .build()
                 )
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void updateById(final ProductDto productDto) {
-        productsDao.update(new Product(productDto.getId(),
-                productDto.getName(),
-                productDto.getPrice(),
-                productDto.getImageUrl()));
+    public void updateById(final ProductDto productDataToUpdate) {
+        final Product product = productsDao.findById(productDataToUpdate.getId());
+        productsDao.update(product,
+                productDataToUpdate.getName(),
+                productDataToUpdate.getPrice(),
+                productDataToUpdate.getImageUrl()
+        );
     }
 
     public void deleteById(final long id) {

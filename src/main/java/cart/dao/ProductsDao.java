@@ -9,7 +9,9 @@ public interface ProductsDao {
 
     List<Product> readAll();
 
-    void update(final Product product);
+    Product findById(final long id);
+
+    void update(final Product product, final String nameToUpdate, final int priceToUpdate, final String imageUrlToUpdate);
 
     void delete(final long id);
 }

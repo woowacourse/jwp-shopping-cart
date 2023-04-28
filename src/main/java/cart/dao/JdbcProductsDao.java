@@ -2,7 +2,9 @@ package cart.dao;
 
 import cart.entity.Product;
 import cart.exception.NoSuchProductException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -11,6 +13,12 @@ import java.util.List;
 
 @Repository
 public class JdbcProductsDao implements ProductsDao {
+
+    private static final RowMapper<Product> productRowMapper = (rs, rowNum) ->
+            new Product(rs.getLong("id"),
+                    rs.getString("product_name"),
+                    rs.getInt("product_price"),
+                    rs.getString("product_image"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -35,34 +43,36 @@ public class JdbcProductsDao implements ProductsDao {
     @Override
     public List<Product> readAll() {
         final String sql = "SELECT * FROM products";
-        return jdbcTemplate.query(sql,
-                (rs, rowNum) ->
-                        new Product(rs.getLong("id"),
-                                rs.getString("product_name"),
-                                rs.getInt("product_price"),
-                                rs.getString("product_image"))
-        );
+        return jdbcTemplate.query(sql, productRowMapper);
     }
 
     @Override
-    public void update(final Product product) {
-        validateIfProductExist(product.getId());
+    public Product findById(final long id) {
+        final String sql = "SELECT * FROM products WHERE id = ?";
 
-        final String sql = "UPDATE products SET product_name = ?, product_price = ? , product_image = ? where id = ?";
-        jdbcTemplate.update(sql,
-                product.getName(),
-                product.getPrice(),
-                product.getImage(),
-                product.getId()
-        );
-    }
-
-    public void validateIfProductExist(long id) {
-        final String sql = "select count(*) from products where id = ?";
-
-        if (jdbcTemplate.queryForObject(sql, Integer.class, id) == 0) {
+        try {
+            return jdbcTemplate.queryForObject(sql, productRowMapper, id);
+        } catch (EmptyResultDataAccessException exception) {
             throw new NoSuchProductException("해당 상품이 없습니다. 입략된 상품 id : " + id);
         }
+    }
+
+    @Override
+    public void update(final Product product,
+                       final String nameToUpdate,
+                       final int priceToUpdate,
+                       final String imageUrlToUpdate
+    ) {
+        final String sql = "UPDATE products SET product_name = ?, product_price = ? , product_image = ? where id = ?";
+        jdbcTemplate.update(sql,
+                nameToUpdate,
+                priceToUpdate,
+                imageUrlToUpdate,
+                product.getId()
+        );
+        product.setName(nameToUpdate);
+        product.setPrice(priceToUpdate);
+        product.setImageUrl(imageUrlToUpdate);
     }
 
     @Override
