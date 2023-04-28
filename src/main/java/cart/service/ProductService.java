@@ -20,7 +20,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Long create(ProductRequest productRequest) {
+    public Long save(ProductRequest productRequest) {
         Product product = productRequest.toEntity();
         Long savedId = productDao.save(product);
         return savedId;
@@ -40,8 +40,8 @@ public class ProductService {
     }
 
     @Transactional
-    public void update(Long productId, ProductRequest productRequest) {
+    public void updateById(Long id, ProductRequest productRequest) {
         Product product = productRequest.toEntity();
-        productDao.updateById(productId, product);
+        productDao.updateById(id, product);
     }
 }
