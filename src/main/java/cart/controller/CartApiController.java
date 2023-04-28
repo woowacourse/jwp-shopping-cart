@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
 public class CartApiController {
 
     private final CartService cartService;
@@ -18,24 +17,24 @@ public class CartApiController {
         this.cartService = cartService;
     }
 
-    @PostMapping("product")
+    @PostMapping("/product")
     public void insertProduct(@RequestBody InsertRequestDto insertRequestDto) {
         validatePrice(insertRequestDto.getPrice());
         cartService.addProduct(insertRequestDto);
     }
 
-    @GetMapping("product")
+    @GetMapping("/product")
     public List<ProductResponseDto> getProducts() {
         return cartService.getProducts();
     }
 
-    @PutMapping("product")
+    @PutMapping("/product")
     public void updateProduct(@RequestBody UpdateRequestDto updateRequestDto) {
         validatePrice(updateRequestDto.getPrice());
         cartService.updateProduct(updateRequestDto);
     }
 
-    @DeleteMapping("product/{id}")
+    @DeleteMapping("/product/{id}")
     public void deleteProduct(@PathVariable int id) {
         cartService.deleteProduct(id);
     }
