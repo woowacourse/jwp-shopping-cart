@@ -18,7 +18,7 @@ public class ProductService {
     }
 
     public void insertProduct(final ProductDto productDto) {
-        productsDao.create(productDto.getName(), productDto.getPrice(), productDto.getImage());
+        productsDao.create(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
     }
 
     public List<ProductDto> findAll() {
@@ -29,7 +29,7 @@ public class ProductService {
                                 .id(product.getId())
                                 .name(product.getName())
                                 .price(product.getPrice())
-                                .image(product.getImage())
+                                .imageUrl(product.getImage())
                                 .build()
                 )
                 .collect(Collectors.toUnmodifiableList());
@@ -39,7 +39,7 @@ public class ProductService {
         productsDao.update(new Product(productDto.getId(),
                 productDto.getName(),
                 productDto.getPrice(),
-                productDto.getImage()));
+                productDto.getImageUrl()));
     }
 
     public void deleteById(final long id) {

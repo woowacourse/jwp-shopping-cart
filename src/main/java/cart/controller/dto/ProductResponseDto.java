@@ -1,16 +1,17 @@
 package cart.controller.dto;
 
 public class ProductResponseDto {
+
     private final Long id;
     private final String name;
     private final Integer price;
-    private final String image;
+    private final String imageUrl;
 
-    public ProductResponseDto(final long id, final String name, final int price, final String image) {
+    public ProductResponseDto(final long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.image = image;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -25,8 +26,8 @@ public class ProductResponseDto {
         return price;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
 }

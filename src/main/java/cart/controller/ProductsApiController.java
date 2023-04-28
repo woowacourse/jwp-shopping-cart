@@ -37,7 +37,7 @@ public class ProductsApiController {
         productService.insertProduct(new ProductDto.Builder()
                 .name(productRequestDto.getName())
                 .price(productRequestDto.getPrice())
-                .image(productRequestDto.getImage())
+                .imageUrl(productRequestDto.getImageUrl())
                 .build());
         httpServletResponse.setStatus(HttpStatus.CREATED.value());
     }
@@ -51,7 +51,7 @@ public class ProductsApiController {
                         productDto.getId(),
                         productDto.getName(),
                         productDto.getPrice(),
-                        productDto.getImage()
+                        productDto.getImageUrl()
                 ))
                 .collect(Collectors.toUnmodifiableList());
     }
@@ -66,7 +66,7 @@ public class ProductsApiController {
                 .id(id)
                 .name(productRequestDto.getName())
                 .price(productRequestDto.getPrice())
-                .image(productRequestDto.getImage())
+                .imageUrl(productRequestDto.getImageUrl())
                 .build());
         httpServletResponse.setStatus(HttpStatus.OK.value());
     }
