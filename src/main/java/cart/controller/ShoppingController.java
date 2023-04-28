@@ -25,9 +25,9 @@ public class ShoppingController {
         return "index";
     }
 
-    @GetMapping("/{id}")
-    public String getProduct(@PathVariable Long id, final Model model) {
-        final ProductDto productDto = productService.getById(id);
+    @GetMapping("/{productId}")
+    public String getProduct(@PathVariable Long productId, final Model model) {
+        final ProductDto productDto = productService.getById(productId);
         model.addAttribute("product", productDto);
         return "product";
     }

@@ -39,7 +39,7 @@ public class AdminController {
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody @Valid final ProductDto productDto) {
         final long productId = productService.save(productDto);
-        return ResponseEntity.created(URI.create("/admin/" + productId)).build();
+        return ResponseEntity.created(URI.create("/" + productId)).build();
     }
 
     @PutMapping("/{productId}")
@@ -56,7 +56,7 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @ModelAttribute("categorys")
+    @ModelAttribute("categories")
     public List<ProductCategory> productCategories() {
         return List.of(ProductCategory.values());
     }

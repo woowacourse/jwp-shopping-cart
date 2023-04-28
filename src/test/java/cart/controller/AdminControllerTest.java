@@ -77,7 +77,7 @@ class AdminControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/admin/1"));
+                .andExpect(header().string("Location", "/1"));
     }
 
     @DisplayName("상품 정보를 추가 시 잘못된 정보 형식으로 들어오면 예외가 발생한다")
