@@ -11,7 +11,7 @@ const showEditModal = (product) => {
         element.value = product[element.getAttribute('name')];
     }
     modal.dataset.formType = 'edit';
-    modal.dataset.productId = product.id;
+    modal.dataset.productId = product.productId;
     modal.style.display = 'block';
 };
 
@@ -36,7 +36,7 @@ form.addEventListener('submit', (event) => {
     }
 
     if (modal.dataset.formType === 'edit') {
-        product['id'] = modal.dataset.productId;
+        product['productId'] = modal.dataset.productId;
         updateProduct(product);
         return;
     }
@@ -44,11 +44,13 @@ form.addEventListener('submit', (event) => {
     createProduct(product);
 });
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '',
-    }).then((response) => {
+        method: 'post',
+        url: '/product',
+        data: product
+    }
+    ).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
@@ -57,10 +59,13 @@ const createProduct = (product) => {
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
+    console.log(product);
+    const { id } = product.productId;
 
     axios.request({
-        url: '',
+        method: 'put',
+        url: '/product',
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -71,7 +76,8 @@ const updateProduct = (product) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: '',
+        method: 'delete',
+        url: '/product/' + id,
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
