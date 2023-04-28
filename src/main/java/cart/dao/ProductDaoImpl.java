@@ -17,14 +17,6 @@ public class ProductDaoImpl implements ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-
-    public ProductDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("product")
-                .usingGeneratedKeyColumns("id");
-    }
-
     private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) ->
             new ProductEntity(
                     resultSet.getLong("id"),
@@ -32,6 +24,13 @@ public class ProductDaoImpl implements ProductDao {
                     resultSet.getString("image"),
                     resultSet.getInt("price")
             );
+
+    public ProductDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
+    }
 
     @Override
     public Optional<ProductEntity> save(Product product) {

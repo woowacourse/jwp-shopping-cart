@@ -33,7 +33,6 @@ class ProductServiceTest {
     @Autowired
     private ProductService productService;
 
-
     @Test
     void 상품을_저장한다() {
         ProductRequest productRequest = new ProductRequest(ImageFixture.url, "name", 1000);
