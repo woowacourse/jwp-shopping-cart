@@ -46,7 +46,7 @@
 - [x] Controller 네이밍 변경
 - [x] path에서 http method에 대한 키워드 삭제
 - [x] Update의 반환 상태 코드 변경
-- [ ] @Valid 어노테이션 사용
+- [x] @Valid 어노테이션 사용
 - [ ] Domain 객체에 DTO 객체를 넘겨주지 않도록 변경
 - [ ] 매직넘버 상수화
 - [x] 사용하지 않는 클래스 삭제

@@ -4,6 +4,7 @@ import cart.product.dto.RequestProductDto;
 import cart.product.dto.ResponseProductDto;
 import cart.product.service.ProductListService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,14 +32,14 @@ public class ProductRestController {
     
     @PostMapping("/products")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody final RequestProductDto requestProductDto) {
+    public void create(@RequestBody @Valid final RequestProductDto requestProductDto) {
         productListService.create(requestProductDto);
     }
     
     @PutMapping("/products/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseProductDto update(@PathVariable final long id,
-            @RequestBody final RequestProductDto requestProductDto) {
+            @RequestBody @Valid final RequestProductDto requestProductDto) {
         return productListService.update(id, requestProductDto);
     }
     
