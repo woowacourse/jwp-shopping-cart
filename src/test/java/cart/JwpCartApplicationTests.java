@@ -115,7 +115,7 @@ class JwpCartApplicationTests {
         when()
                 .delete("/items/{id}", 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private static ItemRequest createItemRequest(String name, String imageUrl, int price) {
