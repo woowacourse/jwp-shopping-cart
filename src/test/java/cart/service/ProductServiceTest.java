@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductDto;
-import cart.dto.ProductSaveRequestDto;
-import cart.dto.ProductUpdateRequestDto;
+import cart.dto.ProductSaveRequest;
+import cart.dto.ProductUpdateRequest;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -33,7 +33,7 @@ class ProductServiceTest {
     @Test
     void 상품을_저장한다() {
         // given
-        final ProductSaveRequestDto request = new ProductSaveRequestDto("허브티", "tea.jpg", 1000L);
+        final ProductSaveRequest request = new ProductSaveRequest("허브티", "tea.jpg", 1000L);
 
         // when
         final Long id = productService.save(request);
@@ -49,8 +49,8 @@ class ProductServiceTest {
     @Test
     void 모든_상품을_조회한다() {
         // given
-        final ProductSaveRequestDto request1 = new ProductSaveRequestDto("허브티", "tea.jpg", 99L);
-        final ProductSaveRequestDto request2 = new ProductSaveRequestDto("블랙켓티", "bk_tea.jpg", 100L);
+        final ProductSaveRequest request1 = new ProductSaveRequest("허브티", "tea.jpg", 99L);
+        final ProductSaveRequest request2 = new ProductSaveRequest("블랙켓티", "bk_tea.jpg", 100L);
         final Long id1 = productService.save(request1);
         final Long id2 = productService.save(request2);
 
@@ -67,7 +67,7 @@ class ProductServiceTest {
     @Test
     void 단일_상품을_조회한다() {
         // given
-        final ProductSaveRequestDto product = new ProductSaveRequestDto("허브티", "tea.jpg", 99L);
+        final ProductSaveRequest product = new ProductSaveRequest("허브티", "tea.jpg", 99L);
         final Long id = productService.save(product);
 
         // when
@@ -93,9 +93,9 @@ class ProductServiceTest {
     @Test
     void 상품을_수정한다() {
         // given
-        final ProductSaveRequestDto product = new ProductSaveRequestDto("허브티", "tea.jpg", 99L);
+        final ProductSaveRequest product = new ProductSaveRequest("허브티", "tea.jpg", 99L);
         final Long id = productService.save(product);
-        final ProductUpdateRequestDto request = new ProductUpdateRequestDto("블랙캣", "cat.jpg", 100L);
+        final ProductUpdateRequest request = new ProductUpdateRequest("블랙캣", "cat.jpg", 100L);
 
         // when
         productService.update(id, request);
@@ -114,7 +114,7 @@ class ProductServiceTest {
     void 없는_상품을_수정하는_경우_NoSuchElementException_을_던진다() {
         // given
         final Long id = 999999999999L;
-        final ProductUpdateRequestDto request = new ProductUpdateRequestDto("블랙캣", "cat.jpg", 100L);
+        final ProductUpdateRequest request = new ProductUpdateRequest("블랙캣", "cat.jpg", 100L);
 
         // expect
         assertThatThrownBy(() -> productService.update(id, request))
@@ -125,7 +125,7 @@ class ProductServiceTest {
     @Test
     void 상품을_삭제한다() {
         // given
-        final ProductSaveRequestDto product = new ProductSaveRequestDto("허브티", "tea.jpg", 99L);
+        final ProductSaveRequest product = new ProductSaveRequest("허브티", "tea.jpg", 99L);
         final Long id = productService.save(product);
 
         // when

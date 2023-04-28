@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.dto.ProductSaveRequestDto;
-import cart.dto.ProductUpdateRequestDto;
+import cart.dto.ProductSaveRequest;
+import cart.dto.ProductUpdateRequest;
 import cart.service.ProductService;
 import java.net.URI;
 import javax.validation.Valid;
@@ -23,14 +23,14 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<Void> save(@Valid @RequestBody final ProductSaveRequestDto request) {
+    public ResponseEntity<Void> save(@Valid @RequestBody final ProductSaveRequest request) {
         final Long id = productService.save(request);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<Void> update(@PathVariable final Long id,
-                                       @Valid @RequestBody ProductUpdateRequestDto request) {
+                                       @Valid @RequestBody ProductUpdateRequest request) {
         productService.update(id, request);
         return ResponseEntity.noContent().build();
     }

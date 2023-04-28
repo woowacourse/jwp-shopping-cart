@@ -5,8 +5,8 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductDto;
-import cart.dto.ProductSaveRequestDto;
-import cart.dto.ProductUpdateRequestDto;
+import cart.dto.ProductSaveRequest;
+import cart.dto.ProductUpdateRequest;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public Long save(final ProductSaveRequestDto request) {
+    public Long save(final ProductSaveRequest request) {
         final Product product = new Product(request.getName(), request.getImage(), request.getPrice());
 
         return productDao.saveAndGetId(product)
@@ -39,7 +39,7 @@ public class ProductService {
         return ProductDto.from(product);
     }
 
-    public void update(final Long id, final ProductUpdateRequestDto request) {
+    public void update(final Long id, final ProductUpdateRequest request) {
         productDao.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
         final Product savedProduct = new Product(id, request.getName(), request.getImage(), request.getPrice());
