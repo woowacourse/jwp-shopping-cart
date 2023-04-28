@@ -55,8 +55,9 @@ class ProductControllerTest {
                 .andReturn();
 
         // then
-        final Product result = productDao.findAll().get(0);
         final String location = mvcResult.getResponse().getHeader("Location");
+        final Long id = Long.parseLong(location.substring(10));
+        final Product result = productDao.findById(id).orElseThrow();
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("허브티"),
                 () -> assertThat(result.getImage()).isEqualTo("tea.jpg"),
@@ -81,7 +82,7 @@ class ProductControllerTest {
                 .andDo(print());
 
         // then
-        final Product result = productDao.findAll().get(0);
+        final Product result = productDao.findById(id).orElseThrow();
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(id),
                 () -> assertThat(result.getName()).isEqualTo("고양이"),
@@ -103,7 +104,7 @@ class ProductControllerTest {
                 .andDo(print());
 
         // then
-        assertThat(productDao.findAll()).isEmpty();
+        assertThat(productDao.findById(id)).isNotPresent();
     }
 
     @Test
