@@ -2,25 +2,35 @@ package cart.controller;
 
 import cart.controller.dto.ErrorResponseDto;
 import cart.exception.NoSuchProductException;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice(assignableTypes = ProductsApiController.class)
+import javax.servlet.http.HttpServletResponse;
+
+@RestControllerAdvice(assignableTypes = ProductsApiController.class)
 public class ProductControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDto> validHandler(final MethodArgumentNotValidException exception) {
-        final String message = exception.getAllErrors().get(0).getDefaultMessage();
+    public ErrorResponseDto validHandler(
+            final MethodArgumentNotValidException exception,
+            final HttpServletResponse httpServletResponse
+    ) {
+        httpServletResponse.setStatus(HttpStatus.BAD_REQUEST.value());
 
-        return ResponseEntity.badRequest().body(new ErrorResponseDto(message));
+        final String message = exception.getAllErrors().get(0).getDefaultMessage();
+        return new ErrorResponseDto(message);
     }
 
     @ExceptionHandler(NoSuchProductException.class)
-    public ResponseEntity<ErrorResponseDto> noProductDataHandler(final NoSuchProductException exception) {
-        final String message = exception.getMessage();
+    public ErrorResponseDto noProductDataHandler(
+            final NoSuchProductException exception,
+            final HttpServletResponse httpServletResponse
+    ) {
+        httpServletResponse.setStatus(HttpStatus.BAD_REQUEST.value());
 
-        return ResponseEntity.badRequest().body(new ErrorResponseDto(message));
+        final String message = exception.getMessage();
+        return new ErrorResponseDto(message);
     }
 }
