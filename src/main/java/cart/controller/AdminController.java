@@ -43,16 +43,16 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/products/{id}")
-    public ResponseEntity<Void> putProducts(@PathVariable Long id,
+    @PutMapping("/products/{productId}")
+    public ResponseEntity<Void> putProducts(@PathVariable Long productIdd,
                                             @Valid @RequestBody ProductModificationRequest request) {
         managementService.update(ProductDtoMapper.from(request));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping("/products/{id}")
-    public ResponseEntity<Void> deleteProducts(@PathVariable Long id) {
-        managementService.delete(ProductDto.from(id));
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<Void> deleteProducts(@PathVariable Long productId) {
+        managementService.delete(ProductDto.from(productId));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
