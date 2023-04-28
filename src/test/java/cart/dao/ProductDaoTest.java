@@ -3,8 +3,8 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Product;
 import java.util.List;
+import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +23,15 @@ class ProductDaoTest {
     @BeforeEach
     void setup() {
         this.productDao = new ProductDao(jdbcTemplate);
-        productDao.insert(new Product("pizza", 1000,
+        productDao.insert(new ProductEntity("pizza", 1000,
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg/800px-Eq_it-na_pizza-margherita_sep2005_sml.jpg"));
-        productDao.insert(
-                new Product("salad", 2000,
-                        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Salad_platter.jpg/1200px-Salad_platter.jpg"));
+        productDao.insert(new ProductEntity("salad", 2000,
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Salad_platter.jpg/1200px-Salad_platter.jpg"));
     }
 
     @Test
     void 상품_데이터_삽입() {
-        final Product product = new Product("chicken", 3000,
+        final ProductEntity product = new ProductEntity("chicken", 3000,
                 "https://cdn.britannica.com/18/137318-050-29F7072E/rooster-Rhode-Island-Red-roosters-chicken"
                         + "-domestication.jpg");
 
@@ -43,9 +42,9 @@ class ProductDaoTest {
 
     @Test
     void 상품_데이터_조회() {
-        final Long id = 2L;
+        final long id = 2L;
 
-        final Product foundProduct = productDao.findById(id);
+        final ProductEntity foundProduct = productDao.findById(id);
 
         assertAll(
                 () -> assertThat(foundProduct.getName()).isEqualTo("salad"),
@@ -55,7 +54,7 @@ class ProductDaoTest {
 
     @Test
     void 모든_상품_데이터_조회() {
-        final List<Product> results = productDao.findAll();
+        final List<ProductEntity> results = productDao.findAll();
 
         assertThat(results.size()).isEqualTo(2);
     }
@@ -63,22 +62,15 @@ class ProductDaoTest {
     @Test
     void 상품_데이터_수정() {
         final Long id = 2L;
-        final Product newProduct = new Product(id, "new salad", 3000, "url");
+        final ProductEntity newProduct = new ProductEntity(id, "new salad", 3000, "url");
 
         productDao.update(newProduct);
-        final Product foundProduct = productDao.findById(id);
+        final ProductEntity foundProduct = productDao.findById(id);
 
         assertAll(
                 () -> assertThat(foundProduct.getName()).isEqualTo(newProduct.getName()),
                 () -> assertThat(foundProduct.getPrice()).isEqualTo(newProduct.getPrice())
         );
-    }
-
-    @Test
-    void 존재하지_않는_상품_수정시_예외_발생() {
-        final Product notExistProduct = new Product(3L, "커피", 2800, "매머드 커피");
-
-        productDao.update(notExistProduct);
     }
 
     @Test

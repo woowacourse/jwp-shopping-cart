@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Product;
+import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -13,7 +13,7 @@ import java.util.List;
 public class ProductDao {
 
     private static final String ALL_COLUMNS = "id, name, price, image_url";
-    private static final RowMapper<Product> productRowMapper = (resultSet, rowNum) -> new Product(
+    private static final RowMapper<ProductEntity> productRowMapper = (resultSet, rowNum) -> new ProductEntity(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getInt("price"),
@@ -30,25 +30,25 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public long insert(final Product product) {
-        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
+    public long insert(final ProductEntity productEntity) {
+        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(productEntity);
 
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
-    public Product findById(final long id) {
+    public ProductEntity findById(final long id) {
         final String sql = "select " + ALL_COLUMNS + " from Product where id = ?";
 
         return jdbcTemplate.queryForObject(sql, productRowMapper, id);
     }
 
-    public List<Product> findAll() {
+    public List<ProductEntity> findAll() {
         final String sql = "select " + ALL_COLUMNS + " from Product";
 
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
-    public void update(final Product newProduct) {
+    public void update(final ProductEntity newProduct) {
         final String sql = "update Product set name = ?, price = ?, image_url = ? where id = ?";
 
         jdbcTemplate.update(sql,
