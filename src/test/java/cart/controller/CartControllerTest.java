@@ -35,7 +35,7 @@ class CartControllerTest {
                 .body(productSaveRequestDto)
                 .when().post("/product")
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("상품이 null일 경우 예외 발생")
@@ -84,7 +84,7 @@ class CartControllerTest {
                 .body(updateDto)
                 .when().put("/product/{id}", 1L)
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("상품 삭제")
@@ -99,6 +99,6 @@ class CartControllerTest {
         given().log().uri()
                 .when().delete("/product/{id}", 1)
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
