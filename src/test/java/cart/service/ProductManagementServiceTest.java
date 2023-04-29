@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.any;
@@ -71,6 +72,16 @@ class ProductManagementServiceTest {
         assertDoesNotThrow(()->managementService.update(productDto));
     }
 
+    @DisplayName("상품 데이터가 수정되지 않으면 예외가 발생하는지 확인한다")
+    @Test
+    void invalidUpdateTest() {
+        final ProductDto productDto = ProductDto.of(3L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
+        when(productDao.update(any())).thenReturn(0);
+
+        assertThatThrownBy(()->managementService.update(productDto))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
     @DisplayName("상품 데이터가 삭제되는지 확인한다")
     @Test
     void deleteTest() {
@@ -78,5 +89,15 @@ class ProductManagementServiceTest {
         when(productDao.delete(any())).thenReturn(1);
 
         assertDoesNotThrow(()->managementService.delete(productDto));
+    }
+
+    @DisplayName("상품 데이터가 삭제되지 않으면 예외가 발생하는지 확인한다")
+    @Test
+    void invalidDeleteTest() {
+        final ProductDto productDto = ProductDto.of(3L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
+        when(productDao.update(any())).thenReturn(0);
+
+        assertThatThrownBy(()->managementService.update(productDto))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }
