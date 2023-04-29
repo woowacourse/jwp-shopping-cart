@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Member;
 import cart.domain.Product;
+import cart.dto.cart.CartProductDto;
 import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
 import java.util.List;
@@ -44,7 +45,7 @@ class CartDaoTest {
         cartDao.save(member.getId(), product2.getId());
 
         // then
-        List<ProductEntity> allProducts = cartDao.findAllProductByMemberId(member.getId());
+        List<CartProductDto> allProducts = cartDao.findAllProductByMemberId(member.getId());
         assertThat(allProducts)
                 .hasSize(2);
     }
@@ -63,10 +64,8 @@ class CartDaoTest {
         cartDao.delete(member.getId(), product1.getId());
 
         // then
-        List<ProductEntity> allProducts = cartDao.findAllProductByMemberId(member.getId());
+        List<CartProductDto> allProducts = cartDao.findAllProductByMemberId(member.getId());
         assertThat(allProducts)
                 .hasSize(1);
-        assertThat(allProducts.get(0))
-                .isEqualTo(product2);
     }
 }

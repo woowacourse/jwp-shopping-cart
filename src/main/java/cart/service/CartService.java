@@ -1,8 +1,6 @@
 package cart.service;
 
-import static java.util.stream.Collectors.toList;
-
-import cart.dto.product.ProductDto;
+import cart.dto.cart.CartProductDto;
 import cart.exception.ProductNotFoundException;
 import cart.repository.CartDao;
 import cart.repository.ProductDao;
@@ -20,24 +18,28 @@ public class CartService {
     }
 
     public void addToCart(Long memberId, Long productId) {
-        validateId(productId);
+        validateProductId(productId);
         cartDao.save(memberId, productId);
     }
 
-    public List<ProductDto> findAllProducts(Long memberId) {
-        return cartDao.findAllProductByMemberId(memberId).stream()
-                .map(ProductDto::fromEntity)
-                .collect(toList());
-    }
-
-    private void validateId(Long productId) {
+    private void validateProductId(Long productId) {
         if (!productDao.existsById(productId)) {
             throw new ProductNotFoundException("존재하지 않는 상품의 ID 입니다.");
         }
     }
 
-    public void deleteProduct(Long memberId, Long productId) {
-        validateId(productId);
-        cartDao.delete(memberId, productId);
+    public List<CartProductDto> findAllProducts(Long memberId) {
+        return cartDao.findAllProductByMemberId(memberId);
+    }
+
+    public void deleteProduct(Long memberId, Long cartId) {
+        validateCartId(cartId);
+        cartDao.delete(memberId, cartId);
+    }
+
+    private void validateCartId(Long cartId) {
+        if (!cartDao.existsById(cartId)) {
+            throw new ProductNotFoundException("존재하지 않는 장바구니의 ID 입니다.");
+        }
     }
 }

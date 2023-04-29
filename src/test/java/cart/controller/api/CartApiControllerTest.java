@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.dto.cart.CartProductDto;
 import cart.dto.product.ProductDto;
 import cart.dto.request.cart.CartAddRequest;
 import cart.dto.request.cart.CartDeleteRequest;
@@ -99,12 +100,13 @@ class CartApiControllerTest {
         willReturn(1L).given(basicAuthService)
                 .resolveMemberId(any());
 
-        List<ProductDto> productDtos = List.of(
-                new ProductDto(1L, "글렌피딕", 100_000, "image1"),
-                new ProductDto(2L, "글렌리벳", 200_000, "image2")
+        List<CartProductDto> productDtos = List.of(
+                new CartProductDto(1L, new ProductDto(1L, "글렌피딕", 100_000, "image1")),
+                new CartProductDto(2L, new ProductDto(1L, "글렌피딕", 100_000, "image1")),
+                new CartProductDto(3L, new ProductDto(2L, "글렌리벳", 200_000, "image2"))
         );
-        willReturn(productDtos).given(cartService)
-                .findAllProducts(1L);
+        given(cartService.findAllProducts(1L))
+                .willReturn(productDtos);
 
         // expect
         mockMvc.perform(get("/api/cart")
@@ -112,16 +114,24 @@ class CartApiControllerTest {
                         .header(AUTHORIZATION_HEADER, TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("200"))
-                .andExpect(jsonPath("$.message").value("2개의 상품이 조회되었습니다."))
+                .andExpect(jsonPath("$.message").value("3개의 상품이 조회되었습니다."))
                 .andExpect(jsonPath("$.result[0].id").value(1))
-                .andExpect(jsonPath("$.result[0].name").value("글렌피딕"))
-                .andExpect(jsonPath("$.result[0].price").value(100_000))
-                .andExpect(jsonPath("$.result[0].imageUrl").value("image1"))
+                .andExpect(jsonPath("$.result[0].product.id").value(1))
+                .andExpect(jsonPath("$.result[0].product.name").value("글렌피딕"))
+                .andExpect(jsonPath("$.result[0].product.price").value(100_000))
+                .andExpect(jsonPath("$.result[0].product.imageUrl").value("image1"))
 
                 .andExpect(jsonPath("$.result[1].id").value(2))
-                .andExpect(jsonPath("$.result[1].name").value("글렌리벳"))
-                .andExpect(jsonPath("$.result[1].price").value(200_000))
-                .andExpect(jsonPath("$.result[1].imageUrl").value("image2"));
+                .andExpect(jsonPath("$.result[1].product.id").value(1))
+                .andExpect(jsonPath("$.result[1].product.name").value("글렌피딕"))
+                .andExpect(jsonPath("$.result[1].product.price").value(100_000))
+                .andExpect(jsonPath("$.result[1].product.imageUrl").value("image1"))
+
+                .andExpect(jsonPath("$.result[2].id").value(3))
+                .andExpect(jsonPath("$.result[2].product.id").value(2))
+                .andExpect(jsonPath("$.result[2].product.name").value("글렌리벳"))
+                .andExpect(jsonPath("$.result[2].product.price").value(200_000))
+                .andExpect(jsonPath("$.result[2].product.imageUrl").value("image2"));
     }
 
     @Test
@@ -161,6 +171,6 @@ class CartApiControllerTest {
                         .header(AUTHORIZATION_HEADER, TOKEN))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.message").value("존재하지 않는 상품의 ID 입니다."));
+                .andExpect(jsonPath("$.message").value("존재하지 않는 장바구니의 ID 입니다."));
     }
 }

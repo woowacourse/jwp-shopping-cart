@@ -1,8 +1,8 @@
 package cart.controller.api;
 
+import cart.dto.cart.CartProductDto;
 import cart.dto.request.cart.CartAddRequest;
 import cart.dto.request.cart.CartDeleteRequest;
-import cart.dto.product.ProductDto;
 import cart.dto.response.Response;
 import cart.dto.response.ResultResponse;
 import cart.dto.response.SimpleResponse;
@@ -43,7 +43,7 @@ public class CartApiController {
     @GetMapping
     public ResponseEntity<Response> findAllProductsByMemberId(HttpServletRequest request) {
         Long memberId = basicAuthService.resolveMemberId(request.getHeader(AUTHORIZATION_HEADER));
-        List<ProductDto> allProducts = cartService.findAllProducts(memberId);
+        List<CartProductDto> allProducts = cartService.findAllProducts(memberId);
         return ResponseEntity.ok()
                 .body(ResultResponse.ok(allProducts.size() + "개의 상품이 조회되었습니다.", allProducts));
     }
@@ -52,7 +52,7 @@ public class CartApiController {
     public ResponseEntity<Response> deleteProductToCart(@RequestBody @Valid CartDeleteRequest cartDeleteRequest,
                                                         HttpServletRequest request) {
         Long memberId = basicAuthService.resolveMemberId(request.getHeader(AUTHORIZATION_HEADER));
-        cartService.deleteProduct(memberId, cartDeleteRequest.getProductId());
+        cartService.deleteProduct(memberId, cartDeleteRequest.getCartId());
         return ResponseEntity.ok()
                 .body(SimpleResponse.ok("장바구니에 상품이 삭제되었습니다."));
     }

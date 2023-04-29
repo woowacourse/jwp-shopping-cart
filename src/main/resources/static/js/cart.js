@@ -21,7 +21,7 @@ const addCartItem = (productId) => {
     });
 }
 
-const removeCartItem = (productId) => {
+const removeCartItem = (cartId) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
@@ -32,7 +32,7 @@ const removeCartItem = (productId) => {
     axios.request({
         method: 'delete',
         url: '/api/cart',
-        data: productId,
+        data: cartId,
         headers: {
             'Authorization': `Basic ${credentials}`,
             'Content-Type': 'application/json'
