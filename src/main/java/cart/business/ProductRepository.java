@@ -10,6 +10,8 @@ public interface ProductRepository {
 
     Integer insert(Product product);
 
+    Optional<Product> findById(Integer productId);
+
     Optional<Product> findByName(String name);
 
     List<Product> findAll();
@@ -17,5 +19,4 @@ public interface ProductRepository {
     Product update(Product product);
 
     Product remove(Integer productId);
-
 }

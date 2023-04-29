@@ -14,8 +14,8 @@ class ProductCRUDServiceTest {
     private final ProductCRUDService productCRUDService = new ProductCRUDService(productRepository);
 
     @Test
-    @DisplayName("동일한 이름을 가진 상품을 repository에 insert할시 예외를 던진다")
-    void test_perform_() {
+    @DisplayName("동일한 이름을 가진 상품을 create 할 시 예외를 던진다")
+    void test_create() {
         //given
         Product teo = new Product(null, new ProductName("teo"),
                 new ProductImage("https://"), new ProductPrice(10));
@@ -27,6 +27,18 @@ class ProductCRUDServiceTest {
 
         //then
         Assertions.assertThatThrownBy(() -> productCRUDService.create(sameNameTeo))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품에 대해 update 할 시 예외를 던진다")
+    void test_update() {
+        //given
+        Product teo = new Product(1, new ProductName("teo"),
+                new ProductImage("https://"), new ProductPrice(10));
+
+        //when, then
+        Assertions.assertThatThrownBy(() -> productCRUDService.update(teo))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -23,6 +23,11 @@ public class MockProductRepository implements ProductRepository {
     }
 
     @Override
+    public Optional<Product> findById(final Integer productId) {
+        return Optional.ofNullable(store.get(productId));
+    }
+
+    @Override
     public Optional<Product> findByName(String name) {
         return store.values()
                 .stream()
