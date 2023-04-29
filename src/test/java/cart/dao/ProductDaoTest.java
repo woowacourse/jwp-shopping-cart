@@ -1,10 +1,14 @@
 package cart.dao;
 
+import static cart.fixture.ProductFixture.PRODUCT_A;
+import static cart.fixture.ProductFixture.PRODUCT_B;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
 import java.util.List;
+import java.util.NoSuchElementException;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,32 +16,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ProductDaoTest {
-    private static final Product PRODUCT_A = new Product("마우스", 10000, "image");
-    private static final Product PRODUCT_B = new Product("키보드", 20000, "image2");
 
     @Autowired
     private DataSource dataSource;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     private ProductDao productDao;
-
-    private final RowMapper<Product> rowMapper = (resultSet, rowNum) -> {
-        Product product = new Product(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("price"),
-                resultSet.getString("image_url"));
-        return product;
-    };
 
     @BeforeEach
     void setUp() {
@@ -45,19 +31,36 @@ class ProductDaoTest {
     }
 
     @Test
-    @DisplayName("상품 데이터를 저장한다")
-    void save_success() {
+    @DisplayName("상품을 정상적으로 저장한다.")
+    void save_product() {
         //when
         Long id = productDao.save(PRODUCT_A);
         //then
-        Product savedProduct = findProductById(id);
-        assertThat(savedProduct).usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(PRODUCT_A);
+        assertThat(id).isPositive();
     }
 
-    private Product findProductById(Long id) {
-        return jdbcTemplate.queryForObject("select * from product where id = ?", rowMapper, id);
+    @Test
+    @DisplayName("상품을 아이디를 통해 반환한다.")
+    void find_by_id_success() {
+        //given
+        Long id = productDao.save(PRODUCT_A);
+        //when
+        Product savedProduct = productDao.findById(id);
+        //then
+        assertAll(
+                () -> assertThat(savedProduct).usingRecursiveComparison()
+                        .ignoringFields("id")
+                        .isEqualTo(PRODUCT_A),
+                () -> assertThat(savedProduct.getId()).isPositive());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 id의 상품을 조회시 예외를 반환한다.")
+    void find_by_id_fail_by_no_id() {
+        //when && then
+        assertThatThrownBy(() -> productDao.findById(10000L))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("존재하지 않는 상품입니다.");
     }
 
     @Test
@@ -80,7 +83,9 @@ class ProductDaoTest {
         //when
         productDao.deleteById(id);
         //then
-        assertThatThrownBy(() -> findProductById(id)).isInstanceOf(EmptyResultDataAccessException.class);
+        assertThatThrownBy(() -> productDao.findById(id))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("존재하지 않는 상품입니다.");
     }
 
     @Test
@@ -91,7 +96,7 @@ class ProductDaoTest {
         //when
         productDao.updateById(id, PRODUCT_B);
         //then
-        Product actual = findProductById(id);
+        Product actual = productDao.findById(id);
         assertThat(actual).usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(PRODUCT_B);
