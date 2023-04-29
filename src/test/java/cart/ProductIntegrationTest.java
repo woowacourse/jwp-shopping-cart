@@ -1,16 +1,11 @@
 package cart;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-import cart.dao.ProductDao;
-import cart.domain.Product;
 import cart.dto.RequestCreateProductDto;
 import cart.dto.RequestUpdateProductDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -20,6 +15,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+import java.sql.PreparedStatement;
+import java.util.Objects;
+
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -30,7 +35,7 @@ class ProductIntegrationTest {
     private int port;
 
     @Autowired
-    private ProductDao productDao;
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
@@ -105,7 +110,7 @@ class ProductIntegrationTest {
     @Test
     void 상품을_삭제하면_상품_목록_페이지와_관리자_페이지에서_사라진다() {
         // given
-        final Long insertedId = productDao.insert(new Product("치킨", 10_000, "치킨 사진"));
+        final Long insertedId = insertProduct("치킨", 10_000, "치킨 사진");
 
         final Response deleteResponse = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
@@ -142,10 +147,23 @@ class ProductIntegrationTest {
         });
     }
 
+    private Long insertProduct(final String name, final Integer price, final String image) {
+        final String sql = "INSERT INTO PRODUCT (name, price, image) VALUES (?, ?, ?)";
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            final PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"ID"});
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, price);
+            preparedStatement.setString(3, image);
+            return preparedStatement;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
     @Test
     void 등록한_상품을_수정하면_상품_목록_페이지와_관리자_페이지에서_수정된다() {
         // given
-        final Long insertedId = productDao.insert(new Product("치킨", 10_000, "치킨 사진"));
+        final Long insertedId = insertProduct("치킨", 10_000, "치킨 사진");
 
         final Response updateResponse = given()
                 .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -181,5 +199,10 @@ class ProductIntegrationTest {
             softly.assertThat(adminResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(adminResponse.body().asString()).contains("피자", "1000", "피자 사진");
         });
+    }
+
+    @AfterEach
+    void tearDown() {
+        jdbcTemplate.update("DELETE FROM Product");
     }
 }
