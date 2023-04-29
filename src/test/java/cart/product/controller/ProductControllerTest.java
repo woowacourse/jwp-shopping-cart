@@ -21,7 +21,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ProductApiControllerTest {
+class ProductControllerTest {
 
 	@Value("${local.server.port}")
 	int port;
