@@ -3,18 +3,18 @@ package cart.domain;
 public class Product {
     private final Long id;
     private final Name name;
-    private final String imageUrl;
     private final Price price;
+    private final String imageUrl;
 
-    public Product(Long id, String name, String imageUrl, Integer price) {
+    public Product(Long id, String name, Integer price, String imageUrl) {
         this.id = id;
         this.name = new Name(name);
-        this.imageUrl = imageUrl;
         this.price = new Price(price);
+        this.imageUrl = imageUrl;
     }
 
-    public Product(String name, String imageUrl, Integer price) {
-        this(null, name, imageUrl, price);
+    public Product(String name, Integer price, String imageUrl) {
+        this(null, name, price, imageUrl);
     }
 
     public Long getId() {
@@ -25,11 +25,11 @@ public class Product {
         return name.getName();
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
     public Integer getPrice() {
         return price.getAmount();
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

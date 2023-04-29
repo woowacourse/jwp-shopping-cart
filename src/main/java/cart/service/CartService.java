@@ -24,8 +24,8 @@ public class CartService {
     public ProductResponse create(ProductRequest productRequest) {
         Product product = new Product(
                 productRequest.getName(),
-                productRequest.getImageUrl(),
-                productRequest.getPrice()
+                productRequest.getPrice(),
+                productRequest.getImageUrl()
         );
 
         Long createdId = productDao.create(product);
@@ -54,8 +54,8 @@ public class CartService {
         Product product = new Product(
                 productUpdateRequest.getId(),
                 productUpdateRequest.getName(),
-                productUpdateRequest.getImageUrl(),
-                productUpdateRequest.getPrice()
+                productUpdateRequest.getPrice(),
+                productUpdateRequest.getImageUrl()
         );
 
         Long updatedId = productDao.update(product);

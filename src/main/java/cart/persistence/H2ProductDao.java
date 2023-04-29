@@ -21,14 +21,14 @@ public class H2ProductDao implements ProductDao {
 
     @Override
     public Long create(Product product) {
-        String sql = "INSERT INTO PRODUCT(name, image_url, price) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO PRODUCT(name, price, image_url) VALUES(?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, product.getName());
-            ps.setString(2, product.getImageUrl());
-            ps.setInt(3, product.getPrice());
+            ps.setInt(2, product.getPrice());
+            ps.setString(3, product.getImageUrl());
             return ps;
         }, keyHolder);
 
@@ -41,8 +41,8 @@ public class H2ProductDao implements ProductDao {
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new Product(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                resultSet.getString("image_url"),
-                resultSet.getInt("price")
+                resultSet.getInt("price"),
+                resultSet.getString("image_url")
         ), id);
     }
 
@@ -52,18 +52,18 @@ public class H2ProductDao implements ProductDao {
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Product(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                resultSet.getString("image_url"),
-                resultSet.getInt("price")
+                resultSet.getInt("price"),
+                resultSet.getString("image_url")
         ));
     }
 
     @Override
     public Long update(Product product) {
-        String sql = "UPDATE PRODUCT SET name=?, image_url=?, price=? WHERE id=?";
+        String sql = "UPDATE PRODUCT SET name=?, price=?, image_url=? WHERE id=?";
         jdbcTemplate.update(sql,
                 product.getName(),
-                product.getImageUrl(),
                 product.getPrice(),
+                product.getImageUrl(),
                 product.getId()
         );
 
