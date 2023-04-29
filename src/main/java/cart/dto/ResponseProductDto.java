@@ -1,5 +1,7 @@
 package cart.dto;
 
+import cart.dao.entity.ProductEntity;
+
 public class ResponseProductDto {
 
     private final Long id;
@@ -7,11 +9,11 @@ public class ResponseProductDto {
     private final Integer price;
     private final String image;
 
-    public ResponseProductDto(final Long id, final String name, final Integer price, final String image) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.image = image;
+    public ResponseProductDto(final ProductEntity productEntity) {
+        this.id = productEntity.getId();
+        this.name = productEntity.getName();
+        this.price = productEntity.getPrice();
+        this.image = productEntity.getImage();
     }
 
     public Long getId() {

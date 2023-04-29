@@ -27,29 +27,17 @@ public class ProductService {
     public List<ResponseProductDto> findAll() {
         final List<ProductEntity> productEntities = productDao.findAll();
         return productEntities.stream()
-                .map(entity -> new ResponseProductDto(
-                        entity.getId(),
-                        entity.getName(),
-                        entity.getPrice(),
-                        entity.getImage())
-                ).collect(Collectors.toUnmodifiableList());
+                .map(ResponseProductDto::new)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public Long insert(final RequestCreateProductDto requestCreateProductDto) {
-        final Product newProduct = new Product(
-                requestCreateProductDto.getName(),
-                requestCreateProductDto.getPrice(),
-                requestCreateProductDto.getImage()
-        );
-        return productDao.insert(newProduct);
+        final Product product = requestCreateProductDto.toProduct();
+        return productDao.insert(product);
     }
 
     public int update(final RequestUpdateProductDto requestUpdateProductDto) {
-        final Product product = new Product(
-                requestUpdateProductDto.getName(),
-                requestUpdateProductDto.getPrice(),
-                requestUpdateProductDto.getImage()
-        );
+        final Product product = requestUpdateProductDto.toProduct();
         final int updatedRows = productDao.update(product, requestUpdateProductDto.getId());
         validateAffectedRowsCount(updatedRows);
         return updatedRows;
