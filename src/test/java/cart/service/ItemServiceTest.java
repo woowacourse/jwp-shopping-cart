@@ -4,7 +4,6 @@ import cart.dao.ItemDao;
 import cart.dto.ItemRequest;
 import cart.dto.ItemResponse;
 import cart.entity.CreateItem;
-import cart.entity.Item;
 import cart.exception.ServiceIllegalArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,16 +40,25 @@ class ItemServiceTest {
     @DisplayName("상품을 저장할 수 있다.")
     void saveSuccess() {
         ItemRequest itemRequest = new ItemRequest("햄버거", "c", 2000);
-        ItemResponse itemResponse = new ItemResponse(3L, "햄버거", "c", 2000);
+        ItemResponse itemResponseExpected = new ItemResponse(3L, "햄버거", "c", 2000);
+
+        List<ItemResponse> itemResponsesExpected = new ArrayList<>();
+        itemResponsesExpected.add(new ItemResponse(1L, "치킨", "a", 10000));
+        itemResponsesExpected.add(new ItemResponse(2L, "피자", "b", 20000));
+        itemResponsesExpected.add(itemResponseExpected);
+
         itemService.save(itemRequest);
 
         List<ItemResponse> items = itemService.findAll();
 
         assertAll(
-                () -> assertThat(items).hasSize(3),
+                () -> assertThat(items)
+                        .usingRecursiveComparison()
+                        .isEqualTo(itemResponsesExpected),
+
                 () -> assertThat(items.get(2))
                         .usingRecursiveComparison()
-                        .isEqualTo(itemResponse)
+                        .isEqualTo(itemResponseExpected) // toString 재정의 시 예외 검증 로직이 변경되기에 내부 값도 검증
         );
     }
 
@@ -57,13 +66,20 @@ class ItemServiceTest {
     @DisplayName("상품 목록을 조회할 수 있다.")
     void findAllSuccessTest() {
         List<ItemResponse> itemResponses = itemService.findAll();
-        ItemResponse itemResponse = new ItemResponse(2L, "피자", "b", 20000);
+        ItemResponse itemResponseExpected = new ItemResponse(2L, "피자", "b", 20000);
+
+        List<ItemResponse> itemResponsesExpected = new ArrayList<>();
+        itemResponsesExpected.add(new ItemResponse(1L, "치킨", "a", 10000));
+        itemResponsesExpected.add(itemResponseExpected);
 
         assertAll(
-                () -> assertThat(itemResponses).hasSize(2),
+                () -> assertThat(itemResponses)
+                        .usingRecursiveComparison()
+                        .isEqualTo(itemResponsesExpected),
+
                 () -> assertThat(itemResponses.get(1))
                         .usingRecursiveComparison()
-                        .isEqualTo(itemResponse)
+                        .isEqualTo(itemResponseExpected) // toString 재정의 시 예외 검증 로직이 변경되기에 내부 값도 검증
         );
     }
 
@@ -72,9 +88,18 @@ class ItemServiceTest {
     @DisplayName("상품을 업데이트할 수 있다.")
     void updateItemSuccessTest() {
         ItemRequest itemRequest = new ItemRequest("국밥", "c", 30000);
+        ItemResponse itemResponseExpected = new ItemResponse(2L, "국밥", "c", 30000);
         Long itemId = 2L;
 
         assertDoesNotThrow(() -> itemService.updateItem(itemId, itemRequest));
+
+        List<ItemResponse> items = itemService.findAll();
+
+        assertAll(
+                () -> assertThat(items.get(1))
+                        .usingRecursiveComparison()
+                        .isEqualTo(itemResponseExpected)
+        );
     }
 
     @Test
@@ -82,7 +107,8 @@ class ItemServiceTest {
     void deleteItemSuccessTest() {
         Long itemId = 2L;
 
-        assertDoesNotThrow(() -> itemService.deleteItem(itemId));
+        itemService.deleteItem(itemId);
+        assertThat(itemService.findAll()).hasSize(1);
     }
 
     @Test
