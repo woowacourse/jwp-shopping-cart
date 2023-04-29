@@ -27,7 +27,6 @@ const form = document.getElementById('form');
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
-
     const formData = new FormData(event.target);
     let product = {};
     for (const entry of formData.entries()) {
@@ -44,37 +43,31 @@ form.addEventListener('submit', (event) => {
     createProduct(product);
 });
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
-    axios.request({
-        url: '',
-    }).then((response) => {
-        window.location.reload();
-    }).catch((error) => {
+    axios.post('/product', product)
+        .then((response) => {
+            window.location.reload();
+        }).catch((error) => {
         console.error(error);
     });
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id} = product;
 
-    axios.request({
-        url: '',
-    }).then((response) => {
-        window.location.reload();
-    }).catch((error) => {
+    axios.put(`/product/${id}`, product)
+        .then((response) => {
+            window.location.reload();
+        }).catch((error) => {
         console.error(error);
     });
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
-    axios.request({
-        url: '',
-    }).then((response) => {
-        window.location.reload();
-    }).catch((error) => {
+    axios.delete(`/product/${id}`)
+        .then((response) => {
+            window.location.reload();
+        }).catch((error) => {
         console.error(error);
     });
 };
