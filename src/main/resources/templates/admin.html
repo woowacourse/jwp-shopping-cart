@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>관리자 페이지</title>
@@ -35,7 +35,7 @@
         <tr th:each="product : ${products}">
             <td th:text="${product.id}"></td>
             <td th:text="${product.name}"></td>
-            <td th:text="${product.price}"></td>
+            <td th:text="${product.price} + 원"></td>
             <td>
                 <img alt="상품 이미지" style="max-width: 100px;" th:src="${product.image}">  <!-- 상품 이미지 -->
             </td>
