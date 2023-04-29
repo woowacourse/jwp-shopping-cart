@@ -35,22 +35,22 @@
         }
 
         axios.request({
-            url: '',
+            method: 'get',
+            url: '/api/cart',
             headers: {
                 'Authorization': `Basic ${credentials}`
             }
         }).then((response) => {
-            const cartItems = response.data;
+            const cartItems = response.data.result;
 
             let productElement = '';
-            // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
             cartItems.forEach(cartItem => {
                 productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
-                            <img src="" alt=""/> <!-- 상품 이미지 -->
-                            <div class="cart-item-name"></div> <!-- 상품 이름 -->
-                            <div class="cart-item-price"></div> <!-- 상품 가격 -->
+                            <img src=${cartItem.imageUrl} alt=""/> <!-- 상품 이미지 -->
+                            <div class="cart-item-name">${cartItem.name}</div> <!-- 상품 이름 -->
+                            <div class="cart-item-price">${cartItem.price}원</div> <!-- 상품 가격 -->
                             <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
                           </div>
                         </div>
