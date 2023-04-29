@@ -23,38 +23,36 @@ import cart.product.service.ProductService;
 @RequestMapping("/products")
 public class ProductApiController {
 
-	private final ProductService productService;
+    private final ProductService productService;
 
-	public ProductApiController(ProductService productService) {
-		this.productService = productService;
-	}
+    public ProductApiController(ProductService productService) {
+        this.productService = productService;
+    }
 
-	@PostMapping
-	public ResponseEntity<ProductResponse> createProducts(@Valid @RequestBody ProductRequest productRequest) {
-		ProductResponse productResponse = productService.saveProducts(productRequest);
-		return ResponseEntity.status(HttpStatus.CREATED).body(productResponse);
-	}
+    @PostMapping
+    public ResponseEntity<ProductResponse> createProducts(@Valid @RequestBody ProductRequest productRequest) {
+        ProductResponse productResponse = productService.saveProducts(productRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productResponse);
+    }
 
-	@PutMapping("/{id}")
-	public ResponseEntity<ProductResponse> updateProducts(@PathVariable Long id,
-		@Valid @RequestBody ProductRequest productRequest) {
-		ProductResponse productResponse = productService.updateProducts(id, productRequest);
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponse> updateProducts(@PathVariable Long id,
+                                                          @Valid @RequestBody ProductRequest productRequest) {
+        ProductResponse productResponse = productService.updateProducts(id, productRequest);
 
-		return ResponseEntity.status(HttpStatus.OK).body(productResponse);
-	}
+        return ResponseEntity.status(HttpStatus.OK).body(productResponse);
+    }
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> deleteProducts(@PathVariable Long id) {
-		productService.deleteProductsById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteProducts(@PathVariable Long id) {
+        productService.deleteProductsById(id);
 
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-	}
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
-	@ExceptionHandler
-	public ResponseEntity<ExceptionResponse> handleBindException(MethodArgumentNotValidException exception) {
-		final String exceptionMessage = exception.getBindingResult()
-			.getFieldError()
-			.getDefaultMessage();
-		return ResponseEntity.badRequest().body(new ExceptionResponse(exceptionMessage));
-	}
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handleBindException(Exception exception) {
+        final String exceptionMessage = exception.getMessage();
+        return ResponseEntity.badRequest().body(new ExceptionResponse(exceptionMessage));
+    }
 }
