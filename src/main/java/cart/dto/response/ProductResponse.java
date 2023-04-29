@@ -8,7 +8,7 @@ public class ProductResponse {
     private Integer price;
     private String imageUrl;
 
-    public ProductResponse(Product product){
+    public ProductResponse(Product product) {
         this.id = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();

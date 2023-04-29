@@ -37,7 +37,8 @@ public class ProductExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException exception) {
         String exceptionMessage = exception.getBindingResult().getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(joining(System.lineSeparator()));

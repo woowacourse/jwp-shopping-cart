@@ -100,7 +100,8 @@ class ProductApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body("message", equalTo("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
+                    .body("message",
+                            equalTo("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
         }
 
         @Test

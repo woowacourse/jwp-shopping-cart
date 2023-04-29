@@ -43,7 +43,7 @@ public class ProductApiController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<Void> update(@PathVariable Long productId,
-                                         @RequestBody @Valid ProductRequest productRequest) {
+                                       @RequestBody @Valid ProductRequest productRequest) {
         productService.updateById(productId, productRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

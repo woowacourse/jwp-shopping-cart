@@ -27,7 +27,6 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-
     private void validateName(String name) {
         if (name.length() < MIN_NAME_LENGTH || MAX_NAME_LENGTH < name.length()) {
             throw new ArgumentNotValidException(
