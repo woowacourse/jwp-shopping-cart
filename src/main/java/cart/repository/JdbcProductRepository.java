@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -20,7 +21,7 @@ public class JdbcProductRepository implements ProductRepository {
         final long id = rs.getLong("id");
         final String name = rs.getString("name");
         final String imageUrl = rs.getString("image_url");
-        final int price = rs.getInt("price");
+        final BigDecimal price = rs.getBigDecimal("price");
         return new Product(id, name, imageUrl, price);
     };
     private final NamedParameterJdbcTemplate jdbcTemplate;

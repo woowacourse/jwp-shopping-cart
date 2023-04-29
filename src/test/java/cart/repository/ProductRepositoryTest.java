@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Import(JdbcProductRepository.class)
 class ProductRepositoryTest {
 
-    private static final Product PRODUCT = new Product("테스트", "테스트URL.png", 4000);
+    private static final Product PRODUCT = new Product("테스트", "테스트URL.png", new BigDecimal(4000));
     @Autowired
     private ProductRepository productRepository;
 

@@ -3,6 +3,7 @@ package cart.controller;
 import cart.entity.Product;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import java.math.BigDecimal;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -40,7 +43,7 @@ class IntegrationTest {
     @DisplayName("상품 추가 테스트")
     void createProduct() {
         final Product product = new Product("TEST",
-                "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", 4000);
+                "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", new BigDecimal(4000));
 
         // 추가 요청이 정상적으로 수행되었는가?
         Response response = given()
@@ -66,7 +69,7 @@ class IntegrationTest {
         LocationInformation locationInformation = insertProduct();
 
         // when : 상품을 수정한다.
-        Product updateProduct = new Product(locationInformation.getId(), "변경된 무언가", "updatedImage.png", 9000);
+        Product updateProduct = new Product(locationInformation.getId(), "변경된 무언가", "updatedImage.png", new BigDecimal(9000));
         given()
                 .body(updateProduct).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -119,7 +122,7 @@ class IntegrationTest {
 
     private LocationInformation insertProduct() {
         final Product product = new Product("TEST787",
-                "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", 4000);
+                "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", new BigDecimal(4000));
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(product)
@@ -133,13 +136,17 @@ class IntegrationTest {
     }
 
     private static void assertDatabase(String location, Product updateProduct) {
-        given().log().all()
-                .get(location)
+        Response response = given().log().all()
+                .get(location);
+
+        response
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("name", equalTo(updateProduct.getName()))
-                .body("imageUrl", equalTo(updateProduct.getImageUrl()))
-                .body("price", equalTo(updateProduct.getPrice()));
+                .body("imageUrl", equalTo(updateProduct.getImageUrl()));
+
+        Integer price = response.getBody().jsonPath().get("price");
+        Assertions.assertThat(new BigDecimal(price)).isEqualTo(updateProduct.getPrice());
     }
 
     private static class LocationInformation {

@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
+import java.math.BigDecimal;
 
 public class Product {
 
@@ -17,19 +18,19 @@ public class Product {
     @Pattern(regexp = IMAGE_EXTENSION_FORMAT, message = "유효한 이미지 확장자가 아닙니다.")
     private String imageUrl;
     @Min(value = 1, message = "가격은 0보다 작을 수 없습니다.")
-    private int price;
+    private BigDecimal price;
 
     public Product() {
     }
 
-    public Product(final Long id, final String name, final String imageUrl, final int price) {
+    public Product(Long id, String name, String imageUrl, BigDecimal price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
     }
 
-    public Product(final String name, final String imageUrl, final int price) {
+    public Product(final String name, final String imageUrl, final BigDecimal price) {
         this(null, name, imageUrl, price);
     }
 
@@ -45,7 +46,7 @@ public class Product {
         return imageUrl;
     }
 
-    public int getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
