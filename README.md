@@ -93,7 +93,11 @@
     - [ ] 장바구니 상품 제거
     - [ ] 장바구니 목록 조회
 
-DB 테이블
+## DB 테이블
+
+### 특이사항
+
+- h2 데이터베이스 예약어 user로 인해 사용자 테이블을 users로 설정함
 
 ```sql
 CREATE TABLE product
@@ -105,7 +109,7 @@ CREATE TABLE product
     PRIMARY KEY (id)
 );
 
-CREATE TABLE user
+CREATE TABLE users
 (
     id       INT          NOT NULL AUTO_INCREMENT,
     email    VARCHAR(320) NOT NULL,
@@ -119,7 +123,7 @@ CREATE TABLE cart
     user_id    INT NOT NULL,
     product_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 )
 ```
