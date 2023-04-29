@@ -16,8 +16,8 @@ public class ProductManagementService {
         this.productDao = productDao;
     }
 
-    public void addProduct(final ProductDto productDto) {
-        productDao.save(ProductEntity.from(productDto));
+    public Long addProduct(final ProductDto productDto) {
+        return productDao.save(ProductEntity.from(productDto));
     }
 
     public List<ProductDto> findAllProduct() {
