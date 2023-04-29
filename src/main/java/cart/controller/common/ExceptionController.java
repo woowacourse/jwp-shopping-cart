@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.common;
 
 import cart.dto.response.ErrorResponse;
 import cart.dto.response.Response;

@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.view;
 
 import cart.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RequiredArgsConstructor
 @Controller
-public class HomeController {
+public class AdminPageController {
     private final ProductService productService;
 
-    @GetMapping("/")
-    public String indexPage(Model model) {
+    @GetMapping("/admin")
+    public String adminPage(Model model) {
         model.addAttribute("products", productService.findAllProducts());
-        return "index";
+        return "admin";
     }
 }
