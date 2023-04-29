@@ -18,13 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.util.Objects;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
@@ -161,19 +159,14 @@ class ProductApiControllerTest {
     private Long insertProduct(final String name, final Integer price, final String image) {
         final String sql = "INSERT INTO PRODUCT (name, price, image) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(final Connection con) throws SQLException {
-                final PreparedStatement preparedStatement = con.prepareStatement(
-                        sql, new String[]{"ID"}
-                );
-                preparedStatement.setString(1, name);
-                preparedStatement.setInt(2, price);
-                preparedStatement.setString(3, image);
-                return preparedStatement;
-            }
+        jdbcTemplate.update(con -> {
+            final PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"ID"});
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, price);
+            preparedStatement.setString(3, image);
+            return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     @Test
