@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductDao productDao;
@@ -51,6 +50,7 @@ public class ProductService {
         return savedProductId;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> findProducts() {
         return productDao.findAll().stream()
                 .map(product -> {
@@ -68,6 +68,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<CategoryResponseDto> findCategories() {
         return categoryDao.findAll().stream()
                 .map(CategoryResponseDto::from)
