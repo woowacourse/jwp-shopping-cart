@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.Product;
-import cart.domain.ProductFixture;
+import cart.domain.product.Product;
+import cart.domain.product.ProductFixture;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.dto.RequestFixture;

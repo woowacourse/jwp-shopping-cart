@@ -1,11 +1,11 @@
 package cart.service;
 
-import static cart.domain.ProductFixture.ODO_PRODUCT;
+import static cart.domain.product.ProductFixture.ODO_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.repository.StubProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

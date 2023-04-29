@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

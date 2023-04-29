@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.entiy.ProductEntity;
 import org.springframework.stereotype.Repository;
 

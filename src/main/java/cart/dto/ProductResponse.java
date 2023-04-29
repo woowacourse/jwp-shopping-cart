@@ -2,7 +2,7 @@ package cart.dto;
 
 import java.util.Objects;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 public class ProductResponse {
     private final long id;

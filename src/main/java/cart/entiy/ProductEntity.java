@@ -1,6 +1,6 @@
 package cart.entiy;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 public class ProductEntity {
     private final ProductEntityId id;

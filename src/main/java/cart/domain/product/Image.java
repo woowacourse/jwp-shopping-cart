@@ -1,27 +1,27 @@
-package cart.domain;
+package cart.domain.product;
 
 import java.util.Objects;
 
-public class ProductName {
+public class Image {
 
-    private static final int MAX_NAME_LENGTH = 255;
+    private static final int MAX_IMAGE_LENGTH = 2048;
 
     private final String value;
 
-    public ProductName(final String value) {
+    public Image(final String value) {
         validate(value);
         this.value = value;
     }
 
     private void validate(final String value) {
         if (value == null) {
-            throw new IllegalArgumentException("이름은 null일 수 없습니다.");
+            throw new IllegalArgumentException("이미지 url은 null일 수 없습니다.");
         }
-        if (value.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("이름은 " + MAX_NAME_LENGTH + "자 이하만 가능합니다.");
+        if (value.length() > MAX_IMAGE_LENGTH) {
+            throw new IllegalArgumentException("이미지 url은 " + MAX_IMAGE_LENGTH + "자 이하만 가능합니다.");
         }
         if (value.isBlank()) {
-            throw new IllegalArgumentException("이름은 공백일 수 없습니다.");
+            throw new IllegalArgumentException("이미지 url은 공백일 수 없습니다.");
         }
     }
 
@@ -37,7 +37,7 @@ public class ProductName {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ProductName that = (ProductName) o;
+        final Image that = (Image) o;
         return Objects.equals(value, that.value);
     }
 

@@ -1,6 +1,6 @@
 package cart.repository;
 
-import static cart.domain.ProductFixture.ODO_PRODUCT;
+import static cart.domain.product.ProductFixture.ODO_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

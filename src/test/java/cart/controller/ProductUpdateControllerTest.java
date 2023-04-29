@@ -1,6 +1,6 @@
 package cart.controller;
 
-import static cart.domain.ProductFixture.NUNU_ID_PRODUCT;
+import static cart.domain.product.ProductFixture.NUNU_ID_PRODUCT;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;

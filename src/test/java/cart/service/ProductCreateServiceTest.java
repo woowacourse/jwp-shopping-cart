@@ -3,9 +3,10 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Product;
-import cart.repository.StubProductRepository;
 import java.util.Optional;
+
+import cart.domain.product.Product;
+import cart.repository.StubProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

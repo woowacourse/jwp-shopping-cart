@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 public class StubProductRepository implements ProductRepository {
 

@@ -1,12 +1,12 @@
-package cart.domain;
+package cart.domain.product;
 
 import java.util.Objects;
 
-public class ProductId {
+public class Id {
 
     private final Long value;
 
-    public ProductId(final Long value) {
+    public Id(final Long value) {
         this.value = value;
     }
 
@@ -22,8 +22,8 @@ public class ProductId {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ProductId productId = (ProductId) o;
-        return Objects.equals(value, productId.value);
+        final Id id = (Id) o;
+        return Objects.equals(value, id.value);
     }
 
     @Override
