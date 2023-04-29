@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -23,7 +24,6 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminControllerTest {
 
-    @LocalServerPort
     private int port;
 
     @Autowired
@@ -32,7 +32,8 @@ class AdminControllerTest {
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
-    void setUp() {
+    void setUp(@LocalServerPort int port) {
+        this.port = port;
         itemDao.save(new CreateItem("치킨", "a", 10000));
         itemDao.save(new CreateItem("피자", "b", 20000));
     }
@@ -84,10 +85,30 @@ class AdminControllerTest {
     }
 
     @ParameterizedTest
-    @DisplayName("상품 이름이 올바르지 않은 경우 테스트")
-    @CsvSource(value = {":상품명은 공백일 수 없습니다.", "    :상품명은 공백일 수 없습니다.", "ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ:상품명의 길이는 30자 이하여야합니다."}, delimiter = ':')
-    void addItemNameFailTest(String name, String message) {
+    @DisplayName("상품명에 공백이 들어갔을 경우 테스트")
+    @ValueSource(strings = {"", "    "})
+    void newItemNameBlankTest(String name) {
         //given
+        String message = "상품명은 공백일 수 없습니다.";
+        ItemRequest itemRequest = new ItemRequest(name, "c", 10000);
+
+        //then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(itemRequest)
+                .when().post("/admin/items/new")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("name", equalTo(message));
+    }
+
+    @Test
+    @DisplayName("상품명의 길이가 30을 넘는 경우 테스트")
+    void newItemNameLengthOverSizeTest() {
+        //given
+        String name = "ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ";
+        String message = "상품명의 길이는 30자 이하여야합니다.";
         ItemRequest itemRequest = new ItemRequest(name, "c", 10000);
 
         //then
@@ -102,10 +123,11 @@ class AdminControllerTest {
     }
 
     @ParameterizedTest
-    @DisplayName("상품 이미지 url이 올바르지 않은 경우 테스트")
-    @CsvSource(value = {":이미지 url은 공백일 수 없습니다.", "    :이미지 url은 공백일 수 없습니다."}, delimiter = ':')
-    void addItemImageUrlFailTest(String url, String message) {
+    @DisplayName("상품 이미지 url에 공백이 들어간 경우 테스트")
+    @ValueSource(strings = {"", "    "})
+    void newItemImageUrlFailTest(String url) {
         //given
+        String message = "이미지 url은 공백일 수 없습니다.";
         ItemRequest itemRequest = new ItemRequest("name", url, 10000);
 
         //then
@@ -119,11 +141,50 @@ class AdminControllerTest {
                 .body("imageUrl", equalTo(message));
     }
 
-    @ParameterizedTest
-    @DisplayName("상품 가격이 올바르지 않은 경우 테스트")
-    @CsvSource(value = {":가격은 공백일 수 없습니다.", "-1:가격은 최소 0원 이상이어야합니다.", "1000001:가격은 최대 100만원 이하여야합니다."}, delimiter = ':')
-    void addItemPriceFailTest(Integer price, String message) {
+    @Test
+    @DisplayName("상품 가격에 공백이 들어간 경우 테스트")
+    void newItemPriceBlackFailTest() {
         //given
+        Integer price = null;
+        String message = "가격은 공백일 수 없습니다.";
+        ItemRequest itemRequest = new ItemRequest("국밥", "c", price);
+
+        //then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(itemRequest)
+                .when().post("/admin/items/new")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("price", equalTo(message));
+    }
+
+    @Test
+    @DisplayName("상품 가격이 0원 미만인 경우 테스트")
+    void newItemPriceNegativeFailTest() {
+        //given
+        Integer price = -1;
+        String message = "가격은 최소 0원 이상이어야합니다.";
+        ItemRequest itemRequest = new ItemRequest("국밥", "c", price);
+
+        //then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(itemRequest)
+                .when().post("/admin/items/new")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("price", equalTo(message));
+    }
+
+    @Test
+    @DisplayName("상품 가격이 100만원 이상인 경우 테스트")
+    void newItemPriceOver1MFailTest() {
+        //given
+        Integer price = 1000001;
+        String message = "가격은 최대 100만원 이하여야합니다.";
         ItemRequest itemRequest = new ItemRequest("국밥", "c", price);
 
         //then
