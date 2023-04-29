@@ -58,19 +58,18 @@ class JdbcProductDaoTest {
         final Product product1 = new Product(new Name("망고"), "https://mango", new Price(1000));
         final Product product2 = new Product(new Name("에코"), "https://echo", new Price(2000));
         final Product product3 = new Product(new Name("포비"), "https://pobi", new Price(3000));
-        
         final long id1 = jdbcProductDao.insert(product1);
-        final long id2 = jdbcProductDao.insert(product2);
-        final long id3 = jdbcProductDao.insert(product3);
-        final int initialSize = jdbcProductDao.findAll().size(); //6
+        jdbcProductDao.insert(product2);
+        jdbcProductDao.insert(product3);
+
+        final int initialSize = jdbcProductDao.findAll().size();
         
         //when
         jdbcProductDao.deleteByID(id1);
-        jdbcProductDao.deleteByID(id2);
         
-        //then 4
-        final int updatedSize = jdbcProductDao.findAll().size(); // 4
-        assertEquals(2, initialSize - updatedSize);
+        //then
+        final int updatedSize = jdbcProductDao.findAll().size();
+        assertEquals(1, initialSize - updatedSize);
     }
     
     @Test
@@ -80,17 +79,34 @@ class JdbcProductDaoTest {
         final Product product1 = new Product(new Name("망고"), "https://mango", new Price(1000));
         final Product product2 = new Product(new Name("에코"), "https://echo", new Price(2000));
         final Product product3 = new Product(new Name("포비"), "https://pobi", new Price(3000));
-        
+
         final long id1 = jdbcProductDao.insert(product1);
-        final long id2 = jdbcProductDao.insert(product2);
-        final long id3 = jdbcProductDao.insert(product3);
+        jdbcProductDao.insert(product2);
+        jdbcProductDao.insert(product3);
         
         //when
-        final Product updatedProduct = new Product(id2, new Name("에코"), "https://echo", new Price(5000));
+        final Product updatedProduct = new Product(id1, new Name("망고"), "https://mango", new Price(5000));
         jdbcProductDao.update(updatedProduct);
         
         //then
-        final Product result = jdbcProductDao.findByID(id2).orElseThrow(NoSuchElementException::new);
+        final Product result = jdbcProductDao.findByID(id1).orElseThrow(NoSuchElementException::new);
         assertEquals(5000, result.getPrice().getValue());
+    }
+
+    @Test
+    @DisplayName("상품 findByID 테스트")
+    void findByID() {
+        //given
+        final Product product = new Product(new Name("망고"), "https://mango", new Price(1000));
+        final long id = jdbcProductDao.insert(product);
+
+        //when
+        final Product result = jdbcProductDao.findByID(id).orElseThrow(NoSuchElementException::new);
+
+        //then
+        assertEquals(id, result.getId());
+        assertEquals("망고", result.getName().getValue());
+        assertEquals("https://mango", result.getImage());
+        assertEquals(1000, result.getPrice().getValue());
     }
 }

@@ -50,7 +50,6 @@
 - [x] Domain 객체에 DTO 객체를 넘겨주지 않도록 변경
 - [x] 매직넘버 상수화
 - [x] 사용하지 않는 클래스 삭제
-- [ ] 엔드포인트간 DTO 분리
 - [x] 필요없는 this 제거
 - [x] ExceptionHandler 추가
 - [x] findById() Optional 처리
@@ -60,3 +59,5 @@
 - [x] Integration Test에서 DB에 값이 실제로 저장되는지 확인
 - [x] update, delete 테스트 전에 테스트를 위한 데이터를 추가한 후 검증하도록 변경
 - [x] Product 테스트 추가
+- [x] findById() 테스트 추가
+- [ ] 엔드포인트간 DTO 분리?
