@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS products
     image_url VARCHAR
 (
     1000
-),
+) NOT NULL,
     price INT NOT NULL,
     PRIMARY KEY
 (

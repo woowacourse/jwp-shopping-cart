@@ -2,16 +2,14 @@ package cart.controller;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import cart.dto.request.ProductAddRequest;
+import cart.dto.request.ProductUpdateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @Slf4j
@@ -43,33 +41,5 @@ public class ProductApiController {
         log.info("id={}", id);
         productDao.deleteById(id);
         return ResponseEntity.ok().build();
-    }
-
-    @Getter
-    @NoArgsConstructor
-    private static class ProductAddRequest {
-
-        @NotNull
-        private String name;
-        @JsonProperty("image-url")
-        @NotNull
-        private String imageUrl;
-        @NotNull
-        private Integer price;
-    }
-
-    @Getter
-    @NoArgsConstructor
-    private static class ProductUpdateRequest {
-
-        @NotNull
-        private Long id;
-        @NotNull
-        private String name;
-        @JsonProperty("image-url")
-        @NotNull
-        private String imageUrl;
-        @NotNull
-        private Integer price;
     }
 }

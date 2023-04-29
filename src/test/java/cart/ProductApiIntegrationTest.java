@@ -25,7 +25,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("/schema.sql")
+@Sql(value = "/schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class ProductApiIntegrationTest {
 
     @LocalServerPort
@@ -37,33 +37,18 @@ public class ProductApiIntegrationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        jdbcTemplate.execute("DROP TABLE IF EXISTS products");
-        jdbcTemplate.execute("CREATE TABLE products ("
-                + "    id BIGINT NOT NULL AUTO_INCREMENT, "
-                + "    name VARCHAR(30) NOT NULL, "
-                + "    image_url VARCHAR(1000), "
-                + "    price INT NOT NULL, "
-                + "    PRIMARY KEY (id)"
-                + ");");
     }
 
     @Test
-    @DisplayName("상품이 추가되었을 때 OK 응답 코드를 반환한다")
+    @DisplayName("상품이 정상적으로 추가되었을 때 OK 응답 코드를 반환한다")
     void create() throws JSONException {
-        JSONObject productAddRequest = parseJSON(Map.of(
-                "name", "일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-                "image-url", "a".repeat(1000),
-                "price", 0
-        ));
+        // given
+        JSONObject productAddRequest = parseJSON(Map.of("name", "총30자길이의문자열입니다____________________", "image-url", "a".repeat(1000), "price", 0));
 
-        ExtractableResponse<Response> response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productAddRequest.toString())
-                .when()
-                .post("/product/add")
-                .then()
-                .extract();
+        // when
+        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(productAddRequest.toString()).when().post("/product").then().extract();
 
+        // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
@@ -77,13 +62,7 @@ public class ProductApiIntegrationTest {
                 "price", 1000
         ));
 
-        ExtractableResponse<Response> response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productAddRequest.toString())
-                .when()
-                .post("/product/add")
-                .then()
-                .extract();
+        ExtractableResponse<Response> response = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(productAddRequest.toString()).when().post("/product").then().extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -97,13 +76,7 @@ public class ProductApiIntegrationTest {
                 "price", 1000
         ));
 
-        ExtractableResponse<Response> response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productAddRequest.toString())
-                .when()
-                .post("/product/add")
-                .then()
-                .extract();
+        ExtractableResponse<Response> response = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(productAddRequest.toString()).when().post("/product").then().extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -118,13 +91,7 @@ public class ProductApiIntegrationTest {
                 "price", price
         ));
 
-        ExtractableResponse<Response> response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productAddRequest.toString())
-                .when()
-                .post("/product/add")
-                .then()
-                .extract();
+        ExtractableResponse<Response> response = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(productAddRequest.toString()).when().post("/product").then().extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -142,13 +109,7 @@ public class ProductApiIntegrationTest {
                 "price", 10000
         ));
 
-        ExtractableResponse<Response> response = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productUpdateRequest.toString())
-                .when()
-                .put("/product/edit")
-                .then()
-                .extract();
+        ExtractableResponse<Response> response = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(productUpdateRequest.toString()).when().put("/product").then().extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
@@ -159,11 +120,7 @@ public class ProductApiIntegrationTest {
                 "INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000)");
         assertThat(updateCount).isEqualTo(1);
 
-        ExtractableResponse<Response> response = given()
-                .when()
-                .delete("/product/delete/1")
-                .then()
-                .extract();
+        ExtractableResponse<Response> response = given().when().delete("/product/1").then().extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
