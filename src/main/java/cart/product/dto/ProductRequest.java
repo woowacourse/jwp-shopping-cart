@@ -13,10 +13,10 @@ public class ProductRequest {
 
 	@NotNull(message = "상품가격을 입력해주세요.")
 	@Range(min = 0, message = "상품 금액은 {min}원 이상의 정수만 입력가능 합니다.")
-	private final Integer price;
+	private final Long price;
 	private final String image;
 
-	public ProductRequest(String name, Integer price, String image) {
+	public ProductRequest(String name, Long price, String image) {
 		this.name = name;
 		this.price = price;
 		this.image = image;
@@ -26,7 +26,7 @@ public class ProductRequest {
 		return name;
 	}
 
-	public Integer getPrice() {
+	public Long getPrice() {
 		return price;
 	}
 

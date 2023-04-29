@@ -35,7 +35,7 @@ class ProductControllerTest {
 	class CrudTest {
 		@Test
 		void createProductsTest() {
-			ProductRequest productRequest = new ProductRequest("name", 1000, "image");
+			ProductRequest productRequest = new ProductRequest("name", 1000L, "image");
 
 			ExtractableResponse<Response> response = saveProducts(productRequest);
 
@@ -44,8 +44,8 @@ class ProductControllerTest {
 
 		@Test
 		void updateProductsTest() {
-			ProductRequest productRequest = new ProductRequest("name", 1000, "image");
-			ProductRequest updatedRequest = new ProductRequest("name", 10, "image");
+			ProductRequest productRequest = new ProductRequest("name", 1000L, "image");
+			ProductRequest updatedRequest = new ProductRequest("name", 10L, "image");
 
 			saveProducts(productRequest);
 
@@ -64,7 +64,7 @@ class ProductControllerTest {
 
 		@Test
 		void deleteProductsTest() {
-			ProductRequest productRequest = new ProductRequest("name", 1000, "image");
+			ProductRequest productRequest = new ProductRequest("name", 1000L, "image");
 
 			saveProducts(productRequest);
 
@@ -73,6 +73,26 @@ class ProductControllerTest {
 				.then()
 				.log().all()
 				.statusCode(HttpStatus.NO_CONTENT.value());
+		}
+
+		@Test
+		void displayHomeTest() {
+			given()
+					.when()
+					.get("/")
+					.then()
+					.statusCode(HttpStatus.OK.value())
+					.contentType(ContentType.HTML);
+		}
+
+		@Test
+		void displayAdminTest() {
+			given()
+					.when()
+					.get("/admin")
+					.then()
+					.statusCode(HttpStatus.OK.value())
+					.contentType(ContentType.HTML);
 		}
 	}
 
@@ -83,7 +103,7 @@ class ProductControllerTest {
 		@ValueSource(strings = {"", " "})
 		@NullSource
 		void nameNullTest(String name) {
-			ProductRequest productRequest = new ProductRequest(name, 1000, "image");
+			ProductRequest productRequest = new ProductRequest(name, 1000L, "image");
 
 			ExtractableResponse<Response> response = saveProducts(productRequest);
 
@@ -92,7 +112,7 @@ class ProductControllerTest {
 
 		@Test
 		void nameSizeTest() {
-			ProductRequest productRequest = new ProductRequest("fsd;kljgnad;ofgadfs;kgjadsfkjhsadflk", 1000, "image");
+			ProductRequest productRequest = new ProductRequest("fsd;kljgnad;ofgadfs;kgjadsfkjhsadflk", 1000L, "image");
 
 			ExtractableResponse<Response> response = saveProducts(productRequest);
 
@@ -109,8 +129,8 @@ class ProductControllerTest {
 		}
 
 		@ParameterizedTest
-		@ValueSource(ints = {-1, -100})
-		void nameRangeTest(int price) {
+		@ValueSource(longs = {-1, -100})
+		void nameRangeTest(Long price) {
 			ProductRequest productRequest = new ProductRequest("name", price, "image");
 
 			ExtractableResponse<Response> response = saveProducts(productRequest);
