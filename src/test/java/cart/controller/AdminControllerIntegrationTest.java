@@ -78,7 +78,7 @@ class AdminControllerIntegrationTest {
                 .put("/admin/product/" + savedId)
                 .then()
                 .log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("상품 삭제 API 호출 시 상품이 삭제된다.")

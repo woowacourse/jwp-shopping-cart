@@ -45,7 +45,7 @@ public class AdminController {
     public ResponseEntity<Void> modifyProduct(@RequestBody @Valid ProductModifyRequest productModifyRequest,
                                               @PathVariable long id) {
         cartService.modifyById(productModifyRequest, id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
 
     }
 

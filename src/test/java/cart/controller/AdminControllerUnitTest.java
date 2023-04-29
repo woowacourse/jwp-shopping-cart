@@ -98,7 +98,7 @@ public class AdminControllerUnitTest {
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestString))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @DisplayName("상품 삭제 API 호출 시 상품이 삭제된다.")
