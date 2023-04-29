@@ -4,7 +4,6 @@ import cart.entity.ProductEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -16,7 +15,6 @@ public class JdbcTemplateProductDao implements ProductDao{
     private final SimpleJdbcInsert insertProducts;
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public JdbcTemplateProductDao(JdbcTemplate jdbcTemplate) {
         this.insertProducts = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("products")

@@ -5,7 +5,6 @@ import cart.dto.ProductResponseDto;
 import cart.dto.UpdateRequestDto;
 import cart.service.CartService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +18,6 @@ public class CartApiController {
 
     private final CartService cartService;
 
-    @Autowired
     public CartApiController(CartService cartService) {
         this.cartService = cartService;
     }

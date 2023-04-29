@@ -57,6 +57,6 @@
 - [x] 단건 조회 API 생성
 - [ ] 변경된 반환값에 따른 테스트 실행
 - [ ] DTO - Entity Mapper 클래스 생성
-- [ ] 불필요한 @Autowired 생략
+- [x] 불필요한 @Autowired 생략
 - [ ] @Valid를 활용한 유효성 검증
 - [x] API URL 설계 다시 하기
