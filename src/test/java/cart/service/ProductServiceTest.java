@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @SpringBootTest
 @Transactional
 @AutoConfigureTestDatabase
-class CartServiceTest {
+class ProductServiceTest {
 
     @Autowired
-    private CartService cartService;
+    private ProductService productService;
 
     @DisplayName("상품을 추가할 수 있다.")
     @Test
@@ -28,7 +28,7 @@ class CartServiceTest {
         ProductSaveRequestDto productSaveRequestDto = new ProductSaveRequestDto("ocean", "image", 1000);
 
         //when & then
-        assertThatNoException().isThrownBy(() -> cartService.addProduct(productSaveRequestDto));
+        assertThatNoException().isThrownBy(() -> productService.addProduct(productSaveRequestDto));
     }
 
     @DisplayName("상품을 찾을 수 있다.")
@@ -38,10 +38,10 @@ class CartServiceTest {
         ProductSaveRequestDto productSaveRequestDto = new ProductSaveRequestDto("ocean", "image", 1000);
 
         //when
-        cartService.addProduct(productSaveRequestDto);
+        productService.addProduct(productSaveRequestDto);
 
         //then
-        ProductResponseDto productResponseDto = cartService.findProducts().get(0);
+        ProductResponseDto productResponseDto = productService.findProducts().get(0);
         assertAll(
                 () -> assertThat(productResponseDto.getName()).isEqualTo(productSaveRequestDto.getName()),
                 () -> assertThat(productResponseDto.getImage()).isEqualTo(productSaveRequestDto.getImage()),
@@ -53,16 +53,16 @@ class CartServiceTest {
     @Test
     void updateProduct() {
         //given
-        cartService.addProduct(new ProductSaveRequestDto("오션", "이미지", 10000));
-        ProductResponseDto product = cartService.findProducts().get(0);
+        productService.addProduct(new ProductSaveRequestDto("오션", "이미지", 10000));
+        ProductResponseDto product = productService.findProducts().get(0);
         //then
-        assertThatNoException().isThrownBy(() -> cartService.updateProduct(1L, new ProductUpdateRequestDto(product.getId(), "연어", "이미지", 100)));
+        assertThatNoException().isThrownBy(() -> productService.updateProduct(1L, new ProductUpdateRequestDto(product.getId(), "연어", "이미지", 100)));
     }
 
     @DisplayName("상품이 없을 때 update 시 예외가 발생한다.")
     @Test
     void updateProduct_Exception() {
-        assertThatThrownBy(() -> cartService.updateProduct(null, new ProductUpdateRequestDto()))
+        assertThatThrownBy(() -> productService.updateProduct(null, new ProductUpdateRequestDto()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 상품이 존재하지 않습니다.");
     }
@@ -71,17 +71,17 @@ class CartServiceTest {
     @Test
     void deleteProduct() {
         //given
-        cartService.addProduct(new ProductSaveRequestDto("오션", "이미지", 10000));
-        ProductResponseDto product = cartService.findProducts().get(0);
+        productService.addProduct(new ProductSaveRequestDto("오션", "이미지", 10000));
+        ProductResponseDto product = productService.findProducts().get(0);
 
         //then
-        assertThatNoException().isThrownBy(() -> cartService.deleteProduct(product.getId()));
+        assertThatNoException().isThrownBy(() -> productService.deleteProduct(product.getId()));
     }
 
     @DisplayName("상품이 없을 때 삭제 시 예외가 발생한다.")
     @Test
     void deleteProduct_Exception() {
-        assertThatThrownBy(() -> cartService.deleteProduct(1L))
+        assertThatThrownBy(() -> productService.deleteProduct(1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 상품이 존재하지 않습니다.");
     }

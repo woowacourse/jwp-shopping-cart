@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
-public class CartService {
+public class ProductService {
 
     private static final String NOT_EXIST_PRODUCT = "해당 상품이 존재하지 않습니다.";
     private final ProductDao productDao;
 
-    public CartService(ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 
@@ -30,7 +30,7 @@ public class CartService {
                 productSaveRequestDto.getImage(),
                 productSaveRequestDto.getPrice());
 
-        ProductEntity save = productDao.save(
+        productDao.save(
                 new ProductEntity(product.getId(),
                         product.getName(),
                         product.getImage(),
@@ -56,7 +56,7 @@ public class CartService {
                 productUpdateRequestDto.getImage(),
                 productUpdateRequestDto.getPrice());
 
-        ProductEntity update = productDao.update(new ProductEntity(
+        productDao.update(new ProductEntity(
                 id, product.getName(),
                 product.getImage(),
                 product.getPrice()));
