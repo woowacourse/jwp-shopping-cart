@@ -11,6 +11,7 @@ public class UserEmail {
 
     public UserEmail(String email) {
         validateEmail(email);
+
         this.email = email;
     }
 
@@ -18,6 +19,10 @@ public class UserEmail {
         if (!EMAIL_PATTERN.matcher(email).matches()) {
             throw new UserFieldNotValidException("이메일은 이메일 형식만을 입력할 있습니다.");
         }
+    }
+
+    public boolean matches(String email) {
+        return this.email.equals(email);
     }
 
     public String getEmail() {

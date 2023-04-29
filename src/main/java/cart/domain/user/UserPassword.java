@@ -8,6 +8,7 @@ public class UserPassword {
 
     public UserPassword(String password) {
         validatePassword(password);
+
         this.password = password;
     }
 
@@ -15,6 +16,10 @@ public class UserPassword {
         if (password.isBlank()) {
             throw new UserFieldNotValidException("비밀번호는 공백을 입력할 수 없습니다.");
         }
+    }
+
+    public boolean matches(String password) {
+        return this.password.equals(password);
     }
 
     public String getPassword() {
