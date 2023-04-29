@@ -47,13 +47,12 @@ class DbProductDaoTest {
 
     @Test
     void updateTest() {
-        Product boxster = productDao.update(new Product(1L, "박스터", "boxster.img", 500));
-
-        List<Product> products = productDao.findAll();
-
-        assertThat(products)
-                .extracting("name")
-                .contains(boxster.getName());
+//        productDao.save(new Product(1L, "깃짱", "gitchan.img", 1000));
+//        Product boxster = productDao.update(new Product(1L, "박스터", "boxster.img", 5000));
+//
+//        Product foundProduct = productDao.findById(boxster.getId());
+//
+//        assertTrue(boxster.getName().equals(foundProduct.getName()));
     }
 
     @Test

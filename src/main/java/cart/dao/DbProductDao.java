@@ -4,6 +4,7 @@ import cart.entity.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -60,7 +61,14 @@ public class DbProductDao implements ProductDao {
     public Product update(Product product) {
         String sql = "UPDATE product SET name = :name, img_url = :imgUrl, price = :price WHERE id = :id";
 
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
+        SqlParameterSource parameters = new MapSqlParameterSource(
+                Map.of(
+                        "name", product.getName(),
+                        "imgUrl", product.getImgUrl(),
+                        "price", product.getPrice(),
+                        "id", product.getId()
+                )
+        );
         namedParameterJdbcTemplate.update(sql, parameters);
 
         return product;

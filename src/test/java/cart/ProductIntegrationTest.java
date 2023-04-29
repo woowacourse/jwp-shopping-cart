@@ -87,7 +87,7 @@ public class ProductIntegrationTest {
                 .body(productRequest)
 
                 .when()
-                .patch("/products/1")
+                .put("/products/1")
 
                 .then()
                 .statusCode(HttpStatus.OK.value());
@@ -101,6 +101,6 @@ public class ProductIntegrationTest {
                 .delete("/products/1")
 
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
