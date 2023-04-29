@@ -35,7 +35,7 @@ public class AdminControllerTest {
 
     @Test
     void 상품을_추가한다() throws Exception {
-        final ProductDto productDto = new ProductDto("하디", "imageUrl", 100000);
+        final ProductDto productDto = new ProductDto("하디", "https://github.com/", 100000);
         final String requestBody = objectMapper.writeValueAsString(productDto);
         given(productManagementService.addProduct(any()))
                 .willReturn(anyLong());
@@ -49,7 +49,7 @@ public class AdminControllerTest {
     @Test
     void 상품을_업데이트한다() throws Exception {
         final Long id = 1L;
-        final ProductDto updatedProductDto = new ProductDto("코코닥", "imageUrl", 15000);
+        final ProductDto updatedProductDto = new ProductDto("코코닥", "https://github.com/", 15000);
         final String requestBody = objectMapper.writeValueAsString(updatedProductDto);
         doNothing()
                 .when(productManagementService)

@@ -36,7 +36,7 @@ public class ProductIntegrationTest {
 
     @Test
     void 상품을_추가한다() {
-        final ProductDto productDto = new ProductDto("하디", "imageUrl", 10000);
+        final ProductDto productDto = new ProductDto("하디", "https://github.com/", 10000);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -48,7 +48,7 @@ public class ProductIntegrationTest {
 
     @Test
     void 상품을_업데이트한다() {
-        final ProductDto productDto = new ProductDto("하디", "image", 100000);
+        final ProductDto productDto = new ProductDto("하디", "https://github.com/", 100000);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +58,7 @@ public class ProductIntegrationTest {
                 .statusCode(HttpStatus.CREATED.value());
 
         final Long id = 1L;
-        final ProductDto updatedProductDto = new ProductDto("코코닥", "imageUrl", 10000);
+        final ProductDto updatedProductDto = new ProductDto("코코닥", "https://github.com/", 10000);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -70,7 +70,7 @@ public class ProductIntegrationTest {
 
     @Test
     void 상품을_삭제한다() {
-        final ProductDto productDto = new ProductDto("하디", "image", 100000);
+        final ProductDto productDto = new ProductDto("하디", "https://github.com/", 100000);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
