@@ -1,6 +1,7 @@
 package cart;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,7 +12,7 @@ public final class GlobalExceptionAdvice {
 
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public void dtoValidation (MethodArgumentNotValidException exception) {
-
+	public ResponseEntity<String> dtoValidation (MethodArgumentNotValidException exception) {
+		return ResponseEntity.badRequest().body(exception.getMessage());
 	}
 }
