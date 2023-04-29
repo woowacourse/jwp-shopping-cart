@@ -1,12 +1,13 @@
 package cart.domain;
 
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import cart.exception.custom.ArgumentNotValidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ProductTest {
 
@@ -23,7 +24,7 @@ class ProductTest {
     void create_fail_by_name_length(String wrongValue) {
         //when && then
         assertThatThrownBy(() -> new Product(wrongValue, 1000, "test"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ArgumentNotValidException.class)
                 .hasMessage("상품의 이름은 1자 이상, 20자 이하입니다.");
     }
 
@@ -33,7 +34,7 @@ class ProductTest {
     void create_fail_by_unit_of_price(int price) {
         //when && then
         assertThatThrownBy(() -> new Product("귤", price, "test"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ArgumentNotValidException.class)
                 .hasMessage("상품의 가격 단위는 100원 단위입니다.");
     }
 
@@ -43,7 +44,7 @@ class ProductTest {
     void create_fail_by_range_of_price(int price) {
         //when && then
         assertThatThrownBy(() -> new Product("귤", price, "test"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ArgumentNotValidException.class)
                 .hasMessage("상품의 최소 가격은 1000원 이상입니다.");
     }
 }

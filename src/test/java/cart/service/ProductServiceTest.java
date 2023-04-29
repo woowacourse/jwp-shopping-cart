@@ -13,8 +13,9 @@ import static org.mockito.Mockito.when;
 import cart.dao.ProductDao;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
+import cart.exception.custom.ArgumentNotValidException;
+import cart.exception.custom.ResourceNotFoundException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -63,7 +64,7 @@ class ProductServiceTest {
             ProductRequest request = new ProductRequest(wrongName, 1000, "imageUrL");
             //when && then
             assertThatThrownBy(() -> productService.save(request))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(ArgumentNotValidException.class)
                     .hasMessage("상품의 이름은 1자 이상, 20자 이하입니다.");
         }
 
@@ -75,7 +76,7 @@ class ProductServiceTest {
             ProductRequest request = new ProductRequest("name", wrongPrice, "imageUrL");
             //when && then
             assertThatThrownBy(() -> productService.save(request))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(ArgumentNotValidException.class)
                     .hasMessage("상품의 가격 단위는 100원 단위입니다.");
         }
 
@@ -87,7 +88,7 @@ class ProductServiceTest {
             ProductRequest request = new ProductRequest("name", wrongPrice, "imageUrL");
             //when && then
             assertThatThrownBy(() -> productService.save(request))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(ArgumentNotValidException.class)
                     .hasMessage("상품의 최소 가격은 1000원 이상입니다.");
         }
     }
@@ -156,7 +157,7 @@ class ProductServiceTest {
             ProductRequest request = new ProductRequest(wrongName, 1000, "imageUrL");
             //when && then
             assertThatThrownBy(() -> productService.updateById(1L, request))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(ArgumentNotValidException.class)
                     .hasMessage("상품의 이름은 1자 이상, 20자 이하입니다.");
         }
 
@@ -168,7 +169,7 @@ class ProductServiceTest {
             ProductRequest request = new ProductRequest("name", wrongPrice, "imageUrL");
             //when && then
             assertThatThrownBy(() -> productService.updateById(1L, request))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(ArgumentNotValidException.class)
                     .hasMessage("상품의 가격 단위는 100원 단위입니다.");
         }
 
@@ -180,7 +181,7 @@ class ProductServiceTest {
             ProductRequest request = new ProductRequest("name", wrongPrice, "imageUrL");
             //when && then
             assertThatThrownBy(() -> productService.updateById(1L, request))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(ArgumentNotValidException.class)
                     .hasMessage("상품의 최소 가격은 1000원 이상입니다.");
         }
 
@@ -192,8 +193,8 @@ class ProductServiceTest {
                     .thenReturn(0);
             //when && then
             assertThatThrownBy(() -> productService.updateById(9999L, PRODUCT_REQUEST_A))
-                    .isInstanceOf(NoSuchElementException.class)
-                    .hasMessage("존재하지 않는 상품입니다.");
+                    .isInstanceOf(ResourceNotFoundException.class)
+                    .hasMessage("존재하지 않는 리소스입니다.");
         }
     }
 
@@ -218,8 +219,8 @@ class ProductServiceTest {
                     .thenReturn(0);
             //when && then
             assertThatThrownBy(() -> productService.deleteById(1L))
-                    .isInstanceOf(NoSuchElementException.class)
-                    .hasMessage("존재하지 않는 상품입니다.");
+                    .isInstanceOf(ResourceNotFoundException.class)
+                    .hasMessage("존재하지 않는 리소스입니다.");
         }
     }
 }

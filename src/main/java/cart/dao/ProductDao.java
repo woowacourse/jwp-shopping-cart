@@ -1,8 +1,8 @@
 package cart.dao;
 
 import cart.domain.Product;
+import cart.exception.custom.ResourceNotFoundException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,7 +41,7 @@ public class ProductDao {
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, id);
         } catch (EmptyResultDataAccessException exception) {
-            throw new NoSuchElementException("존재하지 않는 상품입니다.");
+            throw new ResourceNotFoundException();
         }
     }
 

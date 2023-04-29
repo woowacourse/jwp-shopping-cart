@@ -7,8 +7,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
+import cart.exception.custom.ResourceNotFoundException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,8 +59,8 @@ class ProductDaoTest {
     void find_by_id_fail_by_no_id() {
         //when && then
         assertThatThrownBy(() -> productDao.findById(10000L))
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("존재하지 않는 상품입니다.");
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("존재하지 않는 리소스입니다.");
     }
 
     @Test
@@ -84,8 +84,8 @@ class ProductDaoTest {
         productDao.deleteById(id);
         //then
         assertThatThrownBy(() -> productDao.findById(id))
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("존재하지 않는 상품입니다.");
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("존재하지 않는 리소스입니다.");
     }
 
     @Test

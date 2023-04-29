@@ -2,7 +2,7 @@ package cart.exception;
 
 import static java.util.stream.Collectors.joining;
 
-import java.util.NoSuchElementException;
+import cart.exception.custom.ApplicationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,20 +11,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-//TODO: customException 정의
 @RestControllerAdvice
 public class ProductExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse("서버가 응답할 수 없습니다.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
+        ExceptionResponse response = new ExceptionResponse("서버가 응답할 수 없습니다.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<ExceptionResponse> handleApplicationException(ApplicationException exception) {
+        ExceptionResponse response = new ExceptionResponse(exception.getMessage());
+        return ResponseEntity.status(exception.status()).body(response);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -33,8 +32,8 @@ public class ProductExceptionHandler {
         String inputType = exception.getValue().getClass().toString();
         String requiredType = exception.getRequiredType().toString();
         String message = String.format("잘못된 타입을 입력하였습니다. 입력 타입 : %s, 요구 타입: %s", inputType, requiredType);
-        ExceptionResponse exceptionResponse = new ExceptionResponse(message);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+        ExceptionResponse response = new ExceptionResponse(message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -42,13 +41,8 @@ public class ProductExceptionHandler {
         String exceptionMessage = exception.getBindingResult().getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(joining(System.lineSeparator()));
-        ExceptionResponse exceptionResponse = new ExceptionResponse(exceptionMessage);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
-    }
+        ExceptionResponse response = new ExceptionResponse(exceptionMessage);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ExceptionResponse> handleNoSuchElementException(NoSuchElementException exception) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
 }

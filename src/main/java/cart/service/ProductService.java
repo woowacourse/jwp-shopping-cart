@@ -6,8 +6,8 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
+import cart.exception.custom.ResourceNotFoundException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +56,7 @@ public class ProductService {
 
     private void hasNoMatchingResult(int count) {
         if (count == 0) {
-            throw new NoSuchElementException("존재하지 않는 상품입니다.");
+            throw new ResourceNotFoundException();
         }
     }
 }

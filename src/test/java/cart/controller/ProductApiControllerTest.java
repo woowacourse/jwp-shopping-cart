@@ -100,8 +100,7 @@ class ProductApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body("message",
-                            is("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
+                    .body("message", equalTo("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
         }
 
         @Test
@@ -114,7 +113,7 @@ class ProductApiControllerTest {
                     .get(API_URL + "/" + 100000L)
                     .then()
                     .log().all()
-                    .body("message", equalTo("존재하지 않는 상품입니다."))
+                    .body("message", equalTo("존재하지 않는 리소스입니다."))
                     .statusCode(HttpStatus.NOT_FOUND.value());
         }
     }
@@ -310,7 +309,7 @@ class ProductApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.NOT_FOUND.value())
-                    .body("message", equalTo("존재하지 않는 상품입니다."));
+                    .body("message", equalTo("존재하지 않는 리소스입니다."));
         }
 
         @ParameterizedTest
@@ -486,7 +485,7 @@ class ProductApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.NOT_FOUND.value())
-                    .body("message", equalTo("존재하지 않는 상품입니다."));
+                    .body("message", equalTo("존재하지 않는 리소스입니다."));
         }
     }
 }

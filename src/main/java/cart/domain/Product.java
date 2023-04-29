@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.custom.ArgumentNotValidException;
+
 public class Product {
 
     private static final int MIN_NAME_LENGTH = 1;
@@ -28,17 +30,18 @@ public class Product {
 
     private void validateName(String name) {
         if (name.length() < MIN_NAME_LENGTH || MAX_NAME_LENGTH < name.length()) {
-            throw new IllegalArgumentException(String.format("상품의 이름은 %d자 이상, %d자 이하입니다.", MIN_NAME_LENGTH, MAX_NAME_LENGTH));
+            throw new ArgumentNotValidException(
+                    String.format("상품의 이름은 %d자 이상, %d자 이하입니다.", MIN_NAME_LENGTH, MAX_NAME_LENGTH));
         }
     }
 
     private void validatePrice(int price) {
         if (price < MIN_PRICE) {
-            throw new IllegalArgumentException(String.format("상품의 최소 가격은 %d원 이상입니다.", MIN_PRICE));
+            throw new ArgumentNotValidException(String.format("상품의 최소 가격은 %d원 이상입니다.", MIN_PRICE));
         }
 
         if (price % UNIT_OF_PRICE != 0) {
-            throw new IllegalArgumentException(String.format("상품의 가격 단위는 %d원 단위입니다.", UNIT_OF_PRICE));
+            throw new ArgumentNotValidException(String.format("상품의 가격 단위는 %d원 단위입니다.", UNIT_OF_PRICE));
         }
     }
 
