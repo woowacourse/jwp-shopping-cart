@@ -1,16 +1,18 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.entity.Product;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+@DisplayName("product 를 ")
 @JdbcTest
 class DbProductDaoTest {
 
@@ -23,44 +25,50 @@ class DbProductDaoTest {
         productDao = new DbProductDao(jdbcTemplate);
     }
 
+    @DisplayName("생성한다")
     @Test
     void saveTest() {
         Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
 
-        List<Product> products = productDao.findAll();
-
-        assertThat(products).containsExactly(gitchan);
+        assertThat(productDao.findById(gitchan.getId())).isNotEmpty();
     }
 
+    @DisplayName("id로 찾는다")
     @Test
     void findByIdTest() {
         Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
 
         Optional<Product> foundProduct = productDao.findById(gitchan.getId());
 
-        assertThat(foundProduct).isNotEmpty();
-        assertThat(foundProduct.get()).isEqualTo(gitchan);
+        assertAll(
+                () -> assertThat(foundProduct).isNotEmpty(),
+                () -> assertThat(foundProduct.get()).isEqualTo(gitchan)
+        );
+
     }
 
+    @DisplayName("수정한다")
     @Test
     void updateTest() {
         Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
 
-        Product boxster = productDao.update(new Product(gitchan.getId(), "박스터", "boxster.img", 500));
+        productDao.update(new Product(gitchan.getId(), "박스터", "boxster.img", 500));
 
-        List<Product> products = productDao.findAll();
-        assertThat(products)
-                .map(Product::getName)
-                .containsExactly(boxster.getName());
+        Product findProduct = productDao.findById(gitchan.getId()).get();
+        assertAll(
+                () -> assertThat(findProduct.getName()).isEqualTo("박스터"),
+                () -> assertThat(findProduct.getImgUrl()).isEqualTo("boxster.img"),
+                () -> assertThat(findProduct.getPrice()).isEqualTo(500)
+        );
     }
 
+    @DisplayName("삭제한다")
     @Test
     void deleteTest() {
         Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
 
         productDao.deleteById(gitchan.getId());
 
-        List<Product> products = productDao.findAll();
-        assertThat(products).doesNotContain(gitchan);
+        assertThat(productDao.findById(gitchan.getId())).isEmpty();
     }
 }

@@ -18,12 +18,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DbProductDao implements ProductDao {
+
     public static final RowMapper<Product> productRowMapper = (resultSet, rowMapper) -> new Product(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("img_url"),
             resultSet.getInt("price")
     );
+
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -67,19 +69,16 @@ public class DbProductDao implements ProductDao {
     }
 
     @Override
-    public Product update(Product product) {
+    public void update(Product product) {
         String sql = "UPDATE product SET name = :name, img_url = :imgUrl, price = :price WHERE id = :id";
-
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
         namedParameterJdbcTemplate.update(sql, parameters);
-        return product;
     }
 
     @Override
     public void deleteById(long id) {
         String sql = "DELETE FROM product WHERE id = :id";
         Map<String, Long> parameter = Collections.singletonMap("id", id);
-
         namedParameterJdbcTemplate.update(sql, parameter);
     }
 }
