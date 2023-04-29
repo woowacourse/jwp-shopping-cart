@@ -36,9 +36,9 @@ public class ProductApiController {
     }
 
     @DeleteMapping("/{id}")
-    public Integer delete(@PathVariable final int id) {
+    public ResponseEntity<Void> delete(@PathVariable final int id) {
         productService.delete(id);
-        return id;
+        return ResponseEntity.noContent().build();
     }
 
 }
