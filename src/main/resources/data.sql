@@ -10,11 +10,20 @@ CREATE TABLE IF NOT EXISTS ITEMS
 
 CREATE TABLE IF NOT EXISTS USERS
 (
-    user_id     BIGINT    AUTO_INCREMENT    NOT NULL,
-    email       VARCHAR(255)                NOT NULL,
-    password    VARCHAR(255)                NOT NULL,
+    user_id     BIGINT          AUTO_INCREMENT    NOT NULL,
+    email       VARCHAR(255)                      NOT NULL,
+    password    VARCHAR(255)                      NOT NULL,
 
     PRIMARY KEY (user_id)
+);
+
+CREATE TABLE IF NOT EXISTS CARTS
+(
+    cart_id     BIGINT          AUTO_INCREMENT    NOT NULL,
+    user_email  VARCHAR(255)                      NOT NULL,
+    item_id     VARCHAR(255)                      NOT NULL,
+
+    PRIMARY KEY (cart_id)
 );
 
 INSERT INTO ITEMS(name, image_url, price) VALUES ('자전거1', 'https://www.altonsports.com/prdimg/get/21-INNOZEN24_P_01%281060X600%29.jpg', 10000);
