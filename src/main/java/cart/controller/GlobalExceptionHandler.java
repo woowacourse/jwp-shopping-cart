@@ -14,7 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class ControllerAdvice extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final String INTERNAL_ERROR_MESSAGE = "서버에서 예상치 못한 문제가 발생했습니다.";
     private static final String INPUT_NOT_READABLE_MESSAGE = "잘못된 입력입니다. 입력을 확인하세요.";
