@@ -9,4 +9,12 @@ public class User {
         this.email = new Email(address);
         this.password = new Password(password);
     }
+
+    public String getEmail() {
+        return email.getAddress();
+    }
+
+    public String getPassword() {
+        return password.getValue();
+    }
 }

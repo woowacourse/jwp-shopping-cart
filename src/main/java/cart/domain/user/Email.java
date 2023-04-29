@@ -18,4 +18,8 @@ public class Email {
             throw new IllegalArgumentException("형식에 맞지 않는 이메일입니다.");
         }
     }
+
+    public String getAddress() {
+        return address;
+    }
 }

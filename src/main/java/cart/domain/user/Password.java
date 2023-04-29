@@ -38,4 +38,8 @@ public class Password {
         final Matcher matcher = pattern.matcher(value);
         return !matcher.find();
     }
+
+    public String getValue() {
+        return value;
+    }
 }
