@@ -1,10 +1,11 @@
 package cart.repository;
 
+import static cart.repository.mapper.EntityRowMapper.productRowMapper;
+
 import cart.domain.Product;
 import cart.entity.ProductEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -36,15 +37,6 @@ public class ProductDao {
     public List<ProductEntity> findAll() {
         String sql = "SELECT id, name, price, image_url FROM PRODUCT";
         return jdbcTemplate.query(sql, productRowMapper());
-    }
-
-    private RowMapper<ProductEntity> productRowMapper() {
-        return (rs, rowNum) -> ProductEntity.Builder.builder()
-                .id(rs.getLong("id"))
-                .name(rs.getString("name"))
-                .price(rs.getInt("price"))
-                .imageUrl(rs.getString("image_url"))
-                .build();
     }
 
     public void deleteById(Long id) {

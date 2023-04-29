@@ -1,12 +1,13 @@
 package cart.repository;
 
+import static cart.repository.mapper.EntityRowMapper.memberRowMapper;
+
 import cart.domain.Member;
 import cart.entity.MemberEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
