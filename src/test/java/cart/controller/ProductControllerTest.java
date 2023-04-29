@@ -4,8 +4,8 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
-import cart.dto.request.RequestCreateProductDto;
-import cart.dto.request.RequestUpdateProductDto;
+import cart.dto.request.CreateProductRequest;
+import cart.dto.request.UpdateProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
@@ -50,7 +50,7 @@ class ProductControllerTest {
     void 상품을_등록할_수_있다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 10_000, "치킨 사진"))
+                .body(new CreateProductRequest("치킨", 10_000, "치킨 사진"))
                 .when()
                 .post("/products")
                 .then()
@@ -63,7 +63,7 @@ class ProductControllerTest {
     void 빈_상품을_등록할_수_없다(final String name) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto(name, 10_000, "치킨 사진"))
+                .body(new CreateProductRequest(name, 10_000, "치킨 사진"))
                 .when()
                 .post("/products")
                 .then()
@@ -78,7 +78,7 @@ class ProductControllerTest {
 
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto(overName, 10_000, "치킨 사진"))
+                .body(new CreateProductRequest(overName, 10_000, "치킨 사진"))
                 .when()
                 .post("/products")
                 .then()
@@ -92,7 +92,7 @@ class ProductControllerTest {
     void 가격이_빈_상품을_등록할_수_없다(final Integer price) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
+                .body(new CreateProductRequest("치킨", price, "치킨 사진"))
                 .when()
                 .post("/products")
                 .then()
@@ -106,7 +106,7 @@ class ProductControllerTest {
     void 유효한_가격_범위를_넘긴_상품은_등록할_수_없다(final Integer price) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
+                .body(new CreateProductRequest("치킨", price, "치킨 사진"))
                 .when()
                 .post("/products")
                 .then()
@@ -120,7 +120,7 @@ class ProductControllerTest {
     void 이미지_주소가_없는_상품을_등록할_수_없다(final String image) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 1_000, image))
+                .body(new CreateProductRequest("치킨", 1_000, image))
                 .when()
                 .post("/products")
                 .then()
@@ -135,7 +135,7 @@ class ProductControllerTest {
 
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 1_000, image))
+                .body(new CreateProductRequest("치킨", 1_000, image))
                 .when()
                 .post("/products")
                 .then()
@@ -150,7 +150,7 @@ class ProductControllerTest {
 
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestUpdateProductDto("피자", 10_000, "피자 사진"))
+                .body(new UpdateProductRequest("피자", 10_000, "피자 사진"))
                 .when()
                 .put("/products/" + insertedId)
                 .then()
@@ -180,7 +180,7 @@ class ProductControllerTest {
     void 존재하지_않는_id의_상품은_수정할_수_없다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestUpdateProductDto("치킨", 10_000, "치킨 사진"))
+                .body(new UpdateProductRequest("치킨", 10_000, "치킨 사진"))
                 .when()
                 .put("/products/" + 0L)
                 .then()

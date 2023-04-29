@@ -3,7 +3,7 @@ package cart.dto.request;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class RequestUpdateProductDto {
+public class UpdateProductRequest {
 
     @NotEmpty(message = "상품 이름이 입력되지 않았습니다.")
     private String name;
@@ -12,10 +12,10 @@ public class RequestUpdateProductDto {
     @NotEmpty(message = "상품 이미지 주소가 입력되지 않았습니다.")
     private String image;
 
-    public RequestUpdateProductDto() {
+    public UpdateProductRequest() {
     }
 
-    public RequestUpdateProductDto(final String name, final Integer price, final String image) {
+    public UpdateProductRequest(final String name, final Integer price, final String image) {
         this.name = name;
         this.price = price;
         this.image = image;

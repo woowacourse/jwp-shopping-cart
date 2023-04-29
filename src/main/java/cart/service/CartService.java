@@ -3,9 +3,9 @@ package cart.service;
 import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
 import cart.domain.Product;
-import cart.dto.request.RequestCreateProductDto;
-import cart.dto.request.RequestUpdateProductDto;
-import cart.dto.response.ResponseProductDto;
+import cart.dto.request.CreateProductRequest;
+import cart.dto.request.UpdateProductRequest;
+import cart.dto.response.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public List<ResponseProductDto> findAll() {
+    public List<ProductResponse> findAll() {
         final List<ProductEntity> productEntities = productDao.selectAll();
         return productEntities.stream()
-                .map(entity -> new ResponseProductDto(
+                .map(entity -> new ProductResponse(
                         entity.getId(),
                         entity.getName(),
                         entity.getPrice(),
@@ -34,20 +34,20 @@ public class CartService {
                 ).collect(Collectors.toUnmodifiableList());
     }
 
-    public void insert(final RequestCreateProductDto requestCreateProductDto) {
+    public void insert(final CreateProductRequest createProductRequest) {
         final Product newProduct = new Product(
-                requestCreateProductDto.getName(),
-                requestCreateProductDto.getPrice(),
-                requestCreateProductDto.getImage()
+                createProductRequest.getName(),
+                createProductRequest.getPrice(),
+                createProductRequest.getImage()
         );
         productDao.insert(newProduct);
     }
 
-    public void update(final Long id, final RequestUpdateProductDto requestUpdateProductDto) {
+    public void update(final Long id, final UpdateProductRequest updateProductRequest) {
         final Product product = new Product(
-                requestUpdateProductDto.getName(),
-                requestUpdateProductDto.getPrice(),
-                requestUpdateProductDto.getImage()
+                updateProductRequest.getName(),
+                updateProductRequest.getPrice(),
+                updateProductRequest.getImage()
         );
         final int updatedRows = productDao.update(id, product);
         validateAffectedRowsCount(updatedRows);

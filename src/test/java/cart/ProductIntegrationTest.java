@@ -6,8 +6,8 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.request.RequestCreateProductDto;
-import cart.dto.request.RequestUpdateProductDto;
+import cart.dto.request.CreateProductRequest;
+import cart.dto.request.UpdateProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -68,7 +68,7 @@ class ProductIntegrationTest {
         // given
         final Response createResponse = given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 10_000, "치킨 사진"))
+                .body(new CreateProductRequest("치킨", 10_000, "치킨 사진"))
                 .when()
                 .post("/products")
                 .then()
@@ -149,7 +149,7 @@ class ProductIntegrationTest {
 
         final Response updateResponse = given()
                 .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new RequestUpdateProductDto("피자", 1_000, "피자 사진"))
+                .body(new UpdateProductRequest("피자", 1_000, "피자 사진"))
                 .when()
                 .put("/products/" + insertedId)
                 .then()

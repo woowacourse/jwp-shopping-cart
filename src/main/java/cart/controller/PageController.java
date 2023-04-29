@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.response.ResponseProductDto;
+import cart.dto.response.ProductResponse;
 import cart.service.CartService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +20,15 @@ public class PageController {
 
     @GetMapping("/")
     public String readMainPage(final Model model) {
-        final List<ResponseProductDto> responseProductDtos = cartService.findAll();
-        model.addAttribute("products", responseProductDtos);
+        final List<ProductResponse> productResponses = cartService.findAll();
+        model.addAttribute("products", productResponses);
         return "index";
     }
 
     @GetMapping("/admin")
     public String readAdminPage(final Model model) {
-        final List<ResponseProductDto> responseProductDtos = cartService.findAll();
-        model.addAttribute("products", responseProductDtos);
+        final List<ProductResponse> productResponses = cartService.findAll();
+        model.addAttribute("products", productResponses);
         return "admin";
     }
 }
