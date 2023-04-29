@@ -1,6 +1,5 @@
 package cart.dto;
 
-import cart.repository.entity.ProductEntity;
 import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.Max;
@@ -34,14 +33,6 @@ public class ProductDto {
 
     public ProductDto(final String name, final String imageUrl, final int price) {
         this(null, name, imageUrl, price);
-    }
-
-    public static ProductDto from(final ProductEntity productEntity) {
-        return new ProductDto(
-                productEntity.getId(),
-                productEntity.getName(),
-                productEntity.getImageUrl(),
-                productEntity.getPrice());
     }
 
     public Long getId() {

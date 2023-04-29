@@ -3,9 +3,10 @@ package cart.service;
 import cart.dto.ProductDto;
 import cart.repository.dao.ProductDao;
 import cart.repository.entity.ProductEntity;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ProductManagementService {
@@ -17,17 +18,31 @@ public class ProductManagementService {
     }
 
     public Long addProduct(final ProductDto productDto) {
-        return productDao.save(ProductEntity.from(productDto));
+        final String name = productDto.getName();
+        final String imageUrl = productDto.getImageUrl();
+        final int price = productDto.getPrice();
+
+        return productDao.save(new ProductEntity(name, imageUrl, price));
     }
 
     public List<ProductDto> findAllProduct() {
         return productDao.findAll().stream()
-                .map(ProductDto::from)
+                .map(productEntity -> {
+                    final Long id = productEntity.getId();
+                    final String name = productEntity.getName();
+                    final String imageUrl = productEntity.getImageUrl();
+                    final int price = productEntity.getPrice();
+                    return new ProductDto(id, name, imageUrl, price);
+                })
                 .collect(Collectors.toList());
     }
 
     public void updateProduct(final ProductDto productDto) {
-        productDao.update(ProductEntity.from(productDto));
+        final Long id = productDto.getId();
+        final String name = productDto.getName();
+        final String imageUrl = productDto.getImageUrl();
+        final int price = productDto.getPrice();
+        productDao.update(new ProductEntity(id, name, imageUrl, price));
     }
 
     public void deleteProduct(final Long id) {
