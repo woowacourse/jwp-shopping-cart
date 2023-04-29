@@ -1,4 +1,4 @@
-package cart.service.dto;
+package cart.controller.dto;
 
 import cart.dao.entity.ProductEntity;
 import javax.validation.constraints.NotBlank;

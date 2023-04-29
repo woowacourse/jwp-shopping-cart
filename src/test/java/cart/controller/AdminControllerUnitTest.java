@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.service.CartService;
-import cart.service.dto.ProductRequest;
+import cart.controller.dto.ProductRequest;
 import cart.service.dto.ProductResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;

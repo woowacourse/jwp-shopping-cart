@@ -3,7 +3,7 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.service.dto.ProductRequest;
+import cart.controller.dto.ProductRequest;
 import cart.service.dto.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
