@@ -1,8 +1,8 @@
 package cart.controller.api;
 
-import cart.dto.ProductDto;
-import cart.dto.request.ProductCreateRequest;
-import cart.dto.request.ProductUpdateRequest;
+import cart.dto.product.ProductDto;
+import cart.dto.request.product.ProductCreateRequest;
+import cart.dto.request.product.ProductUpdateRequest;
 import cart.dto.response.Response;
 import cart.dto.response.ResultResponse;
 import cart.dto.response.SimpleResponse;

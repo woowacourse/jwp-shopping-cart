@@ -1,11 +1,11 @@
-package cart.dto.request;
+package cart.dto.request.product;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import org.hibernate.validator.constraints.Length;
 
-public class ProductCreateRequest {
+public class ProductUpdateRequest {
     @NotBlank(message = "상품 이름은 비어있으면 안 됩니다.")
     @Length(
             max = 10,
@@ -23,7 +23,7 @@ public class ProductCreateRequest {
     @NotBlank(message = "상품의 이미지는 비어있으면 안 됩니다.")
     private final String imageUrl;
 
-    public ProductCreateRequest(String name, int price, String imageUrl) {
+    public ProductUpdateRequest(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

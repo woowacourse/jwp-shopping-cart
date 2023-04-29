@@ -3,7 +3,7 @@ package cart.service;
 import static java.util.stream.Collectors.toList;
 
 import cart.domain.Product;
-import cart.dto.ProductDto;
+import cart.dto.product.ProductDto;
 import cart.entity.ProductEntity;
 import cart.exception.ProductNotFoundException;
 import cart.repository.ProductDao;

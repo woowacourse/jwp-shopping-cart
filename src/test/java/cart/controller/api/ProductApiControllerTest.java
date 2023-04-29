@@ -13,9 +13,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dto.ProductDto;
-import cart.dto.request.ProductCreateRequest;
-import cart.dto.request.ProductUpdateRequest;
+import cart.dto.product.ProductDto;
+import cart.dto.request.product.ProductCreateRequest;
+import cart.dto.request.product.ProductUpdateRequest;
 import cart.repository.ProductDao;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
