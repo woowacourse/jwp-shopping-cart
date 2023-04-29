@@ -6,11 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class CartController {
+public class ViewController {
 
     private final ProductDao productDao;
 
-    public CartController(final ProductDao productDao) {
+    public ViewController(final ProductDao productDao) {
         this.productDao = productDao;
     }
 

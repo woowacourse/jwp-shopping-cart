@@ -2,10 +2,12 @@ package cart.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @AllArgsConstructor
-public class ErrorDto {
+@ToString
+public class ExceptionDto {
 
     private final String message;
 }

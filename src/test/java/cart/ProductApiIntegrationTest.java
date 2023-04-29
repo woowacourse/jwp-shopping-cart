@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql("/schema.sql")
-public class ProductIntegrationTest {
+public class ProductApiIntegrationTest {
 
     @LocalServerPort
     private int port;
