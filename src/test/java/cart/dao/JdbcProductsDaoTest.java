@@ -1,58 +1,56 @@
 package cart.dao;
 
 import cart.entity.Product;
+import cart.exception.NoSuchProductException;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@AutoConfigureTestDatabase
+@JdbcTest
 class JdbcProductsDaoTest {
 
-    @Autowired
-    private ProductsDao productsDao;
+    @TestConfiguration
+    static class testConfig {
+        @Autowired
+        JdbcTemplate jdbcTemplate;
+
+        @Bean
+        public ProductsDao productsDao() {
+            return new JdbcProductsDao(jdbcTemplate);
+        }
+    }
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @BeforeEach
-    void setup() {
-        jdbcTemplate.execute("truncate table products");
-        jdbcTemplate.execute("alter table products alter id restart with 1");
-
-        final String name1 = "test1";
-        final int price1 = 1000;
-        final String image1 = "https://domain.com/image1";
-        final String name2 = "test2";
-        final int price2 = 2000;
-        final String image2 = "https://domain.com/image2";
-        final String sql = "insert into products(product_name, product_price, product_image) values (?, ?, ?)";
-        jdbcTemplate.update(sql, name1, price1, image1);
-        jdbcTemplate.update(sql, name2, price2, image2);
-    }
+    @Autowired
+    private ProductsDao productsDao;
 
     @Test
-    void create() {
+    @DisplayName("상품 추가 테스트")
+    void create_test() {
         // given
         final String name = "달리";
         final int price = 1000;
-        final String image = "testSource";
+        final String image = "http://test.com/image/source";
 
         // when
-        productsDao.create(name, price, image);
+        final Long id = productsDao.create(name, price, image);
 
         // then
-        final Map<String, Object> actual = jdbcTemplate.queryForMap("SELECT * FROM products ORDER BY id DESC LIMIT 1");
+        final Map<String, Object> actual = jdbcTemplate.queryForMap("SELECT * FROM products WHERE id = ?", id);
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(actual.get("product_name")).isEqualTo(name);
             softly.assertThat(actual.get("product_price")).isEqualTo(price);
@@ -61,16 +59,48 @@ class JdbcProductsDaoTest {
     }
 
     @Test
-    void readAll() {
-        assertThat(productsDao.readAll()).hasSize(2);
+    @DisplayName("id로 검색 성공 테스트")
+    @Sql("classpath:testData.sql")
+    void findById_success_test() {
+        // given
+        final long id = 1L;
+
+        // when
+        final Product product = productsDao.findById(id);
+
+        // then
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(product.getName()).isEqualTo("test1");
+            softly.assertThat(product.getPrice()).isEqualTo(1000);
+            softly.assertThat(product.getImageUrl()).isEqualTo("https://test.com/image1");
+        });
     }
 
     @Test
-    void update() {
+    @DisplayName("id로 검색 실패 테스트")
+    void findById_fail_test() {
+        final long id = 1L;
+
+        assertThatThrownBy(() -> productsDao.findById(id))
+                .isInstanceOf(NoSuchProductException.class)
+                .hasMessage("해당 상품이 없습니다. 입략된 상품 id : " + id);
+    }
+
+    @Test
+    @DisplayName("추가된 상품 조회 테스트")
+    @Sql("classpath:testData.sql")
+    void readAll_test() {
+        assertThat(productsDao.readAll()).hasSize(3);
+    }
+
+    @Test
+    @DisplayName("업데이트 테스트")
+    @Sql("classpath:testData.sql")
+    void update_test() {
         //given
-        final long id = 2L;
+        final long id = 1L;
         final String newName = "newName";
-        final int newPrice = 1000;
+        final int newPrice = 10000;
         final String newImage = "https://test.com/new/image/source";
         final Product originalProduct = productsDao.findById(id);
 
@@ -90,7 +120,9 @@ class JdbcProductsDaoTest {
     }
 
     @Test
-    void delete() {
+    @DisplayName("데이터 제거 테스트")
+    @Sql("classpath:testData.sql")
+    void delete_test() {
         final long id = 1L;
         productsDao.delete(id);
 
