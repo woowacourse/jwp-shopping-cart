@@ -32,7 +32,7 @@ class JdbcItemDaoTest {
 
     @Test
     @DisplayName("상품을 저장할 수 있다.")
-    void save() {
+    void saveSuccess() {
         CreateItem item = new CreateItem("햄버거", "c", 2000);
 
         itemDao.save(item);
@@ -47,7 +47,7 @@ class JdbcItemDaoTest {
 
     @Test
     @DisplayName("상품 목록을 조회할 수 있다.")
-    void findAll() {
+    void findAllSuccess() {
         List<Item> items = itemDao.findAll();
 
         assertAll(
@@ -58,28 +58,47 @@ class JdbcItemDaoTest {
 
     @Test
     @DisplayName("상품 정보를 수정할 수 있다.")
-    void update() {
+    void updateSuccess() {
         CreateItem item = new CreateItem("햄버거", "c", 2000);
 
-        itemDao.update(3L, item);
+        int updateRow = itemDao.update(2L, item);
 
         List<Item> items = itemDao.findAll();
         Item expected = new Item(2L, "햄버거", "c", 2000);
         assertAll(
+                () -> assertThat(updateRow).isEqualTo(1),
                 () -> assertThat(items).hasSize(2),
                 () -> assertThat(items.get(1))
                         .usingRecursiveComparison()
                         .isEqualTo(expected)
         );
+    }
 
+    @Test
+    @DisplayName("없는 상품 정보를 수정하면 0이 반환된다.")
+    void updateFail() {
+        CreateItem item = new CreateItem("햄버거", "c", 2000);
+
+        assertThat(itemDao.update(3L, item)).isZero();
     }
 
     @Test
     @DisplayName("상품 삭제 할 수 있다.")
-    void delete() {
-        itemDao.delete(3L);
+    void deleteSuccess() {
+        int deleteRow = itemDao.delete(2L);
 
         List<Item> items = itemDao.findAll();
-        assertThat(items).hasSize(1);
+
+        assertAll(
+                () -> assertThat(deleteRow).isEqualTo(1),
+                () -> assertThat(items).hasSize(1)
+        );
+    }
+
+    @Test
+    @DisplayName("없는 상품 삭제하면 0이 반환된다.")
+    void deleteFail() {
+
+        assertThat(itemDao.delete(3L)).isZero();
     }
 }
