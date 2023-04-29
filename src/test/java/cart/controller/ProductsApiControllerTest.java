@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.stream.Stream;
 
@@ -68,11 +67,11 @@ class ProductsApiControllerTest {
 
     private static Stream<Arguments> invalidParameterProvider() {
         return Stream.of(
-                Arguments.of("이름 누락",new ProductRequestDto(null, PRICE, IMAGE), "name 필드가 있어야 합니다."),
-                Arguments.of("금액 누락",new ProductRequestDto(NAME, null, IMAGE), "price 필드가 있어야 합니다."),
-                Arguments.of("금액 음수",new ProductRequestDto(NAME, -1000, IMAGE), "price는 음수가 될 수 없습니다."),
-                Arguments.of("이미지 누락",new ProductRequestDto(NAME, PRICE, null), "image 필드가 있어야 합니다."),
-                Arguments.of("이미지 주소 형식 오류",new ProductRequestDto(NAME, PRICE, "wrongImageSource"), "image가 url형식에 맞지 않습니다.")
+                Arguments.of("이름 누락", new ProductRequestDto(null, PRICE, IMAGE), "name 필드가 있어야 합니다."),
+                Arguments.of("금액 누락", new ProductRequestDto(NAME, null, IMAGE), "price 필드가 있어야 합니다."),
+                Arguments.of("금액 음수", new ProductRequestDto(NAME, -1000, IMAGE), "price는 음수가 될 수 없습니다."),
+                Arguments.of("이미지 누락", new ProductRequestDto(NAME, PRICE, null), "image 필드가 있어야 합니다."),
+                Arguments.of("이미지 주소 형식 오류", new ProductRequestDto(NAME, PRICE, "wrongImageSource"), "image가 url형식에 맞지 않습니다.")
         );
     }
 
@@ -110,7 +109,7 @@ class ProductsApiControllerTest {
 
     @Test
     @DisplayName("없는 상품 정보 변경 시 실패 테스트")
-    void nonProductUpdateFail_test(){
+    void nonProductUpdateFail_test() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new ProductRequestDto("달리", PRICE, IMAGE))
@@ -122,7 +121,7 @@ class ProductsApiControllerTest {
 
     @Test
     @DisplayName("상품 제거 성공 테스트")
-    void deleteProductSuccess_test(){
+    void deleteProductSuccess_test() {
         insertTestData();
 
         RestAssured.given().log().all()
