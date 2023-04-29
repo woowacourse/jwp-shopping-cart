@@ -4,7 +4,8 @@ public class Name {
     
     public static final String EMPTY_PRODUCT_NAME_ERROR = "상품 이름이 없습니다.";
     public static final String LONG_NAME_ERROR = "상품 이름은 10 글자를 넘을 수 없습니다";
-    
+    private static final int LENGTH_UPPER_BOUNDARY = 10;
+
     private final String value;
     
     public Name(final String value) {
@@ -18,7 +19,7 @@ public class Name {
     }
     
     private void validateLength(final String value) {
-        if (value.length() > 10) {
+        if (value.length() > LENGTH_UPPER_BOUNDARY) {
             throw new IllegalArgumentException(LONG_NAME_ERROR);
         }
     }

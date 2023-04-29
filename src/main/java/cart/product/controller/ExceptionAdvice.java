@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionAdvice {
 
     private static final String INTERNAL_SERVER_ERROR_MESSAGE = "서버에서 예기치 않은 오류가 발생했습니다.";
+    private static final String NEW_LINE_DELIMITER = "\n";
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(final IllegalArgumentException e) {
@@ -23,7 +24,7 @@ public class ExceptionAdvice {
     public ResponseEntity<String> handle(final MethodArgumentNotValidException e) {
         final String errorMessage = e.getBindingResult().getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining(NEW_LINE_DELIMITER));
         return ResponseEntity.badRequest().body(errorMessage);
     }
 
