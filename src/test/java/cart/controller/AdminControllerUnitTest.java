@@ -118,7 +118,7 @@ public class AdminControllerUnitTest {
                 new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
                         price);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRegisterRequest.class))).willReturn(1L);
+        given(cartService.save(any(ProductRegisterRequest.class))).willThrow(new IllegalArgumentException("가격은 0보다 커야합니다."));
 
         // when then
         mockMvc.perform(post("/admin/product")
@@ -139,8 +139,9 @@ public class AdminControllerUnitTest {
         ProductRegisterRequest wrongCuteSeonghaDoll =
                 new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", name,
                         25000);
+        System.out.println(name.length());
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRegisterRequest.class))).willReturn(1L);
+        given(cartService.save(any(ProductRegisterRequest.class))).willThrow(new IllegalArgumentException("이름은 1글자 이상 50글자 이하여야합니다."));
 
         // when then
         mockMvc.perform(post("/admin/product")

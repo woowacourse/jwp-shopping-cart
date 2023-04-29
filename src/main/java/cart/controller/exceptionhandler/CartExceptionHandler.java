@@ -20,6 +20,13 @@ public class CartExceptionHandler {
         return ResponseEntity.badRequest().body(errorMessage);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
+        String errorMessage = exception.getMessage();
+        log.warn(errorMessage);
+        return ResponseEntity.badRequest().body(errorMessage);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleUnexpectedException(RuntimeException exception) {
         log.error(exception.getMessage());
