@@ -1,6 +1,11 @@
 package cart.dao;
 
 import cart.entity.Product;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -9,11 +14,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @Component
 public class DbProductDao implements ProductDao {
@@ -51,10 +51,10 @@ public class DbProductDao implements ProductDao {
     }
 
     @Override
-    public Product findById(long id) {
+    public Optional<Product> findById(long id) {
         String sql = "SELECT * FROM product WHERE id = :id";
         Map<String, Long> parameter = Collections.singletonMap("id", id);
-        return namedParameterJdbcTemplate.queryForObject(sql, parameter, productRowMapper);
+        return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, parameter, productRowMapper));
     }
 
     @Override

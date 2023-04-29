@@ -1,15 +1,15 @@
 package cart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.entity.Product;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 class DbProductDaoTest {
@@ -36,9 +36,10 @@ class DbProductDaoTest {
     void findByIdTest() {
         Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
 
-        Product foundProduct = productDao.findById(gitchan.getId());
+        Optional<Product> foundProduct = productDao.findById(gitchan.getId());
 
-        assertThat(foundProduct).isEqualTo(gitchan);
+        assertThat(foundProduct).isNotEmpty();
+        assertThat(foundProduct.get()).isEqualTo(gitchan);
     }
 
     @Test
