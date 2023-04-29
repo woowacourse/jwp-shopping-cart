@@ -3,6 +3,7 @@ package cart.controller.common;
 import cart.dto.response.ErrorResponse;
 import cart.dto.response.Response;
 import cart.dto.response.SimpleResponse;
+import cart.exception.DuplicateEmailException;
 import cart.exception.ProductNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,5 +39,13 @@ public class ExceptionController {
         Response response = SimpleResponse.badRequest(e.getMessage());
         return ResponseEntity.badRequest()
                 .body(response);
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<Response> handle(DuplicateEmailException e) {
+        ErrorResponse errorResponse = ErrorResponse.badRequest("잘못된 요청입니다.");
+        errorResponse.addValidation("email", e.getMessage());
+        return ResponseEntity.badRequest()
+                .body(errorResponse);
     }
 }
