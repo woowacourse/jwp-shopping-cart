@@ -1,7 +1,9 @@
 package cart.controller;
 
 import cart.dto.ResponseProductDto;
+import cart.dto.ResponseUserDto;
 import cart.service.ProductService;
+import cart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +15,12 @@ import java.util.List;
 public class ViewController {
 
     private final ProductService productService;
+    private final UserService userService;
 
     @Autowired
-    public ViewController(final ProductService productService) {
+    public ViewController(final ProductService productService, final UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -31,5 +35,12 @@ public class ViewController {
         final List<ResponseProductDto> responseProductDtos = productService.findAll();
         model.addAttribute("products", responseProductDtos);
         return "admin";
+    }
+    
+    @GetMapping("/settings")
+    public String settings(final Model model) {
+        final List<ResponseUserDto> responseUserDtos = userService.findAll();
+        model.addAttribute("members", responseUserDtos);
+        return "settings";
     }
 }

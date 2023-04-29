@@ -77,9 +77,9 @@
     - [x] 응답 : admin.html
         - [x] 모델 추가 : List\<ResponseProductDto>
 
-- [ ] 사용자 설정 페이지 연동
-    - [ ] 요청 : Get /settings
-    - [ ] 응답 : settings.html
+- [x] 사용자 설정 페이지 연동
+    - [x] 요청 : Get /settings
+    - [x] 응답 : settings.html
 
 - [ ] 사용자 선택
     - [ ] 사용자 인증 정보
