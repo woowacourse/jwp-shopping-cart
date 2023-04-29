@@ -44,34 +44,38 @@ form.addEventListener('submit', (event) => {
     createProduct(product);
 });
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '',
+        url: '/admin/product',
+        method: 'POST',
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data.message);
         console.error(error);
     });
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id} = product;
 
     axios.request({
-        url: '',
+        url: `/admin/product/${id}`,
+        method: 'PUT',
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data.message);
         console.error(error);
     });
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: '',
+        url: `/admin/product/${id}`,
+        method: 'DELETE',
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
