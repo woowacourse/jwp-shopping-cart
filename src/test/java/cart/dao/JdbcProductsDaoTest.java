@@ -32,10 +32,10 @@ class JdbcProductsDaoTest {
 
         final String name1 = "test1";
         final int price1 = 1000;
-        final String image1 = "testSource2";
+        final String image1 = "https://domain.com/image1";
         final String name2 = "test2";
         final int price2 = 2000;
-        final String image2 = "testSource2";
+        final String image2 = "https://domain.com/image2";
         final String sql = "insert into products(product_name, product_price, product_image) values (?, ?, ?)";
         jdbcTemplate.update(sql, name1, price1, image1);
         jdbcTemplate.update(sql, name2, price2, image2);
