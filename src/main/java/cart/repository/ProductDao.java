@@ -60,6 +60,9 @@ public class ProductDao {
 
     private void validId(final int id) {
         final String sql = "select * from product where id = ?";
-        jdbcTemplate.query(sql, (rs, rsnum) -> null, id);
+        final List<Object> findData = jdbcTemplate.query(sql, (rs, rsnum) -> null, id);
+        if (findData.isEmpty()) {
+            throw new IllegalStateException("존재 하지 않는 id 입니다.");
+        }
     }
 }
