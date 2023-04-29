@@ -1,9 +1,6 @@
 package cart.repository;
 
 import cart.entity.Product;
-import java.util.List;
-import java.util.Optional;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -12,6 +9,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class JdbcProductRepository implements ProductRepository {
@@ -54,12 +54,11 @@ public class JdbcProductRepository implements ProductRepository {
     }
 
     @Override
-    public Optional<Product> findById(final long id) {
+    public Product findById(final long id) {
         final String sql = "select * from product where id = :id";
         final MapSqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("id", id);
-        final Product product = jdbcTemplate.queryForObject(sql, paramSource, PRODUCT_ROW_MAPPER);
-        return Optional.ofNullable(product);
+        return jdbcTemplate.queryForObject(sql, paramSource, PRODUCT_ROW_MAPPER);
     }
 
     @Override

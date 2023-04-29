@@ -1,16 +1,16 @@
 package cart.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import cart.entity.Product;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Import(JdbcProductRepository.class)
@@ -37,12 +37,9 @@ class ProductRepositoryTest {
     public void findById() {
         final Product savedProduct = productRepository.save(PRODUCT);
 
-        final Optional<Product> product = productRepository.findById(savedProduct.getId());
+        final Product product = productRepository.findById(savedProduct.getId());
 
-        assertAll(
-                () -> assertThat(product).isNotEmpty(),
-                () -> assertThat(product.get().getName()).isEqualTo(PRODUCT.getName())
-        );
+        assertThat(product.getName()).isEqualTo(PRODUCT.getName());
     }
 
     @Test
@@ -63,8 +60,7 @@ class ProductRepositoryTest {
     public void updateProduct() {
         final Product savedProduct = productRepository.save(PRODUCT);
         //given
-        final Product product = productRepository.findById(savedProduct.getId())
-                .orElseThrow(IllegalArgumentException::new);
+        final Product product = productRepository.findById(savedProduct.getId());
         assertThat(product.getName()).isEqualTo(PRODUCT.getName());
 
         //when
@@ -73,8 +69,7 @@ class ProductRepositoryTest {
         productRepository.update(changedProduct);
 
         //then
-        final Product updatedProduct = productRepository.findById(savedProduct.getId())
-                .orElseThrow(IllegalArgumentException::new);
+        final Product updatedProduct = productRepository.findById(savedProduct.getId());
         assertThat(updatedProduct.getName()).isEqualTo("CHANGED");
     }
 

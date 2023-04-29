@@ -12,7 +12,7 @@ public interface ProductRepository {
 
     void update(Product product);
 
-    Optional<Product> findById(long id);
+    Product findById(long id);
 
     void deleteById(long id);
 }
