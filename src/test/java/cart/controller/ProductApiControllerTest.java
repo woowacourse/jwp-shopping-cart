@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.dto.request.ProductRequestDto;
 import cart.service.ProductService;
+import cart.test.ProductRequestFixture;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 
@@ -36,19 +34,11 @@ class ProductApiControllerTest {
     @DisplayName("상품 정보를 받아서 상품을 생성한다.")
     void create() {
         //given
-        final ProductRequestDto productRequestDto = new ProductRequestDto(
-                "스플릿",
-                "스프링",
-                15000,
-                "우아한테크코스",
-                List.of(1L, 2L)
-        );
-
         //when
         //then
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
+                .body(ProductRequestFixture.request)
                 .when()
                 .post("/products")
                 .then()
@@ -60,27 +50,13 @@ class ProductApiControllerTest {
     @DisplayName("상품의 정보를 수정하여 상품을 업테이트한다.")
     void update() {
         //given
-        final ProductRequestDto productRequestDto = new ProductRequestDto(
-                "스플릿",
-                "스프링",
-                15000,
-                "우아한테크코스",
-                List.of(1L, 2L)
-        );
-        final Long registeredId = productService.registerProduct(productRequestDto);
-        final ProductRequestDto updatedProductRequestDto = new ProductRequestDto(
-                "스플릿2",
-                "스프링2",
-                150000,
-                "우아한테크코스2",
-                List.of(3L, 4L)
-        );
+        final Long registeredId = productService.registerProduct(ProductRequestFixture.request);
 
         //when
         //then
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(updatedProductRequestDto)
+                .body(ProductRequestFixture.updateRequest)
                 .when()
                 .put("/products/" + registeredId)
                 .then()
@@ -91,14 +67,7 @@ class ProductApiControllerTest {
     @DisplayName("상품 ID를 통해 상품을 삭제한다.")
     void delete() {
         //given
-        final ProductRequestDto productRequestDto = new ProductRequestDto(
-                "스플릿",
-                "스프링",
-                15000,
-                "우아한테크코스",
-                List.of(1L, 2L)
-        );
-        final Long registeredId = productService.registerProduct(productRequestDto);
+        final Long registeredId = productService.registerProduct(ProductRequestFixture.request);
 
         //when
         //then
@@ -118,19 +87,11 @@ class ProductApiControllerTest {
         @DisplayName("이미지 URL이 null 일 때")
         void nullImageURL() {
             //given
-            final ProductRequestDto productRequestDto = new ProductRequestDto(
-                    "name",
-                    null,
-                    15000,
-                    "우아한테크코스",
-                    List.of(1L, 2L)
-            );
-
             //when
             //then
             RestAssured.given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequestDto)
+                    .body(ProductRequestFixture.imageEmptyRequest)
                     .when()
                     .post("/products")
                     .then()
@@ -142,19 +103,11 @@ class ProductApiControllerTest {
         @DisplayName("상품명의 길이가 50자를 초과할 때")
         void nameOverMaxLength() {
             //given
-            final ProductRequestDto productRequestDto = new ProductRequestDto(
-                    "1".repeat(51),
-                    "imageUrl",
-                    15000,
-                    "우아한테크코스",
-                    List.of(1L, 2L)
-            );
-
             //when
             //then
             RestAssured.given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequestDto)
+                    .body(ProductRequestFixture.overLengthNameRequest)
                     .when()
                     .post("/products")
                     .then()
@@ -166,19 +119,11 @@ class ProductApiControllerTest {
         @DisplayName("가격이 0보다 작을 때")
         void priceUnderOne() {
             //given
-            final ProductRequestDto productRequestDto = new ProductRequestDto(
-                    "name",
-                    "imageUrl",
-                    -1,
-                    "우아한테크코스",
-                    List.of(1L, 2L)
-            );
-
             //when
             //then
             RestAssured.given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequestDto)
+                    .body(ProductRequestFixture.negativePriceRequest)
                     .when()
                     .post("/products")
                     .then()
@@ -190,19 +135,11 @@ class ProductApiControllerTest {
         @DisplayName("중복선택한 카테고리에 없음이 존재할 때")
         void categoryEmptyUnique() {
             //given
-            final ProductRequestDto productRequestDto = new ProductRequestDto(
-                    "name",
-                    "imageUrl",
-                    1000,
-                    "우아한테크코스",
-                    null
-            );
-
             //when
             //then
             RestAssured.given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequestDto)
+                    .body(ProductRequestFixture.categoryNullRequest)
                     .when()
                     .post("/products")
                     .then()
