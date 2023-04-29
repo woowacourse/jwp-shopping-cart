@@ -1,5 +1,6 @@
 package cart.dto.member;
 
+import cart.entity.MemberEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -19,6 +20,10 @@ public class MemberDto {
         id = builder.id;
         email = builder.email;
         password = builder.password;
+    }
+
+    public static MemberDto fromEntity(MemberEntity entity) {
+        return new MemberDto(entity.getId(), entity.getEmail(), entity.getPassword());
     }
 
     public Long getId() {

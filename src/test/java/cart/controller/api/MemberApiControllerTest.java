@@ -1,15 +1,19 @@
 package cart.controller.api;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.dto.member.MemberDto;
 import cart.dto.request.member.MemberSignupRequest;
 import cart.exception.DuplicateEmailException;
 import cart.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -147,5 +151,38 @@ class MemberApiControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
                 .andExpect(jsonPath("$.validation.password").value("비밀번호는 4자리에서 20자리 사이여야 합니다."));
+    }
+
+    @Test
+    @DisplayName("/members로 GET 요청을 보내면 HTTP 200 코드와 함께 모든 회원이 조회되어야 한다.")
+    void findAllMembers_success() throws Exception {
+        // given
+        List<MemberDto> memberDtos = List.of(
+                new MemberDto(1L, "glenfiddch@naver.com", "123456"),
+                new MemberDto(2L, "glenlivet@naver.com", "123456"),
+                new MemberDto(3L, "glendronach@naver.com", "123456")
+        );
+
+        willReturn(memberDtos)
+                .given(memberService)
+                .findAllMembers();
+
+        // expect
+        mockMvc.perform(get("/members")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.message").value("3명의 회원이 조회되었습니다."))
+                .andExpect(jsonPath("$.result[0].id").value(1))
+                .andExpect(jsonPath("$.result[0].email").value("glenfiddch@naver.com"))
+                .andExpect(jsonPath("$.result[0].password").value("123456"))
+
+                .andExpect(jsonPath("$.result[1].id").value(2))
+                .andExpect(jsonPath("$.result[1].email").value("glenlivet@naver.com"))
+                .andExpect(jsonPath("$.result[1].password").value("123456"))
+
+                .andExpect(jsonPath("$.result[2].id").value(3))
+                .andExpect(jsonPath("$.result[2].email").value("glendronach@naver.com"))
+                .andExpect(jsonPath("$.result[2].password").value("123456"));
     }
 }

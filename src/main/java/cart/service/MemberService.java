@@ -1,8 +1,12 @@
 package cart.service;
 
+import static java.util.stream.Collectors.toList;
+
 import cart.domain.Member;
+import cart.dto.member.MemberDto;
 import cart.exception.DuplicateEmailException;
 import cart.repository.MemberDao;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,5 +26,12 @@ public class MemberService {
         if (memberDao.existsByEmail(email)) {
             throw new DuplicateEmailException();
         }
+    }
+
+    public List<MemberDto> findAllMembers() {
+        return memberDao.findAll()
+                .stream()
+                .map(MemberDto::fromEntity)
+                .collect(toList());
     }
 }
