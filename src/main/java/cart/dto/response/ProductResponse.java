@@ -1,5 +1,6 @@
 package cart.dto.response;
 
+import cart.domain.Product;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -18,6 +19,10 @@ public class ProductResponse {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public ProductResponse(Product product) {
+        this(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public Long getId() {

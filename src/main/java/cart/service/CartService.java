@@ -21,35 +21,32 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public void create(ProductRequest productRequest) {
-        Product product = new Product(
-                productRequest.getName(),
-                productRequest.getImageUrl(),
-                productRequest.getPrice()
-        );
+    public Long createProduct(ProductRequest request) {
+        Product product = request.toEntity();
 
-        productDao.create(product);
+        return productDao.insertAndGetKeyHolder(product);
     }
 
-    public List<ProductResponse> readAll() {
+    public List<ProductResponse> getAllProducts() {
         List<Product> products = productDao.findAll();
         return products.stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                .map(ProductResponse::new)
                 .collect(Collectors.toList());
     }
 
-    public void update(ProductUpdateRequest productUpdateRequest) {
-        Product product = new Product(
-                productUpdateRequest.getId(),
-                productUpdateRequest.getName(),
-                productUpdateRequest.getImageUrl(),
-                productUpdateRequest.getPrice()
-        );
+    public ProductResponse getProduct(Long id) {
+        Product product = productDao.findById(id);
+
+        return new ProductResponse(product);
+    }
+
+    public void updateProduct(ProductUpdateRequest request) {
+        Product product = request.toEntity();
 
         productDao.update(product);
     }
 
-    public void delete(Long id) {
+    public void deleteProduct(Long id) {
         productDao.delete(id);
     }
 }

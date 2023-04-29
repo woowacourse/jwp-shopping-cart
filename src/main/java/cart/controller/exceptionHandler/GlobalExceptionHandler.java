@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.exceptionHandler;
 
 import cart.dto.response.ErrorResponse;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
                 .getAllErrors()
                 .stream()
                 .map(error -> new ErrorResponse(
-                        ((FieldError) error).getField() + " : " + error.getDefaultMessage(), LocalDateTime.now()
+                                ((FieldError) error).getField() + " : " + error.getDefaultMessage(), LocalDateTime.now()
                         )
                 )
                 .collect(Collectors.toList());
@@ -31,6 +31,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException exception) {
         return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage(), LocalDateTime.now()));
     }
 }
