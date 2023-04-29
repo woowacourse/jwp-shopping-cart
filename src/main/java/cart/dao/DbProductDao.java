@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -54,7 +55,15 @@ public class DbProductDao implements ProductDao {
     public Optional<Product> findById(long id) {
         String sql = "SELECT * FROM product WHERE id = :id";
         Map<String, Long> parameter = Collections.singletonMap("id", id);
-        return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, parameter, productRowMapper));
+        return findProduct(sql, parameter);
+    }
+
+    private Optional<Product> findProduct(String sql, Map<String, Long> parameter) {
+        try {
+            return Optional.of(namedParameterJdbcTemplate.queryForObject(sql, parameter, productRowMapper));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -63,7 +72,6 @@ public class DbProductDao implements ProductDao {
 
         SqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
         namedParameterJdbcTemplate.update(sql, parameters);
-
         return product;
     }
 
