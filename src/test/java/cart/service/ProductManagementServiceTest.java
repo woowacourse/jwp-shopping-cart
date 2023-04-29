@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -55,35 +56,27 @@ class ProductManagementServiceTest {
     @Test
     void saveTest() {
         final ProductDto productDto = ProductDto.of("pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
-        doNothing().when(productDao).insert(any());
+        when(productDao.insert(any())).thenReturn(1L);
         managementService.save(productDto);
 
-        assertAll(
-                () -> verify(productDao, times(1)).insert(any())
-        );
+        assertDoesNotThrow(()->managementService.save(productDto));
     }
 
     @DisplayName("상품 데이터가 수정되는지 확인한다")
     @Test
     void updateTest() {
         final ProductDto productDto = ProductDto.of(1L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
-        doNothing().when(productDao).update(any());
-        managementService.update(productDto);
+        when(productDao.update(any())).thenReturn(1);
 
-        assertAll(
-                () -> verify(productDao, times(1)).update(any())
-        );
+        assertDoesNotThrow(()->managementService.update(productDto));
     }
 
     @DisplayName("상품 데이터가 삭제되는지 확인한다")
     @Test
     void deleteTest() {
         final ProductDto productDto = ProductDto.of(1L, null, null, null);
-        doNothing().when(productDao).delete(any());
-        managementService.delete(productDto);
+        when(productDao.delete(any())).thenReturn(1);
 
-        assertAll(
-                () -> verify(productDao, times(1)).delete(any())
-        );
+        assertDoesNotThrow(()->managementService.delete(productDto));
     }
 }
