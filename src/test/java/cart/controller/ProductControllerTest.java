@@ -1,22 +1,28 @@
 package cart.controller;
 
+import cart.dao.ProductDao;
 import cart.dto.ProductCreationRequest;
 import cart.dto.ProductModificationRequest;
+import cart.entity.ProductEntity;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
+@AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductControllerTest {
 
@@ -26,12 +32,22 @@ class ProductControllerTest {
     private static final String dummyImage = "http:";
     private static final Integer dummyPrice = 10_000;
 
+    @Autowired
+    ProductDao productDao;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @LocalServerPort
     int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+
+        resetDatabase();
+        productDao.insert(ProductEntity.of("mouse", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 100000));
+        productDao.insert(ProductEntity.of("keyboard", "https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1", 250000));
     }
 
     @DisplayName("상품 전체 목록을 조회하면 상태코드 200을 반환하는지 확인한다")
@@ -170,8 +186,8 @@ class ProductControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @DisplayName("상품을 삭제하면 상태코드 204를 반환하는지 확인한다")
+    @Transactional
     @Test
     void deleteProductsTest() {
         final long id = 1L;
@@ -181,5 +197,13 @@ class ProductControllerTest {
                 .when().delete(path + "/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void resetDatabase() {
+        final String truncateSql = "TRUNCATE TABLE product";
+        jdbcTemplate.update(truncateSql);
+
+        final String initializeIdSql = "ALTER TABLE product ALTER COLUMN ID RESTART WITH 1";
+        jdbcTemplate.update(initializeIdSql);
     }
 }

@@ -44,6 +44,12 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
+    public void deleteAll() {
+        final String sql = "DELETE FROM product";
+        jdbcTemplate.update(sql);
+    }
+
+    @Override
     public void deleteById(final Long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, id);
