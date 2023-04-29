@@ -27,7 +27,7 @@ class AdminControllerTest {
     int port;
 
     @Nested
-    @DisplayName("관리자 페이지를 조회하는 admin 메서드 테스")
+    @DisplayName("관리자 페이지를 조회하는 admin 메서드 테스트")
     class SelectTest {
 
         @BeforeEach
