@@ -1,4 +1,4 @@
-package cart.model;
+package cart.domain;
 
 import cart.exception.NameRangeException;
 import cart.exception.PriceRangeException;

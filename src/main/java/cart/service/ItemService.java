@@ -6,7 +6,7 @@ import cart.dao.ItemDao;
 import cart.dao.dto.ItemDto;
 import cart.exception.DataBaseSearchException;
 import cart.exception.ItemNotFoundException;
-import cart.model.Item;
+import cart.domain.Item;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
