@@ -6,7 +6,7 @@ import javax.validation.constraints.Positive;
 import org.hibernate.validator.constraints.Length;
 
 public class ProductUpdateRequest {
-    @NotBlank(message = "상품 이름은 비어있으면 안 됩니다.")
+    @NotBlank(message = "상품의 이름이 비어있습니다.")
     @Length(
             max = 10,
             message = "상품 이름의 길이는 {max}자리 보다 작아야 합니다."
@@ -20,7 +20,7 @@ public class ProductUpdateRequest {
     )
     private final int price;
 
-    @NotBlank(message = "상품의 이미지는 비어있으면 안 됩니다.")
+    @NotBlank(message = "상품의 이미지가 비어있습니다.")
     @Length(
             max = 100,
             message = "이미지 URL의 길이는 {max}자리 보다 작아야 합니다."

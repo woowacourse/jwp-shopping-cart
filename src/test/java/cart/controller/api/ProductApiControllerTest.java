@@ -105,7 +105,7 @@ class ProductApiControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.name").value("상품 이름은 비어있으면 안 됩니다."));
+                .andExpect(jsonPath("$.validation.name").value("상품의 이름이 비어있습니다."));
     }
 
     @ParameterizedTest
@@ -157,7 +157,7 @@ class ProductApiControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.imageUrl").value("상품의 이미지는 비어있으면 안 됩니다."));
+                .andExpect(jsonPath("$.validation.imageUrl").value("상품의 이미지가 비어있습니다."));
     }
 
     @Test
@@ -268,7 +268,7 @@ class ProductApiControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.name").value("상품 이름은 비어있으면 안 됩니다."));
+                .andExpect(jsonPath("$.validation.name").value("상품의 이름이 비어있습니다."));
     }
 
     @ParameterizedTest
@@ -323,7 +323,7 @@ class ProductApiControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.imageUrl").value("상품의 이미지는 비어있으면 안 됩니다."));
+                .andExpect(jsonPath("$.validation.imageUrl").value("상품의 이미지가 비어있습니다."));
     }
 
     @Test

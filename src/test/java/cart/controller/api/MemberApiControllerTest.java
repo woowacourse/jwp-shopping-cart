@@ -87,7 +87,7 @@ class MemberApiControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.email").value("이메일은 비어있으면 안 됩니다."));
+                .andExpect(jsonPath("$.validation.email").value("이메일이 비어있습니다."));
     }
 
     @Test
@@ -137,7 +137,7 @@ class MemberApiControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.password").value("비밀번호는 비어있으면 안 됩니다."));
+                .andExpect(jsonPath("$.validation.password").value("비밀번호가 비어있습니다."));
     }
 
     @ParameterizedTest
@@ -183,7 +183,7 @@ class MemberApiControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.password").value("\":\"가 포함될 수 없습니다."));
+                .andExpect(jsonPath("$.validation.password").value("\":\"이 포함될 수 없습니다."));
     }
 
     @Test
