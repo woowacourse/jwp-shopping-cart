@@ -52,7 +52,13 @@ const createProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
-        console.error(error);
+        // if (error.response.status === 400) {
+        let errorMessages = '';
+        for (let message of error.response.data.messages) {
+            errorMessages += (message + '\n');
+        }
+        alert(errorMessages)
+        // }
     });
 };
 

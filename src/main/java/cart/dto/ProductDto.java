@@ -15,7 +15,7 @@ public class ProductDto {
     @NotBlank(message = "이미지 주소를 다시 입력해주세요.")
     private final String image;
 
-    @NotNull(message = "가격을 다시 입력해주세요.")
+    @NotNull(message = "가격은 최소 100원, 최대 10000000원입니다.")
     @Min(100)
     @Max(10_000_000)
     private final Integer price;
