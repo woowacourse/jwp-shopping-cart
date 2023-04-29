@@ -21,20 +21,32 @@
                 - 최소 하나의 특수문자 : ~`!@#$%^&*()-+=
             - [x] 비밀번호 형가에 어긋나면 예외가 발생한다.
 
-- 엔티티
+- ProductEntity
     - 상품
         - id
         - 이름
         - 이미지
         - 가격
 
---- 
+- UserEntity
+    - 사용자
+        - id
+        - 이메일
+        - 비밀번호
+
+- CartEntity
+    - 장바구니
+        - id
+        - 사용자 id
+        - 상품 id
+
+### API
 
 - [x] 상품 목록 페이지 연동
     - [x] 요청 : Get /
     - [x] 응답 : index.html
         - [x] 모델 추가 : List\<ResponseProductDto>
-        -
+
 - [x] 상품 관리 CRUD API 작성
   /product
     - [x] Create
@@ -66,8 +78,8 @@
         - [x] 모델 추가 : List\<ResponseProductDto>
 
 - [ ] 사용자 설정 페이지 연동
-    - [x] 요청 : Get /settings
-    - [x] 응답 : settings.html
+    - [ ] 요청 : Get /settings
+    - [ ] 응답 : settings.html
 
 - [ ] 사용자 선택
     - [ ] 사용자 인증 정보
@@ -84,7 +96,7 @@
 DB 테이블
 
 ```sql
-CREATE TABLE PRODUCT
+CREATE TABLE product
 (
     id    INT           NOT NULL AUTO_INCREMENT,
     name  VARCHAR(50)   NOT NULL,
@@ -92,4 +104,22 @@ CREATE TABLE PRODUCT
     image VARCHAR(2000) NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE user
+(
+    id       INT          NOT NULL AUTO_INCREMENT,
+    email    VARCHAR(320) NOT NULL,
+    password VARCHAR(20)  NOT NULL,
+    PRIMARY KEY (id)
+)
+
+CREATE TABLE cart
+(
+    id         INT NOT NULL AUTO_INCREMENT,
+    user_id    INT NOT NULL,
+    product_id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
+)
 ```
