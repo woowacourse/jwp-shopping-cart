@@ -10,6 +10,8 @@ import cart.service.ProductService;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/products")
 public class ProductApiController {
+    private static final Logger log = LoggerFactory.getLogger(ProductApiController.class);
     private final ProductService productService;
 
     public ProductApiController(ProductService productService) {
@@ -33,6 +36,7 @@ public class ProductApiController {
     public ResponseEntity<Response> createProduct(@RequestBody @Valid ProductCreateRequest request) {
         ProductDto productDto = productService.createProduct(request.getName(), request.getPrice(),
                 request.getImageUrl());
+        log.info("상품이 생성되었습니다. 상품 ID = {}", productDto.getId());
         return ResponseEntity.created(URI.create("/products/" + productDto.getId()))
                 .body(ResultResponse.created("상품이 생성되었습니다.", productDto));
     }
@@ -40,6 +44,7 @@ public class ProductApiController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Response> deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
+        log.info("상품이 삭제되었습니다. 상품 ID = {}", id);
         return ResponseEntity.ok()
                 .body(SimpleResponse.ok("상품이 삭제되었습니다."));
     }
@@ -49,6 +54,7 @@ public class ProductApiController {
                                                   @RequestBody @Valid ProductUpdateRequest request) {
         ProductDto productDto = productService.updateProductById(id, request.getName(), request.getPrice(),
                 request.getImageUrl());
+        log.info("상품이 수정되었습니다. 상품 ID = {}", id);
         return ResponseEntity.ok()
                 .body(ResultResponse.ok("상품이 수정되었습니다.", productDto));
     }

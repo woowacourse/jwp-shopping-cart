@@ -46,7 +46,11 @@ public class BasicAuthProvider {
     }
 
     private String getDecodeToken(String token) {
-        return new String(Base64Utils.decodeFromString(token));
+        try {
+            return new String(Base64Utils.decodeFromString(token));
+        } catch (IllegalArgumentException e) {
+            throw new AuthenticationException("올바른 형식의 토큰이 아닙니다.", e);
+        }
     }
 
     private void validateCredentials(String[] credentials) {
