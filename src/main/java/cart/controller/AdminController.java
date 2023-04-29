@@ -21,13 +21,13 @@ public class AdminController {
 
 
     @GetMapping
+    @ModelAttribute
     public String displayItemList(Model model) {
         model.addAttribute("products", itemService.findAll());
         return "admin";
     }
 
-    @PostMapping("/items/add")
-    @ResponseBody
+    @PostMapping("/items/new")
     @ResponseStatus(HttpStatus.CREATED)
     public String addItem(@Valid @RequestBody ItemRequest itemRequest) {
         itemService.save(itemRequest);

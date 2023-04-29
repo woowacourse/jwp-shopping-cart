@@ -8,10 +8,13 @@ public class ItemResponse {
 
     @JsonProperty("id")
     private final Long id;
+
     @JsonProperty("name")
     private final String name;
+
     @JsonProperty("image-url")
     private final String imageUrl;
+
     @JsonProperty("price")
     private final int price;
 
