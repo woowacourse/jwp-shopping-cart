@@ -5,7 +5,7 @@ import cart.domain.Product;
 public class ProductResponse {
     private Long id;
     private String name;
-    private int price;
+    private Integer price;
     private String imageUrl;
 
     public ProductResponse(Product product){
@@ -23,7 +23,7 @@ public class ProductResponse {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 

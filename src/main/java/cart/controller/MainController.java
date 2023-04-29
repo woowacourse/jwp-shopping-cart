@@ -2,11 +2,10 @@ package cart.controller;
 
 import cart.dto.response.ProductResponse;
 import cart.service.ProductService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
 import java.util.List;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class MainController {
@@ -18,16 +17,18 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
+    public ModelAndView index(ModelAndView mav) {
         List<ProductResponse> products = productService.findAll();
-        model.addAttribute("products", products);
-        return "index";
+        mav.addObject("products", products);
+        mav.setViewName("index");
+        return mav;
     }
 
     @GetMapping("/admin")
-    public String admin(Model model) {
+    public ModelAndView admin(ModelAndView mav) {
         List<ProductResponse> products = productService.findAll();
-        model.addAttribute("products", products);
-        return "admin";
+        mav.addObject("products", products);
+        mav.setViewName("admin");
+        return mav;
     }
 }

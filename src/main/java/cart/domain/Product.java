@@ -11,14 +11,14 @@ public class Product {
 
     private Long id;
     private String name;
-    private int price;
+    private Integer price;
     private String imageUrl;
 
-    public Product(String name, int price, String imageUrl) {
+    public Product(String name, Integer price, String imageUrl) {
         this(null, name, price, imageUrl);
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public Product(Long id, String name, Integer price, String imageUrl) {
         validateName(name);
         validatePrice(price);
         this.id = id;
@@ -45,7 +45,7 @@ public class Product {
         }
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -53,7 +53,7 @@ public class Product {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 

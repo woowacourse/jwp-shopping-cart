@@ -43,6 +43,5 @@ public class ProductExceptionHandler {
                 .collect(joining(System.lineSeparator()));
         ExceptionResponse response = new ExceptionResponse(exceptionMessage);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-
     }
 }
