@@ -8,6 +8,8 @@ public interface ProductDao {
 
     List<ProductEntity> selectAll();
 
+    ProductEntity findById(int productId);
+
     void update(ProductEntity product);
 
     void delete(int productId);

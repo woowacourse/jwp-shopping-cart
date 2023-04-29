@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 @JdbcTest
 class JdbcTemplateProductDaoTest {
@@ -31,7 +30,7 @@ class JdbcTemplateProductDaoTest {
     void insertTest() {
         int id = productDao.insert(new ProductEntity(null, "name", 1000, "image"));
 
-        ProductEntity product = findById(id);
+        ProductEntity product = productDao.findById(id);
 
         assertSoftly(softly -> {
             softly.assertThat(product.getId()).isEqualTo(id);
@@ -41,17 +40,15 @@ class JdbcTemplateProductDaoTest {
         });
     }
 
-    private ProductEntity findById(final int id) {
-        String sql = "select * from products where id = ?";
+    @Test
+    void findByIdTest() {
+        final int id1 = productDao.insert(new ProductEntity(null, "name1", 1000, "image1"));
+        productDao.insert(new ProductEntity(null, "name2", 2000, "image2"));
 
-        RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNumber) -> new ProductEntity(
-                resultSet.getInt("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("price"),
-                resultSet.getString("image")
-        );
+        final ProductEntity findProduct = productDao.findById(id1);
 
-        return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
+        assertThat(findProduct.getId()).isEqualTo(id1);
+        assertThat(findProduct.getName()).isEqualTo("name1");
     }
 
     @Test
@@ -70,7 +67,7 @@ class JdbcTemplateProductDaoTest {
 
         final ProductEntity updateProduct = new ProductEntity(productId, "name2", 2000, "image2");
         productDao.update(updateProduct);
-        final ProductEntity updatedProduct = findById(productId);
+        final ProductEntity updatedProduct = productDao.findById(productId);
 
         assertSoftly(softly -> {
             softly.assertThat(updatedProduct.getName()).isEqualTo("name2");
@@ -86,6 +83,6 @@ class JdbcTemplateProductDaoTest {
 
         productDao.delete(productId);
 
-        assertThatThrownBy(() -> findById(productId)).isInstanceOf(EmptyResultDataAccessException.class);
+        assertThatThrownBy(() -> productDao.findById(productId)).isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

@@ -41,6 +41,13 @@ public class JdbcTemplateProductDao implements ProductDao{
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
+    @Override
+    public ProductEntity findById(final int productId) {
+        String sql = "select * from products where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, productEntityRowMapper, productId);
+    }
+
     private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNumber) -> {
         ProductEntity productEntity = new ProductEntity(
                 resultSet.getInt("id"),
