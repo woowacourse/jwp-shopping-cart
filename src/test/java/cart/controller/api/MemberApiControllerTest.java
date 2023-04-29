@@ -165,7 +165,7 @@ class MemberApiControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.email").value("\":\"가 포함될 수 없습니다."));
+                .andExpect(jsonPath("$.validation.email").value("올바른 이메일 형식이 아닙니다."));
     }
 
     @Test

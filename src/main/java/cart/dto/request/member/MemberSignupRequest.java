@@ -12,7 +12,6 @@ public class MemberSignupRequest {
             max = 30,
             message = "이메일 최대 {max}자리 보다 작아야 합니다."
     )
-    @Pattern(regexp = "^[^:]*$", message = "\":\"가 포함될 수 없습니다.")
     private String email;
 
     @NotBlank(message = "비밀번호는 비어있으면 안 됩니다.")
