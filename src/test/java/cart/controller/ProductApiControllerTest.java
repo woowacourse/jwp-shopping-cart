@@ -90,7 +90,7 @@ class ProductApiControllerTest {
         RestAssured.given().log().all()
                 .when().delete("http://localhost:" + port + "/products/" + createdProductId)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
 
         List<ProductEntity> productEntities = productDao.findAll();
 
