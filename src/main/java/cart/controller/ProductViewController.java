@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.dao.ProductDao;
+import cart.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,22 +9,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ProductViewController {
 
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public ProductViewController(final ProductDao productDao) {
-        this.productDao = productDao;
+    @Autowired
+    public ProductViewController(final ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping(path = "/")
     public String home(Model model) {
-        model.addAttribute("products", productDao.findAll());
+        model.addAttribute("products", productService.getAllProducts());
 
         return "index";
     }
 
     @GetMapping(path = "/admin")
     public String admin(Model model) {
-        model.addAttribute("products", productDao.findAll());
+        model.addAttribute("products", productService.getAllProducts());
 
         return "admin";
     }

@@ -53,7 +53,7 @@ public class ProductApiIntegrationTest {
                               .post("/products")
                               .then()
                               .assertThat()
-                              .statusCode(HttpStatus.OK.value());
+                              .statusCode(HttpStatus.CREATED.value());
     }
 
     @ParameterizedTest(name = "상품 이름이 공백만으로 구성되면 BAD REQUEST 응답 코드를 반환한다")
@@ -145,7 +145,7 @@ public class ProductApiIntegrationTest {
                               .put("/products")
                               .then()
                               .assertThat()
-                              .statusCode(HttpStatus.OK.value());
+                              .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
@@ -176,7 +176,7 @@ public class ProductApiIntegrationTest {
                               .delete("/products/1")
                               .then()
                               .assertThat()
-                              .statusCode(HttpStatus.OK.value());
+                              .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test

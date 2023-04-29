@@ -1,54 +1,48 @@
 package cart.controller;
 
-import cart.dao.ProductDao;
-import cart.domain.product.Product;
+import cart.dto.ProductDto;
 import cart.dto.request.ProductAddRequest;
 import cart.dto.request.ProductUpdateRequest;
+import cart.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import java.util.NoSuchElementException;
+import java.net.URI;
 
 @Slf4j
-@Validated
 @RestController
 @RequestMapping("/products")
 public class ProductApiController {
 
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public ProductApiController(final ProductDao productDao) {
-        this.productDao = productDao;
+    @Autowired
+    public ProductApiController(final ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@Valid @RequestBody ProductAddRequest productDto) {
-        productDao.insert(new Product(productDto.getName(), productDto.getImageUrl(), productDto.getPrice()));
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> add(@RequestBody @Valid ProductAddRequest productAddRequest) {
+        final long id = productService.register(productAddRequest);
+        return ResponseEntity.created(URI.create("/products" + id))
+                             .build();
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@Valid @RequestBody ProductUpdateRequest productDto) {
-        final int affectedRowsCount = productDao.update(new Product(productDto.getId(), productDto.getName(), productDto.getImageUrl(), productDto.getPrice()));
-        if (affectedRowsCount != 1) {
-            throw new NoSuchElementException("존재하지 않는 상품 id입니다");
-        }
-        return ResponseEntity.ok()
+    public ResponseEntity<Void> update(@RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
+        final ProductDto productDto = productService.update(productUpdateRequest);
+        return ResponseEntity.created(URI.create("/products" + productDto.getId()))
                              .build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable @Positive Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.info("id={}", id);
-        final int affectedRowsCount = productDao.deleteById(id);
-        if (affectedRowsCount != 1) {
-            throw new NoSuchElementException("존재하지 않는 상품 id입니다");
-        }
-        return ResponseEntity.ok()
+        productService.delete(id);
+        return ResponseEntity.noContent()
                              .build();
     }
 }
