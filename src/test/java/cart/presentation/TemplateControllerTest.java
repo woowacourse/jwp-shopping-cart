@@ -1,41 +1,48 @@
 package cart.presentation;
 
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
+import cart.application.ProductCRUDApplication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(TemplateController.class)
 class TemplateControllerTest {
 
-    @LocalServerPort
-    private int port;
-
-    @BeforeEach
-    void setup() {
-        RestAssured.port = port;
-    }
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private ProductCRUDApplication productCRUDApplication;
 
     @Test
     @DisplayName("/ 로 GET 요청을 보낼 수 있다")
-    void test_home() {
-        //when, then
-        RestAssured.given()
-                .when().get("/")
-                .then()
-                .statusCode(HttpStatus.OK.value());
+    void test_home() throws Exception {
+        // given
+        given(productCRUDApplication.readAll()).willReturn(null);
+
+        // when
+        mockMvc.perform(get("/"))
+
+                // then
+                .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("/admin 으로 GET 요청을 보낼 수 있다")
-    void test_admin() {
-        //when, then
-        RestAssured.given()
-                .when().get("/admin")
-                .then()
-                .statusCode(HttpStatus.OK.value());
+    void test_admin() throws Exception {
+        // given
+        given(productCRUDApplication.readAll()).willReturn(null);
+
+        // when
+        mockMvc.perform(get("/admin"))
+
+                // then
+                .andExpect(status().isOk());
     }
 }

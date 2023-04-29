@@ -1,82 +1,98 @@
 package cart.presentation;
 
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
+import cart.application.ProductCRUDApplication;
+import cart.presentation.dto.ProductDto;
+import cart.presentation.dto.ProductIdDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
-    @LocalServerPort
-    private int port;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @MockBean
+    private ProductCRUDApplication productCRUDApplication;
 
-    @BeforeEach
-    void setup() {
-        RestAssured.port = port;
-    }
 
     @Test
     @DisplayName("product/create로 POST 요청을 보낼 수 있다")
-    void test_create_request() {
+    void test_create_request() throws Exception {
         // given
-        Map<String, String> body = new HashMap<>();
-        body.put("id", "1");
-        body.put("name", "주디");
-        body.put("url", "https://");
-        body.put("price", "1");
+        willDoNothing().given(productCRUDApplication).create(any(ProductDto.class));
 
-        //when, then
-        RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(body)
-                .when().post("/product/create")
-                .then()
-                .statusCode(HttpStatus.OK.value());
+        String content = objectMapper.writeValueAsString(
+                new ProductDto(1, "teo", "https://", 1));
+
+        // when
+        mockMvc.perform(post("/product/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                // then
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("product/read로 GET 요청을 보낼 수 있다")
+    void test_read_request() throws Exception {
+        // given
+        given(productCRUDApplication.readAll()).willReturn(null);
+
+        // when
+        mockMvc.perform(get("/product/read"))
+
+                // then
+                .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("product/update로 POST 요청을 보낼 수 있다")
-    void test_update_request() {
+    void test_update_request() throws Exception {
         // given
-        Map<String, String> body = new HashMap<>();
-        body.put("id", "1");
-        body.put("name", "테오");
-        body.put("url", "https://");
-        body.put("price", "1");
+        willDoNothing().given(productCRUDApplication).update(any(ProductDto.class));
 
-        //when, then
-        RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(body)
-                .when().post("/product/update")
-                .then()
-                .statusCode(HttpStatus.OK.value());
+        String content = objectMapper.writeValueAsString(
+                new ProductDto(1, "teo", "https://", 1)
+        );
+
+        // when
+        mockMvc.perform(post("/product/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content))
+
+                // then
+                .andExpect(status().isOk());
     }
-
     @Test
     @DisplayName("product/delete로 DELETE 요청을 보낼 수 있다")
-    void test_delete_request() {
+    void test_delete_request() throws Exception {
         // given
-        Map<String, String> body = new HashMap<>();
-        body.put("id", "1");
-        body.put("name", "주디");
-        body.put("url", "https://");
-        body.put("price", "1");
+        willDoNothing().given(productCRUDApplication).delete(any(ProductIdDto.class));
 
-        //when, then
-        RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(body)
-                .when().delete("/product/delete")
-                .then()
-                .statusCode(HttpStatus.OK.value());
+        String content = objectMapper.writeValueAsString(
+                new ProductDto(1, "teo", "https://", 1)
+        );
+
+        // when
+        mockMvc.perform(delete("/product/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content))
+
+                // then
+                .andExpect(status().isOk());
     }
 }
