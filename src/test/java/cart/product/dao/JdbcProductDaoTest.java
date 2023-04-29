@@ -52,27 +52,6 @@ class JdbcProductDaoTest {
     }
     
     @Test
-    @DisplayName("상품 findByName 테스트")
-    void findByName() {
-        //given
-        final Product product1 = new Product(new Name("망고"), "https://mango", new Price(1000));
-        final Product product2 = new Product(new Name("에코"), "https://echo", new Price(2000));
-        final Product product3 = new Product(new Name("포비"), "https://pobi", new Price(3000));
-        
-        jdbcProductDao.insert(product1);
-        jdbcProductDao.insert(product2);
-        jdbcProductDao.insert(product3);
-        
-        //when
-        final Product result = jdbcProductDao.findByName("망고");
-        
-        //then
-        assertEquals(product1.getName().getValue(), result.getName().getValue());
-        assertEquals(product1.getImage(), result.getImage());
-        assertEquals(product1.getPrice().getValue(), result.getPrice().getValue());
-    }
-    
-    @Test
     @DisplayName("상품 deleteByID 테스트")
     void deleteByID() {
         //given

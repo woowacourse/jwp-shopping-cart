@@ -27,11 +27,6 @@ class ProductListServiceTest {
         }
         
         @Override
-        public Product findByName(final String name) {
-            return null;
-        }
-        
-        @Override
         public void deleteByID(final long id) {
         
         }

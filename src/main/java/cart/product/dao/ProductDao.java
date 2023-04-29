@@ -10,8 +10,6 @@ public interface ProductDao {
     
     Optional<Product> findByID(long id);
     
-    Product findByName(String name);
-    
     void deleteByID(long id);
     
     void update(Product product);

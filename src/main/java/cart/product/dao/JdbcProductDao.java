@@ -69,12 +69,6 @@ public class JdbcProductDao implements ProductDao {
     }
     
     @Override
-    public Product findByName(final String name) {
-        final String sql = "select * from product_list where name = ?";
-        return jdbcTemplate.queryForObject(sql, productRowMapper, name);
-    }
-    
-    @Override
     public void deleteByID(final long id) {
         final String sql = "delete from product_list where id = ?";
         jdbcTemplate.update(sql, id);
