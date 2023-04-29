@@ -35,7 +35,7 @@ class ProductRequestControllerTest extends AbstractProductControllerTest {
 
     @Test
     void 이미지_url_길이_초과_테스트() throws Exception {
-        final ProductRequest productRequest = new ProductRequest("누누", "a".repeat(2049), 1);
+        final ProductRequest productRequest = new ProductRequest("누누", "a".repeat(2_097_153), 1);
         final String request = objectMapper.writeValueAsString(productRequest);
 
         mockMvc.perform(post("/products")

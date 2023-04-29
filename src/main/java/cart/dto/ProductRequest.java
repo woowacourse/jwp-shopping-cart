@@ -10,7 +10,7 @@ public class ProductRequest {
     @NotBlank(message = "상품명은 필수 입력값입니다.")
     private String name;
 
-    @Size(min = 1, max = 2048, message = "이미지 url은 1자 이상 2048자 이하입니다. 입력값 : ${validatedValue}")
+    @Size(min = 1, max = 2_097_152, message = "이미지 url은 1자 이상 2,097,152자 이하입니다. 입력값 : ${validatedValue}")
     @NotBlank(message = "이미지 url은 필수 입력값입니다.")
     private String image;
 

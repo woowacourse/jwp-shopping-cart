@@ -15,12 +15,12 @@ class ImageTest {
     }
 
     @Test
-    void 이미지url은_2048자_이하여야_합니다() {
-        final String input = "a".repeat(2049);
+    void 이미지url은_2097152자_이하여야_합니다() {
+        final String input = "a".repeat(2_097_153);
 
         assertThatThrownBy(() -> new Image(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미지 url은 2048자 이하만 가능합니다.");
+                .hasMessage("이미지 url은 2097152자 이하만 가능합니다.");
     }
 
     @Test

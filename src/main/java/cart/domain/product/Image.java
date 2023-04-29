@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Image {
 
-    private static final int MAX_IMAGE_LENGTH = 2048;
+    private static final int MAX_IMAGE_LENGTH = 2_097_152;
 
     private final String value;
 
