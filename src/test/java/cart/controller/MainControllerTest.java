@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductResponse;
+import cart.controller.dto.ProductResponse;
 import cart.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

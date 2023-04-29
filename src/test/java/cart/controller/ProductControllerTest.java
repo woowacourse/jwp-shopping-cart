@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductRequest;
+import cart.controller.dto.ProductRequest;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
