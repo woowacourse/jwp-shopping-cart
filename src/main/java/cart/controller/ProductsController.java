@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
-public class CartController {
+public class ProductsController {
 
     private final CartService cartService;
 
-    public CartController(CartService cartService) {
+    public ProductsController(CartService cartService) {
         this.cartService = cartService;
     }
 

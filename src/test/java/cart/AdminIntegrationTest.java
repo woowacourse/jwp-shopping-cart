@@ -1,4 +1,4 @@
-package cart.controller;
+package cart;
 
 import static org.hamcrest.core.Is.is;
 
@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class AdminIntegrationTest {
 
     @LocalServerPort
     int port;
@@ -28,11 +28,11 @@ class AdminControllerTest {
     @Test
     @DisplayName("/admin 으로 get 요청을 보내면 ok 상태코드를 반환한다")
     void adminTest() {
-        RestAssured.given().log().all()
+        RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/admin")
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -41,12 +41,12 @@ class AdminControllerTest {
     void createTest() {
         ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
 
-        RestAssured.given().log().all()
+        RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
                 .post("/admin/product")
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
@@ -55,12 +55,12 @@ class AdminControllerTest {
     void createExceptionTest() {
         ProductRequest productRequest = new ProductRequest("", null, "");
 
-        RestAssured.given().log().all()
+        RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
                 .post("/admin/product")
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("size()", is(3));
     }
@@ -70,7 +70,7 @@ class AdminControllerTest {
     @DisplayName("/admin/product에 정상적인 PUT request를 전송하면 ok 상태코드를 반환한다")
     void updateTest() {
         ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
-        RestAssured.given().log().all()
+        RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
@@ -83,12 +83,12 @@ class AdminControllerTest {
                 "http://testtest"
         );
 
-        RestAssured.given().log().all()
+        RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest)
                 .when()
                 .put("/admin/product")
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -96,7 +96,7 @@ class AdminControllerTest {
     @DisplayName("/admin/product에 비정상적인 PUT request를 전송하면 bad_request를 반환하고 에러 메시지의 size는 비정상적인 파라미터의 개수와 같다")
     void updateExceptionTest() {
         ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
-        RestAssured.given().log().all()
+        RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
@@ -104,12 +104,12 @@ class AdminControllerTest {
 
         ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(null, "", null, "");
 
-        RestAssured.given().log().all()
+        RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest)
                 .when()
                 .put("/admin/product")
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("size()", is(4));
     }
@@ -120,17 +120,17 @@ class AdminControllerTest {
     void deleteTest() {
         ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
 
-        RestAssured.given().log().all()
+        RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
                 .post("/admin/product");
 
-        RestAssured.given().log().all()
+        RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .delete("/admin/product?id=1")
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
