@@ -1,7 +1,5 @@
 package cart;
 
-import static io.restassured.RestAssured.given;
-
 import cart.dto.ProductDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import static io.restassured.RestAssured.given;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -29,7 +29,7 @@ public class ProductIntegrationTest {
     @Test
     void 상품을_조회한다() {
         given()
-                .when().get("/admin/products")
+                .when().get("/admin")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -63,9 +63,9 @@ public class ProductIntegrationTest {
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(updatedProductDto)
-                .when().patch("/admin/products/{product_id}", id)
+                .when().put("/admin/products/{product_id}", id)
                 .then()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
@@ -85,6 +85,6 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/admin/products/{product_id}", id)
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
