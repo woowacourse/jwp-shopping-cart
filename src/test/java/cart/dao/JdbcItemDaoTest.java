@@ -40,7 +40,7 @@ class JdbcItemDaoTest {
         List<Item> items = itemDao.findAll();
 
         assertAll(
-                () -> assertThat(items.size()).isEqualTo(3),
+                () -> assertThat(items).hasSize(3),
                 () -> assertThat(items.get(2).getId()).isEqualTo(3)
         );
     }
@@ -51,7 +51,7 @@ class JdbcItemDaoTest {
         List<Item> items = itemDao.findAll();
 
         assertAll(
-                () -> assertThat(items.size()).isEqualTo(2),
+                () -> assertThat(items).hasSize(2),
                 () -> assertThat(items.get(1).getId()).isEqualTo(2)
         );
     }
@@ -64,14 +64,14 @@ class JdbcItemDaoTest {
         itemDao.update(2L, item);
 
         List<Item> items = itemDao.findAll();
-
+        Item expected = new Item(2L, "햄버거", "c", 2000);
         assertAll(
-                () -> assertThat(items.size()).isEqualTo(2),
-                () -> assertThat(items.get(1).getId()).isEqualTo(2),
-                () -> assertThat(items.get(1).getName()).isEqualTo("햄버거"),
-                () -> assertThat(items.get(1).getImageUrl()).isEqualTo("c"),
-                () -> assertThat(items.get(1).getPrice()).isEqualTo(2000)
+                () -> assertThat(items).hasSize(2),
+                () -> assertThat(items.get(1))
+                        .usingRecursiveComparison()
+                        .isEqualTo(expected)
         );
+
     }
 
     @Test
@@ -80,6 +80,6 @@ class JdbcItemDaoTest {
         itemDao.delete(2L);
 
         List<Item> items = itemDao.findAll();
-        assertThat(items.size()).isEqualTo(1);
+        assertThat(items).hasSize(1);
     }
 }
