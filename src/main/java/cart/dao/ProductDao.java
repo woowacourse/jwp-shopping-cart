@@ -57,7 +57,7 @@ public class ProductDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public int update(final Product product, final Long id) {
+    public int update(final Long id, final Product product) {
         final String sql = "UPDATE PRODUCT SET name = ?, price = ?, image = ? WHERE id = ?";
         return jdbcTemplate.update(
                 sql,

@@ -150,9 +150,9 @@ class ProductControllerTest {
 
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestUpdateProductDto(insertedId, "피자", 10_000, "피자 사진"))
+                .body(new RequestUpdateProductDto("피자", 10_000, "피자 사진"))
                 .when()
-                .put("/products")
+                .put("/products/" + insertedId)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -180,9 +180,9 @@ class ProductControllerTest {
     void 존재하지_않는_id의_상품은_수정할_수_없다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestUpdateProductDto(0L, "치킨", 10_000, "치킨 사진"))
+                .body(new RequestUpdateProductDto("치킨", 10_000, "치킨 사진"))
                 .when()
-                .put("/products")
+                .put("/products/" + 0L)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());

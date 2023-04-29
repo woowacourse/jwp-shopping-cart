@@ -30,14 +30,14 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/products")).build();
     }
 
-    @PutMapping("/products")
-    public ResponseEntity<Void> updateProduct(@RequestBody @Valid final RequestUpdateProductDto requestUpdateProductDto) {
-        cartService.update(requestUpdateProductDto);
+    @PutMapping("/products/{id}")
+    public ResponseEntity<Void> updateProduct(@PathVariable("id") final Long id, @RequestBody @Valid final RequestUpdateProductDto requestUpdateProductDto) {
+        cartService.update(id, requestUpdateProductDto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") final Long id) {
         cartService.delete(id);
         return ResponseEntity.accepted().build();
     }

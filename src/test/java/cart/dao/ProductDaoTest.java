@@ -49,7 +49,7 @@ class ProductDaoTest {
         final Long id = productDao.insert(new Product("돈까스", 10_000, "돈까스 이미지 주소"));
 
         // when
-        final int updatedRows = productDao.update(new Product("치킨", 1_000, "치킨 이미지 주소"), id);
+        final int updatedRows = productDao.update(id, new Product("치킨", 1_000, "치킨 이미지 주소"));
 
         // then
         assertSoftly(softly -> {
@@ -64,7 +64,7 @@ class ProductDaoTest {
     @Test
     void 등록되지_않은_데이터를_수정할_수_없다() {
         // when
-        final int updatedRows = productDao.update(new Product("치킨", 1_000, "치킨 이미지 주소"), 99999L);
+        final int updatedRows = productDao.update(99999L, new Product("치킨", 1_000, "치킨 이미지 주소"));
 
         // then
         assertThat(updatedRows).isZero();

@@ -149,9 +149,9 @@ class ProductIntegrationTest {
 
         final Response updateResponse = given()
                 .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new RequestUpdateProductDto(insertedId, "피자", 1_000, "피자 사진"))
+                .body(new RequestUpdateProductDto("피자", 1_000, "피자 사진"))
                 .when()
-                .put("/products")
+                .put("/products/" + insertedId)
                 .then()
                 .log().all()
                 .extract().response();
