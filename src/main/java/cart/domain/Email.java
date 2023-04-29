@@ -1,0 +1,21 @@
+package cart.domain;
+
+import java.util.regex.Pattern;
+
+public class Email {
+
+    private static final Pattern EMAIL = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$");
+
+    private final String address;
+
+    public Email(final String address) {
+        validateFormat(address);
+        this.address = address;
+    }
+
+    private void validateFormat(final String address) {
+        if (!EMAIL.matcher(address).matches()) {
+            throw new IllegalArgumentException("형식에 맞지 않는 이메일입니다.");
+        }
+    }
+}
