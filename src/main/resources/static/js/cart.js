@@ -1,5 +1,5 @@
 const showDetail = (productId) => {
-    window.location.href(`/${productId}`)
+    window.location.href = `/${productId}`
 }
 
 const addCartItem = (productId) => {

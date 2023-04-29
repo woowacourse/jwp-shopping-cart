@@ -7,10 +7,8 @@ import static cart.exception.ErrorCode.PRODUCT_PRICE_RANGE;
 
 public class Product {
 
-    private static final int NAME_MIN_LENGTH = 1;
-    private static final int NAME_MAX_LENGTH = 25;
-    private static final int PRICE_MIN_RANGE = 0;
-    private static final int PRICE_MAX_RANGE = 10_000_000;
+    private static final int NAME_MIN_LENGTH = 1, NAME_MAX_LENGTH = 25;
+    private static final int PRICE_MIN_RANGE = 0, PRICE_MAX_RANGE = 10_000_000;
 
     private final String name;
     private final String imageUrl;
