@@ -32,20 +32,20 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public void insert(final ProductEntity productEntity) {
+    public long insert(final ProductEntity productEntity) {
         final String sql = "INSERT INTO product(name, image, price) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
+        return jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
     }
 
     @Override
-    public void update(final ProductEntity productEntity) {
+    public int update(final ProductEntity productEntity) {
         final String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), productEntity.getId());
+        return jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), productEntity.getId());
     }
 
     @Override
-    public void delete(final ProductEntity productEntity) {
+    public int delete(final ProductEntity productEntity) {
         final String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, productEntity.getId());
+        return jdbcTemplate.update(sql, productEntity.getId());
     }
 }

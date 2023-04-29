@@ -28,10 +28,16 @@ public class ProductManagementService {
     }
 
     public void update(final ProductDto productDto) {
-        productDao.update(ProductEntityMapper.from(productDto));
+        int updatedRowCount = productDao.update(ProductEntityMapper.from(productDto));
+        if(updatedRowCount == 0){
+            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
+        }
     }
 
     public void delete(final ProductDto productDto) {
-        productDao.delete(ProductEntityMapper.from(productDto));
+        int deletedRowCount = productDao.delete(ProductEntityMapper.from(productDto));
+        if(deletedRowCount == 0){
+            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
+        }
     }
 }
