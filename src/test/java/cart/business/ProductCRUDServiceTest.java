@@ -41,4 +41,16 @@ class ProductCRUDServiceTest {
         Assertions.assertThatThrownBy(() -> productCRUDService.update(teo))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    @DisplayName("존재하지 않는 상품에 대해 delete 할 시 예외를 던진다")
+    void test_delete() {
+        //given
+        Product teo = new Product(1, new ProductName("teo"),
+                new ProductImage("https://"), new ProductPrice(10));
+
+        //when, then
+        Assertions.assertThatThrownBy(() -> productCRUDService.delete(teo.getId()))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }

@@ -43,6 +43,11 @@ public class ProductCRUDService {
 
     @Transactional
     public void delete(Integer productId) {
+        Optional<Product> foundProduct = productRepository.findById(productId);
+
+        if (foundProduct.isEmpty()) {
+            throw new IllegalArgumentException("존재하는 상품에 대해서만 삭제할 수 있습니다.");
+        }
         productRepository.remove(productId);
     }
 }
