@@ -10,7 +10,6 @@ public class ItemRequest {
 
     @NotBlank(message = "상품명은 공백일 수 없습니다.")
     @Size(max = 30, message = "상품명의 길이는 30자 이하여야합니다.")
-    @JsonProperty("name")
     private final String name;
 
     @NotBlank(message = "이미지 url은 공백일 수 없습니다.")
@@ -20,7 +19,6 @@ public class ItemRequest {
     @NotNull(message = "가격은 공백일 수 없습니다.")
     @Min(value = 0, message = "가격은 최소 0원 이상이어야합니다.")
     @Max(value = 1000000, message = "가격은 최대 100만원 이하여야합니다.")
-    @JsonProperty("price")
     private final Integer price;
 
     public ItemRequest(final String name, final String imageUrl, final Integer price) {

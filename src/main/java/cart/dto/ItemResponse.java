@@ -6,16 +6,13 @@ import java.util.Objects;
 
 public class ItemResponse {
 
-    @JsonProperty("id")
     private final Long id;
 
-    @JsonProperty("name")
     private final String name;
 
     @JsonProperty("image-url")
     private final String imageUrl;
 
-    @JsonProperty("price")
     private final int price;
 
     public ItemResponse(final Long id, final String name, final String imageUrl, final int price) {
