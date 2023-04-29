@@ -20,8 +20,11 @@ public class BasicAuthService {
     }
 
     public Long resolveMemberId(String basicToken) {
-        String decodedToken = decodeToken(getToken(basicToken));
-        return getMemberId(decodedToken);
+        if (StringUtils.hasText(basicToken)) {
+            String decodedToken = decodeToken(getToken(basicToken));
+            return getMemberId(decodedToken);
+        }
+        throw new AuthenticationException("인증 토큰이 비어있습니다.");
     }
 
     private String getToken(String basicToken) {

@@ -10,6 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -64,5 +66,16 @@ class BasicAuthServiceTest {
         assertThatThrownBy(() -> basicAuthService.resolveMemberId("Basic " + token))
                 .isInstanceOf(AuthenticationException.class)
                 .hasMessage("올바른 형식의 토큰이 아닙니다.");
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @EmptySource
+    @DisplayName("인증 토큰이 비어있으면 예외가 발생해야 한다.")
+    void resolveMemberId_blankToken(String token) {
+        // expect
+        assertThatThrownBy(() -> basicAuthService.resolveMemberId(token))
+                .isInstanceOf(AuthenticationException.class)
+                .hasMessage("인증 토큰이 비어있습니다.");
     }
 }
