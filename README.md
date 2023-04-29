@@ -55,7 +55,7 @@
 - [x] ExceptionHandler 추가
 - [x] findById() Optional 처리
 - [x] fake 객체의 저장, 조회가 정상적으로 동작하는지 확인하도록 변경
-- [ ] service 테스트 추가
+- [x] service 테스트 추가
 - [x] 필요없는 출력문 제거
 - [ ] Integration Test에서 DB에 값이 실제로 저장되는지 확인
 - [ ] update, delete 테스트 전에 테스트를 위한 데이터를 추가한 후 검증하도록 변경
