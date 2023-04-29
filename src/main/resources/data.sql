@@ -6,3 +6,12 @@ CREATE TABLE IF NOT EXISTS product (
     `category` VARCHAR(10) NOT NULL,
     PRIMARY KEY(`id`)
 );
+
+CREATE TABLE IF NOT EXISTS users (
+    `id` BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
+    `nickname` VARCHAR(30) NOT NULL,
+    `email` VARCHAR(50) NOT NULL,
+    `password` VARCHAR(50) NOT NULL,
+    `telephone` VARCHAR(13) NOT NULL,
+    PRIMARY KEY(`id`)
+);
