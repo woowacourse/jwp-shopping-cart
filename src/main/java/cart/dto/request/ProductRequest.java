@@ -3,22 +3,20 @@ package cart.dto.request;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public class ProductRequest {
 
     @NotEmpty
-    private String name;
-    @NotNull
-    private BigDecimal price;
+    private final String name;
+    @Positive
+    private final BigDecimal price;
     @NotBlank
-    private String imageUrl;
+    private final String imageUrl;
 
-    public ProductRequest(String name, BigDecimal price, String imageUrl) {
+    public ProductRequest(final String name, final BigDecimal price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

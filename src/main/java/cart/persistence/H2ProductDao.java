@@ -18,7 +18,7 @@ public class H2ProductDao implements ProductDao {
     @Override
     public void create(Product product) {
         String sql = "INSERT INTO PRODUCT(name, image_url, price) VALUES(?, ?, ?)";
-        jdbcTemplate.update(sql, product.getName(), product.getImage(), product.getPrice());
+        jdbcTemplate.update(sql, product.getName(), product.getImageUrl(), product.getPrice());
     }
 
     @Override
@@ -38,7 +38,7 @@ public class H2ProductDao implements ProductDao {
         jdbcTemplate.update(sql,
                 product.getId(),
                 product.getName(),
-                product.getImage(),
+                product.getImageUrl(),
                 product.getPrice(),
                 product.getId()
         );

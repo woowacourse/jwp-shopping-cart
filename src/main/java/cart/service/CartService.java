@@ -34,7 +34,7 @@ public class CartService {
     public List<ProductResponse> readAll() {
         List<Product> products = productDao.findAll();
         return products.stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImage()))
+                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
                 .collect(Collectors.toList());
     }
 

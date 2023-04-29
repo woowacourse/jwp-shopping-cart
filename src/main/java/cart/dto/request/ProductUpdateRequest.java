@@ -12,13 +12,13 @@ import java.math.BigDecimal;
 public class ProductUpdateRequest {
 
     @NotNull
-    private Long id;
+    private final Long id;
     @NotEmpty
-    private String name;
+    private final String name;
     @NotNull
-    private BigDecimal price;
+    private final BigDecimal price;
     @NotBlank
-    private String imageUrl;
+    private final String imageUrl;
 
     public ProductUpdateRequest(Long id, String name, BigDecimal price, String imageUrl) {
         this.id = id;

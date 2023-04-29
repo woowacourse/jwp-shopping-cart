@@ -8,10 +8,10 @@ import java.math.BigDecimal;
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public class ProductResponse {
 
-    private Long id;
-    private String name;
-    private BigDecimal price;
-    private String imageUrl;
+    private final Long id;
+    private final String name;
+    private final BigDecimal price;
+    private final String imageUrl;
 
     public ProductResponse(Long id, String name, BigDecimal price, String imageUrl) {
         this.id = id;

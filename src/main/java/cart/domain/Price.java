@@ -15,6 +15,10 @@ public class Price {
     }
 
     private void validate(BigDecimal amount) {
+        if (amount == null) {
+            throw new IllegalArgumentException("가격은 1000원 이상, 100만원 이하만 가능합니다.");
+        }
+
         if (amount.compareTo(MIN_AMOUNT) < 0 || amount.compareTo(MAX_AMOUNT) > 0) {
             throw new IllegalArgumentException("가격은 1000원 이상, 100만원 이하만 가능합니다.");
         }
