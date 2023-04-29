@@ -25,7 +25,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity addItem(@RequestBody @Validated final ItemRequest itemRequest) {
+    public ResponseEntity<Void> addItem(@RequestBody @Validated final ItemRequest itemRequest) {
         itemService.saveItem(itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))
