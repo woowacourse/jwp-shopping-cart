@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.dao.UserDao;
 import cart.exception.user.SignInFailureException;
 import cart.service.dto.UserDto;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,5 +48,13 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.signIn(email, password))
                 .isInstanceOf(SignInFailureException.class)
                 .hasMessage("로그인에 실패했습니다.");
+    }
+
+    @Test
+    @DisplayName("모든 사용자를 찾는다.")
+    void findAllSuccess() {
+        List<UserDto> users = userService.findAll();
+
+        assertThat(users).hasSize(2);
     }
 }

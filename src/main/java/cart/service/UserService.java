@@ -4,8 +4,12 @@ import cart.dao.UserDao;
 import cart.domain.user.User;
 import cart.exception.user.SignInFailureException;
 import cart.service.dto.UserDto;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 @Transactional(readOnly = true)
 public class UserService {
 
@@ -13,8 +17,15 @@ public class UserService {
 
     private final UserDao userDao;
 
-    public UserService(final UserDao userDao) {
+    public UserService(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    public List<UserDto> findAll() {
+        return userDao.findAll()
+                .stream()
+                .map(UserDto::new)
+                .collect(Collectors.toList());
     }
 
     public UserDto signIn(String email, String password) {
