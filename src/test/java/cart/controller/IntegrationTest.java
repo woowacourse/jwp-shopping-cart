@@ -71,7 +71,7 @@ class IntegrationTest {
                 .body(updateProduct).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .patch("/admin/edit")
+                .put("/admin/edit")
                 .then().log().all()
                 .statusCode(200);
 

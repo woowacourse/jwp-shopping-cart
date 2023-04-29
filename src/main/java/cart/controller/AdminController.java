@@ -39,7 +39,7 @@ public class AdminController {
         return ResponseEntity.created(URI.create("/admin/" + id)).build();
     }
 
-    @PatchMapping("/edit")
+    @PutMapping("/edit")
     public ResponseEntity<Void> editProduct(@RequestBody Product product) {
         productRepository.update(product);
         return ResponseEntity.ok().build();
