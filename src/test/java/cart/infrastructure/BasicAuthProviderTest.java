@@ -1,11 +1,13 @@
-package cart.service;
+package cart.infrastructure;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import cart.exception.AuthenticationException;
+import cart.repository.MemberDao;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,27 +21,31 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.Base64Utils;
 
 @ExtendWith(MockitoExtension.class)
-class BasicAuthServiceTest {
+class BasicAuthProviderTest {
     @Mock
-    MemberService memberService;
+    MemberDao memberDao;
 
     @InjectMocks
-    BasicAuthService basicAuthService;
+    BasicAuthProvider basicAuthProvider;
 
     @Test
-    @DisplayName("Basic 형식의 토큰이 입력되면 정상적으로 사용자의 ID가 반환되어야 한다.")
-    void resolveMemberId_success() {
+    @DisplayName("Basic 형식의 토큰이 입력되면 정상적으로 사용자의 정보가 반환되어야 한다.")
+    void resolveUser_success() {
         // given
         String token = "Basic Z2xlbmZpZGRpY2hAbmF2ZXIuY29tOjEyMzQ1Ng==";
-        given(memberService.findIdByEmailAndPassword("glenfiddich@naver.com", "123456"))
-                .willReturn(1L);
+        given(memberDao.findByEmailAndPassword("glenfiddich@naver.com", "123456"))
+                .willReturn(Optional.of(1L));
 
         // when
-        Long memberId = basicAuthService.resolveMemberId(token);
+        User user = basicAuthProvider.resolveUser(token);
 
         // then
-        assertThat(memberId)
+        assertThat(user.getId())
                 .isEqualTo(1L);
+        assertThat(user.getEmail())
+                .isEqualTo("glenfiddich@naver.com");
+        assertThat(user.getPassword())
+                .isEqualTo("123456");
     }
 
     @ParameterizedTest
@@ -50,7 +56,7 @@ class BasicAuthServiceTest {
         String token = input + " Z2xlbmZpZGRpY2hAbmF2ZXIuY29tOjEyMzQ1Ng==";
 
         // expect
-        assertThatThrownBy(() -> basicAuthService.resolveMemberId(token))
+        assertThatThrownBy(() -> basicAuthProvider.resolveUser(token))
                 .isInstanceOf(AuthenticationException.class)
                 .hasMessage("베이직 형식의 토큰이 아닙니다.");
     }
@@ -63,7 +69,7 @@ class BasicAuthServiceTest {
         String token = Base64Utils.encodeToString(input.getBytes(StandardCharsets.UTF_8));
 
         // expect
-        assertThatThrownBy(() -> basicAuthService.resolveMemberId("Basic " + token))
+        assertThatThrownBy(() -> basicAuthProvider.resolveUser("Basic " + token))
                 .isInstanceOf(AuthenticationException.class)
                 .hasMessage("올바른 형식의 토큰이 아닙니다.");
     }
@@ -74,7 +80,7 @@ class BasicAuthServiceTest {
     @DisplayName("인증 토큰이 비어있으면 예외가 발생해야 한다.")
     void resolveMemberId_blankToken(String token) {
         // expect
-        assertThatThrownBy(() -> basicAuthService.resolveMemberId(token))
+        assertThatThrownBy(() -> basicAuthProvider.resolveUser(token))
                 .isInstanceOf(AuthenticationException.class)
                 .hasMessage("인증 토큰이 비어있습니다.");
     }

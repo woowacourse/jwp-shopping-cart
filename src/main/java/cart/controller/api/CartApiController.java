@@ -6,10 +6,10 @@ import cart.dto.request.cart.CartDeleteRequest;
 import cart.dto.response.Response;
 import cart.dto.response.ResultResponse;
 import cart.dto.response.SimpleResponse;
-import cart.service.BasicAuthService;
+import cart.infrastructure.Principal;
+import cart.infrastructure.User;
 import cart.service.CartService;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,37 +22,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/cart")
 public class CartApiController {
-    private static final String AUTHORIZATION_HEADER = "authorization";
     private final CartService cartService;
-    private final BasicAuthService basicAuthService;
 
-    public CartApiController(CartService cartService, BasicAuthService basicAuthService) {
+    public CartApiController(CartService cartService) {
         this.cartService = cartService;
-        this.basicAuthService = basicAuthService;
     }
 
     @PostMapping
-    public ResponseEntity<Response> addProductToCart(@RequestBody @Valid CartAddRequest cartAddRequest,
-                                                     HttpServletRequest request) {
-        Long memberId = basicAuthService.resolveMemberId(request.getHeader(AUTHORIZATION_HEADER));
-        cartService.addToCart(memberId, cartAddRequest.getProductId());
+    public ResponseEntity<Response> addProductToCart(@RequestBody @Valid CartAddRequest request, @Principal User user) {
+        cartService.addToCart(user.getId(), request.getProductId());
         return ResponseEntity.ok()
                 .body(SimpleResponse.ok("장바구니에 상품이 담겼습니다."));
     }
 
     @GetMapping
-    public ResponseEntity<Response> findAllProductsByMemberId(HttpServletRequest request) {
-        Long memberId = basicAuthService.resolveMemberId(request.getHeader(AUTHORIZATION_HEADER));
-        List<CartProductDto> allProducts = cartService.findAllProducts(memberId);
+    public ResponseEntity<Response> findAllProductsByMemberId(@Principal User user) {
+        List<CartProductDto> allProducts = cartService.findAllProducts(user.getId());
         return ResponseEntity.ok()
                 .body(ResultResponse.ok(allProducts.size() + "개의 상품이 조회되었습니다.", allProducts));
     }
 
     @DeleteMapping
-    public ResponseEntity<Response> deleteProductToCart(@RequestBody @Valid CartDeleteRequest cartDeleteRequest,
-                                                        HttpServletRequest request) {
-        Long memberId = basicAuthService.resolveMemberId(request.getHeader(AUTHORIZATION_HEADER));
-        cartService.deleteProduct(memberId, cartDeleteRequest.getCartId());
+    public ResponseEntity<Response> deleteProductToCart(@RequestBody @Valid CartDeleteRequest request,
+                                                        @Principal User user) {
+        cartService.deleteProduct(user.getId(), request.getCartId());
         return ResponseEntity.ok()
                 .body(SimpleResponse.ok("장바구니에 상품이 삭제되었습니다."));
     }

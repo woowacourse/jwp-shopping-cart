@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.controller.MockBasicAuthProviderConfig;
 import cart.dto.member.MemberDto;
 import cart.dto.request.member.MemberSignupRequest;
 import cart.exception.DuplicateEmailException;
@@ -23,10 +24,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(MemberApiController.class)
+@Import(MockBasicAuthProviderConfig.class)
 class MemberApiControllerTest {
 
     @Autowired

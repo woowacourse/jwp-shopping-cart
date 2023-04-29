@@ -1,35 +1,39 @@
 package cart.controller.api;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.BDDMockito.willReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.controller.MockBasicAuthProviderConfig;
 import cart.dto.cart.CartProductDto;
 import cart.dto.product.ProductDto;
 import cart.dto.request.cart.CartAddRequest;
 import cart.dto.request.cart.CartDeleteRequest;
+import cart.infrastructure.BasicAuthProvider;
+import cart.infrastructure.User;
 import cart.repository.CartDao;
 import cart.repository.ProductDao;
-import cart.service.BasicAuthService;
 import cart.service.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(CartApiController.class)
+@Import(MockBasicAuthProviderConfig.class)
 class CartApiControllerTest {
     private static final String AUTHORIZATION_HEADER = "authorization";
     private static final String TOKEN = "Basic Z2xlbmZpZGRpY2hAbmF2ZXIuY29tOjEyMzQ1Ng==";
@@ -40,9 +44,6 @@ class CartApiControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @MockBean
-    BasicAuthService basicAuthService;
-
     @SpyBean
     CartService cartService;
 
@@ -52,14 +53,20 @@ class CartApiControllerTest {
     @MockBean
     ProductDao productDao;
 
+    @Autowired
+    BasicAuthProvider basicAuthProvider;
+
+    @BeforeEach
+    void setUp() {
+        given(basicAuthProvider.resolveUser(anyString()))
+                .willReturn(new User(1L, "glenfiddich@naver.com", "123456"));
+    }
 
     @Test
     @DisplayName("/api/cart로 POST 요청과 상품의 ID를 보내면 HTTP 200 코드와 장바구니에 상품이 담겨야 한다.")
     void addProductToCart_success() throws Exception {
         // given
         CartAddRequest request = new CartAddRequest(1L);
-        willReturn(1L).given(basicAuthService)
-                .resolveMemberId(any());
         willDoNothing().given(cartService)
                 .addToCart(1L, 1L);
 
@@ -78,8 +85,6 @@ class CartApiControllerTest {
     void addProductToCart_invalidProduct() throws Exception {
         // given
         CartAddRequest request = new CartAddRequest(1L);
-        willReturn(1L).given(basicAuthService)
-                .resolveMemberId(any());
         given(productDao.existsById(1L))
                 .willReturn(false);
 
@@ -97,9 +102,6 @@ class CartApiControllerTest {
     @DisplayName("/api/cart로 GET 요청을 보내면 HTTP 200 코드와 함께 장바구니의 상품이 조회되어야 한다.")
     void findAllProductsByMemberId_success() throws Exception {
         // given
-        willReturn(1L).given(basicAuthService)
-                .resolveMemberId(any());
-
         List<CartProductDto> productDtos = List.of(
                 new CartProductDto(1L, new ProductDto(1L, "글렌피딕", 100_000, "image1")),
                 new CartProductDto(2L, new ProductDto(1L, "글렌피딕", 100_000, "image1")),
@@ -139,8 +141,6 @@ class CartApiControllerTest {
     void deleteProductToCart_success() throws Exception {
         // given
         CartDeleteRequest request = new CartDeleteRequest(1L);
-        willReturn(1L).given(basicAuthService)
-                .resolveMemberId(any());
         willDoNothing().given(cartService)
                 .deleteProduct(1L, 1L);
 
@@ -159,8 +159,6 @@ class CartApiControllerTest {
     void deleteProductToCart_invalidProduct() throws Exception {
         // given
         CartDeleteRequest request = new CartDeleteRequest(1L);
-        willReturn(1L).given(basicAuthService)
-                .resolveMemberId(any());
         given(productDao.existsById(1L))
                 .willReturn(false);
 
