@@ -25,9 +25,11 @@ public class InMemoryProductDaoTest {
     void 엔티티를_저장하고_조회한다() {
         final ProductEntity firstProductEntity = new ProductEntity("kokodak", "localhost:8080/test", 1000);
         final ProductEntity secondProductEntity = new ProductEntity("hardy", "localhost:8080/test", 1000);
+
         inMemoryProductDao.save(firstProductEntity);
         inMemoryProductDao.save(secondProductEntity);
         final List<ProductEntity> products = inMemoryProductDao.findAll();
+
         SoftAssertions softAssertions = new SoftAssertions();
         softAssertions.assertThat(products.size()).isEqualTo(2);
         softAssertions.assertThat(products.get(0).getName()).isEqualTo(firstProductEntity.getName());
@@ -39,9 +41,11 @@ public class InMemoryProductDaoTest {
     void 엔티티를_업데이트한다() {
         final ProductEntity productEntity = new ProductEntity("kokodak", "localhost:8080/test", 1000);
         inMemoryProductDao.save(productEntity);
+
         final ProductEntity updatedProductEntity = new ProductEntity(1L, "hardy", "localhost:8080/test", 2000);
         inMemoryProductDao.update(updatedProductEntity);
         final List<ProductEntity> products = inMemoryProductDao.findAll();
+
         assertThat(products.get(0).getName()).isEqualTo(updatedProductEntity.getName());
     }
 
@@ -49,7 +53,9 @@ public class InMemoryProductDaoTest {
     void 엔티티를_삭제한다() {
         final ProductEntity productEntity = new ProductEntity("kokodak", "localhost:8080/test", 1000);
         inMemoryProductDao.save(productEntity);
+
         inMemoryProductDao.delete(1L);
+
         assertThat(inMemoryProductDao.findAll()).isEmpty();
     }
 }
