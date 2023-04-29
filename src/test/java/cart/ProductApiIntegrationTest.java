@@ -1,10 +1,15 @@
 package cart;
 
+import cart.domain.product.Money;
+import cart.domain.product.ProductImageUrl;
+import cart.domain.product.ProductName;
+import cart.dto.request.ProductAddRequest;
+import cart.dto.request.ProductUpdateRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.json.JSONException;
-import org.json.JSONObject;
+import io.restassured.http.ContentType;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,11 +23,9 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = "/schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -41,95 +44,158 @@ public class ProductApiIntegrationTest {
 
     @Test
     @DisplayName("상품이 정상적으로 추가되었을 때 OK 응답 코드를 반환한다")
-    void create() throws JSONException {
-        // given
-        JSONObject productAddRequest = parseJSON(Map.of("name", "총30자길이의문자열입니다____________________", "image-url", "a".repeat(1000), "price", 0));
+    void add() throws JsonProcessingException {
+        final ProductAddRequest productAddRequest = new ProductAddRequest("a".repeat(ProductName.MAX_LENGTH), "a".repeat(ProductImageUrl.MAX_LENGTH), Money.MAX_AMOUNT);
 
-        // when
-        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(productAddRequest.toString()).when().post("/product").then().extract();
-
-        // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        var response = given().contentType(ContentType.JSON)
+                              .body(toJson(productAddRequest))
+                              .when()
+                              .post("/products")
+                              .then()
+                              .assertThat()
+                              .statusCode(HttpStatus.OK.value());
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {" ", "", "일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일"})
-    @DisplayName("상품이 추가 실패 때 BAD REQUEST 응답 코드를 반환한다")
-    void createFailName(String name) throws JSONException {
-        JSONObject productAddRequest = parseJSON(Map.of(
-                "name", name,
-                "image-url", "url",
-                "price", 1000
-        ));
+    @ParameterizedTest(name = "상품 이름이 공백만으로 구성되면 BAD REQUEST 응답 코드를 반환한다")
+    @ValueSource(strings = {" ", ""})
+    void addFailShortName(String name) throws JsonProcessingException {
+        final ProductAddRequest productAddRequest = new ProductAddRequest(name, "a".repeat(ProductImageUrl.MAX_LENGTH), Money.MAX_AMOUNT);
 
-        ExtractableResponse<Response> response = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(productAddRequest.toString()).when().post("/product").then().extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        var response = given().contentType(ContentType.JSON)
+                              .body(toJson(productAddRequest))
+                              .when()
+                              .post("/products")
+                              .then()
+                              .assertThat()
+                              .statusCode(HttpStatus.BAD_REQUEST.value())
+                              .body("message", Matchers.containsString("이름"));
     }
 
     @Test
-    @DisplayName("상품이 추가 실패 때 BAD REQUEST 응답 코드를 반환한다")
-    void createFailUrl() throws JSONException {
-        JSONObject productAddRequest = parseJSON(Map.of(
-                "name", "name",
-                "image-url", "a".repeat(1001),
-                "price", 1000
-        ));
+    @DisplayName("상품 이름 길이가 기준을 넘으면 BAD REQUEST 응답 코드를 반환한다")
+    void addFailLongName() throws JsonProcessingException {
+        final ProductAddRequest productAddRequest = new ProductAddRequest("a".repeat(ProductName.MAX_LENGTH + 1), "a".repeat(ProductImageUrl.MAX_LENGTH), Money.MAX_AMOUNT);
 
-        ExtractableResponse<Response> response = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(productAddRequest.toString()).when().post("/product").then().extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                              .body(toJson(productAddRequest))
+                              .when()
+                              .post("/products")
+                              .then()
+                              .assertThat()
+                              .statusCode(HttpStatus.BAD_REQUEST.value())
+                              .body("message", Matchers.containsString("이름"));
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "상품 URL이 공백만으로 구성되면 BAD REQUEST 응답 코드를 반환한다")
+    @ValueSource(strings = {" ", ""})
+    void addFailShortUrl(String url) throws JsonProcessingException {
+        final ProductAddRequest productAddRequest = new ProductAddRequest("a".repeat(ProductName.MAX_LENGTH), url, Money.MAX_AMOUNT);
+
+        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                              .body(toJson(productAddRequest))
+                              .when()
+                              .post("/products")
+                              .then()
+                              .assertThat()
+                              .statusCode(HttpStatus.BAD_REQUEST.value())
+                              .body("message", Matchers.containsStringIgnoringCase("url"));
+    }
+
+    @Test
+    @DisplayName("상품 사진 url 길이가 기준을 넘으면 BAD REQUEST 응답 코드를 반환한다")
+    void addFailLongUrl() throws JsonProcessingException {
+        final ProductAddRequest productAddRequest = new ProductAddRequest("a".repeat(ProductName.MAX_LENGTH), "a".repeat(ProductImageUrl.MAX_LENGTH + 1), Money.MAX_AMOUNT);
+
+        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                              .body(toJson(productAddRequest))
+                              .when()
+                              .post("/products")
+                              .then()
+                              .assertThat()
+                              .statusCode(HttpStatus.BAD_REQUEST.value())
+                              .body("message", Matchers.containsStringIgnoringCase("url"));
+    }
+
+    @ParameterizedTest(name = "상품이 가격이 허용 범위 밖이면 BAD REQUEST 응답 코드를 반환한다")
     @ValueSource(ints = {-1, 1_000_000_001})
-    @DisplayName("상품이 추가 실패 때 BAD REQUEST 응답 코드를 반환한다")
-    void createFailPrice(int price) throws JSONException {
-        JSONObject productAddRequest = parseJSON(Map.of(
-                "name", "name",
-                "image-url", "url",
-                "price", price
-        ));
+    void addFailPrice(int price) throws JsonProcessingException {
+        final ProductAddRequest productAddRequest = new ProductAddRequest("a".repeat(ProductName.MAX_LENGTH), "a".repeat(ProductImageUrl.MAX_LENGTH), price);
 
-        ExtractableResponse<Response> response = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(productAddRequest.toString()).when().post("/product").then().extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                              .body(toJson(productAddRequest))
+                              .when()
+                              .post("/products")
+                              .then()
+                              .assertThat()
+                              .statusCode(HttpStatus.BAD_REQUEST.value())
+                              .body("message", containsString("금액"));
     }
 
     @Test
-    void update() throws JSONException {
-        int updateCount = jdbcTemplate.update(
-                "INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000)");
-        assertThat(updateCount).isEqualTo(1);
+    @DisplayName("상품 수정이 성공하면 OK 상태 코드를 반환한다.")
+    void update() throws JsonProcessingException {
+        int insertCount = jdbcTemplate.update("INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.com', 1000)");
+        assertThat(insertCount).isEqualTo(1);
 
-        JSONObject productUpdateRequest = parseJSON(Map.of(
-                "id", 1,
-                "name", "도이",
-                "image-url", "doy.png",
-                "price", 10000
-        ));
+        final ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "a".repeat(ProductName.MAX_LENGTH), "a".repeat(ProductImageUrl.MAX_LENGTH), Money.MAX_AMOUNT);
 
-        ExtractableResponse<Response> response = given().contentType(MediaType.APPLICATION_JSON_VALUE).body(productUpdateRequest.toString()).when().put("/product").then().extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                              .body(toJson(productUpdateRequest))
+                              .when()
+                              .put("/products")
+                              .then()
+                              .assertThat()
+                              .statusCode(HttpStatus.OK.value());
     }
 
     @Test
+    @DisplayName("존재하지 않는 상품을 요청하면 NOT_FOUND 상태 코드를 반환한다.")
+    void updateFailNoId() throws JsonProcessingException {
+        int insertCount = jdbcTemplate.update("INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.com', 1000)");
+        assertThat(insertCount).isEqualTo(1);
+
+        final ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(2L, "a".repeat(ProductName.MAX_LENGTH), "a".repeat(ProductImageUrl.MAX_LENGTH), Money.MAX_AMOUNT);
+
+        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                              .body(toJson(productUpdateRequest))
+                              .when()
+                              .put("/products")
+                              .then()
+                              .assertThat()
+                              .statusCode(HttpStatus.NOT_FOUND.value())
+                              .body("message", Matchers.containsStringIgnoringCase("id"));
+    }
+
+    @Test
+    @DisplayName("상품 삭제가 성공하면 OK 상태 코드를 반환한다.")
     void delete() {
-        int updateCount = jdbcTemplate.update(
-                "INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000)");
-        assertThat(updateCount).isEqualTo(1);
+        int insertCount = jdbcTemplate.update("INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.com', 1000)");
+        assertThat(insertCount).isEqualTo(1);
 
-        ExtractableResponse<Response> response = given().when().delete("/product/1").then().extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        var response = given().when()
+                              .delete("/products/1")
+                              .then()
+                              .assertThat()
+                              .statusCode(HttpStatus.OK.value());
     }
 
-    private JSONObject parseJSON(Map<String, Object> parameters) throws JSONException {
-        JSONObject parsed = new JSONObject();
-        for (Entry<String, Object> entry : parameters.entrySet()) {
-            parsed.put(entry.getKey(), entry.getValue());
-        }
-        return parsed;
+    @Test
+    @DisplayName("존재하지 않는 상품을 삭제하면 NOT_FOUND 상태 코드를 반환한다.")
+    void deleteFailNoId() {
+        int insertCount = jdbcTemplate.update("INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.com', 1000)");
+        assertThat(insertCount).isEqualTo(1);
+
+        var response = given().when()
+                              .delete("/products/" + 2)
+                              .then()
+                              .assertThat()
+                              .statusCode(HttpStatus.NOT_FOUND.value())
+                              .body("message", Matchers.containsStringIgnoringCase("id"));
+    }
+
+    private String toJson(final Object object) throws JsonProcessingException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+
+        return objectMapper.writeValueAsString(object);
     }
 }
