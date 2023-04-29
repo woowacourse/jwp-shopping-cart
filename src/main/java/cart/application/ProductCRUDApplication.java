@@ -20,7 +20,7 @@ public class ProductCRUDApplication {
     }
 
     public void create(ProductDto productDto) {
-        Product product = ProductConverter.toProduct(productDto);
+        Product product = ProductConverter.toProductWithoutId(productDto);
         productCRUDService.create(product);
     }
 

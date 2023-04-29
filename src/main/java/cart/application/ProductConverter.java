@@ -8,7 +8,7 @@ import cart.presentation.dto.ProductDto;
 
 public class ProductConverter {
 
-    public static Product toProduct(ProductDto productDto) {
+    public static Product toProductWithoutId(ProductDto productDto) {
         return new Product(
                 IdSequencer.get(),
                 new ProductName(productDto.getName()),
