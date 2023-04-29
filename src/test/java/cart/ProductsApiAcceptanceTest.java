@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.util.stream.Stream;
 
@@ -33,13 +35,15 @@ class ProductsApiAcceptanceTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert simpleJdbcInsert;
 
     @BeforeEach
     void setPort() {
         RestAssured.port = port;
 
-        jdbcTemplate.execute("truncate table products");
-        jdbcTemplate.execute("alter table products alter id restart with 1");
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("products")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Test
@@ -78,30 +82,33 @@ class ProductsApiAcceptanceTest {
     @Test
     @DisplayName("상품 정보 변경 성공 테스트")
     void updateProductSuccess_test() {
-        insertTestData();
+        final long id = insertTestData();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new ProductRequest("달리", PRICE, IMAGE))
-                .when().put("/products/1")
+                .when().put("/products/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
-    private void insertTestData() {
-        final String sql = "insert into products(product_name, product_price, product_image) values (?, ?, ?)";
-        jdbcTemplate.update(sql, NAME, PRICE, IMAGE);
+    private long insertTestData() {
+        final MapSqlParameterSource parameterMap = new MapSqlParameterSource()
+                .addValue("product_name", NAME)
+                .addValue("product_price", PRICE)
+                .addValue("product_image", IMAGE);
+        return simpleJdbcInsert.executeAndReturnKey(parameterMap).longValue();
     }
 
     @ParameterizedTest(name = "상품 정보 변경 시 {0} 실패 테스트")
     @MethodSource("invalidParameterProvider")
     void updateProductFail_test(final String wrongCase, final ProductRequest requestBody, final String errorMessage) {
-        insertTestData();
+        final long id = insertTestData();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
-                .when().put("/products/1")
+                .when().put("/products/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is(errorMessage));
@@ -110,23 +117,25 @@ class ProductsApiAcceptanceTest {
     @Test
     @DisplayName("없는 상품 정보 변경 시 실패 테스트")
     void nonProductUpdateFail_test(){
+        final long impossibleId = 0;
+
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new ProductRequest("달리", PRICE, IMAGE))
-                .when().put("/products/1")
+                .when().put("/products/" + impossibleId)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("해당 상품이 없습니다. 입략된 상품 id : 1"));
+                .body("message", is("해당 상품이 없습니다. 입략된 상품 id : " + impossibleId));
     }
 
     @Test
     @DisplayName("상품 제거 성공 테스트")
     void deleteProductSuccess_test(){
-        insertTestData();
+        final long id = insertTestData();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .when().delete("/products/1")
+                .when().delete("/products/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
