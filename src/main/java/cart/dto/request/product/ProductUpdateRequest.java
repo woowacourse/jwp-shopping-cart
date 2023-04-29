@@ -21,6 +21,10 @@ public class ProductUpdateRequest {
     private final int price;
 
     @NotBlank(message = "상품의 이미지는 비어있으면 안 됩니다.")
+    @Length(
+            max = 100,
+            message = "이미지 URL의 길이는 {max}자리 보다 작아야 합니다."
+    )
     private final String imageUrl;
 
     public ProductUpdateRequest(String name, int price, String imageUrl) {
