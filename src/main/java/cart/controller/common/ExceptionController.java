@@ -3,10 +3,12 @@ package cart.controller.common;
 import cart.dto.response.ErrorResponse;
 import cart.dto.response.Response;
 import cart.dto.response.SimpleResponse;
+import cart.exception.AuthenticationException;
 import cart.exception.DuplicateEmailException;
 import cart.exception.ProductNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -47,5 +49,12 @@ public class ExceptionController {
         errorResponse.addValidation("email", e.getMessage());
         return ResponseEntity.badRequest()
                 .body(errorResponse);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Response> handle(AuthenticationException e) {
+        Response response = new SimpleResponse("401", e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(response);
     }
 }
