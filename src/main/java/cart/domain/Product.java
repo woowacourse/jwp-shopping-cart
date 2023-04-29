@@ -1,20 +1,41 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class Product {
     private final String name;
     private final int price;
     private final String imageUrl;
 
     public Product(String name, int price, String imageUrl) {
+        validate(name, price, imageUrl);
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    private Product(Builder builder) {
-        name = builder.name;
-        price = builder.price;
-        imageUrl = builder.imageUrl;
+    private void validate(String name, int price, String imageUrl) {
+        validateName(name);
+        validatePrice(price);
+        validateImageUrl(imageUrl);
+    }
+
+    private void validateName(String name) {
+        if (Objects.isNull(name) || name.isBlank()) {
+            throw new IllegalArgumentException("상품의 이름은 빈 값이 될 수 없습니다.");
+        }
+    }
+
+    private void validatePrice(int price) {
+        if (price <= 0) {
+            throw new IllegalArgumentException("상품의 가격은 0 이하 일 수 없습니다.");
+        }
+    }
+
+    private void validateImageUrl(String imageUrl) {
+        if (Objects.isNull(imageUrl) || imageUrl.isBlank()) {
+            throw new IllegalArgumentException("상품의 이미지 URL은 빈 값이 될 수 없습니다.");
+        }
     }
 
     public String getName() {
@@ -57,7 +78,7 @@ public class Product {
         }
 
         public Product build() {
-            return new Product(this);
+            return new Product(name, price, imageUrl);
         }
     }
 }
