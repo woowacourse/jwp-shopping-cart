@@ -39,8 +39,8 @@ public class MemberDao {
 
     private RowMapper<MemberEntity> memberRowMapper() {
         return (rs, rowNum) -> new MemberEntity(
-                rs.getLong(1),
-                rs.getString(2),
-                rs.getString(3));
+                rs.getLong("id"),
+                rs.getString("email"),
+                rs.getString("password"));
     }
 }

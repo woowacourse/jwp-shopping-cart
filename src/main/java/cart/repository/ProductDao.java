@@ -40,10 +40,10 @@ public class ProductDao {
 
     private RowMapper<ProductEntity> productRowMapper() {
         return (rs, rowNum) -> ProductEntity.Builder.builder()
-                .id(rs.getLong(1))
-                .name(rs.getString(2))
-                .price(rs.getInt(3))
-                .imageUrl(rs.getString(4))
+                .id(rs.getLong("id"))
+                .name(rs.getString("name"))
+                .price(rs.getInt("price"))
+                .imageUrl(rs.getString("image_url"))
                 .build();
     }
 
