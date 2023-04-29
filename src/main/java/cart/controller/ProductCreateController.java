@@ -27,7 +27,7 @@ public class ProductCreateController {
                 productRequest.getPrice());
         final ProductResponse productResponse = ProductResponse.from(product);
 
-        return ResponseEntity.created(URI.create("/products/" + product.getProductId().getValue()))
+        return ResponseEntity.created(URI.create("/products/" + product.getId()))
                 .body(productResponse);
     }
 }

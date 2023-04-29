@@ -26,7 +26,7 @@ class ProductDeleteServiceTest {
     void 제거_테스트() {
         //given
         final Product product = stubProductRepository.save(ODO_PRODUCT);
-        final long productId = product.getProductId().getValue();
+        final long productId = product.getId();
 
         //when
         productDeleteService.delete(productId);

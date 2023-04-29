@@ -28,7 +28,7 @@ class ProductCreateServiceTest {
 
         final Optional<Product> product = stubProductRepository.findById(1L);
         assertAll(
-                () -> assertThat(result.getProductId().getValue()).isPositive(),
+                () -> assertThat(result.getId()).isPositive(),
                 () -> assertThat(product).isPresent()
         );
     }

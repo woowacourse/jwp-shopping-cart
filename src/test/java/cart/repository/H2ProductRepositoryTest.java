@@ -31,7 +31,7 @@ class H2ProductRepositoryTest {
     void save() {
         final Product result = h2ProductRepository.save(ODO_PRODUCT);
 
-        assertThat(result.getProductId().getValue()).isPositive();
+        assertThat(result.getId()).isPositive();
     }
 
     @Nested
@@ -41,7 +41,7 @@ class H2ProductRepositoryTest {
 
         @BeforeEach
         void setUp() {
-            productId = h2ProductRepository.save(ODO_PRODUCT).getProductId().getValue();
+            productId = h2ProductRepository.save(ODO_PRODUCT).getId();
         }
 
         @Test
@@ -50,10 +50,10 @@ class H2ProductRepositoryTest {
             final Product result = h2ProductRepository.update(product);
 
             assertAll(
-                    () -> assertThat(result.getProductId().getValue()).isEqualTo(productId),
-                    () -> assertThat(result.getProductName().getValue()).isEqualTo("누누"),
-                    () -> assertThat(result.getProductImage().getValue()).isEqualTo("newUrl"),
-                    () -> assertThat(result.getProductPrice().getValue()).isEqualTo(3)
+                    () -> assertThat(result.getId()).isEqualTo(productId),
+                    () -> assertThat(result.getName().getValue()).isEqualTo("누누"),
+                    () -> assertThat(result.getImage().getValue()).isEqualTo("newUrl"),
+                    () -> assertThat(result.getPrice().getValue()).isEqualTo(3)
             );
         }
 
@@ -69,10 +69,10 @@ class H2ProductRepositoryTest {
 
             assertAll(
                     () -> assertThat(result).isPresent(),
-                    () -> assertThat(result.get().getProductId().getValue()).isEqualTo(productId),
-                    () -> assertThat(result.get().getProductName().getValue()).isEqualTo("오도"),
-                    () -> assertThat(result.get().getProductImage().getValue()).isEqualTo("naver.com"),
-                    () -> assertThat(result.get().getProductPrice().getValue()).isEqualTo(1)
+                    () -> assertThat(result.get().getId()).isEqualTo(productId),
+                    () -> assertThat(result.get().getName().getValue()).isEqualTo("오도"),
+                    () -> assertThat(result.get().getImage().getValue()).isEqualTo("naver.com"),
+                    () -> assertThat(result.get().getPrice().getValue()).isEqualTo(1)
             );
         }
 

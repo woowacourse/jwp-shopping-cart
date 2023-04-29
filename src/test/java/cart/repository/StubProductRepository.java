@@ -25,7 +25,7 @@ public class StubProductRepository implements ProductRepository {
 
     @Override
     public Product update(final Product product) {
-        final Long id = product.getProductId().getValue();
+        final Long id = product.getId();
         if (id == null || productMap.get(id) == null) {
             return product;
         }

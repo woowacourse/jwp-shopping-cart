@@ -45,30 +45,30 @@ class ProductUpdateServiceTest {
 
             @BeforeEach
             void setUp() {
-                result = productUpdateService.update(product.getProductId().getValue(), "누누", "url", 2);
+                result = productUpdateService.update(product.getId(), "누누", "url", 2);
             }
 
             @Test
             @DisplayName("누누를 리턴한다")
             void itReturnNunu() {
                 assertAll(
-                        () -> assertThat(result.getProductId().getValue()).isPositive(),
-                        () -> assertThat(result.getProductName().getValue()).isEqualTo("누누"),
-                        () -> assertThat(result.getProductImage().getValue()).isEqualTo("url"),
-                        () -> assertThat(result.getProductPrice().getValue()).isEqualTo(2)
+                        () -> assertThat(result.getId()).isPositive(),
+                        () -> assertThat(result.getName().getValue()).isEqualTo("누누"),
+                        () -> assertThat(result.getImage().getValue()).isEqualTo("url"),
+                        () -> assertThat(result.getPrice().getValue()).isEqualTo(2)
                 );
             }
 
             @Test
             @DisplayName("누누로 변경된다")
             void itUpdateToNunu() {
-                final Optional<Product> updatedProduct = stubProductRepository.findById(product.getProductId().getValue());
+                final Optional<Product> updatedProduct = stubProductRepository.findById(product.getId());
                 assertAll(
                         () -> assertThat(updatedProduct).isPresent(),
-                        () -> assertThat(updatedProduct.get().getProductId().getValue()).isPositive(),
-                        () -> assertThat(updatedProduct.get().getProductName().getValue()).isEqualTo("누누"),
-                        () -> assertThat(updatedProduct.get().getProductImage().getValue()).isEqualTo("url"),
-                        () -> assertThat(updatedProduct.get().getProductPrice().getValue()).isEqualTo(2)
+                        () -> assertThat(updatedProduct.get().getId()).isPositive(),
+                        () -> assertThat(updatedProduct.get().getName().getValue()).isEqualTo("누누"),
+                        () -> assertThat(updatedProduct.get().getImage().getValue()).isEqualTo("url"),
+                        () -> assertThat(updatedProduct.get().getPrice().getValue()).isEqualTo(2)
                 );
             }
         }
