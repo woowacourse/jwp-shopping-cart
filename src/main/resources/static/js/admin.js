@@ -46,22 +46,20 @@ form.addEventListener('submit', (event) => {
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
-    axios.request({
-        url: '',
-    }).then((response) => {
-        window.location.reload();
-    }).catch((error) => {
+    axios.post('/admin', product)
+        .then((response) => {
+            window.location.reload();
+        }).catch((error) => {
         console.error(error);
     });
 };
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
-
-    axios.request({
-        url: '',
-    }).then((response) => {
+    const {id} = product;
+    axios.put(
+        '/admin', product
+    ).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
@@ -70,11 +68,10 @@ const updateProduct = (product) => {
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
-    axios.request({
-        url: '',
-    }).then((response) => {
-        window.location.reload();
-    }).catch((error) => {
+    axios.delete(`/admin/${id}`)
+        .then((response) => {
+            window.location.reload();
+        }).catch((error) => {
         console.error(error);
     });
 };
