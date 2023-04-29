@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.service.CartService;
-import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductRegisterRequest;
 import cart.service.dto.ProductResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
@@ -73,7 +73,7 @@ public class AdminControllerUnitTest {
     void registerProduct() throws Exception {
         // given
         String requestString = objectMapper.writeValueAsString(cuteSeonghaDoll);
-        given(cartService.save(any(ProductRequest.class))).willReturn(1L);
+        given(cartService.save(any(ProductRegisterRequest.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")
@@ -114,7 +114,7 @@ public class AdminControllerUnitTest {
                 new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
                         "CuteSeonghaDoll", price);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRequest.class))).willReturn(1L);
+        given(cartService.save(any(ProductRegisterRequest.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")
@@ -136,7 +136,7 @@ public class AdminControllerUnitTest {
                 new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
                         name, 24000);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRequest.class))).willReturn(1L);
+        given(cartService.save(any(ProductRegisterRequest.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")
@@ -157,7 +157,7 @@ public class AdminControllerUnitTest {
         ProductResponse wrongCuteSeonghaDoll =
                 new ProductResponse(1, imgUrl, "cuteSeonghaDoll", 24000);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRequest.class))).willReturn(1L);
+        given(cartService.save(any(ProductRegisterRequest.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")

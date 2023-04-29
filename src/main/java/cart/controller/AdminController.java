@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.service.CartService;
-import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductRegisterRequest;
 import cart.service.dto.ProductResponse;
 import java.net.URI;
 import java.util.List;
@@ -35,15 +35,15 @@ public class AdminController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Void> registerProduct(@RequestBody @Valid ProductRequest productRequest) {
-        long savedId = cartService.save(productRequest);
+    public ResponseEntity<Void> registerProduct(@RequestBody @Valid ProductRegisterRequest productRegisterRequest) {
+        long savedId = cartService.save(productRegisterRequest);
         return ResponseEntity.created(URI.create("/admin/product/" + savedId)).build();
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<Void> modifyProduct(@RequestBody @Valid ProductRequest productRequest,
+    public ResponseEntity<Void> modifyProduct(@RequestBody @Valid ProductRegisterRequest productRegisterRequest,
                                               @PathVariable long id) {
-        cartService.modifyById(productRequest, id);
+        cartService.modifyById(productRegisterRequest, id);
         return ResponseEntity.ok().build();
 
     }

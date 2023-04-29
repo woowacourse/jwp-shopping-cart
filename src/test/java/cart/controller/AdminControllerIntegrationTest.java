@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductRegisterRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +47,7 @@ class AdminControllerIntegrationTest {
     void registerProduct() {
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDollFromController",
+                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDollFromController",
                         25000))
                 .when()
                 .post("/admin/product")
@@ -62,7 +62,7 @@ class AdminControllerIntegrationTest {
         String baseUrl = "/admin/product/";
         //given
         String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
+                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
                         "CuteSeonghaDoll", 25000))
                 .when()
                 .post(baseUrl)
@@ -72,7 +72,7 @@ class AdminControllerIntegrationTest {
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/70891072?v=4", "CuteBaronDollFromController", 2500))
+                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/70891072?v=4", "CuteBaronDollFromController", 2500))
                 .when()
                 .put("/admin/product/" + savedId)
                 .then()
@@ -86,7 +86,7 @@ class AdminControllerIntegrationTest {
         String baseUrl = "/admin/product/";
         //given
         String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
+                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
                         "CuteSeonghaDoll", 25000))
                 .when()
                 .post(baseUrl)
@@ -109,7 +109,7 @@ class AdminControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
+                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
                         price))
                 .when()
                 .post("/admin/product")
@@ -131,7 +131,7 @@ class AdminControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", name,
+                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", name,
                         10000))
                 .when()
                 .post("/admin/product")
@@ -153,7 +153,7 @@ class AdminControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest(imgUrl, "cuteSeongHa", 10000))
+                .body(new ProductRegisterRequest(imgUrl, "cuteSeongHa", 10000))
                 .when()
                 .post("/admin/product")
                 .then()

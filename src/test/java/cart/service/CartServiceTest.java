@@ -3,7 +3,7 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductRegisterRequest;
 import cart.service.dto.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,12 +20,12 @@ class CartServiceTest {
     @Autowired
     private CartService cartService;
 
-    private final ProductRequest cuteSeonghaDoll =
-            new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
+    private final ProductRegisterRequest cuteSeonghaDoll =
+            new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteSeonghaDoll", 25000);
 
-    private final ProductRequest cuteBaronDoll =
-            new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
+    private final ProductRegisterRequest cuteBaronDoll =
+            new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteBaronDoll", 250000);
 
     @Test
@@ -50,7 +50,7 @@ class CartServiceTest {
     void modifyById() {
         // given
         long savedId = cartService.save(cuteSeonghaDoll);
-        ProductRequest productToModify = cuteBaronDoll;
+        ProductRegisterRequest productToModify = cuteBaronDoll;
 
         // when
         cartService.modifyById(productToModify, savedId);

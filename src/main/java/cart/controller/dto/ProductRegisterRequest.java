@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import org.hibernate.validator.constraints.Length;
 
-public class ProductRequest {
+public class ProductRegisterRequest {
 
     @Length(min = 1, max = 50, message = "이름은 1글자 이상 50글자 이하여야합니다.")
     private String name;
@@ -16,7 +16,7 @@ public class ProductRequest {
     @NotBlank(message = "이미지 URL은 필수입니다.")
     private String imgUrl;
 
-    public ProductRequest(final String imgUrl, final String name, final int price) {
+    public ProductRegisterRequest(final String imgUrl, final String name, final int price) {
         this.imgUrl = imgUrl;
         this.name = name;
         this.price = price;
