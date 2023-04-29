@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS product
+CREATE TABLE product
 (
     id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name varchar(255) NOT NULL,
