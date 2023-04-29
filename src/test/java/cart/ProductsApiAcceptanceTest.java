@@ -1,4 +1,4 @@
-package cart.controller;
+package cart;
 
 import cart.controller.dto.ProductRequest;
 import io.restassured.RestAssured;
@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
-class ProductsApiControllerTest {
+class ProductsApiAcceptanceTest {
 
     private static final String NAME = "name";
     private static final int PRICE = 0;
