@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
+import cart.controller.dto.ProductResponse;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import org.springframework.stereotype.Controller;
@@ -22,10 +22,10 @@ public class CartController {
     @GetMapping("/")
     public String findAllProducts(final Model model) {
         List<Product> products = productDao.findAll();
-        List<ProductDto> productDtos = products.stream()
-                .map(ProductDto::from)
+        List<ProductResponse> productResponses = products.stream()
+                .map(ProductResponse::from)
                 .collect(Collectors.toList());
-        model.addAttribute("products", productDtos);
+        model.addAttribute("products", productResponses);
 
         return "index";
     }
