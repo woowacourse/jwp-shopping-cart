@@ -1,7 +1,6 @@
 package cart.controller;
 
 import cart.controller.dto.ExceptionResponse;
-import cart.exception.NotFoundResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,8 +15,8 @@ public class ItemControllerAdvice {
 
     private static final Logger log = LoggerFactory.getLogger(ItemControllerAdvice.class);
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
+    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalArgumentException.class})
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(final Exception exception) {
         log.info(exception.getMessage());
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
         ExceptionResponse exceptionResponse = new ExceptionResponse(
@@ -25,34 +24,8 @@ public class ItemControllerAdvice {
                 badRequest.getReasonPhrase(),
                 exception.getMessage());
         return ResponseEntity.status(badRequest)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(exceptionResponse);
-    }
-
-    @ExceptionHandler(NotFoundResultException.class)
-    public ResponseEntity<ExceptionResponse> handleNotFoundResultException(final NotFoundResultException exception) {
-        log.info(exception.getMessage());
-        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                badRequest.value(),
-                badRequest.getReasonPhrase(),
-                exception.getMessage());
-        return ResponseEntity.status(badRequest)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(exceptionResponse);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionResponse> handlerIllegalArgumentException(final IllegalArgumentException exception) {
-        log.info(exception.getMessage());
-        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                badRequest.value(),
-                badRequest.getReasonPhrase(),
-                exception.getMessage());
-        return ResponseEntity.status(badRequest)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(exceptionResponse);
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
     }
 
     @ExceptionHandler(Exception.class)

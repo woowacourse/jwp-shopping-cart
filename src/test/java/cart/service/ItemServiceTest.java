@@ -7,7 +7,6 @@ import cart.domain.ImageUrl;
 import cart.domain.Item;
 import cart.domain.Name;
 import cart.domain.Price;
-import cart.exception.NotFoundResultException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 // TODO: 2023/04/26 서비스 테스트가 할게 없음 -> Mockito를 쓰는게 맞을까?
@@ -98,7 +98,7 @@ class ItemServiceTest {
         //then
         assertThatThrownBy(() ->
                 itemService.updateItem(100L, new ItemRequest("1번", 123, "1번URL"))
-        ).isInstanceOf(NotFoundResultException.class);
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("아이템을 삭제한다.")
@@ -127,7 +127,7 @@ class ItemServiceTest {
         //then
         assertThatThrownBy(() ->
                 itemService.deleteItem(100L)
-        ).isInstanceOf(NotFoundResultException.class);
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("아이템을 조회한다.")
