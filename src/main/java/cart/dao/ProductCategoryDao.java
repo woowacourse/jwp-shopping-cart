@@ -50,8 +50,19 @@ public class ProductCategoryDao {
         );
     }
 
-    public void delete(final Long id) {
+    public void deleteAll(final List<Long> ids) {
         final String sql = "DELETE FROM product_category WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, ids.get(i));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return ids.size();
+            }
+        });
     }
 }

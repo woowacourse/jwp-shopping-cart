@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,7 +32,7 @@ class ProductCategoryDaoTest {
 
     @Test
     @DisplayName("상품 카테고리를 모두 저장한다.")
-    void save() {
+    void saveAll() {
         //given
         final ProductEntity productEntity = new ProductEntity(
                 1L,
@@ -52,8 +53,8 @@ class ProductCategoryDaoTest {
     }
 
     @Test
-    @DisplayName("ID에 해당하는 상품 카테고리를 삭제한다.")
-    void delete() {
+    @DisplayName("ID에 해당하는 상품 카테고리를 모두 삭제한다.")
+    void deleteAll() {
         //given
         final ProductEntity productEntity = new ProductEntity(
                 1L,
@@ -64,10 +65,13 @@ class ProductCategoryDaoTest {
         );
         final Long savedProductId = productDao.save(productEntity);
         productCategoryDao.saveAll(List.of(new ProductCategoryEntity(savedProductId, 1L)));
-        final List<ProductCategoryEntity> saved = productCategoryDao.findAll(savedProductId);
+        final List<ProductCategoryEntity> savedProductCategories = productCategoryDao.findAll(savedProductId);
+        final List<Long> savedProductCategoryIds = savedProductCategories.stream()
+                .map(ProductCategoryEntity::getId)
+                .collect(Collectors.toList());
 
         //when
-        productCategoryDao.delete(saved.get(0).getId());
+        productCategoryDao.deleteAll(savedProductCategoryIds);
 
         //then
         final List<ProductCategoryEntity> productCategoryEntities = productCategoryDao.findAll(savedProductId);

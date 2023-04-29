@@ -88,9 +88,11 @@ public class ProductService {
         productDao.update(savedProduct);
 
         final List<ProductCategoryEntity> productCategories = productCategoryDao.findAll(savedProduct.getId());
-        for (final ProductCategoryEntity productCategory : productCategories) {
-            productCategoryDao.delete(productCategory.getId());
-        }
+        final List<Long> productCategoryIds = productCategories.stream()
+                .map(ProductCategoryEntity::getId)
+                .collect(Collectors.toList());
+        productCategoryDao.deleteAll(productCategoryIds);
+
         final List<Long> categoryIds = productRequestDto.getCategoryIds();
         final List<ProductCategoryEntity> productCategoryEntities = categoryIds.stream()
                 .map(categoryId -> new ProductCategoryEntity(savedProduct.getId(), categoryId))
@@ -107,9 +109,10 @@ public class ProductService {
     public void removeProduct(final Long id) {
         final ProductEntity savedProduct = getSavedProductEntity(id);
         final List<ProductCategoryEntity> productCategories = productCategoryDao.findAll(savedProduct.getId());
-        for (final ProductCategoryEntity productCategory : productCategories) {
-            productCategoryDao.delete(productCategory.getId());
-        }
+        final List<Long> productCategoryIds = productCategories.stream()
+                .map(ProductCategoryEntity::getId)
+                .collect(Collectors.toList());
+        productCategoryDao.deleteAll(productCategoryIds);
         productDao.delete(savedProduct.getId());
     }
 }
