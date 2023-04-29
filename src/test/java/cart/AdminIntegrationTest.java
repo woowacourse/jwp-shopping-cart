@@ -52,7 +52,7 @@ class AdminIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
-                .post("/admin/product")
+                .post("/admin/products")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -66,7 +66,7 @@ class AdminIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
-                .post("/admin/product")
+                .post("/admin/products")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("size()", is(3));
@@ -89,7 +89,7 @@ class AdminIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest)
                 .when()
-                .put("/admin/product")
+                .put("/admin/products/" + createdId)
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -103,7 +103,7 @@ class AdminIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest)
                 .when()
-                .put("/admin/product")
+                .put("/admin/products/1")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("size()", is(4));
@@ -119,7 +119,7 @@ class AdminIntegrationTest {
         RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/admin/product?id=" + createdId)
+                .delete("/admin/products/" + createdId)
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

@@ -10,11 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -40,7 +40,7 @@ public class AdminController {
         return "admin";
     }
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<ProductResponse> create(@RequestBody @Valid ProductRequest productRequest) {
         ProductResponse productResponse = cartService.create(productRequest);
 
@@ -53,16 +53,16 @@ public class AdminController {
         return ResponseEntity.created(createdUri).body(productResponse);
     }
 
-    @PutMapping("/product")
+    @PutMapping("/products/{id}")
     public ResponseEntity<ProductResponse> update(@RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
         ProductResponse productResponse = cartService.update(productUpdateRequest);
 
         return ResponseEntity.ok().body(productResponse);
     }
 
-    @DeleteMapping("/product")
+    @DeleteMapping("/products/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestParam @NotNull Long id) {
+    public void delete(@PathVariable @NotNull Long id) {
         cartService.delete(id);
     }
 }
