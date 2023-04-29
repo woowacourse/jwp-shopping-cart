@@ -23,7 +23,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception e) {
         ExceptionResponse exception = new ExceptionResponse("예상하지 못한 오류가 발생했습니다.");
-        logger.info(exception.getMessage(), e);
+        logger.error(exception.getMessage(), e);
 
         return ResponseEntity.internalServerError().body(exception);
     }
