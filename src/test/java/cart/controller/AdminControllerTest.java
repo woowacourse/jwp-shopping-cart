@@ -24,8 +24,6 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminControllerTest {
 
-    private int port;
-
     @Autowired
     private ItemDao itemDao;
     @Autowired
@@ -33,7 +31,7 @@ class AdminControllerTest {
 
     @BeforeEach
     void setUp(@LocalServerPort int port) {
-        this.port = port;
+        RestAssured.port = port;
         itemDao.save(new CreateItem("치킨", "a", 10000));
         itemDao.save(new CreateItem("피자", "b", 20000));
     }
@@ -196,5 +194,38 @@ class AdminControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("price", equalTo(message));
+    }
+
+    @Test
+    @DisplayName("상품 번호가 없는 경우 수정 테스트")
+    void updateInvalidItemIdFailTest() {
+        //given
+        ItemRequest itemRequest = new ItemRequest("국밥", "c", 30000);
+        String message = "잘못된 상품 번호를 입력하셨습니다.";
+
+        //then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(itemRequest)
+                .when().post("/admin/items/edit/3")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("message", equalTo(message));
+    }
+
+    @Test
+    @DisplayName("상품 번호가 없는 경우 삭제 테스트")
+    void deleteInvalidItemIdFailTest() {
+        //given
+        String message = "잘못된 상품 번호를 입력하셨습니다.";
+
+        //then
+        RestAssured.given().log().all()
+                .when().post("/admin/items/delete/3")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("message", equalTo(message));
     }
 }
