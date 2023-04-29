@@ -2,15 +2,14 @@ package cart.application;
 
 import cart.business.ProductCRUDService;
 import cart.business.domain.Product;
+import cart.config.annonation.Application;
 import cart.presentation.dto.ProductDto;
 import cart.presentation.dto.ProductIdDto;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-// TODO: Custom Annotation `Application` 만들어보기
-@Component
+@Application
 public class ProductCRUDApplication {
 
     private final ProductCRUDService productCRUDService;
