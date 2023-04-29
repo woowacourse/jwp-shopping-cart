@@ -59,4 +59,4 @@
 - [ ] DTO - Entity Mapper 클래스 생성
 - [ ] 불필요한 @Autowired 생략
 - [ ] @Valid를 활용한 유효성 검증
-- [ ] API 설계 다시 하기
+- [x] API URL 설계 다시 하기

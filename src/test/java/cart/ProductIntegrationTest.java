@@ -27,7 +27,7 @@ public class ProductIntegrationTest {
         var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/product")
+                .get("/products")
                 .then()
                 .extract();
 

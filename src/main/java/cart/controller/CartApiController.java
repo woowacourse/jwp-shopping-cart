@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
 public class CartApiController {
 
     private final CartService cartService;
@@ -26,24 +24,24 @@ public class CartApiController {
         this.cartService = cartService;
     }
 
-    @PostMapping("product")
+    @PostMapping("/products")
     public void insertProduct(@RequestBody InsertRequestDto insertRequestDto) {
         validatePrice(insertRequestDto.getPrice());
         cartService.addProduct(insertRequestDto);
     }
 
-    @GetMapping("product")
+    @GetMapping("/products")
     public List<ProductResponseDto> getProducts() {
         return cartService.getProducts();
     }
 
-    @PutMapping("product")
+    @PutMapping("/products")
     public void updateProduct(@RequestBody UpdateRequestDto updateRequestDto) {
         validatePrice(updateRequestDto.getPrice());
         cartService.updateProduct(updateRequestDto);
     }
 
-    @DeleteMapping("product/{id}")
+    @DeleteMapping("/products/{id}")
     public void deleteProduct(@PathVariable int id) {
         cartService.deleteProduct(id);
     }

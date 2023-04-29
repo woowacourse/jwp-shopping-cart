@@ -28,7 +28,7 @@ public class CartApiControllerTest {
 
     @Test
     void insertTest() throws Exception {
-        this.mockMvc.perform(post("/product")
+        this.mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"name\": \"name\", \"image\": \"image\", \"price\": \"1000\"}"))
                 .andExpect(status().isOk());
@@ -36,7 +36,7 @@ public class CartApiControllerTest {
 
     @Test
     void insertTest_fail() throws Exception {
-        this.mockMvc.perform(post("/product")
+        this.mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"name\": \"name\", \"image\": \"image\", \"price\": \"abc\"}"))
                 .andExpect(status().isBadRequest());
@@ -48,7 +48,7 @@ public class CartApiControllerTest {
                 new ProductResponseDto(1, "image1", "name1", 1000),
                 new ProductResponseDto(2, "image2", "name2", 2000)));
 
-        this.mockMvc.perform(get("/product"))
+        this.mockMvc.perform(get("/products"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value("1"))
                 .andExpect(jsonPath("$[0].name").value("name1"))
@@ -62,7 +62,7 @@ public class CartApiControllerTest {
 
     @Test
     void updateTest() throws Exception {
-        this.mockMvc.perform(put("/product")
+        this.mockMvc.perform(put("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"image\", \"price\": \"1000\"}"))
                 .andExpect(status().isOk());
@@ -70,7 +70,7 @@ public class CartApiControllerTest {
 
     @Test
     void updateTest_fail() throws Exception {
-        this.mockMvc.perform(put("/product")
+        this.mockMvc.perform(put("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"image\", \"price\": \"abc\"}"))
                 .andExpect(status().isBadRequest());
@@ -78,13 +78,13 @@ public class CartApiControllerTest {
 
     @Test
     void deleteTest() throws Exception {
-        this.mockMvc.perform(delete("/product/1"))
+        this.mockMvc.perform(delete("/products/1"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void deleteTest_fail() throws Exception {
-        this.mockMvc.perform(delete("/product/a"))
+        this.mockMvc.perform(delete("/products/a"))
                 .andExpect(status().isBadRequest());
     }
 }

@@ -6,10 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
 public class CartController {
 
     private final CartService cartService;
@@ -18,14 +16,14 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping
+    @GetMapping("/")
     public String index(Model model) {
         final List<ProductResponseDto> products = cartService.getProducts();
         model.addAttribute("products", products);
         return "index";
     }
 
-    @GetMapping("admin")
+    @GetMapping("/admin")
     public String admin(Model model) {
         final List<ProductResponseDto> products = cartService.getProducts();
         model.addAttribute("products", products);
