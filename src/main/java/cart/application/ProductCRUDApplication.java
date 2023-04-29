@@ -6,6 +6,7 @@ import cart.business.ReadProductService;
 import cart.business.UpdateProductService;
 import cart.business.domain.Product;
 import cart.presentation.dto.ProductDto;
+import cart.presentation.dto.ProductIdDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -45,12 +46,11 @@ public class ProductCRUDApplication {
     }
 
     public void update(ProductDto productDto) {
-        Product product = ProductConverter.toProduct(productDto);
+        Product product = ProductConverter.toProductWithId(productDto);
         updateProductService.perform(product);
     }
 
-    public void delete(ProductDto productDto) {
-        Product product = ProductConverter.toProduct(productDto);
-        deleteProductService.perform(product);
+    public void delete(ProductIdDto productIdDto) {
+        deleteProductService.perform(productIdDto.getId());
     }
 }

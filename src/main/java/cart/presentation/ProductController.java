@@ -3,6 +3,7 @@ package cart.presentation;
 
 import cart.application.ProductCRUDApplication;
 import cart.presentation.dto.ProductDto;
+import cart.presentation.dto.ProductIdDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,7 @@ public class ProductController {
     }
 
     @DeleteMapping(path = "/delete")
-    public void productDelete(@RequestBody ProductDto request) {
+    public void productDelete(@RequestBody ProductIdDto request) {
         productCRUDApplication.delete(request);
     }
 }

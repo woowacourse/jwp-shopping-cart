@@ -17,6 +17,15 @@ public class ProductConverter {
         );
     }
 
+    public static Product toProductWithId(ProductDto productDto) {
+        return new Product(
+                productDto.getId(),
+                new ProductName(productDto.getName()),
+                new ProductImage(productDto.getUrl()),
+                new ProductPrice(productDto.getPrice())
+        );
+    }
+
     public static ProductDto toProductDto(Product product) {
         return new ProductDto(
                 product.getId(),

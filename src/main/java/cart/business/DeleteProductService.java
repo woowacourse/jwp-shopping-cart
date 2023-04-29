@@ -1,6 +1,5 @@
 package cart.business;
 
-import cart.business.domain.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,7 @@ public class DeleteProductService {
     }
 
     @Transactional
-    public void perform(Product product) {
-        productRepository.remove(product.getId());
+    public void perform(Integer productId) {
+        productRepository.remove(productId);
     }
 }
