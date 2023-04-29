@@ -19,7 +19,7 @@ public class AdminPageController {
         this.productManagementService = productManagementService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String readAdminPage(final Model model) {
         final List<ProductDto> products = productManagementService.findAllProduct();
         model.addAttribute("products", products);
