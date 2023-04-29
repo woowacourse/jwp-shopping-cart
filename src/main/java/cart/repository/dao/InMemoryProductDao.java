@@ -4,6 +4,7 @@ import cart.repository.entity.ProductEntity;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -50,7 +51,7 @@ public class InMemoryProductDao implements ProductDao {
                 return i;
             }
         }
-        throw new IllegalArgumentException("해당 id가 존재하지 않습니다.");
+        throw new EmptyResultDataAccessException("해당 id가 존재하지 않습니다.", 1);
     }
 
     @Override
