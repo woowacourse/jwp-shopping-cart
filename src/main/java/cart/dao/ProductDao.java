@@ -3,13 +3,16 @@ package cart.dao;
 import cart.entity.ProductEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductDao {
-    void save(ProductEntity productEntity);
+    Long save(ProductEntity productEntity);
 
     List<ProductEntity> findAll();
 
+    Optional<ProductEntity> findById(Long id);
+
     void update(ProductEntity productEntity);
 
-    void delete(long id);
+    void delete(Long id);
 }
