@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,14 @@ public class MemoryProductRepository implements ProductRepository {
     public Integer insert(Product product) {
         store.put(sequence, product);
         return sequence++;
+    }
+
+    @Override
+    public Optional<Product> findByName(String name) {
+        return store.values()
+                .stream()
+                .filter(product -> product.getName().equals(name))
+                .findAny();
     }
 
     @Override
