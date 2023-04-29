@@ -61,7 +61,7 @@ class JdbcItemDaoTest {
     void update() {
         CreateItem item = new CreateItem("햄버거", "c", 2000);
 
-        itemDao.update(2L, item);
+        itemDao.update(3L, item);
 
         List<Item> items = itemDao.findAll();
         Item expected = new Item(2L, "햄버거", "c", 2000);
@@ -77,7 +77,7 @@ class JdbcItemDaoTest {
     @Test
     @DisplayName("상품 삭제 할 수 있다.")
     void delete() {
-        itemDao.delete(2L);
+        itemDao.delete(3L);
 
         List<Item> items = itemDao.findAll();
         assertThat(items).hasSize(1);

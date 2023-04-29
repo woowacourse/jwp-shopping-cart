@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.exception.ServiceIllegalArgumentException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(DataAccessException ex) {
+    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(DataAccessException exception) {
 
         Map<String, String> error = new HashMap<>();
         error.put("message", "데이터베이스에 접근할 수 없습니다.");
@@ -24,11 +25,19 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(BindException ex) {
-        Map<String, String> errors = ex.getBindingResult()
+    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(BindException exception) {
+        Map<String, String> errors = exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(ServiceIllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleServiceIllegalAccessException(ServiceIllegalArgumentException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", exception.getMessage());
 
         return ResponseEntity.badRequest().body(errors);
     }

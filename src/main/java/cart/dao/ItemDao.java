@@ -10,7 +10,7 @@ public interface ItemDao {
 
     List<Item> findAll();
 
-    void update(Long id, CreateItem createItem);
+    int update(Long id, CreateItem createItem);
 
-    void delete(Long id);
+    int delete(Long id);
 }
