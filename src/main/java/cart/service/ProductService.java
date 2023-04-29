@@ -43,9 +43,10 @@ public class ProductService {
         final Long savedProductId = productDao.save(product);
 
         final List<Long> categoryIds = productRequestDto.getCategoryIds();
-        for (final Long categoryId : categoryIds) {
-            productCategoryDao.save(new ProductCategoryEntity(savedProductId, categoryId));
-        }
+        final List<ProductCategoryEntity> productCategoryEntities = categoryIds.stream()
+                .map(categoryId -> new ProductCategoryEntity(savedProductId, categoryId))
+                .collect(Collectors.toList());
+        productCategoryDao.saveAll(productCategoryEntities);
 
         return savedProductId;
     }
@@ -91,9 +92,10 @@ public class ProductService {
             productCategoryDao.delete(productCategory.getId());
         }
         final List<Long> categoryIds = productRequestDto.getCategoryIds();
-        for (final Long categoryId : categoryIds) {
-            productCategoryDao.save(new ProductCategoryEntity(savedProduct.getId(), categoryId));
-        }
+        final List<ProductCategoryEntity> productCategoryEntities = categoryIds.stream()
+                .map(categoryId -> new ProductCategoryEntity(savedProduct.getId(), categoryId))
+                .collect(Collectors.toList());
+        productCategoryDao.saveAll(productCategoryEntities);
     }
 
     private ProductEntity getSavedProductEntity(final Long id) {

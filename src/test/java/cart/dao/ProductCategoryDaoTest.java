@@ -30,7 +30,7 @@ class ProductCategoryDaoTest {
     }
 
     @Test
-    @DisplayName("상품 카테고리를 저장한다.")
+    @DisplayName("상품 카테고리를 모두 저장한다.")
     void save() {
         //given
         final ProductEntity productEntity = new ProductEntity(
@@ -41,11 +41,14 @@ class ProductCategoryDaoTest {
                 "description"
         );
         final Long savedProductId = productDao.save(productEntity);
-        final ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity(savedProductId, 1L);
+        final List<ProductCategoryEntity> productCategoryEntities = List.of(
+                new ProductCategoryEntity(savedProductId, 1L),
+                new ProductCategoryEntity(savedProductId, 2L)
+        );
 
         //when
         //then
-        assertThat(productCategoryDao.save(productCategoryEntity)).isNotNull();
+        assertThat(productCategoryDao.saveAll(productCategoryEntities)).isEqualTo(2);
     }
 
     @Test
@@ -60,11 +63,11 @@ class ProductCategoryDaoTest {
                 "description"
         );
         final Long savedProductId = productDao.save(productEntity);
-        final ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity(savedProductId, 1L);
-        final Long savedProductCategoryId = productCategoryDao.save(productCategoryEntity);
+        productCategoryDao.saveAll(List.of(new ProductCategoryEntity(savedProductId, 1L)));
+        final List<ProductCategoryEntity> saved = productCategoryDao.findAll(savedProductId);
 
         //when
-        productCategoryDao.delete(savedProductCategoryId);
+        productCategoryDao.delete(saved.get(0).getId());
 
         //then
         final List<ProductCategoryEntity> productCategoryEntities = productCategoryDao.findAll(savedProductId);
@@ -86,8 +89,7 @@ class ProductCategoryDaoTest {
                     "description"
             );
             final Long savedProductId = productDao.save(productEntity);
-            final ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity(savedProductId, 1L);
-            productCategoryDao.save(productCategoryEntity);
+            productCategoryDao.saveAll(List.of(new ProductCategoryEntity(savedProductId, 1L)));
 
             //when
             final List<ProductCategoryEntity> productCategoryEntities = productCategoryDao.findAll(savedProductId);

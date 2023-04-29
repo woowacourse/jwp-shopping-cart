@@ -1,31 +1,41 @@
 package cart.dao;
 
 import cart.entity.ProductCategoryEntity;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
 public class ProductCategoryDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ProductCategoryDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("product_category")
-                .usingColumns("product_id", "category_id")
-                .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(final ProductCategoryEntity productCategoryEntity) {
-        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(productCategoryEntity);
-        return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+    public int saveAll(final List<ProductCategoryEntity> productCategoryEntities) {
+        final String sql = "INSERT INTO product_category (product_id, category_id) VALUES (?, ?)";
+
+        final int[] rowsAffected = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, productCategoryEntities.get(i).getProductId());
+                ps.setLong(2, productCategoryEntities.get(i).getCategoryId());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return productCategoryEntities.size();
+            }
+        });
+
+        return Arrays.stream(rowsAffected).sum();
     }
 
     public List<ProductCategoryEntity> findAll(final Long productId) {
