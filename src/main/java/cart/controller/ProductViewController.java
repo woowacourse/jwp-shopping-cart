@@ -6,11 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ViewController {
+public class ProductViewController {
 
     private final ProductDao productDao;
 
-    public ViewController(final ProductDao productDao) {
+    public ProductViewController(final ProductDao productDao) {
         this.productDao = productDao;
     }
 

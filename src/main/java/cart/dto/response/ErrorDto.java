@@ -7,7 +7,9 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 @ToString
-public class ExceptionDto {
+public class ErrorDto {
 
+    private final int status;
     private final String message;
+    private final String path;
 }

@@ -1,0 +1,18 @@
+2023-04-29 21:02:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUCTS" not found (this database is empty); SQL statement:
+INSERT INTO products (name, image_url, price) VALUES (?, ?, ?) [42104-214]
+2023-04-29 21:02:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUCTS" not found (this database is empty); SQL statement:
+INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000) [42104-214]
+2023-04-29 21:02:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUCTS" not found (this database is empty); SQL statement:
+INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000) [42104-214]
+2023-04-29 21:07:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUCTS" not found (this database is empty); SQL statement:
+INSERT INTO products (name, image_url, price) VALUES (?, ?, ?) [42104-214]
+2023-04-29 21:07:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUCTS" not found (this database is empty); SQL statement:
+INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000) [42104-214]
+2023-04-29 21:07:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PRODUCTS" not found (this database is empty); SQL statement:
+INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000) [42104-214]

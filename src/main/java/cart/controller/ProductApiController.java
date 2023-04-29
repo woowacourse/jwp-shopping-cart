@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Validated
@@ -33,13 +34,21 @@ public class ProductApiController {
     @PutMapping
     public ResponseEntity<Void> update(@Valid @RequestBody ProductUpdateRequest productDto) {
         final int affectedRowsCount = productDao.update(new Product(productDto.getId(), productDto.getName(), productDto.getImageUrl(), productDto.getPrice()));
-        return ResponseEntity.ok().build();
+        if (affectedRowsCount != 1) {
+            throw new NoSuchElementException("존재하지 않는 상품 id입니다");
+        }
+        return ResponseEntity.ok()
+                             .build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @Positive Long id) {
         log.info("id={}", id);
-        productDao.deleteById(id);
-        return ResponseEntity.ok().build();
+        final int affectedRowsCount = productDao.deleteById(id);
+        if (affectedRowsCount != 1) {
+            throw new NoSuchElementException("존재하지 않는 상품 id입니다");
+        }
+        return ResponseEntity.ok()
+                             .build();
     }
 }
