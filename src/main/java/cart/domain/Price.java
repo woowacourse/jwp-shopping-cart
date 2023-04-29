@@ -1,24 +1,26 @@
 package cart.domain;
 
+import java.math.BigDecimal;
+
 public class Price {
 
-    private static final int MIN_AMOUNT = 1_000;
-    private static final int MAX_AMOUNT = 1_000_000;
+    private static final BigDecimal MIN_AMOUNT = new BigDecimal("1,000".replaceAll(",", ""));
+    private static final BigDecimal MAX_AMOUNT = new BigDecimal("1,000,000".replaceAll(",", ""));
 
-    private final Integer amount;
+    private final BigDecimal amount;
 
-    public Price(Integer amount) {
+    public Price(BigDecimal amount) {
         validate(amount);
         this.amount = amount;
     }
 
-    private void validate(Integer amount) {
-        if (MIN_AMOUNT > amount || amount > MAX_AMOUNT) {
+    private void validate(BigDecimal amount) {
+        if (amount.compareTo(MIN_AMOUNT) < 0 || amount.compareTo(MAX_AMOUNT) > 0) {
             throw new IllegalArgumentException("가격은 1000원 이상, 100만원 이하만 가능합니다.");
         }
     }
 
-    public Integer getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 }

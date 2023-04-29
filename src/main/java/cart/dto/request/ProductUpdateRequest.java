@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public class ProductUpdateRequest {
@@ -15,11 +16,11 @@ public class ProductUpdateRequest {
     @NotEmpty
     private String name;
     @NotNull
-    private Integer price;
+    private BigDecimal price;
     @NotBlank
     private String imageUrl;
 
-    public ProductUpdateRequest(Long id, String name, Integer price, String imageUrl) {
+    public ProductUpdateRequest(Long id, String name, BigDecimal price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -38,7 +39,7 @@ public class ProductUpdateRequest {
         return imageUrl;
     }
 
-    public Integer getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 }

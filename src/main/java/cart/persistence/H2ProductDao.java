@@ -28,7 +28,7 @@ public class H2ProductDao implements ProductDao {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getString("image_url"),
-                rs.getInt("price")
+                rs.getBigDecimal("price")
         ));
     }
 

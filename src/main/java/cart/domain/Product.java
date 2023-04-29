@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.math.BigDecimal;
+
 public class Product {
 
     private final Long id;
@@ -7,14 +9,14 @@ public class Product {
     private final String image;
     private final Price price;
 
-    public Product(Long id, String name, String image, Integer price) {
+    public Product(Long id, String name, String image, BigDecimal price) {
         this.id = id;
         this.name = new Name(name);
         this.image = image;
         this.price = new Price(price);
     }
 
-    public Product(String name, String image, Integer price) {
+    public Product(String name, String image, BigDecimal price) {
         this(null, name, image, price);
     }
 
@@ -30,7 +32,7 @@ public class Product {
         return image;
     }
 
-    public Integer getPrice() {
+    public BigDecimal getPrice() {
         return price.getAmount();
     }
 }

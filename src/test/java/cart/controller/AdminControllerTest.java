@@ -1,7 +1,5 @@
 package cart.controller;
 
-import static org.hamcrest.core.Is.is;
-
 import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;
 import io.restassured.RestAssured;
@@ -13,6 +11,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.math.BigDecimal;
+
+import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminControllerTest {
@@ -39,7 +41,7 @@ class AdminControllerTest {
     @Test
     @DisplayName("/admin/create에 정상적인 request를 전송하면 created 상태코드를 반환한다")
     void createTest() {
-        ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
+        ProductRequest productRequest = new ProductRequest("테스트", BigDecimal.valueOf(1000), "http://testtest");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -69,14 +71,14 @@ class AdminControllerTest {
     @Sql("/data.sql")
     @DisplayName("/admin/update에 정상적인 request를 전송하면 no_content 상태코드를 반환한다")
     void updateTest() {
-        ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
+        ProductRequest productRequest = new ProductRequest("테스트", BigDecimal.valueOf(1000), "http://testtest");
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
                 .post("/admin/create");
 
-        ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "테스트", 10000, "http://testtest");
+        ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "테스트", BigDecimal.valueOf(10000), "http://testtest");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -90,7 +92,7 @@ class AdminControllerTest {
     @Test
     @DisplayName("/admin/update에 비정상적인 request를 전송하면 bad_request를 반환하고 에러 메시지의 size는 비정상적인 파라미터의 개수와 같다")
     void updateExceptionTest() {
-        ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
+        ProductRequest productRequest = new ProductRequest("테스트", BigDecimal.valueOf(1000), "http://testtest");
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
@@ -113,7 +115,7 @@ class AdminControllerTest {
     @Sql("/data.sql")
     @DisplayName("/admin/delete에 정상적인 request를 전송하면 no_content 상태코드를 반환한다")
     void deleteTest() {
-        ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
+        ProductRequest productRequest = new ProductRequest("테스트", BigDecimal.valueOf(1000), "http://testtest");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
