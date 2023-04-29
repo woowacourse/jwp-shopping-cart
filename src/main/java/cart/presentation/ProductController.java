@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,7 @@ public class ProductController {
     }
 
     @PostMapping(path = "/create")
-    public void productCreate(@RequestBody ProductDto request) {
+    public void productCreate(@RequestBody @Valid ProductDto request) {
         productCRUDApplication.create(request);
     }
 
@@ -36,12 +37,12 @@ public class ProductController {
     }
 
     @PostMapping(path = "/update")
-    public void productUpdate(@RequestBody ProductDto request) {
+    public void productUpdate(@RequestBody @Valid ProductDto request) {
         productCRUDApplication.update(request);
     }
 
     @DeleteMapping(path = "/delete")
-    public void productDelete(@RequestBody ProductIdDto request) {
+    public void productDelete(@RequestBody @Valid ProductIdDto request) {
         productCRUDApplication.delete(request);
     }
 }
