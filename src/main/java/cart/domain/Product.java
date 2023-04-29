@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.exception.custom.ArgumentNotValidException;
+import java.util.Objects;
 
 public class Product {
 
@@ -21,6 +22,7 @@ public class Product {
     public Product(Long id, String name, Integer price, String imageUrl) {
         validateName(name);
         validatePrice(price);
+        validateImageUrl(imageUrl);
         this.id = id;
         this.name = name;
         this.price = price;
@@ -41,6 +43,12 @@ public class Product {
 
         if (price % UNIT_OF_PRICE != 0) {
             throw new ArgumentNotValidException(String.format("상품의 가격 단위는 %d원 단위입니다.", UNIT_OF_PRICE));
+        }
+    }
+
+    private void validateImageUrl(String imageUrl) {
+        if (Objects.isNull(imageUrl) || imageUrl.isBlank()) {
+            throw new ArgumentNotValidException("이미지 URL은 비어있을 수 없습니다.");
         }
     }
 

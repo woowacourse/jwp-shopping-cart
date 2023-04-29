@@ -7,6 +7,7 @@ import cart.exception.custom.ArgumentNotValidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class ProductTest {
@@ -46,6 +47,16 @@ class ProductTest {
         assertThatThrownBy(() -> new Product("귤", price, "test"))
                 .isInstanceOf(ArgumentNotValidException.class)
                 .hasMessage("상품의 최소 가격은 1000원 이상입니다.");
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("이미지 URL이 빈값이면 예외를 반환한다.")
+    void create_fail_by_wrong_image_url(String wrongUrl) {
+        //when && then
+        assertThatThrownBy(() -> new Product("귤", 1000, wrongUrl))
+                .isInstanceOf(ArgumentNotValidException.class)
+                .hasMessage("이미지 URL은 비어있을 수 없습니다.");
     }
 }
 
