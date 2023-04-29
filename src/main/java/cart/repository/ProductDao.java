@@ -25,7 +25,7 @@ public class ProductDao {
     public ProductEntity save(Product product) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
         long productId = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
-        return ProductEntity.builder()
+        return ProductEntity.Builder.builder()
                 .id(productId)
                 .name(product.getName())
                 .price(product.getPrice())
@@ -39,7 +39,7 @@ public class ProductDao {
     }
 
     private RowMapper<ProductEntity> productRowMapper() {
-        return (rs, rowNum) -> ProductEntity.builder()
+        return (rs, rowNum) -> ProductEntity.Builder.builder()
                 .id(rs.getLong(1))
                 .name(rs.getString(2))
                 .price(rs.getInt(3))

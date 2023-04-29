@@ -8,16 +8,18 @@ import cart.entity.ProductEntity;
 import cart.exception.ProductNotFoundException;
 import cart.repository.ProductDao;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class ProductService {
     private final ProductDao productDao;
 
+    public ProductService(ProductDao productDao) {
+        this.productDao = productDao;
+    }
+
     public ProductDto createProduct(String name, int price, String imageUrl) {
-        Product product = Product.builder()
+        Product product = Product.Builder.builder()
                 .name(name)
                 .price(price)
                 .imageUrl(imageUrl)
@@ -39,7 +41,7 @@ public class ProductService {
 
     public ProductDto updateProductById(Long id, String name, int price, String imageUrl) {
         validateId(id);
-        ProductEntity productEntity = ProductEntity.builder()
+        ProductEntity productEntity = ProductEntity.Builder.builder()
                 .id(id)
                 .name(name)
                 .price(price)

@@ -29,7 +29,7 @@ class ProductDaoTest {
     @DisplayName("상품이 정상적으로 저장되어야 한다.")
     void save_success() {
         // given
-        Product product = Product.builder()
+        Product product = Product.Builder.builder()
                 .name("글렌피딕")
                 .price(230_000)
                 .imageUrl("no")
@@ -50,7 +50,7 @@ class ProductDaoTest {
     @DisplayName("상품이 정상적으로 수정되어야 한다.")
     void update_success() {
         // given
-        Product product = Product.builder()
+        Product product = Product.Builder.builder()
                 .name("글렌피딕")
                 .price(230_000)
                 .imageUrl("no")
@@ -58,7 +58,7 @@ class ProductDaoTest {
 
         ProductEntity productEntity = productDao.save(product);
 
-        ProductEntity updateProduct = ProductEntity.builder()
+        ProductEntity updateProduct = ProductEntity.Builder.builder()
                 .id(productEntity.getId())
                 .name("글렌리벳")
                 .price(150_000)
@@ -78,7 +78,7 @@ class ProductDaoTest {
     @DisplayName("상품이 정상적으로 삭제되어야 한다.")
     void delete_success() {
         // given
-        Product product = Product.builder()
+        Product product = Product.Builder.builder()
                 .name("글렌피딕")
                 .price(230_000)
                 .imageUrl("no")
