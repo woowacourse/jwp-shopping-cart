@@ -9,20 +9,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
-public class ProductsController {
+public class ProductController {
 
     private final CartService cartService;
 
-    public ProductsController(CartService cartService) {
+    public ProductController(CartService cartService) {
         this.cartService = cartService;
     }
 
     @GetMapping("/")
     public String index() {
-        return "redirect:/products";
+        return "redirect:/product";
     }
 
-    @GetMapping("/products")
+    @GetMapping("/product")
     public String products(Model model) {
         List<ProductResponse> productsResponse = cartService.readAll();
         model.addAttribute("products", productsResponse);
