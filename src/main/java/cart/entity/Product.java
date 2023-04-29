@@ -1,18 +1,23 @@
 package cart.entity;
 
+import cart.domain.Id;
+import cart.domain.ImgUrl;
+import cart.domain.Name;
+import cart.domain.Price;
+
 import java.util.Objects;
 
 public class Product {
-    private final Long id;
-    private final String name;
-    private final String imgUrl;
-    private final Integer price;
+    private final Id id;
+    private final Name name;
+    private final ImgUrl imgUrl;
+    private final Price price;
 
     public Product(Long id, String name, String imgUrl, Integer price) {
-        this.id = id;
-        this.name = name;
-        this.imgUrl = imgUrl;
-        this.price = price;
+        this.id = Id.of(id);
+        this.name = Name.of(name);
+        this.imgUrl = ImgUrl.of(imgUrl);
+        this.price = Price.of(price);
     }
 
     public Product(String name, String imgUrl, Integer price) {
@@ -20,19 +25,19 @@ public class Product {
     }
 
     public Long getId() {
-        return id;
+        return id.getId();
     }
 
     public String getName() {
-        return name;
+        return name.getName();
     }
 
     public String getImgUrl() {
-        return imgUrl;
+        return imgUrl.getImgUrl();
     }
 
     public Integer getPrice() {
-        return price;
+        return price.getPrice();
     }
 
     @Override
