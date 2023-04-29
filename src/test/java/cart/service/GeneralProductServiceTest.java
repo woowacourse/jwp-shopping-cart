@@ -1,0 +1,91 @@
+package cart.service;
+
+import cart.controller.request.ProductCreateRequest;
+import cart.controller.request.ProductUpdateRequest;
+import cart.controller.response.ProductResponse;
+import cart.domain.Product;
+import cart.repository.ProductRepository;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.*;
+
+@SpringBootTest
+class GeneralProductServiceTest {
+    @MockBean
+    ProductRepository productRepository;
+
+    @Autowired
+    GeneralProductService generalProductService;
+
+    @DisplayName("전체 상품 조회 테스트")
+    @Test
+    void findAll() {
+        // given
+        final List<Product> products = List.of(new Product(1L, "KIARA", 1000, "이미지"));
+
+        given(productRepository.findAll()).willReturn(products);
+
+        // when
+        final List<ProductResponse> findAll = generalProductService.findAll();
+
+        // then
+        assertThat(findAll)
+                .usingRecursiveComparison()
+                .isEqualTo(List.of(new ProductResponse(1L, "KIARA", 1000, "이미지")));
+    }
+
+    @DisplayName("상품 저장 테스트")
+    @Test
+    void save() {
+        // given
+        given(productRepository.save(any())).willReturn(1L);
+
+        // when
+        final ProductCreateRequest request = new ProductCreateRequest("KIARA", 1000, "이미지");
+        final long saveId = generalProductService.save(request);
+
+        // then
+        assertThat(saveId).isEqualTo(1L);
+    }
+
+    @DisplayName("상품 삭제 테스트")
+    @Test
+    void deleteByProductId() {
+        // given
+        given(productRepository.deleteByProductId(anyLong())).willReturn(1L);
+
+        // when
+        final long deleteProductId = generalProductService.deleteByProductId(1L);
+
+        // then
+        assertThat(deleteProductId).isEqualTo(1L);
+    }
+
+    @DisplayName("상품 갱신 후 조회 테스트")
+    @Test
+    void updateProduct() {
+        // given
+        given(productRepository.updateByProductId(anyLong(), any())).willReturn(1L);
+        given(productRepository.findByProductId(anyLong()))
+                .willReturn(Optional.ofNullable(new Product(1L, "hyena", 400, "이미지")));
+
+        // when
+        final ProductUpdateRequest request = new ProductUpdateRequest("hyena", 400, "이미지");
+        final ProductResponse updateProduct = generalProductService.update(1L, request);
+
+        // then
+        assertThat(updateProduct)
+                .hasFieldOrPropertyWithValue("id", 1L)
+                .hasFieldOrPropertyWithValue("name", "hyena")
+                .hasFieldOrPropertyWithValue("price", 400.0)
+                .hasFieldOrPropertyWithValue("image", "이미지");
+    }
+}

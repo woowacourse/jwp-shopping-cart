@@ -1,0 +1,49 @@
+== PRODUCTS (상품)
+
+
+== GET PRODUCTS
+
+=== REQUEST
+include::{snippets}/get-products/http-request.adoc[]
+
+=== RESPONSE
+include::{snippets}/get-products/http-response.adoc[]
+
+=== RESPONSE FIELD
+include::{snippets}/get-products/response-fields.adoc[]
+
+
+== CREATE PRODUCTS
+
+=== REQUEST
+include::{snippets}/create-product/http-request.adoc[]
+
+=== RESPONSE
+include::{snippets}/create-product/http-response.adoc[]
+
+=== REQUEST FIELD
+include::{snippets}/create-product/request-fields.adoc[]
+
+
+== UPDATE PRODUCTS
+
+=== REQUEST
+include::{snippets}/update-product/http-request.adoc[]
+
+=== RESPONSE
+include::{snippets}/update-product/http-response.adoc[]
+
+=== REQUEST FIELD
+include::{snippets}/update-product/request-fields.adoc[]
+
+=== RESPONSE FIELD
+include::{snippets}/update-product/response-fields.adoc[]
+
+
+== DELETE PRODUCTS
+
+=== REQUEST
+include::{snippets}/delete-product/http-request.adoc[]
+
+=== RESPONSE
+include::{snippets}/delete-product/http-response.adoc[]
