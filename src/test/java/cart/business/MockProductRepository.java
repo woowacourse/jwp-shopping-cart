@@ -1,14 +1,12 @@
 package cart.business;
 
 import cart.business.domain.Product;
-import cart.business.domain.ProductImage;
-import cart.business.domain.ProductName;
-import cart.business.domain.ProductPrice;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MockProductRepository implements ProductRepository {
@@ -23,8 +21,11 @@ public class MockProductRepository implements ProductRepository {
     }
 
     @Override
-    public Optional<Product> findById(final Integer productId) {
-        return Optional.ofNullable(store.get(productId));
+    public Optional<Product> findById(Integer productId) {
+        return store.values()
+                .stream()
+                .filter(product -> product.getId().equals(productId))
+                .findAny();
     }
 
     @Override
@@ -37,22 +38,29 @@ public class MockProductRepository implements ProductRepository {
 
     @Override
     public List<Product> findAll() {
-        return store.entrySet()
+        return store.values()
                 .stream()
-                .map(entry -> new Product(entry.getKey(),
-                        new ProductName(entry.getValue().getName()),
-                        new ProductImage(entry.getValue().getUrl()),
-                        new ProductPrice(entry.getValue().getPrice())))
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
     public Product update(Product product) {
-        return store.replace(product.getId(), product);
+        Integer productKey = findKeyWithPredicate(entry -> entry.getValue().equals(product));
+        return store.replace(productKey, product);
     }
 
     @Override
     public Product remove(Integer productId) {
-        return store.remove(productId);
+        Integer productKey = findKeyWithPredicate(entry -> entry.getValue().getId().equals(productId));
+        return store.remove(productKey);
+    }
+
+    private Integer findKeyWithPredicate(Predicate<Map.Entry<Integer, Product>> predicate) {
+        return store.entrySet()
+                .stream()
+                .filter(predicate)
+                .map(Map.Entry::getKey)
+                .findAny()
+                .orElseThrow();
     }
 }
