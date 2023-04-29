@@ -25,13 +25,13 @@ import static org.mockito.Mockito.when;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
-class CartServiceTest {
+class ProductServiceTest {
 
     @Mock
     private ProductDao productDao;
 
     @InjectMocks
-    private CartService cartService;
+    private ProductService productService;
 
     @Test
     void 상품을_조회한다() {
@@ -40,7 +40,7 @@ class CartServiceTest {
                 .thenReturn(List.of(new ProductEntity(1L, "치킨", 1_000, "치킨 사진")));
 
         //when
-        final List<ResponseProductDto> responseProductDtos = cartService.findAll();
+        final List<ResponseProductDto> responseProductDtos = productService.findAll();
 
         //then
         assertSoftly(softly -> {
@@ -61,7 +61,7 @@ class CartServiceTest {
         final RequestCreateProductDto requestCreateProductDto = new RequestCreateProductDto("치킨", 1000, "치킨 사진");
 
         // when
-        final Long id = cartService.insert(requestCreateProductDto);
+        final Long id = productService.insert(requestCreateProductDto);
 
         // then
         assertThat(id).isEqualTo(1L);
@@ -75,7 +75,7 @@ class CartServiceTest {
         final RequestUpdateProductDto requestUpdateProductDto = new RequestUpdateProductDto(1L, "치킨", 1000, "치킨 사진");
 
         // when
-        final int affectedRows = cartService.update(requestUpdateProductDto);
+        final int affectedRows = productService.update(requestUpdateProductDto);
 
         // then
         assertThat(affectedRows).isEqualTo(1);
@@ -89,7 +89,7 @@ class CartServiceTest {
         final RequestUpdateProductDto requestUpdateProductDto = new RequestUpdateProductDto(1L, "치킨", 1000, "치킨 사진");
 
         // expect
-        assertThatThrownBy(() -> cartService.update(requestUpdateProductDto))
+        assertThatThrownBy(() -> productService.update(requestUpdateProductDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("접근하려는 데이터가 존재하지 않습니다.");
     }
@@ -102,7 +102,7 @@ class CartServiceTest {
         final Long id = 1L;
 
         // when
-        final int affectedRows = cartService.delete(id);
+        final int affectedRows = productService.delete(id);
 
         // then
         assertThat(affectedRows).isEqualTo(1);
@@ -116,7 +116,7 @@ class CartServiceTest {
         final Long id = 1L;
 
         // expect
-        assertThatThrownBy(() -> cartService.delete(id))
+        assertThatThrownBy(() -> productService.delete(id))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("접근하려는 데이터가 존재하지 않습니다.");
     }

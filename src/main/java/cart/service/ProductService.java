@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CartService {
+public class ProductService {
 
     private static final int MINIMUM_AFFECTED_ROWS = 1;
 
     private final ProductDao productDao;
 
     @Autowired
-    public CartService(final ProductDao productDao) {
+    public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
