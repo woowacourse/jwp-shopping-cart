@@ -1,6 +1,8 @@
 package cart.dto;
 
 import cart.repository.entity.ProductEntity;
+import org.hibernate.validator.constraints.URL;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
@@ -13,6 +15,7 @@ public class ProductDto {
     private String name;
 
     @NotBlank(message = "이미지 경로는 공백일 수 없습니다.")
+    @URL(message = "URL 형식이 아닙니다.")
     private String imageUrl;
 
     @PositiveOrZero(message = "가격은 10억 이하의 음이 아닌 정수여야 합니다.")
