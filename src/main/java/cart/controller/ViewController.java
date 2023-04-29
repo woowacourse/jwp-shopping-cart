@@ -1,7 +1,9 @@
 package cart.controller;
 
 import cart.controller.dto.ItemResponse;
+import cart.controller.dto.UserResponse;
 import cart.service.ItemService;
+import cart.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
@@ -12,9 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ViewController {
 
     private final ItemService itemService;
+    private final UserService userService;
 
-    public ViewController(ItemService itemService) {
+    public ViewController(final ItemService itemService, final UserService userService) {
         this.itemService = itemService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -37,5 +41,16 @@ public class ViewController {
 
         model.addAttribute("products", itemResponses);
         return "admin";
+    }
+
+    @GetMapping("/settings")
+    public String redirectUserSettings(Model model) {
+        final List<UserResponse> userResponses = userService.findAll()
+                .stream()
+                .map(UserResponse::from)
+                .collect(Collectors.toList());
+
+        model.addAttribute("members", userResponses);
+        return "settings";
     }
 }
