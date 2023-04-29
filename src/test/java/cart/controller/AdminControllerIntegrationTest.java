@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.controller.dto.ProductModifyRequest;
 import cart.controller.dto.ProductRegisterRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -62,8 +63,8 @@ class AdminControllerIntegrationTest {
         String baseUrl = "/admin/product/";
         //given
         String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
-                        "CuteSeonghaDoll", 25000))
+                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
+                        25000))
                 .when()
                 .post(baseUrl)
                 .then()
@@ -72,7 +73,7 @@ class AdminControllerIntegrationTest {
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/70891072?v=4", "CuteBaronDollFromController", 2500))
+                .body(new ProductModifyRequest("CuteBaronDollFromController", 2500, "https://avatars.githubusercontent.com/u/70891072?v=4"))
                 .when()
                 .put("/admin/product/" + savedId)
                 .then()

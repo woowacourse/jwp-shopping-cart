@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.controller.dto.ProductModifyRequest;
 import cart.service.CartService;
 import cart.controller.dto.ProductRegisterRequest;
 import cart.service.dto.ProductResponse;
@@ -42,6 +43,9 @@ public class AdminControllerUnitTest {
     private final ProductResponse cuteBaronDoll =
             new ProductResponse(2, "https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteBaronDoll", 250000);
+
+    private final ProductModifyRequest cuteModifySeonghaDoll =
+            new ProductModifyRequest("CuteSeonghaDoll", 2500000, "https://avatars.githubusercontent.com/u/95729738?v=4");
 
     @Autowired
     private WebApplicationContext context;
@@ -88,7 +92,7 @@ public class AdminControllerUnitTest {
     @Test
     void modifyProduct() throws Exception {
         // given
-        String requestString = objectMapper.writeValueAsString(cuteSeonghaDoll);
+        String requestString = objectMapper.writeValueAsString(cuteModifySeonghaDoll);
 
         mockMvc.perform(put("/admin/product/1")
                         .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -110,9 +114,9 @@ public class AdminControllerUnitTest {
     @ValueSource(ints = {-1, 0})
     void exceptionWhenPriceNotPositive(int price) throws Exception {
         // given
-        ProductResponse wrongCuteSeonghaDoll =
-                new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
-                        "CuteSeonghaDoll", price);
+        ProductRegisterRequest wrongCuteSeonghaDoll =
+                new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
+                        price);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
         given(cartService.save(any(ProductRegisterRequest.class))).willReturn(1L);
 
@@ -132,9 +136,9 @@ public class AdminControllerUnitTest {
     @ValueSource(strings = {"dskjgfdsvesvurevhjdsbvehsbvhjesbvhjesbvfhvsdhvhdsvhfdshv", ""})
     void exceptionWhenNameWrongLength(String name) throws Exception {
         // given
-        ProductResponse wrongCuteSeonghaDoll =
-                new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
-                        name, 24000);
+        ProductRegisterRequest wrongCuteSeonghaDoll =
+                new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", name,
+                        25000);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
         given(cartService.save(any(ProductRegisterRequest.class))).willReturn(1L);
 
@@ -154,8 +158,9 @@ public class AdminControllerUnitTest {
     @ValueSource(strings = {"", " "})
     void exceptionWhenBlankImgUrl(String imgUrl) throws Exception {
         // given
-        ProductResponse wrongCuteSeonghaDoll =
-                new ProductResponse(1, imgUrl, "cuteSeonghaDoll", 24000);
+        ProductRegisterRequest wrongCuteSeonghaDoll =
+                new ProductRegisterRequest(imgUrl, "CuteSeonghaDoll",
+                        25000);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
         given(cartService.save(any(ProductRegisterRequest.class))).willReturn(1L);
 

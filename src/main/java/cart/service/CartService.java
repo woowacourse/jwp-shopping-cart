@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.controller.dto.ProductModifyRequest;
 import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
 import cart.controller.dto.ProductRegisterRequest;
@@ -29,8 +30,8 @@ public class CartService {
         return productDao.insert(productEntity);
     }
 
-    public void modifyById(ProductRegisterRequest productRegisterRequest, long id) {
-        ProductEntity productEntity = productRegisterRequest.toEntityBy(id);
+    public void modifyById(ProductModifyRequest productModifyRequest, long id) {
+        ProductEntity productEntity = productModifyRequest.toEntityBy(id);
         productDao.update(productEntity);
     }
 

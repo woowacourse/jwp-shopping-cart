@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.controller.dto.ProductModifyRequest;
 import cart.service.CartService;
 import cart.controller.dto.ProductRegisterRequest;
 import cart.service.dto.ProductResponse;
@@ -41,9 +42,9 @@ public class AdminController {
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<Void> modifyProduct(@RequestBody @Valid ProductRegisterRequest productRegisterRequest,
+    public ResponseEntity<Void> modifyProduct(@RequestBody @Valid ProductModifyRequest productModifyRequest,
                                               @PathVariable long id) {
-        cartService.modifyById(productRegisterRequest, id);
+        cartService.modifyById(productModifyRequest, id);
         return ResponseEntity.ok().build();
 
     }
