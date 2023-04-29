@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.exception;
 
 import cart.controller.dto.ErrorResponse;
 import cart.exception.ErrorCode;
