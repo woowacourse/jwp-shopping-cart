@@ -1,5 +1,7 @@
 package cart.controller.dto;
 
+import cart.entity.ProductEntity;
+
 public class ProductResponse {
 
     private final Long id;
@@ -12,6 +14,13 @@ public class ProductResponse {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
+    }
+
+    public static ProductResponse from(final ProductEntity productEntity) {
+        return new ProductResponse(productEntity.getId(),
+                productEntity.getName(),
+                productEntity.getImageUrl(),
+                productEntity.getPrice());
     }
 
     public Long getId() {

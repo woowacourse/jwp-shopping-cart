@@ -31,8 +31,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ProductResponse findProductById(@PathVariable final Long id) {
-        return productService.findProductById(id);
+    public ResponseEntity<ProductResponse> findProductById(@PathVariable final Long id) {
+        return ResponseEntity.ok(productService.findProductById(id));
     }
 
 
@@ -43,10 +43,10 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable final Long id,
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable final Long id,
                                                 @Valid @RequestBody final ProductRequest productRequest) {
-        productService.updateProduct(id, productRequest);
-        return ResponseEntity.ok().build();
+        final ProductResponse productResponse = productService.updateProduct(id, productRequest);
+        return ResponseEntity.ok(productResponse);
     }
 
     @DeleteMapping("/{id}")
