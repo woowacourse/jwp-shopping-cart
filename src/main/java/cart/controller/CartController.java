@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import cart.dto.CartResponse;
-import cart.dto.MemberAuthRequest;
+import cart.dto.AuthMember;
 import cart.mvcconfig.argumentresolver.AuthPrincipal;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
@@ -29,22 +29,22 @@ public class CartController {
     }
 
     @GetMapping("/cart/products")
-    public ResponseEntity<List<CartResponse>> findAll(@AuthPrincipal MemberAuthRequest memberAuthRequest) {
-        List<CartResponse> allProduct = cartService.findAllProductByMemberInfo(memberAuthRequest);
+    public ResponseEntity<List<CartResponse>> findAll(@AuthPrincipal AuthMember authMember) {
+        List<CartResponse> allProduct = cartService.findAllProductByMemberInfo(authMember);
         return ResponseEntity.ok(allProduct);
     }
 
     @PostMapping("/cart/{productId}")
-    public ResponseEntity<Void> add(@AuthPrincipal MemberAuthRequest memberAuthRequest,
+    public ResponseEntity<Void> add(@AuthPrincipal AuthMember authMember,
                     @PathVariable long productId) {
-        long savedId = cartService.saveProduct(memberAuthRequest, productId);
+        long savedId = cartService.saveProduct(authMember, productId);
         return ResponseEntity.created(URI.create("/cart/" + savedId)).build();
     }
 
     @DeleteMapping("/cart/{productId}")
-    public ResponseEntity<Void> delete(@AuthPrincipal MemberAuthRequest memberAuthRequest,
+    public ResponseEntity<Void> delete(@AuthPrincipal AuthMember authMember,
                        @PathVariable long productId) {
-        cartService.removeProductByMemberInfoAndProductId(memberAuthRequest, productId);
+        cartService.removeProductByMemberInfoAndProductId(authMember, productId);
         return ResponseEntity.noContent().build();
     }
 }

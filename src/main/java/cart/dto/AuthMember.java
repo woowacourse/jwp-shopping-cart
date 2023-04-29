@@ -1,11 +1,11 @@
 package cart.dto;
 
-public class MemberAuthRequest {
+public class AuthMember {
 
     private final String email;
     private final String password;
 
-    public MemberAuthRequest(final String email, final String password) {
+    public AuthMember(final String email, final String password) {
         this.email = email;
         this.password = password;
     }

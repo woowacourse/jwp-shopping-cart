@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 
-import cart.dto.MemberAuthRequest;
+import cart.dto.AuthMember;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -34,6 +34,6 @@ public class AuthPrincipalArgumentResolver implements HandlerMethodArgumentResol
         List<String> memberInfo = List.of(decodedMemberInfo.split(MEMBER_INFO_DELIMITER));
         String email = memberInfo.get(0);
         String password = memberInfo.get(1);
-        return new MemberAuthRequest(email, password);
+        return new AuthMember(email, password);
     }
 }

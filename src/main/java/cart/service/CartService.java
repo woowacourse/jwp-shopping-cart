@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dto.CartResponse;
-import cart.dto.MemberAuthRequest;
+import cart.dto.AuthMember;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
@@ -25,9 +25,9 @@ public class CartService {
         this.memberDao = memberDao;
     }
 
-    public long saveProduct(MemberAuthRequest memberAuthRequest, long productId) {
-        checkMemberExistByMemberInfo(memberAuthRequest);
-        MemberEntity findMemberEntity = memberDao.selectByEmailAndPassword(memberAuthRequest.getEmail(), memberAuthRequest.getPassword());
+    public long saveProduct(AuthMember authMember, long productId) {
+        checkMemberExistByMemberInfo(authMember);
+        MemberEntity findMemberEntity = memberDao.selectByEmailAndPassword(authMember.getEmail(), authMember.getPassword());
         CartEntity cartEntity = new CartEntity.Builder()
                 .memberId(findMemberEntity.getMemberId())
                 .productId(productId)
@@ -35,9 +35,9 @@ public class CartService {
         return cartDao.insert(cartEntity);
     }
 
-    public List<CartResponse> findAllProductByMemberInfo(MemberAuthRequest memberAuthRequest) {
-        checkMemberExistByMemberInfo(memberAuthRequest);
-        MemberEntity findMemberEntity = memberDao.selectByEmailAndPassword(memberAuthRequest.getEmail(),memberAuthRequest.getPassword());
+    public List<CartResponse> findAllProductByMemberInfo(AuthMember authMember) {
+        checkMemberExistByMemberInfo(authMember);
+        MemberEntity findMemberEntity = memberDao.selectByEmailAndPassword(authMember.getEmail(), authMember.getPassword());
         List<ProductEntity> productEntities = cartDao.selectAllProductByMemberId(findMemberEntity.getMemberId());
         return productEntities.stream()
                 .map(productEntity -> new CartResponse(productEntity.getProductId(), productEntity.getImgUrl(),
@@ -45,17 +45,17 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void removeProductByMemberInfoAndProductId(MemberAuthRequest memberAuthRequest, long productId) {
-        checkMemberExistByMemberInfo(memberAuthRequest);
-        MemberEntity findMemberEntity = memberDao.selectByEmailAndPassword(memberAuthRequest.getEmail(), memberAuthRequest.getPassword());
+    public void removeProductByMemberInfoAndProductId(AuthMember authMember, long productId) {
+        checkMemberExistByMemberInfo(authMember);
+        MemberEntity findMemberEntity = memberDao.selectByEmailAndPassword(authMember.getEmail(), authMember.getPassword());
 
         checkProductExistBy(findMemberEntity.getMemberId(), productId);
         cartDao.deleteByMemberIdAndProductId(findMemberEntity.getMemberId(), productId);
     }
 
-    private void checkMemberExistByMemberInfo(MemberAuthRequest memberAuthRequest) {
-        String email = memberAuthRequest.getEmail();
-        String password = memberAuthRequest.getPassword();
+    private void checkMemberExistByMemberInfo(AuthMember authMember) {
+        String email = authMember.getEmail();
+        String password = authMember.getPassword();
         if (memberDao.isNotExistByEmailAndPassword(email, password)) {
             throw new MemberNotFoundException("사용자 인증 정보에 해당하는 사용자가 존재하지 않습니다.");
         }
