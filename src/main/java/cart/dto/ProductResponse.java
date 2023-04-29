@@ -6,7 +6,7 @@ public class ProductResponse {
     private final long id;
     private final String name;
     private final String imgUrl;
-    private final int price;
+    private final Integer price;
 
     private ProductResponse(long id, String name, String imgUrl, int price) {
         this.id = id;
@@ -36,7 +36,7 @@ public class ProductResponse {
         return imgUrl;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 }
