@@ -1,22 +1,21 @@
 package cart.controller;
 
+import cart.entity.Product;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-import cart.entity.Product;
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestDatabase
 class IntegrationTest {
 
     @LocalServerPort
@@ -43,43 +42,64 @@ class IntegrationTest {
         final Product product = new Product("TEST",
                 "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", 4000);
 
-        given()
+        // 추가 요청이 정상적으로 수행되었는가?
+        Response response = given()
                 .body(product).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/admin/create")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", notNullValue());
+                .post("/admin/create");
+
+        String location = response.getHeader("location");
+
+        response.then()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("location", notNullValue());
+
+        // 추가 요청한 데이터가 데이터베이스에 정상적으로 등록되어 있는가?
+        assertDatabase(location, product);
     }
 
     @Test
     @DisplayName("상품 수정 테스트")
-    @Sql({"/test-fixture.sql"})
     void editProduct() {
-        final Product product = new Product(1L, "TEST787",
-                "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", 4000);
+        // given : 상품을 저장한다.
+        LocationInformation locationInformation = insertProduct();
 
+        // when : 상품을 수정한다.
+        Product updateProduct = new Product(locationInformation.getId(), "변경된 무언가", "updatedImage.png", 9000);
         given()
-                .body(product).log().all()
+                .body(updateProduct).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .patch("/admin/edit")
                 .then().log().all()
                 .statusCode(200);
+
+        // then : 상품이 잘 변경되었는지 확인한다.
+        assertDatabase(locationInformation.getLocation(), updateProduct);
     }
 
     @Test
     @DisplayName("상품 삭제 테스트")
-    @Sql({"/test-fixture.sql"})
     void deleteProduct() {
+        // given : 상품을 저장한다.
+        LocationInformation locationInformation = insertProduct();
+
+        // when : 상품을 삭제한다.
         given()
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/admin/delete/1")
+                .delete("/admin/delete/" + locationInformation.getId())
                 .then().log().all()
                 .statusCode(200);
+
+        // then : 상품이 잘 삭제되었는지 확인한다.
+        given().log().all()
+                .get(locationInformation.getLocation())
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(equalTo("주어진 정보에 해당하는 데이터를 찾지 못했습니다."));
     }
 
     @Test
@@ -95,5 +115,48 @@ class IntegrationTest {
                 .then()
                 .statusCode(400)
                 .body(equalTo("유효한 이미지 확장자가 아닙니다."));
+    }
+
+    private LocationInformation insertProduct() {
+        final Product product = new Product("TEST787",
+                "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", 4000);
+        Response response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(product)
+                .when()
+                .post("/admin/create");
+
+        String location = response.getHeader("location");
+        long productId = Long.parseLong(location
+                .replace("/admin/", ""));
+        return new LocationInformation(location, productId);
+    }
+
+    private static void assertDatabase(String location, Product updateProduct) {
+        given().log().all()
+                .get(location)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("name", equalTo(updateProduct.getName()))
+                .body("imageUrl", equalTo(updateProduct.getImageUrl()))
+                .body("price", equalTo(updateProduct.getPrice()));
+    }
+
+    private static class LocationInformation {
+        private final String location;
+        private final long id;
+
+        public LocationInformation(String location, long id) {
+            this.location = location;
+            this.id = id;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+
+        public long getId() {
+            return id;
+        }
     }
 }

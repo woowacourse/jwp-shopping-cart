@@ -26,6 +26,13 @@ public class AdminController {
         return "admin";
     }
 
+    @GetMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<Product> product(@PathVariable final long id) {
+        Product product = productRepository.findById(id);
+        return ResponseEntity.ok(product);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid Product product) {
         long id = productRepository.save(product).getId();
