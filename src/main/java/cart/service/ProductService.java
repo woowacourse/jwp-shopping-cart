@@ -28,6 +28,12 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
+    public ProductResponse findById(Long id) {
+        Product product = productDao.findById(id);
+        return new ProductResponse(product);
+    }
+
+    @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
         List<Product> products = productDao.findAll();
         return products.stream()

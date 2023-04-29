@@ -1,12 +1,16 @@
 package cart.controller;
 
+import static cart.fixture.ProductFixture.PRODUCT_A;
 import static cart.fixture.ProductRequestFixture.PRODUCT_REQUEST_A;
 import static cart.fixture.ProductRequestFixture.PRODUCT_REQUEST_B;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import cart.dao.ProductDao;
+import cart.domain.Product;
 import cart.dto.request.ProductRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +30,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductApiControllerTest {
 
+    private static final String API_URL = "/products";
+
     @LocalServerPort
     private int port;
 
@@ -35,6 +41,9 @@ class ProductApiControllerTest {
     @Autowired
     private ProductDao productDao;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
@@ -42,7 +51,63 @@ class ProductApiControllerTest {
     }
 
     @Nested
-    @DisplayName("[POST] /product :")
+    @DisplayName("[GET] /prdocuts/{id}")
+    class findProduct {
+
+        @Test
+        @DisplayName("정상적으로 단일 상품을 조회한다.")
+        void find_by_id_success() throws JsonProcessingException {
+            Long id = productDao.save(PRODUCT_A);
+            Product findProduct = productDao.findById(id);
+            String expected = objectMapper.writeValueAsString(findProduct);
+
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .when().get(API_URL + "/" + id)
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body(is(expected));
+        }
+
+        @ParameterizedTest
+        @NullSource
+        @DisplayName("path가 null이면 400을 반환한다.")
+        void find_by_id_fail_by_null_path(String nullValue) {
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .when().get(API_URL + "/" + nullValue)
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"a", "bbbb"})
+        @DisplayName("path가 숫자가 아니라면 400을 반환한다.")
+        void find_by_id_fail_by_path_type_mismatch(String wrongTypeValue) {
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .when().get(API_URL + "/" + wrongTypeValue)
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .body("message",
+                            is("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 상품 ID를 경로로 설정시 404을 반환한다.")
+        void find_by_id_fail_by_not_exists_product_id() {
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .when().get(API_URL + "/" + 100000L)
+                    .then().log().all()
+                    .statusCode(HttpStatus.NOT_FOUND.value())
+                    .body("message", equalTo("존재하지 않는 상품입니다."));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("[POST] /products :")
     class PostProduct {
 
         @DisplayName("정상적으로 생성한다.")
@@ -51,7 +116,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(PRODUCT_REQUEST_A)
-                    .when().post("/product")
+                    .when().post(API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.CREATED.value());
         }
@@ -65,7 +130,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().post("/product")
+                    .when().post(API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("이름을 입력해주세요."));
@@ -79,7 +144,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().post("/product")
+                    .when().post(API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("상품의 이름은 1자 이상, 20자 이하입니다."));
@@ -94,7 +159,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().post("/product")
+                    .when().post(API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("가격을 입력해주세요."));
@@ -109,7 +174,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().post("/product")
+                    .when().post(API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("상품의 최소 가격은 1000원 이상입니다."));
@@ -124,7 +189,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().post("/product")
+                    .when().post(API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("상품의 가격 단위는 100원 단위입니다."));
@@ -139,7 +204,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().post("/product")
+                    .when().post(API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("이미지 URL을 입력해주세요."));
@@ -147,18 +212,18 @@ class ProductApiControllerTest {
     }
 
     @Nested
-    @DisplayName("[PUT] /product/{id} :")
+    @DisplayName("[PUT] /products/{id} :")
     class UpdateProduct {
 
         @DisplayName("정상적으로 수정한다.")
         @Test
         void update_success() {
-            Long savedId = productDao.save(PRODUCT_REQUEST_A.toEntity());
+            Long savedId = productDao.save(PRODUCT_A);
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(PRODUCT_REQUEST_B)
-                    .when().put("/product/" + savedId)
+                    .when().put(API_URL + "/" + savedId)
                     .then().log().all()
                     .statusCode(HttpStatus.NO_CONTENT.value());
         }
@@ -170,7 +235,7 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(PRODUCT_REQUEST_A)
-                    .when().put("/product/" + wrongValue)
+                    .when().put(API_URL + "/" + wrongValue)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
@@ -182,19 +247,20 @@ class ProductApiControllerTest {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(PRODUCT_REQUEST_A)
-                    .when().put("/product/" + wrongTypeValue)
+                    .when().put(API_URL + "/" + wrongTypeValue)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body("message", is("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
+                    .body("message",
+                            is("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
         }
 
         @Test
-        @DisplayName("존재하지 않는 상품 ID를 경로로 설정시 400을 반환한다.")
+        @DisplayName("존재하지 않는 상품 ID를 경로로 설정시 404을 반환한다.")
         void update_fail_by_not_exists_product_id() {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(PRODUCT_REQUEST_A)
-                    .when().put("/product/" + 100000L)
+                    .when().put(API_URL + "/" + 100000L)
                     .then().log().all()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("message", equalTo("존재하지 않는 상품입니다."));
@@ -204,13 +270,13 @@ class ProductApiControllerTest {
         @NullAndEmptySource
         @DisplayName("상품의 이름이 공백이거나 null이면 400을 반환한다.")
         void update_fail_by_wrong_product_name(String wrongValue) {
-            Long savedId = productDao.save(PRODUCT_REQUEST_A.toEntity());
+            Long savedId = productDao.save(PRODUCT_A);
             ProductRequest request = new ProductRequest(wrongValue, 1000, "www.naver.com");
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().put("/product/" + savedId)
+                    .when().put(API_URL + "/" + savedId)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("이름을 입력해주세요."));
@@ -219,13 +285,13 @@ class ProductApiControllerTest {
         @Test
         @DisplayName("상품 이름의 길이가 20자 이하가 아닌 경우 400을 반환한다..")
         void update_fail_by_product_name_length() {
-            Long savedId = productDao.save(PRODUCT_REQUEST_A.toEntity());
+            Long savedId = productDao.save(PRODUCT_A);
             ProductRequest request = new ProductRequest("123456789012345678901", 1000, "www.naver.com");
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().put("/product/" + savedId)
+                    .when().put(API_URL + "/" + savedId)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("상품의 이름은 1자 이상, 20자 이하입니다."));
@@ -235,13 +301,13 @@ class ProductApiControllerTest {
         @NullSource
         @DisplayName("상품의 가격이 null이면 400을 반환한다.")
         void update_fail_by_null_price(Integer wrongPrice) {
-            Long savedId = productDao.save(PRODUCT_REQUEST_A.toEntity());
+            Long savedId = productDao.save(PRODUCT_A);
             ProductRequest request = new ProductRequest("name", wrongPrice, "www.naver.com");
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().put("/product/" + savedId)
+                    .when().put(API_URL + "/" + savedId)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("가격을 입력해주세요."));
@@ -251,13 +317,13 @@ class ProductApiControllerTest {
         @ValueSource(ints = {999, 0, -1000})
         @DisplayName("상품 가격이 1000원 미만이면 400을 반환한다.")
         void update_fail_by_product_wrong_price_range(Integer wrongPrice) {
-            Long savedId = productDao.save(PRODUCT_REQUEST_A.toEntity());
+            Long savedId = productDao.save(PRODUCT_A);
             ProductRequest request = new ProductRequest("name", wrongPrice, "www.naver.com");
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().put("/product/" + savedId)
+                    .when().put(API_URL + "/" + savedId)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("상품의 최소 가격은 1000원 이상입니다."));
@@ -267,13 +333,13 @@ class ProductApiControllerTest {
         @ValueSource(ints = {1050, 1150})
         @DisplayName("상품 가격이 100원 단위가 아닌경우 400을 반환한다")
         void update_fail_by_product_wrong_unit_of_price(Integer wrongPrice) {
-            Long savedId = productDao.save(PRODUCT_REQUEST_A.toEntity());
+            Long savedId = productDao.save(PRODUCT_A);
             ProductRequest request = new ProductRequest("name", wrongPrice, "www.naver.com");
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().put("/product/" + savedId)
+                    .when().put(API_URL + "/" + savedId)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("상품의 가격 단위는 100원 단위입니다."));
@@ -283,13 +349,13 @@ class ProductApiControllerTest {
         @NullAndEmptySource
         @DisplayName("이미지 URL이 비어있거나 null이면 400을 반환한다.")
         void update_fail_by_wrong_image_url(String wrongValue) {
-            Long savedId = productDao.save(PRODUCT_REQUEST_A.toEntity());
+            Long savedId = productDao.save(PRODUCT_A);
             ProductRequest request = new ProductRequest("name", 1000, wrongValue);
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
-                    .when().put("/product/" + savedId)
+                    .when().put(API_URL + "/" + savedId)
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("이미지 URL을 입력해주세요."));
@@ -297,17 +363,17 @@ class ProductApiControllerTest {
     }
 
     @Nested
-    @DisplayName("[DELETE] /product/{id} :")
+    @DisplayName("[DELETE] /products/{id} :")
     class DeleteProduct {
 
         @DisplayName("정상적으로 삭제한다.")
         @Test
         void delete_success() {
-            Long savedId = productDao.save(PRODUCT_REQUEST_A.toEntity());
+            Long savedId = productDao.save(PRODUCT_A);
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .when().delete("/product/" + savedId)
+                    .when().delete(API_URL + "/" + savedId)
                     .then().log().all()
                     .statusCode(HttpStatus.NO_CONTENT.value());
         }
@@ -318,7 +384,7 @@ class ProductApiControllerTest {
         void delete_fail_by_null_path(String nullValue) {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .when().delete("/product/" + nullValue)
+                    .when().delete(API_URL + "/" + nullValue)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
@@ -329,19 +395,20 @@ class ProductApiControllerTest {
         void delete_fail_by_path_type_mismatch(String wrongTypeValue) {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .when().delete("/product/" + wrongTypeValue)
+                    .when().delete(API_URL + "/" + wrongTypeValue)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body("message", is("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
+                    .body("message",
+                            is("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
         }
 
 
         @Test
-        @DisplayName("존재하지 않는 상품 ID를 경로로 설정시 400을 반환한다.")
+        @DisplayName("존재하지 않는 상품 ID를 경로로 설정시 404를 반환한다.")
         void delete_fail_by_not_exists_product_id() {
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .when().delete("/product/" + 100000L)
+                    .when().delete(API_URL + "/" + 100000L)
                     .then().log().all()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("message", equalTo("존재하지 않는 상품입니다."));

@@ -1,14 +1,19 @@
 package cart.service;
 
+import static cart.fixture.ProductFixture.PRODUCT_A_HAS_ID;
+import static cart.fixture.ProductFixture.PRODUCT_B_HAS_ID;
 import static cart.fixture.ProductRequestFixture.PRODUCT_REQUEST_A;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import cart.dao.ProductDao;
 import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -85,8 +90,50 @@ class ProductServiceTest {
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("상품의 최소 가격은 1000원 이상입니다.");
         }
-
     }
+
+    @Nested
+    @DisplayName("단일 상품을 조회할 때")
+    class FindByIdProduct {
+
+        @DisplayName("정상적으로 성공한다.")
+        @Test
+        void find_by_id_success() {
+            //when
+            when(productDao.findById(any()))
+                    .thenReturn(PRODUCT_A_HAS_ID);
+            ProductResponse actual = productService.findById(1L);
+            //then
+            assertThat(actual)
+                    .usingRecursiveComparison()
+                    .isEqualTo(PRODUCT_A_HAS_ID);
+        }
+    }
+
+    @Nested
+    @DisplayName("전체 상품을 조회할 때")
+    class FindAllProduct {
+
+        @DisplayName("정상적으로 성공한다.")
+        @Test
+        void find_by_id_success() {
+            //when
+            when(productDao.findAll())
+                    .thenReturn(List.of(PRODUCT_A_HAS_ID, PRODUCT_B_HAS_ID));
+            List<ProductResponse> actual = productService.findAll();
+            //then
+            assertAll(
+                    () -> assertThat(actual.size()).isEqualTo(2),
+                    () -> assertThat(actual.get(0))
+                            .usingRecursiveComparison()
+                            .isEqualTo(PRODUCT_A_HAS_ID),
+                    () -> assertThat(actual.get(1))
+                            .usingRecursiveComparison()
+                            .isEqualTo(PRODUCT_B_HAS_ID)
+            );
+        }
+    }
+
 
     @Nested
     @DisplayName("상품 수정할 때")
