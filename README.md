@@ -4,17 +4,24 @@
 
 ### API 명세
 
+- [x] 상품 단일 조회
+    - GET "/products/{id}"
+    - Response: 200 OK
+        - id, name, price, image_url
+
 - [x] 상품 생성
-  - POST "/admin"
+  - POST "/products"
   - Request: name, price, image_url
-  - Response: 201 OK
+  - Response: 201 Created
+    - header
+        - location: "/products/{id}"
 - [x] 상품 수정
-  - PUT "/admin/{id}"
+  - PUT "/products/{id}"
   - Request: name, price, image_url
-  - Response: 200 OK
+  - Response: 204 No Content
 - [x] 상품 삭제
-  - DELETE "/admin/{id}"
-  - Response: 200 OK
+  - DELETE "/products/{id}"
+  - Response: 200 No Content
 
 ### View
 
