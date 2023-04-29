@@ -52,13 +52,13 @@ class DbProductDaoTest {
     void updateTest() {
         Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
 
-        productDao.update(new Product(gitchan.getId(), "박스터", "boxster.img", 500));
+        productDao.update(new Product(gitchan.getId(), "박스터", "boxster.img", 1500));
 
         Product findProduct = productDao.findById(gitchan.getId()).get();
         assertAll(
                 () -> assertThat(findProduct.getName()).isEqualTo("박스터"),
                 () -> assertThat(findProduct.getImgUrl()).isEqualTo("boxster.img"),
-                () -> assertThat(findProduct.getPrice()).isEqualTo(500)
+                () -> assertThat(findProduct.getPrice()).isEqualTo(1500)
         );
     }
 

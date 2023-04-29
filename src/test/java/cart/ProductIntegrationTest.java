@@ -90,7 +90,7 @@ public class ProductIntegrationTest {
     @DisplayName("상품을 수정한다")
     @Test
     public void updateProductTest() {
-        Product gitchan = productDao.save(new Product("깃짱", "https://gitchan.com", 10));
+        Product gitchan = productDao.save(new Product("깃짱", "https://gitchan.com", 1000));
         ProductRequest productRequest = new ProductRequest("박스터", "https://boxster.com", 10000);
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -112,7 +112,7 @@ public class ProductIntegrationTest {
     @DisplayName("상품을 삭제한다")
     @Test
     public void deleteProductTest() {
-        Product boxster = productDao.save(new Product("박스터", "1", 10));
+        Product boxster = productDao.save(new Product("박스터", "1", 1000));
         RestAssured.given()
 
                 .when()

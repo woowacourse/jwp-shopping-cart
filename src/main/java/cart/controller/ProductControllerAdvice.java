@@ -9,11 +9,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ProductControllerAdvice {
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler
     public ResponseEntity<String> handleException(MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(e.getBindingResult().getFieldError().getDefaultMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler
