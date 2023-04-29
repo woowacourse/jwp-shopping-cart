@@ -1,6 +1,7 @@
 package cart.presentation;
 
-import cart.business.ReadProductService;
+import cart.application.ProductCRUDApplication;
+import cart.business.ProductCRUDService;
 import cart.presentation.dto.ProductDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,32 +13,23 @@ import java.util.stream.Collectors;
 @Controller
 public class TemplateController {
 
-    private final ReadProductService readProductService;
+    private final ProductCRUDApplication productCRUDApplication;
 
-    public TemplateController(ReadProductService readProductService) {
-        this.readProductService = readProductService;
+    public TemplateController(ProductCRUDApplication productCRUDApplication) {
+        this.productCRUDApplication = productCRUDApplication;
     }
 
     @GetMapping("/")
     public String home(Model model) {
-        List<ProductDto> products = readAllProducts();
+        List<ProductDto> products = productCRUDApplication.readAll();
         model.addAttribute("products", products);
         return "index";
     }
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        List<ProductDto> products = readAllProducts();
+        List<ProductDto> products = productCRUDApplication.readAll();
         model.addAttribute("products", products);
         return "admin";
-    }
-
-    private List<ProductDto> readAllProducts() {
-        return readProductService.perform().stream()
-                .map(product -> new ProductDto(product.getId(),
-                        product.getName(),
-                        product.getUrl(),
-                        product.getPrice()))
-                .collect(Collectors.toList());
     }
 }
