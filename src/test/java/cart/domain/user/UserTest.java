@@ -27,10 +27,10 @@ class UserTest {
     }
 
     @ParameterizedTest(name = "email이 a@a.com, password가 password일 때 {0}, {1}을 전달하면 {2}를 반환한다")
-    @CsvSource(value = {"a@a.com:password:true","b@b.com:password:false","a@a.com:not-password:false"}, delimiter = ':')
-    void matches(String email, String password, boolean expected) {
+    @CsvSource(value = {"password:true", "a@a.com:false"}, delimiter = ':')
+    void matches(String password, boolean expected) {
         User user = new User("a@a.com", "password");
 
-        assertThat(user.matches(email, password)).isEqualTo(expected);
+        assertThat(user.matches(password)).isEqualTo(expected);
     }
 }

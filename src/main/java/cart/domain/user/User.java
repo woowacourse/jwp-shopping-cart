@@ -16,8 +16,8 @@ public class User {
         this(null, email, password);
     }
 
-    public boolean matches(String email, String password) {
-        return userEmail.matches(email) && userPassword.matches(password);
+    public boolean matches(String password) {
+        return userPassword.matches(password);
     }
 
     public Long getId() {

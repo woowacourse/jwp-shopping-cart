@@ -19,10 +19,10 @@ public class UserDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<User> findById(Long id) {
-        String sql = "SELECT user_id, email, password FROM USERS WHERE user_id = ?";
+    public Optional<User> findByEmail(String email) {
+        String sql = "SELECT user_id, email, password FROM USERS WHERE email = ?";
 
-        return jdbcTemplate.query(sql, actorRowMapper, id)
+        return jdbcTemplate.query(sql, actorRowMapper, email)
                 .stream()
                 .findAny();
     }

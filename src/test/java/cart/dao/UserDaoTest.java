@@ -27,13 +27,13 @@ class UserDaoTest {
     }
 
     @Test
-    @DisplayName("지정한 id의 사용자를 조회한다.")
+    @DisplayName("지정한 email의 사용자를 조회한다.")
     void findByIdSuccess() {
-        final Optional<User> user = userDao.findById(1L);
+        final Optional<User> user = userDao.findByEmail("a@a.com");
 
         assertAll(
                 () -> assertThat(user).isPresent(),
-                () -> assertThat(user.get().getId()).isEqualTo(1L)
+                () -> assertThat(user.get().getEmail()).isEqualTo("a@a.com")
         );
     }
 

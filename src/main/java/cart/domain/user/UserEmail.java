@@ -21,10 +21,6 @@ public class UserEmail {
         }
     }
 
-    public boolean matches(String email) {
-        return this.email.equals(email);
-    }
-
     public String getEmail() {
         return email;
     }
