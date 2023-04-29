@@ -1,21 +1,15 @@
 package cart.exception;
 
-import org.springframework.http.HttpStatus;
+public class ItemException extends RuntimeException {
 
-public class ItemException extends IllegalArgumentException {
+    private final String message;
 
-    private final ErrorStatus errorStatus;
-
-    public ItemException(ErrorStatus errorStatus) {
-        this.errorStatus = errorStatus;
+    public ItemException(String message) {
+        this.message = message;
     }
 
     @Override
     public String getMessage() {
-        return errorStatus.getMessage();
-    }
-
-    public HttpStatus getErrorStatus() {
-        return errorStatus.getHttpStatus();
+        return message;
     }
 }

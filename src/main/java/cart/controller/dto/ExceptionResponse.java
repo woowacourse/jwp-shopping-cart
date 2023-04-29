@@ -1,14 +1,14 @@
 package cart.controller.dto;
 
-public class ExceptionResponse<T> {
+public class ExceptionResponse {
 
-    private final T message;
+    private final String message;
 
-    public ExceptionResponse(T message) {
+    public ExceptionResponse(String message) {
         this.message = message;
     }
 
-    public T getMessage() {
+    public String getMessage() {
         return message;
     }
 }

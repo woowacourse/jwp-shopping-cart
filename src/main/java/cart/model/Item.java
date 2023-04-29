@@ -1,7 +1,7 @@
 package cart.model;
 
-import cart.exception.ErrorStatus;
-import cart.exception.ItemException;
+import cart.exception.NameRangeException;
+import cart.exception.PriceRangeException;
 
 public class Item {
 
@@ -9,6 +9,9 @@ public class Item {
     private static final int MAX_LENGTH = 50;
     private static final int MIN_PRICE = 10;
     private static final int MAX_PRICE = 100_000_000;
+
+    private static final String NAME_ERROR_MESSAGE = "상품의 이름은 최소 1자, 최대 50자까지 가능합니다.";
+    private static final String PRICE_ERROR_MESSAGE = "상품의 금액은 최소 10원, 최대 1억원 까지 가능합니다.";
 
     private final String name;
     private final String imageUrl;
@@ -26,13 +29,13 @@ public class Item {
         int length = name.length();
 
         if (length < MIN_LENGTH || length > MAX_LENGTH) {
-            throw new ItemException(ErrorStatus.NAME_RANGE_ERROR);
+            throw new NameRangeException(NAME_ERROR_MESSAGE);
         }
     }
 
     private void validatePrice(int price) {
         if (price < MIN_PRICE || price > MAX_PRICE) {
-            throw new ItemException(ErrorStatus.PRICE_RANGE_ERROR);
+            throw new PriceRangeException(PRICE_ERROR_MESSAGE);
         }
     }
 

@@ -1,7 +1,11 @@
 package cart.controller;
 
 import cart.controller.dto.ExceptionResponse;
+import cart.exception.DataBaseSearchException;
 import cart.exception.ItemException;
+import cart.exception.ItemNotFoundException;
+import cart.exception.NameRangeException;
+import cart.exception.PriceRangeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
         logger.warn(ex.getMessage());
-        return ResponseEntity.badRequest().body(new ExceptionResponse<>(INPUT_NOT_READABLE_MESSAGE));
+        return ResponseEntity.badRequest().body(new ExceptionResponse(INPUT_NOT_READABLE_MESSAGE));
     }
 
     @Override
@@ -33,26 +37,39 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
         logger.warn(ex.getMessage());
-        return ResponseEntity.badRequest().body(new ExceptionResponse<>(INPUT_NOT_READABLE_MESSAGE));
+        return ResponseEntity.badRequest().body(new ExceptionResponse(INPUT_NOT_READABLE_MESSAGE));
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers,
                                                                HttpStatus status, WebRequest request) {
         logger.warn(ex.getMessage());
-        return ResponseEntity.badRequest().body(new ExceptionResponse<>(PATH_VARIABLE_ERROR_MESSAGE));
+        return ResponseEntity.badRequest().body(new ExceptionResponse(PATH_VARIABLE_ERROR_MESSAGE));
     }
 
-    @ExceptionHandler(ItemException.class)
-    private ResponseEntity<ExceptionResponse<String>> handleItemException(ItemException ex) {
+    @ExceptionHandler({NameRangeException.class, PriceRangeException.class})
+    private ResponseEntity<ExceptionResponse> handleItemException(ItemException ex) {
         logger.warn(ex.getMessage());
-        return ResponseEntity.status(ex.getErrorStatus()).body(new ExceptionResponse<>(ex.getMessage()));
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ItemNotFoundException.class)
+    private ResponseEntity<ExceptionResponse> handleItemNotFoundException(ItemNotFoundException ex) {
+        logger.warn(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(DataBaseSearchException.class)
+    private ResponseEntity<ExceptionResponse> handleDataBaseSearchException(DataBaseSearchException ex) {
+        logger.warn(ex.getMessage());
+        ex.printStackTrace();
+        return ResponseEntity.internalServerError().body(new ExceptionResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    private ResponseEntity<ExceptionResponse<String>> handleException(Exception ex) {
+    private ResponseEntity<ExceptionResponse> handleException(Exception ex) {
         logger.warn(ex.getMessage());
         ex.printStackTrace();
-        return ResponseEntity.internalServerError().body(new ExceptionResponse<>(INTERNAL_ERROR_MESSAGE));
+        return ResponseEntity.internalServerError().body(new ExceptionResponse(INTERNAL_ERROR_MESSAGE));
     }
 }
