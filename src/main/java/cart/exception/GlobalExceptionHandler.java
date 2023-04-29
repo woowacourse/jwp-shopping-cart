@@ -1,8 +1,6 @@
 package cart.exception;
 
 import cart.controller.dto.ErrorResponse;
-import cart.exception.ErrorCode;
-import cart.exception.GlobalException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +25,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> methodArgumentNotValidException(final MethodArgumentNotValidException e) {
         final List<String> errorMessage = getErrorMessage(e);
         final ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_REQUEST, errorMessage);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> exception() {
+        final ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+        final ErrorResponse errorResponse = new ErrorResponse(errorCode, List.of(errorCode.getMessage()));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
