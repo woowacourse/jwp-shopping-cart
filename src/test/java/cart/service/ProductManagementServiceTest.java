@@ -17,9 +17,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,7 +57,7 @@ class ProductManagementServiceTest {
         when(productDao.insert(any())).thenReturn(1L);
         managementService.save(productDto);
 
-        assertDoesNotThrow(()->managementService.save(productDto));
+        assertDoesNotThrow(() -> managementService.save(productDto));
     }
 
     @DisplayName("상품 데이터가 수정되는지 확인한다")
@@ -69,7 +66,7 @@ class ProductManagementServiceTest {
         final ProductDto productDto = ProductDto.of(1L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
         when(productDao.update(any())).thenReturn(1);
 
-        assertDoesNotThrow(()->managementService.update(productDto));
+        assertDoesNotThrow(() -> managementService.update(productDto));
     }
 
     @DisplayName("상품 데이터가 수정되지 않으면 예외가 발생하는지 확인한다")
@@ -78,7 +75,7 @@ class ProductManagementServiceTest {
         final ProductDto productDto = ProductDto.of(3L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
         when(productDao.update(any())).thenReturn(0);
 
-        assertThatThrownBy(()->managementService.update(productDto))
+        assertThatThrownBy(() -> managementService.update(productDto))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -88,7 +85,7 @@ class ProductManagementServiceTest {
         final ProductDto productDto = ProductDto.of(1L, null, null, null);
         when(productDao.delete(any())).thenReturn(1);
 
-        assertDoesNotThrow(()->managementService.delete(productDto));
+        assertDoesNotThrow(() -> managementService.delete(productDto));
     }
 
     @DisplayName("상품 데이터가 삭제되지 않으면 예외가 발생하는지 확인한다")
@@ -97,7 +94,7 @@ class ProductManagementServiceTest {
         final ProductDto productDto = ProductDto.of(3L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
         when(productDao.update(any())).thenReturn(0);
 
-        assertThatThrownBy(()->managementService.update(productDto))
+        assertThatThrownBy(() -> managementService.update(productDto))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

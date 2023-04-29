@@ -175,10 +175,9 @@ class AdminControllerTest {
         }
 
         @DisplayName("존재하지 않는 id의 상품에 대한 수정 요청이 들어오면 상태코드 400을 반환하는지 확인한다")
-        @ParameterizedTest
-        @ValueSource(strings = {" ", "", "image"})
-        void throwExceptionWhenInvalidIdTest(final String imageInput) {
-            final ProductModificationRequest request = new ProductModificationRequest(3L, "pobi", imageInput, 10_000_000);
+        @Test
+        void throwExceptionWhenInvalidIdTest() {
+            final ProductModificationRequest request = new ProductModificationRequest(3L, "pobi", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10_000_000);
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -209,15 +208,12 @@ class AdminControllerTest {
         }
 
         @DisplayName("존재하지 않는 id의 상품에 대한 삭제 요청이 들어오면 상태코드 400을 반환하는지 확인한다")
-        @ParameterizedTest
-        @ValueSource(strings = {" ", "", "image"})
-        void throwExceptionWhenInvalidIdTest(final String imageInput) {
-            final ProductModificationRequest request = new ProductModificationRequest(3L, "pobi", imageInput, 10_000_000);
+        @Test
+        void throwExceptionWhenInvalidIdTest() {
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(request)
-                    .when().put("/admin/products/" + request.getId())
+                    .when().delete("/admin/products/3")
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
