@@ -1,16 +1,9 @@
 package cart.controller;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-
 import cart.dto.RequestCreateProductDto;
 import cart.dto.RequestUpdateProductDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -29,10 +22,18 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class CartApiControllerTest {
 
     @LocalServerPort
     int port;
