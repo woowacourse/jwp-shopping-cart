@@ -3,6 +3,7 @@ package cart.controller;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.service.ProductService;
+import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,11 @@ public class ProductApiController {
 
     @PostMapping
     public ResponseEntity<String> save(@RequestBody @Valid ProductRequest productRequest) {
-        productService.save(productRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        Long savedId = productService.save(productRequest);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .location(URI.create("/products/" + savedId))
+                .build();
     }
 
     @PutMapping("/{productId}")
