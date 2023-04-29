@@ -6,10 +6,11 @@ import cart.domain.Product;
 import cart.dto.RequestCreateProductDto;
 import cart.dto.RequestUpdateProductDto;
 import cart.dto.ResponseProductDto;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -34,16 +35,16 @@ public class CartService {
                 ).collect(Collectors.toUnmodifiableList());
     }
 
-    public void insert(final RequestCreateProductDto requestCreateProductDto) {
+    public Long insert(final RequestCreateProductDto requestCreateProductDto) {
         final Product newProduct = new Product(
                 requestCreateProductDto.getName(),
                 requestCreateProductDto.getPrice(),
                 requestCreateProductDto.getImage()
         );
-        productDao.insert(newProduct);
+        return productDao.insert(newProduct);
     }
 
-    public void update(final RequestUpdateProductDto requestUpdateProductDto) {
+    public int update(final RequestUpdateProductDto requestUpdateProductDto) {
         final Product product = new Product(
                 requestUpdateProductDto.getName(),
                 requestUpdateProductDto.getPrice(),
@@ -51,6 +52,7 @@ public class CartService {
         );
         final int updatedRows = productDao.update(product, requestUpdateProductDto.getId());
         validateAffectedRowsCount(updatedRows);
+        return updatedRows;
     }
 
     private void validateAffectedRowsCount(final int affectedRows) {
@@ -59,8 +61,9 @@ public class CartService {
         }
     }
 
-    public void delete(final Long id) {
+    public int delete(final Long id) {
         final int affectedRows = productDao.delete(id);
         validateAffectedRowsCount(affectedRows);
+        return affectedRows;
     }
 }
