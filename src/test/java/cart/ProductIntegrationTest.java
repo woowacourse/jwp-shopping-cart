@@ -1,29 +1,41 @@
 package cart;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import cart.dao.ProductDao;
 import cart.dto.ProductRequest;
+import cart.entity.Product;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-
+@Sql("delete.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductIntegrationTest {
 
     @LocalServerPort
     private int port;
 
+    @Autowired
+    private ProductDao productDao;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
     }
 
+    @DisplayName("index 페이지를 조회한다")
     @Test
     public void indexTest() {
         RestAssured.given()
@@ -38,6 +50,7 @@ public class ProductIntegrationTest {
                 .body(containsString("상품목록"));
     }
 
+    @DisplayName("admin 페이지를 조회한다")
     @Test
     public void adminTest() {
         RestAssured.given()
@@ -52,14 +65,10 @@ public class ProductIntegrationTest {
                 .body(containsString("관리자 페이지"));
     }
 
+    @DisplayName("상품을 등록한다")
     @Test
     public void createProducts() {
-        String name = "깃짱";
-        String imgUrl = "#";
-        int price = 10000;
-
-        ProductRequest productRequest = new ProductRequest(name, imgUrl, price);
-
+        ProductRequest productRequest = new ProductRequest("박스터", "https://boxster.com", 10000);
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
@@ -68,39 +77,49 @@ public class ProductIntegrationTest {
                 .post("/products")
 
                 .then()
+
                 .statusCode(HttpStatus.CREATED.value())
-                .body("name", equalTo(name))
-                .body("imgUrl", equalTo(imgUrl))
-                .body("price", equalTo(price));
+                .body("name", equalTo("박스터"))
+                .body("imgUrl", equalTo("https://boxster.com"))
+                .body("price", equalTo(10000));
+        assertThat(productDao.findAll())
+                .map(Product::getName)
+                .containsExactly("박스터");
     }
 
+    @DisplayName("상품을 수정한다")
     @Test
     public void updateProductTest() {
-        String name = "깃짱";
-        String imgUrl = "#";
-        int price = 10000;
-
-        ProductRequest productRequest = new ProductRequest(name, imgUrl, price);
-
+        Product gitchan = productDao.save(new Product("깃짱", "https://gitchan.com", 10));
+        ProductRequest productRequest = new ProductRequest("박스터", "https://boxster.com", 10000);
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
 
                 .when()
-                .patch("/products/1")
+                .patch("/products/{id}", gitchan.getId())
 
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
+        Product findProduct = productDao.findById(gitchan.getId()).get();
+        assertAll(
+                () -> assertThat(findProduct.getName()).isEqualTo("박스터"),
+                () -> assertThat(findProduct.getPrice()).isEqualTo(10000),
+                () -> assertThat(findProduct.getImgUrl()).isEqualTo("https://boxster.com")
+        );
     }
 
+    @DisplayName("상품을 삭제한다")
     @Test
     public void deleteProductTest() {
+        Product boxster = productDao.save(new Product("박스터", "1", 10));
         RestAssured.given()
 
                 .when()
-                .delete("/products/1")
+                .delete("/products/{id}", boxster.getId())
 
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
+        assertThat(productDao.findById(boxster.getId())).isEmpty();
     }
 }
