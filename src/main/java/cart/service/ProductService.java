@@ -9,8 +9,10 @@ import cart.exception.ProductNotFoundException;
 import cart.repository.ProductDao;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
     private final ProductDao productDao;
 
@@ -18,6 +20,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public ProductDto createProduct(String name, int price, String imageUrl) {
         Product product = Product.Builder.builder()
                 .name(name)
@@ -39,6 +42,7 @@ public class ProductService {
         productDao.deleteById(id);
     }
 
+    @Transactional
     public ProductDto updateProductById(Long id, String name, int price, String imageUrl) {
         validateId(id);
         ProductEntity productEntity = ProductEntity.Builder.builder()

@@ -6,8 +6,10 @@ import cart.repository.CartDao;
 import cart.repository.ProductDao;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class CartService {
     private final CartDao cartDao;
     private final ProductDao productDao;
@@ -17,6 +19,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public void addToCart(Long memberId, Long productId) {
         validateProductId(productId);
         cartDao.save(memberId, productId);
@@ -32,6 +35,7 @@ public class CartService {
         return cartDao.findAllProductByMemberId(memberId);
     }
 
+    @Transactional
     public void deleteProduct(Long memberId, Long cartId) {
         validateCartId(cartId);
         cartDao.delete(memberId, cartId);
