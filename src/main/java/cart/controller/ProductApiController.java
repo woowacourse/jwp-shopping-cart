@@ -3,7 +3,6 @@ package cart.controller;
 import cart.dto.request.ProductRequest;
 import cart.service.ProductService;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,15 +31,15 @@ public class ProductApiController {
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<String> update(@PathVariable @NotNull Long productId,
+    public ResponseEntity<Void> update(@PathVariable Long productId,
                                          @RequestBody @Valid ProductRequest productRequest) {
         productService.updateById(productId, productRequest);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<String> delete(@PathVariable @NotNull Long productId) {
+    public ResponseEntity<Void> delete(@PathVariable Long productId) {
         productService.deleteById(productId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

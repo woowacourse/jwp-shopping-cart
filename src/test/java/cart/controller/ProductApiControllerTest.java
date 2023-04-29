@@ -3,6 +3,7 @@ package cart.controller;
 import static cart.fixture.ProductRequestFixture.PRODUCT_REQUEST_A;
 import static cart.fixture.ProductRequestFixture.PRODUCT_REQUEST_B;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 import cart.dao.ProductDao;
 import cart.dto.request.ProductRequest;
@@ -159,7 +160,7 @@ class ProductApiControllerTest {
                     .body(PRODUCT_REQUEST_B)
                     .when().put("/product/" + savedId)
                     .then().log().all()
-                    .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.NO_CONTENT.value());
         }
 
         @ParameterizedTest
@@ -172,6 +173,19 @@ class ProductApiControllerTest {
                     .when().put("/product/" + wrongValue)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"a", "bbbb"})
+        @DisplayName("path가 숫자가 아니라면 400을 반환한다.")
+        void update_fail_by_path_type_mismatch(String wrongTypeValue) {
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(PRODUCT_REQUEST_A)
+                    .when().put("/product/" + wrongTypeValue)
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .body("message", is("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
         }
 
         @Test
@@ -295,7 +309,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .when().delete("/product/" + savedId)
                     .then().log().all()
-                    .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.NO_CONTENT.value());
         }
 
         @ParameterizedTest
@@ -308,6 +322,19 @@ class ProductApiControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"a", "bbbb"})
+        @DisplayName("path가 숫자가 아니라면 400을 반환한다.")
+        void delete_fail_by_path_type_mismatch(String wrongTypeValue) {
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .when().delete("/product/" + wrongTypeValue)
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .body("message", is("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
+        }
+
 
         @Test
         @DisplayName("존재하지 않는 상품 ID를 경로로 설정시 400을 반환한다.")
