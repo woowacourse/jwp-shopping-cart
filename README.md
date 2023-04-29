@@ -10,7 +10,14 @@ CREATE TABLE IF NOT EXISTS ITEM
   price       INT         NOT NULL
 )
 
+CREATE TABLE IF NOT EXISTS USERS
+(
+  user_id     BIGINT    AUTO_INCREMENT    NOT NULL,
+  email       VARCHAR(255)                NOT NULL,
+  password    VARCHAR(255)                NOT NULL,
 
+  PRIMARY KEY (user_id)
+);
 ```
 
 ## API SPEC
@@ -105,6 +112,7 @@ http://localhost:8080/items/1
   - [x] 상품 전체 조회 API를 구현한다.
 - [ ] 사용자 기능 API를 구현한다.
   - [ ] 사용자 전체 조회 API를 구현한다.
+  - [ ] 사용자 로그인 API를 구현한다.
 - [ ] 장바구니 기능 API를 구현한다.
   - [ ] 장바구니 상품 추가 API를 구현한다.
   - [ ] 장바구니 상품 제거 API를 구현한다.
@@ -117,9 +125,11 @@ http://localhost:8080/items/1
 - [ ] 사용자 설정 페이지를 연동한다.
 
 ## 상품 요구사항
+
 - [x] 상품의 이름은 최소 1자, 최대 50자까지 가능하다.
 - [x] 상품의 금액은 최소 10원, 최대 1억원 까지 가능하다.
 
 ## 사용자 요구사항
+
 - [ ] 사용자의 email은 이메일 형식이어야 한다.
 - [ ] 사용자의 password는 공백일 수 없다.
