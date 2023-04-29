@@ -16,12 +16,6 @@ public class MemberDto {
         this.password = password;
     }
 
-    private MemberDto(Builder builder) {
-        id = builder.id;
-        email = builder.email;
-        password = builder.password;
-    }
-
     public static MemberDto fromEntity(MemberEntity entity) {
         return new MemberDto(entity.getId(), entity.getEmail(), entity.getPassword());
     }
@@ -36,37 +30,5 @@ public class MemberDto {
 
     public String getPassword() {
         return password;
-    }
-
-    public static final class Builder {
-        private Long id;
-        private String email;
-        private String password;
-
-        private Builder() {
-        }
-
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        public Builder id(Long val) {
-            id = val;
-            return this;
-        }
-
-        public Builder email(String val) {
-            email = val;
-            return this;
-        }
-
-        public Builder password(String val) {
-            password = val;
-            return this;
-        }
-
-        public MemberDto build() {
-            return new MemberDto(this);
-        }
     }
 }
