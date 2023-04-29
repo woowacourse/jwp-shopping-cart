@@ -34,4 +34,13 @@ public class ProductControllerAdvice {
                 .badRequest()
                 .body(exceptionMessage);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> sendExceptionMessage(RuntimeException exception) {
+        exception.printStackTrace();
+        String exceptionMessage = "서버 내부의 오류로 인해 작업을 처리하지 못했습니다.";
+        return ResponseEntity
+                .internalServerError()
+                .body(exceptionMessage);
+    }
 }
