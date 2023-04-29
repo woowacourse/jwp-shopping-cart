@@ -1,6 +1,6 @@
 package cart.exception;
 
-import cart.dto.ExceptionDto;
+import cart.dto.response.ExceptionDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;

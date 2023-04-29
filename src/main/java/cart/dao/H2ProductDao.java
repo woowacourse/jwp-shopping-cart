@@ -1,8 +1,6 @@
 package cart.dao;
 
-import cart.domain.Product;
-import java.util.List;
-import java.util.Optional;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -10,6 +8,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class H2ProductDao implements ProductDao {
@@ -40,11 +41,8 @@ public class H2ProductDao implements ProductDao {
     }
 
     @Override
-    public void update(final Product product) {
-        namedParameterJdbcTemplate.update(
-                "UPDATE products SET name = :name, image_url = :imageUrl, price = :price WHERE id = :id",
-                new BeanPropertySqlParameterSource(product)
-        );
+    public int update(final Product product) {
+        return namedParameterJdbcTemplate.update("UPDATE products SET name = :name, image_url = :imageUrl, price = :price WHERE id = :id", new BeanPropertySqlParameterSource(product));
     }
 
     @Override
@@ -66,10 +64,7 @@ public class H2ProductDao implements ProductDao {
     }
 
     @Override
-    public void deleteById(final Long id) {
-        namedParameterJdbcTemplate.update(
-                "DELETE FROM products WHERE id = :id",
-                new MapSqlParameterSource("id", id)
-        );
+    public int deleteById(final Long id) {
+        return namedParameterJdbcTemplate.update("DELETE FROM products WHERE id = :id", new MapSqlParameterSource("id", id));
     }
 }
