@@ -27,7 +27,6 @@ public class AdminController {
     }
 
     @GetMapping(value = {"", "/products"})
-    @ResponseStatus(HttpStatus.OK)
     public String readProducts(final Model model) {
         final List<ProductDto> allProduct = productManagementService.findAllProduct();
         model.addAttribute("products", allProduct);
