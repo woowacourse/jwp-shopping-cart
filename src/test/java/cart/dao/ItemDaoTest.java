@@ -75,8 +75,8 @@ class ItemDaoTest {
         Item item = new Item("맥북", "image", 10000);
         Long savedId = itemDao.insert(item);
 
-        int deletedCount = itemDao.delete(savedId);
+        itemDao.delete(savedId);
 
-        assertThat(deletedCount).isEqualTo(1);
+        assertThat(itemDao.findById(savedId).isEmpty()).isTrue();
     }
 }
