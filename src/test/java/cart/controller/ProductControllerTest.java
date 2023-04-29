@@ -4,8 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,10 +52,10 @@ class ProductControllerTest {
 
         //then
         mockMvc.perform(post("/products")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(requestBody))
-               .andDo(print())
-               .andExpect(status().isCreated());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -77,10 +77,10 @@ class ProductControllerTest {
         final String requestBody = objectMapper.writeValueAsString(productModifyRequest);
 
         //then
-        mockMvc.perform(patch("/products/{product-id}", id)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(requestBody))
-               .andExpect(status().isOk());
+        mockMvc.perform(put("/products/{product-id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -96,7 +96,7 @@ class ProductControllerTest {
 
         //then
         mockMvc.perform(delete("/products/{product-id}", id)
-                                .contentType(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk());
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }

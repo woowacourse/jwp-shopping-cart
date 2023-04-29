@@ -68,7 +68,7 @@ const updateProduct = (product) => {
 
     axios.request({
         url: '/products/' + id,
-        method: 'patch',
+        method: 'put',
         headers: {
             "Content-Type": "application/json;charset=UTF-8"
         },
