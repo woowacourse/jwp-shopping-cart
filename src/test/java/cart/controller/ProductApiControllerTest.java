@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.equalTo;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class CartApiControllerTest {
+class ProductApiControllerTest {
 
     @LocalServerPort
     int port;

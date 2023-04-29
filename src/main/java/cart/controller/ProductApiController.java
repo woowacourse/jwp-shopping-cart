@@ -12,12 +12,12 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/admin")
-public class CartApiController {
+public class ProductApiController {
 
     private final ProductService productService;
 
     @Autowired
-    public CartApiController(final ProductService productService) {
+    public ProductApiController(final ProductService productService) {
         this.productService = productService;
     }
 
