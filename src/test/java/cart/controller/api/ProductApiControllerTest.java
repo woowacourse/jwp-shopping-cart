@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.dto.ProductDto;
 import cart.dto.request.ProductCreateRequest;
 import cart.dto.request.ProductUpdateRequest;
-import cart.repository.ProductRepository;
+import cart.repository.ProductDao;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -46,7 +46,7 @@ class ProductApiControllerTest {
     ProductService productService;
 
     @MockBean
-    ProductRepository productRepository;
+    ProductDao productDao;
 
     @Test
     @DisplayName("/products로 POST 요청과 상품의 정보를 보내면 HTTP 201 코드와 함께 상품이 등록되어야 한다.")
@@ -177,7 +177,7 @@ class ProductApiControllerTest {
     void deleteProduct_invalidProductId() throws Exception {
         // given
         long productId = 1;
-        given(productRepository.existsById(anyLong()))
+        given(productDao.existsById(anyLong()))
                 .willReturn(false);
 
         // expect
@@ -219,7 +219,7 @@ class ProductApiControllerTest {
         long productId = 1;
         ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕", 200000, "url");
 
-        given(productRepository.existsById(anyLong()))
+        given(productDao.existsById(anyLong()))
                 .willReturn(false);
 
         // expect
