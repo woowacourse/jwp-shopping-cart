@@ -1,12 +1,13 @@
 package cart.controller.dto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 
 public class ProductRequest {
 
-    @NotNull(message = "name 필드가 있어야 합니다.")
+    @NotBlank(message = "name 필드가 있어야 합니다.")
     private final String name;
 
     @NotNull(message = "price 필드가 있어야 합니다.")
