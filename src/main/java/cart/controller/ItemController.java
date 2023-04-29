@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("items")
 public class ItemController {
 
@@ -25,7 +25,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addItem(@RequestBody @Validated final ItemRequest itemRequest) {
+    public ResponseEntity addItem(@RequestBody @Validated final ItemRequest itemRequest) {
         itemService.saveItem(itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))

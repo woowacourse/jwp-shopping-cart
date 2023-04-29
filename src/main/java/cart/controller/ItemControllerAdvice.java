@@ -8,50 +8,61 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-// TODO: 2023/04/26 text/html을 기대할 떄와, application/json을 기대할 떄 똑같이 Json으로 예외 결과를 응답하는게 맞을까?
-@ControllerAdvice
-public class ExceptionItemControllerAdvice {
+@RestControllerAdvice(assignableTypes = ItemController.class)
+public class ItemControllerAdvice {
 
-    private static final Logger log = LoggerFactory.getLogger(ExceptionItemControllerAdvice.class);
+    private static final Logger log = LoggerFactory.getLogger(ItemControllerAdvice.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         log.info(exception.getMessage());
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(badRequest.value(), badRequest.getReasonPhrase(), exception.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                badRequest.value(),
+                badRequest.getReasonPhrase(),
+                exception.getMessage());
         return ResponseEntity.status(badRequest)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(exceptionResponse);
     }
 
     @ExceptionHandler(NotFoundResultException.class)
-    public ResponseEntity<ExceptionResponse> handleNotFoundResultException(NotFoundResultException exception) {
+    public ResponseEntity<ExceptionResponse> handleNotFoundResultException(final NotFoundResultException exception) {
         log.info(exception.getMessage());
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(badRequest.value(), badRequest.getReasonPhrase(), exception.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                badRequest.value(),
+                badRequest.getReasonPhrase(),
+                exception.getMessage());
         return ResponseEntity.status(badRequest)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(exceptionResponse);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionResponse> handlerIllegalArgumentException(IllegalArgumentException exception) {
+    public ResponseEntity<ExceptionResponse> handlerIllegalArgumentException(final IllegalArgumentException exception) {
         log.info(exception.getMessage());
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(badRequest.value(), badRequest.getReasonPhrase(), exception.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                badRequest.value(),
+                badRequest.getReasonPhrase(),
+                exception.getMessage());
         return ResponseEntity.status(badRequest)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(exceptionResponse);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handlerException(Exception exception) {
-        log.info(exception.getMessage());
+    public ResponseEntity<ExceptionResponse> handlerException(final Exception exception) {
+        log.error(exception.getMessage());
         HttpStatus internalServerError = HttpStatus.INTERNAL_SERVER_ERROR;
-        ExceptionResponse exceptionResponse = new ExceptionResponse(internalServerError.value(), internalServerError.getReasonPhrase(), "예기치 못한 오류가 발생했습니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                internalServerError.value(),
+                internalServerError.getReasonPhrase(),
+                "예기치 못한 오류가 발생했습니다.");
         return ResponseEntity.status(internalServerError)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(exceptionResponse);
