@@ -25,7 +25,7 @@ public class CartService {
     }
 
     public List<ResponseProductDto> findAll() {
-        final List<ProductEntity> productEntities = productDao.selectAll();
+        final List<ProductEntity> productEntities = productDao.findAll();
         return productEntities.stream()
                 .map(entity -> new ResponseProductDto(
                         entity.getId(),

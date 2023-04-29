@@ -36,7 +36,7 @@ class CartServiceTest {
     @Test
     void 상품을_조회한다() {
         //given
-        when(productDao.selectAll())
+        when(productDao.findAll())
                 .thenReturn(List.of(new ProductEntity(1L, "치킨", 1_000, "치킨 사진")));
 
         //when
