@@ -1,7 +1,6 @@
 package cart;
 
 import cart.controller.dto.ProductDto;
-import cart.persistence.entity.ProductCategory;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +38,7 @@ public class ProductIntegrationTest {
     @Test
     void shoppingController_getProduct() {
         // given
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
 
         // when
         given()
@@ -74,7 +73,7 @@ public class ProductIntegrationTest {
     @Test
     void adminController_addProduct() {
         // given
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
 
         // when, then
         given()
@@ -90,7 +89,7 @@ public class ProductIntegrationTest {
     @Test
     void adminController_updateProduct() {
         // given
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
 
         // when
         given()
@@ -115,7 +114,7 @@ public class ProductIntegrationTest {
     @Test
     void adminController_deleteProduct() {
         // given
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
 
         // when
         given()

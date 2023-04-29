@@ -1,7 +1,6 @@
 package cart.controller;
 
 import cart.controller.dto.ProductDto;
-import cart.persistence.entity.ProductCategory;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,9 +31,9 @@ class ShoppingControllerTest {
     void index() throws Exception {
         // given
         final List<ProductDto> productDtos = List.of(
-                new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN),
-                new ProductDto(2L, "초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
-                new ProductDto(3L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
+                new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN"),
+                new ProductDto(2L, "초밥", "chobobUrl", 30000, "JAPANESE"),
+                new ProductDto(3L, "스테이크", "steakUrl", 40000, "WESTERN")
         );
         when(productService.getProducts()).thenReturn(productDtos);
 
@@ -48,7 +47,7 @@ class ShoppingControllerTest {
     @Test
     void getProduct() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
         when(productService.getById(any())).thenReturn(productDto);
 
         // when, then

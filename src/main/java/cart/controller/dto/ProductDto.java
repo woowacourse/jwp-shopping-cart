@@ -1,28 +1,24 @@
 package cart.controller.dto;
 
-import cart.persistence.entity.ProductCategory;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
-
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class ProductDto {
 
     private final Long id;
 
-    @Length(min = 1, max = 25, message = "상품 이름의 길이는 {min} ~ {max}글자여야 합니다.")
+    @NotBlank(message = "상품 이름은 비어있을 수 없습니다.")
     private final String name;
 
     private final String imageUrl;
 
     @NotNull(message = "상품 가격은 비어있을 수 없습니다.")
-    @Range(min = 0, max = 10_000_000, message = "상품 가격은 {min} ~ {max}원까지 가능합니다.")
     private final Integer price;
 
     @NotNull(message = "상품 카테고리는 비어있을 수 없습니다.")
-    private final ProductCategory category;
+    private final String category;
 
-    public ProductDto(final Long id, final String name, final String imageUrl, final Integer price, final ProductCategory category) {
+    public ProductDto(final Long id, final String name, final String imageUrl, final Integer price, final String category) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -46,7 +42,7 @@ public class ProductDto {
         return price;
     }
 
-    public ProductCategory getCategory() {
+    public String getCategory() {
         return category;
     }
 }

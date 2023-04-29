@@ -1,13 +1,13 @@
 package cart.persistence.entity;
 
-public class Product {
+public class ProductEntity {
     private Long id;
     private final String name;
     private final String imageUrl;
     private final int price;
-    private final ProductCategory category;
+    private final String category;
 
-    public Product(final Long id, final String name, final String imageUrl, final int price, final ProductCategory category) {
+    public ProductEntity(final Long id, final String name, final String imageUrl, final int price, final String category) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -15,7 +15,7 @@ public class Product {
         this.category = category;
     }
 
-    public Product(final String name, final String imageUrl, final int price, final ProductCategory category) {
+    public ProductEntity(final String name, final String imageUrl, final int price, final String category) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
@@ -38,7 +38,7 @@ public class Product {
         return price;
     }
 
-    public ProductCategory getCategory() {
+    public String getCategory() {
         return category;
     }
 }

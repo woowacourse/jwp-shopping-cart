@@ -1,10 +1,12 @@
 package cart.service;
 
 import cart.controller.dto.ProductDto;
+import cart.domain.Product;
+import cart.domain.ProductCategory;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.dao.ProductDao;
-import cart.persistence.entity.Product;
+import cart.persistence.entity.ProductEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,20 +24,20 @@ public class ProductService {
     }
 
     public List<ProductDto> getProducts() {
-        final List<Product> products = productDao.findAll();
-        return products.stream()
+        final List<ProductEntity> productEntities = productDao.findAll();
+        return productEntities.stream()
                 .map(this::convertToDto).collect(Collectors.toList());
     }
 
     public long save(final ProductDto productDto) {
-        final Product product = convertToEntity(productDto);
-        return productDao.insert(product);
+        final ProductEntity productEntity = convertToEntity(productDto);
+        return productDao.insert(productEntity);
     }
 
     @Transactional
     public void update(final Long id, final ProductDto productDto) {
-        final Product product = convertToEntity(productDto);
-        int updatedCount = productDao.updateById(product, id);
+        final ProductEntity productEntity = convertToEntity(productDto);
+        int updatedCount = productDao.updateById(productEntity, id);
         if (updatedCount != 1) {
             throw new GlobalException(ErrorCode.PRODUCT_INVALID_UPDATE);
         }
@@ -55,11 +57,13 @@ public class ProductService {
                 .orElseThrow(() -> new GlobalException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
-    private Product convertToEntity(final ProductDto productDto) {
-        return new Product(productDto.getName(), productDto.getImageUrl(), productDto.getPrice(), productDto.getCategory());
+    private ProductEntity convertToEntity(final ProductDto productDto) {
+        final Product product = Product.create(productDto.getName(), productDto.getImageUrl(),
+                productDto.getPrice(), ProductCategory.from(productDto.getCategory()));
+        return new ProductEntity(product.getName(), product.getImageUrl(), product.getPrice(), product.getCategory().name());
     }
 
-    private ProductDto convertToDto(final Product product) {
+    private ProductDto convertToDto(final ProductEntity product) {
         return new ProductDto(product.getId(), product.getName(), product.getImageUrl(),
                 product.getPrice(), product.getCategory());
     }

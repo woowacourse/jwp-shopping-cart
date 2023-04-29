@@ -1,10 +1,8 @@
 package cart.controller;
 
 import cart.controller.dto.ProductDto;
-import cart.persistence.entity.ProductCategory;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +43,9 @@ class AdminControllerTest {
     void getProducts() throws Exception {
         // given
         final List<ProductDto> productDtos = List.of(
-                new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN),
-                new ProductDto(2L, "초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
-                new ProductDto(3L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
+                new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN"),
+                new ProductDto(2L, "초밥", "chobobUrl", 30000, "JAPANESE"),
+                new ProductDto(3L, "스테이크", "steakUrl", 40000, "WESTERN")
         );
         when(productService.getProducts()).thenReturn(productDtos);
 
@@ -61,7 +59,7 @@ class AdminControllerTest {
     @Test
     void addProduct() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
         when(productService.save(any())).thenReturn(1L);
 
         // when, then
@@ -89,7 +87,7 @@ class AdminControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorMessage",
                         containsInAnyOrder(
-                                "상품 이름의 길이는 1 ~ 25글자여야 합니다.",
+                                "상품 이름은 비어있을 수 없습니다.",
                                 "상품 가격은 비어있을 수 없습니다.",
                                 "상품 카테고리는 비어있을 수 없습니다."
                         )
@@ -100,7 +98,7 @@ class AdminControllerTest {
     @Test
     void updateProduct() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
         doNothing().when(productService).update(any(), any());
 
         // when, then
@@ -127,7 +125,7 @@ class AdminControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorMessage",
                         containsInAnyOrder(
-                                "상품 이름의 길이는 1 ~ 25글자여야 합니다.",
+                                "상품 이름은 비어있을 수 없습니다.",
                                 "상품 가격은 비어있을 수 없습니다.",
                                 "상품 카테고리는 비어있을 수 없습니다."
                         )

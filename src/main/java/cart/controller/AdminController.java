@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.controller.dto.ProductDto;
-import cart.persistence.entity.ProductCategory;
+import cart.domain.ProductCategory;
 import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
