@@ -20,7 +20,6 @@ public class ItemService {
 
     private final ItemDao itemDao;
 
-    @Autowired
     public ItemService(ItemDao itemDao) {
         this.itemDao = itemDao;
     }

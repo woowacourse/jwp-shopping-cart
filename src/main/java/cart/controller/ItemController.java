@@ -20,13 +20,12 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    @Autowired
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 
     @PostMapping
-    public ResponseEntity addItem(@RequestBody @Validated final ItemRequest itemRequest) {
+    public ResponseEntity<Void> addItem(@RequestBody @Validated final ItemRequest itemRequest) {
         itemService.saveItem(itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))
@@ -50,7 +49,7 @@ public class ItemController {
     }
 
     @PutMapping("/{itemId}")
-    public ResponseEntity updateItem(@PathVariable final Long itemId,
+    public ResponseEntity<Void> updateItem(@PathVariable final Long itemId,
                                      @RequestBody @Validated final ItemRequest itemRequest) {
         itemService.updateItem(itemId, itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -59,7 +58,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{itemId}")
-    public ResponseEntity deleteItem(@PathVariable final Long itemId) {
+    public ResponseEntity<Void> deleteItem(@PathVariable final Long itemId) {
         itemService.deleteItem(itemId);
         return ResponseEntity.status(HttpStatus.OK)
                              .location(URI.create("/"))

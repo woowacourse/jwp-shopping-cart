@@ -21,7 +21,6 @@ public class ItemDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public ItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
