@@ -41,7 +41,7 @@ public class CartDao {
     public Cart insert(User user, Item item) {
         Map<String, Object> parameters = new HashMap<>(2);
         parameters.put("item_id", item.getId());
-        parameters.put("user_email", item.getImageUrl());
+        parameters.put("user_email", user.getEmail());
 
         Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
 
