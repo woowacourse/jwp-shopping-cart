@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductDao productDao;
@@ -23,16 +24,18 @@ public class ProductService {
     public List<ProductDto> getProducts() {
         final List<Product> products = productDao.findAll();
         return products.stream()
-                .map(ProductDto::fromEntity).collect(Collectors.toList());
+                .map(this::convertToDto).collect(Collectors.toList());
     }
 
     public long save(final ProductDto productDto) {
-        return productDao.insert(productDto.toEntity());
+        final Product product = convertToEntity(productDto);
+        return productDao.insert(product);
     }
 
     @Transactional
     public void update(final Long id, final ProductDto productDto) {
-        int updatedCount = productDao.updateById(productDto.toEntity(), id);
+        final Product product = convertToEntity(productDto);
+        int updatedCount = productDao.updateById(product, id);
         if (updatedCount != 1) {
             throw new GlobalException(ErrorCode.PRODUCT_INVALID_UPDATE);
         }
@@ -48,7 +51,16 @@ public class ProductService {
 
     public ProductDto getById(final Long id) {
         return productDao.findById(id)
-                .map(ProductDto::fromEntity)
+                .map(this::convertToDto)
                 .orElseThrow(() -> new GlobalException(ErrorCode.PRODUCT_NOT_FOUND));
+    }
+
+    private Product convertToEntity(final ProductDto productDto) {
+        return new Product(productDto.getName(), productDto.getImageUrl(), productDto.getPrice(), productDto.getCategory());
+    }
+
+    private ProductDto convertToDto(final Product product) {
+        return new ProductDto(product.getId(), product.getName(), product.getImageUrl(),
+                product.getPrice(), product.getCategory());
     }
 }
