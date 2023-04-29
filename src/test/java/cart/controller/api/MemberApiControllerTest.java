@@ -154,6 +154,36 @@ class MemberApiControllerTest {
     }
 
     @Test
+    @DisplayName("회원가입 시 이메일에 :이 포함되면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
+    void signupMember_includeColonEmail() throws Exception {
+        // given
+        MemberSignupRequest request = new MemberSignupRequest("glen@nav:er.com", "123456");
+
+        // expect
+        mockMvc.perform(post("/members/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.email").value("\":\"가 포함될 수 없습니다."));
+    }
+
+    @Test
+    @DisplayName("회원가입 시 비밀번호에 :이 포함되면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
+    void signupMember_includeColonPassword() throws Exception {
+        // given
+        MemberSignupRequest request = new MemberSignupRequest("glen@naver.com", "123:456");
+
+        // expect
+        mockMvc.perform(post("/members/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.password").value("\":\"가 포함될 수 없습니다."));
+    }
+
+    @Test
     @DisplayName("/members로 GET 요청을 보내면 HTTP 200 코드와 함께 모든 회원이 조회되어야 한다.")
     void findAllMembers_success() throws Exception {
         // given
