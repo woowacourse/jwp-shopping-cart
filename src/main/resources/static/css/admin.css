@@ -89,3 +89,8 @@ input[type="submit"] {
     cursor: pointer;
     font-size: 16px;
 }
+
+#error {
+    color: red;
+    text-align: center;
+}

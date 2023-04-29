@@ -24,6 +24,7 @@ const hideAddModal = () => {
 }
 
 const form = document.getElementById('form');
+const errorText = document.getElementById('error')
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -47,7 +48,9 @@ form.addEventListener('submit', (event) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '',
+        url: '/products',
+        method: 'post',
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -57,24 +60,30 @@ const createProduct = (product) => {
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
-
     axios.request({
-        url: '',
+        url: '/products/' + product['id'],
+        method: 'put',
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
+        showError(error.response['data']);
     });
 };
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: '',
+        url: '/products/' + id,
+        method: 'delete'
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
     });
 };
+
+const showError = (errorMessage) => {
+    errorText.innerHTML = errorMessage;
+}
