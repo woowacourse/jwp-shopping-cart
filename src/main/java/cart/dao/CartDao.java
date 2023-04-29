@@ -68,9 +68,9 @@ public class CartDao {
         return jdbcTemplate.query(sql, actorRowMapper, email);
     }
 
-    public int delete(Long id) {
-        String sql = "DELETE FROM CARTS WHERE cart_id = ?";
+    public int delete(Long id, String email) {
+        String sql = "DELETE FROM CARTS WHERE cart_id = ? AND user_email = ?";
 
-        return jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id, email);
     }
 }
