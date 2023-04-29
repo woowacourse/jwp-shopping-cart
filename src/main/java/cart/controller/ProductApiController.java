@@ -26,19 +26,19 @@ public class ProductApiController {
         this.productDao = productDao;
     }
 
-    @PostMapping(path = "/add")
+    @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody ProductAddRequest productDto) {
         productDao.insert(new Product(productDto.getName(), productDto.getImageUrl(), productDto.getPrice()));
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(path = "/edit")
+    @PutMapping
     public ResponseEntity<Void> update(@Valid @RequestBody ProductUpdateRequest productDto) {
         productDao.update(new Product(productDto.getId(), productDto.getName(), productDto.getImageUrl(), productDto.getPrice()));
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @Positive Long id) {
         log.info("id={}", id);
         productDao.deleteById(id);
