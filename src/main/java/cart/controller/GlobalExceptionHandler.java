@@ -7,7 +7,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,8 +20,8 @@ public class GlobalExceptionHandler {
         List<ErrorResponse> responses = exception.getBindingResult().getAllErrors()
                 .stream()
                 .map(error -> new ErrorResponse(
-                        ((FieldError) error).getField() + " : " + error.getDefaultMessage(),
-                        LocalDateTime.now()))
+                        ((FieldError) error).getField() + " : " + error.getDefaultMessage()
+                ))
                 .collect(Collectors.toList());
 
         return ResponseEntity.badRequest().body(responses);
@@ -30,6 +29,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage(), LocalDateTime.now()));
+        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
     }
 }
