@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 @RequestMapping("/admin")
 public class AdminController {
 
@@ -18,6 +18,7 @@ public class AdminController {
     public AdminController(final ItemService itemService) {
         this.itemService = itemService;
     }
+
 
     @GetMapping
     public String displayItemList(Model model) {
@@ -34,14 +35,12 @@ public class AdminController {
     }
 
     @PostMapping("/items/edit/{itemId}")
-    @ResponseBody
     public String editItem(@PathVariable Long itemId, @Valid @RequestBody ItemRequest itemRequest) {
         itemService.updateItem(itemId, itemRequest);
         return "ok";
     }
 
     @PostMapping("/items/delete/{itemId}")
-    @ResponseBody
     public String deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);
         return "ok";
