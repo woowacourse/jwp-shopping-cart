@@ -7,7 +7,7 @@ CREATE TABLE product
     PRIMARY KEY (id)
 );
 
-CREATE TABLE user
+CREATE TABLE users
 (
     id       INT          NOT NULL AUTO_INCREMENT,
     email    VARCHAR(320) NOT NULL,
@@ -21,6 +21,6 @@ CREATE TABLE cart
     user_id    INT NOT NULL,
     product_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 );
