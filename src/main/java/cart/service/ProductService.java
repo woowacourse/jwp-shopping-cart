@@ -46,6 +46,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
         validateExistence(id);
 
