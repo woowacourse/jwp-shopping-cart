@@ -32,9 +32,16 @@
     margin: 0 20px 0 0;
 }
 
+.cart-item-category {
+    color: #888888;
+    font-weight: 400;
+    font-size: 14px;
+    margin: 0 20px 0 0;
+}
+
 .cart-item-price {
     font-weight: 600;
-    font-size: 20px;
+    font-size: 16px;
     margin-right: 20px;
 }
 
