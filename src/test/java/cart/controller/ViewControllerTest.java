@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class CartControllerTest {
+class ViewControllerTest {
 
     @LocalServerPort
     int port;
@@ -50,6 +50,17 @@ class CartControllerTest {
                 .accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .get("/settings")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("장바구니 페이지를 생성한다.")
+    void cartPage() {
+        RestAssured.given()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .get("/cart")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }

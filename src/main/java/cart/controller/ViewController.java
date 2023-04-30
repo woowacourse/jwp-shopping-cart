@@ -13,13 +13,13 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @Controller
-public final class CartController {
+public final class ViewController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
     private final MemberService memberService;
 
-    public CartController(
+    public ViewController(
             final ProductService productService,
             final CategoryService categoryService,
             final MemberService memberService
@@ -52,6 +52,12 @@ public final class CartController {
         final List<MemberResponseDto> members = memberService.findMembers();
         modelAndView.addObject("members", members);
         modelAndView.setViewName("settings");
+        return modelAndView;
+    }
+
+    @GetMapping("/cart")
+    public ModelAndView cartPage(final ModelAndView modelAndView) {
+        modelAndView.setViewName("cart");
         return modelAndView;
     }
 }
