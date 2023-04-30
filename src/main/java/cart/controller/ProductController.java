@@ -27,7 +27,7 @@ public final class ProductController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Void> saveProduct(
+    public ResponseEntity<Void> addProduct(
             @Valid @RequestBody final ModifyRequest modifyRequest
     ) throws URISyntaxException {
         final Product product = Product.createWithoutId(

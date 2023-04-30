@@ -41,7 +41,7 @@ class ProductControllerTest {
     void setUp() throws URISyntaxException {
         RestAssured.port = port;
         jdbcTemplate.execute("TRUNCATE TABLE product");
-        productController.saveProduct(new ModifyRequest("망고", 1000, "domains.com"));
+        productController.addProduct(new ModifyRequest("망고", 1000, "domains.com"));
     }
 
     @DisplayName("POST /admin/product 요청 시")

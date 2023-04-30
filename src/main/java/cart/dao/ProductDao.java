@@ -54,16 +54,16 @@ public class ProductDao {
                 productToUpdate.getId()
         );
 
-        throwProdcutNotFoundException(affectedRow);
+        throwProductNotFoundException(affectedRow);
     }
 
     public void deleteById(final long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
         final int affectedRow = jdbcTemplate.update(sql, id);
-        throwProdcutNotFoundException(affectedRow);
+        throwProductNotFoundException(affectedRow);
     }
 
-    private void throwProdcutNotFoundException(final int affectedRow) {
+    private void throwProductNotFoundException(final int affectedRow) {
         if (affectedRow == 0) {
             throw new ProductNotFoundException();
         }

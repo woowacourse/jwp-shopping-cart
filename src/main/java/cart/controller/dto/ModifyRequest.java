@@ -17,7 +17,9 @@ public class ModifyRequest {
     @NotBlank
     private final String imageUrl;
 
-    public ModifyRequest(String name, long price, String imageUrl) {
+    public ModifyRequest(final String name,
+                         final long price,
+                         final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
