@@ -17,7 +17,7 @@ import cart.domain.Product;
 @ExtendWith(MockitoExtension.class)
 class ProductJdbcRepositoryTest {
 	@Mock
-	ProductJdbcRepository productJdbcRepository;
+	ProductRepository productRepository;
 
 	@DisplayName("전체 상품 조회 테스트")
 	@Test
@@ -25,10 +25,10 @@ class ProductJdbcRepositoryTest {
 		// given
 		final List<Product> products = List.of(new Product(1L, "사과", 10000, "사과.png"));
 
-		given(productJdbcRepository.findAll()).willReturn(products);
+		given(productRepository.findAll()).willReturn(products);
 
 		// when
-		final List<Product> findProducts = productJdbcRepository.findAll();
+		final List<Product> findProducts = productRepository.findAll();
 
 		// then
 		assertThat(findProducts).isEqualTo(products);
@@ -40,10 +40,10 @@ class ProductJdbcRepositoryTest {
 		// given
 		final ProductUpdateRequest request = new ProductUpdateRequest("사과", 10000, "사과.png");
 
-		given(productJdbcRepository.save(request)).willReturn(1L);
+		given(productRepository.save(request)).willReturn(1L);
 
 		// when
-		final long saveId = productJdbcRepository.save(request);
+		final long saveId = productRepository.save(request);
 
 		// then
 		assertThat(saveId).isEqualTo(1L);
@@ -53,10 +53,10 @@ class ProductJdbcRepositoryTest {
 	@Test
 	void deleteByProductId() {
 		// given
-		given(productJdbcRepository.deleteByProductId(anyLong())).willReturn(1L);
+		given(productRepository.deleteByProductId(anyLong())).willReturn(1L);
 
 		// when
-		final long deleteProductId = productJdbcRepository.deleteByProductId(1L);
+		final long deleteProductId = productRepository.deleteByProductId(1L);
 
 		// then
 		assertThat(deleteProductId).isEqualTo(1L);
@@ -66,11 +66,11 @@ class ProductJdbcRepositoryTest {
 	@Test
 	void updateProduct(){
 		// given
-		given(productJdbcRepository.updateByProductId(anyLong(), any())).willReturn(1L);
+		given(productRepository.updateByProductId(anyLong(), any())).willReturn(1L);
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("kiara", 300.0, "이미지2");
-		final long updateProductId = productJdbcRepository.updateByProductId(1L, request);
+		final long updateProductId = productRepository.updateByProductId(1L, request);
 
 		// then
 		assertThat(updateProductId).isEqualTo(1L);
