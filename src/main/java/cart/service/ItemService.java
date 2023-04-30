@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.controller.dto.UpdateItemRequest;
+import cart.controller.dto.request.UpdateItemRequest;
 import cart.dao.ItemDao;
 import cart.exception.item.ItemNotFoundException;
 import cart.domain.item.Item;

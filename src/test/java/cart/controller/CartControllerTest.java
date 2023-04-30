@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.configuration.AuthenticationPrincipalArgumentResolver;
-import cart.controller.dto.AddCartRequest;
+import cart.controller.dto.request.AddCartRequest;
 import cart.controller.dto.AuthInfo;
 import cart.exception.GlobalControllerAdvice;
 import cart.exception.auth.NotSignInException;

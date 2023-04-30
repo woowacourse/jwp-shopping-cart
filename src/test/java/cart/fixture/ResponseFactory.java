@@ -1,6 +1,6 @@
 package cart.fixture;
 
-import cart.controller.dto.ItemResponse;
+import cart.controller.dto.response.ItemResponse;
 import cart.domain.item.Item;
 import cart.service.dto.ItemDto;
 

@@ -9,9 +9,9 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
-import cart.controller.dto.AddCartRequest;
-import cart.controller.dto.AddItemRequest;
-import cart.controller.dto.SignInRequest;
+import cart.controller.dto.request.AddCartRequest;
+import cart.controller.dto.request.AddItemRequest;
+import cart.controller.dto.request.SignInRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;

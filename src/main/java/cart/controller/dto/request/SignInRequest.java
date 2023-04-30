@@ -1,4 +1,4 @@
-package cart.controller.dto;
+package cart.controller.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

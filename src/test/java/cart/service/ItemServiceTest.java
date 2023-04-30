@@ -8,8 +8,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import cart.controller.dto.AddItemRequest;
-import cart.controller.dto.UpdateItemRequest;
+import cart.controller.dto.request.AddItemRequest;
+import cart.controller.dto.request.UpdateItemRequest;
 import cart.dao.ItemDao;
 import cart.exception.item.ItemException;
 import cart.service.dto.ItemDto;

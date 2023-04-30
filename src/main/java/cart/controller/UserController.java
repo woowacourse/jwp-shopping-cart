@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.SignInRequest;
-import cart.controller.dto.SignInResponse;
+import cart.controller.dto.request.SignInRequest;
+import cart.controller.dto.response.SignInResponse;
 import cart.service.UserService;
 import cart.service.dto.UserDto;
 import java.nio.charset.StandardCharsets;

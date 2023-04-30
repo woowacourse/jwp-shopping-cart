@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.controller.dto.AddItemRequest;
-import cart.controller.dto.ItemResponse;
-import cart.controller.dto.UpdateItemRequest;
+import cart.controller.dto.request.AddItemRequest;
+import cart.controller.dto.response.ItemResponse;
+import cart.controller.dto.request.UpdateItemRequest;
 import cart.service.ItemService;
 import cart.service.dto.ItemDto;
 import java.net.URI;

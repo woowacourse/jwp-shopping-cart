@@ -1,9 +1,9 @@
 package cart.controller;
 
 import cart.configuration.AuthenticationPrincipal;
-import cart.controller.dto.AddCartRequest;
+import cart.controller.dto.request.AddCartRequest;
 import cart.controller.dto.AuthInfo;
-import cart.controller.dto.CartResponse;
+import cart.controller.dto.response.CartResponse;
 import cart.service.CartService;
 import cart.service.dto.CartDto;
 import java.net.URI;

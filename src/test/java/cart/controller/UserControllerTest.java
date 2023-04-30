@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.controller.dto.SignInRequest;
+import cart.controller.dto.request.SignInRequest;
 import cart.domain.user.User;
 import cart.exception.GlobalControllerAdvice;
 import cart.exception.user.SignInFailureException;

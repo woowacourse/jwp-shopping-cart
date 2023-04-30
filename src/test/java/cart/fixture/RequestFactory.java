@@ -1,7 +1,7 @@
 package cart.fixture;
 
-import cart.controller.dto.AddItemRequest;
-import cart.controller.dto.UpdateItemRequest;
+import cart.controller.dto.request.AddItemRequest;
+import cart.controller.dto.request.UpdateItemRequest;
 
 public final class RequestFactory {
 
