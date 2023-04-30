@@ -54,9 +54,9 @@ class ProductServiceTest {
     @CsvSource(value = {"applePizza:10000:사과피자 이미지", "salmonSalad:20000:연어 샐러드 이미지"}, delimiter = ':')
     void 상품_등록(final String name, final int price, final String imageUrl) {
         final long expectedId = 3L;
-        final Long savedId = productService.register(new ProductDto(name, price, imageUrl));
+        final Product savedProduct = productService.register(new ProductDto(name, price, imageUrl));
 
-        assertThat(savedId).isEqualTo(expectedId);
+        assertThat(savedProduct.getId()).isEqualTo(expectedId);
     }
 
     @ParameterizedTest

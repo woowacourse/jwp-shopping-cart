@@ -1,7 +1,9 @@
 package cart.controller;
 
+import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.request.ProductRequest;
+import cart.response.ProductResponse;
 import cart.service.ProductService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -24,25 +26,28 @@ public class ProductResourceController {
 
     @PostMapping("/admin/products")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void createProduct(@RequestBody @Valid final ProductRequest productRequest) {
+    public ProductResponse createProduct(@RequestBody @Valid final ProductRequest productRequest) {
         final ProductDto productDto = new ProductDto(
                 productRequest.getName(),
                 productRequest.getPrice(),
                 productRequest.getImageUrl()
         );
-
-        productService.register(productDto);
+        final Product product = productService.register(productDto);
+        return new ProductResponse(product);
     }
 
     @PutMapping("/admin/products/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void updateProduct(@PathVariable final long id, final @RequestBody @Valid ProductRequest productRequest) {
-        productService.updateProduct(id, new ProductDto(productRequest));
+    public ProductResponse updateProduct(@PathVariable final long id,
+                                         final @RequestBody @Valid ProductRequest productRequest) {
+        final Product product = productService.updateProduct(id, new ProductDto(productRequest));
+        return new ProductResponse(product);
     }
 
     @DeleteMapping("/admin/products/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteProduct(@PathVariable final long id) {
-        productService.deleteProduct(id);
+    public ProductResponse deleteProduct(@PathVariable final long id) {
+        final Product product = productService.deleteProduct(id);
+        return new ProductResponse(product);
     }
 }
