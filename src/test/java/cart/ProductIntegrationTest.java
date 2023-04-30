@@ -34,9 +34,9 @@ public class ProductIntegrationTest {
 	public void getProducts() {
 		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.when()
+			.when().log().all()
 			.get("/products")
-			.then()
+			.then().log().all()
 			.extract();
 
 		assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -49,8 +49,9 @@ public class ProductIntegrationTest {
 		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.body(request)
-			.when().post("/products")
-			.then()
+			.when().log().all()
+			.post("/products")
+			.then().log().all()
 			.extract();
 
 		assertThat(result.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -63,8 +64,9 @@ public class ProductIntegrationTest {
 		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.pathParam("id", saveId)
-			.when().delete("/products/{id}")
-			.then()
+			.when().log().all()
+			.delete("/products/{id}")
+			.then().log().all()
 			.extract();
 
 		assertThat(result.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
@@ -79,8 +81,9 @@ public class ProductIntegrationTest {
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.pathParam("id", saveId)
 			.body(request)
-			.when().patch("/products/{id}")
-			.then()
+			.when().log().all()
+			.patch("/products/{id}")
+			.then().log().all()
 			.extract();
 
 		assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
