@@ -6,7 +6,6 @@ import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.fixture.ProductFixture;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +19,7 @@ import static cart.fixture.ProductFixture.RAMYEON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest
 @Transactional
 class ProductServiceTest {
@@ -39,37 +39,6 @@ class ProductServiceTest {
         List<ProductResponse> products = productService.findAll();
 
         assertThat(products).hasSize(1);
-    }
-
-    @Nested
-    class 유효하지_않은_상품정보를_저장하면_예외 {
-        @Test
-        void 유효하지_않은_상품명() {
-            final String invalidProductName = "a".repeat(51);
-            ProductRequest request = new ProductRequest("url", invalidProductName, 1000);
-
-            assertThatThrownBy(() -> productService.create(request))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품명은 50자를 초과할 수 없습니다.");
-        }
-
-        @Test
-        void 유효하지_않은_url() {
-            ProductRequest request = new ProductRequest(null, "name", 1000);
-
-            assertThatThrownBy(() -> productService.create(request))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("이미지 URL은 비어있을 수 없습니다.");
-        }
-
-        @Test
-        void 유효하지_않은_가격() {
-            ProductRequest request = new ProductRequest("image", "name", -1);
-
-            assertThatThrownBy(() -> productService.create(request))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("가격은 음수 혹은 빈 값이 될 수 없습니다.");
-        }
     }
 
     @Test

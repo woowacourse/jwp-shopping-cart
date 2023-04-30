@@ -4,17 +4,15 @@ import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 
-import java.math.BigDecimal;
-
 public class ProductFixture {
-    public static Product PIZZA = new Product("PIZZA", "url", BigDecimal.valueOf(10000));
-    public static Product CHICKEN = new Product("CHICKEN", "url", BigDecimal.valueOf(10000));
-    public static Product RAMYEON = new Product("RAMYEON", "url", BigDecimal.valueOf(10000));
-    public static Product SANDWICH = new Product("SANDWICH", "url", BigDecimal.valueOf(10000));
-    public static Product COFFEE = new Product("COFFEE", "url", BigDecimal.valueOf(10000));
-    public static Product COKE = new Product("COKE", "url", BigDecimal.valueOf(10000));
-    public static Product WATER = new Product("WATER", "url", BigDecimal.valueOf(500));
-    public static Product SNACK = new Product("SNACK", "url", BigDecimal.valueOf(10000));
+    public static Product PIZZA = new Product("PIZZA", "url", 10000);
+    public static Product CHICKEN = new Product("CHICKEN", "url", 10000);
+    public static Product RAMYEON = new Product("RAMYEON", "url", 10000);
+    public static Product SANDWICH = new Product("SANDWICH", "url", 10000);
+    public static Product COFFEE = new Product("COFFEE", "url", 10000);
+    public static Product COKE = new Product("COKE", "url", 10000);
+    public static Product WATER = new Product("WATER", "url", 10000);
+    public static Product SNACK = new Product("SNACK", "url", 10000);
 
     public static ProductRequest PIZZA_REQUEST = new ProductRequest("image", "PIZZA", 1000);
     public static ProductRequest CHICKEN_REQUEST = new ProductRequest("image", "CHICKEN", 1000);

@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import static cart.fixture.ProductFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
 class H2ProductDaoTest {
 
@@ -31,14 +31,14 @@ class H2ProductDaoTest {
 
     @Test
     void 상품이_정상적으로_저장된다() {
-        Product product = new Product("pizza", "url", BigDecimal.valueOf(10000));
+        Product product = new Product("pizza", "url", 10000);
         Long productId = productDao.save(product);
         assertThat(productId).isPositive();
     }
 
     @Test
     void 상품_데이터_정합성_검증() {
-        Product product = new Product("pizza", "url", BigDecimal.valueOf(10000));
+        Product product = new Product("pizza", "url", 10000);
         Long productId = productDao.save(product);
         ProductEntity created = productDao.findById(productId).orElse(null);
         Assertions.assertAll(

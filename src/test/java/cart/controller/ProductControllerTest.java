@@ -10,18 +10,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
 import static cart.fixture.ProductFixture.CHICKEN_RESPONSE;
-import static cart.fixture.ProductFixture.SNACK_RESPONSE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SuppressWarnings("NonAsciiCharacters")
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
@@ -39,13 +34,44 @@ class ProductControllerTest {
         ProductRequest request = new ProductRequest("img", "name", 1000);
         String jsonRequest = objectMapper.writeValueAsString(request);
 
-        when(productService.findAll())
-                .thenReturn(List.of(SNACK_RESPONSE));
-
         mockMvc.perform(post("/products")
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void 올바르지_않은_상품명_저장_요청_시_예외_발생() throws Exception {
+        String invalidProductName = "a".repeat(51);
+        ProductRequest request = new ProductRequest("img", invalidProductName, 1000);
+        String jsonRequest = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(post("/products")
+                        .content(jsonRequest)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void 올바르지_않은_금액_저장_요청_시_예외_발생() throws Exception {
+        ProductRequest request = new ProductRequest("img", "name", 1_000_000_001);
+        String jsonRequest = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(post("/products")
+                        .content(jsonRequest)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void 올바르지_않은_이미지_저장_요청_시_예외_발생() throws Exception {
+        ProductRequest request = new ProductRequest(null, "name", 1_000_000_000);
+        String jsonRequest = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(post("/products")
+                        .content(jsonRequest)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

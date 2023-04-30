@@ -3,6 +3,7 @@ package cart.dto;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 public class ProductRequest {
 
@@ -10,6 +11,7 @@ public class ProductRequest {
     private final String image;
 
     @NotNull(message = "이름은 비어있을 수 없습니다.")
+    @Size(min = 1, max = 50)
     private final String name;
 
     @NotNull(message = "가격은 비어있을 수 없습니다.")
