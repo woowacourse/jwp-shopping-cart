@@ -71,20 +71,20 @@ class CartServiceTest {
     @DisplayName("장바구니 정보를 정상적으로 제거한다.")
     void deleteCart_success() {
         // given
-        when(memberProductRepository.deleteByMemberEmail(any(), any())).thenReturn(1);
+        when(memberProductRepository.deleteByMemberEmail(any(), any(), any())).thenReturn(1);
 
         // when, then
-        assertDoesNotThrow(() -> cartService.deleteCart("journey@gmail.com", 1L));
+        assertDoesNotThrow(() -> cartService.deleteCart(1L, "journey@gmail.com", 1L));
     }
 
     @ParameterizedTest(name = "장바구니 정보 삭제가 실패하면 예외가 발생한다.")
     @ValueSource(ints = {0, 2})
     void deleteCart_fail(final int deletedCount) {
         // given
-        when(memberProductRepository.deleteByMemberEmail(any(), any())).thenReturn(deletedCount);
+        when(memberProductRepository.deleteByMemberEmail(any(), any(), any())).thenReturn(deletedCount);
 
         // when, then
-        assertThatThrownBy(() -> cartService.deleteCart("journey@gmail.com", 1L))
+        assertThatThrownBy(() -> cartService.deleteCart(1L, "journey@gmail.com", 1L))
                 .isInstanceOf(GlobalException.class)
                 .extracting("errorCode")
                 .isEqualTo(ErrorCode.CART_INVALID_DELETE);

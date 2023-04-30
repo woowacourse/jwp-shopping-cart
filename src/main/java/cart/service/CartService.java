@@ -33,8 +33,8 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCart(final String memberEmail, final Long productId) {
-        int deletedCount = memberCartRepository.deleteByMemberEmail(memberEmail, productId);
+    public void deleteCart(final Long targetMemberId, final String memberEmail, final Long productId) {
+        int deletedCount = memberCartRepository.deleteByMemberEmail(targetMemberId, memberEmail, productId);
         if (deletedCount != 1) {
             throw new GlobalException(ErrorCode.CART_INVALID_DELETE);
         }

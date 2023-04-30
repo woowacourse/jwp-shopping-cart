@@ -14,7 +14,8 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND("사용자 정보를 찾을 수 없습니다."),
     CART_NOT_FOUND("장바구니 정보를 찾을 수 없습니다"),
     CART_INVALID_DELETE("장바구니 정보 삭제 중 예기치 못한 오류가 발생하였습니다."),
-    UNAUTHORIZED("접근 권한이 없습니다"),
+    UNAUTHORIZED("인증되지 않은 사용자입니다."),
+    FORBIDDEN("권한이 없습니다."),
     INTERNAL_SERVER_ERROR("서버에서 예기치 못한 오류가 발생하였습니다.");
 
     private final String message;
