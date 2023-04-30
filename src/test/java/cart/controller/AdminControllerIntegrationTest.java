@@ -81,6 +81,30 @@ class AdminControllerIntegrationTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
+    @DisplayName("없는 상품 ID로 상품 정보 수정 API 호출 시 404를 반환한다.")
+    @Test
+    void modifyProduct_404() {
+        //given
+        long updateProductId = 100L;
+
+        // when
+        Response response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new ProductModifyRequest("CuteBaronDollFromController", 2500, "https://avatars.githubusercontent.com/u/70891072?v=4"))
+                .when()
+                .put("/admin/product/" + updateProductId)
+                .then()
+                .log().all()
+                .extract()
+                .response();
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                () -> assertThat(response.asString()).isEqualTo("상품 ID에 해당하는 상품이 존재하지 않습니다.")
+        );
+    }
+
     @DisplayName("상품 삭제 API 호출 시 상품이 삭제된다.")
     @Test
     void deleteProduct() {
@@ -101,6 +125,28 @@ class AdminControllerIntegrationTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("없는 상품 ID로 상품 삭제 API 호출 시 404를 반환한다.")
+    @Test
+    void deleteProduct_404() {
+        // given
+        long deleteProductId = 100L;
+
+        // when
+        Response response = given().log().all()
+                .when()
+                .delete("/admin/product/" + deleteProductId)
+                .then()
+                .log().all()
+                .extract()
+                .response();
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                () -> assertThat(response.asString()).isEqualTo("상품 ID에 해당하는 상품이 존재하지 않습니다.")
+        );
     }
 
     @DisplayName("가격이 0이하의 값이면 예외가 발생한다.")

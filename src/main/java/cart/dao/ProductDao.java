@@ -53,4 +53,9 @@ public class ProductDao {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    public Boolean isNotExistBy(long id) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM product WHERE id = ?)";
+        return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
+    }
 }

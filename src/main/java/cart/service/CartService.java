@@ -9,6 +9,7 @@ import cart.controller.dto.ProductRegisterRequest;
 import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
 import cart.service.dto.ProductResponse;
+import global.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,6 +42,9 @@ public class CartService {
     public void modifyById(ProductModifyRequest productModifyRequest, long id) {
         Product product = Product.createBy(productModifyRequest.getName(), productModifyRequest.getImgUrl(),
                 productModifyRequest.getPrice());
+
+        checkProductExistBy(id);
+
         ProductEntity productEntity = new ProductEntity.Builder()
                 .id(id)
                 .name(product.getName())
@@ -51,6 +55,13 @@ public class CartService {
     }
 
     public void removeById(long id) {
+        checkProductExistBy(id);
         productDao.delete(id);
+    }
+
+    private void checkProductExistBy(long id) {
+        if (productDao.isNotExistBy(id)) {
+            throw new ProductNotFoundException("상품 ID에 해당하는 상품이 존재하지 않습니다.");
+        }
     }
 }

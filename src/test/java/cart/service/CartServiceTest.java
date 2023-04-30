@@ -1,13 +1,16 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import cart.controller.dto.ProductModifyRequest;
 import cart.controller.dto.ProductRegisterRequest;
 import cart.service.dto.ProductResponse;
-import java.util.List;
-import java.util.stream.Collectors;
+import global.exception.ProductNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,16 @@ class CartServiceTest {
     }
 
     @Test
+    @DisplayName("상품 수정 시 수정 상품 ID에 해당하는 상품이 없다면 예외가 발생한다.")
+    void modifyByIdWhenProductNotFound() {
+        // when, then
+        assertThatThrownBy(() -> cartService.modifyById(cuteBaronDoll, 100L))
+                .isInstanceOf(ProductNotFoundException.class)
+                .hasMessage("상품 ID에 해당하는 상품이 존재하지 않습니다.");
+
+    }
+
+    @Test
     @DisplayName("상품을 저장하고 수정할 수 있다.")
     void modifyById() {
         // given
@@ -71,8 +84,18 @@ class CartServiceTest {
     }
 
     @Test
+    @DisplayName("상품 삭제 시 삭제 상품 ID에 해당하는 상품이 없다면 예외가 발생한다.")
+    void removeByIdWhenProductNotFound() {
+        // when, then
+        assertThatThrownBy(() -> cartService.removeById(100L))
+                .isInstanceOf(ProductNotFoundException.class)
+                .hasMessage("상품 ID에 해당하는 상품이 존재하지 않습니다.");
+
+    }
+
+    @Test
     @DisplayName("상품을 저장하고 삭제할 수 있다.")
-    void deleteById() {
+    void removeById() {
         // given
         long savedId = cartService.save(cuteSeonghaDoll);
 

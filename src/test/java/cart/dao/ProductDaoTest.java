@@ -84,4 +84,22 @@ class ProductDaoTest {
         // then
         assertThat(productDao.findAll()).hasSize(0);
     }
+
+    @DisplayName("삭제 상품 ID에 해당하는 상품 행이 존재하지 않으면 TRUE를 반환한다.")
+    void isNotExistBy_True() {
+        // given
+        long deleteId = 100L;
+
+        // when, then
+        assertThat(productDao.isNotExistBy(deleteId)).isTrue();
+    }
+
+    @DisplayName("삭제 상품 ID에 해당하는 상품 행이 존재하면 FALSE를 반환한다.")
+    void isNotExistBy_False() {
+        // given
+        long savedId = productDao.insert(productEntity);
+
+        // when, then
+        assertThat(productDao.isNotExistBy(savedId)).isFalse();
+    }
 }
