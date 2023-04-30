@@ -42,7 +42,7 @@ public class MemberDao {
     }
 
     public Optional<Long> findByEmailAndPassword(String email, String password) {
-        String sql = "SELECT id password FROM MEMBER WHERE email = ? AND password = ?";
+        String sql = "SELECT id, password FROM MEMBER WHERE email = ? AND password = ?";
         try {
             Long memberId = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), email, password);
             return Optional.ofNullable(memberId);
