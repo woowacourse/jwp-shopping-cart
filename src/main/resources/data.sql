@@ -32,3 +32,7 @@ INSERT INTO product(name, price, image_url) VALUES ('샐러드', 9500, 'https://
 
 INSERT INTO member(email, password) VALUES('songsy405@naver.com', 'abcd');
 INSERT INTO member(email, password) VALUES('songsy405@pusan.ac.kr', '1234');
+
+INSERT INTO cart(member_id, product_id) VALUES(1, 1);
+INSERT INTO cart(member_id, product_id) VALUES(1, 2);
+INSERT INTO cart(member_id, product_id) VALUES(2, 3);

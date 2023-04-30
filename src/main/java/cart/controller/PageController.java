@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.controller.dto.MemberResponse;
 import cart.controller.dto.ProductResponse;
+import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.dao.entity.MemberEntity;
@@ -17,7 +18,8 @@ public class PageController {
     private final ProductDao mySQLProductDao;
     private final MemberDao mySQLMemberDao;
 
-    public PageController(ProductDao mySQLProductDao, MemberDao mySQLMemberDao) {
+    public PageController(ProductDao mySQLProductDao, MemberDao mySQLMemberDao,
+        CartDao mySQLCartDao) {
         this.mySQLProductDao = mySQLProductDao;
         this.mySQLMemberDao = mySQLMemberDao;
     }
@@ -48,5 +50,10 @@ public class PageController {
 
         model.addAttribute("members", members);
         return "settings";
+    }
+
+    @GetMapping("/cart")
+    public String loadCart() {
+        return "cart";
     }
 }
