@@ -68,7 +68,7 @@ public class ProductService {
 
     private void validateId(Long id) {
         if (!productDao.existsById(id)) {
-            throw new ProductNotFoundException("존재하지 않는 상품의 ID 입니다.");
+            throw new ProductNotFoundException();
         }
     }
 }

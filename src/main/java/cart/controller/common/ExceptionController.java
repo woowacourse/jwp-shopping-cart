@@ -4,6 +4,7 @@ import cart.dto.response.ErrorResponse;
 import cart.dto.response.Response;
 import cart.dto.response.SimpleResponse;
 import cart.exception.AuthenticationException;
+import cart.exception.CartNotFoundException;
 import cart.exception.DuplicateEmailException;
 import cart.exception.ProductException;
 import javax.servlet.http.HttpServletRequest;
@@ -68,5 +69,12 @@ public class ExceptionController {
         errorResponse.addValidation(e.getName(), "유효하지 않은 경로입니다.");
         return ResponseEntity.badRequest()
                 .body(errorResponse);
+    }
+
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<Response> handle(CartNotFoundException e) {
+        Response response = SimpleResponse.badRequest(e.getMessage());
+        return ResponseEntity.badRequest()
+                .body(response);
     }
 }

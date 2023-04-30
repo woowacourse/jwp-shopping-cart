@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.dto.cart.CartProductDto;
+import cart.exception.CartNotFoundException;
 import cart.exception.ProductNotFoundException;
 import cart.repository.CartDao;
 import cart.repository.ProductDao;
@@ -43,7 +44,7 @@ public class CartService {
 
     private void validateCartId(Long cartId) {
         if (!cartDao.existsById(cartId)) {
-            throw new ProductNotFoundException("존재하지 않는 장바구니의 ID 입니다.");
+            throw new CartNotFoundException();
         }
     }
 }
