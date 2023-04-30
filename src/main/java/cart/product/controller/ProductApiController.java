@@ -26,13 +26,13 @@ public class ProductApiController {
     @PostMapping
     public ResponseEntity<Void> add(@RequestBody @Valid ProductAddRequest productAddRequest) {
         final long id = productService.register(productAddRequest);
-        return ResponseEntity.created(URI.create("/products" + id)).build();
+        return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
         final long id = productService.update(productUpdateRequest);
-        return ResponseEntity.created(URI.create("/products" + id)).build();
+        return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @DeleteMapping("/{id}")

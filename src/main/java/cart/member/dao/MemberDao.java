@@ -34,7 +34,9 @@ public class MemberDao {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName("members")
                 .usingGeneratedKeyColumns("id");
-
+        // 이메일에 중복을 허용하지 않는다는 검증을 어디서 해야할까요?
+        // 도메인 로직이라고 생각이 드는데 도메인에서 그러면 매번 모든 객체를 꺼내야할까요?
+        // 그냥 DAO에서 DupcliateKeyException이 발생하면 그걸 도메인에서 잡아서 예외 전환하는 방식을 택해야 할까요?
         final Number key = simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(member));
         return new Member(key.longValue(), member.getEmail(), member.getPassword(), member.getPhoneNumber());
     }

@@ -5,11 +5,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 class MemberDaoTest {
@@ -33,6 +35,18 @@ class MemberDaoTest {
 
         // then
         assertThat(memberDao.findAll()).contains(inserted);
+    }
+
+    @Test
+    @DisplayName("이메일이 중복이 되면 예외를 발생시킨다")
+    void duplciateEmail() {
+        // given
+        Member member = new Member("email@email.com", "password", "0100100100");
+        memberDao.save(member);
+        Member duplicateEmailMember = new Member(member.getEmail(), "password2", "0000000000");
+
+
+        assertThatThrownBy(() -> memberDao.save(duplicateEmailMember)).isInstanceOf(DuplicateKeyException.class);
     }
 
     @Test
