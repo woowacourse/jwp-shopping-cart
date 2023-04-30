@@ -36,26 +36,6 @@ public class AdminController {
         return "admin";
     }
 
-    @PostMapping
-    public ResponseEntity<Void> addProduct(@RequestBody @Valid final ProductDto productDto) {
-        final long productId = productService.save(productDto);
-        return ResponseEntity.created(URI.create("/" + productId)).build();
-    }
-
-    @PutMapping("/{productId}")
-    public ResponseEntity<Void> updateProduct(
-            @PathVariable final Long productId,
-            @RequestBody @Valid final ProductDto productDto) {
-        productService.update(productId, productDto);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId) {
-        productService.delete(productId);
-        return ResponseEntity.noContent().build();
-    }
-
     @ModelAttribute("categories")
     public List<ProductCategory> productCategories() {
         return List.of(ProductCategory.values());
