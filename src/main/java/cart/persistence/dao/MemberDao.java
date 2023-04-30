@@ -21,7 +21,7 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long insert(final MemberEntity memberEntity) {
+    public long insert(final MemberEntity memberEntity) {
         final String query = "INSERT INTO member(email, password, nickname, telephone) VALUES (?, ?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -52,7 +52,7 @@ public class MemberDao {
     public Optional<MemberEntity> findByEmail(final String memberEmail) {
         final String query = "SELECT m.id, m.email, m.password, m.nickname, m.telephone FROM member m WHERE m.email = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(query, memberRowMapper(), memberEmail));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, memberRowMapper(), memberEmail));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }

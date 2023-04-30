@@ -26,7 +26,7 @@ public class ProductDao {
         return jdbcTemplate.query(query, productRowMapper());
     }
 
-    public Long insert(final ProductEntity productEntity) {
+    public long insert(final ProductEntity productEntity) {
         final String query = "INSERT INTO product(name, image_url, price, category) VALUES(?, ?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -56,7 +56,7 @@ public class ProductDao {
         final String query = "SELECT p.id, p.name, p.image_url, p.price, p.category FROM product as p " +
                 "WHERE p.id = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(query, productRowMapper(), id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, productRowMapper(), id));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }

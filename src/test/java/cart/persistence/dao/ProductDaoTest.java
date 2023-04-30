@@ -1,6 +1,5 @@
-package cart.persistence;
+package cart.persistence.dao;
 
-import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 @JdbcTest
-@Import(ProductDao.class)
+@Import({ProductDao.class, MemberDao.class, CartDao.class})
 class ProductDaoTest {
 
     private ProductEntity productEntity;
@@ -24,14 +23,18 @@ class ProductDaoTest {
     @Autowired
     private ProductDao productDao;
 
+    @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
+    private CartDao cartDao;
+
     @BeforeEach
     void setUp() {
-        productEntity = new ProductEntity("치킨",
-                "chicken_image_url",
-                20000, "KOREAN");
+        productEntity = new ProductEntity("치킨", "chicken_image_url", 20000, "KOREAN");
     }
 
-    @DisplayName("존재하는 상품을 조회하면, 성공적으로 가져온다.")
+    @DisplayName("유효한 상품 아이디가 주어지면, 상품 정보를 조회한다")
     @Test
     void findById_success() {
         // given
@@ -45,10 +48,10 @@ class ProductDaoTest {
 
         assertThat(findProduct)
                 .extracting("name", "price", "imageUrl", "category")
-                .contains("치킨", 20000, "chicken_image_url", "KOREAN");
+                .containsExactly("치킨", 20000, "chicken_image_url", "KOREAN");
     }
 
-    @DisplayName("존재하지 않는 상품을 가져오면, 빈 값을 반환한다.")
+    @DisplayName("유효하지 않은 상품 아이디가 주어지면, 빈 값을 반환한다")
     @Test
     void findById_empty() {
         // when
@@ -58,7 +61,7 @@ class ProductDaoTest {
         assertThat(findProduct).isEmpty();
     }
 
-    @DisplayName("상품을 저장한다.")
+    @DisplayName("상품 정보를 저장한다")
     @Test
     void insert() {
         // when
@@ -70,10 +73,10 @@ class ProductDaoTest {
 
         assertThat(findProduct)
                 .extracting("name", "price", "imageUrl", "category")
-                .contains("치킨", 20000, "chicken_image_url", "KOREAN");
+                .containsExactly("치킨", 20000, "chicken_image_url", "KOREAN");
     }
 
-    @DisplayName("상품 전체를 조회한다.")
+    @DisplayName("상품 정보 전체를 조회한다.")
     @Test
     void findAll() {
         // given
@@ -87,11 +90,11 @@ class ProductDaoTest {
         assertThat(products).hasSize(2);
         assertThat(products)
                 .extracting("name", "price", "imageUrl", "category")
-                .contains(tuple("치킨", 20000, "chicken_image_url", "KOREAN"),
+                .containsExactly(tuple("치킨", 20000, "chicken_image_url", "KOREAN"),
                         tuple("탕수육", 30000, "pork_image_url", "CHINESE"));
     }
 
-    @DisplayName("상품을 수정한다.")
+    @DisplayName("주어진 상품 아이디에 해당하는 상품 정보를 수정한다.")
     @Test
     void updateById() {
         // given
@@ -108,10 +111,10 @@ class ProductDaoTest {
         assertThat(updatedCount).isEqualTo(1);
         assertThat(findProduct)
                 .extracting("name", "price", "imageUrl", "category")
-                .contains("탕수육", 30000, "pork_image_url", "CHINESE");
+                .containsExactly("탕수육", 30000, "pork_image_url", "CHINESE");
     }
 
-    @DisplayName("상품을 삭제한다.")
+    @DisplayName("주어진 상품 아이디에 해당하는 상품을 삭제한다.")
     @Test
     void deleteById() {
         // given

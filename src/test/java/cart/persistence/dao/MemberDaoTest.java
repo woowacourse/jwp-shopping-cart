@@ -45,6 +45,7 @@ class MemberDaoTest {
     @Test
     @DisplayName("유효한 사용자 아이디가 주어지면, 사용자 정보를 조회한다.")
     void findById_success() {
+        // given
         final Long savedMemberId = memberDao.insert(memberEntity);
 
         // when
@@ -84,13 +85,13 @@ class MemberDaoTest {
                 .containsExactly(tuple("journey@gmail.com", "password", "져니", "010-1234-5678"),
                         tuple("koda@gmail.com", "kodaissocute", "코다", "010-4321-8765"));
     }
-    
+
     @Test
     @DisplayName("유효한 사용자 이메일이 주어지면, 사용자 정보를 반환한다.")
     void findByEmail_success() {
         // given
         memberDao.insert(memberEntity);
-        
+
         // when
         final Optional<MemberEntity> member = memberDao.findByEmail("journey@gmail.com");
         final MemberEntity findMember = member.get();
@@ -100,7 +101,7 @@ class MemberDaoTest {
                 .extracting("email", "password", "nickname", "telephone")
                 .containsExactly("journey@gmail.com", "password", "져니", "010-1234-5678");
     }
-    
+
     @Test
     @DisplayName("유효하지 않은 사용자 이메일이 주어지면, 빈 값을 반환한다.")
     void findByEmail_fail() {
