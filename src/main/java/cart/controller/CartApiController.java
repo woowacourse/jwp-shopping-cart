@@ -1,9 +1,9 @@
 package cart.controller;
 
-import cart.dto.InsertRequestDto;
+import cart.dto.ProductInsertRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.dto.ProductUpdateResponseDto;
-import cart.dto.UpdateRequestDto;
+import cart.dto.ProductUpdateRequestDto;
 import cart.entity.ProductEntity;
 import cart.service.CartService;
 import java.net.URI;
@@ -27,9 +27,9 @@ public class CartApiController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<ProductEntity> insertProduct(@RequestBody InsertRequestDto insertRequestDto) {
-        validatePrice(insertRequestDto.getPrice());
-        final ProductEntity savedProduct = cartService.addProduct(insertRequestDto);
+    public ResponseEntity<ProductEntity> insertProduct(@RequestBody ProductInsertRequestDto productInsertRequestDto) {
+        validatePrice(productInsertRequestDto.getPrice());
+        final ProductEntity savedProduct = cartService.addProduct(productInsertRequestDto);
         final int savedId = savedProduct.getId();
 
         return ResponseEntity.created(URI.create("/products/" + savedId)).build();
@@ -46,9 +46,9 @@ public class CartApiController {
     }
 
     @PutMapping("/products")
-    public ResponseEntity<ProductUpdateResponseDto> updateProduct(@RequestBody UpdateRequestDto updateRequestDto) {
-        validatePrice(updateRequestDto.getPrice());
-        final int updatedRowCount = cartService.updateProduct(updateRequestDto);
+    public ResponseEntity<ProductUpdateResponseDto> updateProduct(@RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
+        validatePrice(productUpdateRequestDto.getPrice());
+        final int updatedRowCount = cartService.updateProduct(productUpdateRequestDto);
         final ProductUpdateResponseDto productUpdateResponseDto = new ProductUpdateResponseDto(updatedRowCount);
 
         return ResponseEntity.ok(productUpdateResponseDto);

@@ -1,22 +1,22 @@
 package cart.service;
 
-import cart.dto.InsertRequestDto;
+import cart.dto.ProductInsertRequestDto;
 import cart.dto.ProductResponseDto;
-import cart.dto.UpdateRequestDto;
+import cart.dto.ProductUpdateRequestDto;
 import cart.entity.ProductEntity;
 
 public class ProductMapper {
 
-    public static ProductEntity toEntity(InsertRequestDto insertRequestDto) {
-        return new ProductEntity(insertRequestDto.getName(), insertRequestDto.getPrice(), insertRequestDto.getImage());
+    public static ProductEntity toEntity(ProductInsertRequestDto productInsertRequestDto) {
+        return new ProductEntity(productInsertRequestDto.getName(), productInsertRequestDto.getPrice(), productInsertRequestDto.getImage());
     }
 
-    public static ProductEntity toEntity(UpdateRequestDto updateRequestDto) {
+    public static ProductEntity toEntity(ProductUpdateRequestDto productUpdateRequestDto) {
         return new ProductEntity(
-                updateRequestDto.getId(),
-                updateRequestDto.getName(),
-                updateRequestDto.getPrice(),
-                updateRequestDto.getImage());
+                productUpdateRequestDto.getId(),
+                productUpdateRequestDto.getName(),
+                productUpdateRequestDto.getPrice(),
+                productUpdateRequestDto.getImage());
     }
 
     public static ProductResponseDto toDto(ProductEntity product) {

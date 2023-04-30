@@ -1,9 +1,9 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dto.InsertRequestDto;
+import cart.dto.ProductInsertRequestDto;
 import cart.dto.ProductResponseDto;
-import cart.dto.UpdateRequestDto;
+import cart.dto.ProductUpdateRequestDto;
 import cart.entity.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +18,8 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public ProductEntity addProduct(final InsertRequestDto insertRequestDto) {
-        final ProductEntity product = ProductMapper.toEntity(insertRequestDto);
+    public ProductEntity addProduct(final ProductInsertRequestDto productInsertRequestDto) {
+        final ProductEntity product = ProductMapper.toEntity(productInsertRequestDto);
         return productDao.insert(product);
     }
 
@@ -31,8 +31,8 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public int updateProduct(final UpdateRequestDto updateRequestDto) {
-        final ProductEntity product = ProductMapper.toEntity(updateRequestDto);
+    public int updateProduct(final ProductUpdateRequestDto productUpdateRequestDto) {
+        final ProductEntity product = ProductMapper.toEntity(productUpdateRequestDto);
         return productDao.update(product);
     }
 
