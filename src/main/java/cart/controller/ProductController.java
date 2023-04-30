@@ -38,7 +38,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> postProducts(@RequestBody ProductCreationRequest request) {
-        managementService.save(ProductDtoMapper.from(request));
+        managementService.add(ProductDtoMapper.from(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

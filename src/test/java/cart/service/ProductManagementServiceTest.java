@@ -57,7 +57,7 @@ class ProductManagementServiceTest {
         final ProductDto productDto = ProductDto.of("pobi_doll", "image", 10_000_000);
         doNothing().when(productDao).insert(any());
 
-        managementService.save(productDto);
+        managementService.add(productDto);
 
         verify(productDao, times(1)).insert(any());
     }

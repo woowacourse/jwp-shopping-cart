@@ -23,7 +23,7 @@ public class ProductManagementService {
         return ProductDtoMapper.from(productEntities);
     }
 
-    public void save(final ProductDto productDto) {
+    public void add(final ProductDto productDto) {
         productDao.insert(ProductEntityMapper.from(productDto));
     }
 
