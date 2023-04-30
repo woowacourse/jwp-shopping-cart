@@ -1,17 +1,18 @@
 package cart.domain;
 
-import java.util.List;
+import cart.entity.ProductEntity;
 
-import cart.dto.ProductDto;
+import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository {
-    Long save(ProductDto productDto);
+    ProductEntity save(Product product);
 
-    ProductDto findById(Long id);
+    Optional<ProductEntity> findById(Long id);
 
-    List<ProductDto> findAll();
+    List<ProductEntity> findAll();
 
-    void updateById(ProductDto productRequestDto, Long id);
+    void update(ProductEntity productEntity);
 
     void deleteById(Long id);
 }

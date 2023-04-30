@@ -4,7 +4,7 @@ import cart.domain.Product;
 import cart.domain.ProductRepository;
 import cart.dto.ProductDto;
 import cart.dto.ProductRequestDto;
-import cart.dto.ProductResponseDto;
+import cart.entity.ProductEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,44 +22,34 @@ public class JwpCartService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> findAll() {
-        List<ProductDto> productDtos = productRepository.findAll();
-        productDtos.stream()
-                .map(productDto -> Product.createWithId(
-                        productDto.getId(),
-                        productDto.getName(),
-                        productDto.getImgUrl(),
-                        productDto.getPrice()))
-                .collect(toList());
-
-        return productDtos.stream()
-                .map(ProductResponseDto::fromProductDto)
+    public List<ProductDto> findAll() {
+        List<ProductEntity> productEntities = productRepository.findAll();
+        return productEntities.stream()
+                .map(ProductDto::fromEntity)
                 .collect(toList());
     }
 
     @Transactional
-    public ProductResponseDto add(ProductRequestDto productRequestDto) {
-        Product product = Product.createWithoutId(
+    public ProductDto add(ProductRequestDto productRequestDto) {
+        Product product = new Product(
                 productRequestDto.getName(),
                 productRequestDto.getImgUrl(),
                 productRequestDto.getPrice()
         );
-
-        ProductDto productDto = new ProductDto(product);
-        productRepository.save(productDto);
-        return ProductResponseDto.fromProductDto(productDto);
+        ProductEntity productEntity = productRepository.save(product);
+        return ProductDto.fromEntity(productEntity);
     }
 
     @Transactional
-    public ProductResponseDto updateById(ProductRequestDto productRequestDto, Long id) {
-        Product product = Product.createWithoutId(
+    public ProductDto updateById(ProductRequestDto productRequestDto, Long id) {
+        Product product = new Product(
                 productRequestDto.getName(),
                 productRequestDto.getImgUrl(),
                 productRequestDto.getPrice()
         );
-        ProductDto productDto = new ProductDto(product);
-        productRepository.updateById(productDto, id);
-        return ProductResponseDto.fromProductDto(productDto);
+        ProductEntity productEntity = new ProductEntity(id, product.getName(), product.getImgUrl(), product.getPrice());
+        productRepository.update(productEntity);
+        return ProductDto.fromEntity(productEntity);
     }
 
     @Transactional

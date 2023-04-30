@@ -1,7 +1,9 @@
 package cart.controller;
 
+import cart.dto.ProductDto;
 import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
+import cart.entity.ProductEntity;
 import cart.service.JwpCartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -37,17 +40,21 @@ class JwpCartControllerTest {
     @Test
     @DisplayName("상품 목록 페이지를 조회한다.")
     void index() throws Exception {
-        List<ProductResponseDto> expectedProducts = List.of(
-                ProductResponseDto.of("product1","p1p1.com", 1000),
-                ProductResponseDto.of ("product2", "p2p2.com", 2000)
+        List<ProductDto> expectDtos = List.of(
+                ProductDto.fromEntity(new ProductEntity(1L, "product1", "p1p1.com", 1000)),
+                ProductDto.fromEntity(new ProductEntity(2L, "product2", "p2p2.com", 2000))
         );
 
-        when(jwpCartService.findAll()).thenReturn(expectedProducts);
+        List<ProductResponseDto> expectResponses = expectDtos.stream()
+                .map(ProductResponseDto::fromProductDto)
+                .collect(toList());
+
+        when(jwpCartService.findAll()).thenReturn(expectDtos);
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"))
-                .andExpect(model().attribute("products", expectedProducts));
+                .andExpect(model().attribute("products", expectResponses));
     }
 
     @Test
@@ -58,9 +65,9 @@ class JwpCartControllerTest {
         int price = 3000;
 
         ProductRequestDto productRequestDto = new ProductRequestDto(name, imgUrl, price);
-        ProductResponseDto expectedResponse = ProductResponseDto.of(name, imgUrl, price);
+        ProductDto expectDto = ProductDto.fromEntity(new ProductEntity(1L, name, imgUrl, price));
 
-        when(jwpCartService.add(any(ProductRequestDto.class))).thenReturn(expectedResponse);
+        when(jwpCartService.add(any(ProductRequestDto.class))).thenReturn(expectDto);
 
         mockMvc.perform(post("/admin/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -91,18 +98,18 @@ class JwpCartControllerTest {
 
         ProductRequestDto productRequestDto = new ProductRequestDto(name, imgUrl, price);
         ProductRequestDto modifiedProductRequestDto = new ProductRequestDto(name, imgUrl, modifiedPrice);
-        ProductResponseDto response = ProductResponseDto.of(name, imgUrl, modifiedPrice);
+        ProductDto expectDto = ProductDto.fromEntity(new ProductEntity(1L, name, imgUrl, modifiedPrice));
 
-        when(jwpCartService.updateById(any(ProductRequestDto.class), any(Long.class))).thenReturn(response);
+        when(jwpCartService.updateById(any(ProductRequestDto.class), any(Long.class))).thenReturn(expectDto);
 
         mockMvc.perform(post("/admin/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(productRequestDto)));
 
         mockMvc.perform(put("/admin/products/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(modifiedProductRequestDto)))
-                        .andExpect(status().isOk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(modifiedProductRequestDto)))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.imgUrl").value(imgUrl))
                 .andExpect(jsonPath("$.price").value(modifiedPrice));
