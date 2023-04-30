@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/products")
@@ -38,14 +37,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> postProducts(@Valid @RequestBody ProductCreationRequest request) {
+    public ResponseEntity<Void> postProducts(@RequestBody ProductCreationRequest request) {
         managementService.save(ProductDtoMapper.from(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{productId}")
     public ResponseEntity<Void> putProducts(@PathVariable Long productId,
-                                            @Valid @RequestBody ProductModificationRequest request) {
+                                            @RequestBody ProductModificationRequest request) {
         managementService.updateById(productId, ProductDtoMapper.from(request));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
