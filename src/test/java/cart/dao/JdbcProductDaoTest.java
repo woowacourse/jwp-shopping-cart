@@ -1,20 +1,20 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import cart.dao.entity.Product;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 class JdbcProductDaoTest {
@@ -113,8 +113,16 @@ class JdbcProductDaoTest {
     private Product findById(Long id) {
         final String selectQuery = "select * from product where id = :id";
         final Map<String, Long> params = Collections.singletonMap("id", id);
-        final RowMapper<Product> rowMapper = BeanPropertyRowMapper.newInstance(Product.class);
 
-        return jdbcTemplate.queryForObject(selectQuery, params, rowMapper);
+        return jdbcTemplate.queryForObject(selectQuery, params, createRowMapper());
+    }
+
+    private static RowMapper<Product> createRowMapper() {
+        return (rs, rowNum) -> new Product(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getInt("price"),
+                rs.getString("img_url")
+        );
     }
 }
