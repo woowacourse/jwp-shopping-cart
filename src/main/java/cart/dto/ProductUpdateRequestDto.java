@@ -1,9 +1,18 @@
 package cart.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+
 public class ProductUpdateRequestDto {
+    @Positive
     private final int id;
+    @Pattern(regexp = ProductValidator.IMAGE_URL_REGEX)
     private final String image;
+    @NotBlank
     private final String name;
+    @PositiveOrZero
     private final int price;
 
     public ProductUpdateRequestDto(final int id, final String image, final String name, final int price) {

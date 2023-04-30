@@ -2,12 +2,13 @@ package cart.controller;
 
 import cart.dto.ProductInsertRequestDto;
 import cart.dto.ProductResponseDto;
-import cart.dto.ProductUpdateResponseDto;
 import cart.dto.ProductUpdateRequestDto;
+import cart.dto.ProductUpdateResponseDto;
 import cart.entity.ProductEntity;
 import cart.service.CartService;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +28,8 @@ public class CartApiController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<ProductEntity> insertProduct(@RequestBody ProductInsertRequestDto productInsertRequestDto) {
-        validatePrice(productInsertRequestDto.getPrice());
-        final ProductEntity savedProduct = cartService.addProduct(productInsertRequestDto);
+    public ResponseEntity<ProductEntity> insertProduct(@RequestBody @Valid ProductInsertRequestDto product) {
+        final ProductEntity savedProduct = cartService.addProduct(product);
         final int savedId = savedProduct.getId();
 
         return ResponseEntity.created(URI.create("/products/" + savedId)).build();
@@ -46,9 +46,8 @@ public class CartApiController {
     }
 
     @PutMapping("/products")
-    public ResponseEntity<ProductUpdateResponseDto> updateProduct(@RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
-        validatePrice(productUpdateRequestDto.getPrice());
-        final int updatedRowCount = cartService.updateProduct(productUpdateRequestDto);
+    public ResponseEntity<ProductUpdateResponseDto> updateProduct(@RequestBody @Valid ProductUpdateRequestDto product) {
+        final int updatedRowCount = cartService.updateProduct(product);
         final ProductUpdateResponseDto productUpdateResponseDto = new ProductUpdateResponseDto(updatedRowCount);
 
         return ResponseEntity.ok(productUpdateResponseDto);
@@ -62,9 +61,4 @@ public class CartApiController {
         return ResponseEntity.ok(productUpdateResponseDto);
     }
 
-    private void validatePrice(int price) {
-        if (price < 0) {
-            throw new IllegalArgumentException("가격은 음수일 수 없습니다.");
-        }
-    }
 }
