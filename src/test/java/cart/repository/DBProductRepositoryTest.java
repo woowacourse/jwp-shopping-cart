@@ -1,21 +1,19 @@
 package cart.repository;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Map;
-
+import cart.domain.Product;
+import cart.domain.ProductRepository;
+import cart.dto.ProductDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-import cart.domain.ProductRepository;
-import cart.dto.ProductDto;
-import cart.dto.ProductRequestDto;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 class DBProductRepositoryTest {
@@ -38,37 +36,21 @@ class DBProductRepositoryTest {
             + "    price   INT             NOT NULL,"
             + "    PRIMARY KEY (id))");
 
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-            .withTableName("product")
-            .usingGeneratedKeyColumns("id");
+        Product product1 = Product.createWithoutId("name1", "url1", 1000);
+        Product product2 = Product.createWithoutId("name2", "url2", 2000);
 
-        ProductRequestDto product1 = new ProductRequestDto("name1", "url1", 1000);
-        ProductRequestDto product2 = new ProductRequestDto("name2", "url2", 2000);
-
-        Map<String, Object> map1 = Map.of(
-            "name", product1.getName(),
-            "imgurl", product1.getImgUrl(),
-            "price", product1.getPrice()
-        );
-        Map<String, Object> map2 = Map.of(
-            "name", product2.getName(),
-            "imgurl", product2.getImgUrl(),
-            "price", product2.getPrice()
-        );
-
-        this.id1 = simpleJdbcInsert.executeAndReturnKey(map1).longValue();
-        this.id2 = simpleJdbcInsert.executeAndReturnKey(map2).longValue();
+        this.id1 = productRepository.save(new ProductDto(product1));
+        this.id2 = productRepository.save(new ProductDto(product2));
     }
 
     @Test
     @DisplayName("상품 정보를 DB에 저장한다.")
     void save() {
         ProductDto product3 = new ProductDto(null, "name3", "url3", 3000);
-        Long id3 = productRepository.save(product3);
 
-        String sql = "SELECT * FROM product";
-        assertThat(jdbcTemplate.query(sql, (rs, rn) -> rs).size()).isEqualTo(3);
-
+        productRepository.save(product3);
+        List<ProductDto> products = productRepository.findAll();
+        assertThat(products).hasSize(3);
     }
 
     @Test
@@ -86,7 +68,8 @@ class DBProductRepositoryTest {
     @Test
     @DisplayName("모든 상품 정보를 조회한다.")
     void findAll() {
-        assertThat(productRepository.findAll().size()).isEqualTo(2);
+        List<ProductDto> products = productRepository.findAll();
+        assertThat(products).hasSize(2);
     }
 
     @Test
@@ -95,19 +78,12 @@ class DBProductRepositoryTest {
         ProductDto product = new ProductDto(id2, "name4", "url4", 4000);
         productRepository.updateById(product, id2);
 
-        String sql = "SELECT id, name, imgurl, price FROM product WHERE id = ?";
-        ProductDto productDto = jdbcTemplate.queryForObject(sql,
-            (rs, rn) -> new ProductDto(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("imgurl"),
-                rs.getInt("price")),
-            id2);
+        ProductDto findProduct = productRepository.findById(id2);
 
         assertAll(
-            () -> assertThat(productDto.getName()).isEqualTo(product.getName()),
-            () -> assertThat(productDto.getImgUrl()).isEqualTo(product.getImgUrl()),
-            () -> assertThat(productDto.getPrice()).isEqualTo(product.getPrice())
+            () -> assertThat(findProduct.getName()).isEqualTo(product.getName()),
+            () -> assertThat(findProduct.getImgUrl()).isEqualTo(product.getImgUrl()),
+            () -> assertThat(findProduct.getPrice()).isEqualTo(product.getPrice())
         );
     }
 
@@ -116,7 +92,7 @@ class DBProductRepositoryTest {
     void deleteById() {
         productRepository.deleteById(id2);
 
-        String sql = "SELECT * FROM product";
-        assertThat(jdbcTemplate.query(sql, (rs, rn) -> rs).size()).isEqualTo(1);
+        List<ProductDto> products = productRepository.findAll();
+        assertThat(products).hasSize(1);
     }
 }
