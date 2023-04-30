@@ -1,12 +1,5 @@
 package cart.web.controller;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-
 import cart.domain.product.service.AdminService;
 import cart.domain.product.service.dto.ProductDto;
 import cart.web.controller.dto.request.ProductCreationRequest;
@@ -22,6 +15,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminRestControllerTest {
@@ -53,6 +53,7 @@ class AdminRestControllerTest {
                 .when().post("/admin")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
+                .header("Location", is("/admin/" + 1))
                 .body("id", is(1))
                 .body("name", is(productName))
                 .body("price", is(productPrice));

@@ -21,7 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ViewController.class)
-class AdminViewControllerTest {
+class ViewControllerTest {
 
     @Autowired
     MockMvc mockMvc;
