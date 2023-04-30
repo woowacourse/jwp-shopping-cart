@@ -16,24 +16,27 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import static io.restassured.RestAssured.given;
 
-@Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductControllerTest {
 
     @LocalServerPort
     private int port;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        jdbcTemplate.execute("TRUNCATE TABLE product");
     }
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @DisplayName("POST /admin/product 요청 시")
     @Nested
