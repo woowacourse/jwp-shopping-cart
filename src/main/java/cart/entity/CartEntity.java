@@ -6,7 +6,11 @@ public class CartEntity {
     private Long memberId;
     private Long productId;
 
-    public CartEntity(Long id, Long memberId, Long productId) {
+    public CartEntity(final Long memberId, final Long productId) {
+        this(null, memberId, productId);
+    }
+
+    public CartEntity(final Long id, final Long memberId, final Long productId) {
         this.id = id;
         this.memberId = memberId;
         this.productId = productId;

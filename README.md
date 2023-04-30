@@ -149,4 +149,4 @@ src/main/resources/data.sql
 - 멤버
     - 조회
 - 카트
-    - 조회
+    - 생성, 조회
