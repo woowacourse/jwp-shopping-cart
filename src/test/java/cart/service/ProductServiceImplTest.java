@@ -8,6 +8,10 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,12 +21,12 @@ import cart.domain.Product;
 import cart.controller.response.ProductResponse;
 import cart.repository.ProductRepository;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
-	@MockBean
+	@Mock
 	ProductRepository productRepository;
 
-	@Autowired
+	@InjectMocks
 	ProductServiceImpl productServiceImpl;
 
 	@DisplayName("전체 상품 조회 테스트")
