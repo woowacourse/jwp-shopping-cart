@@ -75,6 +75,23 @@
     font-weight: bold;
 }
 
+.member-email {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.member-password {
+    color: #888888;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.member-etc {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
 @media screen and (max-width: 768px) {
     .product-grid {
         width: 100%;
