@@ -10,29 +10,29 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-@DisplayName("Email 은(는)")
-class EmailTest {
+@DisplayName("ImageUrl 은(는)")
+class ImageUrlTest {
 
-    @ParameterizedTest(name = "이메일 형식이 올바르지 않다면 오류이다. ex = [{0}]")
+
+    @ParameterizedTest(name = "이미지 주소가 올바르지 않다면 오류이다. ex = [{0}]")
     @ValueSource(strings = {
-            "mallang@woowa",
-            "mallang!woowa.com"
+            "https:/dqw",
+            "https://"
     })
-    void 이메일_형식이_올바르지_않다면_오류(final String wrongEmail) {
+    void 이미지_주소가_올바르지_않다면_오류(final String wrongUrl) {
         // when & then
         assertThatThrownBy(() ->
-                Email.email(wrongEmail)
+                ImageUrl.imageUrl(wrongUrl)
         ).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    void 이메일_형식이_올바르면_생성된다() {
+    void 이미지_주소가_올바르면_생성된다() {
         // when & then
         assertDoesNotThrow(
-                () -> Email.email("mallang@woowa.com")
+                () -> ImageUrl.imageUrl("https://woowa.chat")
         );
     }
 }
