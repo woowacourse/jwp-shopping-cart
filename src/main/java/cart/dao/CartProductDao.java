@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.CartProduct;
 import java.util.List;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -29,9 +30,13 @@ public class CartProductDao {
 
 
     public Long save(final CartProduct cartProduct) {
-        final SqlParameterSource source = new BeanPropertySqlParameterSource(cartProduct);
-        return simpleJdbcInsert.executeAndReturnKey(source)
-                .longValue();
+        try {
+            final SqlParameterSource source = new BeanPropertySqlParameterSource(cartProduct);
+            return simpleJdbcInsert.executeAndReturnKey(source)
+                    .longValue();
+        } catch (final DuplicateKeyException e) {
+            throw new IllegalArgumentException("같은 상품을 담을 수 없습니다.");
+        }
     }
 
     public List<CartProduct> findAllByMemberId(final Long memberId) {

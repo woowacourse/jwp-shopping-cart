@@ -1,7 +1,5 @@
 package cart.domain;
 
-import java.util.List;
-
 public class CartProduct {
 
     private final Long id;
