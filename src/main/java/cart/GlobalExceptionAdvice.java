@@ -15,4 +15,10 @@ public final class GlobalExceptionAdvice {
 	public ResponseEntity<String> dtoValidation (MethodArgumentNotValidException exception) {
 		return ResponseEntity.badRequest().body(exception.getMessage());
 	}
+
+	@ExceptionHandler
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<String> anotherError (RuntimeException exception) {
+		return ResponseEntity.internalServerError().body(exception.getMessage());
+	}
 }
