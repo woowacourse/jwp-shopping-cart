@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.domain.Product;
-import cart.dto.request.ProductSaveRequest;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -27,14 +26,14 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long save(ProductSaveRequest saveRequest) {
+    public long save(Product product) {
         String sql = "insert into PRODUCT(name, image, price) values (:name,:image,:price)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("name", saveRequest.getName())
-                .addValue("image", saveRequest.getImage())
-                .addValue("price", saveRequest.getPrice());
+                .addValue("name", product.getName().getName())
+                .addValue("image", product.getImage())
+                .addValue("price", product.getPrice().getPrice());
 
         jdbcTemplate.update(sql, paramSource, keyHolder);
 

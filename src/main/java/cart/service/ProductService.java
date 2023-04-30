@@ -9,6 +9,7 @@ import cart.dto.ProductDto;
 import cart.dto.request.ProductSaveRequest;
 import cart.dto.request.ProductUpdateRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -19,10 +20,12 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public long saveProduct(ProductSaveRequest productSaveRequest) {
-        return productDao.save(productSaveRequest);
+    public long saveProduct(ProductSaveRequest request) {
+        Product product = new Product(request.getName(), request.getImage(), request.getPrice());
+        return productDao.save(product);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findAllProducts() {
         List<Product> products = productDao.findAllProducts();
         return products.stream()
@@ -30,8 +33,8 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public void updateProduct(ProductUpdateRequest updateRequest) {
-        Product product = new Product(updateRequest.getProductId(), updateRequest.getName(), updateRequest.getImage(), updateRequest.getPrice());
+    public void updateProduct(ProductUpdateRequest request) {
+        Product product = new Product(request.getProductId(), request.getName(), request.getImage(), request.getPrice());
         productDao.updateProduct(product);
     }
 

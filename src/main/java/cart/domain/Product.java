@@ -1,7 +1,7 @@
 package cart.domain;
 
-import cart.exception.BusinessIllegalArgumentException;
 import cart.ErrorCode;
+import cart.exception.BusinessIllegalArgumentException;
 
 public class Product {
 
@@ -10,12 +10,16 @@ public class Product {
     private final String image;
     private final Price price;
 
+    public Product(String name, String image, long price) {
+        this(null, name, image, price);
+    }
+
     public Product(Long productId, String name, String image, long price) {
+        validate(productId);
         this.productId = productId;
         this.name = Name.from(name);
         this.image = image;
         this.price = Price.from(price);
-        validate(productId);
     }
 
     public long getProductId() {
@@ -34,9 +38,8 @@ public class Product {
         return image;
     }
 
-
     private void validate(Long productId) {
-        if (productId < 0) {
+        if (productId != null && productId < 0) {
             throw new BusinessIllegalArgumentException(ErrorCode.NOT_VALID_ID);
         }
     }
