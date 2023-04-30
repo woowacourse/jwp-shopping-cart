@@ -1,5 +1,7 @@
 package cart.exception;
 
+import cart.exception.auth.AuthException;
+import cart.exception.cart.CartException;
 import cart.exception.dto.ExceptionResponse;
 import cart.exception.item.ItemException;
 import cart.exception.user.UserException;
@@ -77,6 +79,20 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserException.class)
     private ResponseEntity<ExceptionResponse> handleUserException(UserException ex) {
         logger.info("UserException : ", ex);
+
+        return ResponseEntity.status(ex.getHttpStatus()).body(new ExceptionResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(CartException.class)
+    private ResponseEntity<ExceptionResponse> handleCartException(CartException ex) {
+        logger.info("CartException : ", ex);
+
+        return ResponseEntity.status(ex.getHttpStatus()).body(new ExceptionResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(AuthException.class)
+    private ResponseEntity<ExceptionResponse> handleAuthException(AuthException ex) {
+        logger.info("AuthException : ", ex);
 
         return ResponseEntity.status(ex.getHttpStatus()).body(new ExceptionResponse(ex.getMessage()));
     }
