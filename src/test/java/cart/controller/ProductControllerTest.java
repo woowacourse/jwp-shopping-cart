@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductAddRequestDto;
+import cart.dto.ProductModifyRequestDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,11 +34,11 @@ public class ProductControllerTest {
     @Test
     @DisplayName("상품을 추가한다.")
     void addProduct() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("밋엉", 10000, "미성씨");
+        ProductAddRequestDto productAddRequestDto = new ProductAddRequestDto("밋엉", 10000, "미성씨");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
+                .body(productAddRequestDto)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/products")
                 .then().log().all()
@@ -47,11 +48,11 @@ public class ProductControllerTest {
     @Test
     @DisplayName("상품을 수정한다.")
     void modifyProduct() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("샐러드", 10000, "밋밋엉");
+        ProductModifyRequestDto productModifyRequestDto = new ProductModifyRequestDto("샐러드", 10000, "밋밋엉");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
+                .body(productModifyRequestDto)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().put("/products/2")
                 .then().log().all()

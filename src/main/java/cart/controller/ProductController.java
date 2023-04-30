@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductAddRequestDto;
+import cart.dto.ProductModifyRequestDto;
 import cart.service.ProductService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +24,15 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> addProduct(@RequestBody ProductRequestDto productRequestDto) {
-        productService.add(productRequestDto);
+    public ResponseEntity<Void> addProduct(@RequestBody ProductAddRequestDto productAddRequestDto) {
+        productService.add(productAddRequestDto);
         return ResponseEntity.created(URI.create("/admin")).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> modifyProduct(@PathVariable int id, @RequestBody ProductRequestDto productRequestDto) {
-        productService.modifyById(id, productRequestDto);
+    public ResponseEntity<Void> modifyProduct(@PathVariable int id,
+                                              @RequestBody ProductModifyRequestDto productModifyRequestDto) {
+        productService.modifyById(id, productModifyRequestDto);
         return ResponseEntity.ok().build();
     }
 

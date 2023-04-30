@@ -1,15 +1,15 @@
 package cart.dto;
 
-public class ProductRequestDto {
+public class ProductModifyRequestDto {
 
     private String name;
     private int price;
     private String imageUrl;
 
-    private ProductRequestDto() {
+    private ProductModifyRequestDto() {
     }
 
-    public ProductRequestDto(String name, int price, String imageUrl) {
+    public ProductModifyRequestDto(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

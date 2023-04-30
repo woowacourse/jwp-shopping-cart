@@ -1,7 +1,8 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductAddRequestDto;
+import cart.dto.ProductModifyRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.entity.Product;
 import cart.entity.Product.Builder;
@@ -29,21 +30,29 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    public void add(ProductRequestDto productRequestDto) {
-        Product product = toEntity(productRequestDto);
+    public void add(ProductAddRequestDto productAddRequestDto) {
+        Product product = toEntity(productAddRequestDto);
         productDao.save(product);
     }
 
-    public void modifyById(int id, ProductRequestDto productRequestDto) {
-        Product product = toEntity(productRequestDto);
+    public void modifyById(int id, ProductModifyRequestDto productModifyRequestDto) {
+        Product product = toEntity(productModifyRequestDto);
         productDao.updateById(id, product);
     }
 
-    private Product toEntity(ProductRequestDto productRequestDto) {
+    private Product toEntity(ProductAddRequestDto productAddRequestDto) {
         return new Builder()
-                .name(productRequestDto.getName())
-                .price(productRequestDto.getPrice())
-                .imageUrl(productRequestDto.getImageUrl())
+                .name(productAddRequestDto.getName())
+                .price(productAddRequestDto.getPrice())
+                .imageUrl(productAddRequestDto.getImageUrl())
+                .build();
+    }
+
+    private Product toEntity(ProductModifyRequestDto productModifyRequestDto) {
+        return new Builder()
+                .name(productModifyRequestDto.getName())
+                .price(productModifyRequestDto.getPrice())
+                .imageUrl(productModifyRequestDto.getImageUrl())
                 .build();
     }
 
