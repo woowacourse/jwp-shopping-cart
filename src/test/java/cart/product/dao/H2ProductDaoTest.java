@@ -19,8 +19,8 @@ class H2ProductDaoTest {
         this.productDao = new H2ProductDao(jdbcTemplate);
     }
 
-    @DisplayName("product를 저장한다")
     @Test
+    @DisplayName("product를 저장한다")
     void insert() {
         // given
         Product product = new Product("도이치킨", "image1", 1000);
@@ -32,8 +32,8 @@ class H2ProductDaoTest {
         assertThat(productDao.findAll()).contains(inserted);
     }
 
-    @DisplayName("product를 수정한다")
     @Test
+    @DisplayName("product를 수정한다")
     void update() {
         // given
         Product product = new Product("도이치킨", "image1", 1000);
@@ -47,8 +47,8 @@ class H2ProductDaoTest {
         assertThat(productDao.findById(inserted.getId()).get()).isEqualTo(updated);
     }
 
-    @DisplayName("product를 id로 조회한다")
     @Test
+    @DisplayName("product를 id로 조회한다")
     void findById() {
         // given
         Product product = new Product("도이치킨", "image1", 1000);

@@ -1,7 +1,10 @@
 package cart.member.domain;
 
+import lombok.Getter;
+
 import java.math.BigInteger;
 
+@Getter
 public class PhoneNumber {
 
     static final int MIN_LENGTH = 10;

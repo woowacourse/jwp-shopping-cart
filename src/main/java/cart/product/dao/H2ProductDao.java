@@ -1,6 +1,7 @@
 package cart.product.dao;
 
 import cart.product.domain.Product;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -15,10 +16,12 @@ import java.util.Optional;
 @Repository
 public class H2ProductDao implements ProductDao {
 
-    private static final RowMapper<Product> productRowMapper = (rs, rowNum) -> new Product(rs.getLong("id"),
-                                                                                           rs.getString("name"),
-                                                                                           rs.getString("image_url"),
-                                                                                           rs.getInt("price"));
+    private static final RowMapper<Product> productRowMapper = (rs, rowNum) -> new Product(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getString("image_url"),
+            rs.getInt("price")
+    );
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -37,23 +40,35 @@ public class H2ProductDao implements ProductDao {
 
     @Override
     public int update(final Product product) {
-        return namedParameterJdbcTemplate.update("UPDATE products SET name = :name, image_url = :imageUrl, price = :price WHERE id = :id", new BeanPropertySqlParameterSource(product));
+        final String sql = "UPDATE products SET name = :name, image_url = :imageUrl, price = :price WHERE id = :id";
+
+        return namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(product));
     }
 
     @Override
     public Optional<Product> findById(final Long id) {
-        Product product = namedParameterJdbcTemplate.queryForObject("SELECT id, name, image_url, price FROM products WHERE id = :id",
-                                                                    new MapSqlParameterSource("id", id), productRowMapper);
-        return Optional.ofNullable(product);
+        final String sql = "SELECT id, name, image_url, price FROM products WHERE id = :id";
+        final MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+
+        try {
+            Product product = namedParameterJdbcTemplate.queryForObject(sql, params, productRowMapper);
+            return Optional.ofNullable(product);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public List<Product> findAll() {
-        return namedParameterJdbcTemplate.query("SELECT id, name, image_url, price FROM products", productRowMapper);
+        final String sql = "SELECT id, name, image_url, price FROM products";
+
+        return namedParameterJdbcTemplate.query(sql, productRowMapper);
     }
 
     @Override
     public int deleteById(final Long id) {
-        return namedParameterJdbcTemplate.update("DELETE FROM products WHERE id = :id", new MapSqlParameterSource("id", id));
+        final String sql = "DELETE FROM products WHERE id = :id";
+
+        return namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
     }
 }

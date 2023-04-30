@@ -1,8 +1,11 @@
 package cart.member.domain;
 
+import lombok.Getter;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Getter
 public class Password {
 
     static final int MIN_LENGTH = 8;

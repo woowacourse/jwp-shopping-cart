@@ -1,8 +1,11 @@
 package cart.member.domain;
 
+import lombok.Getter;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Getter
 public class Email {
 
     static final int MAX_LENGTH = 100;
