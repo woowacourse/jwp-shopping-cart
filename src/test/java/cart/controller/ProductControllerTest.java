@@ -45,14 +45,12 @@ class ProductControllerTest {
     void setUp() {
         RestAssured.port = port;
 
-        resetDatabase();
-        productDao.insert(ProductEntity.of("mouse", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 100000));
-        productDao.insert(ProductEntity.of("keyboard", "https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1", 250000));
+        resetTable();
     }
 
     @DisplayName("상품 전체 목록을 조회하면 상태코드 200을 반환하는지 확인한다")
     @Test
-    void getAdminTest() {
+    void getProductTest() {
         RestAssured.given().log().all()
                 .when().get("/products")
                 .then().log().all()
@@ -199,11 +197,14 @@ class ProductControllerTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private void resetDatabase() {
+    private void resetTable() {
         final String truncateSql = "TRUNCATE TABLE product";
         jdbcTemplate.update(truncateSql);
 
         final String initializeIdSql = "ALTER TABLE product ALTER COLUMN ID RESTART WITH 1";
         jdbcTemplate.update(initializeIdSql);
+
+        productDao.insert(ProductEntity.of("mouse", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 100000));
+        productDao.insert(ProductEntity.of("keyboard", "https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1", 250000));
     }
 }
