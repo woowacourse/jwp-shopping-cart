@@ -1,13 +1,13 @@
 package cart.dao;
 
-import cart.global.annotation.Dao;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
-@Dao
+@Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
