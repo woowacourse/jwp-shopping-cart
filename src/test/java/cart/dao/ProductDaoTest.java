@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.entity.Product;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,6 +67,23 @@ public class ProductDaoTest {
                         .imageUrl("밋엉")
                         .build())
         );
+    }
+
+    @Test
+    @DisplayName("id로 상품을 조회한다.")
+    void findById() {
+        Optional<Product> productOptional = productDao.findById(2);
+
+        Product product = productOptional.get();
+        assertThat(product.getName()).isEqualTo("치킨");
+    }
+
+    @Test
+    @DisplayName("없는 id로 상품을 조회하면 빈 값을 반환한다.")
+    void findByNonExistId() {
+        Optional<Product> productOptional = productDao.findById(1);
+
+        assertThat(productOptional.isEmpty()).isTrue();
     }
 
 }

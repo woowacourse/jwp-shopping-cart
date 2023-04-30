@@ -7,6 +7,7 @@ import cart.dto.ProductResponseDto;
 import cart.entity.Product;
 import cart.entity.Product.Builder;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class ProductService {
     }
 
     public void modifyById(int id, ProductModifyRequestDto productModifyRequestDto) {
+        findProductById(id);
         Product product = toEntity(productModifyRequestDto);
         productDao.updateById(id, product);
     }
@@ -57,7 +59,13 @@ public class ProductService {
     }
 
     public void removeById(int id) {
+        findProductById(id);
         productDao.deleteById(id);
+    }
+
+    private void findProductById(int id) {
+        productDao.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 id 입니다."));
     }
 
 }
