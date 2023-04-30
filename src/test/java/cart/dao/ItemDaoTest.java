@@ -50,7 +50,7 @@ class ItemDaoTest {
     @Sql("classpath:initializeTestDb.sql")
     void findBy() {
         //when
-        Item findItem = itemDao.findBy(1L).orElseThrow();
+        Item findItem = itemDao.findBy(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이템 입니다."));
         //then
         assertThat(findItem).isEqualTo(new Item.Builder()
                 .id(1L)

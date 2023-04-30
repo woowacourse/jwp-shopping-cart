@@ -34,7 +34,8 @@ public class ItemService {
     @Transactional(readOnly = true)
     public ItemResponse loadItem(final Long itemId) {
         Optional<Item> findItem = itemDao.findBy(itemId);
-        return ItemResponse.from(findItem.orElseThrow());
+        Item item = findItem.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이템 입니다."));
+        return ItemResponse.from(item);
     }
 
     @Transactional
