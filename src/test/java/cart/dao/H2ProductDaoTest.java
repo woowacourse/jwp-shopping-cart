@@ -14,15 +14,11 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static cart.fixture.ProductFixture.COFFEE;
-import static cart.fixture.ProductFixture.PIZZA;
-import static cart.fixture.ProductFixture.RAMYEON;
-import static cart.fixture.ProductFixture.SNACK;
-import static cart.fixture.ProductFixture.WATER;
+import static cart.fixture.ProductFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-class ProductDaoImplTest {
+class H2ProductDaoTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -30,24 +26,27 @@ class ProductDaoImplTest {
 
     @BeforeEach
     void setUp() {
-        productDao = new ProductDaoImpl(jdbcTemplate);
+        productDao = new H2ProductDao(jdbcTemplate);
     }
 
     @Test
     void 상품이_정상적으로_저장된다() {
         Product product = new Product("pizza", "url", BigDecimal.valueOf(10000));
-        ProductEntity created = productDao.save(product).orElseGet(() -> null);
+        ProductEntity created = productDao.save(product).orElse(null);
         assertThat(created).isNotNull();
     }
 
     @Test
     void 상품_데이터_정합성_검증() {
         Product product = new Product("pizza", "url", BigDecimal.valueOf(10000));
-        ProductEntity created = productDao.save(product).orElseGet(() -> null);
+        ProductEntity created = productDao.save(product).orElse(null);
 
         Assertions.assertAll(
                 () -> assertThat(created).isNotNull(),
-                () -> assertThat(product.getName()).isEqualTo(created.getName())
+                () -> {
+                    assert created != null;
+                    assertThat(product.getName()).isEqualTo(created.getName());
+                }
         );
     }
 
