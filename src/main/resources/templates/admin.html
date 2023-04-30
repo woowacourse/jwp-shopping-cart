@@ -32,7 +32,7 @@
         </tr>
         <tbody id="product-list">
             <tr th:each="product : ${products}">
-                <td th:text="${product.id}"></td>
+                <td th:text="${product.productId}"></td>
                 <td th:text="${product.name}"></td> <!-- 상품 이름 -->
                 <td th:text="${product.price}"></td> <!-- 상품 가격 -->
                 <td>
@@ -40,7 +40,7 @@
                 </td>
                 <td>
                     <button th:onclick="showEditModal([[${product}]])">수정</button>
-                    <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
+                    <button th:onclick="deleteProduct([[${product.productId}]])">삭제</button>
                 </td>
             </tr>
         </tbody>

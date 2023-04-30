@@ -30,14 +30,14 @@ public class CartApiController {
 
     @PostMapping
     public ResponseEntity<Response> addProductToCart(@RequestBody @Valid CartAddRequest request, @Principal User user) {
-        cartService.addToCart(user.getId(), request.getProductId());
+        cartService.addToCart(user.getMemberId(), request.getProductId());
         return ResponseEntity.ok()
                 .body(SimpleResponse.ok("장바구니에 상품이 담겼습니다."));
     }
 
     @GetMapping
     public ResponseEntity<Response> findAllCartProducts(@Principal User user) {
-        List<CartProductDto> allProducts = cartService.findAllCartProducts(user.getId());
+        List<CartProductDto> allProducts = cartService.findAllCartProducts(user.getMemberId());
         return ResponseEntity.ok()
                 .body(ResultResponse.ok(allProducts.size() + "개의 상품이 조회되었습니다.", allProducts));
     }
@@ -45,7 +45,7 @@ public class CartApiController {
     @DeleteMapping
     public ResponseEntity<Response> deleteProductToCart(@RequestBody @Valid CartDeleteRequest request,
                                                         @Principal User user) {
-        cartService.deleteProduct(user.getId(), request.getCartId());
+        cartService.deleteProduct(user.getMemberId(), request.getCartId());
         return ResponseEntity.ok()
                 .body(SimpleResponse.ok("장바구니에 상품이 삭제되었습니다."));
     }

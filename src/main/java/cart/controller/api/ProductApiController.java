@@ -36,25 +36,25 @@ public class ProductApiController {
     public ResponseEntity<Response> createProduct(@RequestBody @Valid ProductCreateRequest request) {
         ProductDto productDto = productService.createProduct(request.getName(), request.getPrice(),
                 request.getImageUrl());
-        log.info("상품이 생성되었습니다. 상품 ID = {}", productDto.getId());
-        return ResponseEntity.created(URI.create("/products/" + productDto.getId()))
+        log.info("상품이 생성되었습니다. 상품 ID = {}", productDto.getProductId());
+        return ResponseEntity.created(URI.create("/products/" + productDto.getProductId()))
                 .body(ResultResponse.created("상품이 생성되었습니다.", productDto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Response> deleteProduct(@PathVariable Long id) {
-        productService.deleteById(id);
-        log.info("상품이 삭제되었습니다. 상품 ID = {}", id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Response> deleteProduct(@PathVariable Long productId) {
+        productService.deleteById(productId);
+        log.info("상품이 삭제되었습니다. 상품 ID = {}", productId);
         return ResponseEntity.ok()
                 .body(SimpleResponse.ok("상품이 삭제되었습니다."));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Response> updateProduct(@PathVariable Long id,
+    @PatchMapping("/{productId}")
+    public ResponseEntity<Response> updateProduct(@PathVariable Long productId,
                                                   @RequestBody @Valid ProductUpdateRequest request) {
-        ProductDto productDto = productService.updateProductById(id, request.getName(), request.getPrice(),
+        ProductDto productDto = productService.updateProductById(productId, request.getName(), request.getPrice(),
                 request.getImageUrl());
-        log.info("상품이 수정되었습니다. 상품 ID = {}", id);
+        log.info("상품이 수정되었습니다. 상품 ID = {}", productId);
         return ResponseEntity.ok()
                 .body(ResultResponse.ok("상품이 수정되었습니다.", productDto));
     }

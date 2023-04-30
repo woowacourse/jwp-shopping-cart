@@ -29,7 +29,7 @@
                     <p th:text="${product.name}" class="product-name"></p> <!-- 상품 이름 -->
                     <p th:text="${product.price}+원" class="product-price"></p> <!-- 상품 가격 -->
                 </div>
-                <button type="submit" class="product-btn" th:onclick="addCartItem([[${product.id}]])">담기</button>
+                <button type="submit" class="product-btn" th:onclick="addCartItem([[${product.productId}]])">담기</button>
             </div>
         </li>
     </ul>

@@ -206,15 +206,15 @@ class MemberApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.message").value("3명의 회원이 조회되었습니다."))
-                .andExpect(jsonPath("$.result[0].id").value(1))
+                .andExpect(jsonPath("$.result[0].memberId").value(1))
                 .andExpect(jsonPath("$.result[0].email").value("glenfiddch@naver.com"))
                 .andExpect(jsonPath("$.result[0].password").value("123456"))
 
-                .andExpect(jsonPath("$.result[1].id").value(2))
+                .andExpect(jsonPath("$.result[1].memberId").value(2))
                 .andExpect(jsonPath("$.result[1].email").value("glenlivet@naver.com"))
                 .andExpect(jsonPath("$.result[1].password").value("123456"))
 
-                .andExpect(jsonPath("$.result[2].id").value(3))
+                .andExpect(jsonPath("$.result[2].memberId").value(3))
                 .andExpect(jsonPath("$.result[2].email").value("glendronach@naver.com"))
                 .andExpect(jsonPath("$.result[2].password").value("123456"));
     }

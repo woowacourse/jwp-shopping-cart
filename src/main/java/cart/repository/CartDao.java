@@ -46,9 +46,9 @@ public class CartDao {
                         rs.getString("image_url")));
     }
 
-    public void delete(Long memberId, Long productId) {
+    public void delete(Long memberId, Long cartId) {
         String sql = "DELETE FROM CART WHERE member_id = ? AND id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
+        jdbcTemplate.update(sql, memberId, cartId);
     }
 
     public boolean existsById(Long id) {

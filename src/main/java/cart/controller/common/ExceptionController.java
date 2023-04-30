@@ -54,7 +54,7 @@ public class ExceptionController {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Response> handle(AuthenticationException e, HttpServletRequest request) {
-        log.info("인증 요청이 실패 했습니다. 사유: {} TOKEN={}", e.getMessage(), request.getHeader("Authorization"));
+        log.info("인증 요청이 실패 했습니다. 사유: {} TOKEN = {}", e.getMessage(), request.getHeader("Authorization"));
         Response response = new SimpleResponse("401", e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(response);

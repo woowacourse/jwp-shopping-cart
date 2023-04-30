@@ -3,12 +3,12 @@ package cart.dto.member;
 import cart.entity.MemberEntity;
 
 public class MemberDto {
-    private final Long id;
+    private final Long memberId;
     private final String email;
     private final String password;
 
-    public MemberDto(Long id, String email, String password) {
-        this.id = id;
+    public MemberDto(Long memberId, String email, String password) {
+        this.memberId = memberId;
         this.email = email;
         this.password = password;
     }
@@ -17,8 +17,8 @@ public class MemberDto {
         return new MemberDto(entity.getId(), entity.getEmail(), entity.getPassword());
     }
 
-    public Long getId() {
-        return id;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public String getEmail() {

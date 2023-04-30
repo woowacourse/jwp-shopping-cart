@@ -11,7 +11,7 @@ const showEditModal = (product) => {
         element.value = product[element.getAttribute('name')];
     }
     modal.dataset.formType = 'edit';
-    modal.dataset.productId = product.id;
+    modal.dataset.productId = product.productId;
     modal.style.display = 'block';
 };
 
@@ -36,7 +36,7 @@ form.addEventListener('submit', (event) => {
     }
 
     if (modal.dataset.formType === 'edit') {
-        product['id'] = modal.dataset.productId;
+        product['productId'] = modal.dataset.productId;
         updateProduct(product);
         return;
     }
@@ -60,11 +60,11 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
-    const {id} = product;
+    const {productId} = product;
 
     axios.request({
         method: 'patch',
-        url: `/products/${id}`,
+        url: `/products/${productId}`,
         data: product,
         header: {
             'Content-Type': 'application/json',
@@ -76,10 +76,10 @@ const updateProduct = (product) => {
     });
 };
 
-const deleteProduct = (id) => {
+const deleteProduct = (productId) => {
     axios.request({
         method: 'delete',
-        url: `/products/${id}`,
+        url: `/products/${productId}`,
         header: {
             'Content-Type': 'application/json',
         }

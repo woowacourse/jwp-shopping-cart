@@ -40,7 +40,7 @@ class BasicAuthProviderTest {
         User user = basicAuthProvider.resolveUser(token);
 
         // then
-        assertThat(user.getId())
+        assertThat(user.getMemberId())
                 .isEqualTo(1L);
         assertThat(user.getEmail())
                 .isEqualTo("glenfiddich@naver.com");

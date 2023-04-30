@@ -3,16 +3,16 @@ package cart.dto.cart;
 import cart.dto.product.ProductDto;
 
 public class CartProductDto {
-    private Long id;
+    private Long cartId;
     private ProductDto product;
 
-    public CartProductDto(Long id, ProductDto product) {
-        this.id = id;
+    public CartProductDto(Long cartId, ProductDto product) {
+        this.cartId = cartId;
         this.product = product;
     }
 
-    public Long getId() {
-        return id;
+    public Long getCartId() {
+        return cartId;
     }
 
     public ProductDto getProduct() {
