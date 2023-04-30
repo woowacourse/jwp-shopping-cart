@@ -18,18 +18,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @SuppressWarnings("SpellCheckingInspection")
 @JdbcTest
-class H2ProductRepositoryTest {
+class RdsProductRepositoryTest {
 
-    private H2ProductRepository h2ProductRepository;
+    private RdsProductRepository rdsProductRepository;
 
     @Autowired
     private void setUp(final JdbcTemplate jdbcTemplate) {
-        h2ProductRepository = new H2ProductRepository(new ProductDao(jdbcTemplate));
+        rdsProductRepository = new RdsProductRepository(new ProductDao(jdbcTemplate));
     }
 
     @Test
     void save() {
-        final Product result = h2ProductRepository.save(ODO_PRODUCT);
+        final Product result = rdsProductRepository.save(ODO_PRODUCT);
 
         assertThat(result.getId()).isPositive();
     }
@@ -41,13 +41,13 @@ class H2ProductRepositoryTest {
 
         @BeforeEach
         void setUp() {
-            productId = h2ProductRepository.save(ODO_PRODUCT).getId();
+            productId = rdsProductRepository.save(ODO_PRODUCT).getId();
         }
 
         @Test
         void update() {
             final Product product = new Product(productId, "누누", "newUrl", 3);
-            final Product result = h2ProductRepository.update(product);
+            final Product result = rdsProductRepository.update(product);
 
             assertAll(
                     () -> assertThat(result.getId()).isEqualTo(productId),
@@ -59,13 +59,13 @@ class H2ProductRepositoryTest {
 
         @Test
         void findAll() {
-            final List<Product> result = h2ProductRepository.findAll();
+            final List<Product> result = rdsProductRepository.findAll();
             assertThat(result).hasSize(1);
         }
 
         @Test
         void findById() {
-            final Optional<Product> result = h2ProductRepository.findById(productId);
+            final Optional<Product> result = rdsProductRepository.findById(productId);
 
             assertAll(
                     () -> assertThat(result).isPresent(),
@@ -78,9 +78,9 @@ class H2ProductRepositoryTest {
 
         @Test
         void deleteById() {
-            h2ProductRepository.deleteById(productId);
+            rdsProductRepository.deleteById(productId);
 
-            final Optional<Product> result = h2ProductRepository.findById(productId);
+            final Optional<Product> result = rdsProductRepository.findById(productId);
 
             assertThat(result).isEmpty();
         }

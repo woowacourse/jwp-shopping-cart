@@ -10,10 +10,10 @@ import cart.entiy.ProductEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class H2ProductRepository implements ProductRepository {
+public class RdsProductRepository implements ProductRepository {
     private final ProductDao productDao;
 
-    public H2ProductRepository(final ProductDao productDao) {
+    public RdsProductRepository(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
