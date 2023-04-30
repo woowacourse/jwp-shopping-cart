@@ -1,6 +1,7 @@
 package cart.controller.dto;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
@@ -18,6 +19,7 @@ public class ItemRequest {
     @Max(value = 1_000_000_000, message = "가격은 10억 이하로 입력해주세요.")
     private final Integer price;
 
+    @URL(message = "url 형식에 맞게 입력해주세요.")
     @Length(max = 5000, message = "URL은 5000자 이하로 입력해주세요.")
     private final String imageUrl;
 

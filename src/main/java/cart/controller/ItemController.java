@@ -3,14 +3,12 @@ package cart.controller;
 import cart.controller.dto.ItemRequest;
 import cart.controller.dto.ItemResponse;
 import cart.service.ItemService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -25,7 +23,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addItem(@RequestBody @Validated final ItemRequest itemRequest) {
+    public ResponseEntity<Void> addItem(@RequestBody @Valid final ItemRequest itemRequest) {
         itemService.saveItem(itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))
@@ -50,7 +48,7 @@ public class ItemController {
 
     @PutMapping("/{itemId}")
     public ResponseEntity<Void> updateItem(@PathVariable final Long itemId,
-                                     @RequestBody @Validated final ItemRequest itemRequest) {
+                                     @RequestBody @Valid final ItemRequest itemRequest) {
         itemService.updateItem(itemId, itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))

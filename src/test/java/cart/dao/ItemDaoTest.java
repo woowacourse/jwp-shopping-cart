@@ -77,7 +77,7 @@ class ItemDaoTest {
         // given
         Item item = new Item.Builder()
                 .name(new Name("레드북"))
-                .imageUrl(new ImageUrl("url"))
+                .imageUrl(new ImageUrl("https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"))
                 .price(new Price(150000))
                 .build();
         // when
@@ -91,7 +91,7 @@ class ItemDaoTest {
         assertThat(findItem).isEqualTo(new Item.Builder()
                 .id(itemId)
                 .name(new Name("레드북"))
-                .imageUrl(new ImageUrl("url"))
+                .imageUrl(new ImageUrl("https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"))
                 .price(new Price(150000))
                 .build());
     }

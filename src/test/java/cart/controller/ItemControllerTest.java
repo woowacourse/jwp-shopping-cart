@@ -56,7 +56,7 @@ class ItemControllerTest {
     @Test
     void addItemMappingURL() throws Exception {
         //given
-        String value = objectMapper.writeValueAsString(new ItemRequest("레드북", 50000, "url"));
+        String value = objectMapper.writeValueAsString(new ItemRequest("레드북", 50000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
         when(mockItemService.saveItem(any())).thenReturn(1L);
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/items")
@@ -84,7 +84,7 @@ class ItemControllerTest {
         //given
         when(mockItemService.loadItem(1L)).thenReturn(ItemResponse.from(new Item.Builder().id(1L)
                                                                                           .name(new Name("레드북"))
-                                                                                          .imageUrl(new ImageUrl("url"))
+                                                                                          .imageUrl(new ImageUrl("https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"))
                                                                                           .price(new Price(50000))
                                                                                           .build()));
         //when
@@ -97,7 +97,7 @@ class ItemControllerTest {
     @Test
     void updateItemMappingURL() throws Exception {
         //given
-        String value = objectMapper.writeValueAsString(new ItemRequest("레드북", 50000, "url"));
+        String value = objectMapper.writeValueAsString(new ItemRequest("레드북", 50000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
         doNothing().when(mockItemService)
                    .updateItem(anyLong(), any());
         //when
@@ -124,7 +124,7 @@ class ItemControllerTest {
     @Test
     void addItem() {
         //given
-        ItemRequest value = new ItemRequest("레드북", 50000, "url");
+        ItemRequest value = new ItemRequest("레드북", 50000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg");
         when(itemService.saveItem(any())).thenReturn(1L);
         //then
         ResponseEntity responseEntity = itemController.addItem(value);
@@ -143,7 +143,7 @@ class ItemControllerTest {
                 ItemResponse.from(new Item.Builder()
                         .id(1L)
                         .name(new Name("1번"))
-                        .imageUrl(new ImageUrl("1번URL"))
+                        .imageUrl(new ImageUrl("https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"))
                         .price(new Price(1234))
                         .build()
                 ));
@@ -163,7 +163,7 @@ class ItemControllerTest {
         ItemResponse itemResponse = ItemResponse.from(new Item.Builder()
                 .id(1L)
                 .name(new Name("1번"))
-                .imageUrl(new ImageUrl("1번URL"))
+                .imageUrl(new ImageUrl("https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"))
                 .price(new Price(1234))
                 .build()
         );
@@ -180,7 +180,7 @@ class ItemControllerTest {
     @Test
     void updateItem() {
         //given
-        ItemRequest value = new ItemRequest("레드북", 50000, "url");
+        ItemRequest value = new ItemRequest("레드북", 50000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg");
         Long itemId = 1L;
         doNothing().when(itemService).updateItem(anyLong(), any());
         //then

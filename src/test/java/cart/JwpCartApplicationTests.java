@@ -93,7 +93,7 @@ class JwpCartApplicationTests {
     @Test
     @Sql("classpath:initializeTestDb.sql")
     void postRequestItem() throws Exception {
-        String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "url"));
+        String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
         RestAssured.given()
                    .body(content)
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -121,7 +121,7 @@ class JwpCartApplicationTests {
     @Test
     @Sql("classpath:initializeTestDb.sql")
     void putRequestItem() throws JsonProcessingException {
-        String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "url"));
+        String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
         RestAssured.given()
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .body(content)
@@ -144,26 +144,42 @@ class JwpCartApplicationTests {
                    .header("Location", "/");
     }
 
+    @DisplayName("POST /items 요청 예외 응답, 이름 empty")
+    @Test
+    @Sql("classpath:initializeTestDb.sql")
+    void postRequestItemExceptionWithEmptyName() throws Exception {
+        String content = objectMapper.writeValueAsString(new ItemRequest("", 150000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
+        RestAssured.given()
+                .body(content)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/items")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(containsString("이름을 입력해주세요."));
+    }
+
     @DisplayName("POST /items 요청 예외 응답")
     @Test
     @Sql("classpath:initializeTestDb.sql")
-    void postRequestItemException() throws Exception {
-        String content = objectMapper.writeValueAsString(new ItemRequest("", 150000, "url"));
+    void postRequestItemExceptionWithOver5000lengthURL() throws Exception {
+        String url = "-".repeat(5001);
+        String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, url));
         RestAssured.given()
-                   .body(content)
-                   .contentType(MediaType.APPLICATION_JSON_VALUE)
-                   .when()
-                   .post("/items")
-                   .then()
-                   .statusCode(HttpStatus.BAD_REQUEST.value())
-                   .body(containsString("이름을 입력해주세요."));
+                .body(content)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/items")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(containsString("URL은 5000자 이하로 입력해주세요."));
     }
 
     @DisplayName("PUT /items 요청 예외 응답")
     @Test
     @Sql("classpath:initializeTestDb.sql")
     void putRequestItemException() throws Exception {
-        String content = objectMapper.writeValueAsString(new ItemRequest("", 150000, "url"));
+        String content = objectMapper.writeValueAsString(new ItemRequest("", 150000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
         RestAssured.given()
                    .body(content)
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -178,7 +194,7 @@ class JwpCartApplicationTests {
     @Test
     @Sql("classpath:initializeTestDb.sql")
     void putRequestItemExceptionWithNotExist() throws Exception {
-        String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "url"));
+        String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
         RestAssured.given()
                    .body(content)
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
