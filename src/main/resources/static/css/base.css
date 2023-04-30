@@ -74,3 +74,16 @@ h1 {
     text-transform: uppercase;
     margin: 0 0 20px;
 }
+
+.title-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.title-wrapper h1 {
+    margin-right: 10px;
+}
+
+.btn-group {
+    margin-left: auto;
+}

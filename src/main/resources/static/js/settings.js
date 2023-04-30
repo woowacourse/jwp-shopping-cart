@@ -8,6 +8,7 @@ const selectMember = (member) => {
 
 const showAddModal = () => {
     modal.dataset.formType = 'add';
+    document.getElementById("email").disabled = false;
     modal.style.display = 'block';
 };
 
@@ -18,6 +19,7 @@ const showEditModal = (member) => {
     }
     modal.dataset.formType = 'edit';
     modal.dataset.email = member.email;
+    document.getElementById("email").disabled = true;
     modal.style.display = 'block';
 };
 
@@ -25,18 +27,29 @@ form.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
-    let product = {};
+    let member = {};
     for (const entry of formData.entries()) {
         const [key, value] = entry;
-        product[key] = value;
+        member[key] = value;
     }
 
     if (modal.dataset.formType === 'edit') {
-        product['email'] = modal.dataset.email;
-        updateProduct(product);
+        member['email'] = modal.dataset.email;
+        updateProduct(member);
         return;
     }
+
+    createMember(member);
 });
+
+const createMember = (member) => {
+    axios.post("member", member)
+        .then((response) => {
+            window.location.reload();
+        }).catch((error) => {
+        console.error(error);
+    });
+};
 
 const updateProduct = (member) => {
     axios.put("/member", member
