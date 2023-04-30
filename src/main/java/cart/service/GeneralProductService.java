@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.controller.request.ProductCreateRequest;
 import cart.controller.request.ProductUpdateRequest;
 import cart.controller.response.ProductResponse;
 import cart.domain.Product;
@@ -31,7 +30,7 @@ public class GeneralProductService implements ProductService {
 
 	@Transactional
 	@Override
-	public long save(final ProductCreateRequest request) {
+	public long save(final ProductUpdateRequest request) {
 		return productRepository.save(request);
 	}
 

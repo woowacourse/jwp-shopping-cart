@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import cart.controller.request.ProductCreateRequest;
 import cart.controller.request.ProductUpdateRequest;
 import cart.domain.Product;
 
@@ -39,7 +38,7 @@ class ProductJdbcRepositoryTest {
 	@Test
 	void save() {
 		// given
-		final ProductCreateRequest request = new ProductCreateRequest("사과", 10000, "사과.png");
+		final ProductUpdateRequest request = new ProductUpdateRequest("사과", 10000, "사과.png");
 
 		given(productJdbcRepository.save(request)).willReturn(1L);
 

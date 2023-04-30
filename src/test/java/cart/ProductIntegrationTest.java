@@ -11,7 +11,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import cart.controller.request.ProductCreateRequest;
 import cart.controller.request.ProductUpdateRequest;
 import cart.repository.ProductRepository;
 import io.restassured.RestAssured;
@@ -45,7 +44,7 @@ public class ProductIntegrationTest {
 
 	@Test
 	public void createProduct() {
-		final ProductCreateRequest request = new ProductCreateRequest("KIARA", 10000, "이미지");
+		final ProductUpdateRequest request = new ProductUpdateRequest("KIARA", 10000, "이미지");
 
 		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -59,7 +58,7 @@ public class ProductIntegrationTest {
 
 	@Test
 	public void deleteProduct() {
-		final long saveId = repository.save(new ProductCreateRequest("KIARA", 10000, "이미지"));
+		final long saveId = repository.save(new ProductUpdateRequest("KIARA", 10000, "이미지"));
 
 		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +72,7 @@ public class ProductIntegrationTest {
 
 	@Test
 	public void updateProduct() {
-		final long saveId = repository.save(new ProductCreateRequest("KIARA", 10000, "이미지"));
+		final long saveId = repository.save(new ProductUpdateRequest("KIARA", 10000, "이미지"));
 		final ProductUpdateRequest request = new ProductUpdateRequest("HYENA", 3000,"이미지2");
 
 		final ExtractableResponse<Response> result = given()

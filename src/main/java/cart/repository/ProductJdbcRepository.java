@@ -10,7 +10,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import cart.controller.request.ProductCreateRequest;
 import cart.controller.request.ProductUpdateRequest;
 import cart.domain.Product;
 
@@ -48,7 +47,7 @@ public class ProductJdbcRepository implements ProductRepository {
 	}
 
 	@Override
-	public long save(final ProductCreateRequest request) {
+	public long save(final ProductUpdateRequest request) {
 		final String sql = "INSERT INTO products(name, price, image) VALUES(?, ?, ?)";
 		final KeyHolder key = new GeneratedKeyHolder();
 

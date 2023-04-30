@@ -4,11 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import cart.domain.Product;
-import cart.controller.request.ProductCreateRequest;
 import cart.controller.request.ProductUpdateRequest;
 
 public interface ProductRepository {
-	long save(final ProductCreateRequest request);
+	long save(final ProductUpdateRequest request);
 
 	List<Product> findAll();
 

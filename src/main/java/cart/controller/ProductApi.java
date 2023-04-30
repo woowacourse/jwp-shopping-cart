@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cart.controller.request.ProductCreateRequest;
 import cart.controller.request.ProductUpdateRequest;
 import cart.controller.response.ProductResponse;
 import cart.service.ProductService;
@@ -34,7 +33,7 @@ public class ProductApi {
 	}
 
 	@PostMapping("/products")
-	public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductCreateRequest request) {
+	public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductUpdateRequest request) {
 		final long save = productService.save(request);
 		final URI uri = URI.create("/products/" + save);
 		return ResponseEntity.created(uri).build();
