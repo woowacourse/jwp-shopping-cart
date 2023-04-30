@@ -38,7 +38,8 @@ class ProductControllerTest {
         
         RestAssuredMockMvc.standaloneSetup(
                 MockMvcBuilders.standaloneSetup(new ProductController(productService))
-                .setControllerAdvice(new GlobalExceptionHandler()));
+                .setControllerAdvice(new GlobalExceptionHandler())
+        );
     }
     
     @Test

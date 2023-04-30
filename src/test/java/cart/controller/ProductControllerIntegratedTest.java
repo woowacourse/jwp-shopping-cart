@@ -2,7 +2,6 @@ package cart.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -84,7 +83,7 @@ class ProductControllerIntegratedTest {
         productRequestMapper.put("price", 1000);
         
         // expect
-        final Response postResponse = RestAssured.given().log().all()
+        return RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
                 .when().post(DEFAULT_PATH)
@@ -92,9 +91,8 @@ class ProductControllerIntegratedTest {
                 .statusCode(HttpStatus.CREATED.value())
                 .contentType(ContentType.JSON)
                 .extract()
-                .response();
-        
-        return postResponse.path("id");
+                .response()
+                .path("id");
     }
     
     @Test

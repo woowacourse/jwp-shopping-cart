@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,15 +27,17 @@ import static org.mockito.Mockito.*;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @WebMvcTest(ProductService.class)
 class ProductServiceTest {
-    @MockBean
-    private ProductDao productDao;
     @Autowired
     private ProductService productService;
+    @MockBean
+    private ProductDao productDao;
+    private InOrder inOrder;
     private Product firstProduct;
     private Product secondProduct;
     
     @BeforeEach
     void setUp() {
+        inOrder = inOrder(productDao);
         // given
         firstProduct = new Product(1L, "홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 1_000_000_000);
         secondProduct = new Product(2L, "아벨", "https://ca.slack-edge.com/TFELTJB7V-U04LMNLQ78X-a7ef923d5391-512", 1_000_000_000);
@@ -70,8 +71,6 @@ class ProductServiceTest {
     @Test
     void 상품을_수정한다() {
         // expect
-        final InOrder inOrder = inOrder(productDao);
-        
         assertAll(
                 () -> assertThatNoException()
                         .isThrownBy(() -> productService.update(2L, new ProductRequest())),
@@ -83,8 +82,6 @@ class ProductServiceTest {
     @Test
     void 상품을_삭제한다() {
         // expect
-        final InOrder inOrder = inOrder(productDao);
-        
         assertAll(
                 () -> assertThatNoException()
                         .isThrownBy(() -> productService.delete(2L)),
