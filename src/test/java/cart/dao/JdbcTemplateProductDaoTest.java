@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -46,6 +47,14 @@ class JdbcTemplateProductDaoTest {
 
         assertThat(findProduct.getId()).isEqualTo(productId);
         assertThat(findProduct.getName()).isEqualTo("name1");
+    }
+
+    @Test
+    void findByIdTest_nonExistId_fail() {
+        int nonExistId = Integer.MAX_VALUE;
+
+        assertThatThrownBy(() -> productDao.findById(nonExistId))
+                .isInstanceOf(DataAccessException.class);
     }
 
     @Test
