@@ -35,8 +35,8 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void updateProduct(final UpdateRequestDto updateRequestDto) {
-        productDao.update(updateRequestDto.toEntity());
+    public int updateProduct(final UpdateRequestDto updateRequestDto) {
+        return productDao.update(updateRequestDto.toEntity());
     }
 
     public void deleteProduct(final int productId) {

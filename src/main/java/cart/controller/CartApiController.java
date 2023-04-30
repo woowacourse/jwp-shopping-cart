@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dto.InsertRequestDto;
 import cart.dto.ProductResponseDto;
+import cart.dto.ProductUpdateResponseDto;
 import cart.dto.UpdateRequestDto;
 import cart.entity.ProductEntity;
 import cart.service.CartService;
@@ -45,9 +46,12 @@ public class CartApiController {
     }
 
     @PutMapping("/products")
-    public void updateProduct(@RequestBody UpdateRequestDto updateRequestDto) {
+    public ResponseEntity<ProductUpdateResponseDto> updateProduct(@RequestBody UpdateRequestDto updateRequestDto) {
         validatePrice(updateRequestDto.getPrice());
-        cartService.updateProduct(updateRequestDto);
+        final int updatedRowCount = cartService.updateProduct(updateRequestDto);
+        final ProductUpdateResponseDto productUpdateResponseDto = new ProductUpdateResponseDto(updatedRowCount);
+
+        return ResponseEntity.ok(productUpdateResponseDto);
     }
 
     @DeleteMapping("/products/{id}")
