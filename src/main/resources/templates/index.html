@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/base.css}">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="icon" href="data:,">
 </head>
 <body>
 <header class="gnb">
@@ -20,8 +21,8 @@
 </header>
 <div class="container">
     <ul class="product-grid">
-        <li class="product" th:each="product : ${products}" th:onclick="showDetail([[${product.id}]])">
-            <div class="product-image">
+        <li class="product" th:each="product : ${products}">
+            <div class="product-image" th:onclick="showDetail([[${product.id}]])">
                 <img alt="상품 이미지" th:src="${product.getImageUrl()}"> <!-- 상품 이미지 -->
             </div>
             <div class="product-info">
