@@ -55,14 +55,16 @@ public class ProductIntegrationTest {
         Product product = createProduct();
         productRepository.add(product);
 
-        // when & then
+        // when
         ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/products")
                 .then()
                 .extract();
-        List<Product> responseProducts = response.jsonPath().getList("products", Product.class);
+
+        // then
+        List<Product> responseProducts = response.jsonPath().getList("data.products", Product.class);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(responseProducts).asList().hasSize(1);
         assertAll(
@@ -79,14 +81,30 @@ public class ProductIntegrationTest {
         // given
         ProductCreateRequestDto req = createProductCreateRequest();
 
-        // when & then
-        Response result = given().log().all()
+        // when
+        ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(req)
-                .when().post("/products");
+                .when().post("/products").then().extract();
 
-        result.then()
-                .statusCode(HttpStatus.CREATED.value());
+        // then
+        assertThat(response.statusCode()).isEqualTo(201);
+    }
+
+    @Test
+    @DisplayName("올바르지 않은 파라미터일 경우 400 응답을 반환한다.")
+    void create_product_fail() {
+        // given
+        ProductCreateRequestDto req = new ProductCreateRequestDto("안녕", -10000, "imgimg");
+
+        // when
+        ExtractableResponse<Response> response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(req)
+                .when().post("/products")
+                .then().extract();
+        // then
+        assertThat(response.statusCode()).isEqualTo(400);
     }
 
     @Test
@@ -99,14 +117,13 @@ public class ProductIntegrationTest {
         ProductEditRequestDto req = createProductEditRequest();
 
         // when
-        Response result = given().log().all()
+        ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(req)
-                .when().put("/products/" + product.getId());
+                .when().put("/products/" + product.getId()).then().extract();
 
         // then
-        result.then()
-                .statusCode(HttpStatus.OK.value());
+        assertThat(response.statusCode()).isEqualTo(200);
 
         Product editedProduct = productRepository.findById(product.getId()).get();
 
@@ -118,6 +135,26 @@ public class ProductIntegrationTest {
     }
 
     @Test
+    @DisplayName("잘못된 인자를 사용하면 400 응답을 받는다.")
+    void edit_product_fail() {
+        // given
+        Product product = createProduct();
+        productRepository.add(product);
+
+        ProductEditRequestDto req = new ProductEditRequestDto("수정", -100000, "imgimg");
+
+        // when
+        ExtractableResponse<Response> response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(req)
+                .when().put("/products/" + product.getId())
+                .then().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(400);
+    }
+
+    @Test
     @DisplayName("상품을 제거한다.")
     void delete_product_success() {
         // given
@@ -126,12 +163,11 @@ public class ProductIntegrationTest {
         List<Product> givenProducts = productRepository.findAll();
 
         // when
-        Response result = given().log().all()
-                .when().delete("/products/" + product.getId());
+        ExtractableResponse<Response> response =  given()
+                .delete("/products/" + product.getId()).then().extract();
 
         // then
-        result.then()
-                .statusCode(HttpStatus.OK.value());
+        assertThat(response.statusCode()).isEqualTo(200);
 
         List<Product> afterProducts = productRepository.findAll();
         assertThat(afterProducts.size() + 1).isEqualTo(givenProducts.size());

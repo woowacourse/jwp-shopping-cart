@@ -36,6 +36,10 @@ public class ApiResponse<T> {
         return new ApiResponse(httpStatus.value(), exception.getMessage());
     }
 
+    public static ApiResponse of(HttpStatus httpStatus, String exceptionMessage) {
+        return new ApiResponse(httpStatus.value(), exceptionMessage);
+    }
+
     public int getStatus() {
         return status;
     }
