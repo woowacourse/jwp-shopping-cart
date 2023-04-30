@@ -24,14 +24,14 @@ public class ExceptionController {
     private static final String INVALID_REQUEST_MESSAGE = "잘못된 요청입니다.";
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Response> handle(RuntimeException e) {
+    public ResponseEntity<Response> handleRuntimeException(RuntimeException e) {
         log.error("알 수 없는 문제가 발생했습니다.", e);
         return ResponseEntity.internalServerError()
                 .body(SimpleResponse.internalServerError("알 수 없는 문제가 발생했습니다."));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Response> handle(MethodArgumentNotValidException e) {
+    public ResponseEntity<Response> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         ErrorResponse errorResponse = ErrorResponse.badRequest(INVALID_REQUEST_MESSAGE);
         for (FieldError fieldError : e.getFieldErrors()) {
             errorResponse.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
@@ -41,14 +41,14 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(ProductException.class)
-    public ResponseEntity<Response> handle(ProductException e) {
+    public ResponseEntity<Response> handleProductException(ProductException e) {
         Response response = SimpleResponse.badRequest(e.getMessage());
         return ResponseEntity.badRequest()
                 .body(response);
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<Response> handle(DuplicateEmailException e) {
+    public ResponseEntity<Response> handleDuplicateEmailException(DuplicateEmailException e) {
         ErrorResponse errorResponse = ErrorResponse.badRequest(INVALID_REQUEST_MESSAGE);
         errorResponse.addValidation("email", e.getMessage());
         return ResponseEntity.badRequest()
@@ -56,7 +56,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Response> handle(AuthenticationException e, HttpServletRequest request) {
+    public ResponseEntity<Response> handleAuthenticationException(AuthenticationException e, HttpServletRequest request) {
         log.info("인증 요청이 실패 했습니다. 사유: {} TOKEN = {}", e.getMessage(), request.getHeader("Authorization"));
         Response response = new SimpleResponse("401", e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -64,7 +64,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<Response> handle(MethodArgumentTypeMismatchException e) {
+    public ResponseEntity<Response> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         ErrorResponse errorResponse = ErrorResponse.badRequest(INVALID_REQUEST_MESSAGE);
         errorResponse.addValidation(e.getName(), "유효하지 않은 경로입니다.");
         return ResponseEntity.badRequest()
@@ -72,7 +72,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(CartNotFoundException.class)
-    public ResponseEntity<Response> handle(CartNotFoundException e) {
+    public ResponseEntity<Response> handleCartNotFoundException(CartNotFoundException e) {
         Response response = SimpleResponse.badRequest(e.getMessage());
         return ResponseEntity.badRequest()
                 .body(response);
