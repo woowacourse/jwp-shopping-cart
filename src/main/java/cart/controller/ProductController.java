@@ -4,7 +4,6 @@ import cart.service.ProductService;
 import cart.service.dto.ProductModifyRequest;
 import cart.service.dto.ProductRegisterRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/products")
 public class ProductController {
 
@@ -31,19 +31,15 @@ public class ProductController {
     }
 
     @PutMapping("/{product-id}")
-    public String modifyProduct(
+    public void modifyProduct(
             @PathVariable("product-id") final Long productId,
             @Validated @RequestBody final ProductModifyRequest productModifyRequest
     ) {
         productService.modifyProduct(productId, productModifyRequest);
-
-        return "admin";
     }
 
     @DeleteMapping("/{product-id}")
-    public String deleteProduct(@PathVariable("product-id") final Long productId) {
+    public void deleteProduct(@PathVariable("product-id") final Long productId) {
         productService.deleteProduct(productId);
-
-        return "admin";
     }
 }
