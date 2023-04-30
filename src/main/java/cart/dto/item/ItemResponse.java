@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.item;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

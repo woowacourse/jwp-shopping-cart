@@ -1,11 +1,11 @@
-package cart.dto;
+package cart.dto.item;
 
 import cart.domain.Item;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.*;
 
-public class ItemRequest {
+public class ItemSaveRequest {
 
     @NotBlank(message = "상품명은 공백일 수 없습니다.")
     @Size(max = 30, message = "상품명의 길이는 30자 이하여야합니다.")
@@ -20,7 +20,7 @@ public class ItemRequest {
     @Max(value = 1000000, message = "가격은 최대 100만원 이하여야합니다.")
     private final Integer price;
 
-    public ItemRequest(final String name, final String imageUrl, final Integer price) {
+    public ItemSaveRequest(final String name, final String imageUrl, final Integer price) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
