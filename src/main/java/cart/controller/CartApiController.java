@@ -3,8 +3,11 @@ package cart.controller;
 import cart.dto.InsertRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.dto.UpdateRequestDto;
+import cart.entity.ProductEntity;
 import cart.service.CartService;
+import java.net.URI;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +26,17 @@ public class CartApiController {
     }
 
     @PostMapping("/products")
-    public void insertProduct(@RequestBody InsertRequestDto insertRequestDto) {
+    public ResponseEntity<ProductEntity> insertProduct(@RequestBody InsertRequestDto insertRequestDto) {
         validatePrice(insertRequestDto.getPrice());
-        cartService.addProduct(insertRequestDto);
+        final ProductEntity savedProduct = cartService.addProduct(insertRequestDto);
+        final int savedId = savedProduct.getId();
+
+        return ResponseEntity.created(URI.create("/products/" + savedId)).build();
+    }
+
+    @GetMapping("/products/{id}")
+    public ProductEntity findProductById(@PathVariable int id) {
+        return cartService.findProductById(id);
     }
 
     @GetMapping("/products")

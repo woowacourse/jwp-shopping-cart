@@ -18,8 +18,8 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public void addProduct(final InsertRequestDto insertRequestDto) {
-        productDao.insert(insertRequestDto.toEntity());
+    public ProductEntity addProduct(final InsertRequestDto insertRequestDto) {
+        return productDao.insert(insertRequestDto.toEntity());
     }
 
     public List<ProductResponseDto> getProducts() {
@@ -41,5 +41,9 @@ public class CartService {
 
     public void deleteProduct(final int productId) {
         productDao.delete(productId);
+    }
+
+    public ProductEntity findProductById(final int id) {
+        return productDao.findById(id);
     }
 }

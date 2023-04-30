@@ -1,5 +1,6 @@
 package cart.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.dto.ProductResponseDto;
+import cart.entity.ProductEntity;
 import cart.service.CartService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -28,10 +30,12 @@ public class CartApiControllerTest {
 
     @Test
     void insertTest() throws Exception {
+        when(cartService.addProduct(any())).thenReturn(new ProductEntity(1, "name", 1000, "image"));
+
         this.mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"name\": \"name\", \"image\": \"image\", \"price\": \"1000\"}"))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test

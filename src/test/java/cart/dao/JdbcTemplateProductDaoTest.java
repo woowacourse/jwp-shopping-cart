@@ -28,12 +28,9 @@ class JdbcTemplateProductDaoTest {
 
     @Test
     void insertTest() {
-        int id = productDao.insert(new ProductEntity(null, "name", 1000, "image"));
-
-        ProductEntity product = productDao.findById(id);
+        final ProductEntity product = productDao.insert(new ProductEntity(null, "name", 1000, "image"));
 
         assertSoftly(softly -> {
-            softly.assertThat(product.getId()).isEqualTo(id);
             softly.assertThat(product.getName()).isEqualTo("name");
             softly.assertThat(product.getPrice()).isEqualTo(1000);
             softly.assertThat(product.getImage()).isEqualTo("image");
@@ -42,12 +39,12 @@ class JdbcTemplateProductDaoTest {
 
     @Test
     void findByIdTest() {
-        final int id1 = productDao.insert(new ProductEntity(null, "name1", 1000, "image1"));
-        productDao.insert(new ProductEntity(null, "name2", 2000, "image2"));
+        final ProductEntity product = productDao.insert(new ProductEntity(null, "name1", 1000, "image1"));
+        final int productId = product.getId();
 
-        final ProductEntity findProduct = productDao.findById(id1);
+        final ProductEntity findProduct = productDao.findById(productId);
 
-        assertThat(findProduct.getId()).isEqualTo(id1);
+        assertThat(findProduct.getId()).isEqualTo(productId);
         assertThat(findProduct.getName()).isEqualTo("name1");
     }
 
@@ -62,8 +59,9 @@ class JdbcTemplateProductDaoTest {
 
     @Test
     void updateTest() {
-        final ProductEntity product = new ProductEntity(null, "name1", 1000, "image1");
-        final int productId = productDao.insert(product);
+        final ProductEntity productEntity = new ProductEntity(null, "name1", 1000, "image1");
+        final ProductEntity product = productDao.insert(productEntity);
+        final int productId = product.getId();
 
         final ProductEntity updateProduct = new ProductEntity(productId, "name2", 2000, "image2");
         productDao.update(updateProduct);
@@ -78,8 +76,9 @@ class JdbcTemplateProductDaoTest {
 
     @Test
     void deleteTest() {
-        final ProductEntity product = new ProductEntity(null, "name1", 1000, "image1");
-        final int productId = productDao.insert(product);
+        final ProductEntity productEntity = new ProductEntity(null, "name1", 1000, "image1");
+        final ProductEntity product = productDao.insert(productEntity);
+        final int productId = product.getId();
 
         productDao.delete(productId);
 
