@@ -24,4 +24,11 @@ public class MemberController {
         model.addAttribute("members", memberDtos);
         return "settings";
     }
+
+    @GetMapping("/member/{memberId}")
+    public String getMember(@PathVariable Long memberId, final Model model) {
+        final MemberDto memberDto = memberService.getById(memberId);
+        model.addAttribute("member", memberDto);
+        return "member";
+    }
 }

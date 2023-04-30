@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,6 +37,19 @@ class MemberControllerTest {
 
         // when, then
         mockMvc.perform(get("/settings")
+                        .contentType(MediaType.TEXT_HTML))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("사용자 정보를 조회한다")
+    void getMember() throws Exception {
+        // given
+        final MemberDto journey = new MemberDto(1L, "journey@gmail.com", "password", "져니", "010-1234-5678");
+        when(memberService.getById(any())).thenReturn(journey);
+
+        // when, then
+        mockMvc.perform(get("/member/{memberId}", 1L)
                         .contentType(MediaType.TEXT_HTML))
                 .andExpect(status().isOk());
     }

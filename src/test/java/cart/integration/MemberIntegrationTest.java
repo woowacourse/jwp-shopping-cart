@@ -48,4 +48,27 @@ public class MemberIntegrationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
+
+    @Test
+    @DisplayName("단일 사용자 정보를 조회한다.")
+    void getMember() {
+        // given
+        final MemberDto journey = new MemberDto(1L, "journey@gmail.com", "password", "져니", "010-1234-5678");
+
+        given()
+                .when()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(journey)
+                .post("/member")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+        // when, then
+        given()
+                .when()
+                .get("/member/{memberId}", 1L)
+                .then().log().all()
+                .contentType(ContentType.HTML)
+                .statusCode(HttpStatus.OK.value());
+    }
 }
