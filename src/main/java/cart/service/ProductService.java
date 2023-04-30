@@ -41,6 +41,7 @@ public class ProductService {
                 .collect(toList());
     }
 
+    @Transactional
     public void deleteById(Long id) {
         validateId(id);
         validateProductInCart(id);
