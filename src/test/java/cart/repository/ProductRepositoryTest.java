@@ -15,7 +15,7 @@ import cart.service.dto.ProductUpdateRequest;
 import cart.domain.Product;
 
 @ExtendWith(MockitoExtension.class)
-class ProductJdbcRepositoryTest {
+class ProductRepositoryTest {
 	@Mock
 	ProductRepository productRepository;
 
