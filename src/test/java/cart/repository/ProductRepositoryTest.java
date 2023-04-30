@@ -1,23 +1,28 @@
 package cart.repository;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import cart.service.dto.ProductUpdateRequest;
 import cart.domain.Product;
+import cart.service.dto.ProductUpdateRequest;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class ProductRepositoryTest {
-	@Mock
-	ProductRepository productRepository;
+	ProductUpdateRequest request;
+	@Autowired
+	private ProductRepository productRepository;
+
+	@BeforeEach
+	void setUp() {
+		request = new ProductUpdateRequest("사과", 10000, "사과.png");
+	}
 
 	@DisplayName("전체 상품 조회 테스트")
 	@Test
@@ -25,35 +30,34 @@ class ProductRepositoryTest {
 		// given
 		final List<Product> products = List.of(new Product(1L, "사과", 10000, "사과.png"));
 
-		given(productRepository.findAll()).willReturn(products);
-
 		// when
+		productRepository.save(request);
 		final List<Product> findProducts = productRepository.findAll();
 
 		// then
-		assertThat(findProducts).isEqualTo(products);
+		assertThat(findProducts.get(0)).isEqualTo(products.get(0));
+
 	}
 
 	@DisplayName("상품 저장 테스트")
 	@Test
 	void save() {
 		// given
-		final ProductUpdateRequest request = new ProductUpdateRequest("사과", 10000, "사과.png");
-
-		given(productRepository.save(request)).willReturn(1L);
+		productRepository.clear();
 
 		// when
 		final long saveId = productRepository.save(request);
+		final int count = productRepository.findAll().size();
 
 		// then
-		assertThat(saveId).isEqualTo(1L);
+		assertThat(count).isEqualTo(1);
 	}
 
 	@DisplayName("상품 삭제 테스트")
 	@Test
 	void deleteByProductId() {
 		// given
-		given(productRepository.deleteByProductId(anyLong())).willReturn(true);
+		productRepository.save(request);
 
 		// when
 		final boolean isDelete = productRepository.deleteByProductId(1L);
@@ -66,11 +70,11 @@ class ProductRepositoryTest {
 	@Test
 	void updateProduct() {
 		// given
-		given(productRepository.updateByProductId(anyLong(), any())).willReturn(1L);
+		productRepository.save(request);
+		final ProductUpdateRequest newRequest = new ProductUpdateRequest("kiara", 300.0, "이미지2");
 
 		// when
-		final ProductUpdateRequest request = new ProductUpdateRequest("kiara", 300.0, "이미지2");
-		final long updateProductId = productRepository.updateByProductId(1L, request);
+		final long updateProductId = productRepository.updateByProductId(1L, newRequest);
 
 		// then
 		assertThat(updateProductId).isEqualTo(1L);

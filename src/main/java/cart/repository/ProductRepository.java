@@ -78,4 +78,9 @@ public class ProductRepository {
 
 		return productId;
 	}
+
+	public void clear(){
+		final String clearSql = "DELETE FROM products";
+		final int clear = jdbcTemplate.update(clearSql);
+	}
 }

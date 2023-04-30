@@ -28,6 +28,22 @@ public class Product {
 		}
 	}
 
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		final Product product = (Product)o;
+		return Double.compare(product.price, price) == 0 && name.equals(product.name) && image.equals(
+			product.image);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, price, image);
+	}
+
 	public long getId() {
 		return id;
 	}
