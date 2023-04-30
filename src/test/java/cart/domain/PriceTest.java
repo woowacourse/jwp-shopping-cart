@@ -1,13 +1,13 @@
 package cart.domain;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 class PriceTest {
 
@@ -24,7 +24,17 @@ class PriceTest {
     }
 
     @Test
-    void test() {
+    @DisplayName("null로 초기화할 수 없다")
+    void init_null_throw() {
         assertThatThrownBy(() -> new Price(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("소수점아래숫자가 모두 0이면 소수점표현이 없는 것과 같다")
+    void equalsTest() {
+        Price price1 = new Price(new BigDecimal("5000"));
+        Price price2 = new Price(new BigDecimal("5000.00"));
+
+        assertThat(price1).isEqualTo(price2);
     }
 }

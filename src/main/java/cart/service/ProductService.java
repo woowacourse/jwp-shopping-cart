@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class CartService {
+public class ProductService {
 
     private final ProductDao productDao;
 
-    public CartService(ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 
@@ -29,6 +29,7 @@ public class CartService {
 
     public List<ProductResponse> getAllProducts() {
         List<Product> products = productDao.findAll();
+
         return products.stream()
                 .map(ProductResponse::new)
                 .collect(Collectors.toList());
