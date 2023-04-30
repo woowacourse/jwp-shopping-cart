@@ -2,9 +2,9 @@ package cart.domain;
 
 import cart.exception.GlobalException;
 
-import static cart.exception.ErrorCode.USER_EMAIL_LENGTH;
-import static cart.exception.ErrorCode.USER_NICKNAME_LENGTH;
-import static cart.exception.ErrorCode.USER_PASSWORD_LENGTH;
+import static cart.exception.ErrorCode.MEMBER_EMAIL_LENGTH;
+import static cart.exception.ErrorCode.MEMBER_NICKNAME_LENGTH;
+import static cart.exception.ErrorCode.MEMBER_PASSWORD_LENGTH;
 
 public class Member {
 
@@ -33,19 +33,19 @@ public class Member {
 
     private static void validateEmail(final String email) {
         if (email.length() < EMAIl_MIN_LENGTH || email.length() > EMAIL_MAX_LENGTH) {
-            throw new GlobalException(USER_EMAIL_LENGTH);
+            throw new GlobalException(MEMBER_EMAIL_LENGTH);
         }
     }
 
     private static void validatePassword(final String password) {
         if (password.length() < PASSWORD_MIN_LENGTH || password.length() > PASSWORD_MAX_LENGTH) {
-            throw new GlobalException(USER_PASSWORD_LENGTH);
+            throw new GlobalException(MEMBER_PASSWORD_LENGTH);
         }
     }
 
     private static void validateNickname(final String nickname) {
         if (nickname.length() < NICKNAME_MIN_LENGTH || nickname.length() > NICKNAME_MAX_LENGTH) {
-            throw new GlobalException(USER_NICKNAME_LENGTH);
+            throw new GlobalException(MEMBER_NICKNAME_LENGTH);
         }
     }
 

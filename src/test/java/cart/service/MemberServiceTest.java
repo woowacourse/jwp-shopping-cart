@@ -70,7 +70,7 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.getById(1L))
                 .isInstanceOf(GlobalException.class)
                 .extracting("errorCode")
-                .isEqualTo(ErrorCode.USER_NOT_FOUND);
+                .isEqualTo(ErrorCode.MEMBER_NOT_FOUND);
     }
 
     @Test

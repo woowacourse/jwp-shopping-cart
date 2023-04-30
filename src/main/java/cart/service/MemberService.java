@@ -32,7 +32,7 @@ public class MemberService {
     public MemberDto getById(final Long id) {
         return memberDao.findById(id)
                 .map(this::convertToDto)
-                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new GlobalException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     public List<MemberDto> getMembers() {

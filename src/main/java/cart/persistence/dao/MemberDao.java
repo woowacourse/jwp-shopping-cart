@@ -49,6 +49,15 @@ public class MemberDao {
         return jdbcTemplate.query(query, memberRowMapper());
     }
 
+    public Optional<MemberEntity> findByEmail(final String memberEmail) {
+        final String query = "SELECT m.id, m.email, m.password, m.nickname, m.telephone FROM member m WHERE m.email = ?";
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(query, memberRowMapper(), memberEmail));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
     private RowMapper<MemberEntity> memberRowMapper() {
         return (result, count) ->
                 new MemberEntity(result.getLong("id"), result.getString("email"),
