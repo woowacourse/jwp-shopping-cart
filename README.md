@@ -137,6 +137,8 @@ src/main/resources/data.sql
     - 조회
 - 멤버
     - 조회
+- 카트
+    - 생성
 
 ### DAO
 
