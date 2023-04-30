@@ -5,7 +5,6 @@ import cart.dto.ProductAddRequestDto;
 import cart.dto.ProductModifyRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.entity.Product;
-import cart.entity.Product.Builder;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -32,30 +31,14 @@ public class ProductService {
     }
 
     public void add(ProductAddRequestDto productAddRequestDto) {
-        Product product = toEntity(productAddRequestDto);
+        Product product = productAddRequestDto.toEntity();
         productDao.save(product);
     }
 
     public void modifyById(int id, ProductModifyRequestDto productModifyRequestDto) {
         findProductById(id);
-        Product product = toEntity(productModifyRequestDto);
+        Product product = productModifyRequestDto.toEntity();
         productDao.updateById(id, product);
-    }
-
-    private Product toEntity(ProductAddRequestDto productAddRequestDto) {
-        return new Builder()
-                .name(productAddRequestDto.getName())
-                .price(productAddRequestDto.getPrice())
-                .imageUrl(productAddRequestDto.getImageUrl())
-                .build();
-    }
-
-    private Product toEntity(ProductModifyRequestDto productModifyRequestDto) {
-        return new Builder()
-                .name(productModifyRequestDto.getName())
-                .price(productModifyRequestDto.getPrice())
-                .imageUrl(productModifyRequestDto.getImageUrl())
-                .build();
     }
 
     public void removeById(int id) {

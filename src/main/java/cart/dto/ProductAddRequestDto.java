@@ -1,5 +1,7 @@
 package cart.dto;
 
+import cart.entity.Product;
+
 public class ProductAddRequestDto {
 
     private String name;
@@ -25,6 +27,14 @@ public class ProductAddRequestDto {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public Product toEntity() {
+        return new Product.Builder()
+                .name(name)
+                .price(price)
+                .imageUrl(imageUrl)
+                .build();
     }
 
 }
