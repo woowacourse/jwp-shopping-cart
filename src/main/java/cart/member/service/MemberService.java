@@ -6,7 +6,6 @@ import cart.member.dto.DtoMapper;
 import cart.member.dto.MemberAddRequest;
 import cart.member.dto.MemberDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class MemberService {
         try {
             final Member saved = memberDao.save(DtoMapper.toMember(memberAddRequest));
             return saved.getId();
-        } catch (DuplicateKeyException e) {
+        } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다");
         }
     }

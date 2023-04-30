@@ -1,7 +1,7 @@
 const selectMember = (member) => {
     <!-- TODO: [2단계] 사용자 정보에 맞게 변경 -->
-    const { email, password } = member;
-    const string = `${email}:${password}`;
+    const { email, password, phoneNumber } = member;
+    const string = `${email}:${password}:${phoneNumber}`;
     localStorage.setItem('credentials', btoa(string));
     alert(`${email} 사용자로 설정 했습니다.`);
 }
