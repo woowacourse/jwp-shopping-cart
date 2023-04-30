@@ -39,8 +39,8 @@ public class CartService {
         return productDao.update(updateRequestDto.toEntity());
     }
 
-    public void deleteProduct(final int productId) {
-        productDao.delete(productId);
+    public int deleteProduct(final int productId) {
+       return productDao.delete(productId);
     }
 
     public ProductEntity findProductById(final int id) {

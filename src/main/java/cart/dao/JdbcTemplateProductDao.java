@@ -66,8 +66,8 @@ public class JdbcTemplateProductDao implements ProductDao{
     }
 
     @Override
-    public void delete(final int productId) {
+    public int delete(final int productId) {
         String sql = "delete from products where id = ?";
-        jdbcTemplate.update(sql, productId);
+        return jdbcTemplate.update(sql, productId);
     }
 }

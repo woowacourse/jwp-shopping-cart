@@ -55,8 +55,11 @@ public class CartApiController {
     }
 
     @DeleteMapping("/products/{id}")
-    public void deleteProduct(@PathVariable int id) {
-        cartService.deleteProduct(id);
+    public ResponseEntity<ProductUpdateResponseDto> deleteProduct(@PathVariable int id) {
+        final int deletedRowCount = cartService.deleteProduct(id);
+        final ProductUpdateResponseDto productUpdateResponseDto = new ProductUpdateResponseDto(deletedRowCount);
+
+        return ResponseEntity.ok(productUpdateResponseDto);
     }
 
     private void validatePrice(int price) {
