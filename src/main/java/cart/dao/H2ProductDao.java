@@ -62,7 +62,7 @@ public class H2ProductDao implements ProductDao {
 
     private Optional<Product> findProduct(String sql, Map<String, Long> parameter) {
         try {
-            return Optional.of(namedParameterJdbcTemplate.queryForObject(sql, parameter, productRowMapper));
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, parameter, productRowMapper));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
