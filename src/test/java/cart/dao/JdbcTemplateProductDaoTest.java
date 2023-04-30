@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
@@ -100,8 +99,17 @@ class JdbcTemplateProductDaoTest {
         final ProductEntity product = productDao.insert(productEntity);
         final int productId = product.getId();
 
-        productDao.delete(productId);
+        final int deletedRowCount = productDao.delete(productId);
 
-        assertThatThrownBy(() -> productDao.findById(productId)).isInstanceOf(EmptyResultDataAccessException.class);
+        assertThat(deletedRowCount).isOne();
+    }
+
+    @Test
+    void deleteTest_nonExistProduct_nothingDeleted() {
+        int nonExistId = Integer.MAX_VALUE;
+
+        final int deletedRowCount = productDao.delete(nonExistId);
+
+        assertThat(deletedRowCount).isZero();
     }
 }
