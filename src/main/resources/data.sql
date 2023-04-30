@@ -6,3 +6,10 @@ create table product
     price     DECIMAL      NOT NULL,
     primary key (id)
 );
+
+create table member
+(
+    email VARCHAR(255) NOT NULL,
+    password TEXT NOT NULL,
+    primary key (email)
+);
