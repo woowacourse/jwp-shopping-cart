@@ -15,10 +15,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class ExceptionController {
     private static final Logger log = LoggerFactory.getLogger(ExceptionController.class);
+    private static final String INVALID_REQUEST_MESSAGE = "잘못된 요청입니다.";
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Response> handle(RuntimeException e) {
@@ -29,7 +31,7 @@ public class ExceptionController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Response> handle(MethodArgumentNotValidException e) {
-        ErrorResponse errorResponse = ErrorResponse.badRequest("잘못된 요청입니다.");
+        ErrorResponse errorResponse = ErrorResponse.badRequest(INVALID_REQUEST_MESSAGE);
         for (FieldError fieldError : e.getFieldErrors()) {
             errorResponse.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
         }
@@ -46,7 +48,7 @@ public class ExceptionController {
 
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<Response> handle(DuplicateEmailException e) {
-        ErrorResponse errorResponse = ErrorResponse.badRequest("잘못된 요청입니다.");
+        ErrorResponse errorResponse = ErrorResponse.badRequest(INVALID_REQUEST_MESSAGE);
         errorResponse.addValidation("email", e.getMessage());
         return ResponseEntity.badRequest()
                 .body(errorResponse);
@@ -58,5 +60,13 @@ public class ExceptionController {
         Response response = new SimpleResponse("401", e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Response> handle(MethodArgumentTypeMismatchException e) {
+        ErrorResponse errorResponse = ErrorResponse.badRequest(INVALID_REQUEST_MESSAGE);
+        errorResponse.addValidation(e.getName(), "유효하지 않은 경로입니다.");
+        return ResponseEntity.badRequest()
+                .body(errorResponse);
     }
 }
