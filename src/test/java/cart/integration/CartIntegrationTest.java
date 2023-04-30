@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CartIntegrationTest {
@@ -58,6 +59,24 @@ public class CartIntegrationTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @Test
+    @DisplayName("사용자의 장바구니 정보를 조회한다.")
+    @Sql("classpath:init.sql")
+    void getCartByMember() {
+        addSampleMember();
+        addSampleProduct();
+        addSampleCart();
+
+        given()
+                .header("Authorization", authorization)
+                .when()
+                .get("/cart/me")
+                .then().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
+    }
+
     private void addSampleMember() {
         final MemberDto journey = new MemberDto(1L, "journey@gmail.com", "password", "져니", "010-1234-5678");
         given()
@@ -76,6 +95,15 @@ public class CartIntegrationTest {
                 .when()
                 .body(productDto)
                 .post("/admin")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    private void addSampleCart() {
+        given()
+                .header("Authorization", authorization)
+                .when()
+                .post("/cart/{productId}", 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }

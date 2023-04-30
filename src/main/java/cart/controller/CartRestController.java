@@ -29,4 +29,10 @@ public class CartRestController {
         cartService.addCart(memberEmail, productId);
         return ResponseEntity.created(URI.create("/cart/me")).build();
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<List<CartDto>> getCartByMember(@MemberEmail String memberEmail) {
+        final List<CartDto> cartDtos = cartService.getProductsByMemberEmail(memberEmail);
+        return ResponseEntity.ok().body(cartDtos);
+    }
 }

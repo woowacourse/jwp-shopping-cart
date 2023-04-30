@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.common.annotation.MemberEmailArgumentResolver;
+import cart.controller.dto.CartDto;
 import cart.service.CartService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,10 +12,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CartRestController.class)
@@ -52,5 +58,37 @@ class CartRestControllerTest {
                 .andExpectAll(
                         status().isCreated(),
                         header().string("Location", "/cart/me"));
+    }
+
+    @Test
+    @DisplayName("사용자의 장바구니 정보를 조회한다.")
+    void getCartByMember() throws Exception {
+        // given
+        final CartDto chickenDto = new CartDto(1L, 1L, "치킨",
+                "chicken_image_url", 20000, "KOREAN");
+        final CartDto steakDto = new CartDto(1L, 2L, "스테이크",
+                "steak_image_url", 40000, "WESTERN");
+        final List<CartDto> cartDtos = List.of(chickenDto, steakDto);
+        when(cartService.getProductsByMemberEmail(any())).thenReturn(cartDtos);
+
+        // when, then
+        mockMvc.perform(get("/cart/me")
+                        .header("Authorization", authorization))
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        jsonPath("$.[0].memberId").value(1L),
+                        jsonPath("$.[0].productId").value(1L),
+                        jsonPath("$.[0].productName").value("치킨"),
+                        jsonPath("$.[0].productImageUrl").value("chicken_image_url"),
+                        jsonPath("$.[0].productPrice").value(20000),
+                        jsonPath("$.[0].productCategory").value("KOREAN"),
+                        jsonPath("$.[1].memberId").value(1L),
+                        jsonPath("$.[1].productId").value(2L),
+                        jsonPath("$.[1].productName").value("스테이크"),
+                        jsonPath("$.[1].productImageUrl").value("steak_image_url"),
+                        jsonPath("$.[1].productPrice").value(40000),
+                        jsonPath("$.[1].productCategory").value("WESTERN")
+                );
     }
 }
