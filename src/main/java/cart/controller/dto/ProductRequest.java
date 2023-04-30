@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.controller.dto;
 
 import cart.entity.Product;
 import javax.validation.constraints.Min;

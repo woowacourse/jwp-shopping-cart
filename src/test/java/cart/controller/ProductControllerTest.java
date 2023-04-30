@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dto.ProductRequest;
+import cart.controller.dto.ProductRequest;
 import cart.entity.Product;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.dto.MemberResponse;
-import cart.dto.ProductResponse;
+import cart.controller.dto.MemberResponse;
+import cart.controller.dto.ProductResponse;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import java.util.List;
