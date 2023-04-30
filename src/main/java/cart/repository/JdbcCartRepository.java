@@ -5,6 +5,7 @@ import cart.repository.exception.CartPersistanceFailedException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -47,5 +48,18 @@ public class JdbcCartRepository implements CartRepository {
                 Map.of("memberEmail", memberEmail),
                 (rs, rowNum) -> new Cart(rs.getString("member_email"), rs.getLong("product_id"))
         );
+    }
+
+    @Override
+    public void deleteByMemberEmailAndProductId(String memberEmail, Long productId) throws CartPersistanceFailedException {
+        String sql = "delete from CART where member_email = :memberEmail and product_id = :productId";
+        MapSqlParameterSource paramSource = new MapSqlParameterSource()
+                .addValue("memberEmail", memberEmail)
+                .addValue("productId", productId);
+
+        int deletedCount = namedParameterJdbcTemplate.update(sql, paramSource);
+        if (deletedCount == 0) {
+            throw new CartPersistanceFailedException("삭제할 대상이 데이터베이스에 존재하지 않습니다.");
+        }
     }
 }

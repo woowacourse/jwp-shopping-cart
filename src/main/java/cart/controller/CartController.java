@@ -10,6 +10,7 @@ import cart.util.BasicExtractor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,5 +58,13 @@ public class CartController {
         Long productId = Long.valueOf((Integer) requestBody.get("product_id"));
         cartRepository.save(new Cart(member.getEmail(), productId));
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @DeleteMapping("/carts")
+    public ResponseEntity<Void> deleteCart(HttpServletRequest request, @RequestBody Map<String, Object> requestBody) throws CartPersistanceFailedException {
+        Member member = BasicExtractor.extract(request);
+        Long productId = Long.valueOf((Integer) requestBody.get("product_id"));
+        cartRepository.deleteByMemberEmailAndProductId(member.getEmail(), productId);
+        return ResponseEntity.ok().build();
     }
 }

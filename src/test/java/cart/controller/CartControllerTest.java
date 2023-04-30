@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -84,6 +83,20 @@ class CartControllerTest {
                 .andExpect(status().isCreated());
 
         verify(cartRepository, times(1)).save(cart);
+    }
+
+    @Test
+    void deleteByEmailAndId() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        mockMvc.perform(delete("/carts")
+                        .header("authorization", httpBasic("test@gmail.com", "test1234!"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(Map.of("product_id", 1L)))
+                ).andDo(print())
+                .andExpect(status().isOk());
+
+        verify(cartRepository, times(1))
+                .deleteByMemberEmailAndProductId("test@gmail.com", 1L);
     }
 
     private String httpBasic(String email, String password) {

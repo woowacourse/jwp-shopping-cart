@@ -88,4 +88,48 @@ class CartRepositoryTest {
                 .isInstanceOf(CartPersistanceFailedException.class)
                 .hasMessage("동일한 회원이 동일한 상품을 중복해서 장바구니에 담을 수 없습니다.");
     }
+
+    @Test
+    @DisplayName("주어진 이메일과 상품 아이디로 저장된 장바구니를 삭제할 수 있다.")
+    void deleteByEmailAndId() throws MemberPersistanceFailedException, CartPersistanceFailedException {
+        // given
+        Member member = memberRepository.save(new Member("test@gmail.com", "password1234!"));
+        Product product = productRepository.save(new Product("product", "product.png", new BigDecimal(4000)));
+        cartRepository.save(new Cart(member.getEmail(), product.getId()));
+        assertThat(cartRepository.findAllByMemberEmail(member.getEmail())).hasSize(1);
+
+        // when
+        cartRepository.deleteByMemberEmailAndProductId(member.getEmail(), product.getId());
+        assertThat(cartRepository.findAllByMemberEmail(member.getEmail())).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품 아이디로는 장바구니를 삭제할 수 없다.")
+    void invalidDeletingWithId() throws MemberPersistanceFailedException, CartPersistanceFailedException {
+        // given
+        Member member = memberRepository.save(new Member("test@gmail.com", "password1234!"));
+        Product product = productRepository.save(new Product("product", "product.png", new BigDecimal(4000)));
+        cartRepository.save(new Cart(member.getEmail(), product.getId()));
+        assertThat(cartRepository.findAllByMemberEmail(member.getEmail())).hasSize(1);
+
+        // when
+        assertThatThrownBy(() -> cartRepository.deleteByMemberEmailAndProductId("invalid@gmail.com", product.getId()))
+                .isInstanceOf(CartPersistanceFailedException.class)
+                .hasMessage("삭제할 대상이 데이터베이스에 존재하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 이메일로는 장바구니를 삭제할 수 없다.")
+    void invalidDeletingWithEmail() throws MemberPersistanceFailedException, CartPersistanceFailedException {
+        // given
+        Member member = memberRepository.save(new Member("test@gmail.com", "password1234!"));
+        Product product = productRepository.save(new Product("product", "product.png", new BigDecimal(4000)));
+        cartRepository.save(new Cart(member.getEmail(), product.getId()));
+        assertThat(cartRepository.findAllByMemberEmail(member.getEmail())).hasSize(1);
+
+        // when
+        assertThatThrownBy(() -> cartRepository.deleteByMemberEmailAndProductId(member.getEmail(), 2L))
+                .isInstanceOf(CartPersistanceFailedException.class)
+                .hasMessage("삭제할 대상이 데이터베이스에 존재하지 않습니다.");
+    }
 }
