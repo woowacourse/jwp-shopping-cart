@@ -121,6 +121,30 @@ DELETE /products/{id}
 |:----------|:--------------------|
 | `id`      | **Required**. 상품 ID |
 
+---
+
+```http
+POST /carts?productId={productId}
+```
+
+### Request Header
+
+```http
+Authorization: Basic {auth}
+```
+
+### Request Param
+
+| Parameter   | Description         |
+|:------------|:--------------------|
+| `productId` | **Required**. 상품 ID |
+
+### Response
+
+```http
+Location: /carts/{id}
+```
+
 ## 기능 목록
 
 ### DB
