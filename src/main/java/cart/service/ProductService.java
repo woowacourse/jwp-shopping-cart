@@ -32,7 +32,7 @@ public class ProductService {
     public List<ProductResponse> findAll() {
         final List<Product> products = productDao.findAll();
         return products.stream()
-                .map(productMapper::mapToProductResponse)
+                .map(ProductResponse::new)
                 .collect(Collectors.toUnmodifiableList());
     }
 
