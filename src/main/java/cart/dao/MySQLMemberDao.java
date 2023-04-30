@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.controller.dto.MemberRequest;
 import cart.dao.entity.MemberEntity;
+import cart.domain.Member;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,5 +39,14 @@ public class MySQLMemberDao implements MemberDao {
                 resultSet.getLong("id"),
                 resultSet.getString("email"),
                 resultSet.getString("password")));
+    }
+
+    @Override
+    public long findIdByMember(Member member) {
+        String query = "SELECT id FROM member WHERE email = ? AND password = ?";
+        return jdbcTemplate.queryForObject(query,
+            (resultSet, rowNum) -> resultSet.getLong("id"),
+            member.getEmail(), member.getPassword());
+
     }
 }

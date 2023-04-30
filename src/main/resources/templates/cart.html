@@ -24,8 +24,6 @@
   <div class="cart-items">
   </div>
 </div>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script th:src="@{/js/cart.js}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const credentials = localStorage.getItem('credentials');
@@ -65,16 +63,8 @@
 
     });
 
-
-
-
-
-
-
-
-
-
-
 </script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/cart.js}"></script>
 </body>
 </html>
