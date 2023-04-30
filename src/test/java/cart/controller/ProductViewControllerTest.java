@@ -16,7 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql("classpath:schema.sql")
-public class ProductControllerTest {
+public class ProductViewControllerTest {
 
     @LocalServerPort
     private int port;
@@ -52,8 +52,7 @@ public class ProductControllerTest {
                 .when()
                 .post("/admin")
                 .then()
-                .contentType(MediaType.TEXT_HTML_VALUE)
-                .statusCode(200);
+                .statusCode(201);
     }
 
     @Test
