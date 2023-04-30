@@ -1,8 +1,10 @@
 package cart.service;
 
 import cart.controller.dto.CartDto;
-import cart.persistence.entity.MemberProductEntity;
-import cart.persistence.repository.MemberProductRepository;
+import cart.exception.ErrorCode;
+import cart.exception.GlobalException;
+import cart.persistence.entity.MemberCartEntity;
+import cart.persistence.repository.MemberCartRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +15,9 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CartService {
 
-    private final MemberProductRepository memberCartRepository;
+    private final MemberCartRepository memberCartRepository;
 
-    public CartService(final MemberProductRepository memberCartRepository) {
+    public CartService(final MemberCartRepository memberCartRepository) {
         this.memberCartRepository = memberCartRepository;
     }
 
@@ -24,15 +26,23 @@ public class CartService {
     }
 
     public List<CartDto> getProductsByMemberEmail(final String memberEmail) {
-        final List<MemberProductEntity> memberProductEntities = memberCartRepository.findByMemberEmail(memberEmail);
+        final List<MemberCartEntity> memberProductEntities = memberCartRepository.findByMemberEmail(memberEmail);
         return memberProductEntities.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private CartDto convertToDto(final MemberProductEntity memberProductEntity) {
-        return new CartDto(memberProductEntity.getMemberId(), memberProductEntity.getProductId(),
-                memberProductEntity.getProductName(), memberProductEntity.getProductImageUrl(),
-                memberProductEntity.getProductPrice(), memberProductEntity.getProductCategory());
+    @Transactional
+    public void deleteCart(final String memberEmail, final Long productId) {
+        int deletedCount = memberCartRepository.deleteByMemberEmail(memberEmail, productId);
+        if (deletedCount != 1) {
+            throw new GlobalException(ErrorCode.CART_INVALID_DELETE);
+        }
+    }
+
+    private CartDto convertToDto(final MemberCartEntity memberCartEntity) {
+        return new CartDto(memberCartEntity.getMemberId(), memberCartEntity.getProductId(),
+                memberCartEntity.getProductName(), memberCartEntity.getProductImageUrl(),
+                memberCartEntity.getProductPrice(), memberCartEntity.getProductCategory());
     }
 }

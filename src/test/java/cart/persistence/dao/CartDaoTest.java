@@ -1,8 +1,8 @@
 package cart.persistence.dao;
 
 import cart.persistence.entity.CartEntity;
+import cart.persistence.entity.MemberCartEntity;
 import cart.persistence.entity.MemberEntity;
-import cart.persistence.entity.MemberProductEntity;
 import cart.persistence.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,8 +54,8 @@ class CartDaoTest {
         final Optional<CartEntity> cart = cartDao.findById(savedCartId);
         final CartEntity findCart = cart.get();
         assertThat(findCart)
-                .extracting("memberId", "productId")
-                .containsExactly(savedMemberId, savedProductId);
+                .extracting("id", "memberId", "productId")
+                .containsExactly(savedCartId, savedMemberId, savedProductId);
     }
 
     @Test
@@ -73,8 +73,8 @@ class CartDaoTest {
         // then
         final CartEntity findCart = cart.get();
         assertThat(findCart)
-                .extracting("memberId", "productId")
-                .containsExactly(savedMemberId, savedProductId);
+                .extracting("id", "memberId", "productId")
+                .containsExactly(savedCartId, savedMemberId, savedProductId);
     }
 
     @Test
@@ -101,7 +101,7 @@ class CartDaoTest {
         cartDao.insert(steakEntity);
 
         // when
-        final List<MemberProductEntity> memberProductEntities = cartDao.getProductByMemberId(savedMemberId);
+        final List<MemberCartEntity> memberProductEntities = cartDao.getProductsByMemberId(savedMemberId);
 
         // then
         assertThat(memberProductEntities).hasSize(2);
@@ -110,5 +110,22 @@ class CartDaoTest {
                 .containsExactly(
                         tuple(savedMemberId, savedChickenId, "치킨", "chicken_image_url", 20000, "KOREAN"),
                         tuple(savedMemberId, savedSteakId, "스테이크", "steak_image_url", 40000, "WESTERN"));
+    }
+
+    @Test
+    @DisplayName("주어진 사용자 아이디와 상품 아이디에 해당하는 장바구니 정보를 삭제한다.")
+    void deleteByMemberId() {
+        // given
+        final long savedMemberId = memberDao.insert(memberEntity);
+        final long savedChickenId = productDao.insert(productEntity);
+
+        final CartEntity chickenEntity = new CartEntity(savedMemberId, savedChickenId);
+        cartDao.insert(chickenEntity);
+
+        // when
+        final int deletedCount = cartDao.deleteByMemberId(savedMemberId, savedChickenId);
+
+        // then
+        assertThat(deletedCount).isSameAs(1);
     }
 }

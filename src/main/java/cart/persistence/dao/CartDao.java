@@ -1,7 +1,7 @@
 package cart.persistence.dao;
 
 import cart.persistence.entity.CartEntity;
-import cart.persistence.entity.MemberProductEntity;
+import cart.persistence.entity.MemberCartEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -44,13 +44,18 @@ public class CartDao {
         }
     }
 
-    public List<MemberProductEntity> getProductByMemberId(final Long memberId) {
+    public List<MemberCartEntity> getProductsByMemberId(final Long memberId) {
         final String query = "SELECT c.id, c.member_id, c.product_id, p.name, p.image_url, p.price, p.category " +
                 "FROM cart c JOIN product p ON c.product_id = p.id WHERE c.member_id = ?";
         return jdbcTemplate.query(query, (result, count) ->
-                new MemberProductEntity(result.getLong("id"), result.getLong("member_id"),
+                new MemberCartEntity(result.getLong("id"), result.getLong("member_id"),
                         result.getLong("product_id"), result.getString("name"),
                         result.getString("image_url"), result.getInt("price"),
                         result.getString("category")), memberId);
+    }
+
+    public int deleteByMemberId(final Long memberId, final Long productId) {
+        final String query = "DELETE FROM cart c WHERE c.member_id = ? and c.product_id = ?";
+        return jdbcTemplate.update(query, memberId, productId);
     }
 }

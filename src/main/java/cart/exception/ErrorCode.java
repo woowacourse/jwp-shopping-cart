@@ -13,6 +13,7 @@ public enum ErrorCode {
     MEMBER_NICKNAME_LENGTH("닉네임 길이는 1 ~ 30자까지 가능합니다."),
     MEMBER_NOT_FOUND("사용자 정보를 찾을 수 없습니다."),
     CART_NOT_FOUND("장바구니 정보를 찾을 수 없습니다"),
+    CART_INVALID_DELETE("장바구니 정보 삭제 중 예기치 못한 오류가 발생하였습니다."),
     UNAUTHORIZED("접근 권한이 없습니다"),
     INTERNAL_SERVER_ERROR("서버에서 예기치 못한 오류가 발생하였습니다.");
 
