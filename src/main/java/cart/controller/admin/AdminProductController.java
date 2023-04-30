@@ -27,7 +27,7 @@ public class AdminProductController {
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody @Valid final ProductDto productDto) {
         final Long productId = productService.save(productDto);
-        return ResponseEntity.created(URI.create("/admin/" + productId)).build();
+        return ResponseEntity.created(URI.create("/admin/products/" + productId)).build();
     }
 
     @PutMapping("/{productId}")
