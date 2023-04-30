@@ -55,8 +55,8 @@ class ProductControllerUnitTest {
 
     @Test
     void updateProduct() throws Exception {
-        mockMvc.perform(put("/products")
-                        .content(objectMapper.writeValueAsBytes(new ProductUpdateRequest(2L, "pdpd2", "image2", 15000L)))
+        mockMvc.perform(put("/products/2")
+                        .content(objectMapper.writeValueAsBytes(new ProductUpdateRequest("pdpd2", "image2", 15000L)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

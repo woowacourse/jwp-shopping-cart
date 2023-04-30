@@ -2,14 +2,14 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import cart.dto.ProductDto;
 import cart.dto.request.ProductSaveRequest;
 import cart.dto.request.ProductUpdateRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -33,8 +33,8 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public void updateProduct(ProductUpdateRequest request) {
-        Product product = new Product(request.getProductId(), request.getName(), request.getImage(), request.getPrice());
+    public void updateProduct(long productId, ProductUpdateRequest request) {
+        Product product = new Product(productId, request.getName(), request.getImage(), request.getPrice());
         productDao.updateProduct(product);
     }
 

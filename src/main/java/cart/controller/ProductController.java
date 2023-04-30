@@ -31,9 +31,9 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/products")
-    public ResponseEntity<String> updateProduct(@RequestBody ProductUpdateRequest updateRequest) {
-        productService.updateProduct(updateRequest);
+    @PutMapping("/products/{productId}")
+    public ResponseEntity<String> updateProduct(@PathVariable long productId, @RequestBody ProductUpdateRequest updateRequest) {
+        productService.updateProduct(productId, updateRequest);
         return ResponseEntity.ok().build();
     }
 
