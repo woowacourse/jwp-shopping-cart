@@ -44,13 +44,14 @@ class JdbcMemberDaoTest {
 
     @Test
     void update() {
-        MemberEntity member = new MemberEntity("test@gmail.com", "test0", "010123", "qwer1230");
+        MemberEntity member = new MemberEntity("test@gmail.com", "test0", "01012345678", "qwer1230");
         memberDao.update(member);
     }
 
     @Test
     void delete() {
-        memberDao.delete("test@naver.com");
+        System.out.println(memberDao.findAll());
+        memberDao.delete("test@gmail.com");
         Assertions.assertThat(memberDao.findAll()).hasSize(1);
     }
 }
