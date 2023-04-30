@@ -3,7 +3,7 @@ package cart.controller;
 import cart.dao.member.MemberDao;
 import cart.dto.ResultResponse;
 import cart.dto.SuccessCode;
-import cart.dto.member.MemberUpdateRequest;
+import cart.dto.member.MemberRequest;
 import cart.entity.MemberEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,20 +19,32 @@ public class MemberController {
         this.memberDao = memberDao;
     }
 
+    @PostMapping
+    public ResultResponse add(@Valid @RequestBody MemberRequest memberRequest) {
+        MemberEntity item = new MemberEntity(memberRequest.getEmail(),
+                memberRequest.getName(),
+                memberRequest.getPhoneNumber(),
+                memberRequest.getPassword());
+
+        MemberEntity saveItem = memberDao.save(item);
+
+        return new ResultResponse(SuccessCode.CREATE_MEMBER, saveItem);
+    }
+
     @PutMapping
-    public ResultResponse edit(@Valid @RequestBody MemberUpdateRequest itemUpdateRequest) {
-        MemberEntity item = new MemberEntity(itemUpdateRequest.getEmail(),
-                itemUpdateRequest.getName(),
-                itemUpdateRequest.getPhoneNumber(),
-                itemUpdateRequest.getPassword());
+    public ResultResponse edit(@Valid @RequestBody MemberRequest memberRequest) {
+        MemberEntity item = new MemberEntity(memberRequest.getEmail(),
+                memberRequest.getName(),
+                memberRequest.getPhoneNumber(),
+                memberRequest.getPassword());
 
         memberDao.update(item);
-        return new ResultResponse(SuccessCode.UPDATE_ITEM, item);
+        return new ResultResponse(SuccessCode.UPDATE_MEMBER, item);
     }
 
     @DeleteMapping("/{email}")
     public ResultResponse delete(@PathVariable String email) {
         memberDao.delete(email);
-        return new ResultResponse(SuccessCode.DELETE_ITEM, email);
+        return new ResultResponse(SuccessCode.DELETE_MEMBER, email);
     }
 }
