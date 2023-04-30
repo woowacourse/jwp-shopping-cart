@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dao.ItemDao;
+import cart.dao.item.ItemDao;
 
 import cart.dto.item.ItemSaveRequest;
 import cart.dto.item.ItemUpdateRequest;

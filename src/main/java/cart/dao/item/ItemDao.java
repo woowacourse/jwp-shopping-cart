@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.dao.item;
 
 
 import cart.entity.ItemEntity;

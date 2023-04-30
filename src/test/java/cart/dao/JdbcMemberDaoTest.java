@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.dao.member.MemberDao;
 import cart.entity.MemberEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

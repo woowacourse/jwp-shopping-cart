@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.ItemDao;
+import cart.dao.item.ItemDao;
 
 import cart.dto.item.ItemResponse;
 import cart.entity.ItemEntity;

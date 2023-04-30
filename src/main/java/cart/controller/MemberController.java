@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dao.MemberDao;
+import cart.dao.member.MemberDao;
 import cart.dto.ResultResponse;
 import cart.dto.SuccessCode;
 import cart.dto.member.MemberUpdateRequest;
