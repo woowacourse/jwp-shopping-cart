@@ -72,7 +72,7 @@ class AdminControllerTest {
                 .body(productRequest)
                 .when().put("/admin/product/" + id)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
@@ -84,7 +84,7 @@ class AdminControllerTest {
         given()
                 .when().delete("/admin/product/" + id)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private ExtractableResponse<Response> saveProduct(final String name, final int price, final String imageUrl) {

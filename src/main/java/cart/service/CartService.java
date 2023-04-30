@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import cart.persistence.dao.ProductDao;
+import cart.persistence.dao.Dao;
 import cart.persistence.entity.ProductEntity;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
 
-    private final ProductDao productDao;
+    private final Dao productDao;
 
-    public CartService(final ProductDao productDao) {
+    public CartService(final Dao productDao) {
         this.productDao = productDao;
     }
 

@@ -23,7 +23,7 @@ class JdbcProductDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private ProductDao productDao;
+    private Dao productDao;
 
     @BeforeEach
     void setUp() {
@@ -58,7 +58,7 @@ class JdbcProductDaoTest {
         final ProductEntity originalJena = new ProductEntity(productId, "jena", 10000, "");
 
         productDao.update(originalJena);
-        ProductEntity jena = productDao.findByName("jena");
+        ProductEntity jena = (ProductEntity) productDao.findByName("jena");
         assertThat(jena.getName()).isEqualTo("jena");
     }
 
