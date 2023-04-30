@@ -1,6 +1,6 @@
-package cart.dao;
+package cart.product.dao;
 
-import cart.domain.product.Product;
+import cart.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

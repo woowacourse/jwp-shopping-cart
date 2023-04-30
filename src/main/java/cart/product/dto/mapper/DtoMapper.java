@@ -1,9 +1,9 @@
-package cart.dto.mapper;
+package cart.product.dto.mapper;
 
-import cart.domain.product.Product;
-import cart.dto.ProductDto;
-import cart.dto.request.ProductAddRequest;
-import cart.dto.request.ProductUpdateRequest;
+import cart.product.domain.Product;
+import cart.product.dto.ProductDto;
+import cart.product.dto.request.ProductAddRequest;
+import cart.product.dto.request.ProductUpdateRequest;
 
 public class DtoMapper {
 

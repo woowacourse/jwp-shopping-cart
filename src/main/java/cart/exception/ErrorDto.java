@@ -1,4 +1,4 @@
-package cart.dto.response;
+package cart.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,18 +1,18 @@
-package cart.controller;
+package cart;
 
-import cart.service.ProductService;
+import cart.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ProductViewController {
+public class MainController {
 
     private final ProductService productService;
 
     @Autowired
-    public ProductViewController(final ProductService productService) {
+    public MainController(final ProductService productService) {
         this.productService = productService;
     }
 

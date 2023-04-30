@@ -1,6 +1,6 @@
-package cart.dao;
+package cart.product.dao;
 
-import cart.domain.product.Product;
+import cart.product.domain.Product;
 
 import java.util.List;
 import java.util.Optional;

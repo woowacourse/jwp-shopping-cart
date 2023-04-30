@@ -1,10 +1,10 @@
-package cart;
+package cart.product;
 
-import cart.domain.product.Money;
-import cart.domain.product.ProductImageUrl;
-import cart.domain.product.ProductName;
-import cart.dto.request.ProductAddRequest;
-import cart.dto.request.ProductUpdateRequest;
+import cart.product.domain.Money;
+import cart.product.domain.ProductImageUrl;
+import cart.product.domain.ProductName;
+import cart.product.dto.request.ProductAddRequest;
+import cart.product.dto.request.ProductUpdateRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
