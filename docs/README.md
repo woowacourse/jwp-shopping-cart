@@ -2,9 +2,11 @@
 
 # 📚 도메인 모델 네이밍 사전
 
-| 한글명 | 영문명     | 설명    | 분류    |
-|-----|---------|-------|-------|
-| 상품  | Product | 상품 정보 | class |
+| 한글명  | 영문명     | 설명      | 분류    |
+|------|---------|---------|-------|
+| 상품   | Product | 상품 정보   | class |
+| 사용자  | User    | 사용자 정보  | class |
+| 장바구니 | Cart    | 장바구니 정보 | class |
 
 <br>
 
@@ -16,9 +18,23 @@
         - Table 명 : `product`
 
           | id | name | image_url | price |
-          |----|---------|-------------|-------|
+           |----|---------|-------------|-------|
           | 1 | chicken | https://... | 10000 |
           | 2 | pizza | https://... | 12000 |
+
+        - Table 명 : `user`
+
+          | id | email                 | password |
+          |----|-----------------------|----------|
+          | 1 | songsy405@naver.com   | abcd     | 
+          | 2 | songsy405@pusan.ac.kr | 1234     | 
+
+        - Table 명 : `cart`
+      
+          | id | member_id | product_id |
+          |----|-----------------------|----------|
+          | 1 | 1 | 3 |
+          | 2 | 1 | 2 |
 
 # 👨‍🍳 기능 목록
 
@@ -57,10 +73,52 @@
   DELETE /admin/products/{product_id} HTTP/1.1
   ```
 
+## 사용자 설정 페이지 연동
+
+- [ ] 사용자로부터 `/setting`에 대해 GET 요청을 받으면 setting.html 페이지를 반환한다.
+- [ ] 사용자에 대한 데이터를 담을 클래스를 만든다.
+    ```
+  GET /setting HTTP/1.1
+  ```
+
+### 사용자 CRUD API 작성
+
+(별도의 요구사항이 없기 때문에 데이터 추가 api만 구현하였다)
+
+- [ ] user 테이블에 사용자 정보를 추가하는 메서드를 구현한다.
+
+## 장바구니 페이지 연동
+
+- [ ] 사용자로부터 `/cart`에 대해 GET 요청을 받으면 cart.html 페이지를 반환한다.
+- [ ] 장바구니에 대한 데이터를 담을 클래스를 만든다.
+    ```
+  GET /cart HTTP/1.1
+  ```
+
+### 장바구니 CRUD API 작성
+
+- [ ] 사용자로부터 인증 정보와 함께 GET 요청을 받으면 DB에서 해당 사용자의 장바구니 목록을 불러와 반환한다.
+    ```
+    GET /cart HTTP/1.1
+    Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
+    ```
+- [ ] 사용자로부터 인증 정보와 함께 POST 요청을 받으면 새 상품을 DB cart 테이블에 저장한다.
+    ```
+    POST /cart/{product_id} HTTP/1.1
+    Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
+    ```
+- [ ] 사용자로부터 인증 정보와 함께 DELETE 요청을 받으면 상품을 DB cart 테이블 에서 제거한다.
+    ```
+    DELETE /cart/{product_id} HTTP/1.1
+    Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
+    ```
+- [ ] credentials로는 email:password를 base64로 인코딩한 문자열을 사용한다.
+
 ## 테스트 코드 작성
 
-- [x] DAO CRUD 테스트
+- [x] product DAO CRUD 테스트
 - [x] 컨트롤러 CRUD 테스트
+- [ ] cart DAO CRUD 테스트
 
 # 📌 Commit Convention
 
@@ -86,8 +144,6 @@ ex) "docs: 기능 목록 추가"
 - 상세한 컨벤션
   내용은 [Angular JS Git Commit Message Conventions](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)
   를 참고
-
-
 
 # 📌 Code Convention
 
