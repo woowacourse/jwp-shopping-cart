@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.Member;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class H2MemberDao implements MemberDao {
 
-    public static final RowMapper<Member> memberRowMapper = (resultSet, rowMapper) -> new Member(
+    private static final RowMapper<Member> memberRowMapper = (resultSet, rowMapper) -> new Member(
             resultSet.getLong("id"),
             resultSet.getString("email"),
             resultSet.getString("password")
@@ -58,5 +59,11 @@ public class H2MemberDao implements MemberDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Member> findAll() {
+        String sql = "SELECT * FROM member";
+        return jdbcTemplate.query(sql, memberRowMapper);
     }
 }

@@ -31,4 +31,13 @@ class H2MemberDaoTest {
 
         assertThat(memberDao.findById(savedMember.getId())).isNotEmpty();
     }
+
+    @DisplayName("전체 회원을 조회한다")
+    @Test
+    void findAllMember() {
+        memberDao.save(new Member("boxster@email.com", "boxster"));
+        memberDao.save(new Member("gitchan@email.com", "gitchan"));
+
+        assertThat(memberDao.findAll()).hasSize(2);
+    }
 }
