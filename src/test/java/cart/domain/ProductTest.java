@@ -40,4 +40,31 @@ class ProductTest {
                 () -> assertThat(product.getPrice()).isEqualTo(20000)
         );
     }
+
+    @DisplayName("아이디가 다르면 다른 상품이다.")
+    @Test
+    void notEquals() {
+        // given
+        String name = "상품명1";
+        int price = 100000;
+        String imgUrl = "https://www.shutterstock.com/ko/image-illustration/3d-gift-box-pink-valentine-illustration-2257249003";
+        Product product = Product.from(1L, name, imgUrl, price);
+        Product otherProduct = Product.from(2L, name, imgUrl, price);
+
+        // when & then
+        assertThat(product).isNotEqualTo(otherProduct);
+    }
+
+    @DisplayName("아이디가 같으면 동일한 상품이다.")
+    @Test
+    void equals() {
+        // given
+        Long id = 1L;
+        String imgUrl = "https://www.shutterstock.com/ko/image-illustration/3d-gift-box-pink-valentine-illustration-2257249003";
+        Product product = Product.from(id, "상품명1", imgUrl, 100000);
+        Product otherProduct = Product.from(id, "수정 상품명", imgUrl, 10000000);
+
+        // when & then
+        assertThat(product).isEqualTo(otherProduct);
+    }
 }
