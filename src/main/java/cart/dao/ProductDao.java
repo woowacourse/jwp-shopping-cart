@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ProductDao {
 
-    long add(ProductRequest entity);
+    long add(ProductRequest request);
 
     List<ProductEntity> findAll();
 
