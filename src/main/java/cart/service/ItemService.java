@@ -8,6 +8,7 @@ import cart.domain.Item;
 import cart.domain.Name;
 import cart.domain.Price;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class ItemService {
         this.itemDao = itemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ItemResponse> loadAllItem() {
         List<Item> allItem = itemDao.findAll();
         return allItem.stream()
@@ -29,11 +31,13 @@ public class ItemService {
                       .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ItemResponse loadItem(final Long itemId) {
         Optional<Item> findItem = itemDao.findBy(itemId);
         return ItemResponse.from(findItem.orElseThrow());
     }
 
+    @Transactional
     public Long saveItem(final ItemRequest itemRequest) {
         Item item = new Item.Builder()
                 .name(new Name(itemRequest.getName()))
@@ -43,6 +47,7 @@ public class ItemService {
         return itemDao.save(item);
     }
 
+    @Transactional
     public void updateItem(final Long itemId, final ItemRequest itemRequest) {
         validateExistItem(itemId);
         Item item = new Item.Builder()
@@ -54,6 +59,7 @@ public class ItemService {
         itemDao.update(item);
     }
 
+    @Transactional
     public void deleteItem(final Long itemId) {
         validateExistItem(itemId);
         itemDao.deleteBy(itemId);
