@@ -1,39 +1,33 @@
-package cart;
+package cart.controller;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductIntegrationTest {
+class MainControllerTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
     }
 
+    @DisplayName("상품 전체 목록을 조회하면 상태코드 200을 반환하는지 확인한다")
     @Test
-    public void getProducts() {
-        var result = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/")
-                .then()
-                .extract();
-
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+    void getHomeTest() {
+        RestAssured.given().log().all()
+                .when().get("/")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 
 }
