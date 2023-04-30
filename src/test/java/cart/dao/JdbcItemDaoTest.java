@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Item;
 import cart.entity.ItemEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,14 +22,14 @@ class JdbcItemDaoTest {
 
     @BeforeEach
     void setUp() {
-        itemDao.save(new Item("치킨", "a", 10000));
-        itemDao.save(new Item("피자", "b", 20000));
+        itemDao.save(new ItemEntity("치킨", "a", 10000));
+        itemDao.save(new ItemEntity("피자", "b", 20000));
     }
 
     @Test
     @DisplayName("상품을 저장할 수 있다.")
     void save() {
-        Item item = new Item("햄버거", "c", 2000);
+        ItemEntity item = new ItemEntity("햄버거", "c", 2000);
 
         itemDao.save(item);
 
@@ -56,7 +55,7 @@ class JdbcItemDaoTest {
     @Test
     @DisplayName("상품 정보를 수정할 수 있다.")
     void update() {
-        Item item = new Item("햄버거", "c", 2000);
+        ItemEntity item = new ItemEntity("햄버거", "c", 2000);
 
         itemDao.update(2L, item);
 

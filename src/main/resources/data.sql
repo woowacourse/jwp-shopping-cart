@@ -16,5 +16,3 @@ CREATE TABLE IF NOT EXISTS member
     phone_number varchar(30)             NOT NULL,
     password     varchar(30)             NOT NULL
 );
-
-insert into member(email, name, phone_number, password) values ('test@gmail.com', 'test', '01098765432', 'qwer1234')

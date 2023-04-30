@@ -1,9 +1,10 @@
 package cart.controller;
 
 import cart.dao.ItemDao;
-import cart.domain.Item;
+
 import cart.dto.item.ItemSaveRequest;
 import cart.dto.item.ItemUpdateRequest;
+import cart.entity.ItemEntity;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,8 +29,8 @@ class ViewControllerTest {
 
     @BeforeEach
     void setUp() {
-        itemDao.save(new Item("치킨", "a", 10000));
-        itemDao.save(new Item("피자", "b", 20000));
+        itemDao.save(new ItemEntity("치킨", "a", 10000));
+        itemDao.save(new ItemEntity("피자", "b", 20000));
     }
 
     @Test

@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.ItemDao;
-import cart.domain.Item;
+
 import cart.dto.item.ItemResponse;
 import cart.entity.ItemEntity;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class ItemService {
         this.itemDao = itemDao;
     }
 
-    public ItemResponse save(Item item) {
+    public ItemResponse save(ItemEntity item) {
         ItemEntity save = itemDao.save(item);
         return new ItemResponse(save.getId(), save.getName(), save.getImageUrl(), save.getPrice());
     }
@@ -34,7 +34,7 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public void updateItem(Long itemId, Item item) {
+    public void updateItem(Long itemId, ItemEntity item) {
         itemDao.update(itemId, item);
     }
 

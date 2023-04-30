@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.Item;
+
 import cart.entity.ItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,14 +24,14 @@ public class JdbcItemDao implements ItemDao {
 
     public JdbcItemDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns(KEY_COLUMN_NAME)
                 .usingColumns("name", "item_url", "price");
     }
 
     @Override
-    public ItemEntity save(final Item item) {
+    public ItemEntity save(final ItemEntity item) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", item.getName())
                 .addValue("item_url", item.getImageUrl())
@@ -61,7 +61,7 @@ public class JdbcItemDao implements ItemDao {
     }
 
     @Override
-    public void update(final Long id, final Item item) {
+    public void update(final Long id, final ItemEntity item) {
         String sql = "update item set name = ?, item_url = ?, price = ? where id = ?";
 
         jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice(), id);

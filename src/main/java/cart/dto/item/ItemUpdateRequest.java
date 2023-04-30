@@ -1,6 +1,5 @@
 package cart.dto.item;
 
-import cart.domain.Item;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.*;
@@ -44,9 +43,5 @@ public class ItemUpdateRequest {
 
     public Integer getPrice() {
         return price;
-    }
-
-    public Item toItem() {
-        return new Item(name, imageUrl, price);
     }
 }

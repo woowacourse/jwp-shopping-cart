@@ -14,6 +14,13 @@ public class ItemEntity {
         this.price = price;
     }
 
+    public ItemEntity(final String name, final String imageUrl, final int price) {
+        this.id = null;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.price = price;
+    }
+
     public Long getId() {
         return id;
     }

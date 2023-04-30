@@ -1,10 +1,11 @@
 package cart.controller;
 
-import cart.domain.Item;
-import cart.dto.*;
+import cart.dto.ResultResponse;
+import cart.dto.SuccessCode;
 import cart.dto.item.ItemResponse;
 import cart.dto.item.ItemSaveRequest;
 import cart.dto.item.ItemUpdateRequest;
+import cart.entity.ItemEntity;
 import cart.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,14 +25,22 @@ public class ItemController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResultResponse addItem(@Valid @RequestBody ItemSaveRequest itemSaveRequest) {
-        ItemResponse saveItem = itemService.save(itemSaveRequest.toItem());
+        ItemEntity itemEntity = new ItemEntity(itemSaveRequest.getName(),
+                itemSaveRequest.getImageUrl(),
+                itemSaveRequest.getPrice());
+
+        ItemResponse saveItem = itemService.save(itemEntity);
+
         return new ResultResponse(SuccessCode.CREATE_ITEM, saveItem);
     }
 
     @PutMapping
     public ResultResponse editItem(@Valid @RequestBody ItemUpdateRequest itemUpdateRequest) {
         Long itemId = itemUpdateRequest.getId();
-        Item item = itemUpdateRequest.toItem();
+        ItemEntity item = new ItemEntity(itemUpdateRequest.getId(),
+                itemUpdateRequest.getName(),
+                itemUpdateRequest.getImageUrl(),
+                itemUpdateRequest.getPrice());
 
         itemService.updateItem(itemId, item);
         return new ResultResponse(SuccessCode.UPDATE_ITEM, item);
