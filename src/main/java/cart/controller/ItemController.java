@@ -1,14 +1,18 @@
 package cart.controller;
 
 import cart.domain.Item;
+import cart.dto.*;
+import cart.dto.item.ItemResponse;
+import cart.dto.item.ItemSaveRequest;
+import cart.dto.item.ItemUpdateRequest;
 import cart.service.ItemService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
+import javax.validation.Valid;
 
-@Controller
+@RestController
+@RequestMapping("/admin/item")
 public class ItemController {
 
     private final ItemService itemService;
@@ -17,15 +21,25 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    @GetMapping("/")
-    public String displayItemList(Model model) {
-        model.addAttribute("products", itemService.findAll());
-        return "index";
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResultResponse addItem(@Valid @RequestBody ItemSaveRequest itemSaveRequest) {
+        ItemResponse saveItem = itemService.save(itemSaveRequest.toItem());
+        return new ResultResponse(SuccessCode.CREATE_ITEM, saveItem);
     }
 
-    @PostConstruct
-    public void initData() {
-        Item chicken = new Item("치킨", "https://image.homeplus.kr/td/f42afe4b-e0a8-4c79-a07c-aaee40c93a57", 10000);
-        itemService.save(chicken);
+    @PutMapping
+    public ResultResponse editItem(@Valid @RequestBody ItemUpdateRequest itemUpdateRequest) {
+        Long itemId = itemUpdateRequest.getId();
+        Item item = itemUpdateRequest.toItem();
+
+        itemService.updateItem(itemId, item);
+        return new ResultResponse(SuccessCode.UPDATE_ITEM, item);
+    }
+
+    @DeleteMapping("/{itemId}")
+    public ResultResponse deleteItem(@PathVariable Long itemId) {
+        itemService.deleteItem(itemId);
+        return new ResultResponse(SuccessCode.DELETE_ITEM, itemId);
     }
 }
