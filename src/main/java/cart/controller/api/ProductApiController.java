@@ -41,7 +41,7 @@ public class ProductApiController {
                 .body(ResultResponse.created("상품이 생성되었습니다.", productDto));
     }
 
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/{productId:[1-9]\\d*}")
     public ResponseEntity<Response> deleteProduct(@PathVariable Long productId) {
         productService.deleteById(productId);
         log.info("상품이 삭제되었습니다. 상품 ID = {}", productId);
@@ -49,7 +49,7 @@ public class ProductApiController {
                 .body(SimpleResponse.ok("상품이 삭제되었습니다."));
     }
 
-    @PatchMapping("/{productId}")
+    @PatchMapping("/{productId:[1-9]\\d*}")
     public ResponseEntity<Response> updateProduct(@PathVariable Long productId,
                                                   @RequestBody @Valid ProductUpdateRequest request) {
         ProductDto productDto = productService.updateProductById(productId, request.getName(), request.getPrice(),

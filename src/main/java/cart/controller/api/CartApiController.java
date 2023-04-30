@@ -25,7 +25,7 @@ public class CartApiController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/{productId}")
+    @PostMapping("/{productId:[1-9]\\d*}")
     public ResponseEntity<Response> addProductToCart(@PathVariable Long productId, @Principal User user) {
         cartService.addToCart(user.getMemberId(), productId);
         return ResponseEntity.ok()
@@ -39,7 +39,7 @@ public class CartApiController {
                 .body(ResultResponse.ok(allProducts.size() + "개의 상품이 조회되었습니다.", allProducts));
     }
 
-    @DeleteMapping("/{cartId}")
+    @DeleteMapping("/{cartId:[1-9]\\d*}")
     public ResponseEntity<Response> deleteProductToCart(@PathVariable Long cartId, @Principal User user) {
         cartService.deleteProduct(user.getMemberId(), cartId);
         return ResponseEntity.ok()
