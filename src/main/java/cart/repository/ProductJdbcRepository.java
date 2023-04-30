@@ -22,12 +22,12 @@ public class ProductJdbcRepository implements ProductRepository {
 	private final RowMapper<Product> productRowMapper =
 
 		(resultSet, rowNum) ->
-		new Product(
-			resultSet.getLong("id"),
-			resultSet.getString("name"),
-			resultSet.getDouble("price"),
-			resultSet.getString("image")
-		);
+			new Product(
+				resultSet.getLong("id"),
+				resultSet.getString("name"),
+				resultSet.getDouble("price"),
+				resultSet.getString("image")
+			);
 
 	public ProductJdbcRepository(final JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -68,7 +68,7 @@ public class ProductJdbcRepository implements ProductRepository {
 		final String sql = "DELETE FROM products WHERE id = ?";
 		final int deleteCount = jdbcTemplate.update(sql, productId);
 
-		if(deleteCount != DELETED_COUNT){
+		if (deleteCount != DELETED_COUNT) {
 			throw new IllegalStateException("상품 삭제 도중 오류가 발생하여 실패하였습니다.");
 		}
 		return productId;
@@ -77,10 +77,11 @@ public class ProductJdbcRepository implements ProductRepository {
 	@Override
 	public long updateByProductId(final long productId, final ProductUpdateRequest request) {
 		final String updateSql = "UPDATE products SET name = ?, price = ?, image = ? WHERE id = ?";
-		final int updateCount = jdbcTemplate.update(updateSql, request.getName(), request.getPrice(), request.getImage(),
+		final int updateCount = jdbcTemplate.update(updateSql, request.getName(), request.getPrice(),
+			request.getImage(),
 			productId);
 
-		if(updateCount != UPDATED_COUNT){
+		if (updateCount != UPDATED_COUNT) {
 			throw new IllegalStateException("상품 갱신 도충 오류가 발생하여 실패하였습니다.");
 		}
 
