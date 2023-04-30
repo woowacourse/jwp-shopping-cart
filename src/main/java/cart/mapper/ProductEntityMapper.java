@@ -9,6 +9,6 @@ public class ProductEntityMapper {
     }
 
     public static ProductEntity from(final ProductDto productDto) {
-        return ProductEntity.of(productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice());
+        return ProductEntity.of(productDto.getId(), productDto.getName(), productDto.getImageUrl(), productDto.getPrice());
     }
 }

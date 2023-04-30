@@ -2,30 +2,24 @@ package cart.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.URL;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 public class ProductModificationRequest {
 
     private final Long id;
     private final String name;
-    private final String image;
+    private final String imageUrl;
     private final Integer price;
 
     @JsonCreator
     public ProductModificationRequest(
             @JsonProperty(value = "id") final Long id,
             @JsonProperty(value = "name") final String name,
-            @JsonProperty(value = "image") final String image,
+            @JsonProperty(value = "image") final String imageUrl,
             @JsonProperty(value = "price") final Integer price
     ) {
         this.id = id;
         this.name = name;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.price = price;
     }
 
@@ -38,7 +32,7 @@ public class ProductModificationRequest {
     }
 
     public String getImage() {
-        return image;
+        return imageUrl;
     }
 
     public Integer getPrice() {

@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.domain.product.Image;
+import cart.domain.product.ImageUrl;
 import cart.domain.product.Name;
 import cart.domain.product.Price;
 
@@ -8,22 +8,22 @@ public class ProductEntity {
 
     private final Long id;
     private final Name name;
-    private final Image image;
+    private final ImageUrl imageUrl;
     private final Price price;
 
-    private ProductEntity(final Long id, final String name, final String image, final Integer price) {
+    private ProductEntity(final Long id, final String name, final String imageUrl, final Integer price) {
         this.id = id;
         this.name = Name.from(name);
-        this.image = Image.from(image);
+        this.imageUrl = ImageUrl.from(imageUrl);
         this.price = Price.from(price);
     }
 
-    public static ProductEntity of(final String name, final String image, final Integer price) {
-        return new ProductEntity(null, name, image, price);
+    public static ProductEntity of(final String name, final String imageUrl, final Integer price) {
+        return new ProductEntity(null, name, imageUrl, price);
     }
 
-    public static ProductEntity of(final Long id, final String name, final String image, final Integer price) {
-        return new ProductEntity(id, name, image, price);
+    public static ProductEntity of(final Long id, final String name, final String imageUrl, final Integer price) {
+        return new ProductEntity(id, name, imageUrl, price);
     }
 
     public Long getId() {
@@ -34,8 +34,8 @@ public class ProductEntity {
         return name.getName();
     }
 
-    public String getImage() {
-        return image.getImage();
+    public String getImageUrl() {
+        return imageUrl.getUrl();
     }
 
     public Integer getPrice() {

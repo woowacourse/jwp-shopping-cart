@@ -22,7 +22,7 @@ public class ProductDtoMapper {
     }
 
     public static ProductDto from(final ProductEntity productEntity) {
-        return ProductDto.of(productEntity.getId(), productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
+        return ProductDto.of(productEntity.getId(), productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice());
     }
 
     public static List<ProductDto> from(final List<ProductEntity> productEntities) {

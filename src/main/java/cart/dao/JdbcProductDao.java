@@ -20,7 +20,7 @@ public class JdbcProductDao implements ProductDao {
     private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) -> ProductEntity.of(
             resultSet.getLong("id"),
             resultSet.getString("name"),
-            resultSet.getString("image"),
+            resultSet.getString("image_url"),
             resultSet.getInt("price")
     );
 
@@ -33,14 +33,14 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public void insert(final ProductEntity productEntity) {
-        final String sql = "INSERT INTO product(name, image, price) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
+        final String sql = "INSERT INTO product(name, image_url, price) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice());
     }
 
     @Override
     public void updateById(final Long id, final ProductEntity productEntity) {
-        final String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), id);
+        final String sql = "UPDATE product SET name = ?, image_url = ?, price = ? WHERE id = ?";
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice(), id);
     }
 
     @Override

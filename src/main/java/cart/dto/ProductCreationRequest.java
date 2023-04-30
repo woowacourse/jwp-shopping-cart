@@ -6,16 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ProductCreationRequest {
 
     private final String name;
-    private final String image;
+    private final String imageUrl;
     private final Integer price;
 
     @JsonCreator
     public ProductCreationRequest(
             @JsonProperty(value = "name") final String name,
-            @JsonProperty(value = "image") final String image,
+            @JsonProperty(value = "image") final String imageUrl,
             @JsonProperty(value = "price") final Integer price) {
         this.name = name;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.price = price;
     }
 
@@ -24,7 +24,7 @@ public class ProductCreationRequest {
     }
 
     public String getImage() {
-        return image;
+        return imageUrl;
     }
 
     public Integer getPrice() {

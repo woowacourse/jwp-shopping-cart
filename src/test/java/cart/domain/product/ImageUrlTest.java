@@ -7,20 +7,20 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-class ImageTest {
+class ImageUrlTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"http://", "https://"})
     @DisplayName("상품 이미지를 정상적으로 등록할 수 있다")
-    void imageTest(final String input) {
-        assertDoesNotThrow(() -> Image.from(input));
+    void imageUrlTest(final String input) {
+        assertDoesNotThrow(() -> ImageUrl.from(input));
     }
 
     @DisplayName("형식에 맞지 않는 경로가 들어오면 예외를 발생한다")
     @ValueSource(strings = {"http:", "https:", "http:/", "https:/"})
     @ParameterizedTest
-    void throwExceptionWhenInvalidImage(final String input) {
-        assertThatThrownBy(() -> Image.from(input))
+    void throwExceptionWhenInvalidImageUrl(final String input) {
+        assertThatThrownBy(() -> ImageUrl.from(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

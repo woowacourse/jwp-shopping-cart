@@ -12,7 +12,7 @@ public class ProductResponseMapper {
     }
 
     public static ProductResponse from(final ProductDto productDto) {
-        return ProductResponse.of(productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice());
+        return ProductResponse.of(productDto.getId(), productDto.getName(), productDto.getImageUrl(), productDto.getPrice());
     }
 
     public static List<ProductResponse> from(final List<ProductDto> productDtos) {

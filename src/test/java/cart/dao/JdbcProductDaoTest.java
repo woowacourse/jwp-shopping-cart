@@ -42,11 +42,11 @@ class JdbcProductDaoTest {
             softAssertions.assertThat(productEntities.size()).isEqualTo(2);
             softAssertions.assertThat(productEntities.get(0).getId()).isEqualTo(1L);
             softAssertions.assertThat(productEntities.get(0).getName()).isEqualTo("mouse");
-            softAssertions.assertThat(productEntities.get(0).getImage()).isEqualTo("https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg");
+            softAssertions.assertThat(productEntities.get(0).getImageUrl()).isEqualTo("https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg");
             softAssertions.assertThat(productEntities.get(0).getPrice()).isEqualTo(100_000);
             softAssertions.assertThat(productEntities.get(1).getId()).isEqualTo(2L);
             softAssertions.assertThat(productEntities.get(1).getName()).isEqualTo("keyboard");
-            softAssertions.assertThat(productEntities.get(1).getImage()).isEqualTo("https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1");
+            softAssertions.assertThat(productEntities.get(1).getImageUrl()).isEqualTo("https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1");
             softAssertions.assertThat(productEntities.get(1).getPrice()).isEqualTo(250_000);
         });
     }

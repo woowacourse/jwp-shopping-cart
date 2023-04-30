@@ -43,10 +43,10 @@ class ProductManagementServiceTest {
         assertAll(
                 () -> assertThat(productDtos.size()).isEqualTo(data.size()),
                 () -> assertThat(productDtos.get(0).getName()).isEqualTo("chicken"),
-                () -> assertThat(productDtos.get(0).getImage()).isEqualTo("https://image"),
+                () -> assertThat(productDtos.get(0).getImageUrl()).isEqualTo("https://image"),
                 () -> assertThat(productDtos.get(0).getPrice()).isEqualTo(10_000),
                 () -> assertThat(productDtos.get(1).getName()).isEqualTo("pizza"),
-                () -> assertThat(productDtos.get(1).getImage()).isEqualTo("https://image2"),
+                () -> assertThat(productDtos.get(1).getImageUrl()).isEqualTo("https://image2"),
                 () -> assertThat(productDtos.get(1).getPrice()).isEqualTo(20_000)
         );
     }
