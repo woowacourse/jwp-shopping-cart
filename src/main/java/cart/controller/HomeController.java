@@ -8,11 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class WelcomePageController {
+public class HomeController {
 
     private final ProductService productService;
 
-    public WelcomePageController(final ProductService productService) {
+    public HomeController(final ProductService productService) {
         this.productService = productService;
     }
 
