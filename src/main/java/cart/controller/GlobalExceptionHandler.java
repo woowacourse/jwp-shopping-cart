@@ -31,4 +31,9 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(errorMessageByFields);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleUnexpectedException(final Exception exception) {
+        return ResponseEntity.internalServerError().body(exception.getMessage());
+    }
 }
