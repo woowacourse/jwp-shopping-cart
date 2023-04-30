@@ -17,3 +17,15 @@ CREATE TABLE member
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
+
+
+CREATE TABLE cart_product
+(
+    id       BIGINT       NOT NULL AUTO_INCREMENT,
+    member_id    VARCHAR(255) NOT NULL,
+    product_id VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (member_id) REFERENCES member(id),
+    FOREIGN KEY (product_id) REFERENCES product(id),
+    UNIQUE (member_id, product_id)
+);
