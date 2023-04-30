@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,13 +31,15 @@ public class CartApiControllerTest {
 
     @Test
     void insertTest() throws Exception {
-        when(cartService.addProduct(any())).thenReturn(new ProductEntity(1, "name", 1000, "image"));
+        int savedId = 1;
+        when(cartService.addProduct(any())).thenReturn(new ProductEntity(savedId, "name", 1000, "image"));
         final String imageUrl = "http://www.test.image.png";
 
         this.mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"name\": \"name\", \"image\": \"" + imageUrl + "\", \"price\": \"1000\"}"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "/products/" + savedId));
     }
 
     @Test
