@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.DummyData;
 import cart.dao.ProductDao;
 import cart.dto.ProductCreationRequest;
 import cart.dto.ProductModificationRequest;
@@ -19,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import static cart.DummyData.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
@@ -27,10 +29,6 @@ import static org.hamcrest.Matchers.is;
 class ProductControllerTest {
 
     private static final String path = "/products";
-    private static final Long dummyId = 1L;
-    private static final String dummyName = "dummy";
-    private static final String dummyImage = "http:";
-    private static final Integer dummyPrice = 10_000;
 
     @Autowired
     ProductDao productDao;
@@ -70,7 +68,7 @@ class ProductControllerTest {
     @Test
     void postProductsTest() {
         final ProductCreationRequest request
-                = new ProductCreationRequest(dummyName, dummyImage, dummyPrice);
+                = new ProductCreationRequest(dummyImage, dummyImage, dummyPrice);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -127,14 +125,14 @@ class ProductControllerTest {
 
     @DisplayName("상품을 수정하면 상태코드 204를 반환하는지 확인한다")
     @Test
-    void putProductsTest() {
+    void patchProductsTest() {
         final ProductModificationRequest request
                 = new ProductModificationRequest(dummyId, dummyName, dummyImage, dummyPrice);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put(path + "/" + request.getId())
+                .when().patch(path + "/" + request.getId())
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -142,14 +140,14 @@ class ProductControllerTest {
     @DisplayName("상품을 수정할 때 잘못된 형식의 이름이 들어오면 상태코드 400을 반환하는지 확인한다")
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    void throwExceptionWhenInvalidNamePutProductsTest(final String nameInput) {
+    void throwExceptionWhenInvalidNamePatchProductsTest(final String nameInput) {
         final ProductModificationRequest request
                 = new ProductModificationRequest(dummyId, nameInput, dummyImage, dummyPrice);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put(path + "/" + request.getId())
+                .when().patch(path + "/" + request.getId())
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -157,14 +155,14 @@ class ProductControllerTest {
     @DisplayName("상품을 수정할 때 잘못된 형식의 이미지 경로가 들어오면 상태코드 400을 반환하는지 확인한다")
     @ParameterizedTest
     @ValueSource(strings = {" ", "test", "test:."})
-    void throwExceptionWhenInvalidPricePutProductsTest(final String imageInput) {
+    void throwExceptionWhenInvalidPricePatchProductsTest(final String imageInput) {
         final ProductModificationRequest request
                 = new ProductModificationRequest(dummyId, dummyName, imageInput, dummyPrice);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put(path + "/" + request.getId())
+                .when().patch(path + "/" + request.getId())
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -172,14 +170,14 @@ class ProductControllerTest {
     @DisplayName("상품을 수정할 때 잘못된 범위의 가격이 들어오면 상태코드 400을 반환하는지 확인한다")
     @ParameterizedTest
     @ValueSource(ints = {0, 10_000_001})
-    void throwExceptionWhenInvalidPricePutProductsTest(final int priceInput) {
+    void throwExceptionWhenInvalidPricePatchProductsTest(final int priceInput) {
         final ProductModificationRequest request
                 = new ProductModificationRequest(dummyId, dummyName, dummyImage, priceInput);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put(path + "/" + request.getId())
+                .when().patch(path + "/" + request.getId())
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }

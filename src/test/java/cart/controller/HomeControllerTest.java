@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.DummyData;
 import cart.dto.ProductDto;
 import cart.service.ProductManagementService;
 import io.restassured.RestAssured;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static cart.DummyData.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,7 +36,7 @@ class HomeControllerTest {
     @DisplayName("상품 전체 목록을 조회하면 상태코드 200을 반환하는지 확인한다")
     @Test
     void getHomeTest() throws Exception {
-        final ProductDto productDto = ProductDto.of(1L, "test", "http:", 10_000);
+        final ProductDto productDto = ProductDto.of(dummyId, dummyName, dummyImage, dummyPrice);
         final List<ProductDto> productDtos = List.of(productDto);
 
         when(managementService.findAll())
