@@ -38,7 +38,7 @@ class ProductTest {
     void invalidPriceRange(int price) {
         assertThatThrownBy(() -> new Product("ocean", null, price))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("상품 가격은 0원 이상 1억원 이하여야 합니다.");
+                .hasMessage("상품 가격은 0원 이상 100000000원 이하여야 합니다.");
     }
 
     @DisplayName("상품 가격은 10원 단위여야 한다")
