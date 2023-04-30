@@ -33,7 +33,7 @@ class ProductControllerUnitTest {
 
     @Test
     void saveProduct는_상품을_저장하고_created상태코드를_반환한다() throws Exception {
-        mockMvc.perform(post("/product")
+        mockMvc.perform(post("/products")
                         .content(objectMapper.writeValueAsBytes(new ProductSaveRequest("pd1", "image", 2000L)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
@@ -45,7 +45,7 @@ class ProductControllerUnitTest {
         given(productService.findAllProducts())
                 .willReturn(List.of(new ProductDto(2L, "pdpd2", "image2", 15000L)));
 
-        mockMvc.perform(get("/product"))
+        mockMvc.perform(get("/products"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].productId").value(2L))
                 .andExpect(jsonPath("$[0].name").value("pdpd2"))
@@ -55,7 +55,7 @@ class ProductControllerUnitTest {
 
     @Test
     void updateProduct() throws Exception {
-        mockMvc.perform(put("/product")
+        mockMvc.perform(put("/products")
                         .content(objectMapper.writeValueAsBytes(new ProductUpdateRequest(2L, "pdpd2", "image2", 15000L)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -63,7 +63,7 @@ class ProductControllerUnitTest {
 
     @Test
     void deleteProduct() throws Exception {
-        mockMvc.perform(delete("/product/2"))
+        mockMvc.perform(delete("/products/2"))
                 .andExpect(status().isOk());
     }
 }

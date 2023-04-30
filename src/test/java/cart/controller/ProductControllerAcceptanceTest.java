@@ -31,14 +31,14 @@ class ProductControllerAcceptanceTest {
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new ProductSaveRequest("pizza", "image", 12000L))
-                .when().post("/product")
+                .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new ProductUpdateRequest(1L, "chicken!!!!!!", "image2", 12000L))
-                .when().put("/product")
+                .when().put("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -47,7 +47,7 @@ class ProductControllerAcceptanceTest {
     void updateProduct_실패_유효하지_않은_id() {
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new ProductUpdateRequest(-5L, "pdpd2", "image2", 15000L))
-                .when().put("/product")
+                .when().put("/products")
                 .then().statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("errorMessage", is("유효하지 않은 id 입니다."));
     }
