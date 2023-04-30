@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.dto.MemberResponse;
 import cart.dto.ProductResponse;
 import cart.service.MemberService;
 import cart.service.ProductService;
@@ -39,7 +40,10 @@ public class PageController {
 
     @GetMapping("/settings")
     public String setting(Model model) {
-        model.addAttribute("members", memberService.findMembers());
+        List<MemberResponse> members = memberService.findMembers().stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
+        model.addAttribute("members", members);
         return "settings.html";
     }
 }
