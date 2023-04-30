@@ -1,5 +1,7 @@
 package cart.integration;
 
+import cart.controller.dto.MemberDto;
+import cart.controller.dto.ProductDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,21 +11,27 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CartIntegrationTest {
+
+    private String authorization;
+
     @LocalServerPort
     private int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        authorization = "Basic am91cm5leUBnbWFpbC5jb206cGFzc3dvcmQ=";
+
     }
 
     @Test
-    @DisplayName("장바구니 페이지를 조회한다")
+    @DisplayName("장바구니 페이지를 조회한다.")
     void getCarts() {
         given()
                 .when()
@@ -31,5 +39,44 @@ public class CartIntegrationTest {
                 .then().log().all()
                 .contentType(ContentType.HTML)
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("장바구니에 상품을 추가한다.")
+    @Sql("classpath:init.sql")
+    void addCart() {
+        // given
+        addSampleMember();
+        addSampleProduct();
+
+        // when, then
+        given()
+                .header("Authorization", authorization)
+                .when()
+                .post("/cart/{productId}", 1L)
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    private void addSampleMember() {
+        final MemberDto journey = new MemberDto(1L, "journey@gmail.com", "password", "져니", "010-1234-5678");
+        given()
+                .when()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(journey)
+                .post("/member")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    private void addSampleProduct() {
+        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
+        given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .body(productDto)
+                .post("/admin")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
     }
 }
