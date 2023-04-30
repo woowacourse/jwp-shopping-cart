@@ -135,6 +135,8 @@ src/main/resources/data.sql
     - 생성, 조회, 수정, 삭제
 - 카테고리
     - 조회
+- 멤버
+    - 조회
 
 ### DAO
 
