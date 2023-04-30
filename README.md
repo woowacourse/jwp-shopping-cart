@@ -56,7 +56,7 @@
 - [x] 삽입/수정/삭제가 반환값을 가지도록 하고, 해당 반환값이 컨트롤러까지 전달되도록 수정
 - [x] 단건 조회 API 생성
 - [x] 변경된 반환값에 따른 테스트 실행
-- [ ] DTO - Entity Mapper 클래스 생성
+- [x] DTO - Entity Mapper 클래스 생성
 - [x] 불필요한 @Autowired 생략
 - [ ] @Valid를 활용한 유효성 검증
 - [x] API URL 설계 다시 하기

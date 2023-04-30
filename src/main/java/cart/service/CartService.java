@@ -19,24 +19,21 @@ public class CartService {
     }
 
     public ProductEntity addProduct(final InsertRequestDto insertRequestDto) {
-        return productDao.insert(insertRequestDto.toEntity());
+        final ProductEntity product = ProductMapper.toEntity(insertRequestDto);
+        return productDao.insert(product);
     }
 
     public List<ProductResponseDto> getProducts() {
         final List<ProductEntity> products = productDao.selectAll();
 
         return products.stream()
-                .map(product -> new ProductResponseDto(
-                        product.getId(),
-                        product.getImage(),
-                        product.getName(),
-                        product.getPrice()
-                ))
+                .map(ProductMapper::toDto)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public int updateProduct(final UpdateRequestDto updateRequestDto) {
-        return productDao.update(updateRequestDto.toEntity());
+        final ProductEntity product = ProductMapper.toEntity(updateRequestDto);
+        return productDao.update(product);
     }
 
     public int deleteProduct(final int productId) {

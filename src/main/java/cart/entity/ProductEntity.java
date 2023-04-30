@@ -13,6 +13,13 @@ public class ProductEntity {
         this.image = image;
     }
 
+    public ProductEntity(final String name, final int price, final String image) {
+        this.id = null;
+        this.name = name;
+        this.price = price;
+        this.image = image;
+    }
+
     public int getId() {
         return id;
     }

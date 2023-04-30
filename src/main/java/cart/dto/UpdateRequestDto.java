@@ -1,7 +1,5 @@
 package cart.dto;
 
-import cart.entity.ProductEntity;
-
 public class UpdateRequestDto {
     private final int id;
     private final String image;
@@ -31,7 +29,4 @@ public class UpdateRequestDto {
         return price;
     }
 
-    public ProductEntity toEntity() {
-        return new ProductEntity(id, name, price, image);
-    }
 }
