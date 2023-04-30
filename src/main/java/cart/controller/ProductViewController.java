@@ -22,7 +22,7 @@ public class ProductViewController {
 
         model.addAttribute("products", products);
 
-        return "index";
+        return "index.html";
     }
 
     @GetMapping("/admin")
@@ -31,6 +31,6 @@ public class ProductViewController {
 
         model.addAttribute("products", products);
 
-        return "admin";
+        return "admin.html";
     }
 }
