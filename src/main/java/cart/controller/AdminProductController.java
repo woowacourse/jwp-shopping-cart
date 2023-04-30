@@ -18,11 +18,11 @@ import java.net.URISyntaxException;
 
 @RequestMapping("/admin")
 @RestController
-public final class ProductController {
+public final class AdminProductController {
 
     private final ProductDao productDao;
 
-    public ProductController(final ProductDao productDao) {
+    public AdminProductController(final ProductDao productDao) {
         this.productDao = productDao;
     }
 

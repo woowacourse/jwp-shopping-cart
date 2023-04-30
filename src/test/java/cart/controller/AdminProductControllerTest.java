@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ProductControllerTest {
+class AdminProductControllerTest {
 
     @LocalServerPort
     private int port;
@@ -35,13 +35,13 @@ class ProductControllerTest {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ProductController productController;
+    private AdminProductController adminProductController;
 
     @BeforeEach
     void setUp() throws URISyntaxException {
         RestAssured.port = port;
         jdbcTemplate.execute("TRUNCATE TABLE product");
-        productController.addProduct(new ModifyRequest("망고", 1000, "domains.com"));
+        adminProductController.addProduct(new ModifyRequest("망고", 1000, "domains.com"));
     }
 
     @DisplayName("POST /admin/product 요청 시")
