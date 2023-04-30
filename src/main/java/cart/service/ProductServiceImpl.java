@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional
 	@Override
 	public long deleteByProductId(final long productId) {
-		final boolean isDelete = productRepository.deleteByProductId(productId) == productId;
+		final boolean isDelete = productRepository.deleteByProductId(productId);
 
 		if (!isDelete) {
 			throw new IllegalStateException("상품 삭제에 실패했습니다.");

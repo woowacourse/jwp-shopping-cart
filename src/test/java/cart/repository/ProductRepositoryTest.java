@@ -53,18 +53,18 @@ class ProductRepositoryTest {
 	@Test
 	void deleteByProductId() {
 		// given
-		given(productRepository.deleteByProductId(anyLong())).willReturn(1L);
+		given(productRepository.deleteByProductId(anyLong())).willReturn(true);
 
 		// when
-		final long deleteProductId = productRepository.deleteByProductId(1L);
+		final boolean isDelete = productRepository.deleteByProductId(1L);
 
 		// then
-		assertThat(deleteProductId).isEqualTo(1L);
+		assertThat(isDelete).isTrue();
 	}
 
 	@DisplayName("상품 갱신 테스트")
 	@Test
-	void updateProduct(){
+	void updateProduct() {
 		// given
 		given(productRepository.updateByProductId(anyLong(), any())).willReturn(1L);
 

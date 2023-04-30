@@ -59,14 +59,11 @@ public class ProductRepository {
 		return key.getKey().longValue();
 	}
 
-	public long deleteByProductId(final long productId) {
+	public boolean deleteByProductId(final long productId) {
 		final String sql = "DELETE FROM products WHERE id = ?";
 		final int deleteCount = jdbcTemplate.update(sql, productId);
 
-		if (deleteCount != DELETED_COUNT) {
-			throw new IllegalStateException("상품 삭제 도중 오류가 발생하여 실패하였습니다.");
-		}
-		return productId;
+		return deleteCount == DELETED_COUNT;
 	}
 
 	public long updateByProductId(final long productId, final ProductUpdateRequest request) {

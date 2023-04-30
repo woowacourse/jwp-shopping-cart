@@ -60,7 +60,7 @@ class ProductServiceImplTest {
 	@Test
 	void deleteByProductId() {
 		// given
-		given(productRepository.deleteByProductId(anyLong())).willReturn(1L);
+		given(productRepository.deleteByProductId(anyLong())).willReturn(true);
 
 		// when
 		final long deleteProductId = productServiceImpl.deleteByProductId(1L);
