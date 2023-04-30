@@ -1,12 +1,18 @@
 package cart.controller;
 
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import cart.controller.dto.ProductRequest;
 import cart.repository.ProductRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/product")
@@ -28,14 +34,12 @@ public class ProductController {
     public ResponseEntity<String> updateProduct(
             @PathVariable("id") Integer id,
             @RequestBody @Valid ProductRequest productRequest) {
-        Objects.requireNonNull(id);
         productRepository.update(id, productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer id) {
-        Objects.requireNonNull(id);
         productRepository.delete(id);
         return ResponseEntity.ok().build();
     }
