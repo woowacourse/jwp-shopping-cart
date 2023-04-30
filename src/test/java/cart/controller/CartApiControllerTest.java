@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 import static org.hamcrest.Matchers.containsString;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class ProductApiControllerTest {
+class CartApiControllerTest {
 
     @Autowired
     ProductService productService;

@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class ProductControllerTest {
+class CartControllerTest {
 
     @LocalServerPort
     int port;
@@ -34,11 +34,22 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("관리자 페이지를 생성한다.")
-    void admin() {
+    void adminPage() {
         RestAssured.given()
                 .accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .get("/admin")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("세팅 페이지를 생성한다.")
+    void settingPage() {
+        RestAssured.given()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when()
+                .get("/settings")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
