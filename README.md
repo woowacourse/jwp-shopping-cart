@@ -38,7 +38,8 @@ CREATE TABLE product
 
 - 상품 추가
     - [x] POST /admin/product
-    - [x] admin 페이지에서 상품을 추가한품다.
+    - [x] admin 페이지에서 상품을 추가한다.
+        - [x] 추가 성공 시 status created
     - [x] 상품 추가 요청을 유효성 검증한다.
         - [x] 이름이 공백일 수 없다.
         - [x] 가격이 0원 이상 이어야 한다.
@@ -47,6 +48,7 @@ CREATE TABLE product
 - 상품 조회
     - [x] GET /admin
     - [x] admin 페이지에서 상품을 보여준다.
+    - [x] admin.html 반환
 
 - 상품 수정
     - [x] PATCH /admin/product/id
@@ -61,3 +63,5 @@ CREATE TABLE product
 - 상품 삭제
     - [x] DELETE /admin/product/id
     - [x] admin 페이지에서 상품을 삭제한다.
+        - [x] 해당 id에 상품이 없을 시 status not found
+        - [x] delete 성공 시 status ok
