@@ -17,7 +17,7 @@ public class Product {
 	}
 
 	private void validate(final String name, final double price, final String image) {
-		if (name.isEmpty() || name.length() > 20) {
+		if (name.isBlank() || name.isEmpty() || name.length() > 20) {
 			throw new IllegalArgumentException("상품명은 1글자 이상 20글자 이하로 작성해주세요.");
 		}
 		if (price < 0) {
