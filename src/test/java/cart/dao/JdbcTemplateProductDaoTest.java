@@ -73,14 +73,25 @@ class JdbcTemplateProductDaoTest {
         final int productId = product.getId();
 
         final ProductEntity updateProduct = new ProductEntity(productId, "name2", 2000, "image2");
-        productDao.update(updateProduct);
+        final int updatedRowCount = productDao.update(updateProduct);
         final ProductEntity updatedProduct = productDao.findById(productId);
 
         assertSoftly(softly -> {
+            softly.assertThat(updatedRowCount).isEqualTo(1);
             softly.assertThat(updatedProduct.getName()).isEqualTo("name2");
             softly.assertThat(updatedProduct.getPrice()).isEqualTo(2000);
             softly.assertThat(updatedProduct.getImage()).isEqualTo("image2");
         });
+    }
+
+    @Test
+    void updateTest_nonExistProduct_nothingUpdated() {
+        int nonExistId = Integer.MAX_VALUE;
+
+        final ProductEntity product = new ProductEntity(nonExistId, "name", 1000, "image");
+        final int updatedRowCount = productDao.update(product);
+
+        assertThat(updatedRowCount).isZero();
     }
 
     @Test
