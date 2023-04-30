@@ -24,7 +24,7 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public long save(final Product product) {
+    public long add(final Product product) {
         final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(product);
         long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
 

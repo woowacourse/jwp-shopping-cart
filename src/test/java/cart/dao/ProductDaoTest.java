@@ -1,11 +1,6 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import cart.domain.product.Product;
-import java.sql.PreparedStatement;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +8,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+
+import java.sql.PreparedStatement;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 class ProductDaoTest {
@@ -31,7 +32,7 @@ class ProductDaoTest {
     @Test
     void shouldSaveProductWhenRequest() {
         final Product productToSave = Product.createWithoutId("changer", 10, "domain.com");
-        final long productId = productDao.save(productToSave);
+        final long productId = productDao.add(productToSave);
         final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
 
         final Product productFromDb = jdbcTemplate.queryForObject(sql,

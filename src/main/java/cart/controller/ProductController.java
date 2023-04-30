@@ -35,7 +35,7 @@ public final class ProductController {
                 modifyRequest.getPrice(),
                 modifyRequest.getImageUrl()
         );
-        final long id = productDao.save(product);
+        final long id = productDao.add(product);
         return ResponseEntity.created(new URI(String.format("/product/%d", id))).build();
     }
 
