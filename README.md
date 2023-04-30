@@ -4,14 +4,13 @@
 
 ### API 명세서
 
-| Method | URI         | Description |
-|--------|-------------|-------------|
-| GET    | /           | 상품 목록       |
-| GET    | /admin      | 어드민 페이지 목록  |
-| POST   | /admin      | 상품 추가       |
-| GET    | /admin/{id} | 상품 수정 페이지   |
-| PUT    | /admin/{id} | 상품 수정       |
-| DELETE | /admin/{id} | 상품 삭제       |
+| Method | URI                  | Description |
+|--------|----------------------|-------------|
+| GET    | /                    | 상품 목록       |
+| GET    | /admin               | 어드민 페이지 목록  |
+| POST   | /admin/products/     | 상품 추가       |
+| PUT    | /admin/products/{id} | 상품 수정       |
+| DELETE | /admin/products/{id} | 상품 삭제       |
 
 ### 기능 요구사항
 

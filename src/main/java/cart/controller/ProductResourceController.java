@@ -22,7 +22,7 @@ public class ProductResourceController {
         this.productService = productService;
     }
 
-    @PostMapping("/admin")
+    @PostMapping("/admin/products")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void createProduct(@RequestBody @Valid final ProductRequest productRequest) {
         final ProductDto productDto = new ProductDto(
@@ -34,13 +34,13 @@ public class ProductResourceController {
         productService.register(productDto);
     }
 
-    @PutMapping("/admin/{id}")
+    @PutMapping("/admin/products/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateProduct(@PathVariable final long id, final @RequestBody @Valid ProductRequest productRequest) {
         productService.updateProduct(id, new ProductDto(productRequest));
     }
 
-    @DeleteMapping("/admin/{id}")
+    @DeleteMapping("/admin/products/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteProduct(@PathVariable final long id) {
         productService.deleteProduct(id);

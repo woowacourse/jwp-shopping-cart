@@ -50,7 +50,7 @@ public class ProductViewControllerTest {
                 .body(new ProductRequest("족발", 5000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin")
+                .post("/admin/products")
                 .then()
                 .statusCode(201);
     }
@@ -63,13 +63,13 @@ public class ProductViewControllerTest {
                 .body(new ProductRequest("족발", 5000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin");
+                .post("/admin/products");
 
         RestAssured.given()
                 .body(new ProductRequest("피자", 3000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .put("/admin/" + id)
+                .put("/admin/products/" + id)
                 .then()
                 .statusCode(200);
     }
@@ -82,11 +82,11 @@ public class ProductViewControllerTest {
                 .body(new ProductRequest("족발", 5000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin");
+                .post("/admin/products");
 
         RestAssured.given()
                 .when()
-                .delete("/admin/" + id)
+                .delete("/admin/products/" + id)
                 .then()
                 .statusCode(200);
     }
@@ -99,7 +99,7 @@ public class ProductViewControllerTest {
                 .body(new ProductRequest(name, 1000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin")
+                .post("/admin/products")
                 .then()
                 .assertThat()
                 .statusCode(400);
@@ -112,7 +112,7 @@ public class ProductViewControllerTest {
                 .body(new ProductRequest("상품 이름", price, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin")
+                .post("/admin/products")
                 .then()
                 .assertThat()
                 .statusCode(400);
@@ -126,7 +126,7 @@ public class ProductViewControllerTest {
                 .body(new ProductRequest("상품 이름", 1000, imageUrl))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin")
+                .post("/admin/products")
                 .then()
                 .assertThat()
                 .statusCode(400);
@@ -141,7 +141,7 @@ public class ProductViewControllerTest {
                 .body(new ProductRequest("상품 이름", 1000, url))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin")
+                .post("/admin/products")
                 .then()
                 .assertThat()
                 .statusCode(400);
