@@ -10,7 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackageClasses = CartProductController.class)
 public class ExceptionControllerAdvice {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

@@ -82,6 +82,7 @@ const deleteProduct = (id) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data.message)
         console.error(error);
     });
 };
