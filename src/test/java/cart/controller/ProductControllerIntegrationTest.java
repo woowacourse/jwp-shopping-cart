@@ -22,7 +22,7 @@ import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
-class AdminControllerIntegrationTest {
+class ProductControllerIntegrationTest {
 
     @LocalServerPort
     int port;

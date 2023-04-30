@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.admin;
 
 import cart.dto.ProductModifyRequest;
 import cart.service.ProductService;
@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class ProductController {
 
     private final ProductService productService;
 
-    public AdminController(ProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 

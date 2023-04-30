@@ -34,7 +34,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 @WebMvcTest
-public class AdminControllerUnitTest {
+public class ProductControllerUnitTest {
 
     private final ProductResponse cuteSeonghaDoll =
             new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
