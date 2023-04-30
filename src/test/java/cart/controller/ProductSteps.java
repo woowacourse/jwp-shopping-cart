@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductRequest;
+import cart.dto.ProductSaveRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -25,7 +25,7 @@ abstract class ProductSteps {
     }
 
     ExtractableResponse<Response> 상품을_저장한다(final String name, final int price, final String img) {
-        final ProductRequest request = new ProductRequest(name, price, img);
+        final ProductSaveRequest request = new ProductSaveRequest(name, price, img);
 
         return given()
                 .body(request)
@@ -35,7 +35,7 @@ abstract class ProductSteps {
                 .extract();
     }
 
-    ExtractableResponse<Response> 상품을_수정한다(final ProductRequest request, final Long id) {
+    ExtractableResponse<Response> 상품을_수정한다(final ProductSaveRequest request, final Long id) {
         return given()
                 .body(request)
                 .when()

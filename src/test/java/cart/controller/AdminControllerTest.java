@@ -1,9 +1,6 @@
 package cart.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
-import cart.dto.ProductRequest;
+import cart.dto.ProductSaveRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +8,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
 @Sql("productTruncater.sql")
@@ -98,7 +98,7 @@ class AdminControllerTest extends ProductSteps {
         @Test
         void 상품_수정에_성공한다() {
             // given
-            final ProductRequest request = new ProductRequest("샐러드", 20000, "changedImg");
+            final ProductSaveRequest request = new ProductSaveRequest("샐러드", 20000, "changedImg");
 
             // when
             final ExtractableResponse<Response> response = 상품을_수정한다(request, 1L);
@@ -110,7 +110,7 @@ class AdminControllerTest extends ProductSteps {
         @Test
         void 이름의_길이가_20자_초과이면_오류가_발생한다() {
             // when
-            final ProductRequest request = new ProductRequest("012345678901234567891", 10000, "imgUrl");
+            final ProductSaveRequest request = new ProductSaveRequest("012345678901234567891", 10000, "imgUrl");
             final ExtractableResponse<Response> response = 상품을_수정한다(request, 1L);
 
             // then
@@ -123,7 +123,7 @@ class AdminControllerTest extends ProductSteps {
         @Test
         void 이름이_없으면_오류가_발생한다() {
             // when
-            final ProductRequest request = new ProductRequest("", 10000, "imgUrl");
+            final ProductSaveRequest request = new ProductSaveRequest("", 10000, "imgUrl");
             final ExtractableResponse<Response> response = 상품을_수정한다(request, 1L);
 
             // then
@@ -136,10 +136,10 @@ class AdminControllerTest extends ProductSteps {
         @Test
         void 가격의_범위가_맞지_않으면_오류가_발생한다() {
             // when
-            final ProductRequest productUnder10 = new ProductRequest("샐러드", 9, "imgUrl");
+            final ProductSaveRequest productUnder10 = new ProductSaveRequest("샐러드", 9, "imgUrl");
             final ExtractableResponse<Response> saveProductUnder10 = 상품을_수정한다(productUnder10, 1L);
 
-            final ProductRequest productUnder1000000 = new ProductRequest("샐러드", 9, "imgUrl");
+            final ProductSaveRequest productUnder1000000 = new ProductSaveRequest("샐러드", 9, "imgUrl");
             final ExtractableResponse<Response> saveProductOver1000000 = 상품을_수정한다(productUnder1000000, 1L);
 
             // then
@@ -156,7 +156,7 @@ class AdminControllerTest extends ProductSteps {
         @Test
         void 이미지가_없으면_저장에_실패한다() {
             // when
-            final ProductRequest request = new ProductRequest("치킨", 10000, "");
+            final ProductSaveRequest request = new ProductSaveRequest("치킨", 10000, "");
             final ExtractableResponse<Response> response = 상품을_수정한다(request, 1L);
 
             // then

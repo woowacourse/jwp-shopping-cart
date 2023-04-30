@@ -1,15 +1,10 @@
 package cart.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import cart.dao.JdbcProductDao;
 import cart.dao.ProductDao;
-import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import java.util.List;
-import java.util.NoSuchElementException;
+import cart.dto.ProductSaveRequest;
+import cart.dto.ProductUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,6 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Transactional
@@ -84,7 +86,7 @@ class ProductServiceTest {
         void id가_존재하면_수정한다() {
             // given
             final Long id = saveProduct("샐러드", 20000);
-            final ProductRequest request = new ProductRequest("치킨", 10000, "changedImg");
+            final ProductUpdateRequest request = new ProductUpdateRequest("치킨", 10000, "changedImg");
 
             // when
             productService.update(id, request);
@@ -101,7 +103,7 @@ class ProductServiceTest {
         @Test
         void id가_존재하지_않으면_수정되지_않는다() {
             // given
-            final ProductRequest request = new ProductRequest("치킨", 10000, "changedImg");
+            final ProductUpdateRequest request = new ProductUpdateRequest("치킨", 10000, "changedImg");
             final long noneSavedId = 1000L;
 
             // when, then
@@ -111,7 +113,7 @@ class ProductServiceTest {
     }
 
     private Long saveProduct(final String name, final int price) {
-        final ProductRequest request = new ProductRequest(name, price, "img");
+        final ProductSaveRequest request = new ProductSaveRequest(name, price, "img");
         return productService.save(request);
     }
 }

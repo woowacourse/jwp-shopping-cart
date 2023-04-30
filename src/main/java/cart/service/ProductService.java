@@ -2,12 +2,14 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.dao.entity.Product;
-import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.dto.ProductSaveRequest;
+import cart.dto.ProductUpdateRequest;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
@@ -22,8 +24,8 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public Long save(final ProductRequest productRequest) {
-        final Product product = productMapper.mapFrom(productRequest);
+    public Long save(final ProductSaveRequest productSaveRequest) {
+        final Product product = productMapper.mapFrom(productSaveRequest);
         return productDao.save(product);
     }
 
@@ -40,7 +42,7 @@ public class ProductService {
         validateResult(affectedRows);
     }
 
-    public void update(final Long id, final ProductRequest request) {
+    public void update(final Long id, final ProductUpdateRequest request) {
         final int affectedRows = productDao.update(id, productMapper.mapFrom(request));
 
         validateResult(affectedRows);

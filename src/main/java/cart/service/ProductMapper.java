@@ -1,8 +1,9 @@
 package cart.service;
 
 import cart.dao.entity.Product;
-import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
+import cart.dto.ProductSaveRequest;
+import cart.dto.ProductUpdateRequest;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,11 +12,11 @@ public class ProductMapper {
     ProductMapper() {
     }
 
-    public Product mapFrom(final ProductRequest productRequest) {
+    public Product mapFrom(final ProductSaveRequest productSaveRequest) {
         return new Product(
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImgUrl()
+                productSaveRequest.getName(),
+                productSaveRequest.getPrice(),
+                productSaveRequest.getImgUrl()
         );
     }
 
@@ -25,5 +26,13 @@ public class ProductMapper {
                 product.getName(),
                 product.getPrice(),
                 product.getImgUrl());
+    }
+
+    public Product mapFrom(final ProductUpdateRequest request) {
+        return new Product(
+                request.getName(),
+                request.getPrice(),
+                request.getImgUrl()
+        );
     }
 }
