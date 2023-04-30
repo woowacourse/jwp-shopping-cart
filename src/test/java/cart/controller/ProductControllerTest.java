@@ -31,20 +31,20 @@ class ProductControllerTest {
     @Test
     void createProduct() throws Exception {
         // given
-        ProductRequest productRequest = new ProductRequest("치킨", "image.url", 10000);
+        ProductRequest productRequest = new ProductRequest("치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
 
         // when, then
         mockMvc.perform(post("/products")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(productRequest)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @DisplayName("/products/{productId}으로 PUT 요청이 정상적으로 작동한다.")
     @Test
     void modifyProduct() throws Exception {
         // given
-        ProductRequest productRequest = new ProductRequest("치킨", "image.url", 10000);
+        ProductRequest productRequest = new ProductRequest("치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
 
         // when, then
         mockMvc.perform(put("/products/{productId}", "1")
@@ -58,7 +58,7 @@ class ProductControllerTest {
     void removeProduct() throws Exception {
         // when, then
         mockMvc.perform(delete("/products/{productId}", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @DisplayName("API요청 시 이름이 공백이 들어온 경우 400")
@@ -66,7 +66,7 @@ class ProductControllerTest {
     @ValueSource(strings = {"", "  ", "     "})
     void validateRequestName(String inputName) throws Exception {
         // given
-        ProductRequest productRequest = new ProductRequest(inputName, "image.url", 10000);
+        ProductRequest productRequest = new ProductRequest(inputName, "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
 
         // when, then
         mockMvc.perform(post("/products")
@@ -80,7 +80,7 @@ class ProductControllerTest {
     @ValueSource(ints = {-1, 100_000_001})
     void validateRequestPrice(int inputPrice) throws Exception {
         // given
-        ProductRequest productRequest = new ProductRequest("치킨", "image.url", inputPrice);
+        ProductRequest productRequest = new ProductRequest("치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", inputPrice);
 
         // when, then
         mockMvc.perform(post("/products")
