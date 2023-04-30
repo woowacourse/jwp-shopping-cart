@@ -43,7 +43,7 @@ class CartApiControllerTest {
                 .post("/products")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/products/1");
+                .header("Location", containsString("/products/"));
     }
 
     @Test

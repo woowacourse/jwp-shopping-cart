@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.product.ProductEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -50,18 +51,21 @@ public class ProductDao {
 
     public Optional<ProductEntity> findById(final Long id) {
         final String sql = "SELECT id, name, image_url, price, description FROM product WHERE id = ?";
-        final ProductEntity productEntity = namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(
-                sql,
-                (rs, rowNum) -> new ProductEntity(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getString("image_url"),
-                        rs.getInt("price"),
-                        rs.getString("description")
-                ),
-                id
-        );
-        return Optional.ofNullable(productEntity);
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(
+                    sql,
+                    (rs, rowNum) -> new ProductEntity(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getString("image_url"),
+                            rs.getInt("price"),
+                            rs.getString("description")
+                    ),
+                    id
+            ));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void update(final ProductEntity productEntity) {

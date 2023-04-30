@@ -1,10 +1,12 @@
 package cart.dao;
 
 import cart.entity.MemberEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -22,5 +24,18 @@ public class MemberDao {
                 rs.getString("email"),
                 rs.getString("password")
         ));
+    }
+
+    public Optional<MemberEntity> findByEmailAndPassword(final String email, final String password) {
+        final String sql = "SELECT id, email, password FROM member WHERE email = ? and password = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new MemberEntity(
+                    rs.getLong("id"),
+                    rs.getString("email"),
+                    rs.getString("password")
+            ), email, password));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }
