@@ -148,3 +148,5 @@ src/main/resources/data.sql
     - 생성, 조회, 삭제
 - 멤버
     - 조회
+- 카트
+    - 조회
