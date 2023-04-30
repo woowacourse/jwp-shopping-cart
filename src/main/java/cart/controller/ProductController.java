@@ -3,13 +3,12 @@ package cart.controller;
 import cart.controller.dto.ProductRequest;
 import cart.dao.ProductDao;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 
-@Controller
+@RestController
 @RequestMapping("/products")
 public class ProductController {
 
