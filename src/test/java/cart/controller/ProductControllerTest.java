@@ -18,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.net.URISyntaxException;
+
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,10 +34,14 @@ class ProductControllerTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private ProductController productController;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws URISyntaxException {
         RestAssured.port = port;
         jdbcTemplate.execute("TRUNCATE TABLE product");
+        productController.saveProduct(new ModifyRequest("망고", 1000, "domains.com"));
     }
 
     @DisplayName("POST /admin/product 요청 시")
@@ -122,6 +128,20 @@ class ProductControllerTest {
                     .statusCode(HttpStatus.SC_CREATED);
         }
 
+        @DisplayName("상품이 존재하지 않을 경우 Status BadRequest 반환")
+        @Test
+        void shouldResponseStatusBadRequestWhenRequestPutToNotExistId() throws JsonProcessingException {
+            final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
+            final String requestJson = objectMapper.writeValueAsString(request);
+            given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(requestJson)
+                    .when()
+                    .put(String.format("/admin/product/%d", Long.MAX_VALUE))
+                    .then().log().all()
+                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+        }
+
         @DisplayName("이름이 공백인 경우 예외가 발생한다.")
         @ParameterizedTest(name = "비어있는 값 (\"{0}\")")
         @ValueSource(strings = {" "})
@@ -171,13 +191,28 @@ class ProductControllerTest {
 
     }
 
-    @DisplayName("DELETE /admin/product/{id} 요청 시 Status OK 반환")
-    @Test
-    void shouldResponseStatusOkWhenRequestDeleteToAdminProductId() {
-        given().log().all()
-                .when()
-                .delete("/admin/product/1")
-                .then().log().all()
-                .statusCode(HttpStatus.SC_OK);
+    @DisplayName("DELETE /admin/product/{id} 요청 시")
+    @Nested
+    class DeleteAdminProduct {
+
+        @DisplayName("Product가 있을 경우 Status OK 반환")
+        @Test
+        void shouldResponseStatusOkWhenRequestDeleteToAdminProductId() throws JsonProcessingException {
+            given().log().all()
+                    .when()
+                    .delete("/admin/product/1")
+                    .then().log().all()
+                    .statusCode(HttpStatus.SC_OK);
+        }
+
+        @DisplayName("Product가 없을 경우 Status BadRequest 반환")
+        @Test
+        void shouldResponseStatusBadRequestWhenRequestProductNotExists() {
+            given().log().all()
+                    .when()
+                    .delete(String.format("/admin/product/$d", Long.MAX_VALUE))
+                    .then().log().all()
+                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+        }
     }
 }

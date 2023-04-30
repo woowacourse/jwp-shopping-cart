@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.dao.exception.ProductNotFoundException;
 import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -45,17 +46,26 @@ public class ProductDao {
 
     public void update(final Product productToUpdate) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(
+        final int affectedRow = jdbcTemplate.update(
                 sql,
                 productToUpdate.getName(),
                 productToUpdate.getPrice(),
                 productToUpdate.getImageUrl(),
                 productToUpdate.getId()
         );
+
+        throwProdcutNotFoundException(affectedRow);
     }
 
     public void deleteById(final long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        final int affectedRow = jdbcTemplate.update(sql, id);
+        throwProdcutNotFoundException(affectedRow);
+    }
+
+    private void throwProdcutNotFoundException(final int affectedRow) {
+        if (affectedRow == 0) {
+            throw new ProductNotFoundException();
+        }
     }
 }
