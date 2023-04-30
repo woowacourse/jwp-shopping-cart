@@ -5,7 +5,6 @@ import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.entity.ProductEntity;
-import cart.exception.DBException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,11 +19,9 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public ProductResponse create(ProductRequest productRequest) {
+    public Long create(ProductRequest productRequest) {
         Product product = Product.from(productRequest);
-        ProductEntity created = productDao.save(product)
-                .orElseThrow(() -> new DBException("데이터가 정상적으로 저장되지 않았습니다."));
-        return ProductResponse.from(created);
+        return productDao.save(product);
     }
 
     public List<ProductResponse> findAll() {

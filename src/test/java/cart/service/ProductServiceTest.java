@@ -4,7 +4,6 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import cart.entity.ProductEntity;
 import cart.fixture.ProductFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static cart.fixture.ProductFixture.COFFEE;
 import static cart.fixture.ProductFixture.RAMYEON;
@@ -36,13 +34,11 @@ class ProductServiceTest {
     @Test
     void 상품을_저장한다() {
         ProductRequest productRequest = new ProductRequest("image", "name", 1000);
-        ProductResponse productResponse = productService.create(productRequest);
+        Long productId = productService.create(productRequest);
 
-        org.junit.jupiter.api.Assertions.assertAll(
-                () -> assertThat(productResponse.getName()).isEqualTo(productRequest.getName()),
-                () -> assertThat(productResponse.getPrice()).isEqualTo(productRequest.getPrice()),
-                () -> assertThat(productResponse.getImage()).isEqualTo(productRequest.getImage())
-        );
+        List<ProductResponse> products = productService.findAll();
+
+        assertThat(products).hasSize(1);
     }
 
     @Nested
@@ -90,9 +86,7 @@ class ProductServiceTest {
     @Test
     void 상품정보를_수정한다() {
         Product ramyeon = RAMYEON;
-        Optional<ProductEntity> saved = productDao.save(ramyeon);
-        ProductEntity product = saved.get();
-        Long productId = product.getId();
+        Long productId = productDao.save(ramyeon);
 
         ProductRequest updateRequest = new ProductRequest("expectedUrl", "expected", 1000);
 
@@ -118,8 +112,7 @@ class ProductServiceTest {
 
     @Test
     void 상품을_삭제한다() {
-        ProductEntity product = productDao.save(COFFEE).get();
-        Long productId = product.getId();
+        Long productId = productDao.save(COFFEE);
 
         Assertions.assertDoesNotThrow(() -> productService.deleteById(productId));
     }

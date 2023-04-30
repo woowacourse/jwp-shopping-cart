@@ -34,10 +34,9 @@ public class H2ProductDao implements ProductDao {
             );
 
     @Override
-    public Optional<ProductEntity> save(Product product) {
+    public Long save(Product product) {
         BeanPropertySqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
-        long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
-        return findById(id);
+        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
     @Override

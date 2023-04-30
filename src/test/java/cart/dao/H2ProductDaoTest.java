@@ -32,15 +32,15 @@ class H2ProductDaoTest {
     @Test
     void 상품이_정상적으로_저장된다() {
         Product product = new Product("pizza", "url", BigDecimal.valueOf(10000));
-        ProductEntity created = productDao.save(product).orElse(null);
-        assertThat(created).isNotNull();
+        Long productId = productDao.save(product);
+        assertThat(productId).isPositive();
     }
 
     @Test
     void 상품_데이터_정합성_검증() {
         Product product = new Product("pizza", "url", BigDecimal.valueOf(10000));
-        ProductEntity created = productDao.save(product).orElse(null);
-
+        Long productId = productDao.save(product);
+        ProductEntity created = productDao.findById(productId).orElse(null);
         Assertions.assertAll(
                 () -> assertThat(created).isNotNull(),
                 () -> {
@@ -69,9 +69,9 @@ class H2ProductDaoTest {
     @Test
     void 상품_정보_업데이트() {
         Product ramyeon = RAMYEON;
-        Optional<ProductEntity> saved = productDao.save(ramyeon);
-        ProductEntity product = saved.get();
-        Long productId = product.getId();
+        Long productId = productDao.save(ramyeon);
+        ProductEntity product = productDao.findById(productId).get();
+
         ProductRequest updateRequest = new ProductRequest("expectedUrl", "expected", 1000);
 
         product.replace(updateRequest);
@@ -88,8 +88,7 @@ class H2ProductDaoTest {
 
     @Test
     void 상품_삭제() {
-        ProductEntity product = productDao.save(COFFEE).get();
-        Long productId = product.getId();
+        Long productId = productDao.save(COFFEE);
 
         productDao.deleteById(productId);
         Optional<ProductEntity> result = productDao.findById(productId);
