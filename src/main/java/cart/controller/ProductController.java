@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dto.response.CategoryResponseDto;
 import cart.dto.response.ProductResponseDto;
+import cart.service.CategoryService;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +14,11 @@ import java.util.List;
 public final class ProductController {
 
     private final ProductService productService;
+    private final CategoryService categoryService;
 
-    public ProductController(final ProductService productService) {
+    public ProductController(final ProductService productService, CategoryService categoryService) {
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -29,7 +32,7 @@ public final class ProductController {
     @GetMapping("/admin")
     public ModelAndView adminPage(final ModelAndView modelAndView) {
         final List<ProductResponseDto> productResponseDtos = productService.findProducts();
-        final List<CategoryResponseDto> categories = productService.findCategories();
+        final List<CategoryResponseDto> categories = categoryService.findCategories();
         modelAndView.addObject("products", productResponseDtos);
         modelAndView.addObject("categories", categories);
         modelAndView.setViewName("admin");

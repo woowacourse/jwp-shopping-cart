@@ -4,7 +4,6 @@ import cart.dao.CategoryDao;
 import cart.dao.ProductCategoryDao;
 import cart.dao.ProductDao;
 import cart.dto.request.ProductRequestDto;
-import cart.dto.response.CategoryResponseDto;
 import cart.dto.response.ProductResponseDto;
 import cart.entity.CategoryEntity;
 import cart.entity.ProductCategoryEntity;
@@ -66,13 +65,6 @@ public class ProductService {
         return productCategoryDao.findAll(product.getId())
                 .stream()
                 .map(ProductCategoryEntity::getCategoryId)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<CategoryResponseDto> findCategories() {
-        return categoryDao.findAll().stream()
-                .map(CategoryResponseDto::from)
                 .collect(Collectors.toList());
     }
 
