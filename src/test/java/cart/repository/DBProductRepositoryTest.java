@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
+@Sql({"/testSchema.sql"})
 class DBProductRepositoryTest {
 
     @Autowired
@@ -28,14 +30,6 @@ class DBProductRepositoryTest {
     @BeforeEach
     void setUp() {
         productRepository = new DBProductRepository(jdbcTemplate);
-
-        jdbcTemplate.execute("DROP TABLE product IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE product ("
-                + "    id      BIGINT            NOT NULL    AUTO_INCREMENT,"
-                + "    name    VARCHAR(255)    NOT NULL,"
-                + "    imgURL  VARCHAR(8000)    NOT NULL,"
-                + "    price   INT             NOT NULL,"
-                + "    PRIMARY KEY (id))");
 
         Product product1 = new Product("name1", "url1", 1000);
         Product product2 = new Product("name2", "url2", 2000);
