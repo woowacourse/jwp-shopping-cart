@@ -75,10 +75,10 @@
 
 ## 사용자 설정 페이지 연동
 
-- [ ] 사용자로부터 `/setting`에 대해 GET 요청을 받으면 setting.html 페이지를 반환한다.
-- [ ] 사용자에 대한 데이터를 담을 클래스를 만든다.
+- [x] 사용자로부터 `/settings`에 대해 GET 요청을 받으면 settings.html 페이지를 반환한다.
+- [x] 사용자에 대한 데이터를 담을 클래스를 만든다.
     ```
-  GET /setting HTTP/1.1
+  GET /settings HTTP/1.1
   ```
 
 ### 사용자 CRUD API 작성
