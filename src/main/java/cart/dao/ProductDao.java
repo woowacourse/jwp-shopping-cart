@@ -1,12 +1,13 @@
 package cart.dao;
 
-import java.sql.PreparedStatement;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+
+import java.sql.PreparedStatement;
+import java.util.List;
 
 @Component
 public class ProductDao {
@@ -33,13 +34,6 @@ public class ProductDao {
                 ));
     }
 
-    public int countById(Long id) {
-        String findAllQuery = "SELECT count(*) FROM product WHERE product_id = ?";
-
-        return jdbcTemplate.queryForObject(findAllQuery, Integer.class, id);
-    }
-
-
     public Long insert(ProductEntity productEntity) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(productEntity);
 
@@ -52,10 +46,10 @@ public class ProductDao {
         jdbcTemplate.update(deleteByIdQuery, id);
     }
 
-    public ProductEntity update(ProductEntity productEntity) {
+    public int update(ProductEntity productEntity) {
         String updateProductQuery = "UPDATE product SET name = ?, price = ?, category = ?, image_url =? WHERE product_id = ?";
 
-        int update = jdbcTemplate.update(con -> {
+        int countOfUpdate = jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(updateProductQuery);
 
             preparedStatement.setString(1, productEntity.getName());
@@ -66,6 +60,6 @@ public class ProductDao {
             return preparedStatement;
         });
 
-        return productEntity;
+        return countOfUpdate;
     }
 }

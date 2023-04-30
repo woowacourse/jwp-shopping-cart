@@ -1,13 +1,7 @@
 package cart.domain.product.service;
 
-import cart.domain.product.ImageUrl;
-import cart.domain.product.Product;
-import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductName;
-import cart.domain.product.ProductPrice;
-import cart.domain.product.ProductRepository;
+import cart.domain.product.*;
 import cart.domain.product.service.dto.ProductCreationDto;
-import cart.domain.product.service.dto.ProductDto;
 import cart.domain.product.service.dto.ProductModificationDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +33,9 @@ public class AdminService {
     }
 
     @Transactional
-    public ProductDto update(ProductModificationDto productDto) {
+    public int update(ProductModificationDto productDto) {
         Product product = productDto.toProduct();
-        productRepository.update(product);
 
-        return new ProductDto(product);
+        return productRepository.update(product);
     }
 }

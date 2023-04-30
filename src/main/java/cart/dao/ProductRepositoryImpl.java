@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.domain.product.*;
-import cart.exception.GlobalException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -43,26 +42,13 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void deleteById(Long id) {
-        validateExistProduct(id);
-
         productDao.deleteById(id);
     }
 
     @Override
-    public Product update(Product product) {
+    public int update(Product product) {
         ProductEntity productEntity = new ProductEntity(product);
 
-        validateExistProduct(product.getProductId());
-        productDao.update(productEntity);
-
-        return product;
-    }
-
-    private void validateExistProduct(Long id) {
-        int count = productDao.countById(id);
-
-        if (count < 1) {
-            throw new GlobalException("존재하지 않는 자원입니다.");
-        }
+        return productDao.update(productEntity);
     }
 }

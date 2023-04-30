@@ -3,6 +3,7 @@ package cart.web.controller;
 import cart.domain.product.service.AdminService;
 import cart.domain.product.service.dto.ProductCreationDto;
 import cart.domain.product.service.dto.ProductModificationDto;
+import cart.exception.GlobalException;
 import cart.web.controller.dto.request.ProductCreationRequest;
 import cart.web.controller.dto.request.ProductModificationRequest;
 import cart.web.controller.dto.response.ProductCreationResponse;
@@ -61,7 +62,11 @@ public class AdminRestController {
                 request.getImageUrl()
         );
 
-        adminService.update(productModificationDto);
+        int countOfUpdate = adminService.update(productModificationDto);
+
+        if (countOfUpdate < 1) {
+            throw new GlobalException("존재하지 않는 리소스입니다.");
+        }
 
         return ResponseEntity
                 .ok(new ProductModificationResponse(request));

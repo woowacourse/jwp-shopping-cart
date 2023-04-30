@@ -1,7 +1,6 @@
 package cart.web.controller;
 
 import cart.domain.product.service.AdminService;
-import cart.domain.product.service.dto.ProductDto;
 import cart.web.controller.dto.request.ProductCreationRequest;
 import cart.web.controller.dto.request.ProductModificationRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -77,9 +76,7 @@ class AdminRestControllerTest {
     void updateProduct() {
         ProductModificationRequest request =
                 new ProductModificationRequest(1L, "Chicken", 18_000, "FOOD", "image.com");
-        ProductDto response =
-                new ProductDto(1L, "Chicken", 18_000, "FOOD", "image.com");
-        when(adminService.update(any())).thenReturn(response);
+        when(adminService.update(any())).thenReturn(1);
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
