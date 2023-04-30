@@ -50,7 +50,7 @@ public class ProductDao {
         return namedParameterJdbcTemplate.query(sql, rowMapper);
     }
     
-    public long save(final Product product) {
+    public Long save(final Product product) {
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }

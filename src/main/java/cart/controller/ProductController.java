@@ -1,29 +1,35 @@
 package cart.controller;
 
-import cart.dto.ProductResponse;
+import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/products")
 public class ProductController {
     private final ProductService productService;
     
-    @GetMapping
-    public ModelAndView findAll(ModelAndView modelAndView) {
-        modelAndView.setViewName("index");
-        modelAndView.addObject("products", productService.findAll());
-        return modelAndView;
+    @PostMapping
+    public ResponseEntity<Void> save(@RequestBody @Valid ProductRequest productRequest) {
+        productService.save(productRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
-    @GetMapping("/products")
-    public ResponseEntity<List<ProductResponse>> getProducts() {
-        return ResponseEntity.ok(productService.findAll());
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid ProductRequest productRequest) {
+        productService.update(id, productRequest);
+        return ResponseEntity.noContent().build();
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

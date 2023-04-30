@@ -25,32 +25,30 @@ class ProductServiceTest {
     private ProductDao productDao;
     @Autowired
     private ProductService productService;
-    
+
     @Test
     void 모든_상품_목록을_가져온다() {
         final Product firstProduct = new Product(1L, "홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 1_000_000_000);
         final Product secondProduct = new Product(2L, "아벨", "https://ca.slack-edge.com/TFELTJB7V-U04LMNLQ78X-a7ef923d5391-512", 1_000_000_000);
         given(productDao.findAll()).willReturn(List.of(firstProduct, secondProduct));
-        
+
         final ProductResponse firstProductResponse = ProductResponse.from(firstProduct);
         final ProductResponse secondProductResponse = ProductResponse.from(secondProduct);
         assertThat(productService.findAll()).containsExactly(firstProductResponse, secondProductResponse);
     }
-    
+
     @Test
     void 상품을_저장한다() {
-        final ProductRequest productRequest = new ProductRequest("홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 1_000_000_000);
         assertThatNoException()
-                .isThrownBy(() -> productService.save(productRequest));
+                .isThrownBy(() -> productService.save(new ProductRequest()));
     }
-    
+
     @Test
     void 상품을_수정한다() {
-        final ProductRequest productRequest = new ProductRequest("홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 1_000_000_000);
         assertThatNoException()
-                .isThrownBy(() -> productService.update(1L, productRequest));
+                .isThrownBy(() -> productService.update(1L, new ProductRequest()));
     }
-    
+
     @Test
     void 상품을_삭제한다() {
         assertThatNoException()
