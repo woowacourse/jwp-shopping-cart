@@ -1,15 +1,11 @@
 package cart.dao;
 
-import cart.domain.product.ImageUrl;
-import cart.domain.product.Product;
-import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductName;
-import cart.domain.product.ProductPrice;
-import cart.domain.product.ProductRepository;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+import cart.domain.product.*;
+import cart.exception.GlobalException;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
@@ -66,7 +62,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         int count = productDao.countById(id);
 
         if (count < 1) {
-            throw new NoSuchElementException();
+            throw new GlobalException("존재하지 않는 자원입니다.");
         }
     }
 }
