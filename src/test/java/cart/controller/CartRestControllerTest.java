@@ -15,7 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -90,5 +92,18 @@ class CartRestControllerTest {
                         jsonPath("$.[1].productPrice").value(40000),
                         jsonPath("$.[1].productCategory").value("WESTERN")
                 );
+    }
+
+    @Test
+    @DisplayName("사용자의 장바구니 상품을 제거한다.")
+    void deleteCart() throws Exception {
+        // given
+        doNothing().when(cartService).deleteCart(any(), any(), any());
+
+        // when, then
+        mockMvc.perform(delete("/cart/{targetMemberId}/{productId}", 1L, 1L)
+                        .header("Authorization", authorization)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
 }

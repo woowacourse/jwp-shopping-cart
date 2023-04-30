@@ -77,6 +77,24 @@ public class CartIntegrationTest {
                 .body("size()", is(1));
     }
 
+    @Test
+    @DisplayName("사용자의 장바구니 상품을 제거한다.")
+    @Sql("classpath:init.sql")
+    void deleteCart() {
+        // given
+        addSampleMember();
+        addSampleProduct();
+        addSampleCart();
+
+        // when, then
+        given()
+                .header("Authorization", authorization)
+                .when()
+                .delete("/cart/{targetMemberId}/{productId}", 1L, 1L)
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
     private void addSampleMember() {
         final MemberDto journey = new MemberDto(1L, "journey@gmail.com", "password", "져니", "010-1234-5678");
         given()
