@@ -63,7 +63,7 @@ class ProductDaoTest {
     @Test
     void 상품_데이터_수정() {
         final Long id = 2L;
-        final Product newProduct = new Product(id, "new salad", 3000, "url");
+        final Product newProduct = new Product(id, "new salad", 3000, "https://salad.com");
 
         productDao.update(newProduct);
         final Product foundProduct = productDao.findById(id);
@@ -76,7 +76,7 @@ class ProductDaoTest {
 
     @Test
     void 존재하지_않는_상품_수정시_예외_발생() {
-        final Product notExistProduct = new Product(3L, "커피", 2800, "매머드 커피");
+        final Product notExistProduct = new Product(3L, "커피", 2800, "https://coffee.com");
 
         productDao.update(notExistProduct);
     }

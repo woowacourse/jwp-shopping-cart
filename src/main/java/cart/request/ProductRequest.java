@@ -1,38 +1,30 @@
 package cart.request;
 
-import javax.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
-import org.hibernate.validator.constraints.URL;
+import cart.domain.ImageUrl;
+import cart.domain.Name;
+import cart.domain.Price;
 
 public class ProductRequest {
 
-    @NotBlank(message = "상품의 이름을 입력해주세요.")
-    private final String name;
-
-    @Range(min = 0, max = 100_000_000, message = "0원 이상 1억 이하의 가격을 입력해주세요.")
-    private final int price;
-
-    @URL(protocol = "https", message = "https로 시작하는 URL 주소를 사용해주세요.")
-    @Length(max = 2083)
-    @NotBlank(message = "상품의 사진 url을 입력해주세요.")
-    private final String imageUrl;
+    private final Name name;
+    private final Price price;
+    private final ImageUrl imageUrl;
 
     public ProductRequest(final String name, final int price, final String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.name = new Name(name);
+        this.price = new Price(price);
+        this.imageUrl = new ImageUrl(imageUrl);
     }
 
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     public int getPrice() {
-        return price;
+        return price.getValue();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl.getValue();
     }
 }

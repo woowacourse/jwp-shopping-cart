@@ -51,7 +51,8 @@ class ProductServiceTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"applePizza:10000:사과피자 이미지", "salmonSalad:20000:연어 샐러드 이미지"}, delimiter = ':')
+    @CsvSource(value = {"applePizza:10000:https://apple.pizza", "salmonSalad:20000:https://salmon.salad"},
+            delimiter = ':')
     void 상품_등록(final String name, final int price, final String imageUrl) {
         final long expectedId = 3L;
         final Product savedProduct = productService.register(new ProductDto(name, price, imageUrl));
@@ -60,7 +61,8 @@ class ProductServiceTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"1:applePizza:10000:사과피자 이미지", "2:salmonSalad:20000:연어 샐러드 이미지"}, delimiter = ':')
+    @CsvSource(value = {"1:applePizza:10000:https://apple.pizza",
+            "2:salmonSalad:20000:https://salmon.salad"}, delimiter = ':')
     void 상품_수정(final long id, final String newName, final int newPrice, final String newImageUrl) {
         productService.updateProduct(id, new ProductDto(newName, newPrice, newImageUrl));
 

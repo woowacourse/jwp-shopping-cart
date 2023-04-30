@@ -3,6 +3,7 @@ package cart.controller;
 import cart.request.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -95,41 +96,35 @@ public class ProductViewControllerTest {
     @ValueSource(strings = {"", " "})
     @NullSource
     void 상품의_이름에_빈값_널_공백이_들어가면_예외_발생(final String name) {
-        RestAssured.given()
-                .body(new ProductRequest(name, 1000, "https://image.com"))
-                .contentType(ContentType.JSON)
-                .when()
-                .post("/admin/products")
-                .then()
-                .assertThat()
-                .statusCode(400);
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    new ProductRequest(name, 1234, "https://image.url");
+                }
+        );
     }
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 100_000_001})
     void 범위가_벗어난_가격을_입력하면_예외_발생(final int price) {
-        RestAssured.given()
-                .body(new ProductRequest("상품 이름", price, "https://image.com"))
-                .contentType(ContentType.JSON)
-                .when()
-                .post("/admin/products")
-                .then()
-                .assertThat()
-                .statusCode(400);
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    new ProductRequest("name", price, "https://image.url");
+                }
+        );
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"http", "", " ", "asdfasdf", "smtp", "ssh"})
     @NullSource
-    void 범위가_벗어난_가격을_입력하면_예외_발생(final String imageUrl) {
-        RestAssured.given()
-                .body(new ProductRequest("상품 이름", 1000, imageUrl))
-                .contentType(ContentType.JSON)
-                .when()
-                .post("/admin/products")
-                .then()
-                .assertThat()
-                .statusCode(400);
+    void 유효하지_않은_URL을_입력하면_예외_발생(final String imageUrl) {
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    new ProductRequest("name", 1234, imageUrl);
+                }
+        );
     }
 
     @ParameterizedTest
@@ -137,13 +132,11 @@ public class ProductViewControllerTest {
     void 길이_제한을_벗어난_URL을_입력하면_예외_발생(final int repeatCount) {
         final String url = "https://" + "a".repeat(repeatCount) + ".com";
 
-        RestAssured.given()
-                .body(new ProductRequest("상품 이름", 1000, url))
-                .contentType(ContentType.JSON)
-                .when()
-                .post("/admin/products")
-                .then()
-                .assertThat()
-                .statusCode(400);
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    new ProductRequest("name", 1234, url);
+                }
+        );
     }
 }

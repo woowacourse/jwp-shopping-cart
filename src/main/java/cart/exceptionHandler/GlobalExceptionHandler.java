@@ -17,4 +17,9 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(fieldError.getDefaultMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> illigalArgumentException(final IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }
