@@ -36,7 +36,7 @@ class ProductRestControllerTest {
             given().log().uri()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productRequest)
-                    .when().post("/product")
+                    .when().post("/products")
                     .then()
                     .statusCode(HttpStatus.OK.value());
         }
@@ -49,7 +49,7 @@ class ProductRestControllerTest {
             given().log().uri()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productRequest)
-                    .when().post("/product")
+                    .when().post("/products")
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
@@ -62,7 +62,7 @@ class ProductRestControllerTest {
             given().log().uri()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productRequest)
-                    .when().post("/product")
+                    .when().post("/products")
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
@@ -75,7 +75,7 @@ class ProductRestControllerTest {
             given().log().uri()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productRequest)
-                    .when().post("/product")
+                    .when().post("/products")
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
@@ -87,11 +87,11 @@ class ProductRestControllerTest {
         //given
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
-                .when().post("/product");
+                .when().post("/products");
 
         //then
         given().log().uri()
-                .when().get("/products")
+                .when().get("/products/all")
                 .then().log().body()
                 .statusCode(HttpStatus.OK.value())
                 .body("name.get(0)", is("연어"))
@@ -107,21 +107,21 @@ class ProductRestControllerTest {
             //given
             given().contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productRequest)
-                    .when().post("/product");
+                    .when().post("/products");
 
             Integer productId = given()
-                    .when().get("/products")
+                    .when().get("/products/all")
                     .then()
                     .extract()
-                    .body().jsonPath().get("id[0]");
+                    .body().jsonPath().get("id.get(0)");
 
-            ProductRequest updateDto = new ProductRequest(productId.longValue(), "오션", "hi", 50);
+            ProductRequest updateDto = new ProductRequest("오션", "hi", 50);
 
             //then
             given().log().uri()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(updateDto)
-                    .when().put("/product")
+                    .when().put("/products/{id}", productId)
                     .then()
                     .statusCode(HttpStatus.OK.value());
         }
@@ -130,13 +130,13 @@ class ProductRestControllerTest {
         @Test
         void updateProduct_NotExist() {
             //given
-            ProductRequest updateDto = new ProductRequest(null, "연어", "hi", 50);
+            ProductRequest updateDto = new ProductRequest("연어", "hi", 50);
 
             //then
             given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(updateDto)
-                    .when().put("/product")
+                    .when().put("/products/{id}", 0)
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
@@ -151,17 +151,17 @@ class ProductRestControllerTest {
             //given
             given().contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(productRequest)
-                    .when().post("/product");
+                    .when().post("/products");
 
             Integer productId = given()
-                    .when().get("/products")
+                    .when().get("/products/all")
                     .then()
                     .extract()
                     .body().jsonPath().get("id[0]");
 
             //then
             given().log().uri()
-                    .when().delete("/product/{id}", productId)
+                    .when().delete("/products/{id}", productId)
                     .then()
                     .statusCode(HttpStatus.OK.value());
         }
@@ -171,7 +171,7 @@ class ProductRestControllerTest {
         void deleteProduct_notExist() {
             //then
             given().log().uri()
-                    .when().delete("/product/{id}", 0)
+                    .when().delete("/products/{id}", 0)
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }

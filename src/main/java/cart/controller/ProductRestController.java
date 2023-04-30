@@ -17,27 +17,29 @@ public final class ProductRestController {
         this.productService = productService;
     }
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<String> createProduct(@RequestBody @Valid ProductRequest productRequest) {
         productService.addProduct(productRequest);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/products")
-    public ResponseEntity<List<ProductResponse>> getProducts() {
+    @GetMapping("/products/all")
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
         List<ProductResponse> products = productService.findProducts();
 
         return ResponseEntity.ok().body(products);
     }
 
-    @PutMapping("/product")
-    public ResponseEntity<String> updateProduct(@RequestBody ProductRequest productRequest) {
+    @PutMapping("/products/{id}")
+    public ResponseEntity<String> updateProduct(@RequestBody @Valid ProductRequest productRequest,
+                                                @PathVariable Long id) {
+        productRequest.setId(id);
         productService.updateProduct(productRequest);
 
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
 

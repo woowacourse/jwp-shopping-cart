@@ -47,7 +47,7 @@ form.addEventListener('submit', (event) => {
 const createProduct = (product) => {
     axios.request({
         method: 'post',
-        url: '/product',
+        url: '/products',
         data: {
             name: product.name,
             price: product.price,
@@ -66,9 +66,8 @@ const updateProduct = (product) => {
 
     axios.request({
         method: 'put',
-        url: '/product',
+        url: `/products/${id}`,
         data: {
-            id: id,
             name: product.name,
             price: product.price,
             image: product.image
@@ -84,7 +83,7 @@ const updateProduct = (product) => {
 const deleteProduct = (id) => {
     axios.request({
         method: 'delete',
-        url: `/product/${id}`
+        url: `/products/${id}`
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
