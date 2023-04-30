@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import cart.domain.Product;
-import cart.controller.request.ProductUpdateRequest;
+import cart.service.dto.ProductUpdateRequest;
 
 @Repository
 public class ProductRepository {

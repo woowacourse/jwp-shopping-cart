@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cart.controller.request.ProductUpdateRequest;
+import cart.service.dto.ProductUpdateRequest;
 import cart.controller.response.ProductResponse;
 import cart.service.ProductService;
 

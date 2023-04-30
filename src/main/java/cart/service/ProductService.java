@@ -2,7 +2,7 @@ package cart.service;
 
 import java.util.List;
 
-import cart.controller.request.ProductUpdateRequest;
+import cart.service.dto.ProductUpdateRequest;
 import cart.controller.response.ProductResponse;
 
 public interface ProductService {

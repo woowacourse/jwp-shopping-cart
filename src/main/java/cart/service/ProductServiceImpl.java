@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.controller.request.ProductUpdateRequest;
+import cart.service.dto.ProductUpdateRequest;
 import cart.controller.response.ProductResponse;
 import cart.domain.Product;
 import cart.repository.ProductRepository;
