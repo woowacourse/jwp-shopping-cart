@@ -45,7 +45,7 @@ CREATE TABLE product
         - [x] URL이 공백일 수 없다.
 
 - 상품 조회
-    - [x] GET /admin/products
+    - [x] GET /admin
     - [x] admin 페이지에서 상품을 보여준다.
 
 - 상품 수정

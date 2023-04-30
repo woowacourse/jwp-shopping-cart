@@ -3,58 +3,47 @@ package cart.controller;
 import cart.controller.dto.ModifyRequest;
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @RequestMapping("/admin")
-@Controller
-public class AdminController {
+@RestController
+public final class ProductController {
 
     private final ProductDao productDao;
 
-    public AdminController(final ProductDao productDao) {
+    public ProductController(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
     @PostMapping("/product")
-    public String saveProduct(
-            @Valid @RequestBody final ModifyRequest modifyRequest,
-            final HttpServletResponse response
-    ) {
-        Product product = Product.createWithoutId(
+    public ResponseEntity<Void> saveProduct(
+            @Valid @RequestBody final ModifyRequest modifyRequest
+    ) throws URISyntaxException {
+        final Product product = Product.createWithoutId(
                 modifyRequest.getName(),
                 modifyRequest.getPrice(),
                 modifyRequest.getImageUrl()
         );
-        productDao.save(product);
-        response.setStatus(HttpServletResponse.SC_CREATED);
-        return "admin";
-    }
-
-    @GetMapping
-    public String productList(final Model model) {
-        final List<Product> products = productDao.findAll();
-        model.addAttribute("products", products);
-        return "admin";
+        final long id = productDao.save(product);
+        return ResponseEntity.created(new URI(String.format("/product/%d", id))).build();
     }
 
     @PutMapping("/product/{id}")
-    public String updateProduct(
+    public ResponseEntity<Void> updateProduct(
             @Valid @RequestBody final ModifyRequest modifyRequest,
-            @PathVariable final Long id,
-            final HttpServletResponse response
-    ) {
+            @PathVariable final Long id
+    ) throws URISyntaxException {
         final Product product = Product.create(
                 id,
                 modifyRequest.getName(),
@@ -62,13 +51,12 @@ public class AdminController {
                 modifyRequest.getImageUrl()
         );
         productDao.update(product);
-        response.setStatus(HttpServletResponse.SC_CREATED);
-        return "admin";
+        return ResponseEntity.created(new URI(String.format("/product/%d", id))).build();
     }
 
     @DeleteMapping("/product/{id}")
-    public String deleteProduct(@PathVariable final Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
         productDao.deleteById(id);
-        return "admin";
+        return ResponseEntity.ok().build();
     }
 }

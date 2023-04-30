@@ -9,18 +9,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
-public class HomeController {
+public final class ViewController {
 
     private final ProductDao productDao;
 
-    public HomeController(final ProductDao productDao) {
+    public ViewController(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    @GetMapping
-    public String productList(final Model model) {
+    @GetMapping("/")
+    public String homeProductList(final Model model) {
         List<Product> products = productDao.findAll();
         model.addAttribute("products", products);
         return "index";
+    }
+
+    @GetMapping("/admin")
+    public String adminProductList(final Model model) {
+        final List<Product> products = productDao.findAll();
+        model.addAttribute("products", products);
+        return "admin";
     }
 }

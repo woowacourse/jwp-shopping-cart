@@ -1,7 +1,5 @@
 package cart.controller;
 
-import static io.restassured.RestAssured.given;
-
 import cart.controller.dto.ModifyRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
+import static io.restassured.RestAssured.given;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class ProductControllerTest {
 
     @LocalServerPort
     private int port;
@@ -33,24 +33,13 @@ class AdminControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @DisplayName("GET /admin 요청 시 Status OK 및 HTML 반환")
-    @Test
-    void shouldResponseHtmlWithStatusOkWhenRequestGetToAdmin() {
-        given().log().all()
-                .when()
-                .get("/admin")
-                .then().log().all()
-                .statusCode(HttpStatus.SC_OK)
-                .contentType(ContentType.HTML);
-    }
-
     @DisplayName("POST /admin/product 요청 시")
     @Nested
     class postAdminProduct {
 
-        @DisplayName("입력이 올바른 경우 Status Created 및 HTML 반환")
+        @DisplayName("입력이 올바른 경우 Status Created 반환")
         @Test
-        void shouldResponseHtmlWithStatusCreatedWhenRequestPostToAdminProduct() throws JsonProcessingException {
+        void shouldResponseStatusCreatedWhenRequestPostToAdminProduct() throws JsonProcessingException {
             final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
             final String requestJson = objectMapper.writeValueAsString(request);
             given().log().all()
@@ -59,8 +48,7 @@ class AdminControllerTest {
                     .when()
                     .post("/admin/product")
                     .then().log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .contentType(ContentType.HTML);
+                    .statusCode(HttpStatus.SC_CREATED);
         }
 
         @DisplayName("이름이 공백인 경우 예외가 발생한다.")
@@ -115,9 +103,9 @@ class AdminControllerTest {
     @Nested
     class putAdminProduct {
 
-        @DisplayName("입력이 올바른 경우 Status Created 및 HTML 반환")
+        @DisplayName("입력이 올바른 경우 Status Created 반환")
         @Test
-        void shouldResponseHtmlWithStatusCreatedWhenRequestPutToAdminProductId() throws JsonProcessingException {
+        void shouldResponseStatusCreatedWhenRequestPutToAdminProductId() throws JsonProcessingException {
             final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
             final String requestJson = objectMapper.writeValueAsString(request);
             given().log().all()
@@ -126,8 +114,7 @@ class AdminControllerTest {
                     .when()
                     .put("/admin/product/1")
                     .then().log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .contentType(ContentType.HTML);
+                    .statusCode(HttpStatus.SC_CREATED);
         }
 
         @DisplayName("이름이 공백인 경우 예외가 발생한다.")
@@ -179,14 +166,13 @@ class AdminControllerTest {
 
     }
 
-    @DisplayName("DELETE /admin/product/{id} 요청 시 Status OK 및 HTML 반환")
+    @DisplayName("DELETE /admin/product/{id} 요청 시 Status OK 반환")
     @Test
-    void shouldResponseHtmlWithStatusOkWhenRequestDeleteToAdminProductId() {
+    void shouldResponseStatusOkWhenRequestDeleteToAdminProductId() {
         given().log().all()
                 .when()
                 .delete("/admin/product/1")
                 .then().log().all()
-                .statusCode(HttpStatus.SC_OK)
-                .contentType(ContentType.HTML);
+                .statusCode(HttpStatus.SC_OK);
     }
 }
