@@ -3,14 +3,11 @@ package cart.web.controller.dto.response;
 import cart.web.controller.dto.request.ProductModificationRequest;
 
 public class ProductModificationResponse {
-    private Long id;
-    private String name;
-    private Integer price;
-    private String category;
-    private String imageUrl;
-
-    public ProductModificationResponse() {
-    }
+    private final Long id;
+    private final String name;
+    private final Integer price;
+    private final String category;
+    private final String imageUrl;
 
     public ProductModificationResponse(ProductModificationRequest request) {
         this.id = request.getId();

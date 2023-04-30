@@ -3,14 +3,11 @@ package cart.web.controller.dto.response;
 import cart.web.controller.dto.request.ProductCreationRequest;
 
 public class ProductCreationResponse {
-    private Long id;
-    private String name;
-    private Integer price;
-    private String category;
-    private String imageUrl;
-
-    public ProductCreationResponse() {
-    }
+    private final Long id;
+    private final String name;
+    private final Integer price;
+    private final String category;
+    private final String imageUrl;
 
     public ProductCreationResponse(Long id, ProductCreationRequest request) {
         this.id = id;
