@@ -5,7 +5,6 @@ import static cart.factory.ProductRequestDtoFactory.createProductCreateRequest;
 import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
@@ -13,6 +12,7 @@ import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductEditRequestDto;
 import cart.repository.ProductRepository;
 import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -56,13 +56,21 @@ public class ProductIntegrationTest {
         productRepository.add(product);
 
         // when & then
-        given()
+        ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/products")
                 .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("products", hasSize(1));
+                .extract();
+        List<Product> responseProducts = response.jsonPath().getList("products", Product.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(responseProducts).asList().hasSize(1);
+        assertAll(
+                () -> assertThat(responseProducts.get(0).getName()).isEqualTo(product.getName()),
+                () -> assertThat(responseProducts.get(0).getPrice()).isEqualTo(product.getPrice()),
+                () -> assertThat(responseProducts.get(0).getImgUrl()).isEqualTo(product.getImgUrl())
+        );
+
     }
 
     @Test
