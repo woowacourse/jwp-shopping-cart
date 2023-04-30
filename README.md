@@ -153,11 +153,11 @@
   - [ ] 사용자 정보를 받아서 사용자를 등록한다.
     - 등록 시 사용되는 사용자 정보
       - nickname
-        - [ ] [validation] 닉네임은 한글, 영어, 숫자만 가능하다.
-        - [ ] [validation] 닉네임은 2자 이상 8자 이하여야한다.
+        - [x] [validation] 닉네임은 한글, 영어, 숫자만 가능하다.
+        - [x] [validation] 닉네임은 2자 이상 8자 이하여야한다.
       - email
       - password
-        - [ ] [validation] 비밀번호는 4자 이상이어야 한다.
+        - [x] [validation] 비밀번호는 4자 이상이어야 한다.
 
 <br>
 
@@ -192,6 +192,7 @@
 
 ## 📘 4. DB 설계
 
-<img width="989" alt="장바구니 DB ERD" src="https://user-images.githubusercontent.com/95729738/235350968-24cc7638-3321-469d-94cc-74e416ef4418.png">
+<img width="801" alt="장바구니 ERD 설계" src="https://user-images.githubusercontent.com/95729738/235354560-46ba18c6-84e2-4896-8587-4c3dabc75870.png">
+
 
 
