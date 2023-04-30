@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -154,5 +156,32 @@ class ProductDaoTest {
                     () -> assertThat(updatedProductEntity.getDescription()).isEqualTo("description")
             );
         }
+    }
+
+    @Test
+    @DisplayName("상품 ID 목록에 존재하는 모든 상품을 조회한다.")
+    void findAllIn() {
+        final ProductEntity firstProduct = new ProductEntity(
+                "name1",
+                "image1",
+                1000,
+                "description1"
+        );
+        final ProductEntity secondProduct = new ProductEntity(
+                "name2",
+                "image2",
+                1000,
+                "description2"
+        );
+        final Long firstProductId = productDao.save(firstProduct);
+        final Long secondProductId = productDao.save(secondProduct);
+
+        final List<ProductEntity> result = productDao.findAllIn(List.of(firstProductId, secondProductId));
+
+        assertAll(
+                () -> assertThat(result).hasSize(2),
+                () -> assertThat(result.get(0).getId()).isEqualTo(firstProductId),
+                () -> assertThat(result.get(1).getId()).isEqualTo(secondProductId)
+        );
     }
 }

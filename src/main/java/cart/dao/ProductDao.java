@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +47,22 @@ public class ProductDao {
                         rs.getInt("price"),
                         rs.getString("description")
                 )
+        );
+    }
+
+    public List<ProductEntity> findAllIn(final List<Long> productIds) {
+        final String inSql = String.join(",", Collections.nCopies(productIds.size(), "?"));
+        final String sql = String.format("SELECT id, name, image_url, price, description FROM product WHERE id IN (%s)", inSql);
+        return namedParameterJdbcTemplate.getJdbcTemplate().query(
+                sql,
+                (rs, rowNum) -> new ProductEntity(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("image_url"),
+                        rs.getInt("price"),
+                        rs.getString("description")
+                ),
+                productIds.toArray()
         );
     }
 
