@@ -3,21 +3,21 @@ package cart.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cart.controller.domain.Product;
-import cart.controller.dto.ProductModifyRequest;
-import cart.controller.dto.ProductRegisterRequest;
+import cart.domain.product.Product;
+import cart.dto.ProductModifyRequest;
+import cart.dto.ProductRegisterRequest;
 import cart.dao.ProductDao;
-import cart.dao.entity.ProductEntity;
-import cart.service.dto.ProductResponse;
-import global.exception.ProductNotFoundException;
+import cart.entity.ProductEntity;
+import cart.dto.ProductResponse;
+import cart.exception.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CartService {
+public class ProductService {
 
     private final ProductDao productDao;
 
-    public CartService(final ProductDao productDao) {
+    public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 

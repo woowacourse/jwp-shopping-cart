@@ -4,8 +4,8 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.controller.dto.ProductModifyRequest;
-import cart.controller.dto.ProductRegisterRequest;
+import cart.dto.ProductModifyRequest;
+import cart.dto.ProductRegisterRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;

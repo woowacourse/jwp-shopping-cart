@@ -1,4 +1,4 @@
-package cart.controller.domain;
+package cart.domain.product;
 
 public class Name {
 

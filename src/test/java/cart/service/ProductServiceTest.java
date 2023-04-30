@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cart.controller.dto.ProductModifyRequest;
-import cart.controller.dto.ProductRegisterRequest;
-import cart.service.dto.ProductResponse;
-import global.exception.ProductNotFoundException;
+import cart.dto.ProductModifyRequest;
+import cart.dto.ProductRegisterRequest;
+import cart.dto.ProductResponse;
+import cart.exception.ProductNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
-class CartServiceTest {
+class ProductServiceTest {
 
     @Autowired
-    private CartService cartService;
+    private ProductService productService;
 
     private final ProductRegisterRequest cuteSeonghaDoll =
             new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
@@ -39,11 +39,11 @@ class CartServiceTest {
     @DisplayName("상품을 저장하고, 모든 상품을 조회할 수 있다.")
     void findAll() {
         // given
-        long savedId1 = cartService.save(cuteSeonghaDoll);
-        long savedId2 = cartService.save(cuteBaronDoll2);
+        long savedId1 = productService.save(cuteSeonghaDoll);
+        long savedId2 = productService.save(cuteBaronDoll2);
 
         // when
-        List<ProductResponse> products = cartService.findAllProducts();
+        List<ProductResponse> products = productService.findAllProducts();
         List<Long> foundIds = products.stream()
                 .map(ProductResponse::getId)
                 .collect(Collectors.toList());
@@ -56,7 +56,7 @@ class CartServiceTest {
     @DisplayName("상품 수정 시 수정 상품 ID에 해당하는 상품이 없다면 예외가 발생한다.")
     void modifyByIdWhenProductNotFound() {
         // when, then
-        assertThatThrownBy(() -> cartService.modifyById(cuteBaronDoll, 100L))
+        assertThatThrownBy(() -> productService.modifyById(cuteBaronDoll, 100L))
                 .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("상품 ID에 해당하는 상품이 존재하지 않습니다.");
 
@@ -66,14 +66,14 @@ class CartServiceTest {
     @DisplayName("상품을 저장하고 수정할 수 있다.")
     void modifyById() {
         // given
-        long savedId = cartService.save(cuteSeonghaDoll);
+        long savedId = productService.save(cuteSeonghaDoll);
         ProductModifyRequest productToModify = cuteBaronDoll;
 
         // when
-        cartService.modifyById(productToModify, savedId);
+        productService.modifyById(productToModify, savedId);
 
         // then
-        ProductResponse foundProduct = cartService.findAllProducts().get(0);
+        ProductResponse foundProduct = productService.findAllProducts().get(0);
 
         assertAll(
                 () -> assertThat(foundProduct.getId()).isEqualTo(savedId),
@@ -87,7 +87,7 @@ class CartServiceTest {
     @DisplayName("상품 삭제 시 삭제 상품 ID에 해당하는 상품이 없다면 예외가 발생한다.")
     void removeByIdWhenProductNotFound() {
         // when, then
-        assertThatThrownBy(() -> cartService.removeById(100L))
+        assertThatThrownBy(() -> productService.removeById(100L))
                 .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("상품 ID에 해당하는 상품이 존재하지 않습니다.");
 
@@ -97,12 +97,12 @@ class CartServiceTest {
     @DisplayName("상품을 저장하고 삭제할 수 있다.")
     void removeById() {
         // given
-        long savedId = cartService.save(cuteSeonghaDoll);
+        long savedId = productService.save(cuteSeonghaDoll);
 
         // when
-        cartService.removeById(savedId);
+        productService.removeById(savedId);
 
         // then
-        assertThat(cartService.findAllProducts()).isEmpty();
+        assertThat(productService.findAllProducts()).isEmpty();
     }
 }

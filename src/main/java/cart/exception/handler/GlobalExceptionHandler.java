@@ -1,6 +1,6 @@
-package cart.controller.exceptionhandler;
+package cart.exception.handler;
 
-import global.exception.NotFoundException;
+import cart.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class CartExceptionHandler {
+public class GlobalExceptionHandler {
 
     private static final String UNEXPECTED_EXCEPTION_MESSAGE = "관리자에게 문의하세요.";
     private final Logger log = LoggerFactory.getLogger(getClass());

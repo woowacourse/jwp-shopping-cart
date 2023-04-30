@@ -1,4 +1,4 @@
-package cart.dao.entity;
+package cart.entity;
 
 public class ProductEntity {
 

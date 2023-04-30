@@ -11,10 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import cart.controller.dto.ProductModifyRequest;
-import cart.service.CartService;
-import cart.controller.dto.ProductRegisterRequest;
-import cart.service.dto.ProductResponse;
+import cart.dto.ProductModifyRequest;
+import cart.service.ProductService;
+import cart.dto.ProductRegisterRequest;
+import cart.dto.ProductResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -54,7 +54,7 @@ public class AdminControllerUnitTest {
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private CartService cartService;
+    private ProductService productService;
 
     @BeforeEach
     void setUp() {
@@ -66,7 +66,7 @@ public class AdminControllerUnitTest {
     @DisplayName("전체 상품 조회 API 호출 시 전체 상품이 반환된다.")
     @Test
     void showAllProducts() throws Exception {
-        given(cartService.findAllProducts()).willReturn(List.of(cuteSeonghaDoll, cuteBaronDoll));
+        given(productService.findAllProducts()).willReturn(List.of(cuteSeonghaDoll, cuteBaronDoll));
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin"));
@@ -77,7 +77,7 @@ public class AdminControllerUnitTest {
     void registerProduct() throws Exception {
         // given
         String requestString = objectMapper.writeValueAsString(cuteSeonghaDoll);
-        given(cartService.save(any(ProductRegisterRequest.class))).willReturn(1L);
+        given(productService.save(any(ProductRegisterRequest.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")
@@ -118,7 +118,7 @@ public class AdminControllerUnitTest {
                 new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
                         price);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRegisterRequest.class))).willThrow(new IllegalArgumentException("가격은 0보다 커야합니다."));
+        given(productService.save(any(ProductRegisterRequest.class))).willThrow(new IllegalArgumentException("가격은 0보다 커야합니다."));
 
         // when then
         mockMvc.perform(post("/admin/product")
@@ -141,7 +141,7 @@ public class AdminControllerUnitTest {
                         25000);
         System.out.println(name.length());
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRegisterRequest.class))).willThrow(new IllegalArgumentException("이름은 1글자 이상 50글자 이하여야합니다."));
+        given(productService.save(any(ProductRegisterRequest.class))).willThrow(new IllegalArgumentException("이름은 1글자 이상 50글자 이하여야합니다."));
 
         // when then
         mockMvc.perform(post("/admin/product")
@@ -163,7 +163,7 @@ public class AdminControllerUnitTest {
                 new ProductRegisterRequest(imgUrl, "CuteSeonghaDoll",
                         25000);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRegisterRequest.class))).willReturn(1L);
+        given(productService.save(any(ProductRegisterRequest.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")

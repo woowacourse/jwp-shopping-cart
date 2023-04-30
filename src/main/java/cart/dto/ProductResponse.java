@@ -1,6 +1,6 @@
-package cart.service.dto;
+package cart.dto;
 
-import cart.dao.entity.ProductEntity;
+import cart.entity.ProductEntity;
 
 public class ProductResponse {
 
