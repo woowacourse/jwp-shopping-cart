@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.controller.dto.ItemResponse;
 import cart.controller.dto.UserResponse;
+import cart.service.CartService;
 import cart.service.ItemService;
 import cart.service.UserService;
 import java.util.List;
@@ -15,10 +16,12 @@ public class ViewController {
 
     private final ItemService itemService;
     private final UserService userService;
+    private final CartService cartService;
 
-    public ViewController(final ItemService itemService, final UserService userService) {
+    public ViewController(final ItemService itemService, final UserService userService, final CartService cartService) {
         this.itemService = itemService;
         this.userService = userService;
+        this.cartService = cartService;
     }
 
     @GetMapping
@@ -44,13 +47,18 @@ public class ViewController {
     }
 
     @GetMapping("/settings")
-    public String redirectUserSettings(Model model) {
-        final List<UserResponse> userResponses = userService.findAll()
+    public String redirectUserSettingsPage(Model model) {
+        List<UserResponse> userResponses = userService.findAll()
                 .stream()
                 .map(UserResponse::from)
                 .collect(Collectors.toList());
 
         model.addAttribute("members", userResponses);
         return "settings";
+    }
+
+    @GetMapping("/cart")
+    public String redirectCartPage() {
+        return "cart";
     }
 }

@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.service.CartService;
 import cart.service.ItemService;
 import cart.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +27,9 @@ class ViewControllerTest {
 
     @MockBean
     UserService userService;
+
+    @MockBean
+    CartService cartService;
 
     @Autowired
     MockMvc mockMvc;
