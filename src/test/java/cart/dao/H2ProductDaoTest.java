@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @DisplayName("product 를 ")
 @JdbcTest
-class DbProductDaoTest {
+class H2ProductDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -22,7 +22,7 @@ class DbProductDaoTest {
 
     @BeforeEach
     void setUp() {
-        productDao = new DbProductDao(jdbcTemplate);
+        productDao = new H2ProductDao(jdbcTemplate);
     }
 
     @DisplayName("생성한다")

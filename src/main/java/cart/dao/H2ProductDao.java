@@ -17,7 +17,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DbProductDao implements ProductDao {
+public class H2ProductDao implements ProductDao {
 
     public static final RowMapper<Product> productRowMapper = (resultSet, rowMapper) -> new Product(
             resultSet.getLong("id"),
@@ -29,7 +29,7 @@ public class DbProductDao implements ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public DbProductDao(JdbcTemplate jdbcTemplate) {
+    public H2ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
