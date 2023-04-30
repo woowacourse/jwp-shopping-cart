@@ -1,5 +1,6 @@
 package cart;
 
+import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +20,12 @@ public final class GlobalExceptionAdvice {
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<String> anotherError (RuntimeException exception) {
+		return ResponseEntity.internalServerError().body(exception.getMessage());
+	}
+
+	@ExceptionHandler
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<String> constraintValidation (ConstraintViolationException exception) {
 		return ResponseEntity.internalServerError().body(exception.getMessage());
 	}
 }

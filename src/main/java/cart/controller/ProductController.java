@@ -1,7 +1,6 @@
 package cart.controller;
 
 import cart.controller.dto.response.ProductResponse;
-import cart.entity.ProductEntity;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.http.HttpStatus;

@@ -3,6 +3,7 @@ package cart.service;
 import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
 import cart.controller.dto.response.ProductResponse;
+import cart.convertor.ProductEntityConvertor;
 import cart.dao.ProductDao;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,29 +15,31 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductDao productDao;
+    private final ProductEntityConvertor productEntityConvertor;
 
-    public ProductService(ProductDao productDao) {
+    public ProductService (ProductDao productDao, final ProductEntityConvertor productEntityConvertor) {
         this.productDao = productDao;
+        this.productEntityConvertor = productEntityConvertor;
     }
 
     @Transactional
-    public void create(ProductCreateRequest request) {
-        productDao.create(request);
+    public void create (ProductCreateRequest request) {
+        productDao.create(productEntityConvertor.dtoToEntity(request));
     }
 
-    public List<ProductResponse> findAll() {
+    public List<ProductResponse> findAll () {
         return productDao.findAll().stream()
                 .map(ProductResponse::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public void update(Long id, ProductUpdateRequest request) {
-        productDao.updateById(id, request);
+    public void update (Long id, ProductUpdateRequest request) {
+        productDao.updateById(id, productEntityConvertor.dtoToEntity(request));
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete (Long id) {
         productDao.deleteById(id);
     }
 

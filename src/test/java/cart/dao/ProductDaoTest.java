@@ -6,23 +6,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
+import cart.convertor.ProductEntityConvertor;
 import cart.entity.ProductEntity;
 import java.util.List;
+import javax.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
 
 @JdbcTest
 class ProductDaoTest {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-
+	private ProductEntityConvertor productEntityConvertor = new ProductEntityConvertor();
 	private ProductDao productDao;
 
 	@BeforeEach
@@ -32,13 +32,12 @@ class ProductDaoTest {
 
 	@DisplayName("상품 생성 쿼리")
 	@Test
-	@Rollback
 	void create () {
 		// given
 		ProductCreateRequest request = new ProductCreateRequest("product", 5000, "image url");
 
 		// when
-		productDao.create(request);
+		productDao.create(productEntityConvertor.dtoToEntity(request));
 
 		// then
 		List<ProductEntity> responses = productDao.findAll();
@@ -51,15 +50,14 @@ class ProductDaoTest {
 
 	@DisplayName("상품 전체 조회 쿼리")
 	@Test
-	@Rollback
 	void findAll () {
 		// given
 		ProductCreateRequest request1 = new ProductCreateRequest("product1", 5000, "image url");
 		ProductCreateRequest request2 = new ProductCreateRequest("product2", 6000, "image url");
 		ProductCreateRequest request3 = new ProductCreateRequest("product3", 7000, "image url");
-		productDao.create(request1);
-		productDao.create(request2);
-		productDao.create(request3);
+		productDao.create(productEntityConvertor.dtoToEntity(request1));
+		productDao.create(productEntityConvertor.dtoToEntity(request2));
+		productDao.create(productEntityConvertor.dtoToEntity(request3));
 
 		// when
 		List<ProductEntity> responses = productDao.findAll();
@@ -76,15 +74,14 @@ class ProductDaoTest {
 
 	@DisplayName("상품 수정 쿼리")
 	@Test
-	@Rollback
 	void updateById () {
 		// given
 		ProductCreateRequest createRequest = new ProductCreateRequest("product1", 5000, "image url");
 		ProductUpdateRequest updateRequest = new ProductUpdateRequest("update product", 2000, "img");
-		productDao.create(createRequest);
+		productDao.create(productEntityConvertor.dtoToEntity(createRequest));
 
 		// when
-		productDao.updateById(getResponseId(), updateRequest);
+		productDao.updateById(getResponseId(), productEntityConvertor.dtoToEntity(updateRequest));
 
 		ProductEntity response = productDao.findAll().get(0);
 
@@ -104,15 +101,14 @@ class ProductDaoTest {
 
 	@DisplayName("상품 삭제 쿼리")
 	@Test
-	@Rollback
 	void deleteById () {
 		// given
 		ProductCreateRequest createRequest1 = new ProductCreateRequest("product1", 5000, "image url");
 		ProductCreateRequest createRequest2 = new ProductCreateRequest("product1", 5000, "image url");
 		ProductCreateRequest createRequest3 = new ProductCreateRequest("product1", 5000, "image url");
-		productDao.create(createRequest1);
-		productDao.create(createRequest2);
-		productDao.create(createRequest3);
+		productDao.create(productEntityConvertor.dtoToEntity(createRequest1));
+		productDao.create(productEntityConvertor.dtoToEntity(createRequest2));
+		productDao.create(productEntityConvertor.dtoToEntity(createRequest3));
 
 		// when
 		int beforeSize = productDao.findAll().size();
@@ -125,15 +121,14 @@ class ProductDaoTest {
 
 	@DisplayName("이름이 32자 넘는 경우 요청 실패")
 	@Test
-	@Rollback
 	void create32OverNameLengthFail () {
 		// given
-		final String name = "012345678901234567890123456789012";
+		final String name = "012345678901234567890123456789012345";
 		ProductCreateRequest request = new ProductCreateRequest(name, 5000, "image url");
 
 		// when
 
 		// then
-		assertThrows(DataIntegrityViolationException.class, () -> productDao.create(request));
+		assertThrows(ConstraintViolationException.class, () -> productDao.create(productEntityConvertor.dtoToEntity(request)));
 	}
 }
