@@ -127,7 +127,7 @@ class ItemControllerTest {
         ItemRequest value = new ItemRequest("레드북", 50000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg");
         when(itemService.saveItem(any())).thenReturn(1L);
         //then
-        ResponseEntity responseEntity = itemController.addItem(value);
+        ResponseEntity<Void> responseEntity = itemController.addItem(value);
         Assertions.assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED),
                 () -> assertThat(responseEntity.getHeaders()
@@ -184,7 +184,7 @@ class ItemControllerTest {
         Long itemId = 1L;
         doNothing().when(itemService).updateItem(anyLong(), any());
         //then
-        ResponseEntity responseEntity = itemController.updateItem(itemId, value);
+        ResponseEntity<Void> responseEntity = itemController.updateItem(itemId, value);
         Assertions.assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED),
                 () -> assertThat(responseEntity.getHeaders()
@@ -200,7 +200,7 @@ class ItemControllerTest {
         doNothing().when(itemService)
                    .deleteItem(anyLong());
         //then
-        ResponseEntity responseEntity = itemController.deleteItem(itemId);
+        ResponseEntity<Void> responseEntity = itemController.deleteItem(itemId);
         Assertions.assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),
                 () -> assertThat(responseEntity.getHeaders()
