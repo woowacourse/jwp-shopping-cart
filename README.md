@@ -1,27 +1,29 @@
 # jwp-shopping-cart
 
-- 기능 목록
-
 ## API
 
-### 관리자
-- 어드민 페이지 반환 (상품 목록 반환)
-  - `/admin (Get)`
-  - Product 리스트 반환
+### 페이지
+- 메인 페이지 (상품목록)
+  - GET
+  - `/`
+- 관리자 페이지
+  - GET
+  - `/admin`
+
+### 상품 API
+- 상품 추가
+  - POST
+  - `/product`
+  - 입력한 정보를 바탕으로 Product 추가
 - 상품 수정
-  - `/admin/product/{id} (Put)`
+  - PUT
+  - `/product/{id}`
   - 해당 id를 가진 Product 수정
 - 상품 삭제
-  - `/admin/product/{id} (Delete)`
+  - DELETE
+  - `/product/{id}`
   - 해당 id를 가진 Product 삭제
-- 상품 추가
-  - `/admin/product (Post)`
-  - 입력한 정보를 바탕으로 Product 추가
 
-### 상품
-- 상품목록
-  - `/ (Get)`
-  - Product 리스트 반환
 
 ## DDL
 
