@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 public class ProductRequest {
 
     @NotNull(message = "이미지 url은 비어있을 수 없습니다.")
-    private final String image;
+    private final String imageUrl;
 
     @NotNull(message = "이름은 비어있을 수 없습니다.")
     @Size(min = 1, max = 50)
@@ -19,14 +19,14 @@ public class ProductRequest {
     @Max(value = 1_000_000_000, message = "가격은 최대 10억까지 가능합니다.")
     private final Integer price;
 
-    public ProductRequest(String image, String name, Integer price) {
-        this.image = image;
+    public ProductRequest(String imageUrl, String name, Integer price) {
+        this.imageUrl = imageUrl;
         this.name = name;
         this.price = price;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public String getName() {

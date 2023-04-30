@@ -16,7 +16,7 @@ public class ProductResponse {
     }
 
     public static ProductResponse from(ProductEntity entity) {
-        return new ProductResponse(entity.getId(), entity.getName(), entity.getImage(), entity.getPrice());
+        return new ProductResponse(entity.getId(), entity.getName(), entity.getImageUrl(), entity.getPrice());
     }
 
     public Long getId() {

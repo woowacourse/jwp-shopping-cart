@@ -20,7 +20,7 @@ public class ProductService {
     }
 
     public Long create(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
+        Product product = new Product(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
         return productDao.save(product);
     }
 

@@ -29,7 +29,7 @@ public class H2ProductDao implements ProductDao {
             new ProductEntity(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
-                    resultSet.getString("image"),
+                    resultSet.getString("image_url"),
                     resultSet.getInt("price")
             );
 
@@ -41,8 +41,8 @@ public class H2ProductDao implements ProductDao {
 
     @Override
     public ProductEntity update(ProductEntity entity) {
-        String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
-        jdbcTemplate.update(sql, entity.getName(), entity.getImage(), entity.getPrice(), entity.getId());
+        String sql = "UPDATE product SET name = ?, image_url = ?, price = ? WHERE id = ?";
+        jdbcTemplate.update(sql, entity.getName(), entity.getImageUrl(), entity.getPrice(), entity.getId());
         return entity;
     }
 

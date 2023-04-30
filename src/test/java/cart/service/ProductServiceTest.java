@@ -62,7 +62,7 @@ class ProductServiceTest {
         ProductResponse updatedResponse = productService.update(updateRequest, productId);
 
         Assertions.assertAll(
-                () -> assertThat(updatedResponse.getImage()).isEqualTo(updateRequest.getImage()),
+                () -> assertThat(updatedResponse.getImage()).isEqualTo(updateRequest.getImageUrl()),
                 () -> assertThat(updatedResponse.getName()).isEqualTo(updateRequest.getName()),
                 () -> assertThat(updatedResponse.getPrice()).isEqualTo(updateRequest.getPrice())
         );

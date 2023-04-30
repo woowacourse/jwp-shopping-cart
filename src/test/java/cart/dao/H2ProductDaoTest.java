@@ -80,7 +80,7 @@ class H2ProductDaoTest {
         ProductEntity updatedProduct = productDao.findById(productId).get();
 
         Assertions.assertAll(
-                () -> assertThat(updatedProduct.getImage()).isEqualTo(updateRequest.getImage()),
+                () -> assertThat(updatedProduct.getImageUrl()).isEqualTo(updateRequest.getImageUrl()),
                 () -> assertThat(updatedProduct.getName()).isEqualTo(updateRequest.getName()),
                 () -> assertThat(updatedProduct.getPrice()).isEqualTo(updateRequest.getPrice())
         );

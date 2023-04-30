@@ -6,19 +6,19 @@ public class ProductEntity {
 
     private final Long id;
     private String name;
-    private String image;
+    private String imageUrl;
     private int price;
 
     public ProductEntity(Long id, String name, String image, int price) {
         this.id = id;
         this.name = name;
-        this.image = image;
+        this.imageUrl = image;
         this.price = price;
     }
 
     public void replace(ProductRequest productRequest) {
         this.name = productRequest.getName();
-        this.image = productRequest.getImage();
+        this.imageUrl = productRequest.getImageUrl();
         this.price = productRequest.getPrice();
     }
 
@@ -30,8 +30,8 @@ public class ProductEntity {
         return name;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public int getPrice() {
