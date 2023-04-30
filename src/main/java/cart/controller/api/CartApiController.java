@@ -36,8 +36,8 @@ public class CartApiController {
     }
 
     @GetMapping
-    public ResponseEntity<Response> findAllProductsByMemberId(@Principal User user) {
-        List<CartProductDto> allProducts = cartService.findAllProducts(user.getId());
+    public ResponseEntity<Response> findAllCartProducts(@Principal User user) {
+        List<CartProductDto> allProducts = cartService.findAllCartProducts(user.getId());
         return ResponseEntity.ok()
                 .body(ResultResponse.ok(allProducts.size() + "개의 상품이 조회되었습니다.", allProducts));
     }

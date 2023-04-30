@@ -28,7 +28,7 @@ public class CartDao {
         return simpleJdbcInsert.executeAndReturnKey(mapSqlParameterSource).longValue();
     }
 
-    public List<CartProductDto> findAllProductByMemberId(Long memberId) {
+    public List<CartProductDto> findAllCartProductByMemberId(Long memberId) {
         String sql = "SELECT C.id, P.id as p_id, P.name, P.price, P.image_url " +
                 "FROM CART as C " +
                 "JOIN MEMBER as M ON C.member_id = M.id " +

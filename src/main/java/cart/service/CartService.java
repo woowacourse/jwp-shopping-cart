@@ -31,8 +31,8 @@ public class CartService {
         }
     }
 
-    public List<CartProductDto> findAllProducts(Long memberId) {
-        return cartDao.findAllProductByMemberId(memberId);
+    public List<CartProductDto> findAllCartProducts(Long memberId) {
+        return cartDao.findAllCartProductByMemberId(memberId);
     }
 
     @Transactional

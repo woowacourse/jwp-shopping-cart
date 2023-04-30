@@ -100,14 +100,14 @@ class CartApiControllerTest {
 
     @Test
     @DisplayName("/api/cart로 GET 요청을 보내면 HTTP 200 코드와 함께 장바구니의 상품이 조회되어야 한다.")
-    void findAllProductsByMemberId_success() throws Exception {
+    void findAllCartProducts_success() throws Exception {
         // given
         List<CartProductDto> productDtos = List.of(
                 new CartProductDto(1L, new ProductDto(1L, "글렌피딕", 100_000, "image1")),
                 new CartProductDto(2L, new ProductDto(1L, "글렌피딕", 100_000, "image1")),
                 new CartProductDto(3L, new ProductDto(2L, "글렌리벳", 200_000, "image2"))
         );
-        given(cartService.findAllProducts(1L))
+        given(cartService.findAllCartProducts(1L))
                 .willReturn(productDtos);
 
         // expect
