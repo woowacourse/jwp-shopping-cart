@@ -98,37 +98,82 @@ class ProductRestControllerTest {
                 .body("price.get(0)", is(10000));
     }
 
-    @DisplayName("상품 정보 업데이트")
-    @Test
-    void updateProduct() {
-        //given
-        given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when().post("/product");
+    @Nested
+    @DisplayName("상품 업데이트 테스트")
+    class UpdateTest {
+        @DisplayName("상품 정보를 업데이트할 수 있다")
+        @Test
+        void updateProduct() {
+            //given
+            given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(productRequest)
+                    .when().post("/product");
 
-        ProductRequest updateDto = new ProductRequest(1L, "오션", "hi", 50);
+            Integer productId = given()
+                    .when().get("/products")
+                    .then()
+                    .extract()
+                    .body().jsonPath().get("id[0]");
 
-        //then
-        given().log().uri()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(updateDto)
-                .when().put("/product")
-                .then()
-                .statusCode(HttpStatus.OK.value());
+            ProductRequest updateDto = new ProductRequest(productId.longValue(), "오션", "hi", 50);
+
+            //then
+            given().log().uri()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(updateDto)
+                    .when().put("/product")
+                    .then()
+                    .statusCode(HttpStatus.OK.value());
+        }
+
+        @DisplayName("업데이트 하려는 상품이 없으면 400이 반환된다")
+        @Test
+        void updateProduct_NotExist() {
+            //given
+            ProductRequest updateDto = new ProductRequest(null, "연어", "hi", 50);
+
+            //then
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(updateDto)
+                    .when().put("/product")
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
     }
 
-    @DisplayName("상품 삭제")
-    @Test
-    void deleteProduct() {
-        //given
-        given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequest)
-                .when().post("/product");
+    @Nested
+    @DisplayName("상품 삭제 테스트")
+    class DeleteTest {
+        @DisplayName("등록된 상품을 삭제할 수 있다")
+        @Test
+        void deleteProduct() {
+            //given
+            given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(productRequest)
+                    .when().post("/product");
 
-        //then
-        given().log().uri()
-                .when().delete("/product/{id}", 1)
-                .then()
-                .statusCode(HttpStatus.OK.value());
+            Integer productId = given()
+                    .when().get("/products")
+                    .then()
+                    .extract()
+                    .body().jsonPath().get("id[0]");
+
+            //then
+            given().log().uri()
+                    .when().delete("/product/{id}", productId)
+                    .then()
+                    .statusCode(HttpStatus.OK.value());
+        }
+
+        @DisplayName("삭제하려는 상품이 없으면 400이 반환된다")
+        @Test
+        void deleteProduct_notExist() {
+            //then
+            given().log().uri()
+                    .when().delete("/product/{id}", 0)
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
     }
 }
