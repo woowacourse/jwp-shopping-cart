@@ -1,19 +1,18 @@
 package cart.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import cart.domain.Product;
 import cart.domain.ProductRepository;
 import cart.dto.ProductDto;
 import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
-@Transactional(readOnly = true)
 public class JwpCartService {
 
     private final ProductRepository productRepository;
@@ -22,37 +21,48 @@ public class JwpCartService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> findAll() {
-        List<Product> products = productRepository.findAll()
-            .stream()
-            .map(productDto -> Product.createWithId(
-                productDto.getId(),
-                productDto.getName(),
-                productDto.getImgUrl(),
-                productDto.getPrice()))
-            .collect(Collectors.toList());
+        List<ProductDto> productDtos = productRepository.findAll();
+        productDtos.stream()
+                .map(productDto -> Product.createWithId(
+                        productDto.getId(),
+                        productDto.getName(),
+                        productDto.getImgUrl(),
+                        productDto.getPrice()))
+                .collect(toList());
 
-        return products.stream().map(ProductResponseDto::new).collect(Collectors.toList());
+        return productDtos.stream()
+                .map(ProductResponseDto::fromProductDto)
+                .collect(toList());
     }
 
-    public void add(ProductRequestDto productRequestDto) {
+    @Transactional
+    public ProductResponseDto add(ProductRequestDto productRequestDto) {
         Product product = Product.createWithoutId(
-            productRequestDto.getName(),
-            productRequestDto.getImgUrl(),
-            productRequestDto.getPrice()
+                productRequestDto.getName(),
+                productRequestDto.getImgUrl(),
+                productRequestDto.getPrice()
         );
-        productRepository.save(new ProductDto(product));
+
+        ProductDto productDto = new ProductDto(product);
+        productRepository.save(productDto);
+        return ProductResponseDto.fromProductDto(productDto);
     }
 
-    public void updateById(ProductRequestDto productRequestDto, Long id) {
+    @Transactional
+    public ProductResponseDto updateById(ProductRequestDto productRequestDto, Long id) {
         Product product = Product.createWithoutId(
-            productRequestDto.getName(),
-            productRequestDto.getImgUrl(),
-            productRequestDto.getPrice()
+                productRequestDto.getName(),
+                productRequestDto.getImgUrl(),
+                productRequestDto.getPrice()
         );
-        productRepository.updateById(new ProductDto(product), id);
+        ProductDto productDto = new ProductDto(product);
+        productRepository.updateById(productDto, id);
+        return ProductResponseDto.fromProductDto(productDto);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         productRepository.deleteById(id);
     }

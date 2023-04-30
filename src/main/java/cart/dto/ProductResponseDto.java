@@ -8,11 +8,23 @@ public class ProductResponseDto {
     private final String imgUrl;
     private final int price;
 
-    public ProductResponseDto(Product product) {
-        this.id = product.getId();
-        this.name = product.getName();
-        this.imgUrl = product.getImgUrl();
-        this.price = product.getPrice();
+    private ProductResponseDto(Long id, String name, String imgUrl, int price) {
+        this.id = id;
+        this.name = name;
+        this.imgUrl = imgUrl;
+        this.price = price;
+    }
+
+    public static ProductResponseDto of(String name, String imgUrl, int price) {
+        return new ProductResponseDto(null, name, imgUrl, price);
+    }
+
+    public static ProductResponseDto fromProduct(Product product) {
+        return new ProductResponseDto(product.getId(), product.getName(), product.getImgUrl(), product.getPrice());
+    }
+
+    public static ProductResponseDto fromProductDto(ProductDto productDto) {
+        return new ProductResponseDto(productDto.getId(), productDto.getName(), productDto.getImgUrl(), productDto.getPrice());
     }
 
     public Long getId() {

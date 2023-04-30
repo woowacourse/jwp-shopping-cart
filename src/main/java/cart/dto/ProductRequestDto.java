@@ -1,6 +1,7 @@
 package cart.dto;
 
 import org.hibernate.validator.constraints.URL;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.NotBlank;
 
@@ -10,7 +11,7 @@ public class ProductRequestDto {
     private String name;
     @URL
     private String imgUrl;
-    @NotBlank
+    @NumberFormat
     private int price;
 
     public ProductRequestDto() {

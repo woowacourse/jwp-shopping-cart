@@ -1,119 +1,134 @@
 package cart.controller;
 
-import java.util.stream.Stream;
-
-import org.junit.jupiter.api.BeforeEach;
+import cart.dto.ProductRequestDto;
+import cart.dto.ProductResponseDto;
+import cart.service.JwpCartService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import cart.dto.ProductRequestDto;
-import io.restassured.RestAssured;
+import java.util.List;
+import java.util.stream.Stream;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(JwpCartController.class)
 class JwpCartControllerTest {
 
-    @LocalServerPort
-    int port;
+    @Autowired
+    MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
+    @MockBean
+    JwpCartService jwpCartService;
 
     @Test
     @DisplayName("상품 목록 페이지를 조회한다.")
-    void index() {
-        RestAssured.given().log().all()
-            .accept(MediaType.TEXT_HTML_VALUE)
-            .when().get("/")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .contentType(MediaType.TEXT_HTML_VALUE);
-    }
+    void index() throws Exception {
+        List<ProductResponseDto> expectedProducts = List.of(
+                ProductResponseDto.of("product1","p1p1.com", 1000),
+                ProductResponseDto.of ("product2", "p2p2.com", 2000)
+        );
 
-    @Test
-    @DisplayName("관리자 페이지를 조회한다.")
-    void admin() {
-        RestAssured.given().log().all()
-            .accept(MediaType.TEXT_HTML_VALUE)
-            .when().get("/admin")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .contentType(MediaType.TEXT_HTML_VALUE);
+        when(jwpCartService.findAll()).thenReturn(expectedProducts);
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andExpect(model().attribute("products", expectedProducts));
     }
 
     @Test
     @DisplayName("상품을 추가한다.")
-    void addProduct() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("리오", "http://asdf.asdf", 3000);
+    void addProduct() throws Exception {
+        String name = "리오";
+        String imgUrl = "http://asdf.asdf";
+        int price = 3000;
 
-        RestAssured.given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
-            .when().post("/admin/products")
-            .then().log().all()
-            .statusCode(HttpStatus.CREATED.value());
+        ProductRequestDto productRequestDto = new ProductRequestDto(name, imgUrl, price);
+        ProductResponseDto expectedResponse = ProductResponseDto.of(name, imgUrl, price);
+
+        when(jwpCartService.add(any(ProductRequestDto.class))).thenReturn(expectedResponse);
+
+        mockMvc.perform(post("/admin/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productRequestDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.imgUrl").value(imgUrl))
+                .andExpect(jsonPath("$.price").value(price));
     }
 
     @ParameterizedTest
-    @MethodSource("makeDto")
+    @MethodSource("makeInvalidDto")
     @DisplayName("상품을 추가한다. - 잘못된 입력을 검증한다.")
-    void addProductInvalidInput(ProductRequestDto productRequestDto) {
-
-        RestAssured.given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
-            .when().post("/admin/products")
-            .then().log().all()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
+    void addProductInvalidInput(ProductRequestDto productRequestDto) throws Exception {
+        mockMvc.perform(post("/admin/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productRequestDto)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("상품 정보를 수정한다.")
-    void updateProduct() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("리오", "http://asdf.asdf", 3000);
+    void updateProduct() throws Exception {
+        String name = "리오";
+        String imgUrl = "http://asdf.asdf";
+        int price = 3000;
+        int modifiedPrice = 1000;
 
-        RestAssured.given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
-            .when().put("/admin/products/1")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value());
+        ProductRequestDto productRequestDto = new ProductRequestDto(name, imgUrl, price);
+        ProductRequestDto modifiedProductRequestDto = new ProductRequestDto(name, imgUrl, modifiedPrice);
+        ProductResponseDto response = ProductResponseDto.of(name, imgUrl, modifiedPrice);
+
+        when(jwpCartService.updateById(any(ProductRequestDto.class), any(Long.class))).thenReturn(response);
+
+        mockMvc.perform(post("/admin/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productRequestDto)));
+
+        mockMvc.perform(put("/admin/products/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(modifiedProductRequestDto)))
+                        .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.imgUrl").value(imgUrl))
+                .andExpect(jsonPath("$.price").value(modifiedPrice));
     }
 
     @ParameterizedTest
-    @MethodSource("makeDto")
+    @MethodSource("makeInvalidDto")
     @DisplayName("상품 정보를 수정한다. - 잘못된 입력을 검증한다.")
-    void updateProductInvalidInput(ProductRequestDto productRequestDto) {
-
-        RestAssured.given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
-            .when().put("/admin/products")
-            .then().log().all()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
+    void updateProductInvalidInput(ProductRequestDto modifiedProductRequestDto) throws Exception {
+        mockMvc.perform(put("/admin/products/{id}", any(Long.class))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(modifiedProductRequestDto)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("상품을 삭제한다.")
-    void deleteProduct() {
-        RestAssured.given().log().all()
-            .when().delete("/admin/products/1")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value());
+    void deleteProduct() throws Exception {
+        doNothing().when(jwpCartService).deleteById(any(Long.class));
+        mockMvc.perform(delete("/admin/products/{id}", any(Long.class)))
+                .andExpect(status().isOk());
     }
 
-    static Stream<Arguments> makeDto() {
+    static Stream<Arguments> makeInvalidDto() {
         return Stream.of(Arguments.arguments(new ProductRequestDto("a".repeat(256), "https://naver.com", 1000)),
-            Arguments.arguments(new ProductRequestDto("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
-            Arguments.arguments(new ProductRequestDto("aaa", "https://naver.com", -1000)));
+                Arguments.arguments(new ProductRequestDto("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
+                Arguments.arguments(new ProductRequestDto("aaa", "https://naver.com", -1000)));
     }
 }
