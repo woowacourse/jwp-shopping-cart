@@ -5,7 +5,9 @@ import static java.util.stream.Collectors.toList;
 import cart.domain.Product;
 import cart.dto.product.ProductDto;
 import cart.entity.ProductEntity;
+import cart.exception.ProductConstraintException;
 import cart.exception.ProductNotFoundException;
+import cart.repository.CartDao;
 import cart.repository.ProductDao;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProductService {
     private final ProductDao productDao;
+    private final CartDao cartDao;
 
-    public ProductService(ProductDao productDao) {
+    public ProductService(ProductDao productDao, CartDao cartDao) {
         this.productDao = productDao;
+        this.cartDao = cartDao;
     }
 
     @Transactional
@@ -39,7 +43,14 @@ public class ProductService {
 
     public void deleteById(Long id) {
         validateId(id);
+        validateProductInCart(id);
         productDao.deleteById(id);
+    }
+
+    private void validateProductInCart(Long id) {
+        if (cartDao.existsByProductId(id)) {
+            throw new ProductConstraintException();
+        }
     }
 
     @Transactional

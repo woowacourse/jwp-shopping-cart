@@ -17,6 +17,7 @@ import cart.controller.MockBasicAuthProviderConfig;
 import cart.dto.product.ProductDto;
 import cart.dto.request.product.ProductCreateRequest;
 import cart.dto.request.product.ProductUpdateRequest;
+import cart.repository.CartDao;
 import cart.repository.ProductDao;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +51,9 @@ class ProductApiControllerTest {
 
     @MockBean
     ProductDao productDao;
+
+    @MockBean
+    CartDao cartDao;
 
     @Test
     @DisplayName("/products로 POST 요청과 상품의 정보를 보내면 HTTP 201 코드와 함께 상품이 등록되어야 한다.")
@@ -189,6 +193,24 @@ class ProductApiControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("존재하지 않는 상품의 ID 입니다."));
+    }
+
+    @Test
+    @DisplayName("/products/{id}로 DELETE 요청을 보낼 때 해당 상품이 없으면 HTTP 400 코드와 예외 메시지가 반환되어야 한다.")
+    void deleteProduct_productInCart() throws Exception {
+        // given
+        long productId = 1;
+        given(productDao.existsById(anyLong()))
+                .willReturn(true);
+        given(cartDao.existsByProductId(anyLong()))
+                .willReturn(true);
+
+        // expect
+        mockMvc.perform(delete("/products/" + productId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("해당 상품이 장바구니에 존재합니다."));
     }
 
     @Test

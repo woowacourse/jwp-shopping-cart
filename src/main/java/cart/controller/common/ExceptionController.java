@@ -5,7 +5,7 @@ import cart.dto.response.Response;
 import cart.dto.response.SimpleResponse;
 import cart.exception.AuthenticationException;
 import cart.exception.DuplicateEmailException;
-import cart.exception.ProductNotFoundException;
+import cart.exception.ProductException;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +39,8 @@ public class ExceptionController {
                 .body(errorResponse);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<Response> handle(ProductNotFoundException e) {
+    @ExceptionHandler(ProductException.class)
+    public ResponseEntity<Response> handle(ProductException e) {
         Response response = SimpleResponse.badRequest(e.getMessage());
         return ResponseEntity.badRequest()
                 .body(response);
