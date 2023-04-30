@@ -8,15 +8,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.*;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -45,27 +51,67 @@ class ProductServiceTest {
         final List<ProductResponse> productResponses = productService.findAll();
         
         // then
-        assertThat(productResponses).containsExactly(firstProductResponse, secondProductResponse);
+        assertAll(
+                () -> then(productDao).should(only()).findAll(),
+                () -> assertThat(productResponses).containsExactly(firstProductResponse, secondProductResponse)
+        );
     }
-
+    
     @Test
     void 상품을_저장한다() {
         // expect
-        assertThatNoException()
-                .isThrownBy(() -> productService.save(new ProductRequest()));
+        assertAll(
+                () -> assertThatNoException()
+                        .isThrownBy(() -> productService.save(new ProductRequest())),
+                () -> then(productDao).should(only()).save(any())
+        );
     }
-
+    
     @Test
     void 상품을_수정한다() {
         // expect
-        assertThatNoException()
-                .isThrownBy(() -> productService.update(2L, new ProductRequest()));
+        final InOrder inOrder = inOrder(productDao);
+        
+        assertAll(
+                () -> assertThatNoException()
+                        .isThrownBy(() -> productService.update(2L, new ProductRequest())),
+                () -> then(productDao).should(inOrder).findAll(),
+                () -> then(productDao).should(inOrder).update(any())
+        );
     }
-
+    
     @Test
     void 상품을_삭제한다() {
         // expect
-        assertThatNoException()
-                .isThrownBy(() -> productService.delete(2L));
+        final InOrder inOrder = inOrder(productDao);
+        
+        assertAll(
+                () -> assertThatNoException()
+                        .isThrownBy(() -> productService.delete(2L)),
+                () -> then(productDao).should(inOrder).findAll(),
+                () -> then(productDao).should(inOrder).delete(anyLong())
+        );
+    }
+    
+    @Test
+    void 상품을_수정할_시_존재하지_않는_product_id를_전달하면_예외가_발생한다() {
+        // expect
+        assertAll(
+                () -> assertThatIllegalArgumentException()
+                        .isThrownBy(() -> productService.update(3L, null))
+                        .withMessage("[ERROR] 존재하지 않는 product id 입니다."),
+                () -> then(productDao).should(never()).update(any())
+        );
+    }
+    
+    @Test
+    void 상품을_삭제할_시_존재하지_않는_product_id를_전달하면_예외가_발생한다() {
+        // expect
+        assertAll(
+                () -> assertThatIllegalArgumentException()
+                        .isThrownBy(() -> productService.delete(3L))
+                        .withMessage("[ERROR] 존재하지 않는 product id 입니다."),
+                () -> then(productDao).should(never()).delete(anyLong())
+        );
     }
 }

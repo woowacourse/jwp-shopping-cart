@@ -19,7 +19,10 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.*;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -57,9 +60,13 @@ class ViewControllerTest {
                 .response()
                 .getMvcResult();
         
-        // then
         final ModelAndView modelAndView = mvcResult.getModelAndView();
-        assertThat(Objects.requireNonNull(modelAndView).getViewName()).isEqualTo("index");
+        
+        // then
+        assertAll(
+                () -> then(productService).should(only()).findAll(),
+                () -> assertThat(Objects.requireNonNull(modelAndView).getViewName()).isEqualTo("index")
+        );
     }
     
     @Test
@@ -74,8 +81,12 @@ class ViewControllerTest {
                 .response()
                 .getMvcResult();
         
-        // then
         final ModelAndView modelAndView = mvcResult.getModelAndView();
-        assertThat(Objects.requireNonNull(modelAndView).getViewName()).isEqualTo("admin");
+        
+        // then
+        assertAll(
+                () -> then(productService).should(only()).findAll(),
+                () -> assertThat(Objects.requireNonNull(modelAndView).getViewName()).isEqualTo("admin")
+        );
     }
 }

@@ -17,6 +17,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.HashMap;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.only;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -50,6 +54,8 @@ class ProductControllerTest {
                 .then().log().all()
                 .assertThat()
                 .status(HttpStatus.CREATED);
+        
+        then(productService).should(only()).save(any());
     }
     
     @Test
@@ -65,6 +71,8 @@ class ProductControllerTest {
                 .then().log().all()
                 .assertThat()
                 .status(HttpStatus.NO_CONTENT);
+        
+        then(productService).should(only()).update(anyLong(), any());
     }
     
     private void normalInput() {
@@ -81,6 +89,8 @@ class ProductControllerTest {
                 .then().log().all()
                 .assertThat()
                 .status(HttpStatus.NO_CONTENT);
+        
+        then(productService).should(only()).delete(anyLong());
     }
     
     @ParameterizedTest(name = "{displayName} : name = {0}")
