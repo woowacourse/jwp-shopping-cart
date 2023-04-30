@@ -57,7 +57,6 @@ public class MySQLProductDao implements ProductDao {
         } catch (EmptyResultDataAccessException exception){
             return Optional.empty();
         }
-
     }
 
     @Override
