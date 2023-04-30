@@ -1,10 +1,6 @@
 package cart.controller;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 import cart.dto.ErrorResponse;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +8,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(assignableTypes = AdminController.class)
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+@RestControllerAdvice(assignableTypes = {AdminController.class, AdminProductController.class})
 public class AdminControllerAdvice {
 
     private static final String UNEXPECTED_ERROR_MESSAGE = "네트워크 연결 상태가 좋지 않습니다 잠시 후 다시 시도해 주세요.";
