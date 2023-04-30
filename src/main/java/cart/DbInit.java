@@ -1,6 +1,8 @@
 package cart;
 
+import cart.dao.MemberDao;
 import cart.dao.ProductDao;
+import cart.entity.Member;
 import cart.entity.Product;
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
@@ -9,9 +11,11 @@ import org.springframework.stereotype.Component;
 public class DbInit {
 
     private final ProductDao productDao;
+    private final MemberDao memberDao;
 
-    public DbInit(ProductDao productDao) {
+    public DbInit(ProductDao productDao, MemberDao memberDao) {
         this.productDao = productDao;
+        this.memberDao = memberDao;
     }
 
     @PostConstruct
@@ -28,5 +32,11 @@ public class DbInit {
                 "치킨",
                 "https://cdn.thescoop.co.kr/news/photo/202010/41306_58347_1055.jpg",
                 10000));
+
+        memberDao.save(new Member(
+                        "boxster@email.com",
+                        "boxster"
+                )
+        );
     }
 }

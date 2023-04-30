@@ -6,7 +6,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.entity.Member;
 import cart.entity.Product;
+import cart.service.MemberService;
 import cart.service.ProductService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +26,8 @@ class PageControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private ProductService productService;
+    @MockBean
+    private MemberService memberService;
 
     @DisplayName("인덱스 페이지를 상품 리스트와 함께 조회한다")
     @Test
@@ -53,5 +57,19 @@ class PageControllerTest {
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("products", hasSize(2)));
+    }
+
+    @DisplayName("회원 페이지를 전체 회원과 함께 조회한다")
+    @Test
+    void settingPageTest() throws Exception {
+        List<Member> members = List.of(
+                new Member("boxster@email.com", "boxster"),
+                new Member("gitchan@email.com", "gitchan"));
+
+        when(memberService.findMembers()).thenReturn(members);
+
+        mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("members", hasSize(2)));
     }
 }
