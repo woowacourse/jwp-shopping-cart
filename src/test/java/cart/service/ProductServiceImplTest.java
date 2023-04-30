@@ -18,12 +18,12 @@ import cart.controller.response.ProductResponse;
 import cart.repository.ProductRepository;
 
 @SpringBootTest
-class GeneralProductServiceTest {
+class ProductServiceImplTest {
 	@MockBean
 	ProductRepository productRepository;
 
 	@Autowired
-	GeneralProductService generalProductService;
+	ProductServiceImpl productServiceImpl;
 
 	@DisplayName("전체 상품 조회 테스트")
 	@Test
@@ -34,7 +34,7 @@ class GeneralProductServiceTest {
 		given(productRepository.findAll()).willReturn(products);
 
 		// when
-		final List<ProductResponse> findAll = generalProductService.findAll();
+		final List<ProductResponse> findAll = productServiceImpl.findAll();
 
 		// then
 		assertThat(findAll)
@@ -50,7 +50,7 @@ class GeneralProductServiceTest {
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("KIARA", 1000, "이미지");
-		final long saveId = generalProductService.save(request);
+		final long saveId = productServiceImpl.save(request);
 
 		// then
 		assertThat(saveId).isEqualTo(1L);
@@ -63,7 +63,7 @@ class GeneralProductServiceTest {
 		given(productRepository.deleteByProductId(anyLong())).willReturn(1L);
 
 		// when
-		final long deleteProductId = generalProductService.deleteByProductId(1L);
+		final long deleteProductId = productServiceImpl.deleteByProductId(1L);
 
 		// then
 		assertThat(deleteProductId).isEqualTo(1L);
@@ -79,7 +79,7 @@ class GeneralProductServiceTest {
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("hyena", 400, "이미지");
-		final ProductResponse updateProduct = generalProductService.update(1L, request);
+		final ProductResponse updateProduct = productServiceImpl.update(1L, request);
 
 		// then
 		assertThat(updateProduct)

@@ -13,10 +13,10 @@ import cart.repository.ProductRepository;
 
 @Transactional(readOnly = true)
 @Service
-public class GeneralProductService implements ProductService {
+public class ProductServiceImpl implements ProductService {
 	private final ProductRepository productRepository;
 
-	public GeneralProductService(final ProductRepository productRepository) {
+	public ProductServiceImpl(final ProductRepository productRepository) {
 		this.productRepository = productRepository;
 	}
 
