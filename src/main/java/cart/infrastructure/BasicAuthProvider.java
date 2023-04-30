@@ -22,8 +22,7 @@ public class BasicAuthProvider {
     }
 
     public User resolveUser(String token) {
-        String decodeToken = decodeToken(token);
-        String[] credentials = decodeToken.split(DELIMITER);
+        String[] credentials = getCredentials(token);
         validateCredentials(credentials);
         String email = credentials[EMAIL_INDEX];
         String password = credentials[PASSWORD_INDEX];
@@ -31,14 +30,15 @@ public class BasicAuthProvider {
         return new User(memberId, email, password);
     }
 
-    private String decodeToken(String token) {
+    private String[] getCredentials(String token) {
         if (!StringUtils.hasText(token)) {
             throw new AuthenticationException("인증 토큰이 비어있습니다.");
         }
         if (!token.startsWith(BASIC_HEADER)) {
             throw new AuthenticationException("베이직 형식의 토큰이 아닙니다.");
         }
-        return getDecodeToken(trimToken(token));
+        String decodeToken = getDecodeToken(trimToken(token));
+        return decodeToken.split(DELIMITER);
     }
 
     private static String trimToken(String token) {
