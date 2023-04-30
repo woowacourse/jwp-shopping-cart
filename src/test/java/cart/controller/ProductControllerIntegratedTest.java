@@ -2,6 +2,7 @@ package cart.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -11,7 +12,6 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 import java.util.HashMap;
 
@@ -35,48 +35,107 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품을_생성한다() {
+        // given
         productRequestMapper.put("name", "product");
         productRequestMapper.put("imageUrl", "aaaa");
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
                 .when().post(DEFAULT_PATH)
                 .then().log().all()
+                .contentType(ContentType.JSON)
                 .statusCode(HttpStatus.CREATED.value());
     }
     
     @Test
     void 상품을_수정한다() {
-        productRequestMapper.put("name", "product");
-        productRequestMapper.put("imageUrl", "aaaa");
-        productRequestMapper.put("price", 1000);
+        // given
+        final Integer id = saveAndGetProductId();
         
+        // expect
         RestAssured.given().log().all()
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .contentType(ContentType.JSON)
                 .body(productRequestMapper)
-                .when().put(DEFAULT_PATH + "1")
+                .when().put(DEFAULT_PATH + id)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
     
     @Test
     void 상품을_삭제한다() {
+        // given
+        final Integer id = saveAndGetProductId();
+        
+        // expect
         RestAssured.given().log().all()
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .when().delete(DEFAULT_PATH + "1")
+                .contentType(ContentType.JSON)
+                .when().delete(DEFAULT_PATH + id)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+    
+    private Integer saveAndGetProductId() {
+        // given
+        productRequestMapper.put("name", "product");
+        productRequestMapper.put("imageUrl", "aaaa");
+        productRequestMapper.put("price", 1000);
+        
+        // expect
+        final Response postResponse = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(productRequestMapper)
+                .when().post(DEFAULT_PATH)
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .contentType(ContentType.JSON)
+                .extract()
+                .response();
+        
+        return postResponse.path("id");
+    }
+    
+    @Test
+    void 상품을_수정할_시_존재하지_않는_product_id를_전달하면_예외가_발생한다() {
+        // given
+        productRequestMapper.put("name", "product");
+        productRequestMapper.put("imageUrl", "aaaa");
+        productRequestMapper.put("price", 1000);
+        
+        // expect
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(productRequestMapper)
+                .when().put(DEFAULT_PATH + 1)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .contentType(ContentType.JSON)
+                .body("message", is("[ERROR] 존재하지 않는 product id 입니다."));
+    }
+    
+    @Test
+    void 상품을_삭제할_시_존재하지_않는_product_id를_전달하면_예외가_발생한다() {
+        // expect
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when().delete(DEFAULT_PATH + 1)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .contentType(ContentType.JSON)
+                .body("message", is("[ERROR] 존재하지 않는 product id 입니다."));
     }
     
     @ParameterizedTest(name = "{displayName} : name = {0}")
     @NullAndEmptySource
     void 상품_저장_시_상품_이름이_null_또는_empty일_시_예외_발생(final String name) {
+        // given
         productRequestMapper.put("name", name);
         productRequestMapper.put("imageUrl", "aaaa");
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -89,10 +148,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_저장_시_상품_이름_길이가_255초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "a".repeat(256));
         productRequestMapper.put("imageUrl", "aaaa");
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -106,10 +167,12 @@ class ProductControllerIntegratedTest {
     @ParameterizedTest(name = "{displayName} : name = {0}")
     @NullAndEmptySource
     void 상품_저장_시_이미지_URL이_null_또는_empty일_시_예외_발생(final String imageUrl) {
+        // given
         productRequestMapper.put("name", "홍고");
         productRequestMapper.put("imageUrl", imageUrl);
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -122,10 +185,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_저장_시_이미지_URL_길이가_255초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a".repeat(256));
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -138,10 +203,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_저장_시_가격이_null일_시_예외_발생() {
+        // given
         productRequestMapper.put("name", "홍고");
         productRequestMapper.put("imageUrl", "홍고");
         productRequestMapper.put("price", null);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -154,10 +221,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_저장_시_가격이_1원_미만일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", 0);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -170,10 +239,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_저장_시_가격이_천만원_초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", 10_000_001);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -186,10 +257,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_저장_시_price의_자릿수가_Integer_범위를_초과했을_때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", "10000001000");
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -203,10 +276,12 @@ class ProductControllerIntegratedTest {
     @ParameterizedTest(name = "{displayName} : name = {0}")
     @NullAndEmptySource
     void 상품_수정_시_상품_이름이_null_또는_empty일_시_예외_발생(final String name) {
+        // given
         productRequestMapper.put("name", name);
         productRequestMapper.put("imageUrl", "aaaa");
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -219,10 +294,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_수정_시_상품_이름_길이가_255초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "a".repeat(256));
         productRequestMapper.put("imageUrl", "aaaa");
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -236,10 +313,12 @@ class ProductControllerIntegratedTest {
     @ParameterizedTest(name = "{displayName} : name = {0}")
     @NullAndEmptySource
     void 상품_수정_시_이미지_URL이_null_또는_empty일_시_예외_발생(final String imageUrl) {
+        // given
         productRequestMapper.put("name", "홍고");
         productRequestMapper.put("imageUrl", imageUrl);
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -252,10 +331,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_수정_시_이미지_URL_길이가_255초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a".repeat(256));
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -268,10 +349,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_수정_시_가격이_null일_시_예외_발생() {
+        // given
         productRequestMapper.put("name", "홍고");
         productRequestMapper.put("imageUrl", "홍고");
         productRequestMapper.put("price", null);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -284,10 +367,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_수정_시_가격이_1원_미만일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", 0);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -300,10 +385,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_수정_시_가격이_천만원_초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", 10_000_001);
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -316,10 +403,12 @@ class ProductControllerIntegratedTest {
     
     @Test
     void 상품_수정_시_price의_자릿수가_Integer_범위를_초과했을_때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", "10000001000");
         
+        // expect
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)

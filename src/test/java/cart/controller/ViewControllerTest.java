@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -41,31 +42,40 @@ class ViewControllerTest {
     
     @Test
     void 모든_상품_목록을_가져온_후_index_페이지로_이동한다() {
+        // given
         final ProductResponse firstProductResponse = new ProductResponse(1L, "홍고", "aa", 1_000_000_000);
         final ProductResponse secondProductResponse = new ProductResponse(2L, "아벨", "bb", 1_000_000_000);
         given(productService.findAll()).willReturn(List.of(firstProductResponse, secondProductResponse));
         
+        // when
         final MvcResult mvcResult = RestAssuredMockMvc.given().log().all()
                 .when().get("/")
                 .then().log().all()
                 .assertThat()
                 .status(HttpStatus.OK)
-                .extract().response().getMvcResult();
+                .extract()
+                .response()
+                .getMvcResult();
         
+        // then
         final ModelAndView modelAndView = mvcResult.getModelAndView();
-        assertThat(modelAndView.getViewName()).isEqualTo("index");
+        assertThat(Objects.requireNonNull(modelAndView).getViewName()).isEqualTo("index");
     }
     
     @Test
     void 모든_상품_목록을_가져온_후_관리자_페이지로_이동한다() {
+        // when
         final MvcResult mvcResult = RestAssuredMockMvc.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
                 .assertThat()
                 .status(HttpStatus.OK)
-                .extract().response().getMvcResult();
+                .extract()
+                .response()
+                .getMvcResult();
         
+        // then
         final ModelAndView modelAndView = mvcResult.getModelAndView();
-        assertThat(modelAndView.getViewName()).isEqualTo("admin");
+        assertThat(Objects.requireNonNull(modelAndView).getViewName()).isEqualTo("admin");
     }
 }

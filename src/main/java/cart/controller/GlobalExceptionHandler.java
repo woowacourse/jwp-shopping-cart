@@ -13,8 +13,13 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(Exception exception) {
+    public ResponseEntity<ExceptionResponse> handleException() {
         return ResponseEntity.internalServerError().body(new ExceptionResponse("서버가 응답할 수 없습니다."));
+    }
+    
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(exception.getMessage()));
     }
     
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -27,7 +32,7 @@ public class GlobalExceptionHandler {
     }
     
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(HttpMessageNotReadableException exception) {
+    public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException() {
         return ResponseEntity.badRequest().body(new ExceptionResponse("[ERROR] 가격의 최대 금액은 1000만원입니다."));
     }
 }

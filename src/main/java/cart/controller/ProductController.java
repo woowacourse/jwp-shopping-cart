@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import cart.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,13 @@ public class ProductController {
     private final ProductService productService;
     
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid ProductRequest productRequest) {
-        productService.save(productRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<ProductResponse> save(@RequestBody @Valid ProductRequest productRequest) {
+        final Long productId = productService.save(productRequest);
+        final ProductResponse productResponse = ProductResponse.builder()
+                .id(productId)
+                .build();
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(productResponse);
     }
     
     @PutMapping("/{id}")

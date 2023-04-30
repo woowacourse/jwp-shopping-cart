@@ -37,16 +37,12 @@ class ProductControllerTest {
                 .setControllerAdvice(new GlobalExceptionHandler()));
     }
     
-    private void normalInput() {
-        productRequestMapper.put("name", "book");
-        productRequestMapper.put("imageUrl", "aaa");
-        productRequestMapper.put("price", 10_000);
-    }
-    
     @Test
     void 상품을_생성한다() {
+        // given
         normalInput();
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -58,8 +54,10 @@ class ProductControllerTest {
     
     @Test
     void 상품을_수정한다() {
+        // given
         normalInput();
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -69,8 +67,15 @@ class ProductControllerTest {
                 .status(HttpStatus.NO_CONTENT);
     }
     
+    private void normalInput() {
+        productRequestMapper.put("name", "book");
+        productRequestMapper.put("imageUrl", "aaa");
+        productRequestMapper.put("price", 10_000);
+    }
+    
     @Test
     void 상품을_삭제한다() {
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .when().delete(DEFAULT_PATH + "1")
                 .then().log().all()
@@ -81,10 +86,12 @@ class ProductControllerTest {
     @ParameterizedTest(name = "{displayName} : name = {0}")
     @NullAndEmptySource
     void 상품_저장_시_상품_이름이_null_또는_empty일_시_예외_발생(final String name) {
+        // given
         productRequestMapper.put("name", name);
         productRequestMapper.put("imageUrl", "aaaa");
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -97,10 +104,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_저장_시_상품_이름_길이가_255초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "a".repeat(256));
         productRequestMapper.put("imageUrl", "aaaa");
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -114,10 +123,12 @@ class ProductControllerTest {
     @ParameterizedTest(name = "{displayName} : name = {0}")
     @NullAndEmptySource
     void 상품_저장_시_이미지_URL이_null_또는_empty일_시_예외_발생(final String imageUrl) {
+        // given
         productRequestMapper.put("name", "홍고");
         productRequestMapper.put("imageUrl", imageUrl);
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -130,10 +141,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_저장_시_이미지_URL_길이가_255초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a".repeat(256));
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -146,10 +159,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_저장_시_가격이_null일_시_예외_발생() {
+        // given
         productRequestMapper.put("name", "홍고");
         productRequestMapper.put("imageUrl", "홍고");
         productRequestMapper.put("price", null);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -162,10 +177,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_저장_시_가격이_1원_미만일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", 0);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -178,10 +195,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_저장_시_가격이_천만원_초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", 10_000_001);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -194,10 +213,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_저장_시_price의_자릿수가_Integer_범위를_초과했을_때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", "10000001000");
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -211,10 +232,12 @@ class ProductControllerTest {
     @ParameterizedTest(name = "{displayName} : name = {0}")
     @NullAndEmptySource
     void 상품_수정_시_상품_이름이_null_또는_empty일_시_예외_발생(final String name) {
+        // given
         productRequestMapper.put("name", name);
         productRequestMapper.put("imageUrl", "aaaa");
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -227,10 +250,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_수정_시_상품_이름_길이가_255초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "a".repeat(256));
         productRequestMapper.put("imageUrl", "aaaa");
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -244,10 +269,12 @@ class ProductControllerTest {
     @ParameterizedTest(name = "{displayName} : name = {0}")
     @NullAndEmptySource
     void 상품_수정_시_이미지_URL이_null_또는_empty일_시_예외_발생(final String imageUrl) {
+        // given
         productRequestMapper.put("name", "홍고");
         productRequestMapper.put("imageUrl", imageUrl);
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -260,10 +287,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_수정_시_이미지_URL_길이가_255초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a".repeat(256));
         productRequestMapper.put("price", 1000);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -276,10 +305,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_수정_시_가격이_null일_시_예외_발생() {
+        // given
         productRequestMapper.put("name", "홍고");
         productRequestMapper.put("imageUrl", "홍고");
         productRequestMapper.put("price", null);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -292,10 +323,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_수정_시_가격이_1원_미만일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", 0);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -308,10 +341,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_수정_시_가격이_천만원_초과일때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", 10_000_001);
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)
@@ -324,10 +359,12 @@ class ProductControllerTest {
     
     @Test
     void 상품_수정_시_price의_자릿수가_Integer_범위를_초과했을_때_예외_발생() {
+        // given
         productRequestMapper.put("name", "아벨");
         productRequestMapper.put("imageUrl", "a");
         productRequestMapper.put("price", "10000001000");
         
+        // expect
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(productRequestMapper)

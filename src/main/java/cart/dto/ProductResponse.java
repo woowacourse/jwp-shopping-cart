@@ -1,20 +1,24 @@
 package cart.dto;
 
 import cart.domain.Product;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
 @EqualsAndHashCode
-@RequiredArgsConstructor
 public class ProductResponse {
     private final Long id;
     private final String name;
     private final String imageUrl;
     private final Integer price;
+    
+    @Builder
+    public ProductResponse(final Long id, final String name, final String imageUrl, final Integer price) {
+        this.id = id;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.price = price;
+    }
     
     public static ProductResponse from(Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
