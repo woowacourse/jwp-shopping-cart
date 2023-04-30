@@ -13,3 +13,6 @@ create table member
     password TEXT NOT NULL,
     primary key (email)
 );
+
+insert into member (email, password) values ('a@a.com', 'password1');
+insert into member (email, password) values ('b@b.com', 'password2');
