@@ -31,18 +31,29 @@ public class CartApiControllerTest {
     @Test
     void insertTest() throws Exception {
         when(cartService.addProduct(any())).thenReturn(new ProductEntity(1, "name", 1000, "image"));
+        final String imageUrl = "http://www.test.image.png";
 
         this.mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"name\": \"name\", \"image\": \"image\", \"price\": \"1000\"}"))
+                        .content("{ \"name\": \"name\", \"image\": \"" + imageUrl + "\", \"price\": \"1000\"}"))
                 .andExpect(status().isCreated());
     }
 
     @Test
-    void insertTest_fail() throws Exception {
+    void insertTest_imageNonUrl_fail() throws Exception {
         this.mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"name\": \"name\", \"image\": \"image\", \"price\": \"abc\"}"))
+                        .content("{ \"name\": \"name\", \"image\": \"image\", \"price\": \"1000\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void insertTest_priceNonNumber_fail() throws Exception {
+        final String imageUrl = "http://www.test.image.png";
+
+        this.mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{ \"name\": \"name\", \"image\": \"" + imageUrl + "\", \"price\": \"1000\"}"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -66,17 +77,29 @@ public class CartApiControllerTest {
 
     @Test
     void updateTest() throws Exception {
+        final String imageUrl = "http://www.test.image.png";
+
         this.mockMvc.perform(put("/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"image\", \"price\": \"1000\"}"))
+                        .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"" + imageUrl + "\", \"price\": \"1000\"}"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void updateTest_fail() throws Exception {
+    void updateTest_imageNonUrl_fail() throws Exception {
         this.mockMvc.perform(put("/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"image\", \"price\": \"abc\"}"))
+                        .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"image\", \"price\": \"1000\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateTest_priceNonNumber_fail() throws Exception {
+        final String imageUrl = "http://www.test.image.png";
+
+        this.mockMvc.perform(put("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"" + imageUrl + "\", \"price\": \"abc\"}"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -87,7 +110,7 @@ public class CartApiControllerTest {
     }
 
     @Test
-    void deleteTest_fail() throws Exception {
+    void deleteTest_idNonNumber_fail() throws Exception {
         this.mockMvc.perform(delete("/products/a"))
                 .andExpect(status().isBadRequest());
     }
