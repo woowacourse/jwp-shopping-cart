@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
 
-public class MemberUpdateRequest {
+public class MemberRequest {
 
     @NotNull
     private final String email;
@@ -16,7 +16,7 @@ public class MemberUpdateRequest {
     @NotNull
     private final String password;
 
-    public MemberUpdateRequest(final String email, final String name, final String phoneNumber, final String password) {
+    public MemberRequest(final String email, final String name, final String phoneNumber, final String password) {
         this.email = email;
         this.name = name;
         this.phoneNumber = phoneNumber;
