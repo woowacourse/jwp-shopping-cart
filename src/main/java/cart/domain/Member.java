@@ -6,7 +6,7 @@ import static cart.exception.ErrorCode.USER_EMAIL_LENGTH;
 import static cart.exception.ErrorCode.USER_NICKNAME_LENGTH;
 import static cart.exception.ErrorCode.USER_PASSWORD_LENGTH;
 
-public class User {
+public class Member {
 
     private static final int EMAIl_MIN_LENGTH = 5, EMAIL_MAX_LENGTH = 50;
     private static final int PASSWORD_MIN_LENGTH = 8, PASSWORD_MAX_LENGTH = 50;
@@ -17,18 +17,18 @@ public class User {
     private final String nickname;
     private final String telephone;
 
-    private User(final String email, final String password, final String nickname, final String telephone) {
+    private Member(final String email, final String password, final String nickname, final String telephone) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.telephone = telephone;
     }
 
-    public static User create(final String email, final String password, final String nickname, final String telephone) {
+    public static Member create(final String email, final String password, final String nickname, final String telephone) {
         validateEmail(email);
         validatePassword(password);
         validateNickname(nickname);
-        return new User(email, password, nickname, telephone);
+        return new Member(email, password, nickname, telephone);
     }
 
     private static void validateEmail(final String email) {
