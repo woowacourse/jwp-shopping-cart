@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -39,6 +41,24 @@ class JdbcUserDaoTest {
         // then
         사용자_정보를_비교한다(user, saveId, "test@test.com", "test");
     }
+
+    @Test
+    void 전체_조회한다() {
+        // given
+        final long firstUser = 사용자를_저장한다("test@test.com", "test");
+        final long secondUser = 사용자를_저장한다("user@user.com", "user");
+
+        // when
+        final List<Users> users = userDao.findAll();
+
+        // then
+        assertAll(
+                () -> assertThat(users).hasSize(2),
+                () -> 사용자_정보를_비교한다(users.get(0), firstUser, "test@test.com", "test"),
+                () -> 사용자_정보를_비교한다(users.get(1), secondUser, "user@user.com", "user")
+        );
+    }
+
 
     private void 사용자_정보를_비교한다(final Users target, final long id, final String email, final String password) {
         assertAll(

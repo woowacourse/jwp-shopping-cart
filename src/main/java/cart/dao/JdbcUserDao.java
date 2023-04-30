@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -34,6 +35,21 @@ public class JdbcUserDao implements UserDao {
         return returnUsers(users);
     }
 
+    private Optional<Users> returnUsers(final Users users) {
+        if (ObjectUtils.isEmpty(users)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(users);
+    }
+
+    @Override
+    public List<Users> findAll() {
+        final String sql = "SELECT id, email, password, created_at FROM users";
+
+        return jdbcTemplate.query(sql, createUsersRowMapper());
+    }
+
     private static RowMapper<Users> createUsersRowMapper() {
         return (rs, rowNum) -> new Users(
                 rs.getLong("id"),
@@ -41,13 +57,5 @@ public class JdbcUserDao implements UserDao {
                 rs.getString("password"),
                 rs.getTimestamp("created_at").toLocalDateTime()
         );
-    }
-
-    private Optional<Users> returnUsers(final Users users) {
-        if (ObjectUtils.isEmpty(users)) {
-            return Optional.empty();
-        }
-
-        return Optional.of(users);
     }
 }
