@@ -1,5 +1,7 @@
 package cart.dto.member;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.NotNull;
 
 public class MemberResponse {
@@ -9,6 +11,7 @@ public class MemberResponse {
     @NotNull
     private final String name;
     @NotNull
+    @JsonProperty("phone-number")
     private final String phoneNumber;
     @NotNull
     private final String password;
