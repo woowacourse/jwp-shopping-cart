@@ -23,52 +23,49 @@ class CartDaoTest {
     JdbcTemplate jdbcTemplate;
 
     CartDao cartDao;
+    Cart cart;
 
     @BeforeEach
     void setUp() {
         cartDao = new CartDao(jdbcTemplate);
+
+        User user = new User(2L, "a@a.com", "a");
+        Item item = new Item(1L, "자전거1", "https://image.com", 10000);
+
+        cart = cartDao.insert(user, item);
     }
 
     @Test
     @DisplayName("장바구니에 상품을 추가한다")
     void insertSuccess() {
         User user = new User(2L, "b@b.com", "b");
-        Item item = new Item(1L, "자전거1", "https://image.com", 10000);
+        Item item = new Item(2L, "자전거1", "https://image.com", 10000);
 
         Cart cart = cartDao.insert(user, item);
 
         assertThat(cart.getId()).isPositive();
     }
 
+    @Test
+    @DisplayName("장바구니에 상품이 존재하는 사용자의 상품을 조회한다")
+    void findByEmailAndItemIdSuccessWithNotEmptyCarts() {
+        List<Cart> carts = cartDao.findByEmailAndItemId("a@a.com", cart.getItem().getId());
+
+        assertThat(carts).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("장바구니에 상품이 존재하지 않는 사용자의 상품을 조회한다")
+    void findByEmailAndItemIdSuccessWithEmptyCarts() {
+        List<Cart> carts = cartDao.findByEmailAndItemId("c@c.com", cart.getItem().getId());
+
+        assertThat(carts).isEmpty();
+    }
+
     @Nested
     @DisplayName("findByEmailAndItemId 테스트")
     class FindByEmailAndItemIdTest {
 
-        private Cart cart;
-
-        @BeforeEach
-        void setUp() {
-            User user = new User(1L, "a@a.com", "a");
-            Item item = new Item(5L, "자전거1", "https://image.com", 10000);
-
-            cart = cartDao.insert(user, item);
-        }
-
-        @Test
-        @DisplayName("장바구니에 상품이 존재하는 사용자의 상품을 조회한다")
-        void findByEmailAndItemIdSuccessWithNotEmptyCarts() {
-            List<Cart> carts = cartDao.findByEmailAndItemId("a@a.com", cart.getItem().getId());
-
-            assertThat(carts).isNotEmpty();
-        }
-
-        @Test
-        @DisplayName("장바구니에 상품이 존재하지 않는 사용자의 상품을 조회한다")
-        void findByEmailAndItemIdSuccessWithEmptyCarts() {
-            List<Cart> carts = cartDao.findByEmailAndItemId("b@b.com", cart.getItem().getId());
-
-            assertThat(carts).isEmpty();
-        }
     }
 
     @Nested

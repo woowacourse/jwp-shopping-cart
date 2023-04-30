@@ -7,7 +7,6 @@ import cart.domain.item.Item;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -20,10 +19,12 @@ class ItemDaoTest {
     JdbcTemplate jdbcTemplate;
 
     ItemDao itemDao;
+    Item savedItem;
 
     @BeforeEach
     void setUp() {
         itemDao = new ItemDao(jdbcTemplate);
+        savedItem = itemDao.insert(createMacBookItem());
     }
 
     @Test
@@ -40,48 +41,35 @@ class ItemDaoTest {
         );
     }
 
-    @Nested
-    @DisplayName("조회, 수정, 삭제 테스트")
-    class RudTest {
+    @Test
+    @DisplayName("지정된 id의 상품을 조회한다")
+    void selectSuccess() {
+        Optional<Item> actual = itemDao.findById(savedItem.getId());
 
-        private Item savedItem;
+        assertAll(
+                () -> assertThat(actual).isPresent(),
+                () -> assertThat(actual.get().getName()).isEqualTo("맥북프로"),
+                () -> assertThat(actual.get().getImageUrl()).isEqualTo("https://image.com"),
+                () -> assertThat(actual.get().getPrice()).isEqualTo(10_000)
+        );
+    }
 
-        @BeforeEach
-        void setUp() {
-            savedItem = itemDao.insert(createMacBookItem());
-        }
+    @Test
+    @DisplayName("지정된 id의 상품을 변경한다")
+    void updateSuccess() {
+        Item updateItem = new Item(savedItem.getId(), "맥북", "https://image.net", 50_000);
 
-        @Test
-        @DisplayName("지정된 id의 상품을 조회한다")
-        void selectSuccess() {
-            Optional<Item> actual = itemDao.findById(savedItem.getId());
+        int updateRecordCount = itemDao.update(updateItem);
 
-            assertAll(
-                    () -> assertThat(actual).isPresent(),
-                    () -> assertThat(actual.get().getName()).isEqualTo("맥북프로"),
-                    () -> assertThat(actual.get().getImageUrl()).isEqualTo("https://image.com"),
-                    () -> assertThat(actual.get().getPrice()).isEqualTo(10_000)
-            );
-        }
+        assertThat(updateRecordCount).isOne();
+    }
 
-        @Test
-        @DisplayName("지정된 id의 상품을 변경한다")
-        void updateSuccess() {
-            Item updateItem = new Item(savedItem.getId(), "맥북", "https://image.net", 50_000);
+    @Test
+    @DisplayName("지정된 id의 상품을 삭제한다")
+    void deleteSuccess() {
+        int deletedRecordCount = itemDao.delete(savedItem.getId());
 
-            int updateRecordCount = itemDao.update(updateItem);
-
-            assertThat(updateRecordCount).isOne();
-        }
-
-        @Test
-        @DisplayName("지정된 id의 상품을 삭제한다")
-        void deleteSuccess() {
-            int deletedRecordCount = itemDao.delete(savedItem.getId());
-
-            assertThat(deletedRecordCount).isOne();
-        }
-
+        assertThat(deletedRecordCount).isOne();
     }
 
     private Item createMacBookItem() {

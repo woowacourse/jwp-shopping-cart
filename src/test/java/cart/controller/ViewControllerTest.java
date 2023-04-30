@@ -66,4 +66,14 @@ class ViewControllerTest {
                 .andExpect(view().name("settings"))
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("/cart를 요청하면 장바구니 페이지 이름을 반환한다.")
+    void redirectCartPage() throws Exception {
+        mockMvc.perform(get("/cart"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", is("text/html;charset=UTF-8")))
+                .andExpect(view().name("cart"))
+                .andDo(print());
+    }
 }
