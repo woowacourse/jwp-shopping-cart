@@ -22,7 +22,6 @@ public class ProductController {
         this.productDao = productDao;
     }
 
-    // TODO /admin/products  VS  /products 가 고민입니다
     @PostMapping("/products")
     @ResponseStatus(HttpStatus.CREATED)
     public void save(

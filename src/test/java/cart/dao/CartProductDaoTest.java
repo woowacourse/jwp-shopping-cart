@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -62,7 +61,7 @@ class CartProductDaoTest {
         // when & then
         assertThatThrownBy(() ->
                 장바구니_상품을_저장한다(cartProduct2)
-        ).isInstanceOf(DuplicateKeyException.class);
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 
 

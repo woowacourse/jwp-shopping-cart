@@ -1,14 +1,12 @@
 package cart.controller.view;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import java.util.List;
@@ -25,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @DisplayName("AdminController 는")
 @WebMvcTest(AdminController.class)
+@MockBean(MemberDao.class)
 class AdminControllerTest {
 
     @Autowired

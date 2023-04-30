@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @DisplayName("SettingController 는")
 @WebMvcTest(SettingController.class)
+@MockBean(MemberDao.class)
 class SettingControllerTest {
 
     @Autowired

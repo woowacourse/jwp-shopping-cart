@@ -41,7 +41,7 @@ class ProductControllerTest {
 
     @Test
     public void 상품을_등록한다() {
-        final ProductRequest request = new ProductRequest("채채", "https://채채.com", 1000);
+        final ProductRequest request = new ProductRequest("chaechae", "https://www.chaechae.com", 1000);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -55,8 +55,8 @@ class ProductControllerTest {
 
     @Test
     public void 상품을_수정한다() {
-        final Long id = productDao.save(new Product("말랑", "https://말랑.com", 2000));
-        final ProductRequest request = new ProductRequest("채채", "https://채채.com", 1000);
+        final Long id = productDao.save(new Product("mallang", "https://www.mallang.com", 2000));
+        final ProductRequest request = new ProductRequest("chaechae", "https://www.chaechae.com", 1000);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -67,12 +67,12 @@ class ProductControllerTest {
                 .log().all()
                 .statusCode(200);
         final Product product = productDao.findById(id).get();
-        assertThat(product.getName()).isEqualTo("채채");
+        assertThat(product.getName()).isEqualTo("chaechae");
     }
 
     @Test
     public void 상품을_삭제한다() {
-        final Long id = productDao.save(new Product("말랑", "https://말랑.com", 2000));
+        final Long id = productDao.save(new Product("mallang", "https://www.mallang.com", 2000));
 
         given()
                 .when()
@@ -84,7 +84,7 @@ class ProductControllerTest {
 
     @Test
     public void 상품_등록_시_예외_처리() {
-        final ProductRequest request = new ProductRequest("  ", "채채.com", 0);
+        final ProductRequest request = new ProductRequest("  ", "chaechae.com", 0);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
