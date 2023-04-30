@@ -18,4 +18,8 @@ public class Price {
             throw new IllegalArgumentException("가격은 0원 이상이어야 합니다");
         }
     }
+
+    public int getPrice() {
+        return price;
+    }
 }

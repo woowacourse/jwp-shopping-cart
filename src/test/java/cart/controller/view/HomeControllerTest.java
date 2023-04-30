@@ -34,8 +34,8 @@ class HomeControllerTest {
 
     @Test
     void 상품목록을_보여준다() throws Exception {
-        Product product1 = new Product("말랑", "말랑.com", 1000);
-        Product product2 = new Product("채채", "채채.com", 2000);
+        Product product1 = new Product("말랑", "https://mallang.com", 1000);
+        Product product2 = new Product("채채", "https://chaechae.com", 2000);
         final List<Product> products = List.of(product1, product2);
 
         given(productDao.findAll()).willReturn(products);

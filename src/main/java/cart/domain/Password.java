@@ -34,4 +34,8 @@ public class Password {
     public int hashCode() {
         return Objects.hash(password);
     }
+
+    public String getPassword() {
+        return password;
+    }
 }

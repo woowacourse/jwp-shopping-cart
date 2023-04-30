@@ -100,7 +100,7 @@ class CartProductDaoTest {
     }
 
     private Long 회원을_저장한다() {
-        return memberDao.save(new Member("email.com", "234"));
+        return memberDao.save(new Member("mallang@email.com", "234"));
     }
 
     private Long 장바구니_상품을_저장한다(final CartProduct cartProduct) {

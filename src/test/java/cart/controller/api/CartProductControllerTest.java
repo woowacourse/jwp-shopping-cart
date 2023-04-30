@@ -55,7 +55,7 @@ class CartProductControllerTest {
     private CartProductDao cartProductDao;
 
     private final Member 회원
-            = new Member("말랑", "1234");
+            = new Member("mallang@woowa.com", "1234");
 
     private final Product 상품
             = new Product("상품", "https://woowa.chat", 1000);

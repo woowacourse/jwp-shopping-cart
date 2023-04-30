@@ -34,8 +34,8 @@ class AdminControllerTest {
 
     @Test
     public void 상품목록을_보여준다() throws Exception {
-        final Product 채채 = new Product("채채", "채채.com", 1000);
-        final Product 말랑 = new Product("말랑", "말랑.com", 2000);
+        final Product 채채 = new Product("채채", "https://chaechae.com", 1000);
+        final Product 말랑 = new Product("말랑", "https://mallang.com", 2000);
         final List<Product> list = List.of(채채, 말랑);
         given(productDao.findAll()).willReturn(list);
 
