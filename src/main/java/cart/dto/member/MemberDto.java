@@ -1,10 +1,7 @@
 package cart.dto.member;
 
 import cart.entity.MemberEntity;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-@JsonInclude(Include.NON_NULL)
 public class MemberDto {
     private final Long id;
     private final String email;
