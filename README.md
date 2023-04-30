@@ -144,3 +144,5 @@ src/main/resources/data.sql
     - 조회
 - 상품카테고리
     - 생성, 조회, 삭제
+- 멤버
+    - 조회
