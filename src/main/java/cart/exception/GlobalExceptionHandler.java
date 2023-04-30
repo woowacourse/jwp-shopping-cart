@@ -35,6 +35,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<?> handleException(Exception e) {
-        return ResponseEntity.internalServerError().body(e.getMessage());
+        return ResponseEntity.internalServerError().body("예기치 못한 에러가 발생했습니다.");
     }
 }
