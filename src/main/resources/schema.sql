@@ -1,4 +1,4 @@
-create table product
+create table if not exists product
 (
     id        BIGINT       NOT NULL AUTO_INCREMENT,
     name      VARCHAR(255) NOT NULL,
@@ -7,7 +7,7 @@ create table product
     primary key (id)
 );
 
-create table member
+create table if not exists member
 (
     email VARCHAR(255) NOT NULL,
     password TEXT NOT NULL,
@@ -17,7 +17,7 @@ create table member
 insert into member (email, password) values ('a@a.com', 'password1');
 insert into member (email, password) values ('b@b.com', 'password2');
 
-create table cart
+create table if not exists cart
 (
     member_email VARCHAR(255) NOT NULL,
     product_id   BIGINT NOT NULL,

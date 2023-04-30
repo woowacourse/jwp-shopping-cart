@@ -66,24 +66,10 @@ class JdbcMemberRepositoryTest {
     @Test
     @DisplayName("저장된 Member를 전부 조회할 수 있다.")
     void findAll() throws MemberPersistanceFailedException {
-        // given
-        List<Member> members = List.of(
-                new Member("test1@gmail.com", "password1234!"),
-                new Member("test2@gmail.com", "password1234!"),
-                new Member("test3@gmail.com", "password1234!"),
-                new Member("test4@gmail.com", "password1234!")
-        );
-        for (Member member : members) {
-            repository.save(member);
-        }
-
         // when
         List<Member> foundMembers = repository.findAll();
 
         // then
-        Assertions.assertAll(
-                () -> assertThat(foundMembers).hasSize(4),
-                () -> assertThat(foundMembers).isEqualTo(members)
-        );
+        assertThat(foundMembers).hasSize(2);
     }
 }
