@@ -3,73 +3,144 @@
 ## 개요
 
 - Spring Web MVC를 이용하여 쇼핑몰의 상품 관리 기능 구현
-    - 상품 생성
-    - 상품 목록 조회
-    - 상품 수정
-    - 상품 삭제
+    - 상품 생성, 상품 목록 조회, 상품 수정, 상품 삭제
+    - 사용자 생성, 사용자 목록 조회, 사용자 선택, 사용자 삭제
+    - 장바구니 상품 추가, 장바구니 목록 조회, 장바구니 상품 삭제
 
 - 상품 관리 페이지를 Thymeleaf를 이용하여 랜더링
     - `/` : 상품 목록 페이지
     - `/admin` : 관리자 도구 페이지
+    - `/settings` : 사용자 목록 페이지
+    - `/cart` : 장바구니 목록 페이지
+
+- 인증 기능 구현
+    - Basic Auth
+
+## API Docs
+
+```http
+POST /products
+```
+
+### Request Body
+
+| Parameter     | Type         | Description          |
+|:--------------|:-------------|:---------------------|
+| `name`        | `string`     | **Required**. 상품명    |
+| `imageUrl`    | `string`     | **Required**. 이미지 경로 |
+| `price`       | `integer`    | **Required**. 상품 가격  |
+| `description` | `string`     | **Required**. 상품 설명  |
+| `categoryIds` | `List<Long>` | 카테고리 ID 목록           |
+
+### Response
+
+```http
+Location: /products/{id}
+```
+
+---
+
+```http
+GET /products
+```
+
+### Response
+
+```javascript
+{
+    [
+        {
+            "id": 1,
+            "name": "치킨",
+            "imageUrl": "/chicken.png",
+            "price": 15000,
+            "description": "맛있는 치킨",
+            "categoryResponseDtos": [
+                {
+                    "id": 2,
+                    "name": "한식"
+                },
+                {
+                    "id": 6,
+                    "name": "치킨"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "피자",
+            "imageUrl": "/pizza.png",
+            "price": 15000,
+            "description": "맛있는 피자",
+            "categoryResponseDtos": [
+                {
+                    "id": 2,
+                    "name": "한식"
+                },
+                {
+                    "id": 7,
+                    "name": "분식"
+                }
+            ]
+        }
+    ]
+}
+```
+
+---
+
+```http
+PUT /products/{id}
+```
+
+### Path Parameter
+
+| Parameter | Description         |
+|:----------|:--------------------|
+| `id`      | **Required**. 상품 ID |
+
+### Request Body
+
+| Parameter     | Type         | Description          |
+|:--------------|:-------------|:---------------------|
+| `name`        | `string`     | **Required**. 상품명    |
+| `imageUrl`    | `string`     | **Required**. 이미지 경로 |
+| `price`       | `integer`    | **Required**. 상품 가격  |
+| `description` | `string`     | **Required**. 상품 설명  |
+| `categoryIds` | `List<Long>` | 카테고리 ID 목록           |
+
+---
+
+```http
+DELETE /products/{id}
+```
+
+### Path Parameter
+
+| Parameter | Description         |
+|:----------|:--------------------|
+| `id`      | **Required**. 상품 ID |
 
 ## 기능 목록
 
-### Controller
+### DB
 
-- [x]  관리자 도구 페이지를 반환한다. ( GET “/admin” )
-    - Response Body : 모든 상품의 정보 ( ID, 이름, 가격, 이미지URL, 카테고리 이름 목록)
-- [x]  상품 목록 페이지를 반환한다. ( GET “/” )
-    - Response Body : 모든 상품의 정보 ( ID, 이름, 가격, 이미지URL, 카테고리 이름 목록)
-- [x]  상품을 생성한다. ( POST "/products" )
-    - Request Body :  상품의 정보 ( 이름, 가격, 이미지URL, 카테고리 아이디 목록 )
-    - Response Header Location  : /products/{상품 ID}
-- [x]  상품을 수정한다. ( PUT "/products/{id}" )
-    - Request Body  : 상품의 정보 ( 이름, 가격, 이미지URL, 카테고리 아이디 목록 )
-    - Response Body : 없음
-- [x]  상품을 삭제한다. ( DELETE "/products/{id}" )
-    - Request Body  : 없음
-    - Response Body : 없음
+```
+src/main/resources/data.sql
+```
 
 ### Service
 
-- [x]  상품 생성
-- [x]  상품 목록 조회
-- [x]  상품 수정
-- [x]  상품 삭제
-
-### DB
-
-- PRODUCT
-    - [x]  ID  ( INT NOT NULL AUTO_INCREMENT )
-    - [x]  NAME ( VARCHAR(50) NOT NULL )
-    - [x]  IMAGE_URL ( TEXT NOT NULL )
-    - [x]  PRICE ( INT NOT NULL )
-    - [x]  DESCRIPTION ( VARCHAR(255) )
-    - [x]  PRIMARY KEY ( ID )
-
-- CATEGORY
-    - [x]  ID  ( INT NOT NULL AUTO_INCREMENT PK )
-    - [x]  NAME ( VARCHAR(50) NOT NULL )
-    - [x]  PRIMARY KEY ( ID )
-
-- PRODUCT_CATEGORY
-    - [x]  ID  ( INT NOT NULL AUTO_INCREMENT PK )
-    - [x]  PRODUCT_ID
-    - [x]  CATEGORY_ID
-    - [x]  PRIMARY KEY (ID)
-    - [x]  FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT(ID)
-    - [x]  FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(ID)
+- 상품
+    - 생성, 조회, 수정, 삭제
+- 카테고리
+    - 조회
 
 ### DAO
 
-- 상품 DAO
-    - [x]  조회
-    - [x]  생성
-    - [x]  수정
-    - [x]  삭제
-- 카테고리 DAO
-    - [x]  조회
-- 상품카테고리 DAO
-    - [x]  조회
-    - [x]  생성
-    - [x]  삭제
+- 상품
+    - 생성, 조회, 수정, 삭제
+- 카테고리
+    - 조회
+- 상품카테고리
+    - 생성, 조회, 삭제
