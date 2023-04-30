@@ -5,9 +5,9 @@ import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +39,7 @@ public final class AdminProductController {
         return ResponseEntity.created(new URI(String.format("/product/%d", id))).build();
     }
 
-    @PutMapping("/product/{id}")
+    @PatchMapping("/product/{id}")
     public ResponseEntity<Void> updateProduct(
             @Valid @RequestBody final ModifyRequest modifyRequest,
             @PathVariable final Long id
@@ -51,7 +51,7 @@ public final class AdminProductController {
                 modifyRequest.getImageUrl()
         );
         productDao.update(product);
-        return ResponseEntity.created(new URI(String.format("/product/%d", id))).build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/product/{id}")

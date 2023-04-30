@@ -110,11 +110,11 @@ class AdminProductControllerTest {
         }
     }
 
-    @DisplayName("PUT /admin/product/{id} 요청 시")
+    @DisplayName("PATCH /admin/product/{id} 요청 시")
     @Nested
     class putAdminProduct {
 
-        @DisplayName("입력이 올바른 경우 Status Created 반환")
+        @DisplayName("입력이 올바른 경우 Status OK 반환")
         @Test
         void shouldResponseStatusCreatedWhenRequestPutToAdminProductId() throws JsonProcessingException {
             final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
@@ -123,12 +123,12 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/product/1")
+                    .patch("/admin/product/1")
                     .then().log().all()
-                    .statusCode(HttpStatus.SC_CREATED);
+                    .statusCode(HttpStatus.SC_OK);
         }
 
-        @DisplayName("상품이 존재하지 않을 경우 Status BadRequest 반환")
+        @DisplayName("상품이 존재하지 않을 경우 Status Not Found 반환")
         @Test
         void shouldResponseStatusBadRequestWhenRequestPutToNotExistId() throws JsonProcessingException {
             final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
@@ -137,9 +137,9 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put(String.format("/admin/product/%d", Long.MAX_VALUE))
+                    .patch(String.format("/admin/product/%d", Long.MAX_VALUE))
                     .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
         }
 
         @DisplayName("이름이 공백인 경우 예외가 발생한다.")
@@ -153,7 +153,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/product/1")
+                    .patch("/admin/product/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -168,7 +168,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/product/1")
+                    .patch("/admin/product/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -184,7 +184,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/product/1")
+                    .patch("/admin/product/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -205,14 +205,14 @@ class AdminProductControllerTest {
                     .statusCode(HttpStatus.SC_OK);
         }
 
-        @DisplayName("Product가 없을 경우 Status BadRequest 반환")
+        @DisplayName("Product가 없을 경우 Status Not Found 반환")
         @Test
         void shouldResponseStatusBadRequestWhenRequestProductNotExists() {
             given().log().all()
                     .when()
-                    .delete(String.format("/admin/product/$d", Long.MAX_VALUE))
+                    .delete(String.format("/admin/product/%d", Long.MAX_VALUE))
                     .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
         }
     }
 }

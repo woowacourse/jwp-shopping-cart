@@ -61,7 +61,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest3)
                 .when()
-                .put("admin/product/1");
+                .patch("admin/product/1");
 
         // 1개의 상품 삭제
         given()

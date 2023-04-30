@@ -49,8 +49,10 @@ CREATE TABLE product
     - [x] admin 페이지에서 상품을 보여준다.
 
 - 상품 수정
-    - [x] PUT /admin/product/id
+    - [x] PATCH /admin/product/id
     - [x] admin 페이지에서 상품을 수정한다.
+        - [x] 해당 id에 상품이 없을 시 status not found
+        - [x] update 성공 시 status ok
     - [x] 상품 수정 요청을 유효성 검증한다.
         - [x] 이름이 공백일 수 없다.
         - [x] 가격이 0원 이상 이어야 한다.
