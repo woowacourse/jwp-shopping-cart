@@ -19,21 +19,30 @@ public class MemberDao {
 
     public List<MemberEntity> findAll() {
         final String sql = "SELECT id, email, password FROM member";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new MemberEntity(
-                rs.getLong("id"),
-                rs.getString("email"),
-                rs.getString("password")
-        ));
+        return jdbcTemplate.query(
+                sql,
+                (rs, rowNum) -> new MemberEntity(
+                        rs.getLong("id"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                )
+        );
     }
 
     public Optional<MemberEntity> findByEmailAndPassword(final String email, final String password) {
         final String sql = "SELECT id, email, password FROM member WHERE email = ? and password = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new MemberEntity(
-                    rs.getLong("id"),
-                    rs.getString("email"),
-                    rs.getString("password")
-            ), email, password));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                            sql,
+                            (rs, rowNum) -> new MemberEntity(
+                                    rs.getLong("id"),
+                                    rs.getString("email"),
+                                    rs.getString("password")
+                            ),
+                            email,
+                            password
+                    )
+            );
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

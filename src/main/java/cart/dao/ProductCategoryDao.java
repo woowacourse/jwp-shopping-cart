@@ -19,9 +19,21 @@ public class ProductCategoryDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public List<ProductCategoryEntity> findAll(final Long productId) {
+        final String sql = "SELECT id, product_id, category_id FROM product_category WHERE product_id = ?";
+        return jdbcTemplate.query(
+                sql,
+                (rs, rowNum) -> new ProductCategoryEntity(
+                        rs.getLong("id"),
+                        rs.getLong("product_id"),
+                        rs.getLong("category_id")
+                ),
+                productId
+        );
+    }
+
     public int saveAll(final List<ProductCategoryEntity> productCategoryEntities) {
         final String sql = "INSERT INTO product_category (product_id, category_id) VALUES (?, ?)";
-
         final int[] rowsAffected = jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -34,34 +46,20 @@ public class ProductCategoryDao {
                 return productCategoryEntities.size();
             }
         });
-
         return Arrays.stream(rowsAffected).sum();
     }
 
-    public List<ProductCategoryEntity> findAll(final Long productId) {
-        final String sql = "SELECT id, product_id, category_id FROM product_category WHERE product_id = ?";
-        return jdbcTemplate.query(
-                sql,
-                (rs, rowNum) -> new ProductCategoryEntity(
-                        rs.getLong("id"),
-                        rs.getLong("product_id"),
-                        rs.getLong("category_id")),
-                productId
-        );
-    }
-
-    public void deleteAll(final List<Long> ids) {
+    public void deleteAll(final List<Long> productCategoryIds) {
         final String sql = "DELETE FROM product_category WHERE id = ?";
-
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setLong(1, ids.get(i));
+                ps.setLong(1, productCategoryIds.get(i));
             }
 
             @Override
             public int getBatchSize() {
-                return ids.size();
+                return productCategoryIds.size();
             }
         });
     }
