@@ -3,6 +3,7 @@ package cart.repository;
 import cart.dao.ProductJdbcDao;
 import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -30,12 +31,14 @@ class ProductRepositoryTest {
     }
 
     @Test
-    void add() {
+    @DisplayName("상품 저장")
+    void save() {
         ProductEntity productEntity = productDao.select(getGreatestId());
         assertThat(productEntity).isEqualTo(new ProductEntity(getGreatestId(), "땡칠", "asdf", 100L));
     }
 
     @Test
+    @DisplayName("상품 제거")
     void delete() {
         productRepository.delete(getGreatestId());
 
@@ -46,6 +49,7 @@ class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("상품 수정")
     void update() {
         productRepository.update(getGreatestId(), "땡칠", "VERY_BIG_IMAGE", 100L);
 
@@ -54,6 +58,7 @@ class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("모든 상품 가져오기")
     void getAll() {
         productRepository.save("비버", "SMALL_IMAGE", 100L);
 

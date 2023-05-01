@@ -29,7 +29,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("POST(/product)")
+    @DisplayName("상품을 추가한다")
     void createProduct() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -41,7 +41,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("PUT(/product/{id})")
+    @DisplayName("기 상품을 수정한다")
     void updateProduct() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -53,7 +53,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE(/product/{id})")
+    @DisplayName("기 상품을 삭제한다")
     void deleteProduct() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
