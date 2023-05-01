@@ -22,20 +22,20 @@ public final class ProductApiController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponseDto>> findProducts() {
-        final List<ProductResponseDto> result = productService.findProducts();
-        return ResponseEntity.ok(result);
+        final List<ProductResponseDto> response = productService.findProducts();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<Void> registerProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
-        final Long savedProductId = productService.registerProduct(productRequestDto);
-        return ResponseEntity.created(URI.create("/products/" + savedProductId)).build();
+        final Long productId = productService.registerProduct(productRequestDto);
+        return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(
             @PathVariable(name = "id") Long productId,
-            @RequestBody ProductRequestDto productRequestDto
+            @Valid @RequestBody ProductRequestDto productRequestDto
     ) {
         productService.updateProduct(productId, productRequestDto);
         return ResponseEntity.ok().build();
