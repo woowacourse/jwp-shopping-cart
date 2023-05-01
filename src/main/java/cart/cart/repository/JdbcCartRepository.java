@@ -34,7 +34,6 @@ public class JdbcCartRepository implements CartRepository {
         } catch (DuplicateKeyException exception) {
             throw new CartPersistenceFailedException(PersistenceExceptionMessages.CART_DUPLICATED_SAVING);
         } catch (DataIntegrityViolationException exception) {
-            exception.printStackTrace();
             throw new CartPersistenceFailedException(PersistenceExceptionMessages.CART_SAVING_WITH_INVALID_VALUES, exception);
         }
 
