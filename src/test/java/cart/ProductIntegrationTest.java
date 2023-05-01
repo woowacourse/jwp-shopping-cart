@@ -2,6 +2,8 @@ package cart;
 
 import cart.dto.ProductDto;
 import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -50,14 +52,17 @@ public class ProductIntegrationTest {
     void 상품을_업데이트한다() {
         final ProductDto productDto = new ProductDto("하디", "https://github.com/", 100000);
 
-        given()
+        final ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productDto)
                 .when().post("/admin/products")
                 .then()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.CREATED.value())
+                .extract();
 
-        final Long id = 1L;
+        final String location = response.header("location");
+        final String[] parsedLocation = location.split("/");
+        final Long id = Long.parseLong(parsedLocation[parsedLocation.length - 1]);
         final ProductDto updatedProductDto = new ProductDto("코코닥", "https://github.com/", 10000);
 
         given()
@@ -72,14 +77,17 @@ public class ProductIntegrationTest {
     void 상품을_삭제한다() {
         final ProductDto productDto = new ProductDto("하디", "https://github.com/", 100000);
 
-        given()
+        final ExtractableResponse<Response> response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productDto)
                 .when().post("/admin/products")
                 .then()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.CREATED.value())
+                .extract();
 
-        final Long id = 1L;
+        final String location = response.header("location");
+        final String[] parsedLocation = location.split("/");
+        final Long id = Long.parseLong(parsedLocation[parsedLocation.length - 1]);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
