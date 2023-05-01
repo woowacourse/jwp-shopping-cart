@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import cart.dao.ProductDao;
+import cart.dao.product.ProductDao;
 import cart.dao.entity.Product;
-import cart.dto.ProductCreateRequest;
-import cart.dto.ProductMapper;
-import cart.dto.ProductResponse;
-import cart.dto.ProductUpdateRequest;
+import cart.dto.product.ProductCreateRequest;
+import cart.dto.product.ProductMapper;
+import cart.dto.product.ProductResponse;
+import cart.dto.product.ProductUpdateRequest;
 
 @Service
 public class ProductService {

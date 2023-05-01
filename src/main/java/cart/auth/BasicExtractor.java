@@ -3,10 +3,12 @@ package cart.auth;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import cart.dto.UserRequest;
+import cart.dto.user.UserRequest;
 
+@Component
 public class BasicExtractor implements Extractor {
 
     private final static String AUTHORIZATION = "Authorization";

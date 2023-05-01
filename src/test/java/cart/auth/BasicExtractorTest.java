@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 
-import cart.dto.UserRequest;
+import cart.dto.user.UserRequest;
 
 class BasicExtractorTest {
 

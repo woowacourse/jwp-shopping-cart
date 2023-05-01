@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cart.dto.UserResponse;
+import cart.dto.user.UserResponse;
 import cart.service.UserService;
 
 @Controller

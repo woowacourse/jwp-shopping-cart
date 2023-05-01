@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import cart.dao.entity.User;
+import cart.dao.user.JdbcUserDao;
+import cart.dao.user.UserDao;
 
 @JdbcTest
 class JdbcUserDaoTest {

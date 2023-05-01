@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.dao.user;
 
 import java.util.List;
 

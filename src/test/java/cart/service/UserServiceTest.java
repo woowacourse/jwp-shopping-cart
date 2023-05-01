@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import cart.dto.UserResponse;
+import cart.dto.user.UserResponse;
 
 @SpringBootTest
 class UserServiceTest {

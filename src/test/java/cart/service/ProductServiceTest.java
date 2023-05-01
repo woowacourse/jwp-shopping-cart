@@ -12,9 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.dto.ProductCreateRequest;
-import cart.dto.ProductResponse;
-import cart.dto.ProductUpdateRequest;
+import cart.dto.product.ProductCreateRequest;
+import cart.dto.product.ProductResponse;
+import cart.dto.product.ProductUpdateRequest;
 
 @SpringBootTest
 @Transactional

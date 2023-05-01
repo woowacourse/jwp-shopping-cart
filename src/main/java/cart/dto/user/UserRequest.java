@@ -1,10 +1,10 @@
-package cart.dto;
+package cart.dto.user;
 
-public class UserResponse {
+public class UserRequest {
     private final String email;
     private final String password;
 
-    public UserResponse(String email, String password) {
+    public UserRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }

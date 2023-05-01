@@ -5,10 +5,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import cart.dao.UserDao;
+import cart.dao.user.UserDao;
 import cart.dao.entity.User;
-import cart.dto.UserMapper;
-import cart.dto.UserResponse;
+import cart.dto.user.UserMapper;
+import cart.dto.user.UserResponse;
 
 @Service
 public class UserService {
