@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.dto.ProductDto;
-import cart.repository.dao.ProductDao;
-import cart.repository.entity.ProductEntity;
+import cart.repository.dao.productDao.ProductDao;
+import cart.entity.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,16 +22,16 @@ public class ProductManagementService {
         final String imageUrl = productDto.getImageUrl();
         final int price = productDto.getPrice();
 
-        return productDao.save(new ProductEntity(name, imageUrl, price));
+        return productDao.save(new Product(name, imageUrl, price));
     }
 
     public List<ProductDto> findAllProduct() {
         return productDao.findAll().stream()
-                .map(productEntity -> {
-                    final Long id = productEntity.getId();
-                    final String name = productEntity.getName();
-                    final String imageUrl = productEntity.getImageUrl();
-                    final int price = productEntity.getPrice();
+                .map(product -> {
+                    final Long id = product.getId();
+                    final String name = product.getName();
+                    final String imageUrl = product.getImageUrl();
+                    final int price = product.getPrice();
                     return new ProductDto(id, name, imageUrl, price);
                 })
                 .collect(Collectors.toList());
@@ -42,7 +42,7 @@ public class ProductManagementService {
         final String name = productDto.getName();
         final String imageUrl = productDto.getImageUrl();
         final int price = productDto.getPrice();
-        productDao.update(new ProductEntity(id, name, imageUrl, price));
+        productDao.update(new Product(id, name, imageUrl, price));
     }
 
     public void deleteProduct(final Long id) {
