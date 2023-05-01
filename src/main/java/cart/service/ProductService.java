@@ -34,7 +34,7 @@ public class ProductService {
     public List<ProductResponse> findAll() {
         List<ProductEntity> products = productDao.findAll();
         return products.stream()
-                .map(ProductResponse::from)
+                .map(productMapper::entityToResponse)
                 .collect(Collectors.toList());
     }
 
