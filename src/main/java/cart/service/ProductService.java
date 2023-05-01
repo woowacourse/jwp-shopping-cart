@@ -20,7 +20,7 @@ public class ProductService {
     }
 
     public Long saveProduct(final ProductRequestDto productRequestDto) {
-        final Product newProduct = new Product(productRequestDto);
+        final Product newProduct = productRequestDto.makeProduct();
         return productDao.insertProduct(newProduct);
     }
 
@@ -33,7 +33,7 @@ public class ProductService {
 
     public void updateProduct(final Long id, final ProductRequestDto productRequestDto) {
         validateProductExist(id);
-        productDao.updateProduct(id, new Product(productRequestDto));
+        productDao.updateProduct(id, productRequestDto.makeProduct());
     }
 
     public Long deleteProduct(final Long id) {

@@ -1,6 +1,5 @@
 package cart.entity;
 
-import cart.dto.ProductRequestDto;
 import cart.exception.product.NullOrBlankException;
 import cart.exception.product.PriceNotUnderZeroException;
 
@@ -22,10 +21,6 @@ public class Product {
 
     public Product(final String name, final String imageUrl, final int price) {
         this(null, name, imageUrl, price);
-    }
-
-    public Product(final ProductRequestDto productRequestDto) {
-        this(null, productRequestDto.getName(), productRequestDto.getImageUrl(), productRequestDto.getPrice());
     }
 
     public Long getId() {

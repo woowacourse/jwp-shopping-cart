@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.entity.Product;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
@@ -18,6 +19,14 @@ public class ProductRequestDto {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
+    }
+
+    public Product makeProduct() {
+        return new Product(
+            this.name,
+            this.imageUrl,
+            this.price
+        );
     }
 
     public String getName() {
