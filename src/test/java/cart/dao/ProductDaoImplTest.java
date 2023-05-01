@@ -7,18 +7,29 @@ import cart.entity.Product;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
+@TestInstance(Lifecycle.PER_CLASS)
 class ProductDaoImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    private ProductDao productDao;
+
+    @BeforeAll
+    void generateProductDao() {
+        productDao = new ProductDaoImpl(jdbcTemplate);
+    }
 
     @BeforeEach
     void setting() {
@@ -35,7 +46,6 @@ class ProductDaoImplTest {
     @Test
     void insert_product() {
         // given
-        ProductDaoImpl productDao = new ProductDaoImpl(jdbcTemplate);
         Product product = new Product("연필", "이미지url", 1000);
 
         // when
@@ -49,7 +59,6 @@ class ProductDaoImplTest {
     @Test
     void find_all_product() {
         // given
-        ProductDaoImpl productDao = new ProductDaoImpl(jdbcTemplate);
         Product product1 = new Product("연필", "이미지url", 1000);
         Product product2 = new Product("지우개", "이미지url", 1000);
         productDao.insertProduct(product1);
@@ -66,7 +75,6 @@ class ProductDaoImplTest {
     @Test
     void find_product_by_id() {
         // given
-        ProductDaoImpl productDao = new ProductDaoImpl(jdbcTemplate);
         Product product1 = new Product("연필", "이미지url", 1000);
         Product product2 = new Product("지우개", "이미지url", 1000);
         Long product1Id = productDao.insertProduct(product1);
@@ -85,7 +93,6 @@ class ProductDaoImplTest {
     @Test
     void update_product_by_id() {
         // given
-        ProductDaoImpl productDao = new ProductDaoImpl(jdbcTemplate);
         Product product = new Product("연필", "이미지url", 1000);
         Long productId = productDao.insertProduct(product);
         Product updateProduct = new Product("지우개", "이미지url", 2000);
@@ -104,7 +111,6 @@ class ProductDaoImplTest {
     @Test
     void delete_product_by_id() {
         // given
-        ProductDaoImpl productDao = new ProductDaoImpl(jdbcTemplate);
         Product product = new Product("연필", "이미지url", 1000);
         Long productId = productDao.insertProduct(product);
 

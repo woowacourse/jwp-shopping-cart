@@ -22,7 +22,6 @@ public class ProductDaoImpl implements ProductDao {
         resultSet.getInt("price")
     );
 
-
     public ProductDaoImpl(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
