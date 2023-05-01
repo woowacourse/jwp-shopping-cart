@@ -31,6 +31,10 @@ public class ProductService {
 
     public void updateProduct(final ProductHttpRequest productHttpRequest) {
         final int updatedCount = productRepository.update(toProduct(productHttpRequest));
+        validateProductNotFound(updatedCount);
+    }
+
+    private static void validateProductNotFound(final int updatedCount) {
         if (updatedCount == 0) {
             throw new ProductNotFoundException();
         }
@@ -46,10 +50,6 @@ public class ProductService {
     }
 
     private static Product toProduct(final ProductHttpRequest productHttpRequest) {
-        if (productHttpRequest.getId() == null) {
-            return new Product(productHttpRequest.getName(), productHttpRequest.getImageUrl(),
-                    productHttpRequest.getPrice());
-        }
         return new Product(productHttpRequest.getId(), productHttpRequest.getName(), productHttpRequest.getImageUrl(),
                 productHttpRequest.getPrice());
     }
