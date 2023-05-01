@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dto.ProductRequestDto;
-import cart.dto.ProductResponseDto;
+import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import cart.entity.Product;
 import cart.exception.notfound.ProductNotFoundException;
 import java.util.List;
@@ -19,21 +19,21 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public Long saveProduct(final ProductRequestDto productRequestDto) {
-        final Product newProduct = productRequestDto.makeProduct();
+    public Long saveProduct(final ProductRequest productRequest) {
+        final Product newProduct = productRequest.makeProduct();
         return productDao.insertProduct(newProduct);
     }
 
-    public List<ProductResponseDto> findAll() {
+    public List<ProductResponse> findAll() {
         List<Product> products = productDao.findAll();
         return products.stream()
-            .map(ProductResponseDto::new)
+            .map(ProductResponse::new)
             .collect(Collectors.toList());
     }
 
-    public void updateProduct(final Long id, final ProductRequestDto productRequestDto) {
+    public void updateProduct(final Long id, final ProductRequest productRequest) {
         validateProductExist(id);
-        productDao.updateProduct(id, productRequestDto.makeProduct());
+        productDao.updateProduct(id, productRequest.makeProduct());
     }
 
     public Long deleteProduct(final Long id) {

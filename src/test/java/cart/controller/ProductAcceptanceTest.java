@@ -3,7 +3,7 @@ package cart.controller;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -35,11 +35,11 @@ class ProductAcceptanceTest {
     @Rollback
     @MethodSource("createProductAndStatusCode")
     @ParameterizedTest(name = "{displayName}")
-    void create_product_success(ProductRequestDto productRequestDto, int statusCode) {
+    void create_product_success(ProductRequest productRequest, int statusCode) {
         // when
         ExtractableResponse<Response> result = given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
+            .body(productRequest)
             .when()
             .post("/products")
             .then()
@@ -51,12 +51,12 @@ class ProductAcceptanceTest {
 
     private static Stream<Arguments> createProductAndStatusCode() {
         return Stream.of(
-            Arguments.arguments(new ProductRequestDto("연필", "이미지", 1000), HttpStatus.CREATED.value()),
-            Arguments.arguments(new ProductRequestDto("", "이미지", 1000), HttpStatus.BAD_REQUEST.value()),
-            Arguments.arguments(new ProductRequestDto("", "", 1000), HttpStatus.BAD_REQUEST.value()),
-            Arguments.arguments(new ProductRequestDto("", null, 1000), HttpStatus.BAD_REQUEST.value()),
-            Arguments.arguments(new ProductRequestDto(null, "이미지", 1000), HttpStatus.BAD_REQUEST.value()),
-            Arguments.arguments(new ProductRequestDto("연필", "이미지", -1), HttpStatus.BAD_REQUEST.value())
+            Arguments.arguments(new ProductRequest("연필", "이미지", 1000), HttpStatus.CREATED.value()),
+            Arguments.arguments(new ProductRequest("", "이미지", 1000), HttpStatus.BAD_REQUEST.value()),
+            Arguments.arguments(new ProductRequest("", "", 1000), HttpStatus.BAD_REQUEST.value()),
+            Arguments.arguments(new ProductRequest("", null, 1000), HttpStatus.BAD_REQUEST.value()),
+            Arguments.arguments(new ProductRequest(null, "이미지", 1000), HttpStatus.BAD_REQUEST.value()),
+            Arguments.arguments(new ProductRequest("연필", "이미지", -1), HttpStatus.BAD_REQUEST.value())
         );
     }
 
@@ -64,12 +64,12 @@ class ProductAcceptanceTest {
     @Rollback
     @MethodSource("updateProductAndStatusCode")
     @ParameterizedTest
-    void update_product(ProductRequestDto productUpdateDto, int statusCode) {
+    void update_product(ProductRequest productUpdateDto, int statusCode) {
         // given
-        ProductRequestDto productRequestDto = new ProductRequestDto("지우개", "이미지", 2000);
+        ProductRequest productRequest = new ProductRequest("지우개", "이미지", 2000);
         ExtractableResponse<Response> add = given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
+            .body(productRequest)
             .post("/products")
             .then()
             .extract();
@@ -92,25 +92,25 @@ class ProductAcceptanceTest {
 
     private static Stream<Arguments> updateProductAndStatusCode() {
         return Stream.of(
-            Arguments.arguments(new ProductRequestDto("연필", "이미지", 1000), HttpStatus.NO_CONTENT.value()),
-            Arguments.arguments(new ProductRequestDto("", "이미지", 1000), HttpStatus.BAD_REQUEST.value()),
-            Arguments.arguments(new ProductRequestDto("", "", 1000), HttpStatus.BAD_REQUEST.value()),
-            Arguments.arguments(new ProductRequestDto("", null, 1000), HttpStatus.BAD_REQUEST.value()),
-            Arguments.arguments(new ProductRequestDto(null, "이미지", 1000), HttpStatus.BAD_REQUEST.value()),
-            Arguments.arguments(new ProductRequestDto("연필", "이미지", -1), HttpStatus.BAD_REQUEST.value())
+            Arguments.arguments(new ProductRequest("연필", "이미지", 1000), HttpStatus.NO_CONTENT.value()),
+            Arguments.arguments(new ProductRequest("", "이미지", 1000), HttpStatus.BAD_REQUEST.value()),
+            Arguments.arguments(new ProductRequest("", "", 1000), HttpStatus.BAD_REQUEST.value()),
+            Arguments.arguments(new ProductRequest("", null, 1000), HttpStatus.BAD_REQUEST.value()),
+            Arguments.arguments(new ProductRequest(null, "이미지", 1000), HttpStatus.BAD_REQUEST.value()),
+            Arguments.arguments(new ProductRequest("연필", "이미지", -1), HttpStatus.BAD_REQUEST.value())
         );
     }
 
     @DisplayName("상품 삭제 요청을 보냈을 때 성공하면 상태코드 200을 반환하고 잘못된 요청을 보내면 400을 반환한다.")
     @Rollback
-    @CsvSource(value = {"1,200", "100,400"})
+    @CsvSource(value = {"1,200", "100,404"})
     @ParameterizedTest
     void delete_product(Long id, int statusCode) {
         // given
-        ProductRequestDto productRequestDto = new ProductRequestDto("지우개", "이미지", 2000);
+        ProductRequest productRequest = new ProductRequest("지우개", "이미지", 2000);
         given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
+            .body(productRequest)
             .post("/products");
 
         // when

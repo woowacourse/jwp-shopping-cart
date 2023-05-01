@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductResponseDto;
+import cart.dto.ProductResponse;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ public class AdminController {
 
     @GetMapping
     public String admin(Model model) {
-        List<ProductResponseDto> products = productService.findAll();
+        List<ProductResponse> products = productService.findAll();
         model.addAttribute("products", products);
         return "admin";
     }
