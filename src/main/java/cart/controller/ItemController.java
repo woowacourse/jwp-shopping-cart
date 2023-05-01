@@ -42,13 +42,13 @@ public class ItemController {
                 itemUpdateRequest.getImageUrl(),
                 itemUpdateRequest.getPrice());
 
-        itemService.updateItem(itemId, item);
+        itemService.update(itemId, item);
         return new ResultResponse(SuccessCode.UPDATE_ITEM, item);
     }
 
     @DeleteMapping("/{itemId}")
     public ResultResponse deleteItem(@PathVariable Long itemId) {
-        itemService.deleteItem(itemId);
+        itemService.delete(itemId);
         return new ResultResponse(SuccessCode.DELETE_ITEM, itemId);
     }
 }

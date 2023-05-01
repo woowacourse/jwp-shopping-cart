@@ -20,7 +20,7 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResultResponse add(@Valid @RequestBody MemberRequest memberRequest) {
+    public ResultResponse addMember(@Valid @RequestBody MemberRequest memberRequest) {
         MemberEntity item = new MemberEntity(memberRequest.getEmail(),
                 memberRequest.getName(),
                 memberRequest.getPhoneNumber(),
@@ -32,7 +32,7 @@ public class MemberController {
     }
 
     @PutMapping
-    public ResultResponse edit(@Valid @RequestBody MemberRequest memberRequest) {
+    public ResultResponse editMember(@Valid @RequestBody MemberRequest memberRequest) {
         MemberEntity item = new MemberEntity(memberRequest.getEmail(),
                 memberRequest.getName(),
                 memberRequest.getPhoneNumber(),
@@ -43,7 +43,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{email}")
-    public ResultResponse delete(@PathVariable String email) {
+    public ResultResponse deleteMember(@PathVariable String email) {
         memberDao.delete(email);
         return new ResultResponse(SuccessCode.DELETE_MEMBER, email);
     }

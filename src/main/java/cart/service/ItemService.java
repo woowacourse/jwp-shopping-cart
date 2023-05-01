@@ -34,11 +34,11 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public void updateItem(Long itemId, ItemEntity item) {
+    public void update(Long itemId, ItemEntity item) {
         itemDao.update(itemId, item);
     }
 
-    public void deleteItem(Long itemId) {
+    public void delete(Long itemId) {
         itemDao.delete(itemId);
     }
 }
