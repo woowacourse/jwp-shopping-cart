@@ -7,13 +7,16 @@ import cart.dto.CartResponse;
 import cart.dto.CartResponses;
 import cart.dto.CartSaveRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcMySqlDialectTest
@@ -60,6 +63,30 @@ class CartServiceTest {
                 () -> assertThat(results.get(1).getProductId()).isEqualTo(3L),
                 () -> assertThat(results.get(1).getCount()).isEqualTo(3)
         );
+    }
+
+    @Nested
+    class 삭제_테스트를_한다 {
+
+        @Test
+        void 장바구니_id가_주어지면_장바구니를_삭제_한다() {
+            // given
+            final long userId = 2L;
+            final Long saveId = 장바구니를_저장한다(userId, 3L, 4);
+
+            // when
+            cartService.delete(saveId);
+
+            // then
+            assertThat(cartService.findAllByUserId(userId).getCartResponses()).isEmpty();
+        }
+
+        @Test
+        void 장바구니_id가_없는_id면_장바구니를_삭제에_실패한다() {
+            // when, then
+            assertThatThrownBy(() -> cartService.delete(1000L))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
     }
 
     private Long 장바구니를_저장한다(final long userId, final long productId, final int count) {

@@ -8,6 +8,7 @@ import cart.dto.CartSaveRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,5 +33,13 @@ public class CartService {
                 .map(CartResponse::new)
                 .collect(Collectors.toList());
         return new CartResponses(cartResponses);
+    }
+
+    public void delete(final Long saveId) {
+        final int affectedRows = cartDao.delete(saveId);
+
+        if (affectedRows == 0) {
+            throw new NoSuchElementException("해당 장바구니 정보를 찾을 수 없습니다.");
+        }
     }
 }
