@@ -1,6 +1,8 @@
 package cart.controller;
 
+import cart.dto.CreateProductRequest;
 import cart.dto.ProductDto;
+import cart.dto.UpdateProductRequest;
 import cart.service.ProductManagementService;
 import java.util.List;
 import javax.validation.Valid;
@@ -35,17 +37,15 @@ public class AdminController {
 
     @PostMapping("/products")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody @Valid final ProductDto productDto) {
-        productManagementService.addProduct(productDto);
+    public void createProduct(@RequestBody @Valid final CreateProductRequest request) {
+        productManagementService.addProduct(request);
     }
 
     @PatchMapping("/products/{product_id}")
     @ResponseStatus(HttpStatus.CREATED)
     public void updateProduct(@PathVariable("product_id") final Long id,
-                              @RequestBody @Valid final ProductDto productDto) {
-        final ProductDto updatedProductDto
-                = new ProductDto(id, productDto.getName(), productDto.getImageUrl(), productDto.getPrice());
-        productManagementService.updateProduct(updatedProductDto);
+                              @RequestBody @Valid final UpdateProductRequest request) {
+        productManagementService.updateProduct(id, request);
     }
 
     @DeleteMapping("/products/{product_id}")

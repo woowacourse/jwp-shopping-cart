@@ -1,6 +1,6 @@
 package cart.repository.entity;
 
-import cart.dto.ProductDto;
+import cart.domain.Product;
 
 public class ProductEntity {
 
@@ -20,12 +20,19 @@ public class ProductEntity {
         this(null, name, imageUrl, price);
     }
 
-    public static ProductEntity from(final ProductDto productDto) {
+    public static ProductEntity from(final Product product) {
         return new ProductEntity(
-                productDto.getId(),
-                productDto.getName(),
-                productDto.getImageUrl(),
-                productDto.getPrice());
+                product.getName().getValue(),
+                product.getImageUrl().getValue(),
+                product.getPrice().getValue());
+    }
+
+    public static ProductEntity of(final Long id, final Product product) {
+        return new ProductEntity(
+                id,
+                product.getName().getValue(),
+                product.getImageUrl().getValue(),
+                product.getPrice().getValue());
     }
 
     public Long getId() {

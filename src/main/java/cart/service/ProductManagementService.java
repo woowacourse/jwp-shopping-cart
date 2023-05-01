@@ -1,6 +1,9 @@
 package cart.service;
 
+import cart.domain.Product;
+import cart.dto.CreateProductRequest;
 import cart.dto.ProductDto;
+import cart.dto.UpdateProductRequest;
 import cart.repository.dao.ProductDao;
 import cart.repository.entity.ProductEntity;
 import java.util.List;
@@ -16,8 +19,9 @@ public class ProductManagementService {
         this.productDao = productDao;
     }
 
-    public void addProduct(final ProductDto productDto) {
-        productDao.save(ProductEntity.from(productDto));
+    public void addProduct(final CreateProductRequest request) {
+        final Product product = new Product(request.getName(), request.getImageUrl(), request.getPrice());
+        productDao.save(ProductEntity.from(product));
     }
 
     public List<ProductDto> findAllProduct() {
@@ -26,8 +30,9 @@ public class ProductManagementService {
                 .collect(Collectors.toList());
     }
 
-    public void updateProduct(final ProductDto productDto) {
-        productDao.update(ProductEntity.from(productDto));
+    public void updateProduct(final Long id, final UpdateProductRequest request) {
+        final Product product = new Product(request.getName(), request.getImageUrl(), request.getPrice());
+        productDao.update(ProductEntity.of(id, product));
     }
 
     public void deleteProduct(final Long id) {

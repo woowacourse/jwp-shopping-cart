@@ -11,7 +11,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.dto.CreateProductRequest;
 import cart.dto.ProductDto;
+import cart.dto.UpdateProductRequest;
 import cart.service.ProductManagementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
@@ -53,8 +55,8 @@ public class AdminControllerTest {
 
     @Test
     void 상품을_추가한다() throws Exception {
-        final ProductDto productDto = new ProductDto("하디", "imageUrl", 100000);
-        final String requestBody = objectMapper.writeValueAsString(productDto);
+        final CreateProductRequest request = new CreateProductRequest("하디", "imageUrl", 100000);
+        final String requestBody = objectMapper.writeValueAsString(request);
         doNothing()
                 .when(productManagementService)
                 .addProduct(any());
@@ -68,11 +70,11 @@ public class AdminControllerTest {
     @Test
     void 상품을_업데이트한다() throws Exception {
         final Long id = 1L;
-        final ProductDto updatedProductDto = new ProductDto("코코닥", "imageUrl", 15000);
-        final String requestBody = objectMapper.writeValueAsString(updatedProductDto);
+        final UpdateProductRequest request = new UpdateProductRequest("코코닥", "imageUrl", 15000);
+        final String requestBody = objectMapper.writeValueAsString(request);
         doNothing()
                 .when(productManagementService)
-                .updateProduct(any());
+                .updateProduct(any(), any());
 
         mockMvc.perform(patch("/admin/products/{product_id}", id)
                         .content(requestBody)
