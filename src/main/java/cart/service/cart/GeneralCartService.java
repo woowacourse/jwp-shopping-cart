@@ -37,6 +37,7 @@ public class GeneralCartService implements CartService {
                 .stream()
                 .map(Cart::getProductId)
                 .map(productRepository::findByProductId)
+                .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(product -> new ProductResponse(
                         product.getId().getId(),
