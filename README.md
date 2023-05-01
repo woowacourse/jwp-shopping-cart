@@ -22,6 +22,5 @@
 ### 피드백 요구사항
 
 - [x] view 담당 Controller와 resource(json) 담당 Controller 분리
-- [x] 반환하는 자원의 확장자명까지 명확히 표기
 - [x] 요청에 대한 응답 코드와 자원 포함
 - [x] 원시값 포장
