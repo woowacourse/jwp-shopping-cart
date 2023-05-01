@@ -35,12 +35,11 @@ public class ProductService {
     }
 
     public void update(final int id, final @Valid ProductUpdateRequest productUpdateRequest) {
-        ProductEntity productEntity = findProductById(id);
+        findProductById(id);
         Product product = productUpdateRequest.toProduct();
+        Product updatedProduct = product.update(productUpdateRequest);
 
-        ProductEntity updatedEntity = productEntity.update(product.toEntity());
-
-        productDaoImpl.update(updatedEntity);
+        productDaoImpl.update(id, updatedProduct.toEntity());
     }
 
     private ProductEntity findProductById(final int id) {

@@ -2,9 +2,10 @@ package cart.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.controller.dto.request.product.ProductInsertRequest;
+import cart.controller.dto.request.product.ProductUpdateRequest;
 import cart.dao.ProductDao;
 import cart.dao.ProductEntity;
-import cart.dto.ProductDto;
 import io.restassured.RestAssured;
 import java.util.List;
 import java.util.Optional;
@@ -44,11 +45,11 @@ class ProductApiControllerTest {
     @DisplayName("상품 등록 테스트")
     @Test
     void insert() {
-        ProductDto productDto = new ProductDto("name", "image", 1000);
+        ProductInsertRequest request = new ProductInsertRequest("name", "image", 1000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productDto)
+                .body(request)
                 .when().post("http://localhost:" + port + "/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -65,11 +66,11 @@ class ProductApiControllerTest {
         ProductEntity productEntity = new ProductEntity("name", "image", 1000);
         int createdProductId = productDao.insert(productEntity);
 
-        ProductDto productDto = new ProductDto("name", "changeImage", 2000);
+        ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest("name", "changeImage", 2000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productDto)
+                .body(productUpdateRequest)
                 .when().put("http://localhost:" + port + "/products/" + createdProductId)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
@@ -104,11 +105,11 @@ class ProductApiControllerTest {
         @DisplayName("상품 등록 잘못된 요청 시(이름) 예외 테스트")
         @Test
         void validateNameInsertRequest() {
-            ProductDto productDto = new ProductDto("", "image", 1000);
+            ProductInsertRequest productInsertRequest = new ProductInsertRequest("", "image", 1000);
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productDto)
+                    .body(productInsertRequest)
                     .when().post("http://localhost:" + port + "/products")
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -117,11 +118,11 @@ class ProductApiControllerTest {
         @DisplayName("상품 등록 잘못된 요청 시(이미지) 예외 테스트")
         @Test
         void validateImageInsertRequest() {
-            ProductDto productDto = new ProductDto("name", "", 1000);
+            ProductInsertRequest productInsertRequest = new ProductInsertRequest("name", "", 1000);
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productDto)
+                    .body(productInsertRequest)
                     .when().post("http://localhost:" + port + "/products")
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -131,11 +132,11 @@ class ProductApiControllerTest {
         @ParameterizedTest
         @ValueSource(ints = {99, 10_000_001})
         void validatePriceInsertRequest(final int price) {
-            ProductDto productDto = new ProductDto("name", "image", price);
+            ProductInsertRequest productInsertRequest = new ProductInsertRequest("name", "image", price);
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productDto)
+                    .body(productInsertRequest)
                     .when().post("http://localhost:" + port + "/products")
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -149,11 +150,11 @@ class ProductApiControllerTest {
             int createdProductId = productDao.insert(productEntity);
 
             // then
-            ProductDto productDto = new ProductDto("", "changeImage", 2000);
+            ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest("", "changeImage", 2000);
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productDto)
+                    .body(productUpdateRequest)
                     .when().put("http://localhost:" + port + "/products/" + createdProductId)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -167,11 +168,11 @@ class ProductApiControllerTest {
             int createdProductId = productDao.insert(productEntity);
 
             // then
-            ProductDto productDto = new ProductDto("name", "", 2000);
+            ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest("name", "", 2000);
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productDto)
+                    .body(productUpdateRequest)
                     .when().put("http://localhost:" + port + "/products/" + createdProductId)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -186,11 +187,11 @@ class ProductApiControllerTest {
             int createdProductId = productDao.insert(productEntity);
 
             // then
-            ProductDto productDto = new ProductDto("name", "", 2000);
+            ProductInsertRequest productInsertRequest = new ProductInsertRequest("name", "", 2000);
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productDto)
+                    .body(productInsertRequest)
                     .when().put("http://localhost:" + port + "/products/" + createdProductId)
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());

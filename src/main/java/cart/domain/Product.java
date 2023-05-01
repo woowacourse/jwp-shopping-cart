@@ -1,12 +1,13 @@
 package cart.domain;
 
+import cart.controller.dto.request.product.ProductUpdateRequest;
 import cart.dao.ProductEntity;
 
 public class Product {
 
-    private final String name;
-    private final String image;
-    private final int price;
+    private String name;
+    private String image;
+    private int price;
 
     public Product(final String name, final String image, final int price) {
         this.name = name;
@@ -30,4 +31,10 @@ public class Product {
         return new ProductEntity(name, image, price);
     }
 
+    public Product update(ProductUpdateRequest productUpdateRequest) {
+        this.name = productUpdateRequest.getName();
+        this.image = productUpdateRequest.getImage();
+        this.price = productUpdateRequest.getPrice();
+        return this;
+    }
 }
