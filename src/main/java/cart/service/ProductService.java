@@ -1,12 +1,14 @@
 package cart.service;
 
-import cart.controller.dto.ProductResponse;
+import cart.controller.dto.request.product.ProductInsertRequest;
+import cart.controller.dto.request.product.ProductUpdateRequest;
+import cart.controller.dto.response.ProductResponse;
 import cart.dao.ProductDao;
 import cart.dao.ProductEntity;
 import cart.domain.Product;
-import cart.dto.ProductDto;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,15 +28,15 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public Integer insert(final ProductDto productDto) {
-        Product product = productDto.toProduct();
+    public Integer insert(@Valid final ProductInsertRequest productInsertRequest) {
+        Product product = productInsertRequest.toProduct();
         ProductEntity productEntity = product.toEntity();
         return productDaoImpl.insert(productEntity);
     }
 
-    public void update(final int id, final ProductDto productDto) {
+    public void update(final int id, final @Valid ProductUpdateRequest productUpdateRequest) {
         ProductEntity productEntity = findProductById(id);
-        Product product = productDto.toProduct();
+        Product product = productUpdateRequest.toProduct();
 
         ProductEntity updatedEntity = productEntity.update(product.toEntity());
 

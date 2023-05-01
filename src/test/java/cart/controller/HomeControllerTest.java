@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import cart.controller.dto.ProductResponse;
+import cart.controller.dto.response.ProductResponse;
 import cart.service.ProductService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

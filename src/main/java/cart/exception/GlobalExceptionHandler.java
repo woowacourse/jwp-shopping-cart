@@ -1,6 +1,6 @@
 package cart.exception;
 
-import cart.controller.dto.ErrorResponse;
+import cart.controller.dto.response.ErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
