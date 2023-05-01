@@ -1,7 +1,7 @@
 package cart.product.repository;
 
-import cart.common.PersistenceException;
-import cart.common.PersistenceExceptionMessages;
+import cart.common.exception.PersistenceException;
+import cart.common.exception.PersistenceExceptionMessages;
 
 public class ProductPersistenceException extends PersistenceException {
     public ProductPersistenceException(PersistenceExceptionMessages message) {

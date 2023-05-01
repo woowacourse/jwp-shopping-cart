@@ -1,6 +1,6 @@
 package cart.product.repository;
 
-import cart.common.PersistenceExceptionMessages;
+import cart.common.exception.PersistenceExceptionMessages;
 import cart.product.entity.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;

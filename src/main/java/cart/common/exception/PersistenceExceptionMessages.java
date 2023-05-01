@@ -1,4 +1,4 @@
-package cart.common;
+package cart.common.exception;
 
 public enum PersistenceExceptionMessages {
     PRODUCT_NOTFOUND("id에 해당하는 Product를 찾지 못했습니다."),

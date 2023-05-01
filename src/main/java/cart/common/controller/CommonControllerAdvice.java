@@ -1,5 +1,6 @@
-package cart.common;
+package cart.common.controller;
 
+import cart.common.exception.PersistenceException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

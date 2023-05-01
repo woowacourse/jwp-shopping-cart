@@ -2,7 +2,7 @@ package cart.authentication.repository;
 
 import cart.authentication.entity.Member;
 import cart.authentication.exception.MemberPersistenceFailedException;
-import cart.common.PersistenceExceptionMessages;
+import cart.common.exception.PersistenceExceptionMessages;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;

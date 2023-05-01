@@ -2,7 +2,7 @@ package cart.cart.repository;
 
 import cart.cart.entity.Cart;
 import cart.cart.exception.CartPersistenceFailedException;
-import cart.common.PersistenceExceptionMessages;
+import cart.common.exception.PersistenceExceptionMessages;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;

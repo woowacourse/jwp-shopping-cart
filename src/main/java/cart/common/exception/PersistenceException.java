@@ -1,4 +1,4 @@
-package cart.common;
+package cart.common.exception;
 
 public class PersistenceException extends RuntimeException {
     public PersistenceException(PersistenceExceptionMessages message) {
