@@ -54,4 +54,9 @@ public class UserDao {
         final String sql = "SELECT * FROM users WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, USER_ENTITY_ROW_MAPPER, id);
     }
+
+    public UserEntity findByEmail(String email) {
+        final String sql = "SELECT * FROM users WHERE email = ?";
+        return jdbcTemplate.queryForObject(sql, USER_ENTITY_ROW_MAPPER, email);
+    }
 }

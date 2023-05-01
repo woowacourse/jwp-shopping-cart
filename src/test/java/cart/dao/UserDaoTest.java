@@ -93,4 +93,21 @@ class UserDaoTest {
         //then
         assertThat(userDao.findAll()).hasSize(0);
     }
+
+    @Test
+    void 이메일로_데이터를_찾는다() {
+        //given
+        final User user = new User("huchu@woowahan.com", "1234567a!");
+        final Long id = userDao.insert(user);
+
+        //when
+        final UserEntity userEntity = userDao.findByEmail("huchu@woowahan.com");
+
+        //then
+        assertSoftly(softly -> {
+            softly.assertThat(userEntity.getId()).isEqualTo(id);
+            softly.assertThat(userEntity.getEmail()).isEqualTo("huchu@woowahan.com");
+            softly.assertThat(userEntity.getPassword()).isEqualTo("1234567a!");
+        });
+    }
 }
