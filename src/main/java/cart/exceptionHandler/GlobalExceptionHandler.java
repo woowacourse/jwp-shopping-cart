@@ -20,9 +20,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(final IllegalArgumentException e) {
-        final Map<String, Object> body = makeBody(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 오류가 발생했습니다. 확인 후 다시 이용해주세요.");
+        final Map<String, Object> body = makeBody(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 
-        logger.error(body);
+        logger.error(body + ", " + e.getMessage());
 
         return ResponseEntity.internalServerError().body(body);
     }
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleUnsuspectedException(final RuntimeException e) {
         final Map<String, Object> body = makeBody(HttpStatus.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_MESSAGE);
 
-        logger.error(body);
+        logger.error(body + ", " + e.getMessage());
 
         return ResponseEntity.internalServerError().body(body);
     }
