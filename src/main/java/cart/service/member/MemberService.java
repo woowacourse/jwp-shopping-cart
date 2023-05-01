@@ -1,12 +1,13 @@
-package cart.service;
+package cart.service.member;
 
+import cart.domain.member.MemberId;
 import cart.service.request.MemberCreateRequest;
 import cart.service.response.MemberResponse;
 
 import java.util.List;
 
 public interface MemberService {
-    long save(final MemberCreateRequest request);
+    MemberId save(final MemberCreateRequest request);
     List<MemberResponse> findAll();
-    long deleteByMemberId(final long memberId);
+    MemberId deleteByMemberId(final MemberId memberId);
 }

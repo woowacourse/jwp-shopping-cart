@@ -1,12 +1,12 @@
-package cart.domain;
+package cart.domain.member;
 
 public class Member {
-    private long id;
+    private MemberId id;
     private String name;
     private String email;
     private String password;
 
-    public Member(final long id, final String name, final String email, final String password) {
+    public Member(final MemberId id, final String name, final String email, final String password) {
         this(name, email, password);
         this.id = id;
     }
@@ -30,7 +30,7 @@ public class Member {
         }
     }
 
-    public long getId() {
+    public MemberId getId() {
         return id;
     }
 

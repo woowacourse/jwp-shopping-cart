@@ -1,7 +1,9 @@
 package cart.service;
 
-import cart.domain.Member;
-import cart.repository.MemberRepository;
+import cart.domain.member.Member;
+import cart.domain.member.MemberId;
+import cart.repository.member.MemberRepository;
+import cart.service.member.GeneralMemberService;
 import cart.service.request.MemberCreateRequest;
 import cart.service.response.MemberResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +16,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
@@ -29,22 +30,22 @@ class GeneralMemberServiceTest {
     @Test
     void save() {
         // given
-        given(memberRepository.save(any())).willReturn(1L);
+        given(memberRepository.save(any())).willReturn(MemberId.from(1L));
 
         // when
         final MemberCreateRequest request = new MemberCreateRequest("헤나", "test@test.com", "test");
-        final long saveMemberId = generalMemberService.save(request);
+        final MemberId saveMemberId = generalMemberService.save(request);
 
         // then
-        assertThat(saveMemberId).isEqualTo(1L);
+        assertThat(saveMemberId.getId()).isEqualTo(1L);
     }
 
     @DisplayName("전체 회원을 조회한다.")
     @Test
     void findAll() {
         // given
-        final Member memberHyena = new Member(1L, "헤나", "test@test.com", "test");
-        final Member memberTony = new Member(2L, "토니", "test2@test.com", "test2");
+        final Member memberHyena = new Member(MemberId.from(1L), "헤나", "test@test.com", "test");
+        final Member memberTony = new Member(MemberId.from(2L), "토니", "test2@test.com", "test2");
         given(memberRepository.findAll()).willReturn(List.of(memberHyena, memberTony));
 
         // when
@@ -63,12 +64,12 @@ class GeneralMemberServiceTest {
     @Test
     void deleteByMemberId() {
         // given
-        given(memberRepository.deleteByMemberId(anyLong())).willReturn(1L);
+        given(memberRepository.deleteByMemberId(any())).willReturn(MemberId.from(1L));
 
         // when
-        final long deleteMemberId = generalMemberService.deleteByMemberId(1L);
+        final MemberId deleteMemberId = generalMemberService.deleteByMemberId(MemberId.from(1L));
 
         // then
-        assertThat(deleteMemberId).isEqualTo(1L);
+        assertThat(deleteMemberId.getId()).isEqualTo(1L);
     }
 }

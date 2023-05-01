@@ -1,6 +1,7 @@
-package cart.repository;
+package cart.repository.member;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
+import cart.domain.member.MemberId;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,8 +13,24 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+import static cart.repository.member.MemberJdbcRepository.Table.*;
+
 @Repository
 public class MemberJdbcRepository implements MemberRepository {
+    enum Table {
+        TABLE("members"),
+        ID("id"),
+        NAME("name"),
+        EMAIL("email"),
+        PASSWORD("password");
+        
+        private final String name;
+
+        Table(final String name) {
+            this.name = name;
+        }
+    }
+    
     private static final int DELETED_COUNT = 1;
 
     private final JdbcTemplate jdbcTemplate;
@@ -22,36 +39,37 @@ public class MemberJdbcRepository implements MemberRepository {
     public MemberJdbcRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("members")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(TABLE.name)
+                .usingGeneratedKeyColumns(ID.name);
     }
 
     private final RowMapper<Member> rowMapper = (rs, rowNum) -> {
         return new Member(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("email"),
-                rs.getString("password")
+                MemberId.from(rs.getLong(ID.name)),
+                rs.getString(NAME.name),
+                rs.getString(EMAIL.name),
+                rs.getString(PASSWORD.name)
         );
     };
 
+    @Override
+    public MemberId save(final Member member) {
+        final long memberId = simpleJdbcInsert.executeAndReturnKey(paramSource(member)).longValue();
+        return MemberId.from(memberId);
+    }
+
     private SqlParameterSource paramSource(final Member member) {
         return new MapSqlParameterSource()
-                .addValue("name", member.getName())
-                .addValue("email", member.getEmail())
-                .addValue("password", member.getPassword());
+                .addValue(NAME.name, member.getName())
+                .addValue(EMAIL.name, member.getEmail())
+                .addValue(PASSWORD.name, member.getPassword());
     }
 
     @Override
-    public long save(final Member member) {
-        return simpleJdbcInsert.execute(paramSource(member));
-    }
-
-    @Override
-    public Optional<Member> findByMemberId(final long memberId) {
+    public Optional<Member> findByMemberId(final MemberId memberId) {
         final String sql = "SELECT * FROM members WHERE id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, memberId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, memberId.getId()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -64,9 +82,9 @@ public class MemberJdbcRepository implements MemberRepository {
     }
 
     @Override
-    public long deleteByMemberId(final long memberId) {
+    public MemberId deleteByMemberId(final MemberId memberId) {
         final String sql = "DELETE FROM members WHERE id = ?";
-        final int deleteCount = jdbcTemplate.update(sql, memberId);
+        final int deleteCount = jdbcTemplate.update(sql, memberId.getId());
 
         if (deleteCount != DELETED_COUNT) {
             throw new IllegalStateException("회원 삭제 도중 오류가 발생하여 실패하였습니다.");

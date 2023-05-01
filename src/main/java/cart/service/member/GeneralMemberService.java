@@ -1,7 +1,8 @@
-package cart.service;
+package cart.service.member;
 
-import cart.domain.Member;
-import cart.repository.MemberRepository;
+import cart.domain.member.Member;
+import cart.domain.member.MemberId;
+import cart.repository.member.MemberRepository;
 import cart.service.request.MemberCreateRequest;
 import cart.service.response.MemberResponse;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class GeneralMemberService implements MemberService {
 
     @Transactional
     @Override
-    public long save(final MemberCreateRequest request) {
+    public MemberId save(final MemberCreateRequest request) {
         final Member newMember = new Member(request.getName(), request.getEmail(), request.getPassword());
         return memberRepository.save(newMember);
     }
@@ -31,7 +32,7 @@ public class GeneralMemberService implements MemberService {
         return memberRepository.findAll()
                 .stream()
                 .map(member -> new MemberResponse(
-                        member.getId(),
+                        member.getId().getId(),
                         member.getName(),
                         member.getEmail(),
                         member.getPassword()
@@ -40,7 +41,7 @@ public class GeneralMemberService implements MemberService {
 
     @Transactional
     @Override
-    public long deleteByMemberId(final long memberId) {
+    public MemberId deleteByMemberId(final MemberId memberId) {
         return memberRepository.deleteByMemberId(memberId);
     }
 }

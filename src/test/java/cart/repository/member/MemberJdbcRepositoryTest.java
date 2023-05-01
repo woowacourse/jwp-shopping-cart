@@ -1,6 +1,7 @@
-package cart.repository;
+package cart.repository.member;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
+import cart.domain.member.MemberId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,10 @@ class MemberJdbcRepositoryTest {
         final Member member = new Member("헤나", "test@test.com", "test");
 
         // when
-        final long saveMemberId = memberRepository.save(member);
+        final MemberId saveMemberId = memberRepository.save(member);
 
         // expect
-        assertThat(saveMemberId).isEqualTo(1L);
+        assertThat(saveMemberId.getId()).isEqualTo(1L);
     }
 
     @DisplayName("회원을 회원 번호을 통해 조회한다.")
@@ -38,14 +39,14 @@ class MemberJdbcRepositoryTest {
     @Test
     void findByMemberId() {
         // when
-        final Optional<Member> maybeMember = memberRepository.findByMemberId(1L);
+        final Optional<Member> maybeMember = memberRepository.findByMemberId(MemberId.from(1L));
 
         // expect
         assertThat(maybeMember).isPresent();
         final Member member = maybeMember.get();
 
         assertAll(
-                () -> assertThat(member.getId()).isEqualTo(1L),
+                () -> assertThat(member.getId().getId()).isEqualTo(1L),
                 () -> assertThat(member.getName()).isEqualTo("헤나"),
                 () -> assertThat(member.getEmail()).isEqualTo("test@test.com"),
                 () -> assertThat(member.getPassword()).isEqualTo("test")
@@ -72,7 +73,7 @@ class MemberJdbcRepositoryTest {
     @Test
     void deleteByMemberId() {
         // when
-        final long deleteId = memberRepository.deleteByMemberId(1L);
+        final MemberId deleteId = memberRepository.deleteByMemberId(MemberId.from(1L));
         final Optional<Member> maybeMember = memberRepository.findByMemberId(deleteId);
 
         // expect
