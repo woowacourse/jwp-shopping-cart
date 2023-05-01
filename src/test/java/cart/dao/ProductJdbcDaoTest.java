@@ -1,6 +1,7 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,55 +18,71 @@ class ProductJdbcDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private ProductJdbcDao productJdbcDao;
-    private Integer insertedId;
+
+    private ProductJdbcDao productDao;
 
     @BeforeEach
     void setUp() {
-        this.productJdbcDao = new ProductJdbcDao(jdbcTemplate);
+        this.productDao = new ProductJdbcDao(jdbcTemplate);
 
-        final ProductDto productDto = new ProductDto("비버", "A", 1000L);
-        insertedId = productJdbcDao.insert(productDto);
+        productDao.insert(new ProductDto("땡칠", "https://avatars.githubusercontent.com/u/39221443", 1000L));
+        productDao.insert(new ProductDto("비버", "https://avatars.githubusercontent.com/u/109223081", 1000L));
+        productDao.insert(new ProductDto("코다", "https://avatars.githubusercontent.com/u/63405904", 1000000L));
     }
 
     @Test
-    @DisplayName("삽입 테스트")
+    @DisplayName("상품 삽입")
     void insert() {
-        assertThat(insertedId).isNotNull();
+        assertThat(productDao.findAll())
+                .extracting("name", "image", "price")
+                .contains(
+                        tuple("비버", "https://avatars.githubusercontent.com/u/109223081", 1000L)
+                );
     }
 
     @Test
-    @DisplayName("수정 테스트")
-    void update() {
-        final ProductDto productDto = new ProductDto("비버", "A", 100000L);
-        productJdbcDao.update(insertedId, productDto);
-
-        final ProductEntity result = productJdbcDao.select(insertedId);
-        assertThat(result.getPrice()).isEqualTo(100000L);
-    }
-
-    @Test
-    @DisplayName("삭제 테스트")
-    void deleteById() {
-        productJdbcDao.deleteById(insertedId);
-
-        assertThat(productJdbcDao.findAll().size()).isZero();
-    }
-
-    @Test
-    @DisplayName("조회 테스트")
+    @DisplayName("상품 하나 조회")
     void select() {
-        final ProductEntity expectEntity = new ProductEntity(insertedId, "비버", "A", 1000L);
-        final ProductEntity entity = productJdbcDao.select(insertedId);
+        final ProductEntity entity = productDao.select(getGreatestId());
 
-        assertThat(entity).isEqualTo(expectEntity);
+        assertThat(entity)
+                .extracting("name", "image", "price")
+                .containsExactly("코다", "https://avatars.githubusercontent.com/u/63405904", 1000000L);
     }
 
     @Test
-    @DisplayName("전체조회 테스트")
+    @DisplayName("상품 전체 조회")
     void findAll() {
-        final ProductEntity expectEntity = new ProductEntity(insertedId, "비버", "A", 1000L);
+        assertThat(productDao.findAll())
+                .extracting("name", "image", "price")
+                .containsExactlyInAnyOrder(
+                        tuple("땡칠", "https://avatars.githubusercontent.com/u/39221443", 1000L),
+                        tuple("비버", "https://avatars.githubusercontent.com/u/109223081", 1000L),
+                        tuple("코다", "https://avatars.githubusercontent.com/u/63405904", 1000000L)
+                );
+    }
 
-        assertThat(productJdbcDao.findAll()).containsOnly(expectEntity);
+    @Test
+    @DisplayName("상품 수정")
+    void update() {
+        productDao.update(getGreatestId(), new ProductDto("코다", "VERY_BIG_IMAGE", 100L));
+
+        assertThat(productDao.findAll())
+                .extracting("name", "image", "price")
+                .contains(tuple("코다", "VERY_BIG_IMAGE", 100L));
+    }
+
+    @Test
+    @DisplayName("상품 삭제")
+    void deleteById() {
+        productDao.deleteById(getGreatestId());
+
+        assertThat(productDao.findAll())
+                .extracting("name")
+                .doesNotContain("코다");
+    }
+
+    private Integer getGreatestId() {
+        return jdbcTemplate.queryForObject("SELECT MAX(id) FROM product", Integer.class);
     }
 }
