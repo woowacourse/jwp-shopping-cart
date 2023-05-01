@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class ProductService {
 
     private final ProductDao productDao;
@@ -21,6 +20,7 @@ public class ProductService {
         return productDao.findAll();
     }
 
+    @Transactional
     public Product register(final ProductDto productDto) {
         final Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
         final long id = productDao.insert(product);
@@ -28,6 +28,7 @@ public class ProductService {
         return new Product(id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
     }
 
+    @Transactional
     public Product updateProduct(final long id, final ProductDto productDto) {
         validateExistData(id);
 
@@ -43,6 +44,7 @@ public class ProductService {
         return new Product(id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
     }
 
+    @Transactional
     public void deleteProduct(final long id) {
         validateExistData(id);
         productDao.delete(id);
