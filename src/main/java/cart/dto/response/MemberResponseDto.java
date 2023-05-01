@@ -2,7 +2,7 @@ package cart.dto.response;
 
 import cart.entity.MemberEntity;
 
-public class MemberResponseDto {
+public final class MemberResponseDto {
 
     private final Long id;
     private final String email;

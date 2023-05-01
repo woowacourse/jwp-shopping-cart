@@ -2,7 +2,7 @@ package cart.dto.response;
 
 import cart.entity.product.ProductEntity;
 
-public class CartProductResponseDto {
+public final class CartProductResponseDto {
 
     private Long id;
     private Long productId;

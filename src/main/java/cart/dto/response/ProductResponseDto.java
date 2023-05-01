@@ -6,7 +6,7 @@ import cart.entity.product.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductResponseDto {
+public final class ProductResponseDto {
 
     private final Long id;
     private final String name;
