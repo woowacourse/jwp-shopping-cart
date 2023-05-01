@@ -6,7 +6,7 @@ import cart.authentication.entity.Member;
 import cart.product.entity.Product;
 import cart.cart.repository.CartRepository;
 import cart.product.repository.ProductRepository;
-import cart.cart.exception.CartPersistanceFailedException;
+import cart.cart.exception.CartPersistenceFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -51,14 +51,14 @@ public class CartController {
     }
 
     @PostMapping("/carts")
-    public ResponseEntity<Void> saveCart(@Authentication Member member, @RequestBody Map<String, Object> requestBody) throws CartPersistanceFailedException {
+    public ResponseEntity<Void> saveCart(@Authentication Member member, @RequestBody Map<String, Object> requestBody) {
         Long productId = Long.valueOf((Integer) requestBody.get("product_id"));
         cartRepository.save(new Cart(member.getEmail(), productId));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/carts")
-    public ResponseEntity<Void> deleteCart(@Authentication Member member, @RequestBody Map<String, Object> requestBody) throws CartPersistanceFailedException {
+    public ResponseEntity<Void> deleteCart(@Authentication Member member, @RequestBody Map<String, Object> requestBody) {
         Long productId = Long.valueOf((Integer) requestBody.get("product_id"));
         cartRepository.deleteByMemberEmailAndProductId(member.getEmail(), productId);
         return ResponseEntity.ok().build();

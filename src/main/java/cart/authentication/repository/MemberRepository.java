@@ -1,14 +1,13 @@
 package cart.authentication.repository;
 
 import cart.authentication.entity.Member;
-import cart.authentication.exception.MemberPersistanceFailedException;
 
 import java.util.List;
 
 public interface MemberRepository {
-    Member save(Member member) throws MemberPersistanceFailedException;
+    Member save(Member member);
 
-    Member findByEmail(String email) throws MemberPersistanceFailedException;
+    Member findByEmail(String email);
 
     List<Member> findAll();
 }

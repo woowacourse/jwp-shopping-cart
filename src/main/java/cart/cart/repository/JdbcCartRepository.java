@@ -1,7 +1,7 @@
 package cart.cart.repository;
 
 import cart.cart.entity.Cart;
-import cart.cart.exception.CartPersistanceFailedException;
+import cart.cart.exception.CartPersistenceFailedException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -22,19 +22,19 @@ public class JdbcCartRepository implements CartRepository {
     }
 
     @Override
-    public Cart save(Cart cart) throws CartPersistanceFailedException {
+    public Cart save(Cart cart) throws CartPersistenceFailedException {
         String sql = "insert into CART (member_email, product_id) values (:memberEmail, :productId)";
 
         try {
             int updateCount = namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(cart));
             if (updateCount == 0) {
-                throw new CartPersistanceFailedException("장바구니 정보를 저장하는 데에 실패했습니다.");
+                throw new CartPersistenceFailedException("장바구니 정보를 저장하는 데에 실패했습니다.");
             }
         } catch (DuplicateKeyException exception) {
-            throw new CartPersistanceFailedException("동일한 회원이 동일한 상품을 중복해서 장바구니에 담을 수 없습니다.");
+            throw new CartPersistenceFailedException("동일한 회원이 동일한 상품을 중복해서 장바구니에 담을 수 없습니다.");
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
-            throw new CartPersistanceFailedException("존재하지 않는 멤버 또는 상품으로 장바구니에 담을 수 없습니다.", exception);
+            throw new CartPersistenceFailedException("존재하지 않는 멤버 또는 상품으로 장바구니에 담을 수 없습니다.", exception);
         }
 
         return cart;
@@ -51,7 +51,7 @@ public class JdbcCartRepository implements CartRepository {
     }
 
     @Override
-    public void deleteByMemberEmailAndProductId(String memberEmail, Long productId) throws CartPersistanceFailedException {
+    public void deleteByMemberEmailAndProductId(String memberEmail, Long productId) {
         String sql = "delete from CART where member_email = :memberEmail and product_id = :productId";
         MapSqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("memberEmail", memberEmail)
@@ -59,7 +59,7 @@ public class JdbcCartRepository implements CartRepository {
 
         int deletedCount = namedParameterJdbcTemplate.update(sql, paramSource);
         if (deletedCount == 0) {
-            throw new CartPersistanceFailedException("삭제할 대상이 데이터베이스에 존재하지 않습니다.");
+            throw new CartPersistenceFailedException("삭제할 대상이 데이터베이스에 존재하지 않습니다.");
         }
     }
 }

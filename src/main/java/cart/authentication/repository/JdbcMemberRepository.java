@@ -1,7 +1,7 @@
 package cart.authentication.repository;
 
 import cart.authentication.entity.Member;
-import cart.authentication.exception.MemberPersistanceFailedException;
+import cart.authentication.exception.MemberPersistenceFailedException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -22,21 +22,21 @@ public class JdbcMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member save(Member member) throws MemberPersistanceFailedException {
+    public Member save(Member member) {
         String sql = "insert into MEMBER (email, password) values (:email, :password)";
         try {
             int updateCount = namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(member));
             if (updateCount == 0) {
-                throw new MemberPersistanceFailedException("Member가 정상적으로 저장되지 않았습니다.");
+                throw new MemberPersistenceFailedException("Member가 정상적으로 저장되지 않았습니다.");
             }
             return member;
         } catch (DuplicateKeyException exception) {
-            throw new MemberPersistanceFailedException("이미 등록된 email입니다.");
+            throw new MemberPersistenceFailedException("이미 등록된 email입니다.");
         }
     }
 
     @Override
-    public Member findByEmail(String email) throws MemberPersistanceFailedException {
+    public Member findByEmail(String email) {
         String sql = "select * from MEMBER where email = :email";
         try {
             return namedParameterJdbcTemplate.queryForObject(
@@ -47,7 +47,7 @@ public class JdbcMemberRepository implements MemberRepository {
                             rs.getString("password")
                     ));
         } catch (EmptyResultDataAccessException exception) {
-            throw new MemberPersistanceFailedException("주어진 ID로 Member를 찾을 수 없습니다.");
+            throw new MemberPersistenceFailedException("주어진 ID로 Member를 찾을 수 없습니다.");
         }
     }
 
