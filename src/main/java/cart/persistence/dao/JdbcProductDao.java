@@ -36,9 +36,9 @@ public class JdbcProductDao implements Dao<ProductEntity> {
     }
 
     @Override
-    public ProductEntity findByName(final String name) {
-        final String sql = "SELECT product_id, name, price, image_url FROM product WHERE name = ?";
-        return jdbcTemplate.queryForObject(sql, actorRowMapper, name);
+    public ProductEntity findById(final Long id) {
+        final String sql = "SELECT product_id, name, price, image_url FROM product WHERE product_id = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
     }
 
     @Override

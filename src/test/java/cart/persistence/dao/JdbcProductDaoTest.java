@@ -62,7 +62,7 @@ class JdbcProductDaoTest {
         final ProductEntity originalJena = new ProductEntity(productId, "jena", 10000, "");
 
         productDao.update(originalJena);
-        ProductEntity jena = (ProductEntity) productDao.findByName("jena");
+        ProductEntity jena = (ProductEntity) productDao.findById(productId);
         assertThat(jena.getName()).isEqualTo("jena");
     }
 
@@ -73,6 +73,6 @@ class JdbcProductDaoTest {
 
         productDao.deleteById(id);
 
-        assertThatThrownBy(() -> productDao.findByName("modi")).isInstanceOf(EmptyResultDataAccessException.class);
+        assertThatThrownBy(() -> productDao.findById(id)).isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

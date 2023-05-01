@@ -6,7 +6,7 @@ public interface Dao<T> {
 
     Long save(T t);
 
-    T findByName(String name);
+    T findById(Long id);
 
     List<T> findAll();
 
