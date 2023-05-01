@@ -38,8 +38,7 @@
             url: '/carts',
             headers: {
                 'Authorization': `Basic ${credentials}`
-            },
-            method: 'GET'
+            }
         }).then((response) => {
             const cartItems = response.data;
 
