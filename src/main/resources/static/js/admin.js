@@ -45,35 +45,50 @@ form.addEventListener('submit', (event) => {
 });
 
 const createProduct = (product) => {
-    axios.request({
-        url: '/products',
-        method: "POST",
-        data: product
-    }).then((response) => {
-        window.location.reload();
-    }).catch((error) => {
-        // if (error.response.status === 400) {
-        let errorMessages = '';
-        for (let message of error.response.data.messages) {
-            errorMessages += (message + '\n');
-        }
-        alert(errorMessages)
-        // }
-    });
+    try {
+        validImage(product.image)
+        axios.request({
+            url: '/products',
+            method: "POST",
+            data: product
+        }).then((response) => {
+            window.location.reload();
+        }).catch((error) => {
+            let errorMessages = '';
+            for (let message of error.response.data.messages) {
+                errorMessages += (message + '\n');
+            }
+            alert(errorMessages)
+        });
+    } catch (error) {
+        alert(error.message)
+    }
 };
 
 const updateProduct = (product) => {
-    const {id} = product;
+    try {
+        validImage(product.image)
+        const {id} = product;
 
-    axios.request({
-        url: '/products/' + id,
-        method: "PUT",
-        data: product
-    }).then((response) => {
-        window.location.reload();
-    }).catch((error) => {
-        alert(error.response.data.messages)
-    });
+        axios.request({
+            url: '/products/' + id,
+            method: "PUT",
+            data: product
+        }).then((response) => {
+            window.location.reload();
+        }).catch((error) => {
+            alert(error.response.data.messages)
+        });
+    } catch (error) {
+        alert(error.message)
+    }
+};
+
+const validImage = (imageUrl) => {
+    const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(:[0-9]+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
+    if (!imageUrl.match(regex)) {
+        throw new Error("유효하지 않은 Url 입니다.");
+    }
 };
 
 const deleteProduct = (id) => {
