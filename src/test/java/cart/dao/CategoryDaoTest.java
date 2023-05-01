@@ -26,16 +26,21 @@ class CategoryDaoTest {
     }
 
     @Test
-    @DisplayName("카테고리 ID 목록으로 저장되어 있는 카테고리를 모두 조회한다.")
+    @DisplayName("모든 카테고리를 조회한다.")
+    void findAll() {
+        final List<CategoryEntity> result = categoryDao.findAll();
+
+        assertThat(result).hasSize(10);
+    }
+
+    @Test
+    @DisplayName("카테고리 ID 목록으로 카테고리를 모두 조회한다.")
     void getCategories() {
-        //given
         final List<Long> ids = List.of(1L, 4L, 6L);
 
-        //when
-        final List<CategoryEntity> categoryEntities = categoryDao.findAllInId(ids);
+        final List<CategoryEntity> result = categoryDao.findAllInIds(ids);
 
-        //then
-        assertThat(categoryEntities).map(CategoryEntity::getName)
+        assertThat(result).map(CategoryEntity::getName)
                 .containsExactly("카페", "일식", "치킨");
     }
 }

@@ -16,21 +16,21 @@ public class CategoryDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CategoryEntity> findAllInId(final List<Long> categoryIds) {
+    public List<CategoryEntity> findAll() {
+        final String sql = "SELECT id, name FROM category";
+        return jdbcTemplate.query(
+                sql,
+                (rs, rowNum) -> new CategoryEntity(rs.getLong("id"), rs.getString("name"))
+        );
+    }
+
+    public List<CategoryEntity> findAllInIds(final List<Long> categoryIds) {
         final String inSql = String.join(",", Collections.nCopies(categoryIds.size(), "?"));
         final String sql = String.format("SELECT id, name FROM category WHERE id IN (%s)", inSql);
         return jdbcTemplate.query(
                 sql,
                 (rs, rowNum) -> new CategoryEntity(rs.getLong("id"), rs.getString("name")),
                 categoryIds.toArray()
-        );
-    }
-
-    public List<CategoryEntity> findAll() {
-        final String sql = "SELECT id, name FROM category";
-        return jdbcTemplate.query(
-                sql,
-                (rs, rowNum) -> new CategoryEntity(rs.getLong("id"), rs.getString("name"))
         );
     }
 }
