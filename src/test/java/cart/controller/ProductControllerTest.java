@@ -195,6 +195,15 @@ class ProductControllerTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
+    @DisplayName("예상하지 못한 에러가 일어난다면 상태코드 500을 반환하는지 확인한다")
+    @Test
+    void exceptionInternalServerErrorProductsTest() {
+        RestAssured.given().log().all()
+                .body("{\"error\":\"error\"}")
+                .when().post()
+                .then().statusCode(500);
+    }
+
     private void resetTable() {
         final String truncateSql = "TRUNCATE TABLE product";
         jdbcTemplate.update(truncateSql);

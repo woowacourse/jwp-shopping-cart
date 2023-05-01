@@ -15,6 +15,15 @@ public class ExceptionController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> handleGlobalException(final Exception exception) {
+        log.error(exception.getMessage());
+
+        final ExceptionResponse exceptionResponse = new ExceptionResponse("잠시 후 다시 시도해주세요");
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ExceptionResponse> handleValidationException(final IllegalArgumentException exception) {
         log.error(exception.getMessage());
