@@ -72,6 +72,14 @@ class ProductDaoTest {
     }
 
     @Test
+    @DisplayName("수정된 상품 수 반환")
+    void count_updated() {
+        int updatedCount = productDao.update(getGreatestId(), "코다", "VERY_BIG_IMAGE", 100L);
+
+        assertThat(updatedCount).isEqualTo(1);
+    }
+
+    @Test
     @DisplayName("상품 삭제")
     void deleteById() {
         productDao.deleteById(getGreatestId());

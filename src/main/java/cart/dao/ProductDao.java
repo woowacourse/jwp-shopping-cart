@@ -29,9 +29,9 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).intValue();
     }
 
-    public void update(final Integer id, String name, String image, Long price) {
+    public int update(final Integer id, String name, String image, Long price) {
         String sql = "UPDATE product SET name= ?, image= ?, price=? WHERE id= ?";
-        jdbcTemplate.update(
+        return jdbcTemplate.update(
                 sql,
                 name, image, price,
                 id
