@@ -13,6 +13,19 @@ import java.util.Objects;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(InvalidProductException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidProductException(InvalidProductException exception) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .badRequest()
+                .body(exceptionResponse);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(

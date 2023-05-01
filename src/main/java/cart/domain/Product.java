@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.exception.InvalidProductException;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,33 +34,33 @@ public class Product {
 
     private void validateName(final String name) {
         if (name.isBlank()) {
-            throw new IllegalArgumentException("상품 이름은 공백을 입력할 수 없습니다.");
+            throw new InvalidProductException("상품 이름은 공백을 입력할 수 없습니다.");
         }
 
         if (name.length() < MIN_NAME_LENGTH || name.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("상품 이름은 1자 이상 10자 이하만 가능합니다.");
+            throw new InvalidProductException("상품 이름은 1자 이상 10자 이하만 가능합니다.");
         }
     }
 
     private void validateImageUrl(final String imageUrl) {
         if (imageUrl.isBlank()) {
-            throw new IllegalArgumentException("상품 사진의 url은 공백을 입력할 수 없습니다.");
+            throw new InvalidProductException("상품 사진의 url은 공백을 입력할 수 없습니다.");
         }
 
         Pattern pattern = Pattern.compile(URL_REGEX);
         Matcher matcher = pattern.matcher(imageUrl);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("유효하지 않은 상품 사진 URL 입니다.");
+            throw new InvalidProductException("유효하지 않은 상품 사진 URL 입니다.");
         }
     }
 
     private void validatePrice(final Integer price) {
         if (price == null) {
-            throw new IllegalArgumentException("상품 가격은 필수 값입니다.");
+            throw new InvalidProductException("상품 가격은 필수 값입니다.");
         }
 
         if (price < MIN_PRICE || price > MAX_PRICE) {
-            throw new IllegalArgumentException("상품 금액은 0원 이상 100,000,000원 이하만 가능합니다.");
+            throw new InvalidProductException("상품 금액은 0원 이상 100,000,000원 이하만 가능합니다.");
         }
     }
 
