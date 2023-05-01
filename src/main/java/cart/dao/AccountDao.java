@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class AccountDao {
@@ -27,5 +28,11 @@ public class AccountDao {
         final String sql = "SELECT * FROM ACCOUNT";
 
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public Optional<AccountEntity> findByEmailAndPassword(final String email, final String password) {
+        final String sql = "SELECT * FROM ACCOUNT A WHERE A.email = ? and A.password = ?";
+
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, email, password));
     }
 }

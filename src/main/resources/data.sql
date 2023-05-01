@@ -11,7 +11,7 @@ insert into cart(id)
 values (2);
 
 insert into account(id, email, password, cart_id)
-values (1, '회원1@gg', '1234', 1);
+values (1, 'account1@gg', '1234', 1);
 
 insert into account(id, email, password, cart_id)
-values (2, '회원2@gg', '12345', 2);
+values (2, 'account2@gg', '12345', 2);

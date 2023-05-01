@@ -1,6 +1,8 @@
 package cart.service;
 
 import cart.dao.AccountDao;
+import cart.dao.AccountEntity;
+import cart.domain.account.AuthAccount;
 import cart.service.dto.AccountSearchResponse;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +28,14 @@ public class AccountService {
                                  entity.getPassword())
                          )
                          .collect(Collectors.toList());
+    }
+
+    public AccountEntity searchByEmailAndPassword(final AuthAccount authAccount) {
+        return accountDao.findByEmailAndPassword(
+                authAccount.getEmail(),
+                authAccount.getPassword()
+        ).orElseThrow(() -> {
+            throw new IllegalStateException("존재하지 않는 사용자입니다.");
+        });
     }
 }
