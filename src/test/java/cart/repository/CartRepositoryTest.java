@@ -1,18 +1,21 @@
 package cart.repository;
 
+import cart.authentication.entity.Member;
+import cart.authentication.exception.MemberPersistanceFailedException;
+import cart.authentication.repository.JdbcMemberRepository;
 import cart.authentication.repository.MemberRepository;
 import cart.cart.entity.Cart;
-import cart.cart.repository.CartRepository;
-import cart.authentication.entity.Member;
-import cart.product.entity.Product;
-import cart.product.repository.ProductRepository;
 import cart.cart.exception.CartPersistanceFailedException;
-import cart.authentication.exception.MemberPersistanceFailedException;
+import cart.cart.repository.CartRepository;
+import cart.cart.repository.JdbcCartRepository;
+import cart.product.entity.Product;
+import cart.product.repository.JdbcProductRepository;
+import cart.product.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 
 import java.math.BigDecimal;
 
@@ -20,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
-@ComponentScan(basePackages = "cart.repository")
+@Import({JdbcMemberRepository.class, JdbcProductRepository.class, JdbcCartRepository.class})
 class CartRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
