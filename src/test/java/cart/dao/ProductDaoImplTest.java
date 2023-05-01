@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.entity.Product;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -112,7 +113,7 @@ class ProductDaoImplTest {
         Long result = productDao.deleteProduct(productId);
 
         // then
-        assertThatThrownBy(() -> productDao.findById(result))
-            .isInstanceOf(EmptyResultDataAccessException.class);
+        assertThatThrownBy(() -> productDao.findById(result).get())
+            .isInstanceOf(NoSuchElementException.class);
     }
 }
