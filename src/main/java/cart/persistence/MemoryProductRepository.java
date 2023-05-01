@@ -2,7 +2,6 @@ package cart.persistence;
 
 import cart.business.ProductRepository;
 import cart.business.domain.Product;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@Repository
 public class MemoryProductRepository implements ProductRepository {
 
     private final Map<Integer, Product> store = new ConcurrentHashMap<>();
