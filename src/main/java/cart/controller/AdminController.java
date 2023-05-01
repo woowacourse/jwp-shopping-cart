@@ -25,7 +25,7 @@ public class AdminController {
         this.productService = productService;
     }
 
-    @GetMapping
+    @GetMapping("/products")
     public String admin(Model model) {
         model.addAttribute("products", productService.findAll());
         return "admin";
