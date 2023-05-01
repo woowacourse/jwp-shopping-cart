@@ -47,7 +47,16 @@
     - [x] 응답 : index.html
         - [x] 모델 추가 : List\<ResponseProductDto>
 
-- [x] 상품 관리 CRUD API 작성
+- [x] 관리자 도구 페이지 연동
+    - [x] 요청 : Get /admin
+    - [x] 응답 : admin.html
+        - [x] 모델 추가 : List\<ResponseProductDto>
+
+- [x] 사용자 설정 페이지 연동
+    - [x] 요청 : Get /settings
+    - [x] 응답 : settings.html
+
+- [x] 상품 관리 API 작성
   /product
     - [x] Create
         - [x] 요청 : Post
@@ -72,26 +81,23 @@
         - [x] 예외 :
             - [x] DB 관련 예외가 생긴 경우
 
-- [x] 관리자 도구 페이지 연동
-    - [x] 요청 : Get /admin
-    - [x] 응답 : admin.html
-        - [x] 모델 추가 : List\<ResponseProductDto>
-
-- [x] 사용자 설정 페이지 연동
-    - [x] 요청 : Get /settings
-    - [x] 응답 : settings.html
+- [ ] 장바구니 기능 API 작성
+    - /carts
+        - [ ] Create : 장바구니에 상품 추가
+            - [ ] 요청 : Post
+                - [ ] 상품 id
+            - [ ] 응답 : 201
+  
+        - [ ] Delete : 장바구니에 담긴 상품 제거
+            - [ ] 요청 : Delete
+                - [ ] 상품 id
+            - [ ] 응답 : 200
 
 - [ ] 사용자 선택
     - [ ] 사용자 인증 정보
         - [ ] Header : Authorization
         - [ ] type : Basic
         - [ ] credentials : email:password (encoded with base64)
-
-- [ ] 장바구니 기능
-    - [ ] 사용자 인증
-    - [ ] 장바구니 상품 추가
-    - [ ] 장바구니 상품 제거
-    - [ ] 장바구니 목록 조회
 
 ## DB 테이블
 
