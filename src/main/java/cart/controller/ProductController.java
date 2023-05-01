@@ -19,10 +19,10 @@ public class ProductController {
 
     @GetMapping("/")
     public String index() {
-        return "redirect:/product";
+        return "redirect:/products";
     }
 
-    @GetMapping("/product")
+    @GetMapping("/products")
     public String products(Model model) {
         List<ProductResponse> productsResponse = cartService.readAll();
         model.addAttribute("products", productsResponse);
