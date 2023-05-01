@@ -1,12 +1,12 @@
 package cart.controller;
 
+import cart.authentication.Authentication;
 import cart.entity.Cart;
 import cart.entity.Member;
 import cart.entity.Product;
 import cart.repository.CartRepository;
 import cart.repository.ProductRepository;
 import cart.repository.exception.CartPersistanceFailedException;
-import cart.util.BasicExtractor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,8 +36,7 @@ public class CartController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<Product>> findByEmail(HttpServletRequest request) {
-        Member member = BasicExtractor.extract(request);
+    public ResponseEntity<List<Product>> findByEmail(@Authentication Member member) {
         List<Cart> carts = cartRepository.findAllByMemberEmail(member.getEmail());
 
         List<Long> productIds = carts.stream()
@@ -53,16 +51,14 @@ public class CartController {
     }
 
     @PostMapping("/carts")
-    public ResponseEntity<Void> saveCart(HttpServletRequest request, @RequestBody Map<String, Object> requestBody) throws CartPersistanceFailedException {
-        Member member = BasicExtractor.extract(request);
+    public ResponseEntity<Void> saveCart(@Authentication Member member, @RequestBody Map<String, Object> requestBody) throws CartPersistanceFailedException {
         Long productId = Long.valueOf((Integer) requestBody.get("product_id"));
         cartRepository.save(new Cart(member.getEmail(), productId));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/carts")
-    public ResponseEntity<Void> deleteCart(HttpServletRequest request, @RequestBody Map<String, Object> requestBody) throws CartPersistanceFailedException {
-        Member member = BasicExtractor.extract(request);
+    public ResponseEntity<Void> deleteCart(@Authentication Member member, @RequestBody Map<String, Object> requestBody) throws CartPersistanceFailedException {
         Long productId = Long.valueOf((Integer) requestBody.get("product_id"));
         cartRepository.deleteByMemberEmailAndProductId(member.getEmail(), productId);
         return ResponseEntity.ok().build();

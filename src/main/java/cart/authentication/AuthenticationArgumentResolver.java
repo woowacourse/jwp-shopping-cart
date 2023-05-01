@@ -1,20 +1,26 @@
-package cart.util;
+package cart.authentication;
 
 import cart.entity.Member;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.core.MethodParameter;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
-import javax.servlet.http.HttpServletRequest;
-
-public class BasicExtractor {
+public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
     private static final String AUTHORIZATION = "Authorization";
 
-    private BasicExtractor() {
+    @Override
+    public boolean supportsParameter(MethodParameter parameter) {
+        return parameter.hasParameterAnnotation(Authentication.class);
     }
 
-    public static Member extract(HttpServletRequest request) {
-        String header = request.getHeader(AUTHORIZATION);
+    @Override
+    public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        String header = webRequest.getHeader(AUTHORIZATION);
 
         if (header == null) {
             throw new MemberAuthenticationException("Member로 로그인이 되지 않았습니다.");
