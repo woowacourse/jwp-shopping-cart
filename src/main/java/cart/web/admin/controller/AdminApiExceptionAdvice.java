@@ -12,8 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import cart.domain.admin.persistence.entity.ProductEntityMappingException;
-import cart.domain.admin.service.DbNotAffectedException;
+import cart.domain.DbNotAffectedException;
+import cart.domain.EntityMappingException;
 
 @ControllerAdvice
 public class AdminApiExceptionAdvice {
@@ -30,7 +30,7 @@ public class AdminApiExceptionAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleEntityMappingException(final ProductEntityMappingException exception) {
+    public ResponseEntity<String> handleEntityMappingException(final EntityMappingException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 

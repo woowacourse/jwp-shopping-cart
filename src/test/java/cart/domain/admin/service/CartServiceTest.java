@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import cart.domain.DbNotAffectedException;
 import cart.domain.admin.persistence.dao.ProductDao;
 import cart.domain.admin.persistence.entity.ProductEntity;
 
@@ -28,7 +29,7 @@ class CartServiceTest {
     private CartService cartService;
 
     @Test
-    void create_메서드로_postProductRequest를_저장한다() {
+    void create_메서드로_productEntity를_저장한다() {
         final ProductEntity productEntity = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
         cartService.create(productEntity);
 
@@ -42,7 +43,7 @@ class CartServiceTest {
     }
 
     @Test
-    void readAll_메서드로_모든_ProductResponse를_불러온다() {
+    void readAll_메서드로_모든_productEntity를_불러온다() {
         final ProductEntity productEntity = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
         productDao.save(productEntity);
 
@@ -58,7 +59,7 @@ class CartServiceTest {
     }
 
     @Test
-    void update_메서드로_ProductEntity를_변경한다() {
+    void update_메서드로_productEntity를_변경한다() {
         final ProductEntity productEntity = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
         final Long id = productDao.save(productEntity);
 

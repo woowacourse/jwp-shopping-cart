@@ -26,7 +26,7 @@ public class JdbcProductDao implements ProductDao {
     public JdbcProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-            .withTableName("PRODUCT")
+            .withTableName("product")
             .usingGeneratedKeyColumns("product_id");
     }
 

@@ -1,5 +1,7 @@
 package cart.domain.admin.persistence.entity;
 
+import cart.domain.EntityMappingException;
+
 public class ProductEntity {
 
     private static final int NAME_LENGTH_MAX = 20;
@@ -26,19 +28,19 @@ public class ProductEntity {
 
     private void validateNameLength(final String name) {
         if (name.length() > NAME_LENGTH_MAX) {
-            throw new ProductEntityMappingException("이름의 길이는 20자 이하여야 합니다.");
+            throw new EntityMappingException("이름의 길이는 20자 이하여야 합니다.");
         }
     }
 
     private void validatePrice(final int price) {
         if (price % 10 != 0) {
-            throw new ProductEntityMappingException("금액은 10원 단위여야 합니다.");
+            throw new EntityMappingException("금액은 10원 단위여야 합니다.");
         }
     }
 
     private void validateImageUrlLength(final String imageUrl) {
         if (imageUrl.length() > URL_LENGTH_MAX) {
-            throw new ProductEntityMappingException("URL의 길이가 너무 깁니다.");
+            throw new EntityMappingException("URL의 길이가 너무 깁니다.");
         }
     }
 
