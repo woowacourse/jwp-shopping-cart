@@ -30,4 +30,10 @@ public class CartApiController {
         final List<CartProductResponseDto> response = cartService.findCartProductsByMember(memberAuthDto);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCart(@PathVariable Long id) {
+        cartService.deleteCart(id);
+        return ResponseEntity.noContent().build();
+    }
 }
