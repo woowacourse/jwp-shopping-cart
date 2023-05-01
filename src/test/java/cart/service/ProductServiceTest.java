@@ -69,14 +69,14 @@ class ProductServiceTest {
         when(productDao.findById(any())).thenReturn(Optional.of(productEntity));
 
         // when
-        final ProductRequest productRequest = productService.getById(1L);
+        final ProductResponse productResponse = productService.getById(1L);
 
         // then
         assertAll(
-                () -> assertThat(productRequest.getName()).isEqualTo("스테이크"),
-                () -> assertThat(productRequest.getImageUrl()).isEqualTo("steakUrl"),
-                () -> assertThat(productRequest.getPrice()).isEqualTo(40000),
-                () -> assertThat(productRequest.getCategory()).isEqualTo(ProductCategory.WESTERN)
+                () -> assertThat(productResponse.getName()).isEqualTo("스테이크"),
+                () -> assertThat(productResponse.getImageUrl()).isEqualTo("steakUrl"),
+                () -> assertThat(productResponse.getPrice()).isEqualTo(40000),
+                () -> assertThat(productResponse.getCategory()).isEqualTo(ProductCategory.WESTERN)
         );
     }
 

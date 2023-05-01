@@ -1,7 +1,7 @@
 package cart.web.handler;
 
-import cart.web.controller.dto.ErrorResponse;
 import cart.web.exception.ErrorCode;
+import cart.web.exception.ErrorResponse;
 import cart.web.exception.GlobalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

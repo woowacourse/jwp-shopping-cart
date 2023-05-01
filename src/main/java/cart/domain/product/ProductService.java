@@ -58,12 +58,13 @@ public class ProductService {
         }
     }
 
-    public ProductRequest getById(final Long id) {
+    public ProductResponse getById(final Long id) {
         final Optional<Product> productById = productDao.findById(id);
         if (productById.isEmpty()) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }
         final Product product = productById.get();
-        return new ProductRequest(product.getProductNameValue(), product.getImageUrlValue(), product.getPriceValue(), product.getCategory());
+        return new ProductResponse(product.getId(), product.getProductNameValue(), product.getImageUrlValue(),
+                product.getPriceValue(), product.getCategory());
     }
 }

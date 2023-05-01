@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.domain.product.ProductCategory;
 import cart.domain.product.ProductService;
+import cart.web.controller.admin.AdminViewController;
 import cart.web.controller.product.ProductViewController;
-import cart.web.controller.product.dto.ProductRequest;
 import cart.web.controller.product.dto.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ProductViewController.class)
+@WebMvcTest({ProductViewController.class, AdminViewController.class})
 class ProductViewControllerTest {
 
     @Autowired
@@ -54,8 +54,8 @@ class ProductViewControllerTest {
         @Test
         void getProduct() throws Exception {
             // given
-            final ProductRequest productRequest = new ProductRequest("치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
-            when(productService.getById(any())).thenReturn(productRequest);
+            final ProductResponse productResponse = new ProductResponse(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+            when(productService.getById(any())).thenReturn(productResponse);
 
             //when
             mockMvc.perform(get("/products/{id}", 1L)

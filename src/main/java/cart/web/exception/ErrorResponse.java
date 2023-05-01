@@ -1,6 +1,4 @@
-package cart.web.controller.dto;
-
-import cart.web.exception.ErrorCode;
+package cart.web.exception;
 
 import java.util.List;
 
