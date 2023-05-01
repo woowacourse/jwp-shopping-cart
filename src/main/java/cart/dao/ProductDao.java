@@ -42,10 +42,15 @@ public class ProductDao implements Dao<ProductEntity> {
     }
 
     @Override
-    public void update(final ProductEntity productEntity) {
+    public void save(final ProductEntity productEntity) {
+        simpleJdbcInsert.execute(new BeanPropertySqlParameterSource(productEntity));
+    }
+
+    @Override
+    public int update(final ProductEntity productEntity) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
 
-        jdbcTemplate.update(
+        return jdbcTemplate.update(
                 sql,
                 productEntity.getName(),
                 productEntity.getPrice(),
@@ -55,14 +60,9 @@ public class ProductDao implements Dao<ProductEntity> {
     }
 
     @Override
-    public void save(final ProductEntity productEntity) {
-        simpleJdbcInsert.execute(new BeanPropertySqlParameterSource(productEntity));
-    }
-
-    @Override
-    public void deleteById(final Long id) {
+    public int deleteById(final Long id) {
         final String sql = "DELETE from product where id = ?";
 
-        jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 }
