@@ -169,7 +169,7 @@ class ProductApiControllerTest {
                     .post(API_URL)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 이름은 1자 이상, 20자 이하입니다."));
         }
 
@@ -205,7 +205,7 @@ class ProductApiControllerTest {
                     .post(API_URL)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 최소 가격은 1000원 이상입니다."));
         }
 
@@ -223,7 +223,7 @@ class ProductApiControllerTest {
                     .post(API_URL)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 가격 단위는 100원 단위입니다."));
         }
 
@@ -345,7 +345,7 @@ class ProductApiControllerTest {
                     .put(API_URL + "/" + savedId)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 이름은 1자 이상, 20자 이하입니다."));
         }
 
@@ -383,7 +383,7 @@ class ProductApiControllerTest {
                     .put(API_URL + "/" + savedId)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 최소 가격은 1000원 이상입니다."));
         }
 
@@ -402,7 +402,7 @@ class ProductApiControllerTest {
                     .put(API_URL + "/" + savedId)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 가격 단위는 100원 단위입니다."));
         }
 
