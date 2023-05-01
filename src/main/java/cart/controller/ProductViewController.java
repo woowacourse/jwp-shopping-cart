@@ -1,0 +1,36 @@
+package cart.controller;
+
+import cart.domain.Product;
+import cart.service.ProductService;
+import java.util.List;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class ProductViewController {
+
+    private final ProductService productService;
+
+    public ProductViewController(final ProductService productService) {
+        this.productService = productService;
+    }
+
+    @GetMapping("/")
+    public String indexPage(final Model model) {
+        final List<Product> products = productService.findAll();
+
+        model.addAttribute("products", products);
+
+        return "index.html";
+    }
+
+    @GetMapping("/admin")
+    public String adminPage(final Model model) {
+        final List<Product> products = productService.findAll();
+
+        model.addAttribute("products", products);
+
+        return "admin.html";
+    }
+}
