@@ -44,32 +44,27 @@ form.addEventListener('submit', (event) => {
     createProduct(product);
 });
 
+const handleException = (e) => {
+    console.error(e);
+    alert(e.message);
+}
+
 const createProduct = (product) => {
-    axios.post('/product', product)
-        .then(() => {
-            window.location.reload();
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    axios.post('/products', product)
+        .then(() => window.location.reload())
+        .catch(handleException);
 };
 
 const updateProduct = (product) => {
     const {id} = product;
 
-    axios.put(`/product/${id}`, product)
-        .then(() => {
-            window.location.reload();
-        }).catch((error) => {
-        console.error(error);
-    });
+    axios.put(`/products/${id}`, product)
+        .then(() => window.location.reload())
+        .catch(handleException);
 };
 
 const deleteProduct = (id) => {
-    axios.delete(`/product/${id}`)
-        .then(() => {
-        window.location.reload();
-    }).catch((error) => {
-        console.error(error);
-    });
+    axios.delete(`/products/${id}`)
+        .then(() => window.location.reload())
+        .catch(handleException);
 };

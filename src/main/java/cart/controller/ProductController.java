@@ -15,7 +15,7 @@ import cart.controller.dto.ProductRequest;
 import cart.repository.ProductRepository;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductRepository productRepository;
