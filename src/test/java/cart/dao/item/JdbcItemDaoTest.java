@@ -27,7 +27,7 @@ class JdbcItemDaoTest {
     }
 
     @Test
-    @DisplayName("상품을 저장할 수 있다.")
+    @DisplayName("상품 저장 테스트")
     void save() {
         ItemEntity item = new ItemEntity("햄버거", "c", 2000);
 
@@ -42,7 +42,7 @@ class JdbcItemDaoTest {
     }
 
     @Test
-    @DisplayName("상품 목록을 조회할 수 있다.")
+    @DisplayName("상품 목록 조회 테스트")
     void findAll() {
         List<ItemEntity> itemEntities = itemDao.findAll();
 
@@ -53,7 +53,7 @@ class JdbcItemDaoTest {
     }
 
     @Test
-    @DisplayName("상품 정보를 수정할 수 있다.")
+    @DisplayName("상품 정보 업데이트 테스트")
     void update() {
         ItemEntity item = new ItemEntity("햄버거", "c", 2000);
 
@@ -71,7 +71,7 @@ class JdbcItemDaoTest {
     }
 
     @Test
-    @DisplayName("상품 삭제 할 수 있다.")
+    @DisplayName("상품 삭제 테스트")
     void delete() {
         itemDao.delete(2L);
 

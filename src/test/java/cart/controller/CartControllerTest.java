@@ -9,6 +9,7 @@ import cart.entity.MemberEntity;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,6 +46,7 @@ class CartControllerTest {
     }
 
     @Test
+    @DisplayName("장바구니 추가 테스트")
     void addCart() {
         ItemEntity item = itemDao.save(new ItemEntity("피자", "b", 20000));
         CartSaveRequest request = new CartSaveRequest();
@@ -61,6 +63,7 @@ class CartControllerTest {
     }
 
     @Test
+    @DisplayName("장바구니 삭제 테스트")
     void deleteCart() {
         RestAssured.given().log().all()
                 .header("Authorization", "Basic " + authorization)

@@ -5,6 +5,7 @@ import cart.entity.MemberEntity;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,6 +35,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @DisplayName("멤버 추가 테스트")
     void add() {
         MemberEntity member3 = new MemberEntity("power@naver.com", "power", "01012345678", "qwer1234");
 
@@ -50,6 +52,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @DisplayName("멤버 업데이트 테스트")
     void edit() {
         MemberEntity member2 = new MemberEntity("good@naver.com", "power", "01012345678", "qwer1234");
 
@@ -65,6 +68,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @DisplayName("멤버 삭제 테스트")
     void delete() {
         RestAssured.given()
                 .log().all()
