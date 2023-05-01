@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.controller.dto.ErrorResponse;
 import java.util.NoSuchElementException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,9 +17,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ErrorResponse> handleNoSuchElementException() {
-        ErrorResponse errorResponse = new ErrorResponse("존재하지 않는 id입니다.");
+    @ExceptionHandler({IllegalArgumentException.class,NoSuchElementException.class, DataIntegrityViolationException.class})
+    public ResponseEntity<ErrorResponse> handleNoSuchElementException(Exception exception) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
 }
