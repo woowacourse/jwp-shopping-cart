@@ -7,6 +7,7 @@ import cart.response.ProductResponse;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductService {
@@ -18,15 +19,22 @@ public class ProductService {
     }
 
     public List<ProductResponse> findAll() {
-        List<Product> products = productRepository.findAll();
-        List<ProductResponse> result = new ArrayList<>();
+        final Map<Long, Product> savedProducts = productRepository.findAll();
 
-        long id = 1L;
-        for (final Product product : products) {
+        return toProductResponses(savedProducts);
+    }
+
+    private List<ProductResponse> toProductResponses(final Map<Long, Product> savedProducts) {
+        final List<ProductResponse> result = new ArrayList<>();
+        for (final Map.Entry<Long, Product> entry : savedProducts.entrySet()) {
+            final Long id = entry.getKey();
+            final Product product = entry.getValue();
+
             result.add(new ProductResponse(id, product.getName(), product.getPrice(), product.getImageUrl()));
         }
 
-        return result;
+        result.sort((product1, product2) -> (int) (product1.getId() - product2.getId()));
+        return List.copyOf(result);
     }
 
     public Long register(final ProductDto productDto) {

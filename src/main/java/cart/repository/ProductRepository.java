@@ -1,12 +1,13 @@
 package cart.repository;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toUnmodifiableMap;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.entity.ProductEntity;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ProductRepository {
@@ -29,12 +30,14 @@ public class ProductRepository {
         return new Product(result.getName(), result.getPrice(), result.getImageUrl());
     }
 
-    public List<Product> findAll() {
-        List<ProductEntity> result = productDao.findAll();
+    public Map<Long, Product> findAll() {
+        List<ProductEntity> savedProducts = productDao.findAll();
 
-        return result.stream()
-                .map(productEntity -> new Product(productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl()))
-                .collect(toList());
+        return savedProducts.stream()
+                .collect(toUnmodifiableMap(
+                        ProductEntity::getId,
+                        savedProduct -> new Product(savedProduct.getName(), savedProduct.getPrice(), savedProduct.getImageUrl())
+                ));
     }
 
     public void update(final long id, final Product newProduct) {
