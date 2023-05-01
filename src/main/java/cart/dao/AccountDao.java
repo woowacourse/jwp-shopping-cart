@@ -15,7 +15,8 @@ public class AccountDao {
             new AccountEntity(
                     rs.getLong("id"),
                     rs.getString("email"),
-                    rs.getString("password")
+                    rs.getString("password"),
+                    rs.getLong("cart_id")
             );
 
     public AccountDao(final JdbcTemplate jdbcTemplate) {
