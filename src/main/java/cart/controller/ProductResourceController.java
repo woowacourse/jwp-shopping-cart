@@ -45,9 +45,8 @@ public class ProductResourceController {
     }
 
     @DeleteMapping("/admin/products/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
-    public ProductResponse deleteProduct(@PathVariable final long id) {
-        final Product product = productService.deleteProduct(id);
-        return new ProductResponse(product);
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteProduct(@PathVariable final long id) {
+        productService.deleteProduct(id);
     }
 }

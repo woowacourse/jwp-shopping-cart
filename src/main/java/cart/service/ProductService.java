@@ -17,10 +17,6 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public Product findById(final long id) {
-        return productDao.findById(id);
-    }
-
     public List<Product> findAll() {
         return productDao.findAll();
     }
@@ -29,7 +25,7 @@ public class ProductService {
         final Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
         final long id = productDao.insert(product);
 
-        return findById(id);
+        return new Product(id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
     }
 
     public Product updateProduct(final long id, final ProductDto productDto) {
@@ -44,14 +40,12 @@ public class ProductService {
 
         productDao.update(newProduct);
 
-        return findById(id);
+        return new Product(id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
     }
 
-    public Product deleteProduct(final long id) {
+    public void deleteProduct(final long id) {
         validateExistData(id);
-        final Product product = findById(id);
         productDao.delete(id);
-        return product;
     }
 
     private void validateExistData(final long id) {

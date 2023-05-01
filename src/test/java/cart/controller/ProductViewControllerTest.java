@@ -89,7 +89,7 @@ public class ProductViewControllerTest {
                 .when()
                 .delete("/admin/products/" + id)
                 .then()
-                .statusCode(200);
+                .statusCode(204);
     }
 
     @ParameterizedTest
