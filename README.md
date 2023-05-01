@@ -1,8 +1,8 @@
 # jwp-shopping-cart
 
 ## 1단계 피드백 사항 및 추가 수정 사항
-- [ ] view의 객체(ProductRequest) 가 Service 에 그대로 전달되었을 때 생기는 문제점
-- [ ] 컨트롤러에서 Service 에서 사용되는 값들을 알게 되면 안 좋은 점
+- [x] view의 객체(ProductRequest) 가 Service 에 그대로 전달되었을 때 생기는 문제점
+- [x] 컨트롤러에서 Service 에서 사용되는 값들을 알게 되면 안 좋은 점
 - [x] View 를 반환하는 컨트롤러와 API 작업을 하는 컨트롤러 분리하기
 - [x] Model이 반환되는 과정
 - [x] ModelAndView 학습

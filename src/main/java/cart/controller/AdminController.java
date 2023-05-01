@@ -3,7 +3,6 @@ package cart.controller;
 import cart.dto.ProductRequest;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,7 +25,7 @@ public class AdminController {
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody final ProductRequest productRequest) {
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody @Valid final ProductRequest productRequest) {
         cartService.update(id, productRequest);
         return ResponseEntity.noContent().build();
     }
