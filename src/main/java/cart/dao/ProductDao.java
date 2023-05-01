@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.global.exception.ProductNotFoundException;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -30,8 +31,13 @@ public class ProductDao implements Dao<ProductEntity> {
     @Override
     public ProductEntity findById(final Long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
+        ProductEntity productEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
 
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        if (productEntity == null) {
+            throw new ProductNotFoundException();
+        }
+
+        return productEntity;
     }
 
     @Override
