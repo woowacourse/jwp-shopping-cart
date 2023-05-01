@@ -1,8 +1,8 @@
-package cart.controller;
+package cart.web.handler;
 
-import cart.controller.dto.ErrorResponse;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
+import cart.web.controller.dto.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

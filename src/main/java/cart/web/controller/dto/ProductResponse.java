@@ -1,7 +1,7 @@
-package cart.controller.dto;
+package cart.web.controller.dto;
 
-import cart.persistence.entity.Product;
-import cart.persistence.entity.ProductCategory;
+import cart.dao.ProductCategory;
+import cart.dao.ProductEntity;
 
 public class ProductResponse {
 
@@ -43,7 +43,7 @@ public class ProductResponse {
         return category;
     }
 
-    public Product toEntity() {
-        return new Product(name, imageUrl, price, category);
+    public ProductEntity toEntity() {
+        return new ProductEntity(name, imageUrl, price, category);
     }
 }

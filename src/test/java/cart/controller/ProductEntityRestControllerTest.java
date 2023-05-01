@@ -1,8 +1,9 @@
 package cart.controller;
 
-import cart.controller.dto.ProductRequest;
-import cart.persistence.entity.ProductCategory;
-import cart.service.ProductService;
+import cart.dao.ProductCategory;
+import cart.domain.product.service.ProductService;
+import cart.web.controller.ProductRestController;
+import cart.web.controller.dto.ProductRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductRestController.class)
-class ProductRestControllerTest {
+class ProductEntityRestControllerTest {
 
     private ProductRequest productRequest;
 

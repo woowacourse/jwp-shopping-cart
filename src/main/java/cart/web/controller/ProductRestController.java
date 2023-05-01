@@ -1,7 +1,7 @@
-package cart.controller;
+package cart.web.controller;
 
-import cart.controller.dto.ProductRequest;
-import cart.service.ProductService;
+import cart.domain.product.service.ProductService;
+import cart.web.controller.dto.ProductRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +26,7 @@ public class ProductRestController {
 
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody @Valid final ProductRequest productRequest) {
+
         final Long productId = productService.save(productRequest);
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }

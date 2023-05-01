@@ -1,9 +1,9 @@
-package cart.controller;
+package cart.web.controller;
 
-import cart.controller.dto.ProductRequest;
-import cart.controller.dto.ProductResponse;
-import cart.persistence.entity.ProductCategory;
-import cart.service.ProductService;
+import cart.dao.ProductCategory;
+import cart.domain.product.service.ProductService;
+import cart.web.controller.dto.ProductRequest;
+import cart.web.controller.dto.ProductResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

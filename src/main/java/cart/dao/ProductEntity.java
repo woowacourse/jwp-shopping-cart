@@ -1,9 +1,9 @@
-package cart.persistence.entity;
+package cart.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Product {
+public class ProductEntity {
     private final Long id;
     private final String name;
     private final String imageUrl;
@@ -13,7 +13,7 @@ public class Product {
     public final Logger log = LoggerFactory.getLogger(getClass());
 
 
-    public Product(final Long id, final String name, final String imageUrl, final int price, final ProductCategory category) {
+    public ProductEntity(final Long id, final String name, final String imageUrl, final int price, final ProductCategory category) {
         validate(name, price, category);
         this.id = id;
         this.name = name;
@@ -22,7 +22,7 @@ public class Product {
         this.category = category;
     }
 
-    public Product(final String name, final String imageUrl, final int price, final ProductCategory category) {
+    public ProductEntity(final String name, final String imageUrl, final int price, final ProductCategory category) {
         this(null, name, imageUrl, price, category);
     }
 

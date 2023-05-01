@@ -1,7 +1,7 @@
 package cart;
 
-import cart.controller.dto.ProductRequest;
-import cart.persistence.entity.ProductCategory;
+import cart.dao.ProductCategory;
+import cart.web.controller.dto.ProductRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductIntegrationTest {
+public class ProductEntityIntegrationTest {
 
     @LocalServerPort
     private int port;

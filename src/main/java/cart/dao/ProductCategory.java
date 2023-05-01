@@ -1,4 +1,4 @@
-package cart.persistence.entity;
+package cart.dao;
 
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;

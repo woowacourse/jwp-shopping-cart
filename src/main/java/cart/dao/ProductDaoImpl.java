@@ -1,7 +1,6 @@
-package cart.persistence.dao;
+package cart.dao;
 
-import cart.persistence.entity.Product;
-import cart.persistence.entity.ProductCategory;
+import cart.domain.product.ProductRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,57 +13,62 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Component
-public class ProductDao {
+public class ProductDaoImpl implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDao(final JdbcTemplate jdbcTemplate) {
+    public ProductDaoImpl(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    final RowMapper<Product> productRowMapper = (result, count) ->
-            new Product(result.getLong("id"),
+    final RowMapper<ProductEntity> productRowMapper = (result, count) ->
+            new ProductEntity(result.getLong("id"),
                     result.getString("name"),
                     result.getString("image_url"),
                     result.getInt("price"),
                     ProductCategory.from(result.getString("category"))
             );
 
-    public Long insert(final Product product) {
+    @Override
+    public Long insert(final ProductEntity productEntity) {
         final String query = "INSERT INTO product(name, image_url, price, category) VALUES(?, ?, ?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
-            ps.setString(1, product.getName());
-            ps.setString(2, product.getImageUrl());
-            ps.setInt(3, product.getPrice());
-            ps.setString(4, product.getCategory().name());
+            ps.setString(1, productEntity.getName());
+            ps.setString(2, productEntity.getImageUrl());
+            ps.setInt(3, productEntity.getPrice());
+            ps.setString(4, productEntity.getCategory().name());
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Optional<Product> findById(final Long id) {
+    @Override
+    public Optional<ProductEntity> findById(final Long id) {
         final String query = "SELECT p.id, p.name, p.image_url, p.price, p.category FROM product p WHERE p.id = ?";
         try {
-            final Product product = jdbcTemplate.queryForObject(query, productRowMapper, id);
-            return Optional.of(product);
+            final ProductEntity productEntity = jdbcTemplate.queryForObject(query, productRowMapper, id);
+            return Optional.of(productEntity);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }
 
-    public List<Product> findAll() {
+    @Override
+    public List<ProductEntity> findAll() {
         final String query = "SELECT p.id, p.name, p.image_url, p.price, p.category FROM product p";
         return jdbcTemplate.query(query, productRowMapper);
     }
 
-    public int update(final Long productId, final Product product) {
+    @Override
+    public int update(final Long productId, final ProductEntity productEntity) {
         final String query = "UPDATE product p SET p.name = ?, p.image_url = ?, p.price = ?, p.category = ? WHERE p.id = ?";
-        return jdbcTemplate.update(query, product.getName(), product.getImageUrl(), product.getPrice(),
-                product.getCategory().name(), productId);
+        return jdbcTemplate.update(query, productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice(),
+                productEntity.getCategory().name(), productId);
     }
 
+    @Override
     public int deleteById(final Long id) {
         final String query = "DELETE FROM product p WHERE p.id = ?";
         return jdbcTemplate.update(query, id);

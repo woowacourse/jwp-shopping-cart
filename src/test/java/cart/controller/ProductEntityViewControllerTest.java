@@ -1,9 +1,10 @@
 package cart.controller;
 
-import cart.controller.dto.ProductRequest;
-import cart.controller.dto.ProductResponse;
-import cart.persistence.entity.ProductCategory;
-import cart.service.ProductService;
+import cart.dao.ProductCategory;
+import cart.domain.product.service.ProductService;
+import cart.web.controller.ProductViewController;
+import cart.web.controller.dto.ProductRequest;
+import cart.web.controller.dto.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductViewController.class)
-class ProductViewControllerTest {
+class ProductEntityViewControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
