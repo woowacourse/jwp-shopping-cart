@@ -63,7 +63,7 @@ class CartServiceTest {
                     "password"
             )));
 
-            final Long savedCartId = cartService.putInCart(memberAuthDto, 1L);
+            final Long savedCartId = cartService.putInCart(1L, memberAuthDto);
 
             assertThat(savedCartId).isNotNull();
         }
@@ -77,7 +77,7 @@ class CartServiceTest {
             );
             given(productDao.findById(any())).willReturn(Optional.empty());
 
-            assertThatThrownBy(() -> cartService.putInCart(memberAuthDto, 1L))
+            assertThatThrownBy(() -> cartService.putInCart(1L, memberAuthDto))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("존재하지 않는 상품입니다.");
         }
@@ -98,7 +98,7 @@ class CartServiceTest {
             )));
             given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.empty());
 
-            assertThatThrownBy(() -> cartService.putInCart(memberAuthDto, 1L))
+            assertThatThrownBy(() -> cartService.putInCart(1L, memberAuthDto))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("등록되지 않은 회원입니다.");
         }
@@ -129,9 +129,9 @@ class CartServiceTest {
                     "password"
             )));
             given(cartDao.findAllByMemberId(any())).willReturn(List.of(cartEntity));
-            given(productDao.findAllIn(any())).willReturn(List.of(productEntity));
+            given(productDao.findById(any())).willReturn(Optional.ofNullable(productEntity));
 
-            final List<CartProductResponseDto> result = cartService.findCartProductsByMember(memberAuthDto);
+            final List<CartProductResponseDto> result = cartService.findCartItemsForMember(memberAuthDto);
 
             assertAll(
                     () -> assertThat(result).hasSize(1),
@@ -152,7 +152,7 @@ class CartServiceTest {
             );
             given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.empty());
 
-            assertThatThrownBy(() -> cartService.findCartProductsByMember(memberAuthDto))
+            assertThatThrownBy(() -> cartService.findCartItemsForMember(memberAuthDto))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("등록되지 않은 회원입니다.");
         }

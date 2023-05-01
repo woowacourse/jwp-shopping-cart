@@ -26,7 +26,7 @@ public class CartService {
         this.memberDao = memberDao;
     }
 
-    public Long putInCart(final MemberAuthDto memberAuthDto, final Long productId) {
+    public Long putInCart(final Long productId, final MemberAuthDto memberAuthDto) {
         final ProductEntity product = getProduct(productId);
         final MemberEntity member = getMember(memberAuthDto);
         return cartDao.save(new CartEntity(member.getId(), product.getId()));
@@ -42,7 +42,7 @@ public class CartService {
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 회원입니다."));
     }
 
-    public List<CartProductResponseDto> findCartProductsByMember(final MemberAuthDto memberAuthDto) {
+    public List<CartProductResponseDto> findCartItemsForMember(final MemberAuthDto memberAuthDto) {
         final MemberEntity member = getMember(memberAuthDto);
         final List<CartEntity> cartEntities = cartDao.findAllByMemberId(member.getId());
         return cartEntities.stream()
@@ -53,7 +53,7 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteCart(final Long id) {
-        cartDao.delete(id);
+    public void removeCartItem(final Long cartId, final MemberAuthDto memberAuthDto) {
+        cartDao.delete(cartId);
     }
 }

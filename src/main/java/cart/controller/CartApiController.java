@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@RestController
 @RequestMapping("/carts")
+@RestController
 public class CartApiController {
 
     private final CartService cartService;
@@ -20,21 +20,22 @@ public class CartApiController {
         this.cartService = cartService;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> putInCart(@RequestParam Long productId, @Member MemberAuthDto memberAuthDto) {
-        final Long savedCartId = cartService.putInCart(memberAuthDto, productId);
-        return ResponseEntity.created(URI.create("/carts/" + savedCartId)).build();
-    }
-
     @GetMapping
-    public ResponseEntity<List<CartProductResponseDto>> findCartProductsByMember(@Member MemberAuthDto memberAuthDto) {
-        final List<CartProductResponseDto> response = cartService.findCartProductsByMember(memberAuthDto);
+    public ResponseEntity<List<CartProductResponseDto>> findCartItemsForMember(@Member MemberAuthDto memberAuthDto) {
+        final List<CartProductResponseDto> response = cartService.findCartItemsForMember(memberAuthDto);
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping
+    public ResponseEntity<Void> putInCart(@RequestParam Long productId, @Member MemberAuthDto memberAuthDto) {
+        final Long cartId = cartService.putInCart(productId, memberAuthDto);
+        return ResponseEntity.created(URI.create("/carts/" + cartId)).build();
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCart(@PathVariable Long id) {
-        cartService.deleteCart(id);
+    public ResponseEntity<Void> removeCartItem(@PathVariable(name = "id") Long cartId, @Member MemberAuthDto memberAuthDto) {
+        cartService.removeCartItem(cartId, memberAuthDto);
         return ResponseEntity.noContent().build();
     }
 }
+
