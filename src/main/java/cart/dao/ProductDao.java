@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.global.exception.ProductNotFoundException;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -31,13 +32,11 @@ public class ProductDao implements Dao<ProductEntity> {
     @Override
     public ProductEntity findById(final Long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
-        ProductEntity productEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
-
-        if (productEntity == null) {
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (final EmptyResultDataAccessException e) {
             throw new ProductNotFoundException();
         }
-
-        return productEntity;
     }
 
     @Override
@@ -48,8 +47,8 @@ public class ProductDao implements Dao<ProductEntity> {
     }
 
     @Override
-    public void save(final ProductEntity productEntity) {
-        simpleJdbcInsert.execute(new BeanPropertySqlParameterSource(productEntity));
+    public Long save(final ProductEntity productEntity) {
+        return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(productEntity)).longValue();
     }
 
     @Override

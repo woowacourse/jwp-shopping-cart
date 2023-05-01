@@ -22,14 +22,14 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public void registerProduct(final ProductRegisterRequest productRegisterRequest) {
+    public Long registerProduct(final ProductRegisterRequest productRegisterRequest) {
         ProductEntity productEntity = new ProductEntity(
                 productRegisterRequest.getName(),
                 productRegisterRequest.getPrice(),
                 productRegisterRequest.getImageUrl()
         );
 
-        productDao.save(productEntity);
+        return productDao.save(productEntity);
     }
 
     @Transactional(readOnly = true)

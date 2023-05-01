@@ -7,7 +7,7 @@ public interface Dao<T> {
 
     List<T> findAll();
 
-    void save(T t);
+    Long save(T t);
 
     int update(T t);
 
