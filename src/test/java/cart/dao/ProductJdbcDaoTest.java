@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import cart.TestFixture;
+
 @JdbcTest
 class ProductJdbcDaoTest {
 
@@ -22,9 +24,9 @@ class ProductJdbcDaoTest {
     void setUp() {
         this.productDao = new ProductJdbcDao(jdbcTemplate);
 
-        productDao.insert(new ProductDto("땡칠", "https://avatars.githubusercontent.com/u/39221443", 1000L));
-        productDao.insert(new ProductDto("비버", "https://avatars.githubusercontent.com/u/109223081", 1000L));
-        productDao.insert(new ProductDto("코다", "https://avatars.githubusercontent.com/u/63405904", 1000000L));
+        productDao.insert("땡칠", TestFixture.IMAGE_0CHIL, 1000L);
+        productDao.insert("비버", TestFixture.IMAGE_BEAVER, 1000L);
+        productDao.insert("코다", TestFixture.IMAGE_KODA, 1000000L);
     }
 
     @Test
@@ -33,7 +35,7 @@ class ProductJdbcDaoTest {
         assertThat(productDao.findAll())
                 .extracting("name", "image", "price")
                 .contains(
-                        tuple("비버", "https://avatars.githubusercontent.com/u/109223081", 1000L)
+                        tuple("비버", TestFixture.IMAGE_BEAVER, 1000L)
                 );
     }
 
@@ -44,7 +46,7 @@ class ProductJdbcDaoTest {
 
         assertThat(entity)
                 .extracting("name", "image", "price")
-                .containsExactly("코다", "https://avatars.githubusercontent.com/u/63405904", 1000000L);
+                .containsExactly("코다", TestFixture.IMAGE_KODA, 1000000L);
     }
 
     @Test
@@ -53,16 +55,16 @@ class ProductJdbcDaoTest {
         assertThat(productDao.findAll())
                 .extracting("name", "image", "price")
                 .containsExactlyInAnyOrder(
-                        tuple("땡칠", "https://avatars.githubusercontent.com/u/39221443", 1000L),
-                        tuple("비버", "https://avatars.githubusercontent.com/u/109223081", 1000L),
-                        tuple("코다", "https://avatars.githubusercontent.com/u/63405904", 1000000L)
+                        tuple("땡칠", TestFixture.IMAGE_0CHIL, 1000L),
+                        tuple("비버", TestFixture.IMAGE_BEAVER, 1000L),
+                        tuple("코다", TestFixture.IMAGE_KODA, 1000000L)
                 );
     }
 
     @Test
     @DisplayName("상품 수정")
     void update() {
-        productDao.update(getGreatestId(), new ProductDto("코다", "VERY_BIG_IMAGE", 100L));
+        productDao.update(getGreatestId(), "코다", "VERY_BIG_IMAGE", 100L);
 
         assertThat(productDao.findAll())
                 .extracting("name", "image", "price")

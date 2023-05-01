@@ -3,9 +3,9 @@ package cart.dao;
 import java.util.List;
 
 public interface ProductDao {
-    Integer insert(ProductDto productEntity);
+    Integer insert(String name, String image, Long price);
 
-    void update(Integer id, ProductDto productDto);
+    void update(Integer id, String name, String image, Long price);
 
     void deleteById(Integer id);
 

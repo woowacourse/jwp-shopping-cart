@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import cart.dao.ProductDao;
-import cart.dao.ProductDto;
 import cart.dao.ProductEntity;
 
 @Repository
@@ -18,7 +17,7 @@ public class ProductRepository {
     }
 
     public void save(final String name, final String image, final Long price) {
-        productDao.insert(new ProductDto(name, image, price));
+        productDao.insert(name, image, price);
     }
 
     public void delete(final Integer id) {
@@ -27,7 +26,7 @@ public class ProductRepository {
 
     public void update(final Integer id, final String name, final String image, final Long price) {
         ProductEntity entity = productDao.select(id);
-        productDao.update(entity.getId(), new ProductDto(name, image, price));
+        productDao.update(entity.getId(), name, image, price);
     }
 
     public List<ProductEntity> getAll() {
