@@ -48,15 +48,15 @@ public class AdminController {
         return ResponseEntity.created(URI.create("/admin/product/" + id)).build();
     }
 
-    @PutMapping("/product/{id}")
+    @PutMapping("/product/{productId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void updateProduct(@PathVariable final long id, final @RequestBody @Valid ProductRequest productRequest) {
-        productService.updateProduct(id, ProductDto.from(productRequest));
+    public void updateProduct(@PathVariable final long productId, final @RequestBody @Valid ProductRequest productRequest) {
+        productService.updateProduct(productId, ProductDto.from(productRequest));
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/product/{productId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteProduct(@PathVariable final long id) {
-        productService.deleteProduct(id);
+    public void deleteProduct(@PathVariable("productId") final long productId) {
+        productService.deleteProduct(productId);
     }
 }
