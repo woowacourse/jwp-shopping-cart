@@ -1,8 +1,9 @@
 package cart.service;
 
 import cart.dto.ProductDto;
-import cart.repository.dao.productDao.ProductDao;
 import cart.entity.Product;
+import cart.exception.customExceptions.DataNotFoundException;
+import cart.repository.dao.productDao.ProductDao;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,10 +43,17 @@ public class ProductManagementService {
         final String name = productDto.getName();
         final String imageUrl = productDto.getImageUrl();
         final int price = productDto.getPrice();
-        productDao.update(new Product(id, name, imageUrl, price));
+
+        int amountOfUpdatedProduct = productDao.update(new Product(id, name, imageUrl, price));
+        if (amountOfUpdatedProduct == 0) {
+            throw new DataNotFoundException("해당 상품을 찾을 수 없습니다.");
+        }
     }
 
     public void deleteProduct(final Long id) {
-        productDao.delete(id);
+        int amountOfDeletedProduct = productDao.delete(id);
+        if (amountOfDeletedProduct == 0) {
+            throw new DataNotFoundException("해당 상품을 찾을 수 없습니다.");
+        }
     }
 }
