@@ -2,7 +2,6 @@ package cart.web.controller.product;
 
 import cart.domain.product.ProductCategory;
 import cart.domain.product.ProductService;
-import cart.web.controller.product.ProductRestController;
 import cart.web.controller.product.dto.ProductRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
