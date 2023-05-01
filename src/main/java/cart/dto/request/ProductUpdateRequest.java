@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.Length;
 public class ProductUpdateRequest {
     @NotBlank(message = "상품 이름은 비어있으면 안 됩니다.")
     @Length(
-            max = 10,
+            max = 20,
             message = "상품 이름의 길이는 {max}자리 보다 작아야 합니다."
     )
     private final String name;
