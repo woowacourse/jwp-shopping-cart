@@ -36,22 +36,22 @@ public class ProductDao {
     }
 
     public List<Product> findAll() {
-        final String sql = "select * from product";
+        final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     public void update(final Product product) {
-        final String sql = "update product set name = ?, image = ?, price = ? where id = ?";
+        final String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getImage(), product.getPrice(), product.getId());
     }
 
     public void delete(final Long id) {
-        final String sql = "delete from product where id = ?";
+        final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     public Optional<Product> findById(final Long id) {
-        final String sql = "select * from product where id = ?";
+        final String sql = "SELECT * FROM product WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (final EmptyResultDataAccessException e) {
