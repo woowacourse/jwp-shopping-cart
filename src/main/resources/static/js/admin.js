@@ -66,7 +66,7 @@ const updateProduct = (product) => {
     const { id } = product;
 
     axios.request({
-        method: "patch",
+        method: "put",
         url: '/admin/products/' + id,
         data: {
             name: product.name,
@@ -76,7 +76,9 @@ const updateProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data.message);
         console.error(error);
+        window.location.reload();
     });
 };
 
@@ -88,6 +90,8 @@ const deleteProduct = (id) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data.message);
         console.error(error);
+        window.location.reload();
     });
 };
