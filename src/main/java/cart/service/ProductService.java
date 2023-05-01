@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
+    public static final int UPDATE_QUERY_NUMBER = 0;
+
     private final ProductDao productDao;
 
     public ProductService(ProductDao productDao) {
@@ -24,14 +26,14 @@ public class ProductService {
 
     public void update(ProductRequest productRequest, int id) {
         int updateRowNumber = productDao.update(productRequest, id);
-        if (updateRowNumber == 0) {
+        if (updateRowNumber == UPDATE_QUERY_NUMBER) {
             throw new IllegalArgumentException("해당하는 ID가 없습니다.");
         }
     }
 
     public void delete(int id) {
         int deleteRowNumber = productDao.delete(id);
-        if (deleteRowNumber == 0) {
+        if (deleteRowNumber == UPDATE_QUERY_NUMBER) {
             throw new IllegalArgumentException("해당하는 ID가 없습니다.");
         }
     }

@@ -6,14 +6,18 @@ import javax.validation.constraints.PositiveOrZero;
 
 public class ProductRequest {
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
-    private final String name;
+    private String name;
 
     @NotBlank(message = "이미지 Url은 필수 입력 값입니다.")
-    private final String imgUrl;
+    private String imgUrl;
 
     @NotNull(message = "상품가격은 필수 입력 값입니다.")
     @PositiveOrZero(message = "상품가격은 0 이상이어야 합니다.")
-    private final int price;
+    private int price;
+
+    public ProductRequest() {
+
+    }
 
     public ProductRequest(String name, String imgUrl, int price) {
         this.name = name;
