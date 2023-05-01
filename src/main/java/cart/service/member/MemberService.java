@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface MemberService {
     MemberId save(final MemberCreateRequest request);
+
     List<MemberResponse> findAll();
+
     MemberId deleteByMemberId(final MemberId memberId);
 }

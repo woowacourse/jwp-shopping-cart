@@ -1,71 +1,97 @@
 package cart.repository.member;
 
+import cart.config.RepositoryTestConfig;
 import cart.domain.member.Member;
 import cart.domain.member.MemberId;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
-@JdbcTest
-@Import(MemberJdbcRepository.class)
-class MemberJdbcRepositoryTest {
-    @Autowired
+class MemberJdbcRepositoryTest extends RepositoryTestConfig {
+    private static final Member MEMBER = new Member("헤나", "test@test.com", "test");
+
     MemberRepository memberRepository;
+
+    @BeforeEach
+    void setUp() {
+        memberRepository = new MemberJdbcRepository(jdbcTemplate);
+    }
 
     @DisplayName("회원을 저장한다.")
     @Test
     void save() {
-        // given
-        final Member member = new Member("헤나", "test@test.com", "test");
-
         // when
-        final MemberId saveMemberId = memberRepository.save(member);
+        final MemberId saveMemberId = memberRepository.save(MEMBER);
 
-        // expect
-        assertThat(saveMemberId.getId()).isEqualTo(1L);
-    }
+        final Optional<Member> maybeMember = memberRepository.findByMemberId(saveMemberId);
 
-    @DisplayName("회원을 회원 번호을 통해 조회한다.")
-    @Sql(statements = "INSERT INTO members VALUES(1L, '헤나', 'test@test.com', 'test')")
-    @Test
-    void findByMemberId() {
-        // when
-        final Optional<Member> maybeMember = memberRepository.findByMemberId(MemberId.from(1L));
-
-        // expect
         assertThat(maybeMember).isPresent();
         final Member member = maybeMember.get();
 
-        assertAll(
-                () -> assertThat(member.getId().getId()).isEqualTo(1L),
-                () -> assertThat(member.getName()).isEqualTo("헤나"),
-                () -> assertThat(member.getEmail()).isEqualTo("test@test.com"),
-                () -> assertThat(member.getPassword()).isEqualTo("test")
-        );
+        // then
+        assertThat(member)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(new Member("헤나", "test@test.com", "test"));
+    }
+
+    @DisplayName("회원을 회원 번호을 통해 조회한다.")
+    @Test
+    void findByMemberId() {
+        // given
+        final MemberId memberId = memberRepository.save(MEMBER);
+
+        // when
+        final Optional<Member> maybeMember = memberRepository.findByMemberId(memberId);
+
+        assertThat(maybeMember).isPresent();
+        final Member member = maybeMember.get();
+
+        // then
+        assertThat(member)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(new Member("헤나", "test@test.com", "test"));
+    }
+
+    @DisplayName("회원을 회원 번호을 통해 조회한다.")
+    @Test
+    void findByEmail() {
+        // given
+        final MemberId memberId = memberRepository.save(MEMBER);
+
+        // when
+        final Optional<Member> maybeMember = memberRepository.findByMemberId(memberId);
+
+        assertThat(maybeMember).isPresent();
+        final Member member = maybeMember.get();
+
+        // then
+        assertThat(member)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(new Member("헤나", "test@test.com", "test"));
     }
 
     @DisplayName("회원 전체를 조회한다.")
-    @Sql(statements = {
-            "INSERT INTO members VALUES(1L, '헤나1', 'test1@test.com', 'test1')",
-            "INSERT INTO members VALUES(2L, '헤나2', 'test2@test.com', 'test2')",
-            "INSERT INTO members VALUES(3L, '헤나3', 'test3@test.com', 'test3')"
-    })
     @Test
-    void findAllMembers() {
+    void findAll() {
+        // given
+        memberRepository.save(MEMBER);
+
         // when
         final List<Member> findAllMembers = memberRepository.findAll();
 
-        // expect
-        assertThat(findAllMembers).hasSize(3);
+        // then
+        assertThat(findAllMembers)
+                .usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
+                .containsExactly(MEMBER);
     }
 
     @DisplayName("회원을 회원 번호를 통해 삭제한다.")

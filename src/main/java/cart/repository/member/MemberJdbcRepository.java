@@ -13,24 +13,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static cart.repository.member.MemberJdbcRepository.Table.*;
-
 @Repository
 public class MemberJdbcRepository implements MemberRepository {
-    enum Table {
-        TABLE("members"),
-        ID("id"),
-        NAME("name"),
-        EMAIL("email"),
-        PASSWORD("password");
-        
-        private final String name;
-
-        Table(final String name) {
-            this.name = name;
-        }
-    }
-    
     private static final int DELETED_COUNT = 1;
 
     private final JdbcTemplate jdbcTemplate;
@@ -39,16 +23,16 @@ public class MemberJdbcRepository implements MemberRepository {
     public MemberJdbcRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName(TABLE.name)
-                .usingGeneratedKeyColumns(ID.name);
+                .withTableName("members")
+                .usingGeneratedKeyColumns("id");
     }
 
     private final RowMapper<Member> rowMapper = (rs, rowNum) -> {
         return new Member(
-                MemberId.from(rs.getLong(ID.name)),
-                rs.getString(NAME.name),
-                rs.getString(EMAIL.name),
-                rs.getString(PASSWORD.name)
+                MemberId.from(rs.getLong("id")),
+                rs.getString("name"),
+                rs.getString("email"),
+                rs.getString("password")
         );
     };
 
@@ -60,9 +44,9 @@ public class MemberJdbcRepository implements MemberRepository {
 
     private SqlParameterSource paramSource(final Member member) {
         return new MapSqlParameterSource()
-                .addValue(NAME.name, member.getName())
-                .addValue(EMAIL.name, member.getEmail())
-                .addValue(PASSWORD.name, member.getPassword());
+                .addValue("name", member.getName())
+                .addValue("email", member.getEmail())
+                .addValue("password", member.getPassword());
     }
 
     @Override
@@ -70,6 +54,16 @@ public class MemberJdbcRepository implements MemberRepository {
         final String sql = "SELECT * FROM members WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, memberId.getId()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Member> findByEmail(final String email) {
+        final String sql = "SELECT * FROM members WHERE email = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, email));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

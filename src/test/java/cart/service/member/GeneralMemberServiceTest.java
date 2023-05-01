@@ -1,16 +1,16 @@
-package cart.service;
+package cart.service.member;
 
+import cart.config.ServiceTestConfig;
 import cart.domain.member.Member;
 import cart.domain.member.MemberId;
 import cart.repository.member.MemberRepository;
-import cart.service.member.GeneralMemberService;
 import cart.service.request.MemberCreateRequest;
 import cart.service.response.MemberResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-@SpringBootTest
-class GeneralMemberServiceTest {
+@Import(GeneralMemberService.class)
+class GeneralMemberServiceTest extends ServiceTestConfig {
     @MockBean
     MemberRepository memberRepository;
 
