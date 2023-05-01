@@ -3,19 +3,23 @@ package cart.exception;
 import static java.util.stream.Collectors.joining;
 
 import cart.exception.custom.ApplicationException;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+//TODO: contentType 예외 추가
 @RestControllerAdvice
-public class ProductExceptionHandler {
+public class ProductExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
+    public ResponseEntity<ExceptionResponse> handleAllException(Exception exception) {
         ExceptionResponse response = new ExceptionResponse("서버가 응답할 수 없습니다.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
@@ -26,23 +30,28 @@ public class ProductExceptionHandler {
         return ResponseEntity.status(exception.status()).body(response);
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentTypeMismatchException(
-            MethodArgumentTypeMismatchException exception) {
-        String inputType = exception.getValue().getClass().toString();
-        String requiredType = exception.getRequiredType().toString();
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
+                                                        HttpStatus status, WebRequest request) {
+        String inputType = ex.getValue().getClass().toString();
+        String requiredType = ex.getRequiredType().toString();
         String message = String.format("잘못된 타입을 입력하였습니다. 입력 타입 : %s, 요구 타입: %s", inputType, requiredType);
         ExceptionResponse response = new ExceptionResponse(message);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return handleExceptionInternal(response, status);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(
-            MethodArgumentNotValidException exception) {
-        String exceptionMessage = exception.getBindingResult().getAllErrors().stream()
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatus status,
+                                                                  WebRequest request) {
+        String exceptionMessage = ex.getBindingResult().getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(joining(System.lineSeparator()));
         ExceptionResponse response = new ExceptionResponse(exceptionMessage);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return handleExceptionInternal(response, status);
+    }
+
+    private ResponseEntity<Object> handleExceptionInternal(ExceptionResponse response, HttpStatus status) {
+        return ResponseEntity.status(status).body(response);
     }
 }
