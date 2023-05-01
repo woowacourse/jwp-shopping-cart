@@ -6,7 +6,6 @@ import cart.domain.Product;
 import cart.dto.RequestCreateProductDto;
 import cart.dto.RequestUpdateProductDto;
 import cart.dto.ResponseProductDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +18,6 @@ public class ProductService {
 
     private final ProductDao productDao;
 
-    @Autowired
     public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }

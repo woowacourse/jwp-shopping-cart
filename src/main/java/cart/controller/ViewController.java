@@ -4,7 +4,6 @@ import cart.dto.ResponseProductDto;
 import cart.dto.ResponseUserDto;
 import cart.service.ProductService;
 import cart.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +16,6 @@ public class ViewController {
     private final ProductService productService;
     private final UserService userService;
 
-    @Autowired
     public ViewController(final ProductService productService, final UserService userService) {
         this.productService = productService;
         this.userService = userService;
@@ -36,7 +34,7 @@ public class ViewController {
         model.addAttribute("products", responseProductDtos);
         return "admin";
     }
-    
+
     @GetMapping("/settings")
     public String settings(final Model model) {
         final List<ResponseUserDto> responseUserDtos = userService.findAll();

@@ -3,7 +3,6 @@ package cart.controller;
 import cart.dto.RequestCreateProductDto;
 import cart.dto.RequestUpdateProductDto;
 import cart.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,6 @@ public class ProductApiController {
 
     private final ProductService productService;
 
-    @Autowired
     public ProductApiController(final ProductService productService) {
         this.productService = productService;
     }
