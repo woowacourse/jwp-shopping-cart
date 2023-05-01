@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.controller.dto.ProductRequest;
-import cart.dao.ProductDao;
+import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest {
 
     @MockBean
-    private ProductDao productDao;
+    private ProductService productService;
 
     @Autowired
     private MockMvc mockMvc;
