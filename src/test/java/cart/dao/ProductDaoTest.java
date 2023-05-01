@@ -81,6 +81,15 @@ class ProductDaoTest {
                 .doesNotContain("코다");
     }
 
+    @Test
+    @DisplayName("삭제된 상품 수 반환")
+    void count_deleted() {
+        final int previousCount = productDao.findAll().size();
+        int deletedCount = productDao.deleteById(getGreatestId());
+
+        assertThat(productDao.findAll()).hasSize(previousCount - deletedCount);
+    }
+
     private Integer getGreatestId() {
         return jdbcTemplate.queryForObject("SELECT MAX(id) FROM product", Integer.class);
     }
