@@ -1,6 +1,7 @@
 package cart.service;
 
-import cart.controller.dto.ProductDto;
+import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductResponse;
 import cart.exception.GlobalException;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.Product;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.when;
 @WebMvcTest(ProductService.class)
 class ProductServiceTest {
 
-    private ProductDto productDto;
+    private ProductRequest productRequest;
 
     @MockBean
     private ProductDao productDao;
@@ -37,7 +38,7 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        productDto = new ProductDto(1L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN);
+        productRequest = new ProductRequest("스테이크", "steakUrl", 40000, ProductCategory.WESTERN);
     }
 
     @DisplayName("상품을 저장한다")
@@ -49,10 +50,10 @@ class ProductServiceTest {
         when(productDao.findAll()).thenReturn(products);
 
         // when
-        productService.save(productDto);
+        productService.save(productRequest);
 
         // then
-        final List<ProductDto> resultProducts = productService.getProducts();
+        final List<ProductResponse> resultProducts = productService.getProducts();
         assertAll(
                 () -> assertThat(resultProducts).hasSize(1),
                 () -> assertThat(resultProducts.get(0).getName()).isEqualTo("스테이크")
@@ -67,14 +68,14 @@ class ProductServiceTest {
         when(productDao.findById(any())).thenReturn(Optional.of(product));
 
         // when
-        final ProductDto productDto = productService.getById(1L);
+        final ProductRequest productRequest = productService.getById(1L);
 
         // then
         assertAll(
-                () -> assertThat(productDto.getName()).isEqualTo("스테이크"),
-                () -> assertThat(productDto.getImageUrl()).isEqualTo("steakUrl"),
-                () -> assertThat(productDto.getPrice()).isEqualTo(40000),
-                () -> assertThat(productDto.getCategory()).isEqualTo(ProductCategory.WESTERN)
+                () -> assertThat(productRequest.getName()).isEqualTo("스테이크"),
+                () -> assertThat(productRequest.getImageUrl()).isEqualTo("steakUrl"),
+                () -> assertThat(productRequest.getPrice()).isEqualTo(40000),
+                () -> assertThat(productRequest.getCategory()).isEqualTo(ProductCategory.WESTERN)
         );
     }
 
@@ -101,7 +102,7 @@ class ProductServiceTest {
         when(productDao.findAll()).thenReturn(products);
 
         // when
-        final List<ProductDto> resultProducts = productService.getProducts();
+        final List<ProductResponse> resultProducts = productService.getProducts();
 
         // then
         assertAll(
@@ -116,20 +117,20 @@ class ProductServiceTest {
     @Test
     void update_success() {
         // given
-        when(productDao.update(any())).thenReturn(1);
+        when(productDao.update(any(), any())).thenReturn(1);
 
         // when, then
-        assertDoesNotThrow(() -> productService.update(1L, productDto));
+        assertDoesNotThrow(() -> productService.update(1L, productRequest));
     }
 
     @DisplayName("상품 수정이 실패하면 예외가 발생한다")
     @Test
     void update_fail() {
         // given
-        when(productDao.update(any())).thenReturn(0);
+        when(productDao.update(any(), any())).thenReturn(0);
 
         // when, then
-        assertThatThrownBy(() -> productService.update(1L, productDto))
+        assertThatThrownBy(() -> productService.update(1L, productRequest))
                 .isInstanceOf(GlobalException.class);
     }
 

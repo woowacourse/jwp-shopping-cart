@@ -59,10 +59,10 @@ public class ProductDao {
         return jdbcTemplate.query(query, productRowMapper);
     }
 
-    public int update(final Product product) {
+    public int update(final Long productId, final Product product) {
         final String query = "UPDATE product p SET p.name = ?, p.image_url = ?, p.price = ?, p.category = ? WHERE p.id = ?";
         return jdbcTemplate.update(query, product.getName(), product.getImageUrl(), product.getPrice(),
-                product.getCategory().name(), product.getId());
+                product.getCategory().name(), productId);
     }
 
     public int deleteById(final Long id) {

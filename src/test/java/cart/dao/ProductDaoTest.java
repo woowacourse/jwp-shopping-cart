@@ -85,7 +85,7 @@ class ProductDaoTest {
         // given
         final Long productId = productDao.insert(product);
         final Product updateProduct = new Product(productId, "탕수육", "imageUrl", 30000, ProductCategory.CHINESE);
-        int updatedCount = productDao.update(updateProduct);
+        int updatedCount = productDao.update(productId, updateProduct);
 
         // when
         final Product findProduct = productDao.findById(productId).get();

@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
+import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductResponse;
 import cart.persistence.entity.ProductCategory;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
@@ -35,12 +36,12 @@ class ProductViewControllerTest {
         @Test
         void index() throws Exception {
             // given
-            final List<ProductDto> productDtos = List.of(
-                    new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN),
-                    new ProductDto(2L, "초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
-                    new ProductDto(3L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
+            final List<ProductResponse> productRequests = List.of(
+                    new ProductResponse(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN),
+                    new ProductResponse(2L, "초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
+                    new ProductResponse(3L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
             );
-            when(productService.getProducts()).thenReturn(productDtos);
+            when(productService.getProducts()).thenReturn(productRequests);
 
             // when, then
             mockMvc.perform(get("/")
@@ -52,8 +53,8 @@ class ProductViewControllerTest {
         @Test
         void getProduct() throws Exception {
             // given
-            final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
-            when(productService.getById(any())).thenReturn(productDto);
+            final ProductRequest productRequest = new ProductRequest("치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+            when(productService.getById(any())).thenReturn(productRequest);
 
             //when
             mockMvc.perform(get("/products/{id}", 1L)
@@ -69,12 +70,12 @@ class ProductViewControllerTest {
         @Test
         void getProducts() throws Exception {
             // given
-            final List<ProductDto> productDtos = List.of(
-                    new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN),
-                    new ProductDto(2L, "초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
-                    new ProductDto(3L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
+            final List<ProductResponse> productRequests = List.of(
+                    new ProductResponse(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN),
+                    new ProductResponse(2L, "초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
+                    new ProductResponse(3L, "스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
             );
-            when(productService.getProducts()).thenReturn(productDtos);
+            when(productService.getProducts()).thenReturn(productRequests);
 
             // when, then
             mockMvc.perform(get("/admin"))

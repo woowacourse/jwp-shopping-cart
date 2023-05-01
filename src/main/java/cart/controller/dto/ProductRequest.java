@@ -7,9 +7,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 
-public class ProductDto {
-
-    private final Long id;
+public class ProductRequest {
 
     @Length(min = 1, max = 25, message = "상품 이름의 길이는 {min} ~ {max}글자여야 합니다.")
     private final String name;
@@ -23,17 +21,13 @@ public class ProductDto {
     @NotNull(message = "상품 카테고리는 비어있을 수 없습니다.")
     private final ProductCategory category;
 
-    public ProductDto(final Long id, final String name, final String imageUrl, final Integer price, final ProductCategory category) {
-        this.id = id;
+    public ProductRequest(final String name, final String imageUrl, final Integer price, final ProductCategory category) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
         this.category = category;
     }
 
-    public Long getId() {
-        return id;
-    }
 
     public String getName() {
         return name;
@@ -52,6 +46,6 @@ public class ProductDto {
     }
 
     public Product toEntity() {
-        return new Product(id, name, imageUrl, price, category);
+        return new Product(name, imageUrl, price, category);
     }
 }

@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
+import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductResponse;
 import cart.persistence.entity.ProductCategory;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -21,14 +22,14 @@ public class ProductViewController {
 
     @GetMapping("/")
     public String index(final Model model) {
-        final List<ProductDto> products = productService.getProducts();
+        final List<ProductResponse> products = productService.getProducts();
         model.addAttribute("products", products);
         return "index.html";
     }
 
     @GetMapping("/admin")
     public String getProducts(final Model model) {
-        final List<ProductDto> products = productService.getProducts();
+        final List<ProductResponse> products = productService.getProducts();
         model.addAttribute("products", products);
         return "admin.html";
     }
@@ -36,8 +37,8 @@ public class ProductViewController {
     // TODO: 관리자의 권한으로 접근하면, 소비자가 접근할 때와 다른 화면을 보여줄 필요가 있지 않을까
     @GetMapping("/products/{productId}")
     public String getProduct(@PathVariable Long productId, final Model model) {
-        final ProductDto productDto = productService.getById(productId);
-        model.addAttribute("product", productDto);
+        final ProductRequest productRequest = productService.getById(productId);
+        model.addAttribute("product", productRequest);
         return "product.html";
     }
 

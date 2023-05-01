@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
+import cart.controller.dto.ProductRequest;
 import cart.persistence.entity.ProductCategory;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ProductRestController.class)
 class ProductRestControllerTest {
 
-    private ProductDto productDto;
+    private ProductRequest productRequest;
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,7 +41,7 @@ class ProductRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+        productRequest = new ProductRequest("치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
     }
 
     @DisplayName("상품을 정상적으로 추가한다")
@@ -53,7 +53,7 @@ class ProductRestControllerTest {
         // when, then
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productDto))
+                        .content(objectMapper.writeValueAsString(productRequest))
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
                 .andExpect(status().isCreated());
@@ -63,12 +63,12 @@ class ProductRestControllerTest {
     @Test
     void addProduct_fail() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "", "", null, null);
+        final ProductRequest productRequest = new ProductRequest("", "", null, null);
 
         // when, then
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productDto))
+                        .content(objectMapper.writeValueAsString(productRequest))
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
                 .andExpect(status().isBadRequest())
@@ -91,7 +91,7 @@ class ProductRestControllerTest {
         // when, then
         mockMvc.perform(put("/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productDto))
+                        .content(objectMapper.writeValueAsString(productRequest))
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
                 .andExpect(status().isNoContent());
@@ -101,12 +101,12 @@ class ProductRestControllerTest {
     @Test
     void updateProduct_fail() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "", "", null, null);
+        final ProductRequest productRequest = new ProductRequest("", "", null, null);
 
         // when, then
         mockMvc.perform(put("/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productDto))
+                        .content(objectMapper.writeValueAsString(productRequest))
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
                 .andExpect(status().isBadRequest())
