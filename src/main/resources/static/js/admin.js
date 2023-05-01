@@ -64,7 +64,7 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id} = product;
 
     axios.request({
         url: '/products/' + id,
@@ -97,6 +97,9 @@ const deleteProduct = (id) => {
 };
 
 const showError = (component, message) => {
+    if (!message) {
+        message = "";
+    }
     component.innerHTML = message;
 }
 

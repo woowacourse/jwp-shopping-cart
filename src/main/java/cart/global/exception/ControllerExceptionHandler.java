@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         ErrorResponse errorResponse = new ErrorResponse(ExceptionStatus.BAD_INPUT_VALUE_EXCEPTION);
@@ -23,6 +23,12 @@ public class ControllerExceptionHandler {
         }
 
         return errorResponse;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleHttpMessageNotReadableException() {
+        return new ErrorResponse(ExceptionStatus.BAD_INPUT_VALUE_EXCEPTION);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
