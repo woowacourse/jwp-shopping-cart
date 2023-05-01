@@ -39,7 +39,7 @@ class ProductRepositoryTest {
         final Optional<Product> product = productRepository.findById(PRODUCT_ENTITY1.getId());
 
         assertAll(
-                () -> assertThat(product).isNotEmpty(),
+                () -> assertThat(product).isPresent(),
                 () -> assertThat(product.get().getName()).isEqualTo(PRODUCT_ENTITY1.getName())
         );
     }
