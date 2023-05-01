@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.util.Base64Utils;
 
+import static org.hamcrest.Matchers.equalTo;
+
 @Sql("classpath:test_init.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CartControllerTest {
@@ -33,6 +35,7 @@ class CartControllerTest {
     private MemberDao memberDao;
 
     private String authorization;
+    private String invalidAuthorization;
 
     @BeforeEach
     void setUp() {
@@ -43,6 +46,7 @@ class CartControllerTest {
         cartDao.save(member1.getEmail(), item1.getId());
 
         authorization = Base64Utils.encodeToString((member1.getEmail() + ":" + member1.getPassword()).getBytes());
+        invalidAuthorization = Base64Utils.encodeToString((member1.getEmail() + ":" + "abc").getBytes());
     }
 
     @Test
@@ -63,12 +67,48 @@ class CartControllerTest {
     }
 
     @Test
+    @DisplayName("사용자 패스워드가 일치하지 않은경우 테스트")
+    void memberPasswordMismatch() {
+        ItemEntity item = itemDao.save(new ItemEntity("피자", "b", 20000));
+        CartSaveRequest request = new CartSaveRequest();
+        request.setId(item.getId());
+
+        RestAssured.given().log().all()
+                .header("Authorization", "Basic " + invalidAuthorization)
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("http://localhost:" + port + "/cart")
+                .then()
+                .body("message", equalTo("패스워드가 일치하지 않습니다. 다시 시도해주세요."))
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    @DisplayName("유효하지 않은 Authorization 테스트")
+    void invalidAuthorization() {
+        ItemEntity item = itemDao.save(new ItemEntity("피자", "b", 20000));
+        CartSaveRequest request = new CartSaveRequest();
+        request.setId(item.getId());
+
+        RestAssured.given().log().all()
+                .header("Authorization", "Basic " + invalidAuthorization + "error")
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("http://localhost:" + port + "/cart")
+                .then()
+                .body("message", equalTo("예기치 않은 오류가 발생했습니다."))
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
+
+    @Test
     @DisplayName("장바구니 삭제 테스트")
     void deleteCart() {
         RestAssured.given().log().all()
                 .header("Authorization", "Basic " + authorization)
                 .when()
-                .delete("http://localhost:" + port + "/cart/"+1)
+                .delete("http://localhost:" + port + "/cart/" + 1)
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
