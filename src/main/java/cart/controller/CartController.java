@@ -1,16 +1,16 @@
 package cart.controller;
 
+import cart.annotation.login.Login;
 import cart.dto.ResultResponse;
 import cart.dto.SuccessCode;
 import cart.dto.cart.CartSaveRequest;
 import cart.dto.item.ItemResponse;
+import cart.entity.MemberEntity;
 import cart.service.CartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -23,35 +23,19 @@ public class CartController {
     }
 
     @GetMapping("/carts")
-    public List<ItemResponse> getCarts(@RequestHeader(value = "Authorization") String authorization) {
-        if (authorization != null && authorization.startsWith("Basic ")) {
-            String base64Credentials = authorization.substring("Basic ".length());
-            String memberEmail = new String(Base64Utils.decodeFromString(base64Credentials)).split(":")[0];
-            return cartService.findAll(memberEmail);
-        }
-        return Collections.emptyList();
+    public List<ItemResponse> getCarts(@Login MemberEntity member) {
+        return cartService.findAll(member.getEmail());
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<ResultResponse> addCart(@RequestHeader(value = "Authorization") String authorization, @RequestBody CartSaveRequest cart) {
-        if (authorization != null && authorization.startsWith("Basic ")) {
-            String base64Credentials = authorization.substring("Basic ".length());
-            String memberEmail = new String(Base64Utils.decodeFromString(base64Credentials)).split(":")[0];
-            cartService.save(memberEmail, cart.getId());
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ResultResponse(SuccessCode.CREATE_CART, cart));
-        }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResultResponse(SuccessCode.NO_CONTENT_MEMBER, authorization));
+    public ResponseEntity<ResultResponse> addCart(@Login MemberEntity member, @RequestBody CartSaveRequest cart) {
+        cartService.save(member.getEmail(), cart.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResultResponse(SuccessCode.CREATE_CART, cart));
     }
 
     @DeleteMapping("/cart/{itemId}")
-    public ResponseEntity<ResultResponse> deleteCart(@RequestHeader(value = "Authorization") String authorization, @PathVariable Long itemId) {
-        if (authorization != null && authorization.startsWith("Basic ")) {
-            String base64Credentials = authorization.substring("Basic ".length());
-            String memberEmail = new String(Base64Utils.decodeFromString(base64Credentials)).split(":")[0];
-            cartService.delete(memberEmail, itemId);
-            return ResponseEntity.status(HttpStatus.OK).body(new ResultResponse(SuccessCode.DELETE_CART, authorization));
-        }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResultResponse(SuccessCode.NO_CONTENT_MEMBER, authorization));
+    public ResponseEntity<ResultResponse> deleteCart(@Login MemberEntity member, @PathVariable Long itemId) {
+        cartService.delete(member.getEmail(), itemId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResultResponse(SuccessCode.DELETE_CART, member.getEmail()));
     }
 }
