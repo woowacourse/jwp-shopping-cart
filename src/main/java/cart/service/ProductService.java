@@ -10,8 +10,10 @@ import cart.repository.ProductRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
@@ -26,6 +28,7 @@ public class ProductService {
         return ProductDto.fromEntity(productEntity);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findAllProducts() {
         return productRepository.findAll().stream()
                 .map(ProductDto::fromEntity)
@@ -49,6 +52,7 @@ public class ProductService {
         return ProductDto.fromEntity(productEntity);
     }
 
+    @Transactional(readOnly = true)
     private void validateId(Long id) {
         if (!productRepository.existsById(id)) {
             throw new ProductNotFoundException("존재하지 않는 상품의 ID 입니다.");
