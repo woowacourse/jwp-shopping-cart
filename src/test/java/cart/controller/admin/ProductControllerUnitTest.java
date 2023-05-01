@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.admin;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;

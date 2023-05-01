@@ -17,7 +17,7 @@
 <br>
 
 ### ✅ 사용자 설정 페이지 연동
-- [ ] `/user/settings` url로 접속했을 때, 사용자 설정 페이지로 접속하도록 연동한다.
+- [ ] `/member/settings` url로 접속했을 때, 사용자 설정 페이지로 접속하도록 연동한다.
 - [ ] `settings.html`에 조회된 정보 표시
 
 <br>
@@ -33,7 +33,7 @@
 ## 🎯 2-1. 상품 API 구현
 
 ### ✅ 상품 목록 조회 GET API 
-  - [x] GET `/admin` uri 맵핑
+  - [x] GET `/admin` uri 맵핑기
     - 조회될 상품 정보
       - 상품 id
       - 상품 이미지
@@ -69,20 +69,20 @@
 ## 🎯 2-2. 사용자 API 구현
 
 ### ✅ 사용자 등록 API
-  - [ ] POST `/user/register` uri 맵핑
+  - [x] POST `/member/register` uri 맵핑
     - 사용자 정보로 등록한다.
       - nickname
-        - [ ] [validation] 닉네임은 필수다. (공백, 빈 값 허용 X)
+        - [x] [validation] 닉네임은 필수다. (공백, 빈 값 허용 X)
       - email
-        - [ ] [validation] 이메일은 필수다. (공백, 빈 값 허용 X)
-        - [ ] [validation] 이메일 형식이어야한다. (aaa@bb.cc)
+        - [x] [validation] 이메일은 필수다. (공백, 빈 값 허용 X)
+        - [x] [validation] 이메일 형식이어야한다. (aaa@bb.cc)
       - password
-        - [ ] [validation] 비밀번호는 필수다. (공백, 빈 값 허용 X)
+        - [x] [validation] 비밀번호는 필수다. (공백, 빈 값 허용 X)
     
 <br>
 
 ### ✅ 사용자 목록 조회 API
-  - [ ] GET `/users` uri 맵핑
+  - [ ] GET `/members` uri 맵핑
     - 사용자 목록의 조회될 사용자 정보
       - nickname
       - email
