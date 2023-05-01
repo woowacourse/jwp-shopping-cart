@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @Slf4j
-public class ExceptionController {
+public class ExceptionAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Response> handle(RuntimeException e) {
         log.error("알 수 없는 문제가 발생했습니다.", e);
