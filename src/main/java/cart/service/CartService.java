@@ -10,7 +10,6 @@ import cart.entity.MemberEntity;
 import cart.entity.product.ProductEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,14 +45,15 @@ public class CartService {
     public List<CartProductResponseDto> findCartProductsByMember(final MemberAuthDto memberAuthDto) {
         final MemberEntity member = getMember(memberAuthDto);
         final List<CartEntity> cartEntities = cartDao.findAllByMemberId(member.getId());
-        final List<Long> productIds = cartEntities.stream()
-                .map(CartEntity::getProductId)
+        return cartEntities.stream()
+                .map(cartEntity -> {
+                    final ProductEntity product = getProduct(cartEntity.getProductId());
+                    return CartProductResponseDto.from(cartEntity.getId(), product);
+                })
                 .collect(Collectors.toList());
-        if (productIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return productDao.findAllIn(productIds).stream()
-                .map(CartProductResponseDto::from)
-                .collect(Collectors.toList());
+    }
+
+    public void deleteCart(final Long id) {
+        cartDao.delete(id);
     }
 }
