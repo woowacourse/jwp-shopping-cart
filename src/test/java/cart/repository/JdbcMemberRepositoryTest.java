@@ -1,9 +1,9 @@
 package cart.repository;
 
-import cart.authentication.repository.JdbcMemberRepository;
 import cart.authentication.entity.Member;
-import cart.authentication.repository.MemberRepository;
 import cart.authentication.exception.MemberPersistenceFailedException;
+import cart.authentication.repository.JdbcMemberRepository;
+import cart.authentication.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

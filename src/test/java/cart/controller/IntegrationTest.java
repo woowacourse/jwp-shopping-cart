@@ -26,6 +26,20 @@ class IntegrationTest {
     @LocalServerPort
     private int port;
 
+    private static void assertDatabase(String location, Product updateProduct) {
+        Response response = given().log().all()
+                .get(location);
+
+        response
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("name", equalTo(updateProduct.getName()))
+                .body("imageUrl", equalTo(updateProduct.getImageUrl()));
+
+        Integer price = response.getBody().jsonPath().get("price");
+        Assertions.assertThat(new BigDecimal(price)).isEqualTo(updateProduct.getPrice());
+    }
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
@@ -135,20 +149,6 @@ class IntegrationTest {
         long productId = Long.parseLong(location
                 .replace("/admin/", ""));
         return new LocationInformation(location, productId);
-    }
-
-    private static void assertDatabase(String location, Product updateProduct) {
-        Response response = given().log().all()
-                .get(location);
-
-        response
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("name", equalTo(updateProduct.getName()))
-                .body("imageUrl", equalTo(updateProduct.getImageUrl()));
-
-        Integer price = response.getBody().jsonPath().get("price");
-        Assertions.assertThat(new BigDecimal(price)).isEqualTo(updateProduct.getPrice());
     }
 
     private static class LocationInformation {

@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.product.entity.Product;
 import cart.product.controller.ProductController;
+import cart.product.entity.Product;
 import cart.product.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,13 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = ProductController.class)
 class ProductControllerTest {
+    MockMvc mockMvc;
     @Autowired
     private WebApplicationContext webApplicationContext;
-
     @MockBean
     private ProductRepository productRepository;
-
-    MockMvc mockMvc;
 
     @BeforeEach
     public void setup() {
