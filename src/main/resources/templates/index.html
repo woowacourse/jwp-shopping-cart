@@ -19,18 +19,18 @@
     </nav>
 </header>
 <div class="container">
-    <ul class="productEntity-grid">
-        <li class="productEntity" th:each="productEntity : ${productEntities}" th:onclick="showDetail([[${productEntity.id}]])">
-            <div class="productEntity-image">
-                <img alt="상품 이미지" th:src="${productEntity.getImageUrl()}"> <!-- 상품 이미지 -->
+    <ul class="product-grid">
+        <li class="product" th:each="prdocut : ${products}" th:onclick="showDetail([[${prdocut.id}]])">
+            <div class="product-image">
+                <img alt="상품 이미지" th:src="${prdocut.getImageUrl()}"> <!-- 상품 이미지 -->
             </div>
-            <div class="productEntity-info">
-                <div class="productEntity-desc">
-                    <p class="productEntity-category" th:text="${productEntity.getCategory()}"></p> <!-- 상품 카테고리 -->
-                    <p class="productEntity-name" th:text="${productEntity.getName()}"></p> <!-- 상품 이름 -->
-                    <p class="productEntity-price" th:text="${productEntity.getPrice()} + '원'"></p> <!-- 상품 가격 -->
+            <div class="product-info">
+                <div class="product-desc">
+                    <p class="product-category" th:text="${prdocut.getCategory()}"></p> <!-- 상품 카테고리 -->
+                    <p class="product-name" th:text="${prdocut.getName()}"></p> <!-- 상품 이름 -->
+                    <p class="product-price" th:text="${prdocut.getPrice()} + '원'"></p> <!-- 상품 가격 -->
                 </div>
-                <button type="submit" class="productEntity-btn" th:onclick="addCartItem([[${productEntity.id}]])">담기</button>
+                <button type="submit" class="product-btn" th:onclick="addCartItem([[${prdocut.id}]])">담기</button>
             </div>
         </li>
     </ul>

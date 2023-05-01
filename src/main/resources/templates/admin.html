@@ -34,7 +34,7 @@
         <tbody id="product-list">
         <tr th:each="product : ${products}">
             <td>
-                <a href="product.html" th:href="@{|/admin/products/${product.getId()}|}">
+                <a href="product.html" th:href="@{|/products/${product.getId()}|}">
                     [[${product.getId()}]]
                 </a>
             </td>
