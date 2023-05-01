@@ -1,11 +1,7 @@
 package cart;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.dao.entity.ProductEntity;
 import cart.dto.request.RequestCreateProductDto;
 import cart.dto.request.RequestUpdateProductDto;
 import io.restassured.RestAssured;
@@ -20,6 +16,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -105,7 +105,13 @@ class ProductIntegrationTest {
     @Test
     void 상품을_삭제하면_상품_목록_페이지와_관리자_페이지에서_사라진다() {
         // given
-        final Long insertedId = productDao.insert(new Product("치킨", 10_000, "치킨 사진"));
+        final Long insertedId = productDao.insert(
+                new ProductEntity.Builder()
+                        .name("치킨")
+                        .price(10_000)
+                        .image("치킨 사진")
+                        .build()
+        );
 
         final Response deleteResponse = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
@@ -145,7 +151,13 @@ class ProductIntegrationTest {
     @Test
     void 등록한_상품을_수정하면_상품_목록_페이지와_관리자_페이지에서_수정된다() {
         // given
-        final Long insertedId = productDao.insert(new Product("치킨", 10_000, "치킨 사진"));
+        final Long insertedId = productDao.insert(
+                new ProductEntity.Builder()
+                        .name("치킨")
+                        .price(10_000)
+                        .image("치킨 사진")
+                        .build()
+        );
 
         final Response updateResponse = given()
                 .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)

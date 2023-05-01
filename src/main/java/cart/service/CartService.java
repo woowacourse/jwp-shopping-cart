@@ -2,15 +2,15 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
-import cart.domain.Product;
 import cart.dto.request.RequestCreateProductDto;
 import cart.dto.request.RequestUpdateProductDto;
 import cart.dto.response.ResponseProductDto;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -38,22 +38,23 @@ public class CartService {
 
     @Transactional
     public void insert(final RequestCreateProductDto requestCreateProductDto) {
-        final Product newProduct = new Product(
-                requestCreateProductDto.getName(),
-                requestCreateProductDto.getPrice(),
-                requestCreateProductDto.getImage()
-        );
-        productDao.insert(newProduct);
+        final ProductEntity newProductEntity = new ProductEntity.Builder()
+                .name(requestCreateProductDto.getName())
+                .price(requestCreateProductDto.getPrice())
+                .image(requestCreateProductDto.getImage())
+                .build();
+        productDao.insert(newProductEntity);
     }
 
     @Transactional
     public void update(final Long id, final RequestUpdateProductDto requestUpdateProductDto) {
-        final Product product = new Product(
-                requestUpdateProductDto.getName(),
-                requestUpdateProductDto.getPrice(),
-                requestUpdateProductDto.getImage()
-        );
-        final int updatedRows = productDao.update(product, id);
+        final ProductEntity productEntity = new ProductEntity.Builder()
+                .id(id)
+                .name(requestUpdateProductDto.getName())
+                .price(requestUpdateProductDto.getPrice())
+                .image(requestUpdateProductDto.getImage())
+                .build();
+        final int updatedRows = productDao.update(productEntity);
         validateAffectedRowsCount(updatedRows);
     }
 
