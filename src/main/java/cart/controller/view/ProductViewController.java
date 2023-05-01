@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.view;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import cart.controller.response.ProductResponse;
 import cart.service.ProductServiceImpl;
 
 @Controller
-public class ProductController {
+public class ProductViewController {
 	private final ProductServiceImpl productServiceImpl;
 
-	public ProductController(ProductServiceImpl productServiceImpl) {
+	public ProductViewController(ProductServiceImpl productServiceImpl) {
 		this.productServiceImpl = productServiceImpl;
 	}
 

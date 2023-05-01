@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import java.net.URI;
 import java.util.List;
@@ -19,10 +19,10 @@ import cart.controller.response.ProductResponse;
 import cart.service.ProductService;
 
 @RestController
-public class ProductApi {
+public class ProductApiController {
 	private final ProductService productService;
 
-	public ProductApi(final ProductService productService) {
+	public ProductApiController(final ProductService productService) {
 		this.productService = productService;
 	}
 
