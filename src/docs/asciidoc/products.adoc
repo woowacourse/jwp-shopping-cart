@@ -47,3 +47,33 @@ include::{snippets}/delete-product/http-request.adoc[]
 
 === RESPONSE
 include::{snippets}/delete-product/http-response.adoc[]
+
+
+== GET CART
+
+=== REQUEST
+include::{snippets}/get-cart-products/http-request.adoc[]
+
+=== RESPONSE
+include::{snippets}/get-cart-products/http-response.adoc[]
+
+=== RESPONSE FIELD
+include::{snippets}/get-cart-products/response-fields.adoc[]
+
+
+== ADD CART
+
+=== REQUEST
+include::{snippets}/add-product-in-cart/http-request.adoc[]
+
+=== RESPONSE
+include::{snippets}/add-product-in-cart/http-response.adoc[]
+
+
+== REMOVE CART
+
+=== REQUEST
+include::{snippets}/remove-product-in-cart/http-request.adoc[]
+
+=== RESPONSE
+include::{snippets}/remove-product-in-cart/http-response.adoc[]
