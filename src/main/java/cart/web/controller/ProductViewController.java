@@ -21,14 +21,14 @@ public class ProductViewController {
     }
 
     @GetMapping("/")
-    public String index(final Model model) {
+    public String renderIndex(final Model model) {
         final List<ProductResponse> products = productService.getProducts();
         model.addAttribute("products", products);
         return "index.html";
     }
 
     @GetMapping("/admin")
-    public String getProducts(final Model model) {
+    public String renderAdmin(final Model model) {
         final List<ProductResponse> products = productService.getProducts();
         model.addAttribute("products", products);
         return "admin.html";
@@ -36,7 +36,7 @@ public class ProductViewController {
 
     // TODO: 관리자의 권한으로 접근하면, 소비자가 접근할 때와 다른 화면을 보여줄 필요가 있지 않을까
     @GetMapping("/products/{productId}")
-    public String getProduct(@PathVariable Long productId, final Model model) {
+    public String renderProduct(@PathVariable Long productId, final Model model) {
         final ProductRequest productRequest = productService.getById(productId);
         model.addAttribute("product", productRequest);
         return "product.html";
