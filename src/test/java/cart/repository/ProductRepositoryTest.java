@@ -12,11 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 
-
-@TestPropertySource(locations = "/application-data.properties")
 @JdbcTest
 @Import(JdbcProductRepository.class)
 class ProductRepositoryTest {
@@ -24,7 +20,6 @@ class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
-    @Sql("/test-fixture.sql")
     @Test
     @DisplayName("모든 상품을 조회하는 기능 테스트")
     public void findAll() {
@@ -32,7 +27,6 @@ class ProductRepositoryTest {
         assertThat(all).hasSize(4);
     }
 
-    @Sql("/test-fixture.sql")
     @Test
     @DisplayName("ID로 상품을 조회하는 기능 테스트")
     public void findById() {
@@ -44,7 +38,6 @@ class ProductRepositoryTest {
         );
     }
 
-    @Sql("/clear.sql")
     @Test
     @DisplayName("상품을 저장하는 기능 테스트")
     public void createProduct() {
@@ -59,7 +52,6 @@ class ProductRepositoryTest {
         );
     }
 
-    @Sql("/test-fixture.sql")
     @Test
     @DisplayName("상품을 업데이트하는 기능 테스트")
     public void updateProduct() {
@@ -79,7 +71,6 @@ class ProductRepositoryTest {
         assertThat(updatedProduct.getName()).isEqualTo("CHANGED");
     }
 
-    @Sql("/test-fixture.sql")
     @Test
     @DisplayName("상품을 삭제하는 기능 테스트")
     public void deleteById() {

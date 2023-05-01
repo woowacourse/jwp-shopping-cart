@@ -2,12 +2,14 @@ package cart;
 
 import static io.restassured.RestAssured.given;
 
+import cart.service.ProductService;
 import cart.service.dto.ProductRequest;
 import io.restassured.RestAssured;
 import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -16,6 +18,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class IntegrationTest {
+
+    @Autowired
+    private ProductService productService;
 
     @LocalServerPort
     private int port;
@@ -64,9 +69,9 @@ class IntegrationTest {
                 .statusCode(Response.SC_BAD_REQUEST);
     }
 
+    @Sql("/test-fixture.sql")
     @Test
     @DisplayName("상품 수정 테스트")
-    @Sql({"/test-fixture.sql"})
     void editProduct() {
         final ProductRequest productRequest = new ProductRequest(1L, "TEST787",
                 "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", 4000);
@@ -80,15 +85,15 @@ class IntegrationTest {
                 .statusCode(200);
     }
 
+    @Sql("/test-fixture.sql")
     @Test
     @DisplayName("상품 삭제 테스트")
-    @Sql({"/test-fixture.sql"})
     void deleteProduct() {
         given()
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/product/1")
+                .delete("/product/2")
                 .then().log().all()
                 .statusCode(200);
     }
