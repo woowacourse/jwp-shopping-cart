@@ -2,29 +2,20 @@ package cart.dao;
 
 public class ProductEntity {
 
-    private Integer id;
-    private String name;
-    private String image;
-    private int price;
+    private final Integer id;
+    private final String name;
+    private final String image;
+    private final int price;
 
     public ProductEntity(final String name, final String image, final int price) {
-        this.name = name;
-        this.image = image;
-        this.price = price;
+        this(null, name, image, price);
     }
 
-    public ProductEntity(final int id, final String name, final String image, final int price) {
+    public ProductEntity(final Integer id, final String name, final String image, final int price) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
-    }
-
-    public ProductEntity update(final ProductEntity productEntity) {
-        this.name = productEntity.getName();
-        this.image = productEntity.getImage();
-        this.price = productEntity.getPrice();
-        return this;
     }
 
     public int getId() {
