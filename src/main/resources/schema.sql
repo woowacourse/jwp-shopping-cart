@@ -15,3 +15,12 @@ CREATE TABLE IF NOT EXISTS members
     phone_number VARCHAR(20)  NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS carts
+(
+    member_id  BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    PRIMARY KEY (member_id, product_id),
+    FOREIGN KEY (member_id) REFERENCES members (id),
+    FOREIGN KEY (product_id) REFERENCES products (id)
+);

@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS members;
+DROP TABLE IF EXISTS carts;
 
 CREATE TABLE IF NOT EXISTS products
 (
@@ -17,4 +18,13 @@ CREATE TABLE IF NOT EXISTS members
     password     VARCHAR(40)  NOT NULL,
     phone_number VARCHAR(20)  NOT NULL,
     PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS carts
+(
+    member_id  BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    PRIMARY KEY (member_id, product_id),
+    FOREIGN KEY (member_id) REFERENCES members (id),
+    FOREIGN KEY (product_id) REFERENCES products (id)
 );
