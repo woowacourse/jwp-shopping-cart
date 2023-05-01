@@ -2,6 +2,8 @@ package cart.dto;
 
 import cart.persistence.entity.ProductEntity;
 
+import java.util.Objects;
+
 public class ProductResponse {
 
     private final Long id;
@@ -35,5 +37,18 @@ public class ProductResponse {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductResponse that = (ProductResponse) o;
+        return price == that.price && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(imageUrl, that.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, imageUrl);
     }
 }
