@@ -1,9 +1,6 @@
 package cart.advice;
 
-import cart.exception.AuthorizationInvalidException;
-import cart.exception.MemberNotFoundException;
-import cart.exception.PasswordInvalidException;
-import cart.exception.ProductNotFoundException;
+import cart.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,6 +24,30 @@ public class ExceptionAdvice {
 
         return ResponseEntity.badRequest()
                 .body(defaultMessage);
+    }
+
+    @ExceptionHandler(EmailCreateFailException.class)
+    public ResponseEntity<String> handleEmailCreateException(final MemberNotFoundException exception) {
+        return ResponseEntity.badRequest()
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(NameCreateFailException.class)
+    public ResponseEntity<String> handleNameCreateException(final MemberNotFoundException exception) {
+        return ResponseEntity.badRequest()
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(PasswordCreateFailException.class)
+    public ResponseEntity<String> handlePasswordCreateException(final MemberNotFoundException exception) {
+        return ResponseEntity.badRequest()
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(PriceCreateFailException.class)
+    public ResponseEntity<String> handlePriceCreateException(final MemberNotFoundException exception) {
+        return ResponseEntity.badRequest()
+                .body(exception.getMessage());
     }
 
     @ExceptionHandler(MemberNotFoundException.class)

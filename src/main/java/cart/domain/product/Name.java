@@ -1,5 +1,7 @@
 package cart.domain.product;
 
+import cart.exception.NameCreateFailException;
+
 import java.util.Objects;
 
 public class Name {
@@ -13,7 +15,7 @@ public class Name {
 
     private void validate(final String name) {
         if (name.isBlank()) {
-            throw new IllegalArgumentException("이름은 공백이 되면 안됩니다.");
+            throw new NameCreateFailException();
         }
     }
 

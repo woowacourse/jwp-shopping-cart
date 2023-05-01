@@ -1,5 +1,6 @@
 package cart.domain.member;
 
+import cart.exception.EmailCreateFailException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,6 +27,6 @@ class EmailTest {
     void throws_exception_when_email_is_wrong(final String givenEmail) {
         // when & then
         assertThatThrownBy(() -> new Email(givenEmail))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(EmailCreateFailException.class);
     }
 }

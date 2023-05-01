@@ -1,5 +1,6 @@
 package cart.domain.member;
 
+import cart.exception.PasswordCreateFailException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,6 +27,6 @@ class PasswordTest {
     void throws_exception_when_password_is_wrong(final String givenPassword) {
         // when & then
         assertThatThrownBy(() -> new Password(givenPassword))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(PasswordCreateFailException.class);
     }
 }

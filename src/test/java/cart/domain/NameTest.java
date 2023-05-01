@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.domain.product.Name;
+import cart.exception.NameCreateFailException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +29,7 @@ class NameTest {
 
         // when & then
         assertThatThrownBy(() -> new Name(name))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NameCreateFailException.class);
     }
 
     @Test
@@ -54,6 +55,6 @@ class NameTest {
 
         // when & then
         assertThatThrownBy(() -> name.edit(expected))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NameCreateFailException.class);
     }
 }

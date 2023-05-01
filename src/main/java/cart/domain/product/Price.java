@@ -1,5 +1,7 @@
 package cart.domain.product;
 
+import cart.exception.PriceCreateFailException;
+
 import java.util.Objects;
 
 public class Price {
@@ -15,7 +17,7 @@ public class Price {
 
     private void validate(final int price) {
         if (price < MINIMUM_PRICE) {
-            throw new IllegalArgumentException("최소 가격은 0원 이상입니다.");
+            throw new PriceCreateFailException();
         }
     }
 

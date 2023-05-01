@@ -1,6 +1,7 @@
 package cart.domain;
 
 import cart.domain.product.Price;
+import cart.exception.PriceCreateFailException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +29,7 @@ class PriceTest {
 
         // when & then
         assertThatThrownBy(() -> new Price(price))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(PriceCreateFailException.class);
     }
 
     @Test
@@ -54,6 +55,6 @@ class PriceTest {
 
         // when & then
         assertThatThrownBy(() -> price.edit(expected))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(PriceCreateFailException.class);
     }
 }

@@ -1,5 +1,7 @@
 package cart.domain.member;
 
+import cart.exception.EmailCreateFailException;
+
 public class Email {
 
     private static final String EMAIL_REGEX = "[0-9a-zA-Z]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
@@ -13,11 +15,11 @@ public class Email {
 
     private void validate(final String email) {
         if (email.isBlank()) {
-            throw new IllegalArgumentException("이메일의 형식이 맞지 않습니다. 예시) example@example.com");
+            throw new EmailCreateFailException();
         }
 
         if (!email.matches(EMAIL_REGEX)) {
-            throw new IllegalArgumentException("이메일의 형식이 맞지 않습니다. 예시) example@example.com");
+            throw new EmailCreateFailException();
         }
     }
 
