@@ -21,6 +21,11 @@ public class ErrorResponse {
         this.status = errorCode.getStatus();
     }
 
+    public ErrorResponse(final String message,final int status) {
+        this.message = message;
+        this.status = status;
+    }
+
     public String getMessage() {
         return message;
     }
