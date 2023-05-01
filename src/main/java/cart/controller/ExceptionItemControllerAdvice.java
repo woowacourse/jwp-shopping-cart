@@ -18,7 +18,7 @@ public class ExceptionItemControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        log.info(exception.getMessage());
+        log.warn(exception.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 exception.getMessage());
@@ -29,7 +29,7 @@ public class ExceptionItemControllerAdvice {
 
     @ExceptionHandler(NotFoundResultException.class)
     public ResponseEntity<ExceptionResponse> handleNotFoundResultException(NotFoundResultException exception) {
-        log.info(exception.getMessage());
+        log.warn(exception.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 exception.getMessage());
@@ -40,7 +40,7 @@ public class ExceptionItemControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ExceptionResponse> handlerIllegalArgumentException(IllegalArgumentException exception) {
-        log.info(exception.getMessage());
+        log.warn(exception.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 exception.getMessage());
@@ -51,7 +51,7 @@ public class ExceptionItemControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handlerException(Exception exception) {
-        log.info(exception.getMessage());
+        log.error(exception.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                 "예기치 못한 오류가 발생했습니다.");
