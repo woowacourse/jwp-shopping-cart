@@ -64,4 +64,16 @@ class CartDaoTest {
                 () -> assertThat(result.get(0).getProductId()).isEqualTo(savedProductId)
         );
     }
+
+    @Test
+    @DisplayName("장바구니 상품을 삭제한다.")
+    void delete() {
+        final CartEntity cartEntity = new CartEntity(savedMemberId, savedProductId);
+        final Long savedCartId = cartDao.save(cartEntity);
+
+        cartDao.delete(savedCartId);
+
+        final List<CartEntity> result = cartDao.findAllByMemberId(savedMemberId);
+        assertThat(result).isEmpty();
+    }
 }

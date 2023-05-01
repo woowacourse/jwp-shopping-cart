@@ -35,4 +35,9 @@ public class CartDao {
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(cartEntity);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
+
+    public void delete(final Long id) {
+        final String sql = "DELETE FROM cart WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }
