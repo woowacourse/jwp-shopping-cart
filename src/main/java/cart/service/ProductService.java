@@ -60,7 +60,7 @@ public class ProductService {
                         modifiedProduct.getImageUrl()
                 );
 
-        productDao.modify(modifiedProductEntity);
+        productDao.update(modifiedProductEntity);
     }
 
     public void deleteProduct(final Long productId) {

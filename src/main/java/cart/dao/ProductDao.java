@@ -8,10 +8,17 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ProductDao {
+public class ProductDao implements Dao<ProductEntity> {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
+            new ProductEntity(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getInt("price"),
+                    rs.getString("image_url")
+            );
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -20,39 +27,42 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public void save(final ProductEntity productEntity) {
-        simpleJdbcInsert.execute(new BeanPropertySqlParameterSource(productEntity));
+    @Override
+    public ProductEntity findById(final Long id) {
+        final String sql = "SELECT * FROM product WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
+    @Override
     public List<ProductEntity> findAll() {
         final String sql = "SELECT * FROM product";
-
-        final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
-                new ProductEntity(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getInt("price"),
-                        rs.getString("image_url")
-                );
 
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public void modify(final ProductEntity modifiedProductEntity) {
+    @Override
+    public void update(final ProductEntity productEntity) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
 
         jdbcTemplate.update(
                 sql,
-                modifiedProductEntity.getName(),
-                modifiedProductEntity.getPrice(),
-                modifiedProductEntity.getImageUrl(),
-                modifiedProductEntity.getId()
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImageUrl(),
+                productEntity.getId()
         );
     }
 
-    public void deleteById(final Long productId) {
+    @Override
+    public void save(final ProductEntity productEntity) {
+        simpleJdbcInsert.execute(new BeanPropertySqlParameterSource(productEntity));
+    }
+
+    @Override
+    public void deleteById(final Long id) {
         final String sql = "DELETE from product where id = ?";
 
-        jdbcTemplate.update(sql, productId);
+        jdbcTemplate.update(sql, id);
     }
 }
