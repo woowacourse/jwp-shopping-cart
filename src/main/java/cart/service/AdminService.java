@@ -14,7 +14,6 @@ import java.util.List;
 public class AdminService {
     private final ProductDao productDao;
 
-    @Autowired
     public AdminService(ProductDao productDao) {
         this.productDao = productDao;
     }

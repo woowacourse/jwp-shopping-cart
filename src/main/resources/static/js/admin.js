@@ -34,7 +34,6 @@ form.addEventListener('submit', (event) => {
         const [key, value] = entry;
         product[key] = value;
     }
-    console.log(product);
 
     if (modal.dataset.formType === 'edit') {
         product['id'] = modal.dataset.productId;
