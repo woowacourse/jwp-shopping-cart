@@ -1,6 +1,7 @@
 package cart.product.repository;
 
 import cart.product.entity.Product;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -59,7 +60,11 @@ public class JdbcProductRepository implements ProductRepository {
         final String sql = "select * from product where id = :id";
         final MapSqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("id", id);
-        return jdbcTemplate.queryForObject(sql, paramSource, PRODUCT_ROW_MAPPER);
+        try {
+            return jdbcTemplate.queryForObject(sql, paramSource, PRODUCT_ROW_MAPPER);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new ProductPersistenceException("Id에 해당하는 Product를 찾지 못했습니다.", exception);
+        }
     }
 
     @Override
