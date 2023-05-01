@@ -23,4 +23,9 @@ public class UserService {
                 .map(ResponseUserDto::new)
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    public Long findIdByEmail(final String email) {
+        final UserEntity userEntity = userDao.findByEmail(email);
+        return userEntity.getId();
+    }
 }
