@@ -41,4 +41,9 @@ public class ViewController {
         model.addAttribute("members", responseUserDtos);
         return "settings";
     }
+
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
+    }
 }
