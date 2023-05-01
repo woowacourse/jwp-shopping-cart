@@ -63,7 +63,7 @@ const createProduct = (product) => {
 const updateProduct = (product) => {
     axios.request({
         url: 'product',
-        method: 'POST',
+        method: 'PUT',
         data: product
     }).then((response) => {
         window.location.reload();
