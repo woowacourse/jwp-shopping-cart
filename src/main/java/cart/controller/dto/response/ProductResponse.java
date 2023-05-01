@@ -2,10 +2,10 @@ package cart.controller.dto.response;
 
 public class ProductResponse {
 
-    private int id;
-    private String name;
-    private String image;
-    private int price;
+    private final int id;
+    private final String name;
+    private final String image;
+    private final int price;
 
     public ProductResponse(final int id, final String name, final String image, final int price) {
         this.id = id;
