@@ -2,7 +2,6 @@ package cart.service;
 
 import cart.dto.ProductRequestDto;
 import cart.entity.ProductEntity;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -27,11 +26,6 @@ class AdminServiceTest {
     @Autowired
     private AdminService adminService;
 
-    @BeforeEach
-    void initializeTest() {
-        adminService.deleteAll();
-    }
-
     @DisplayName("addProduct 성공 테스트")
     @Test
     void successAddProduct() {
@@ -43,11 +37,13 @@ class AdminServiceTest {
     void addProduct_fail() {
         ProductRequestDto productRequestDto = new ProductRequestDto("케로케로케로케로케로케로케로케로케로케로케로케로케로", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
         assertThatThrownBy(() -> adminService.addProduct(productRequestDto))
+//                .isExactlyInstanceOf(MethodArgumentNotValidException.class);
                 .isExactlyInstanceOf(DataIntegrityViolationException.class);
     }
 
 
-    @Test
+    @DisplayName("selectAllProducts 성공 테스트")
+    @Test()
     void selectAllProducts() {
         ProductRequestDto productRequestDto2 = new ProductRequestDto("쿠루루", 2000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
         adminService.addProduct(productRequestDto);
@@ -63,6 +59,7 @@ class AdminServiceTest {
         );
     }
 
+    @DisplayName("updateProduct 성공 테스트")
     @Test
     void updateProduct() {
         int id = adminService.addProduct(productRequestDto);
@@ -75,6 +72,7 @@ class AdminServiceTest {
                 .contains(tuple(updateProductDto.getName(), updateProductDto.getPrice(), updateProductDto.getImage()));
     }
 
+    @DisplayName("deleteProduct 성공 테스트")
     @Test
     void deleteProduct() {
         int id = adminService.addProduct(productRequestDto);
@@ -82,6 +80,6 @@ class AdminServiceTest {
 
         List<ProductEntity> productEntities = adminService.selectAllProducts();
 
-        assertThat(productEntities).hasSize(0);
+        assertThat(productEntities.size()).isZero();
     }
 }

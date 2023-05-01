@@ -1,11 +1,14 @@
 package cart.controller;
 
 import cart.dto.ProductRequestDto;
+import cart.service.AdminService;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -16,11 +19,19 @@ import org.springframework.http.MediaType;
 public class AdminControllerTest {
 
     @LocalServerPort
-    int port;
+    private int port;
+
+    @Autowired
+    private AdminService adminService;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+    }
+
+    @AfterEach
+    void clean() {
+        adminService.deleteAll();
     }
 
     @DisplayName("상품 정상 등록 테스트")
@@ -94,9 +105,12 @@ public class AdminControllerTest {
     @DisplayName("상품 삭제 요청 확인 테스트")
     @Test
     void deleteProduct() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        int productId = adminService.addProduct(productRequestDto);
+
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/admin/products/1")
+                .when().delete("/admin/products/{productId}", productId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
