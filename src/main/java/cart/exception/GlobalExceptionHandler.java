@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleIllegalArgument(final NoSuchElementException e) {
+    public ErrorResponse handleNoSuchElement(final NoSuchElementException e) {
         return new ErrorResponse(e.getMessage());
     }
 
