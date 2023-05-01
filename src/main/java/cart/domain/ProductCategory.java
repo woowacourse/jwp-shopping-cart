@@ -1,8 +1,8 @@
 package cart.domain;
 
-import cart.exception.GlobalException;
-
 import static cart.exception.ErrorCode.PRODUCT_INVALID_CATEGORY;
+
+import cart.exception.GlobalException;
 
 public enum ProductCategory {
     KOREAN, JAPANESE, CHINESE, WESTERN, SNACK, DESSERT;

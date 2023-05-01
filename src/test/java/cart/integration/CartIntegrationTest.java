@@ -1,5 +1,8 @@
 package cart.integration;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+
 import cart.controller.dto.MemberDto;
 import cart.controller.dto.ProductDto;
 import io.restassured.RestAssured;
@@ -12,9 +15,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CartIntegrationTest {
@@ -35,11 +35,11 @@ public class CartIntegrationTest {
     @DisplayName("장바구니 페이지를 조회한다.")
     void getCarts() {
         given()
-                .when()
-                .get("/cart")
-                .then().log().all()
-                .contentType(ContentType.HTML)
-                .statusCode(HttpStatus.OK.value());
+            .when()
+            .get("/cart")
+            .then().log().all()
+            .contentType(ContentType.HTML)
+            .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -52,11 +52,11 @@ public class CartIntegrationTest {
 
         // when, then
         given()
-                .header("Authorization", authorization)
-                .when()
-                .post("/cart/{productId}", 1L)
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+            .header("Authorization", authorization)
+            .when()
+            .post("/cart/{productId}", 1L)
+            .then().log().all()
+            .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
@@ -68,13 +68,13 @@ public class CartIntegrationTest {
         addSampleCart();
 
         given()
-                .header("Authorization", authorization)
-                .when()
-                .get("/cart/me")
-                .then().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(1));
+            .header("Authorization", authorization)
+            .when()
+            .get("/cart/me")
+            .then().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .statusCode(HttpStatus.OK.value())
+            .body("size()", is(1));
     }
 
     @Test
@@ -88,41 +88,42 @@ public class CartIntegrationTest {
 
         // when, then
         given()
-                .header("Authorization", authorization)
-                .when()
-                .delete("/cart/{targetMemberId}/{productId}", 1L, 1L)
-                .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+            .header("Authorization", authorization)
+            .when()
+            .delete("/cart/{targetMemberId}/{productId}", 1L, 1L)
+            .then().log().all()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private void addSampleMember() {
-        final MemberDto journey = new MemberDto(1L, "journey@gmail.com", "password", "져니", "010-1234-5678");
+        final MemberDto journey = new MemberDto(1L, "journey@gmail.com", "password", "져니",
+            "010-1234-5678");
         given()
-                .when()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(journey)
-                .post("/member")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(journey)
+            .post("/member")
+            .then().log().all()
+            .statusCode(HttpStatus.CREATED.value());
     }
 
     private void addSampleProduct() {
         final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
         given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .body(productDto)
-                .post("/admin")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .body(productDto)
+            .post("/admin")
+            .then().log().all()
+            .statusCode(HttpStatus.CREATED.value());
     }
 
     private void addSampleCart() {
         given()
-                .header("Authorization", authorization)
-                .when()
-                .post("/cart/{productId}", 1L)
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+            .header("Authorization", authorization)
+            .when()
+            .post("/cart/{productId}", 1L)
+            .then().log().all()
+            .statusCode(HttpStatus.CREATED.value());
     }
 }

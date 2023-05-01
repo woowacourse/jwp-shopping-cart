@@ -1,21 +1,20 @@
 package cart.persistence.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+
 import cart.persistence.entity.CartEntity;
 import cart.persistence.entity.MemberCartEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.ProductEntity;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 @JdbcTest
 @Import({CartDao.class, MemberDao.class, ProductDao.class})
@@ -54,8 +53,8 @@ class CartDaoTest {
         final Optional<CartEntity> cart = cartDao.findById(savedCartId);
         final CartEntity findCart = cart.get();
         assertThat(findCart)
-                .extracting("id", "memberId", "productId")
-                .containsExactly(savedCartId, savedMemberId, savedProductId);
+            .extracting("id", "memberId", "productId")
+            .containsExactly(savedCartId, savedMemberId, savedProductId);
     }
 
     @Test
@@ -73,8 +72,8 @@ class CartDaoTest {
         // then
         final CartEntity findCart = cart.get();
         assertThat(findCart)
-                .extracting("id", "memberId", "productId")
-                .containsExactly(savedCartId, savedMemberId, savedProductId);
+            .extracting("id", "memberId", "productId")
+            .containsExactly(savedCartId, savedMemberId, savedProductId);
     }
 
     @Test
@@ -93,7 +92,8 @@ class CartDaoTest {
         // given
         final long savedMemberId = memberDao.insert(memberEntity);
         final long savedChickenId = productDao.insert(productEntity);
-        final long savedSteakId = productDao.insert(new ProductEntity("스테이크", "steak_image_url", 40000, "WESTERN"));
+        final long savedSteakId = productDao.insert(
+            new ProductEntity("스테이크", "steak_image_url", 40000, "WESTERN"));
 
         final CartEntity chickenEntity = new CartEntity(savedMemberId, savedChickenId);
         final CartEntity steakEntity = new CartEntity(savedMemberId, savedSteakId);
@@ -101,15 +101,17 @@ class CartDaoTest {
         cartDao.insert(steakEntity);
 
         // when
-        final List<MemberCartEntity> memberProductEntities = cartDao.getProductsByMemberId(savedMemberId);
+        final List<MemberCartEntity> memberProductEntities = cartDao.getProductsByMemberId(
+            savedMemberId);
 
         // then
         assertThat(memberProductEntities).hasSize(2);
         assertThat(memberProductEntities)
-                .extracting("memberId", "productId", "productName", "productImageUrl", "productPrice", "productCategory")
-                .containsExactly(
-                        tuple(savedMemberId, savedChickenId, "치킨", "chicken_image_url", 20000, "KOREAN"),
-                        tuple(savedMemberId, savedSteakId, "스테이크", "steak_image_url", 40000, "WESTERN"));
+            .extracting("memberId", "productId", "productName", "productImageUrl", "productPrice",
+                "productCategory")
+            .containsExactly(
+                tuple(savedMemberId, savedChickenId, "치킨", "chicken_image_url", 20000, "KOREAN"),
+                tuple(savedMemberId, savedSteakId, "스테이크", "steak_image_url", 40000, "WESTERN"));
     }
 
     @Test

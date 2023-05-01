@@ -1,9 +1,9 @@
 package cart.domain;
 
-import cart.exception.GlobalException;
-
 import static cart.exception.ErrorCode.PRODUCT_NAME_LENGTH;
 import static cart.exception.ErrorCode.PRODUCT_PRICE_RANGE;
+
+import cart.exception.GlobalException;
 
 public class Product {
 
@@ -15,14 +15,16 @@ public class Product {
     private final int price;
     private final ProductCategory category;
 
-    private Product(final String name, final String imageUrl, final int price, final ProductCategory category) {
+    private Product(final String name, final String imageUrl, final int price,
+                    final ProductCategory category) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
         this.category = category;
     }
 
-    public static Product create(final String name, final String imageUrl, final int price, final ProductCategory category) {
+    public static Product create(final String name, final String imageUrl, final int price,
+                                 final ProductCategory category) {
         validateNameLength(name);
         validatePrice(price);
         return new Product(name, imageUrl, price, category);

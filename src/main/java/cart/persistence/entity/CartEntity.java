@@ -1,13 +1,13 @@
 package cart.persistence.entity;
 
 public class CartEntity {
-    private Long id;
+
+    private final Long id;
     private final Long memberId;
     private final Long productId;
 
     public CartEntity(final Long memberId, final Long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+        this(null, memberId, productId);
     }
 
     public CartEntity(final Long id, final Long memberId, final Long productId) {

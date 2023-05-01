@@ -1,18 +1,5 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
-import cart.service.ProductService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.nio.charset.StandardCharsets;
-
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -23,6 +10,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import cart.controller.dto.ProductDto;
+import cart.service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(AdminRestController.class)
 class AdminRestControllerTest {
@@ -45,12 +44,12 @@ class AdminRestControllerTest {
 
         // when, then
         mockMvc.perform(post("/admin")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                )
-                .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/1"));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productDto))
+                .characterEncoding(StandardCharsets.UTF_8)
+            )
+            .andExpect(status().isCreated())
+            .andExpect(header().string("Location", "/1"));
     }
 
     @DisplayName("상품 정보를 추가 시 잘못된 정보 형식으로 들어오면 예외가 발생한다")
@@ -61,18 +60,18 @@ class AdminRestControllerTest {
 
         // when, then
         mockMvc.perform(post("/admin")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productDto))
+                .characterEncoding(StandardCharsets.UTF_8)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errorMessage",
+                containsInAnyOrder(
+                    "상품 이름은 비어있을 수 없습니다.",
+                    "상품 가격은 비어있을 수 없습니다.",
+                    "상품 카테고리는 비어있을 수 없습니다."
                 )
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorMessage",
-                        containsInAnyOrder(
-                                "상품 이름은 비어있을 수 없습니다.",
-                                "상품 가격은 비어있을 수 없습니다.",
-                                "상품 카테고리는 비어있을 수 없습니다."
-                        )
-                ));
+            ));
     }
 
     @DisplayName("상품 정보를 수정한다")
@@ -84,11 +83,11 @@ class AdminRestControllerTest {
 
         // when, then
         mockMvc.perform(put("/admin/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                )
-                .andExpect(status().isNoContent());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productDto))
+                .characterEncoding(StandardCharsets.UTF_8)
+            )
+            .andExpect(status().isNoContent());
     }
 
     @DisplayName("상품 수정 시 잘못된 정보 형식으로 들어오면 예외가 발생한다")
@@ -99,18 +98,18 @@ class AdminRestControllerTest {
 
         // when, then
         mockMvc.perform(put("/admin/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(productDto))
+                .characterEncoding(StandardCharsets.UTF_8)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errorMessage",
+                containsInAnyOrder(
+                    "상품 이름은 비어있을 수 없습니다.",
+                    "상품 가격은 비어있을 수 없습니다.",
+                    "상품 카테고리는 비어있을 수 없습니다."
                 )
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorMessage",
-                        containsInAnyOrder(
-                                "상품 이름은 비어있을 수 없습니다.",
-                                "상품 가격은 비어있을 수 없습니다.",
-                                "상품 카테고리는 비어있을 수 없습니다."
-                        )
-                ));
+            ));
     }
 
     @DisplayName("상품 정보를 삭제한다")
@@ -121,7 +120,7 @@ class AdminRestControllerTest {
 
         // when, then
         mockMvc.perform(delete("/admin/{id}", 1L)
-                        .contentType(MediaType.TEXT_HTML))
-                .andExpect(status().isNoContent());
+                .contentType(MediaType.TEXT_HTML))
+            .andExpect(status().isNoContent());
     }
 }

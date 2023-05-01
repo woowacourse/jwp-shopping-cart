@@ -1,18 +1,17 @@
 package cart.persistence.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+
 import cart.persistence.entity.MemberEntity;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 @JdbcTest
 @Import(MemberDao.class)
@@ -38,8 +37,8 @@ class MemberDaoTest {
         final Optional<MemberEntity> member = memberDao.findById(savedMemberId);
         final MemberEntity findMember = member.get();
         assertThat(findMember)
-                .extracting("email", "password", "nickname", "telephone")
-                .containsExactly("journey@gmail.com", "password", "져니", "010-1234-5678");
+            .extracting("email", "password", "nickname", "telephone")
+            .containsExactly("journey@gmail.com", "password", "져니", "010-1234-5678");
     }
 
     @Test
@@ -54,8 +53,8 @@ class MemberDaoTest {
         // then
         final MemberEntity findMember = member.get();
         assertThat(findMember)
-                .extracting("email", "password", "nickname", "telephone")
-                .containsExactly("journey@gmail.com", "password", "져니", "010-1234-5678");
+            .extracting("email", "password", "nickname", "telephone")
+            .containsExactly("journey@gmail.com", "password", "져니", "010-1234-5678");
     }
 
     @Test
@@ -81,9 +80,9 @@ class MemberDaoTest {
         // then
         assertThat(memberEntities).hasSize(2);
         assertThat(memberEntities)
-                .extracting("email", "password", "nickname", "telephone")
-                .containsExactly(tuple("journey@gmail.com", "password", "져니", "010-1234-5678"),
-                        tuple("koda@gmail.com", "kodaissocute", "코다", "010-4321-8765"));
+            .extracting("email", "password", "nickname", "telephone")
+            .containsExactly(tuple("journey@gmail.com", "password", "져니", "010-1234-5678"),
+                tuple("koda@gmail.com", "kodaissocute", "코다", "010-4321-8765"));
     }
 
     @Test
@@ -98,8 +97,8 @@ class MemberDaoTest {
 
         // then
         assertThat(findMember)
-                .extracting("email", "password", "nickname", "telephone")
-                .containsExactly("journey@gmail.com", "password", "져니", "010-1234-5678");
+            .extracting("email", "password", "nickname", "telephone")
+            .containsExactly("journey@gmail.com", "password", "져니", "010-1234-5678");
     }
 
     @Test

@@ -1,10 +1,10 @@
 package cart.domain;
 
-import cart.exception.GlobalException;
-
 import static cart.exception.ErrorCode.MEMBER_EMAIL_LENGTH;
 import static cart.exception.ErrorCode.MEMBER_NICKNAME_LENGTH;
 import static cart.exception.ErrorCode.MEMBER_PASSWORD_LENGTH;
+
+import cart.exception.GlobalException;
 
 public class Member {
 
@@ -17,14 +17,16 @@ public class Member {
     private final String nickname;
     private final String telephone;
 
-    private Member(final String email, final String password, final String nickname, final String telephone) {
+    private Member(final String email, final String password, final String nickname,
+                   final String telephone) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.telephone = telephone;
     }
 
-    public static Member create(final String email, final String password, final String nickname, final String telephone) {
+    public static Member create(final String email, final String password, final String nickname,
+                                final String telephone) {
         validateEmail(email);
         validatePassword(password);
         validateNickname(nickname);

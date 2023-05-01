@@ -1,16 +1,15 @@
 package cart.persistence.dao;
 
 import cart.persistence.entity.MemberEntity;
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -52,7 +51,8 @@ public class MemberDao {
     public Optional<MemberEntity> findByEmail(final String memberEmail) {
         final String query = "SELECT m.id, m.email, m.password, m.nickname, m.telephone FROM member m WHERE m.email = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, memberRowMapper(), memberEmail));
+            return Optional.ofNullable(
+                jdbcTemplate.queryForObject(query, memberRowMapper(), memberEmail));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
@@ -60,8 +60,8 @@ public class MemberDao {
 
     private RowMapper<MemberEntity> memberRowMapper() {
         return (result, count) ->
-                new MemberEntity(result.getLong("id"), result.getString("email"),
-                        result.getString("password"), result.getString("nickname"),
-                        result.getString("telephone"));
+            new MemberEntity(result.getLong("id"), result.getString("email"),
+                result.getString("password"), result.getString("nickname"),
+                result.getString("telephone"));
     }
 }

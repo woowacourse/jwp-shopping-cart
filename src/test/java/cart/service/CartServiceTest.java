@@ -1,10 +1,18 @@
 package cart.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import cart.controller.dto.CartDto;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.entity.MemberCartEntity;
 import cart.persistence.repository.MemberCartRepository;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,15 +20,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @WebMvcTest(CartService.class)
 class CartServiceTest {
@@ -49,10 +48,11 @@ class CartServiceTest {
     void getProductsByMemberEmail() {
         // given
         final MemberCartEntity chickenProduct = new MemberCartEntity(1L, 1L, 1L,
-                "치킨", "chicken_image_url", 20000, "KOREAN");
+            "치킨", "chicken_image_url", 20000, "KOREAN");
         final MemberCartEntity steakProductEntity = new MemberCartEntity(2L, 1L, 2L,
-                "스테이크", "steakUrl", 40000, "WESTERN");
-        when(memberProductRepository.findByMemberEmail(any())).thenReturn(List.of(chickenProduct, steakProductEntity));
+            "스테이크", "steakUrl", 40000, "WESTERN");
+        when(memberProductRepository.findByMemberEmail(any())).thenReturn(
+            List.of(chickenProduct, steakProductEntity));
 
         // when
         final List<CartDto> cartDtos = cartService.getProductsByMemberEmail("journey@gmail.com");
@@ -60,11 +60,11 @@ class CartServiceTest {
         // then
         assertThat(cartDtos).hasSize(2);
         assertThat(cartDtos)
-                .extracting("memberId", "productId", "productName",
-                        "productImageUrl", "productPrice", "productCategory")
-                .containsExactly(
-                        tuple(1L, 1L, "치킨", "chicken_image_url", 20000, "KOREAN"),
-                        tuple(1L, 2L, "스테이크", "steakUrl", 40000, "WESTERN"));
+            .extracting("memberId", "productId", "productName",
+                "productImageUrl", "productPrice", "productCategory")
+            .containsExactly(
+                tuple(1L, 1L, "치킨", "chicken_image_url", 20000, "KOREAN"),
+                tuple(1L, 2L, "스테이크", "steakUrl", 40000, "WESTERN"));
     }
 
     @Test
@@ -81,12 +81,13 @@ class CartServiceTest {
     @ValueSource(ints = {0, 2})
     void deleteCart_fail(final int deletedCount) {
         // given
-        when(memberProductRepository.deleteByMemberEmail(any(), any(), any())).thenReturn(deletedCount);
+        when(memberProductRepository.deleteByMemberEmail(any(), any(), any())).thenReturn(
+            deletedCount);
 
         // when, then
         assertThatThrownBy(() -> cartService.deleteCart(1L, "journey@gmail.com", 1L))
-                .isInstanceOf(GlobalException.class)
-                .extracting("errorCode")
-                .isEqualTo(ErrorCode.CART_INVALID_DELETE);
+            .isInstanceOf(GlobalException.class)
+            .extracting("errorCode")
+            .isEqualTo(ErrorCode.CART_INVALID_DELETE);
     }
 }

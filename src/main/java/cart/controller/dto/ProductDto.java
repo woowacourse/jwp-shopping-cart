@@ -18,7 +18,8 @@ public class ProductDto {
     @NotNull(message = "상품 카테고리는 비어있을 수 없습니다.")
     private final String category;
 
-    public ProductDto(final Long id, final String name, final String imageUrl, final Integer price, final String category) {
+    public ProductDto(final Long id, final String name, final String imageUrl, final Integer price,
+                      final String category) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;

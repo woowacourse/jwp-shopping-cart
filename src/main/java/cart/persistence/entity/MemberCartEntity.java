@@ -1,6 +1,7 @@
 package cart.persistence.entity;
 
 public class MemberCartEntity {
+
     private final Long cartId;
     private final Long memberId;
     private final Long productId;
@@ -9,8 +10,10 @@ public class MemberCartEntity {
     private final int productPrice;
     private final String productCategory;
 
-    public MemberCartEntity(final Long cartId, final Long memberId, final Long productId, final String productName,
-                            final String productImageUrl, final int productPrice, final String productCategory) {
+    public MemberCartEntity(final Long cartId, final Long memberId, final Long productId,
+                            final String productName,
+                            final String productImageUrl, final int productPrice,
+                            final String productCategory) {
         this.cartId = cartId;
         this.memberId = memberId;
         this.productId = productId;

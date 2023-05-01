@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 public class MemberDto {
+
     private final Long id;
 
     @NotBlank(message = "이메일에 빈 값을 입력할 수 없습니다.")
@@ -20,7 +21,8 @@ public class MemberDto {
     @Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 전화번호 형식을 입력해 주세요.")
     private final String telephone;
 
-    public MemberDto(final Long id, final String email, final String password, final String nickname, final String telephone) {
+    public MemberDto(final Long id, final String email, final String password,
+                     final String nickname, final String telephone) {
         this.id = id;
         this.email = email;
         this.password = password;

@@ -2,6 +2,8 @@ package cart.controller;
 
 import cart.controller.dto.ProductDto;
 import cart.service.ProductService;
+import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,9 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/admin")
@@ -32,8 +31,8 @@ public class AdminRestController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<Void> updateProduct(
-            @PathVariable final Long productId,
-            @RequestBody @Valid final ProductDto productDto) {
+        @PathVariable final Long productId,
+        @RequestBody @Valid final ProductDto productDto) {
         productService.update(productId, productDto);
         return ResponseEntity.noContent().build();
     }

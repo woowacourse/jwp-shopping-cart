@@ -7,11 +7,10 @@ import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.ProductEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,7 +25,7 @@ public class ProductService {
     public List<ProductDto> getProducts() {
         final List<ProductEntity> productEntities = productDao.findAll();
         return productEntities.stream()
-                .map(this::convertToDto).collect(Collectors.toList());
+            .map(this::convertToDto).collect(Collectors.toList());
     }
 
     public long save(final ProductDto productDto) {
@@ -53,18 +52,19 @@ public class ProductService {
 
     public ProductDto getById(final Long id) {
         return productDao.findById(id)
-                .map(this::convertToDto)
-                .orElseThrow(() -> new GlobalException(ErrorCode.PRODUCT_NOT_FOUND));
+            .map(this::convertToDto)
+            .orElseThrow(() -> new GlobalException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     private ProductEntity convertToEntity(final ProductDto productDto) {
         final Product product = Product.create(productDto.getName(), productDto.getImageUrl(),
-                productDto.getPrice(), ProductCategory.from(productDto.getCategory()));
-        return new ProductEntity(product.getName(), product.getImageUrl(), product.getPrice(), product.getCategory().name());
+            productDto.getPrice(), ProductCategory.from(productDto.getCategory()));
+        return new ProductEntity(product.getName(), product.getImageUrl(), product.getPrice(),
+            product.getCategory().name());
     }
 
     private ProductDto convertToDto(final ProductEntity product) {
         return new ProductDto(product.getId(), product.getName(), product.getImageUrl(),
-                product.getPrice(), product.getCategory());
+            product.getPrice(), product.getCategory());
     }
 }

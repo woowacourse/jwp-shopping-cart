@@ -1,18 +1,17 @@
 package cart.persistence.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+
 import cart.persistence.entity.ProductEntity;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 @JdbcTest
 @Import({ProductDao.class, MemberDao.class, CartDao.class})
@@ -47,8 +46,8 @@ class ProductDaoTest {
         final ProductEntity findProduct = product.get();
 
         assertThat(findProduct)
-                .extracting("name", "price", "imageUrl", "category")
-                .containsExactly("치킨", 20000, "chicken_image_url", "KOREAN");
+            .extracting("name", "price", "imageUrl", "category")
+            .containsExactly("치킨", 20000, "chicken_image_url", "KOREAN");
     }
 
     @DisplayName("유효하지 않은 상품 아이디가 주어지면, 빈 값을 반환한다")
@@ -72,8 +71,8 @@ class ProductDaoTest {
         final ProductEntity findProduct = product.get();
 
         assertThat(findProduct)
-                .extracting("name", "price", "imageUrl", "category")
-                .containsExactly("치킨", 20000, "chicken_image_url", "KOREAN");
+            .extracting("name", "price", "imageUrl", "category")
+            .containsExactly("치킨", 20000, "chicken_image_url", "KOREAN");
     }
 
     @DisplayName("상품 정보 전체를 조회한다.")
@@ -89,9 +88,9 @@ class ProductDaoTest {
         // then
         assertThat(products).hasSize(2);
         assertThat(products)
-                .extracting("name", "price", "imageUrl", "category")
-                .containsExactly(tuple("치킨", 20000, "chicken_image_url", "KOREAN"),
-                        tuple("탕수육", 30000, "pork_image_url", "CHINESE"));
+            .extracting("name", "price", "imageUrl", "category")
+            .containsExactly(tuple("치킨", 20000, "chicken_image_url", "KOREAN"),
+                tuple("탕수육", 30000, "pork_image_url", "CHINESE"));
     }
 
     @DisplayName("주어진 상품 아이디에 해당하는 상품 정보를 수정한다.")
@@ -101,7 +100,8 @@ class ProductDaoTest {
         final Long productId = productDao.insert(productEntity);
 
         // when
-        final ProductEntity updateProduct = new ProductEntity(productId, "탕수육", "pork_image_url", 30000, "CHINESE");
+        final ProductEntity updateProduct = new ProductEntity(productId, "탕수육", "pork_image_url",
+            30000, "CHINESE");
         int updatedCount = productDao.updateById(updateProduct, productId);
 
         // then
@@ -110,8 +110,8 @@ class ProductDaoTest {
 
         assertThat(updatedCount).isEqualTo(1);
         assertThat(findProduct)
-                .extracting("name", "price", "imageUrl", "category")
-                .containsExactly("탕수육", 30000, "pork_image_url", "CHINESE");
+            .extracting("name", "price", "imageUrl", "category")
+            .containsExactly("탕수육", 30000, "pork_image_url", "CHINESE");
     }
 
     @DisplayName("주어진 상품 아이디에 해당하는 상품을 삭제한다.")
