@@ -34,7 +34,7 @@
   - [x] `/admin` url로 접속했을 때, 관리자 페이지로 접속하도록 연동한다.
   - [x] admin.html에 조회된 정보 표시
 - [ ] 사용자 기능 구현
-  - [ ] Email, Password 가지는 사용자 DB 설계
+  - [x] Email, Password 가지는 사용자 DB 설계
   - [ ] 사용자 등록 API 구현
     - [ ] 사용자 등록 기능 구현
       - email
@@ -57,6 +57,7 @@
     - `Authorization: Basic {credential}` 로 헤더에 인증 정보 추가
     - Credential: `email:password` 를 base64 인코딩
 - [ ] 장바구니 기능 구현
+  - [x] 장바구니 DB 설계 
   - [ ] 장바구니 상품 담기 API 구현 
     - [ ] 상품 담기 기능 구현
       - productId
