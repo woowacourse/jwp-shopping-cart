@@ -47,6 +47,7 @@ member
 | id        | BIGINT       | PK, AUTO_INCREMENT |
 | email     | VARCHAR(255) | UNIQUE             |
 | password  | VARCHAR(255) |                    |
+| name      | VARCHAR(10)  |                    |
 
 ### API
 

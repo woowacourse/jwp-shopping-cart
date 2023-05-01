@@ -3,6 +3,11 @@ spring:
     url: jdbc:h2:mem:testdb;MODE=MySQL
     driver-class-name: org.h2.Driver
   h2.console.enabled: true
+  sql:
+    init:
+      mode: embedded
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
 logging:
   level:
     root: debug

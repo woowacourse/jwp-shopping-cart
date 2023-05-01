@@ -10,10 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
-@Sql(scripts = {"classpath:data.sql"})
 class JdbcProductDaoTest {
 
     private final RowMapper<Product> productRowMapper = (resultSet, rowNum) ->

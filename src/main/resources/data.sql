@@ -1,8 +1,5 @@
-CREATE TABLE IF NOT EXISTS product
-(
-    id        BIGINT      NOT NULL AUTO_INCREMENT,
-    name      VARCHAR(64) NOT NULL,
-    price     INT         NOT NULL,
-    image_url TEXT,
-    PRIMARY KEY (id)
-);
+INSERT INTO member (email, password, name)
+VALUES ('a@a.com', 'abc1', '이오');
+
+INSERT INTO member (email, password, name)
+VALUES ('b@b.com', 'abc2', '애쉬');
