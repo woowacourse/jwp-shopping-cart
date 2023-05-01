@@ -5,9 +5,12 @@ import javax.validation.constraints.NotNull;
 public class MemberRequest {
 
     @NotNull
-    private final String email;
+    private String email;
     @NotNull
-    private final String password;
+    private String password;
+
+    public MemberRequest() {
+    }
 
     public MemberRequest(String email, String password) {
         this.email = email;

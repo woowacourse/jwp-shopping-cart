@@ -73,6 +73,7 @@
     ```
   DELETE /admin/products/{product_id} HTTP/1.1
   ```
+  - [ ] 만약 cart 테이블에 상품 id가 포함된 데이터가 존재한다면, 해당 데이터를 모두 제거한 뒤 상품 데이터를 제거한다.
 
 ## 사용자 설정 페이지 연동
 
@@ -122,6 +123,7 @@
 - [x] product DAO CRUD 테스트
 - [x] 컨트롤러 CRUD 테스트
 - [ ] cart DAO CRUD 테스트
+- [x] member DAO CRUD 테스트
 
 # 📌 Commit Convention
 
