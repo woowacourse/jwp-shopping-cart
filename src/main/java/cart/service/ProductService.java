@@ -11,6 +11,7 @@ import cart.entity.product.ProductEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +56,9 @@ public class ProductService {
         return productDao.findAll().stream()
                 .map(product -> {
                     final List<Long> categoryIds = getCategoryIds(product);
+                    if (categoryIds.isEmpty()) {
+                        return ProductResponseDto.of(product, Collections.emptyList());
+                    }
                     final List<CategoryEntity> categories = categoryDao.findAllInId(categoryIds);
                     return ProductResponseDto.of(product, categories);
                 })
