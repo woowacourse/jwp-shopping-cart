@@ -6,7 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -18,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @JdbcTest
 // DDL
 @Sql(value = "/schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Import(CartItemTestConfig.class)
+@ComponentScan(basePackages = {"cart.product.dao", "cart.member.dao", "cart.cartitems.dao"})
 class CartItemDaoTest {
 
     private static final int FIRST_MEMBER_ID = 1;
@@ -26,14 +29,15 @@ class CartItemDaoTest {
     private static final int SECOND_PRODUCT_ID = 2;
     private static final int THIRD_PRODUCT_ID = 3;
 
-    private final CartItemDao cartItemDao;
-    private final CarItemDaoTestConfig carItemDaoTestConfig;
+    @Autowired
+    private CartItemDao cartItemDao;
 
     @Autowired
-    CartItemDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.cartItemDao = new CartItemDao(namedParameterJdbcTemplate);
-        this.carItemDaoTestConfig = new CarItemDaoTestConfig(namedParameterJdbcTemplate);
-    }
+    private CartItemTestConfig cartItemTestConfig;
+
+//    CartItemDaoTest(JdbcTemplate jdbcTemplate) {
+//        this.cartItemDao = new CartItemDao(new NamedParameterJdbcTemplate(jdbcTemplate));
+//    }
 
     /**
      * beforeEach를 실행하면 MEMBER는 2명 Product는 3개가 들어간 상태로 초기화 된다.
@@ -41,7 +45,7 @@ class CartItemDaoTest {
 
     @BeforeEach
     void beforeEach() {
-        carItemDaoTestConfig.beforeEach();
+        cartItemTestConfig.setMembersAndProducts();
     }
 
     @Test

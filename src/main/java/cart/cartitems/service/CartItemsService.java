@@ -2,7 +2,7 @@ package cart.cartitems.service;
 
 import cart.cartitems.dao.CartItemDao;
 import cart.cartitems.dto.CartItemDto;
-import cart.cartitems.dto.request.ProductAddRequest;
+import cart.cartitems.dto.request.CartItemAddRequest;
 import cart.infrastructure.AuthInfo;
 import cart.infrastructure.AuthorizationService;
 import cart.product.dto.ProductDto;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -38,8 +39,8 @@ public class CartItemsService {
                                  .collect(Collectors.toUnmodifiableList());
     }
 
-    public CartItemDto addItemToCart(AuthInfo authInfo, ProductAddRequest productAddRequest) {
-        final long productIdToAdd = productAddRequest.getProductId();
+    public CartItemDto addItemToCart(AuthInfo authInfo, CartItemAddRequest cartItemAddRequest) {
+        final long productIdToAdd = cartItemAddRequest.getProductId();
 
         productService.validateProductExist(productIdToAdd);
 
@@ -59,7 +60,7 @@ public class CartItemsService {
         final int deletedItemsCount = cartItemDao.deleteItem(cartItemDto);
 
         if (deletedItemsCount != 1) {
-            throw new IllegalArgumentException("잘못된 상품 번호입니다");
+            throw new NoSuchElementException("잘못된 상품 번호입니다");
         }
 
         return cartItemDto.getProductId();

@@ -1,5 +1,6 @@
 package cart.cartitems.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,7 +8,8 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
-public class ProductAddRequest {
+@AllArgsConstructor
+public class CartItemAddRequest {
 
     @NotNull
     private Long productId;

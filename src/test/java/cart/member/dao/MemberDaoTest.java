@@ -8,7 +8,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.sql.SQLException;
@@ -47,7 +46,7 @@ class MemberDaoTest {
 
         final ThrowingCallable throwingCallable = () -> memberDao.save(duplicateEmailMember);
 
-        assertThatThrownBy(throwingCallable).isInstanceOf(DuplicateKeyException.class);
+        assertThatThrownBy(throwingCallable).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

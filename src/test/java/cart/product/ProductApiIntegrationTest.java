@@ -6,7 +6,6 @@ import cart.product.domain.ProductName;
 import cart.product.dto.request.ProductAddRequest;
 import cart.product.dto.request.ProductUpdateRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
@@ -23,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
+import static cart.TestUtils.toJson;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -191,11 +191,5 @@ public class ProductApiIntegrationTest {
                               .assertThat()
                               .statusCode(HttpStatus.NOT_FOUND.value())
                               .body("message", Matchers.containsStringIgnoringCase("id"));
-    }
-
-    private String toJson(final Object object) throws JsonProcessingException {
-        final ObjectMapper objectMapper = new ObjectMapper();
-
-        return objectMapper.writeValueAsString(object);
     }
 }

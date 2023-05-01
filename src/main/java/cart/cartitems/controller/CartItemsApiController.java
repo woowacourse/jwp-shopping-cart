@@ -1,7 +1,7 @@
 package cart.cartitems.controller;
 
 import cart.cartitems.dto.CartItemDto;
-import cart.cartitems.dto.request.ProductAddRequest;
+import cart.cartitems.dto.request.CartItemAddRequest;
 import cart.cartitems.service.CartItemsService;
 import cart.infrastructure.AuthInfo;
 import cart.product.dto.ProductDto;
@@ -37,10 +37,10 @@ public class CartItemsApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addItemToCart(HttpServletRequest request, @RequestBody @Valid ProductAddRequest productAddRequest) {
+    public ResponseEntity<Void> addItemToCart(HttpServletRequest request, @RequestBody @Valid CartItemAddRequest cartItemAddRequest) {
         final AuthInfo authInfo = (AuthInfo) request.getAttribute("authInfo");
 
-        final CartItemDto cartItemDto = cartItemsService.addItemToCart(authInfo, productAddRequest);
+        final CartItemDto cartItemDto = cartItemsService.addItemToCart(authInfo, cartItemAddRequest);
 
         return ResponseEntity.created(URI.create("/cart/items/" + cartItemDto.getProductId())).build();
     }
