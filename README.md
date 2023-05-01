@@ -17,8 +17,8 @@
 <br>
 
 ### ✅ 사용자 설정 페이지 연동
-- [ ] `/member/settings` url로 접속했을 때, 사용자 설정 페이지로 접속하도록 연동한다.
-- [ ] `settings.html`에 조회된 정보 표시
+- [x] `/member/settings` url로 접속했을 때, 사용자 설정 페이지로 접속하도록 연동한다.
+- [x] `settings.html`에 조회된 정보 표시
 
 <br>
 
