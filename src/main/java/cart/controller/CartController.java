@@ -50,9 +50,9 @@ public class CartController {
                 .body(CartResponse.from(cartDto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCart(@PathVariable Long id, @AuthenticationPrincipal AuthInfo authInfo) {
-        cartService.delete(id, authInfo.getEmail());
+    @DeleteMapping("/{cartId}")
+    public ResponseEntity<Void> deleteCart(@PathVariable Long cartId, @AuthenticationPrincipal AuthInfo authInfo) {
+        cartService.delete(cartId, authInfo.getEmail());
 
         return ResponseEntity.noContent().build();
     }

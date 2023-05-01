@@ -48,19 +48,19 @@ public class ItemController {
                 .body(ItemResponse.from(itemDto));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{itemId}")
     public ResponseEntity<ItemResponse> updateItem(
             @RequestBody @Valid UpdateItemRequest updateItemRequest,
-            @PathVariable Long id
+            @PathVariable Long itemId
     ) {
-        ItemDto itemDto = itemService.update(id, updateItemRequest);
+        ItemDto itemDto = itemService.update(itemId, updateItemRequest);
 
         return ResponseEntity.ok(ItemResponse.from(itemDto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
-        itemService.delete(id);
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity<Void> deleteItem(@PathVariable Long itemId) {
+        itemService.delete(itemId);
 
         return ResponseEntity.noContent()
                 .build();
