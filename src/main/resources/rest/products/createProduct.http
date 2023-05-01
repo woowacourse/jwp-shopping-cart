@@ -1,0 +1,8 @@
+POST localhost:8080/products
+Content-Type: application/json
+
+{
+  "name": "테스트",
+  "price": "5000",
+  "image-url": "testimage"
+}

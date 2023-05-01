@@ -1,0 +1,9 @@
+PUT localhost:8080/products/1
+Content-Type: application/json
+
+{
+    "id": "1",
+    "name": "updated",
+    "price": "10000",
+    "image-url": "updated-url"
+}
