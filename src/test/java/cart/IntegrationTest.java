@@ -1,7 +1,6 @@
 package cart;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.notNullValue;
 
 import cart.service.dto.ProductRequest;
 import io.restassured.RestAssured;
@@ -10,11 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class IntegrationTest {
 
     @LocalServerPort
@@ -45,10 +45,9 @@ class IntegrationTest {
                 .body(productRequest).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/admin/create")
+                .post("/product")
                 .then().log().all()
-                .statusCode(201)
-                .header("Location", notNullValue());
+                .statusCode(201);
     }
 
     @Test
@@ -60,7 +59,7 @@ class IntegrationTest {
                 .body(jsonStrNameEmpty)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/admin/create")
+                .post("/product")
                 .then()
                 .statusCode(Response.SC_BAD_REQUEST);
     }
@@ -76,7 +75,7 @@ class IntegrationTest {
                 .body(productRequest).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .patch("/admin/edit")
+                .put("/product/1")
                 .then().log().all()
                 .statusCode(200);
     }
@@ -89,7 +88,7 @@ class IntegrationTest {
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/admin/delete/1")
+                .delete("/product/1")
                 .then().log().all()
                 .statusCode(200);
     }
@@ -103,7 +102,7 @@ class IntegrationTest {
                 .body(jsonStr)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/admin/create")
+                .post("/product")
                 .then()
                 .statusCode(400);
     }
