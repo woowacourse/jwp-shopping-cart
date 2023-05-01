@@ -72,13 +72,13 @@
 
 ### 사용자 기능 구현
 - [ ] 사용자 기본 정보: email, password
-  - [ ] DB 테이블 설계
+  - [x] DB 테이블 설계
     - ```sql
       CREATE TABLE USERS
       (
         id          INT     NOT NULL AUTO_INCREMENT,
         email       VARCHAR NOT NULL UNIQUE,
-        password    VARCHAR NOT NULL
+        password    VARCHAR NOT NULL,
         PRIMARY KEY(id)
       );
       ```
