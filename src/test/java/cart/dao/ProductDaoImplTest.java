@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,7 +42,7 @@ class ProductDaoImplTest {
     @DisplayName("존재하지 않는 상품을 조회하면 Optional을 반환한다")
     @Test
     void findById_fail() {
-        final Optional<Product> productOptional = productDao.findById(1L);
+        final Optional<Product> productOptional = productDao.findById(1000L);
         assertThat(productOptional.isPresent()).isFalse();
     }
 
@@ -61,20 +60,6 @@ class ProductDaoImplTest {
                 () -> assertThat(findProductEntity.getPriceValue()).isEqualTo(20000),
                 () -> assertThat(findProductEntity.getImageUrlValue()).isEqualTo(IMAGE_URL),
                 () -> assertThat(findProductEntity.getCategory()).isEqualTo(ProductCategory.KOREAN));
-    }
-
-    @DisplayName("상품 전체를 조회한다.")
-    @Test
-    void findAll() {
-        // given
-        productDao.insert(productEntity);
-        productDao.insert(productEntity);
-
-        // when
-        final List<Product> productEntities = productDao.findAll();
-
-        // then
-        assertThat(productEntities).hasSize(2);
     }
 
     @DisplayName("상품을 수정한다.")

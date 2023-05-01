@@ -20,8 +20,8 @@
 </header>
 <div class="container">
     <ul class="product-grid">
-        <li class="product" th:each="prdocut : ${products}" th:onclick="showDetail([[${prdocut.id}]])">
-            <div class="product-image">
+        <li class="product" th:each="prdocut : ${products}">
+            <div class="product-image" th:onclick="showDetail([[${prdocut.id}]])">
                 <img alt="상품 이미지" th:src="${prdocut.getImageUrl()}"> <!-- 상품 이미지 -->
             </div>
             <div class="product-info">
@@ -30,7 +30,7 @@
                     <p class="product-name" th:text="${prdocut.getName()}"></p> <!-- 상품 이름 -->
                     <p class="product-price" th:text="${prdocut.getPrice()} + '원'"></p> <!-- 상품 가격 -->
                 </div>
-                <button type="submit" class="product-btn" th:onclick="addCartItem([[${prdocut.id}]])">담기</button>
+                <button type="submit" class="product-btn" th:onclick="addCartItem([[${prdocut.getId()}]])">담기</button>
             </div>
         </li>
     </ul>
