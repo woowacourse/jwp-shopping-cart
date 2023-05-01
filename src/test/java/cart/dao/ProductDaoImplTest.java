@@ -25,8 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProductDaoImplTest {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
-    ProductDao productDao;
+    private JdbcTemplate jdbcTemplate;
+    private ProductDao productDao;
 
     @BeforeEach
     void setUp() {
