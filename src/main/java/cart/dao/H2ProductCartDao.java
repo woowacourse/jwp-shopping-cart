@@ -1,7 +1,9 @@
 package cart.dao;
 
+import cart.entity.Member;
 import cart.entity.ProductCart;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class H2ProductCartDao implements ProductCartDao {
 
-    private static final RowMapper<ProductCart> productRowMapper = (resultSet, rowMapper) -> new ProductCart(
+    private static final RowMapper<ProductCart> productCartRowMapper = (resultSet, rowMapper) -> new ProductCart(
             resultSet.getLong("id"),
             resultSet.getLong("product_id"),
             resultSet.getLong("member_id")
@@ -54,9 +56,16 @@ public class H2ProductCartDao implements ProductCartDao {
 
     private Optional<ProductCart> findProduct(String sql, Map<String, Long> parameter) {
         try {
-            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, parameter, productRowMapper));
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, parameter, productCartRowMapper));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<ProductCart> findAllByMember(Member member) {
+        String sql = "SELECT * FROM product_cart WHERE member_id = :member_id";
+        Map<String, Long> parameter = Collections.singletonMap("member_id", member.getId());
+        return namedParameterJdbcTemplate.query(sql, parameter, productCartRowMapper);
     }
 }

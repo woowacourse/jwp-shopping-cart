@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.entity.Member;
 import cart.entity.Product;
 import cart.entity.ProductCart;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,19 @@ class H2ProductCartDaoTest {
                 () -> assertThat(savedCart.getId()).isEqualTo(findCart.getId()),
                 () -> assertThat(savedCart.getProductId()).isEqualTo(findCart.getProductId()),
                 () -> assertThat(savedCart.getMemberId()).isEqualTo(findCart.getMemberId())
+        );
+    }
+
+    @DisplayName("member로 저장된 모든 product cart를 찾는다")
+    @Test
+    void findAllByMemberTest() {
+        ProductCart productCart = new ProductCart(product.getId(), member.getId());
+        ProductCart savedCart = productCartDao.save(productCart);
+
+        List<ProductCart> productCarts = productCartDao.findAllByMember(member);
+        assertAll(
+                () -> assertThat(productCarts).hasSize(1),
+                () -> assertThat(productCarts).containsExactly(savedCart)
         );
     }
 
