@@ -43,14 +43,14 @@ public class AdminController {
         return ResponseEntity.created(URI.create("/product")).build();
     }
 
-    @PutMapping("/product")
-    public ResponseEntity<Void> updateProduct(@RequestBody @Valid final RequestUpdateProductDto requestUpdateProductDto) {
-        cartService.update(requestUpdateProductDto);
+    @PutMapping("/product/{id}")
+    public ResponseEntity<Void> updateProduct(@PathVariable final Long id, @RequestBody @Valid final RequestUpdateProductDto requestUpdateProductDto) {
+        cartService.update(id, requestUpdateProductDto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable @Valid final Long id) {
         cartService.delete(id);
         return ResponseEntity.ok().build();
     }

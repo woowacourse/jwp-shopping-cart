@@ -47,13 +47,13 @@ public class CartService {
     }
 
     @Transactional
-    public void update(final RequestUpdateProductDto requestUpdateProductDto) {
+    public void update(final Long id, final RequestUpdateProductDto requestUpdateProductDto) {
         final Product product = new Product(
                 requestUpdateProductDto.getName(),
                 requestUpdateProductDto.getPrice(),
                 requestUpdateProductDto.getImage()
         );
-        final int updatedRows = productDao.update(product, requestUpdateProductDto.getId());
+        final int updatedRows = productDao.update(product, id);
         validateAffectedRowsCount(updatedRows);
     }
 

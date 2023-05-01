@@ -63,8 +63,8 @@ const updateProduct = (product) => {
 
     axios.request({
         method: 'put',
-        url: '/admin/product',
-        data : product
+        url: '/admin/product/' + id,
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -76,7 +76,7 @@ const updateProduct = (product) => {
 const deleteProduct = (id) => {
     axios.request({
         method: 'delete',
-        url: `/admin/product/${id}`
+        url: '/admin/product/' + id,
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
