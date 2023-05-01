@@ -8,5 +8,7 @@ public interface CartDao {
 
     Long save(final Cart cart);
 
-    List<Cart> findAllByUserId(final Long id);
+    List<Cart> findAllByUserId(final Long userId);
+
+    int delete(final Long id);
 }

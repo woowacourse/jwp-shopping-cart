@@ -60,6 +60,19 @@ class JdbcCartDaoTest {
         );
     }
 
+    @Test
+    void 장바구니를_삭제한다() {
+        // given
+        final long userId = 1L;
+        final Long savedId = 장바구니를_저장한다(userId, 2L, 3);
+
+        // when
+        cartDao.delete(savedId);
+
+        // then
+        assertThat(cartDao.findAllByUserId(1L)).isEmpty();
+    }
+
     private Long 장바구니를_저장한다(final long userId, final long productId, final int count) {
         final Cart cart = new Cart(userId, productId, count);
         return cartDao.save(cart);

@@ -42,6 +42,13 @@ public class JdbcCartDao implements CartDao {
         return jdbcTemplate.query(sql, Collections.singletonMap("userId", userId), createCartRowMapper());
     }
 
+    @Override
+    public int delete(final Long id) {
+        final String sql = "DELETE FROM cart WHERE id = :id";
+
+        return jdbcTemplate.update(sql, Collections.singletonMap("id", id));
+    }
+
     private RowMapper<Cart> createCartRowMapper() {
         return (rs, rowNum) -> new Cart(
                 rs.getLong("id"),
