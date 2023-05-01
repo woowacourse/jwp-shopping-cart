@@ -44,7 +44,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .body(productDto)
-                .post("/admin/products")
+                .post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
@@ -76,7 +76,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .body(productDto)
-                .post("/admin/products")
+                .post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -90,7 +90,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .body(productDto)
-                .post("/admin/products")
+                .post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
@@ -98,7 +98,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .body(productDto)
-                .put("/admin/products/{id}", 1L)
+                .put("/products/{id}", 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -112,14 +112,14 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .body(productDto)
-                .post("/admin/products")
+                .post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/admin/products/{id}", 1L)
+                .delete("/products/{id}", 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

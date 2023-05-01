@@ -1,4 +1,4 @@
-package cart.controller.admin;
+package cart.controller;
 
 import cart.controller.dto.ProductDto;
 import cart.service.ProductService;
@@ -15,19 +15,19 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/admin/products")
-public class AdminProductController {
+@RequestMapping("/products")
+public class ProductRestController {
 
     private final ProductService productService;
 
-    public AdminProductController(final ProductService productService) {
+    public ProductRestController(final ProductService productService) {
         this.productService = productService;
     }
 
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody @Valid final ProductDto productDto) {
         final Long productId = productService.save(productDto);
-        return ResponseEntity.created(URI.create("/admin/products/" + productId)).build();
+        return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{productId}")

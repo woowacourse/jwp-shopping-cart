@@ -1,4 +1,4 @@
-package cart.controller.admin;
+package cart.controller;
 
 import cart.controller.dto.ProductDto;
 import cart.persistence.entity.ProductCategory;
@@ -25,8 +25,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AdminProductController.class)
-class AdminProductControllerTest {
+@WebMvcTest(ProductRestController.class)
+class ProductRestControllerTest {
 
     private ProductDto productDto;
 
@@ -51,7 +51,7 @@ class AdminProductControllerTest {
         when(productService.save(any())).thenReturn(1L);
 
         // when, then
-        mockMvc.perform(post("/admin/products")
+        mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -66,7 +66,7 @@ class AdminProductControllerTest {
         final ProductDto productDto = new ProductDto(1L, "", "", null, null);
 
         // when, then
-        mockMvc.perform(post("/admin/products")
+        mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -89,7 +89,7 @@ class AdminProductControllerTest {
         doNothing().when(productService).update(any(), any());
 
         // when, then
-        mockMvc.perform(put("/admin/products/{id}", 1L)
+        mockMvc.perform(put("/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -104,7 +104,7 @@ class AdminProductControllerTest {
         final ProductDto productDto = new ProductDto(1L, "", "", null, null);
 
         // when, then
-        mockMvc.perform(put("/admin/products/{id}", 1L)
+        mockMvc.perform(put("/products/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productDto))
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -126,7 +126,7 @@ class AdminProductControllerTest {
         doNothing().when(productService).delete(any());
 
         // when, then
-        mockMvc.perform(delete("/admin/products/{productId}", 1L))
+        mockMvc.perform(delete("/products/{productId}", 1L))
                 .andExpect(status().isNoContent());
     }
 }
