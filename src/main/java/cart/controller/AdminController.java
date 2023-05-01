@@ -18,19 +18,19 @@ public class AdminController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<String> addProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
         adminService.addProduct(productRequestDto);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductRequestDto productRequestDto, @PathVariable int id) {
+    public ResponseEntity<Void> updateProduct(@Valid @RequestBody ProductRequestDto productRequestDto, @PathVariable int id) {
         adminService.updateProduct(productRequestDto, id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable int id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
         adminService.deleteProduct(id);
         return ResponseEntity.ok().build();
     }
