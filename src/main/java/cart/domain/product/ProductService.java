@@ -26,25 +26,30 @@ public class ProductService {
     public List<ProductResponse> getProducts() {
         final List<Product> products = productDao.findAll();
         return products.stream()
-                .map(product -> new ProductResponse(product.getId(), product.getProductNameValue(), product.getImageUrlValue(), product.getPriceValue(), product.getCategory()))
+                .map(product -> new ProductResponse(product.getId(), product.getProductNameValue(), product.getImageUrlValue(),
+                        product.getPriceValue(), product.getCategory()))
                 .collect(Collectors.toList());
     }
 
     public Long save(final ProductRequest productRequest) {
-        final Product product = new Product(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice(), productRequest.getCategory());
+        final Product product = map2Product(productRequest);
         return productDao.insert(product);
     }
 
     public void update(final Long id, final ProductRequest productRequest) {
-        final Product product = new Product(
-                productRequest.getName(),
-                productRequest.getImageUrl(),
-                productRequest.getPrice(),
-                productRequest.getCategory());
+        final Product product = map2Product(productRequest);
         int updatedCount = productDao.update(id, product);
         if (updatedCount != 1) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }
+    }
+
+    private Product map2Product(final ProductRequest productRequest) {
+        return new Product(
+                productRequest.getName(),
+                productRequest.getImageUrl(),
+                productRequest.getPrice(),
+                productRequest.getCategory());
     }
 
     public void delete(final Long id) {

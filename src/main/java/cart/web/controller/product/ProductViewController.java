@@ -1,15 +1,11 @@
 package cart.web.controller.product;
 
-import cart.domain.product.ProductCategory;
 import cart.domain.product.ProductService;
 import cart.web.controller.product.dto.ProductResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.List;
 
 @Controller
 public class ProductViewController {
@@ -26,10 +22,4 @@ public class ProductViewController {
         model.addAttribute("product", productResponse);
         return "product.html";
     }
-
-    @ModelAttribute("categorys")
-    public List<ProductCategory> productCategories() {
-        return List.of(ProductCategory.values());
-    }
-
 }

@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS cart
     `product_id` BIGINT        NOT NULL,
     `user_id`    BIGINT        NOT NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`product_id`) REFERENCES product (`id`),
-    FOREIGN KEY (`user_id`) REFERENCES _user (`id`)
+    FOREIGN KEY (`product_id`) REFERENCES product (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`user_id`) REFERENCES _user (`id`) ON DELETE CASCADE
 );
 
 INSERT INTO product(`name`, `image_url`, `price`, `category`)

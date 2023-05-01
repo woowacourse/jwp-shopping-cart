@@ -21,7 +21,6 @@ public class UserViewController {
         this.productService = productService;
     }
 
-
     @GetMapping("/")
     public String renderIndex(final Model model) {
         final List<ProductResponse> products = productService.getProducts();

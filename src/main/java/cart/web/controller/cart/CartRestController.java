@@ -1,8 +1,8 @@
 package cart.web.controller.cart;
 
 import cart.domain.cart.CartService;
-import cart.domain.product.Product;
 import cart.web.controller.auth.BasicAuthorizationExtractor;
+import cart.web.controller.product.dto.ProductResponse;
 import cart.web.controller.user.dto.UserRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,18 +27,18 @@ public class CartRestController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<String> addProduct(final HttpServletRequest request,
-                                          @PathVariable Long productId) {
+    public ResponseEntity<Void> addProduct(final HttpServletRequest request,
+                                             @PathVariable Long productId) {
         final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor();
         final UserRequest userRequest = extractor.extract(request);
-        cartService.add(userRequest, productId);
+        final Long addedProductId = cartService.add(userRequest, productId);
 
         return ResponseEntity.created(URI.create("/cart")).build();
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<String> deleteProduct(final HttpServletRequest request,
-                                          @PathVariable Long productId) {
+    public ResponseEntity<Void> deleteProduct(final HttpServletRequest request,
+                                                @PathVariable Long productId) {
         final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor();
         final UserRequest userRequest = extractor.extract(request);
         cartService.delete(userRequest, productId);
@@ -47,11 +47,11 @@ public class CartRestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> showProducts(final HttpServletRequest request) {
+    public ResponseEntity<List<ProductResponse>> getProducts(final HttpServletRequest request) {
         final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor();
         final UserRequest userRequest = extractor.extract(request);
-        final List<Product> products = cartService.getProducts(userRequest);
+        final List<ProductResponse> productResponses = cartService.getProducts(userRequest);
 
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(productResponses);
     }
 }

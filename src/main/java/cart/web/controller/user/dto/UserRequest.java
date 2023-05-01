@@ -1,5 +1,6 @@
 package cart.web.controller.user.dto;
 
+// TODO: 추후에 로그인 로직시, Validation 처리하도록 구현
 public class UserRequest {
 
     private final String email;
