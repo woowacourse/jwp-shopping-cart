@@ -1,6 +1,7 @@
 package cart.controller.exception;
 
-import cart.controller.response.ErrorResponse;
+import cart.config.auth.AuthLoginException;
+import cart.config.auth.BasicAuthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -14,15 +15,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import static java.time.LocalDateTime.now;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private ResponseEntity<ErrorResponse> info(final Exception e) {
+    private ResponseEntity<ErrorResponse> infoBadRequest(final Exception e) {
         log.info("", e);
         final ErrorResponse response = new ErrorResponse(e.getMessage(), now(), BAD_REQUEST.value());
 
@@ -31,9 +30,19 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    private ResponseEntity<ErrorResponse> infoUnAuthorized(final Exception e) {
+        log.info("", e);
+        final ErrorResponse response = new ErrorResponse(e.getMessage(), now(), UNAUTHORIZED.value());
+
+        return ResponseEntity
+                .status(UNAUTHORIZED)
+                .body(response);
+    }
+
     private ResponseEntity<ErrorResponse> error(final Exception e) {
         log.error("", e);
-        final ErrorResponse response = new ErrorResponse(e.getMessage(), now(), INTERNAL_SERVER_ERROR.value());
+        final ErrorResponse response = new ErrorResponse(
+                "서버 내부에서 오류가 발생하였습니다. 계속 오류가 발생할 경우 관리자 측에 문의해주세요.", now(), INTERNAL_SERVER_ERROR.value());
 
         return ResponseEntity
                 .internalServerError()
@@ -51,7 +60,15 @@ public class GlobalExceptionHandler {
             MethodArgumentTypeMismatchException.class
     })
     public ResponseEntity<ErrorResponse> handleBadRequestException(Exception e) {
-        return info(e);
+        return infoBadRequest(e);
+    }
+
+    @ExceptionHandler(value = {
+            AuthLoginException.class,
+            BasicAuthException.class
+    })
+    public ResponseEntity<ErrorResponse> handleUnAuthorized(Exception e) {
+        return infoUnAuthorized(e);
     }
 
     @ExceptionHandler(Exception.class)
