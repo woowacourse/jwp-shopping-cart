@@ -1,6 +1,6 @@
 package cart;
 
-import cart.dao.ProductCategory;
+import cart.domain.product.ProductCategory;
 import cart.web.controller.product.dto.ProductRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;

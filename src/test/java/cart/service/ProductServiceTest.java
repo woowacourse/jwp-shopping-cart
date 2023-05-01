@@ -1,8 +1,8 @@
 package cart.service;
 
-import cart.dao.ProductCategory;
 import cart.dao.ProductDaoImpl;
 import cart.domain.product.Product;
+import cart.domain.product.ProductCategory;
 import cart.domain.product.ProductService;
 import cart.web.controller.product.dto.ProductRequest;
 import cart.web.controller.product.dto.ProductResponse;

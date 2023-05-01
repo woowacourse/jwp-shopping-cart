@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.product.Product;
+import cart.domain.product.ProductCategory;
 import cart.domain.product.ProductDao;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

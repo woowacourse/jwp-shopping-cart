@@ -1,6 +1,6 @@
 package cart.web.controller.product;
 
-import cart.dao.ProductCategory;
+import cart.domain.product.ProductCategory;
 import cart.domain.product.ProductService;
 import cart.web.controller.product.dto.ProductRequest;
 import cart.web.controller.product.dto.ProductResponse;

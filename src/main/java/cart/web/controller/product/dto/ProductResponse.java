@@ -1,7 +1,7 @@
 package cart.web.controller.product.dto;
 
-import cart.dao.ProductCategory;
 import cart.domain.product.Product;
+import cart.domain.product.ProductCategory;
 
 public class ProductResponse {
 

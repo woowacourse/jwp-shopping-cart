@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.domain.product;
 
 import cart.web.exception.ErrorCode;
 import cart.web.exception.GlobalException;

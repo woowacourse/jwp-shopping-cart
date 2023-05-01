@@ -1,7 +1,5 @@
 package cart.domain.product;
 
-import cart.dao.ProductCategory;
-
 public class Product {
 
     private final Long id;
