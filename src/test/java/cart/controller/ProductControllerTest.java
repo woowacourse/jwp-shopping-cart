@@ -29,12 +29,14 @@ class ProductControllerTest {
     @Test
     @DisplayName("/products로 post 요청을 보내면 상태코드 200(OK)을 응답한다")
     void createProduct() {
+        //given
         final String requestName = "소주";
         final int requestPrice = 4_000;
         final String requestUrl = "none";
         final ProductRequest createRequest = new ProductRequest(requestName, requestPrice,
             requestUrl);
 
+        //when, then
         RestAssured
             .given().contentType(ContentType.JSON).body(createRequest)
             .when().post("/products")
@@ -44,12 +46,14 @@ class ProductControllerTest {
     @Test
     @DisplayName("/products로 잘못된 형식의 post 요청을 보내면 상태코드 400(BadRequest)을 응답한다")
     void createProduct_fail() {
+        //given
         final String requestName = " ";
         final int requestPrice = 4_000;
         final String requestUrl = "none";
         final ProductRequest createRequest = new ProductRequest(requestName, requestPrice,
             requestUrl);
 
+        //when, then
         RestAssured
             .given().contentType(ContentType.JSON).body(createRequest)
             .when().post("/products")
@@ -59,12 +63,14 @@ class ProductControllerTest {
     @Test
     @DisplayName("/products/{id}로 put 요청을 보내면 상태코드 200(OK)을 응답한다")
     void updateProduct() {
+        //given
         final String requestName = "소주";
         final int requestPrice = 4_000;
         final String requestUrl = "none";
         final ProductRequest createRequest = new ProductRequest(requestName, requestPrice,
             requestUrl);
 
+        //when, then
         RestAssured
             .given().contentType(ContentType.JSON).body(createRequest)
             .when().put("/products/1")
@@ -74,12 +80,14 @@ class ProductControllerTest {
     @Test
     @DisplayName("/products로 잘못된 형식의 put 요청을 보내면 상태코드 400(BadRequest)을 응답한다")
     void updateProduct_fail() {
+        //given
         final String requestName = " ";
         final int requestPrice = 4_000;
         final String requestUrl = "none";
         final ProductRequest createRequest = new ProductRequest(requestName, requestPrice,
             requestUrl);
 
+        //when, then
         RestAssured
             .given().contentType(ContentType.JSON).body(createRequest)
             .when().put("/products/1")
@@ -89,12 +97,14 @@ class ProductControllerTest {
     @Test
     @DisplayName("/products로 존재하지 않는 상품에 대해 put 요청을 보내면 상태코드 400(BadRequest)을 응답한다")
     void updateProduct_fail2() {
+        //given
         final String requestName = "맥주";
         final int requestPrice = 4_000;
         final String requestUrl = "none";
         final ProductRequest createRequest = new ProductRequest(requestName, requestPrice,
             requestUrl);
 
+        //when, then
         RestAssured
             .given().contentType(ContentType.JSON).body(createRequest)
             .when().put("/products/-1")

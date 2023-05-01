@@ -47,14 +47,14 @@ public class MySQLProductDao implements ProductDao {
     @Override
     public Optional<ProductEntity> findById(Long id) {
         String query = "SELECT * FROM product WHERE id = ?";
-        try{
+        try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, (resultSet, rowNum) ->
                 new ProductEntity(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getInt("price"),
                     resultSet.getString("image_url")), id));
-        } catch (EmptyResultDataAccessException exception){
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }

@@ -39,6 +39,7 @@ class CartControllerTest {
             .when().get("/cart/products")
             .then().statusCode(200);
     }
+
     @Test
     @DisplayName("/cart로 post 요청을 보내면 상태코드 200(OK)을 응답한다")
     void addCart() {

@@ -27,8 +27,8 @@ public class CartController {
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getProducts(HttpServletRequest request) {
-        Member member= extractMember(request);
-        List<ProductResponse> cart=cartRepository.getProducts(member);
+        Member member = extractMember(request);
+        List<ProductResponse> cart = cartRepository.getProducts(member);
 
         return ResponseEntity.ok().body(cart);
     }
@@ -36,13 +36,13 @@ public class CartController {
     @PostMapping("/{product_id}")
     public long create(@PathVariable("product_id") Long productId,
         HttpServletRequest request) {
-        Member member= extractMember(request);
+        Member member = extractMember(request);
         return cartRepository.add(productId, member);
     }
 
     @DeleteMapping("/{product_id}")
     public int remove(@PathVariable("product_id") Long productId, HttpServletRequest request) {
-        Member member= extractMember(request);
+        Member member = extractMember(request);
         return cartRepository.remove(productId, member);
     }
 
@@ -50,7 +50,7 @@ public class CartController {
         String credentials = request.getHeader("authorization").substring("Basic ".length());
         String[] decoded = new String(Base64Utils.decode(credentials.getBytes())).split(":");
         if (decoded.length != 2) {
-            throw new IllegalArgumentException(); //TODO
+            throw new IllegalArgumentException("credential의 형식이 잘못되었습니다.");
         }
         return new Member(decoded[0], decoded[1]);
     }

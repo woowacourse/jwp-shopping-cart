@@ -109,20 +109,20 @@
     POST /cart/{product_id} HTTP/1.1
     Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
     ```
-  - [ ] 이미 존재하는 상품을 추가하려 할 경우 예외처리한다.
+  - [x] 이미 존재하는 상품을 추가하려 할 경우 예외처리한다.
 - [x] 사용자로부터 인증 정보와 함께 DELETE 요청을 받으면 상품을 DB cart 테이블 에서 제거한다.
     ```
     DELETE /cart/{product_id} HTTP/1.1
     Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
     ```
-  - [ ] cart에 존재하지 않는 상품을 제거하려 할 경우 예외처리 한다.
+  - [x] cart에 존재하지 않는 상품을 제거하려 할 경우 예외처리 한다.
 - [x] credentials로는 email:password를 base64로 인코딩한 문자열을 사용한다.
 
 ## 테스트 코드 작성
 
 - [x] product DAO CRUD 테스트
 - [x] 컨트롤러 CRUD 테스트
-- [ ] cart DAO CRUD 테스트
+- [x] cart DAO CRUD 테스트
 - [x] member DAO CRUD 테스트
 
 # 📌 Commit Convention

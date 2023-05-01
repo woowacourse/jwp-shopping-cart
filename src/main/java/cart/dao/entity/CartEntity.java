@@ -1,6 +1,7 @@
 package cart.dao.entity;
 
 public class CartEntity {
+
     private final Long id;
     private final Long member_id;
     private final Long product_id;

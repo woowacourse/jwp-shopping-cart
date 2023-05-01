@@ -51,9 +51,7 @@ public class MySQLCartDao implements CartDao {
     public boolean isExistEntity(Long memberId, Long productId) {
         String query = "SELECT id FROM cart WHERE member_id = ? AND product_id = ?";
         return jdbcTemplate.query(query,
-            (resultSet, rowNum) -> resultSet.getLong("id"), memberId, productId).size()==1;
-
-
+            (resultSet, rowNum) -> resultSet.getLong("id"), memberId, productId).size() == 1;
     }
 
     @Override

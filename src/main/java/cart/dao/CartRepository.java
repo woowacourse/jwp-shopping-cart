@@ -36,21 +36,27 @@ public class CartRepository {
     public long add(Long productId, Member member) {
         Long memberId = mySQLMemberDao.findIdByMember(member)
             .orElseThrow(() -> new NoSuchElementException(MEMBER_NOT_FOUND_MESSAGE));
+        validateIfCartAleadyExist(productId, memberId);
+        validateIfProductExist(productId);
+        return mySQLCartDao.add(memberId, productId);
+    }
+
+    private void validateIfCartAleadyExist(Long productId, Long memberId) {
         if (mySQLCartDao.isExistEntity(memberId, productId)) {
             throw new DataIntegrityViolationException(ALREADY_EXIST_MESSAGE);
         }
+    }
+
+    private void validateIfProductExist(Long productId) {
         if (mySQLProductDao.findById(productId).isEmpty()) {
             throw new NoSuchElementException(PRODUCT_NOT_FOUND_MESSAGE);
         }
-        return mySQLCartDao.add(memberId, productId);
     }
 
     public int remove(Long productId, Member member) {
         Long memberId = mySQLMemberDao.findIdByMember(member).orElseThrow(() -> new
             NoSuchElementException(MEMBER_NOT_FOUND_MESSAGE));
-        if (mySQLProductDao.findById(productId).isEmpty()) {
-            throw new NoSuchElementException(PRODUCT_NOT_FOUND_MESSAGE);
-        }
+        validateIfProductExist(productId);
         return mySQLCartDao.deleteById(memberId, productId);
     }
 

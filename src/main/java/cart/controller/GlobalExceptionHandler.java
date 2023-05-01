@@ -17,8 +17,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class,NoSuchElementException.class, DataIntegrityViolationException.class})
+    @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class,
+        DataIntegrityViolationException.class})
     public ResponseEntity<ErrorResponse> handleNoSuchElementException(Exception exception) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<ErrorResponse> handleAuthException(Exception exception) {
         ErrorResponse errorResponse = new ErrorResponse(exception.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }

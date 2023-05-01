@@ -1,6 +1,7 @@
 package cart.dao.entity;
 
 public class MemberEntity {
+
     private final Long id;
     private final String email;
     private final String password;

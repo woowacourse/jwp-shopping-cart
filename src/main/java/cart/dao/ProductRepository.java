@@ -6,7 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductRepository {
-    private static final String PRODUCT_NOT_FOUND_MESSAGE="존재하지 않는 제품입니다.";
+
+    private static final String PRODUCT_NOT_FOUND_MESSAGE = "존재하지 않는 제품입니다.";
 
     private final CartDao mySQLCartDao;
     private final ProductDao mySQLProductDao;
@@ -16,25 +17,27 @@ public class ProductRepository {
         this.mySQLProductDao = mySQLProductDao;
     }
 
-    public long add(ProductRequest product){
+    public long add(ProductRequest product) {
         return mySQLProductDao.add(product);
     }
 
     public int update(Long id, ProductRequest product) {
         final int updateCount = mySQLProductDao.updateById(id, product);
-        if (updateCount == 0) {
-            throw new NoSuchElementException(PRODUCT_NOT_FOUND_MESSAGE);
-        }
+        validateIfProductExist(updateCount);
         return updateCount;
     }
 
-    public int remove(Long productId){
+    public int remove(Long productId) {
         mySQLCartDao.deleteByProductId(productId);
 
         final int deleteCount = mySQLProductDao.deleteById(productId);
-        if (deleteCount == 0) {
+        validateIfProductExist(deleteCount);
+        return deleteCount;
+    }
+
+    private static void validateIfProductExist(int changeCount) {
+        if (changeCount == 0) {
             throw new NoSuchElementException(PRODUCT_NOT_FOUND_MESSAGE);
         }
-        return deleteCount;
     }
 }

@@ -45,8 +45,11 @@ class CartRepositoryTest {
     @Test
     @DisplayName("getProducts() 메서드에 회원 정보를 인자로 넣어주면 처음 들어가있는 장바구니 제품 목록이 반환된다.")
     void getProducts() {
+        //given, when
         List<ProductResponse> products = cartRepository.getProducts(member);
         int actual = products.size();
+
+        //then
         assertThat(actual).isEqualTo(2);
     }
 
