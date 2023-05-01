@@ -51,6 +51,34 @@ class PageControllerTest {
             "<td>샐러드</td>", "<td>9500</td>",
             "<img style=\"max-width: 100px;\" src=\"https://searchad-phinf.pstatic.net/MjAyMzA0MThfMjk0/MDAxNjgxODAwNDY4NjU4.FJcjmoGsxyCq0nZqlcmoAL2mwX8mM9ny9DdliQcqGZ0g.9cGk2IQHfPIm2-ABelEOY1cc-_8NBQgPMgPpjFZkGFEg.JPEG/2814800-bb4236af-96dd-42e7-8256-32ffaa73de52.jpg?type=f160_160\">"
         );
+    }
 
+    @Test
+    @DisplayName("/settings로 get 요청을 보내면 설정 페이지에 대한 html 파일을 응답한다")
+    void loadSettings() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/settings"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+        String content = result.getResponse().getContentAsString();
+
+        Assertions.assertThat(content).contains(
+            "<div class=\"cart-item-name\">songsy405@naver.com</div>",
+            "<div class=\"cart-item-price\">abcd</div>",
+            "onclick=\"selectMember({&quot;id&quot;:1,&quot;email&quot;:&quot;songsy405@naver.com&quot;,&quot;password&quot;:&quot;abcd&quot;})\">",
+            "<div class=\"cart-item-name\">songsy405@pusan.ac.kr</div>",
+            "<div class=\"cart-item-price\">1234</div>",
+            "onclick=\"selectMember({&quot;id&quot;:2,&quot;email&quot;:&quot;songsy405@pusan.ac.kr&quot;,&quot;password&quot;:&quot;1234&quot;})\">"
+        );
+    }
+
+    @Test
+    @DisplayName("/cart로 get 요청을 보내면 장바구니 페이지에 대한 html 파일을 응답한다")
+    void loadCart() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/cart"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+        String content = result.getResponse().getContentAsString();
+
+        Assertions.assertThat(content).contains("<h1>장바구니</h1>");
     }
 }
