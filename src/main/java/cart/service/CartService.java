@@ -37,7 +37,7 @@ public class CartService {
 
     private ProductsResponseDto getProductsResponseDto(final List<Cart> carts) {
         List<Product> products = carts.stream()
-                .map(Cart::getProduct)
+                .map(cart -> productService.findById(cart.getProductId()))
                 .collect(Collectors.toList());
 
         return ProductsResponseDto.from(products);
@@ -65,7 +65,7 @@ public class CartService {
 
     private void validateCartHasRequestProduct(final Product product, final List<Cart> memberCarts) {
         List<Product> memberCartProducts = memberCarts.stream()
-                .map(Cart::getProduct)
+                .map(cart -> productService.findById(cart.getProductId()))
                 .collect(Collectors.toList());
 
         if (!memberCartProducts.contains(product)) {

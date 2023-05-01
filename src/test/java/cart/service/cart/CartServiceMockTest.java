@@ -51,6 +51,7 @@ public class CartServiceMockTest {
 
         given(memberService.findMember(req)).willReturn(member);
         given(cartRepository.findAllByMember(member)).willReturn(List.of(Cart.from(member, product)));
+        given(productService.findById(any())).willReturn(product);
 
         // when
         ProductsResponseDto result = cartService.findAll(req);
@@ -96,6 +97,7 @@ public class CartServiceMockTest {
         given(memberService.findMember(req)).willReturn(member);
         given(productService.findById(productId)).willReturn(product);
         given(cartRepository.findAllByMember(member)).willReturn(memberCart);
+        given(productService.findById(memberCart.get(0).getProductId())).willReturn(product);
 
         // when
         cartService.deleteCart(req, productId);

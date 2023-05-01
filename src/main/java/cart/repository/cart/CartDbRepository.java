@@ -69,11 +69,11 @@ public class CartDbRepository implements CartRepository {
 
     @Override
     public void save(final Cart cart) {
-        CartDbResponseDto cartDbResponseDto = CartDbResponseDto.from(cart.getId(), cart.getMember().getId(), cart.getProduct().getId());
+        CartDbResponseDto cartDbResponseDto = CartDbResponseDto.from(cart.getId(), cart.getMemberId(), cart.getProductId());
         BeanPropertySqlParameterSource source = new BeanPropertySqlParameterSource(cartDbResponseDto);
         KeyHolder keyHolder = simpleJdbcInsert.executeAndReturnKeyHolder(source);
         Long generatedId = keyHolder.getKeyAs(Long.class);
-        cart.setId(generatedId);
+//        cart.setId(generatedId);
     }
 
     @Override
