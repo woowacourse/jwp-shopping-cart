@@ -3,6 +3,7 @@ package cart.controller;
 import cart.dto.MemberAuthDto;
 import cart.dto.response.CartProductResponseDto;
 import cart.service.CartService;
+import cart.util.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +21,13 @@ public class CartApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> putInCart(@RequestParam Long productId, MemberAuthDto memberAuthDto) {
+    public ResponseEntity<Void> putInCart(@RequestParam Long productId, @Member MemberAuthDto memberAuthDto) {
         final Long savedCartId = cartService.putInCart(memberAuthDto, productId);
         return ResponseEntity.created(URI.create("/carts/" + savedCartId)).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<CartProductResponseDto>> findCartProductsByMember(MemberAuthDto memberAuthDto) {
+    public ResponseEntity<List<CartProductResponseDto>> findCartProductsByMember(@Member MemberAuthDto memberAuthDto) {
         final List<CartProductResponseDto> response = cartService.findCartProductsByMember(memberAuthDto);
         return ResponseEntity.ok(response);
     }
