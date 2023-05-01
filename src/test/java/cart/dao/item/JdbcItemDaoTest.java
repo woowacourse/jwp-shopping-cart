@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
-@Sql({"classpath:test_init.sql"})
+@Sql({"classpath:schema.sql"})
 class JdbcItemDaoTest {
 
     @Autowired

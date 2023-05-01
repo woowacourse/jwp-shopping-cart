@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 @SpringBootTest
-@Sql({"classpath:test_init.sql"})
+@Sql({"classpath:schema.sql"})
 class JdbcCartDaoTest {
 
     @Autowired

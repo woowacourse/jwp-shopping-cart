@@ -20,7 +20,7 @@ import org.springframework.util.Base64Utils;
 
 import static org.hamcrest.Matchers.equalTo;
 
-@Sql("classpath:test_init.sql")
+@Sql("classpath:schema.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CartControllerTest {
 

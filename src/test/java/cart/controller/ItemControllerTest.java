@@ -17,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static org.hamcrest.Matchers.equalTo;
 
-@Sql("classpath:test_init.sql")
+@Sql("classpath:schema.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ItemControllerTest {
 
