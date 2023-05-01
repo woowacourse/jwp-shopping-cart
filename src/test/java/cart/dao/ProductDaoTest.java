@@ -32,7 +32,7 @@ class ProductDaoTest {
         productDao = new ProductDao(jdbcTemplate);
 
         name = "치킨";
-        imageUrl = "image.img";
+        imageUrl = "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg";
         price = 10000;
 
         request = new ProductRequest(name, imageUrl, price);
