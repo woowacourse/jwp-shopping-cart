@@ -37,12 +37,12 @@
 
 ## 사용자 API
 
-| Method | URL           | Description |
-|--------|---------------|-------------|
-| GET    | `/users`      | 사용자 조회      |
-| POST   | `/users`      | 사용자 추가      |
-| PUT    | `/users/{id}` | 사용자 수정      |
-| DELETE | `/users/{id}` | 사용자 삭제      |
+| Method | URL             | Description |
+|--------|-----------------|-------------|
+| GET    | `/members`      | 사용자 조회      |
+| POST   | `/members`      | 사용자 추가      |
+| PUT    | `/members/{id}` | 사용자 수정      |
+| DELETE | `/members/{id}` | 사용자 삭제      |
 
 ## 상품 API
 
