@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcProductDao implements Dao<ProductEntity> {
@@ -36,9 +37,9 @@ public class JdbcProductDao implements Dao<ProductEntity> {
     }
 
     @Override
-    public ProductEntity findById(final Long id) {
+    public Optional<ProductEntity> findById(final Long id) {
         final String sql = "SELECT product_id, name, price, image_url FROM product WHERE product_id = ?";
-        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, actorRowMapper, id));
     }
 
     @Override

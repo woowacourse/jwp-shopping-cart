@@ -56,13 +56,13 @@ class JdbcProductDaoTest {
     }
 
     @Test
-    void update_메서드로_저장된_Product를_수정한다() {
+    void update_메서드로_저장된_Product를_수정한다() throws Throwable {
         final ProductEntity modi = new ProductEntity("modi", 10000, "");
         final Long productId = productDao.save(modi);
         final ProductEntity originalJena = new ProductEntity(productId, "jena", 10000, "");
 
         productDao.update(originalJena);
-        ProductEntity jena = (ProductEntity) productDao.findById(productId);
+        ProductEntity jena = (ProductEntity) productDao.findById(productId).orElseThrow(()->new EmptyResultDataAccessException(0));
         assertThat(jena.getName()).isEqualTo("jena");
     }
 
