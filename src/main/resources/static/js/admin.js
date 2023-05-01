@@ -1,8 +1,8 @@
 const modal = document.getElementById('modal');
 
 const showAddModal = () => {
-    const categoriesInfo = modal.getElementsByClassName("category");
-    for (const categoryInfo of categoriesInfo) {
+    const categoryInfos = modal.getElementsByClassName("category");
+    for (const categoryInfo of categoryInfos) {
         categoryInfo.removeAttribute("checked");
     }
     modal.dataset.formType = 'add';
@@ -14,8 +14,8 @@ const showEditModal = (product, categories) => {
         for (const productInfo of productInfos) {
             productInfo.value = product[productInfo.getAttribute('name')];
         }
-        const categoriesInfo = modal.getElementsByClassName("category");
-        for (const category of categoriesInfo) {
+        const categoryInfos = modal.getElementsByClassName("category");
+        for (const category of categoryInfos) {
             let currentCategory = categories[category.getAttribute('name') - 1];
             category.value = currentCategory.id;
             if (product.categoryNames.includes(currentCategory.name)) {
