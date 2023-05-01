@@ -12,6 +12,10 @@ public class UserEntity {
         this.password = password;
     }
 
+    public UserEntity(final String email, final String password) {
+        this(null, email, password);
+    }
+
     public Long getId() {
         return id;
     }

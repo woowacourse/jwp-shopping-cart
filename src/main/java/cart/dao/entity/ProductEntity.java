@@ -14,6 +14,10 @@ public class ProductEntity {
         this.image = image;
     }
 
+    public ProductEntity(final String name, final Integer price, final String image) {
+        this(null, name, price, image);
+    }
+
     public Long getId() {
         return id;
     }
