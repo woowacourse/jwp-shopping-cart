@@ -142,7 +142,7 @@ class AdminControllerIntegrationTest {
         // then
         assertAll(
                 () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.getBody().asString()).isEqualTo("상품명은 50글자 이하여야합니다.")
+                () -> assertThat(response.getBody().asString()).isEqualTo("상품명은 1글자 이상, 50글자 이하여야합니다.")
         );
     }
 
