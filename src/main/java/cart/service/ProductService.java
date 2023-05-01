@@ -3,6 +3,7 @@ package cart.service;
 import cart.dao.ProductDao;
 import cart.dao.ProductEntity;
 import cart.domain.Product;
+import cart.global.exception.ProductNotFoundException;
 import cart.service.dto.ProductModifyRequest;
 import cart.service.dto.ProductRegisterRequest;
 import cart.service.dto.ProductSearchResponse;
@@ -60,10 +61,16 @@ public class ProductService {
                         modifiedProduct.getImageUrl()
                 );
 
-        productDao.update(modifiedProductEntity);
+        int affectedRowCount = productDao.update(modifiedProductEntity);
+        if(affectedRowCount == 0) {
+            throw new ProductNotFoundException();
+        }
     }
 
     public void deleteProduct(final Long productId) {
-        productDao.deleteById(productId);
+        int affectedRowCount = productDao.deleteById(productId);
+        if(affectedRowCount == 0) {
+            throw new ProductNotFoundException();
+        }
     }
 }
