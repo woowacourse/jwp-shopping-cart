@@ -98,7 +98,7 @@ class ProductControllerTest {
         RestAssured
             .given().contentType(ContentType.JSON).body(createRequest)
             .when().put("/products/-1")
-            .then().statusCode(400).body(Matchers.containsString("존재하지 않는 id입니다."));
+            .then().statusCode(400).body(Matchers.containsString("존재하지 않는 제품입니다."));
     }
 
     @Test
@@ -116,6 +116,6 @@ class ProductControllerTest {
         RestAssured
             .given().contentType(ContentType.JSON)
             .when().delete("/products/-1")
-            .then().statusCode(400).body(Matchers.containsString("존재하지 않는 id입니다."));
+            .then().statusCode(400).body(Matchers.containsString("존재하지 않는 제품입니다."));
     }
 }

@@ -14,7 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
+@Sql({"/schema.sql", "/data.sql"})
 @JdbcTest
 public class MySQLProductDaoTest {
 
@@ -36,27 +38,32 @@ public class MySQLProductDaoTest {
     @Test
     @DisplayName("add() 메서드를 호출하면 하나의 데이터가 product에 추가된다")
     void add() {
+        //given
         final ProductRequest request = new ProductRequest("test", 15_000, "test/image/url");
+
+        //when
         final int beforeSize = mySQLProductDao.findAll().size();
         mySQLProductDao.add(request);
         final int afterSize = mySQLProductDao.findAll().size();
+
+        //then
         assertThat(afterSize).isEqualTo(beforeSize + 1);
     }
 
     @Test
     @DisplayName("findAll() 메서드를 호출하면 3개의 초기 product 데이터를 반환한다")
     void findAll() {
+        //given
         final List<ProductEntity> productEntities = mySQLProductDao.findAll();
 
+        //when, then
         assertThat(productEntities.size()).isEqualTo(3);
     }
 
     @Test
     @DisplayName("findById() 메서드를 호출하면 해당 id의 product 데이터를 반환한다")
     void findById() {
-        // given
-
-        // when
+        // given, when
         final ProductEntity actual = mySQLProductDao.findById(firstRecordId).get();
 
         // then
@@ -89,9 +96,7 @@ public class MySQLProductDaoTest {
     @Test
     @DisplayName("deleteById() 메서드를 호출하면 해당 id의 product를 제거한다")
     void deleteById() {
-        // given
-
-        // when
+        // given, when
         final int deleteCount = mySQLProductDao.deleteById(firstRecordId);
         final Optional<ProductEntity> deletedRecord = mySQLProductDao.findById(firstRecordId);
 

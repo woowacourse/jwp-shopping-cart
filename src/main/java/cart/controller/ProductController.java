@@ -1,8 +1,7 @@
 package cart.controller;
 
 import cart.controller.dto.ProductRequest;
-import cart.dao.ProductDao;
-import java.util.NoSuchElementException;
+import cart.dao.ProductRepository;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,35 +15,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+    private final ProductRepository productRepository;
 
-    private final ProductDao mySQLProductDao;
-
-    public ProductController(ProductDao mySQLProductDao) {
-        this.mySQLProductDao = mySQLProductDao;
+    public ProductController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @PostMapping
     public ResponseEntity create(@Valid @RequestBody ProductRequest product) {
-        mySQLProductDao.add(product);
+        productRepository.add(product);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable Long id,
         @Valid @RequestBody ProductRequest product) {
-        final int updateCount = mySQLProductDao.updateById(id, product);
-        if (updateCount == 0) {
-            throw new NoSuchElementException();
-        }
+        productRepository.update(id, product);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        final int deleteCount = mySQLProductDao.deleteById(id);
-        if (deleteCount == 0) {
-            throw new NoSuchElementException();
-        }
+        productRepository.remove(id);
         return ResponseEntity.ok().build();
     }
 }
