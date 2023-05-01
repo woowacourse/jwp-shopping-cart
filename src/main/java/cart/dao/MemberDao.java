@@ -5,11 +5,14 @@ import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface MemberDao {
+
     long add(MemberRequest request);
 
     List<MemberEntity> findAll();
 
-    long findIdByMember(Member member);
+    Optional<Long> findIdByMember(Member member);
 }

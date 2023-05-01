@@ -5,6 +5,8 @@ import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
@@ -42,11 +44,16 @@ public class MySQLMemberDao implements MemberDao {
     }
 
     @Override
-    public long findIdByMember(Member member) {
+    public Optional<Long> findIdByMember(Member member) {
         String query = "SELECT id FROM member WHERE email = ? AND password = ?";
-        return jdbcTemplate.queryForObject(query,
-            (resultSet, rowNum) -> resultSet.getLong("id"),
-            member.getEmail(), member.getPassword());
+        try{
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query,
+                (resultSet, rowNum) -> resultSet.getLong("id"),
+                member.getEmail(), member.getPassword()));
+        }catch(EmptyResultDataAccessException exception){
+            return Optional.empty();
+        }
+
 
     }
 }
