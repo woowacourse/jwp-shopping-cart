@@ -16,13 +16,17 @@ public class Product {
     private final Integer price;
 
     public Product(final Long id, final String name, final String imageUrl, final Integer price) {
-        validateImageUrl(imageUrl);
-        validatePrice(price);
-        validateName(name);
+        validateParameter(name, imageUrl, price);
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
+    }
+
+    private void validateParameter(final String name, final String imageUrl, final Integer price) {
+        validateImageUrl(imageUrl);
+        validatePrice(price);
+        validateName(name);
     }
 
     public Product(final String name, final String imageUrl, final Integer price) {
