@@ -1,6 +1,8 @@
 package cart.entity;
 
-public class CartEntity {
+import java.util.Objects;
+
+public final class CartEntity {
 
     private Long id;
     private Long memberId;
@@ -26,5 +28,18 @@ public class CartEntity {
 
     public Long getProductId() {
         return productId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartEntity that = (CartEntity) o;
+        return Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
