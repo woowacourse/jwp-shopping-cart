@@ -11,7 +11,7 @@ const addCartItem = (productId) => {
         url: 'http://localhost:8080/carts',
         method: 'POST',
         headers: {
-            'Authorization': `${credentials}`
+            'Authorization': `Basic ${credentials}`
         },
         params: {
             'productId': productId
@@ -36,7 +36,7 @@ const removeCartItem = (id) => {
         url: 'http://localhost:8080/carts/' + id,
         method: 'DELETE',
         headers: {
-            'Authorization': `${credentials}`
+            'Authorization': `Basic ${credentials}`
         }
     }).then((response) => {
         window.location.reload();

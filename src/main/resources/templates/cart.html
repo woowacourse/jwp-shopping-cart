@@ -38,7 +38,7 @@
             url: 'http://localhost:8080/carts',
             method: 'GET',
             headers: {
-                'Authorization': `${credentials}`
+                'Authorization': `Basic ${credentials}`
             }
         }).then((response) => {
             const cartItems = response.data;
