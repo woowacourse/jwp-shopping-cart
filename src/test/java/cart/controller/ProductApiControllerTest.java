@@ -63,19 +63,17 @@ class ProductApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.code").value("201"))
-                .andExpect(jsonPath("$.message").value("상품이 생성되었습니다."))
-                .andExpect(jsonPath("$.result.id").value(1))
-                .andExpect(jsonPath("$.result.name").value("글렌피딕"))
-                .andExpect(jsonPath("$.result.price").value(230000))
-                .andExpect(jsonPath("$.result.imageUrl").value("url"));
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("글렌피딕"))
+                .andExpect(jsonPath("$.price").value(230000))
+                .andExpect(jsonPath("$.imageUrl").value("url"));
     }
 
     @Test
-    @DisplayName("상품을 생성할 때 이름이 10자를 초과하면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
+    @DisplayName("상품을 생성할 때 이름이 20자를 초과하면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
     void createProduct_nameLengthOverThan10() throws Exception {
         // given
-        ProductCreateRequest request = new ProductCreateRequest("글렌피딕글렌리벳글렌모렌지", 230_000, "url");
+        ProductCreateRequest request = new ProductCreateRequest("글렌피딕글렌리벳글렌모렌지글렌피딕글렌리벳글렌모렌지", 230_000, "url");
 
         // expect
         mockMvc.perform(post("/products")
@@ -84,7 +82,7 @@ class ProductApiControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.name").value("상품 이름의 길이는 10자리 보다 작아야 합니다."));
+                .andExpect(jsonPath("$.validation.name").value("상품 이름의 길이는 20자리 보다 작아야 합니다."));
     }
 
     @ParameterizedTest
@@ -167,9 +165,7 @@ class ProductApiControllerTest {
         // expect
         mockMvc.perform(delete("/products/" + productId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
-                .andExpect(jsonPath("$.message").value("상품이 삭제되었습니다."));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -204,12 +200,10 @@ class ProductApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
-                .andExpect(jsonPath("$.message").value("상품이 수정되었습니다."))
-                .andExpect(jsonPath("$.result.id").value(1))
-                .andExpect(jsonPath("$.result.name").value("글렌피딕"))
-                .andExpect(jsonPath("$.result.price").value(200000))
-                .andExpect(jsonPath("$.result.imageUrl").value("url"));
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("글렌피딕"))
+                .andExpect(jsonPath("$.price").value(200000))
+                .andExpect(jsonPath("$.imageUrl").value("url"));
     }
 
     @Test
@@ -233,11 +227,11 @@ class ProductApiControllerTest {
 
 
     @Test
-    @DisplayName("상품을 수정할 때 이름이 10자를 초과하면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
+    @DisplayName("상품을 수정할 때 이름이 20자를 초과하면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
     void updateProduct_nameLengthOverThan10() throws Exception {
         // given
         long productId = 1;
-        ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕글렌리벳글렌모렌지", 230_000, "url");
+        ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕글렌리벳글렌모렌지글렌피딕글렌리벳글렌모렌지", 230_000, "url");
 
         // expect
         mockMvc.perform(patch("/products/" + productId)
@@ -246,7 +240,7 @@ class ProductApiControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.name").value("상품 이름의 길이는 10자리 보다 작아야 합니다."));
+                .andExpect(jsonPath("$.validation.name").value("상품 이름의 길이는 20자리 보다 작아야 합니다."));
     }
 
     @ParameterizedTest
@@ -342,26 +336,24 @@ class ProductApiControllerTest {
         mockMvc.perform(get("/products")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("200"))
-                .andExpect(jsonPath("$.message").value("총 4개의 상품이 조회되었습니다."))
-                .andExpect(jsonPath("$.result[0].id").value(1))
-                .andExpect(jsonPath("$.result[0].name").value("글렌피딕"))
-                .andExpect(jsonPath("$.result[0].price").value(100_000))
-                .andExpect(jsonPath("$.result[0].imageUrl").value("image1"))
+                .andExpect(jsonPath("$.[0].id").value(1))
+                .andExpect(jsonPath("$.[0].name").value("글렌피딕"))
+                .andExpect(jsonPath("$.[0].price").value(100_000))
+                .andExpect(jsonPath("$.[0].imageUrl").value("image1"))
 
-                .andExpect(jsonPath("$.result[1].id").value(2))
-                .andExpect(jsonPath("$.result[1].name").value("글렌리벳"))
-                .andExpect(jsonPath("$.result[1].price").value(200_000))
-                .andExpect(jsonPath("$.result[1].imageUrl").value("image2"))
+                .andExpect(jsonPath("$.[1].id").value(2))
+                .andExpect(jsonPath("$.[1].name").value("글렌리벳"))
+                .andExpect(jsonPath("$.[1].price").value(200_000))
+                .andExpect(jsonPath("$.[1].imageUrl").value("image2"))
 
-                .andExpect(jsonPath("$.result[2].id").value(3))
-                .andExpect(jsonPath("$.result[2].name").value("글렌모렌지"))
-                .andExpect(jsonPath("$.result[2].price").value(300_000))
-                .andExpect(jsonPath("$.result[2].imageUrl").value("image3"))
+                .andExpect(jsonPath("$.[2].id").value(3))
+                .andExpect(jsonPath("$.[2].name").value("글렌모렌지"))
+                .andExpect(jsonPath("$.[2].price").value(300_000))
+                .andExpect(jsonPath("$.[2].imageUrl").value("image3"))
 
-                .andExpect(jsonPath("$.result[3].id").value(4))
-                .andExpect(jsonPath("$.result[3].name").value("글렌드로낙"))
-                .andExpect(jsonPath("$.result[3].price").value(400_000))
-                .andExpect(jsonPath("$.result[3].imageUrl").value("image4"));
+                .andExpect(jsonPath("$.[3].id").value(4))
+                .andExpect(jsonPath("$.[3].name").value("글렌드로낙"))
+                .andExpect(jsonPath("$.[3].price").value(400_000))
+                .andExpect(jsonPath("$.[3].imageUrl").value("image4"));
     }
 }

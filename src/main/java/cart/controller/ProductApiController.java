@@ -1,11 +1,8 @@
 package cart.controller;
 
-import cart.dto.request.ProductCreateRequest;
 import cart.dto.ProductDto;
+import cart.dto.request.ProductCreateRequest;
 import cart.dto.request.ProductUpdateRequest;
-import cart.dto.response.Response;
-import cart.dto.response.ResultResponse;
-import cart.dto.response.SimpleResponse;
 import cart.service.ProductService;
 import java.net.URI;
 import java.util.List;
@@ -28,34 +25,37 @@ public class ProductApiController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Response> createProduct(@RequestBody @Valid ProductCreateRequest request) {
+    public ResponseEntity<ProductDto> createProduct(@RequestBody @Valid ProductCreateRequest request) {
         ProductDto productDto = productService.createProduct(request.getName(), request.getPrice(),
                 request.getImageUrl());
         return ResponseEntity
                 .created(URI.create("/products/" + productDto.getId()))
-                .body(ResultResponse.created("상품이 생성되었습니다.", productDto));
+                .body(productDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Response> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
         return ResponseEntity
-                .ok(SimpleResponse.ok("상품이 삭제되었습니다."));
+                .ok()
+                .build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Response> updateProduct(@PathVariable Long id,
-                                                  @RequestBody @Valid ProductUpdateRequest request) {
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,
+                                                    @RequestBody @Valid ProductUpdateRequest request) {
         ProductDto productDto = productService.updateProductById(id, request.getName(), request.getPrice(),
                 request.getImageUrl());
         return ResponseEntity
-                .ok(ResultResponse.ok("상품이 수정되었습니다.", productDto));
+                .ok()
+                .body(productDto);
     }
 
     @GetMapping
-    public ResponseEntity<Response> findAllProducts() {
+    public ResponseEntity<List<ProductDto>> findAllProducts() {
         List<ProductDto> allProducts = productService.findAllProducts();
-        return ResponseEntity.ok()
-                .body(ResultResponse.ok("총 " + allProducts.size() + "개의 상품이 조회되었습니다.", allProducts));
+        return ResponseEntity
+                .ok()
+                .body(allProducts);
     }
 }
