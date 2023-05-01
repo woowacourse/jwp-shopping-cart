@@ -71,11 +71,4 @@ public class JdbcProductDao implements ProductDao {
 
         return jdbcTemplate.update(sql, params);
     }
-
-    @Override
-    public boolean existBy(final Long id) {
-        final String sql = "SELECT EXISTS(SELECT 1 FROM product WHERE id = :id)";
-
-        return jdbcTemplate.queryForObject(sql, Map.of("id", id), Boolean.class);
-    }
 }
