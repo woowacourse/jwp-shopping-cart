@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @Sql("classpath:test_init.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ViewControllerTest {
+class ItemControllerTest {
 
     @LocalServerPort
     private int port;
