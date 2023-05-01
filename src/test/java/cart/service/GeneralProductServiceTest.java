@@ -1,10 +1,10 @@
 package cart.service;
 
-import cart.controller.request.ProductCreateRequest;
-import cart.controller.request.ProductUpdateRequest;
-import cart.controller.response.ProductResponse;
 import cart.domain.Product;
 import cart.repository.ProductRepository;
+import cart.service.request.ProductCreateRequest;
+import cart.service.request.ProductUpdateRequest;
+import cart.service.response.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

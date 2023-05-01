@@ -1,9 +1,9 @@
 package cart.controller;
 
-import cart.controller.request.ProductCreateRequest;
-import cart.controller.request.ProductUpdateRequest;
-import cart.controller.response.ProductResponse;
 import cart.service.ProductService;
+import cart.service.request.ProductCreateRequest;
+import cart.service.request.ProductUpdateRequest;
+import cart.service.response.ProductResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

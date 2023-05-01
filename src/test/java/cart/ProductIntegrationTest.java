@@ -1,8 +1,8 @@
 package cart;
 
-import cart.controller.request.ProductCreateRequest;
-import cart.controller.request.ProductUpdateRequest;
 import cart.repository.ProductRepository;
+import cart.service.request.ProductCreateRequest;
+import cart.service.request.ProductUpdateRequest;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;

@@ -1,8 +1,8 @@
 package cart.repository;
 
-import cart.controller.request.ProductCreateRequest;
-import cart.controller.request.ProductUpdateRequest;
 import cart.domain.Product;
+import cart.service.request.ProductCreateRequest;
+import cart.service.request.ProductUpdateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +50,7 @@ class ProductJdbcRepositoryTest {
 	}
 
 	@DisplayName("상품 삭제 테스트")
+
 	@Test
 	void deleteByProductId() {
 		// given

@@ -1,8 +1,8 @@
 package cart.repository;
 
-import cart.controller.request.ProductCreateRequest;
-import cart.controller.request.ProductUpdateRequest;
 import cart.domain.Product;
+import cart.service.request.ProductCreateRequest;
+import cart.service.request.ProductUpdateRequest;
 
 import java.util.List;
 import java.util.Optional;
