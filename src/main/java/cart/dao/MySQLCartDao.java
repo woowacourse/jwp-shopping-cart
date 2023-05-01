@@ -4,6 +4,7 @@ import cart.dao.entity.ProductEntity;
 import cart.domain.Member;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,7 @@ public class MySQLCartDao implements CartDao {
             ps.setLong(2, productId);
             return ps;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     @Override
@@ -48,15 +49,22 @@ public class MySQLCartDao implements CartDao {
 
     @Override
     public boolean isExistEntity(Long memberId, Long productId) {
-        String query = "SELECT EXISTS (SELECT id FROM cart WHERE cart.member_id = ? AND cart.product_id = ?)";
+        String query = "SELECT id FROM cart WHERE member_id = ? AND product_id = ?";
+        return jdbcTemplate.query(query,
+            (resultSet, rowNum) -> resultSet.getLong("id"), memberId, productId).size()==1;
 
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query,
-            (resultSet, rowNum) -> resultSet.getBoolean("EXISTS"), memberId, productId));
+
     }
 
     @Override
     public int deleteById(Long memberId, Long productId) {
         String query = "DELETE FROM cart WHERE member_id = ? AND product_id = ?";
         return jdbcTemplate.update(query, memberId, productId);
+    }
+
+    @Override
+    public int deleteByProductId(Long productId) {
+        String query = "DELETE FROM cart WHERE product_id = ?";
+        return jdbcTemplate.update(query, productId);
     }
 }
