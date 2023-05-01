@@ -53,4 +53,8 @@ public class MemberService {
                         memberEntity.getEmail(), memberEntity.getPassword()))
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    public Boolean isExistByMemberInfo(String email, String password) {
+        return memberDao.isExistByEmailAndPassword(email, password);
+    }
 }
