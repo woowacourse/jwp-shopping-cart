@@ -25,7 +25,7 @@ class ProductControllerTest {
                 .given()
                 .contentType(ContentType.JSON)
                 .body(new ProductRequest("비버", "a", 100L))
-                .post("/product");
+                .post("/products");
     }
 
     @Test
@@ -35,7 +35,7 @@ class ProductControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
                 .body(new ProductRequest("비버", "a", 100L))
-                .when().post("/product")
+                .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -47,7 +47,7 @@ class ProductControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
                 .body(new ProductRequest("비버", "a", 100L))
-                .when().put("/product/1")
+                .when().put("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -58,7 +58,7 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .when().delete("/product/1")
+                .when().delete("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
