@@ -1,5 +1,7 @@
 # jwp-shopping-cart
 
+## 요구 기능 목록
+
 - [x] 페이지 접속
     - [x] 상품 목록 페이지 연동
         - [x] "/" 로 접근하면 상품 목록 페이지(index.html)로 접근한다.
@@ -26,3 +28,12 @@
     - [x] 가격 : 0이상인 정수
     - [x] 이름 : 255자까지
     - [x] imageUrl : 확장자 종류 validation(regex)
+
+## 📚 API
+
+### Product
+| 기능 | Method | URL             |
+|----|--------|-----------------|
+| 생성 | POST   | /products       |
+| 수정 | PUT    | /products/{id}  |
+| 삭제 | DELETE | /products/{id}  |
