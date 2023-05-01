@@ -1,6 +1,7 @@
 package cart.web.admin.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,8 +21,10 @@ public class AdminViewController {
 
     @GetMapping("/admin")
     public String getAllProducts(final Model model) {
-        List<ProductResponse> products = cartService.readAll();
-        model.addAttribute("products", products);
+        final List<ProductResponse> responses = cartService.findAll().stream()
+            .map(ProductResponse::from)
+            .collect(Collectors.toList());
+        model.addAttribute("products", responses);
         return "admin";
     }
 }

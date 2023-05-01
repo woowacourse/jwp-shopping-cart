@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
+import cart.domain.admin.persistence.entity.ProductEntity;
+
 public class PostProductRequest {
 
     @NotBlank(message = "20자 이하의 상품 명을 입력해주세요")
@@ -27,6 +29,10 @@ public class PostProductRequest {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public static ProductEntity toEntity(final PostProductRequest request) {
+        return new ProductEntity(request.getName(), request.getPrice(), request.imageUrl);
     }
 
     public String getName() {
