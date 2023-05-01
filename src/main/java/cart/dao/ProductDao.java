@@ -1,10 +1,13 @@
 package cart.dao;
 
 import cart.entity.Product;
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -28,9 +31,19 @@ public class ProductDao {
         return jdbcTemplate.query(sqlForSelectAll, productRowMapper);
     }
 
-    public void save(Product product) {
+    public int save(Product product) {
         String sqlForSave = "INSERT INTO Product (name, price, image_url) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sqlForSave, product.getName(), product.getPrice(), product.getImageUrl());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sqlForSave, new String[] { "id" });
+            ps.setString(1, product.getName());
+            ps.setInt(2, product.getPrice());
+            ps.setString(3, product.getImageUrl());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     public void deleteById(int id) {
