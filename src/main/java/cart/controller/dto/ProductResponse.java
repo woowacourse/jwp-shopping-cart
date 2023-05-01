@@ -1,6 +1,6 @@
 package cart.controller.dto;
 
-import cart.domain.product.Product;
+import cart.service.product.dto.ProductDto;
 
 public class ProductResponse {
 
@@ -19,18 +19,11 @@ public class ProductResponse {
 		this.price = price;
 	}
 
-	public ProductResponse(Product product) {
-		this.id = product.getId();
-		this.name = product.getName();
-		this.image = product.getImage();
-		this.price = product.getPrice();
-	}
-
-	public ProductResponse(Long id, Product product) {
-		this.id = id;
-		this.name = product.getName();
-		this.image = product.getImage();
-		this.price = product.getPrice();
+	public ProductResponse(ProductDto productDto) {
+		this.id = productDto.getId();
+		this.name = productDto.getName();
+		this.image = productDto.getImage();
+		this.price = productDto.getPrice();
 	}
 
 	public Long getId() {

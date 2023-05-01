@@ -13,6 +13,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import cart.dao.product.ProductDao;
+import cart.dao.product.dto.ProductCreateDTO;
+import cart.dao.product.dto.ProductUpdateDTO;
 import cart.domain.product.Product;
 
 @JdbcTest
@@ -23,7 +26,8 @@ class ProductDaoTest {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	private Product product;
+	private ProductCreateDTO productCreateDTO;
+
 	private final RowMapper<Product> productRowMapper = (rs, rowNum) -> new Product(
 		rs.getLong("id"),
 		rs.getString("name"),
@@ -36,7 +40,7 @@ class ProductDaoTest {
 	@BeforeEach
 	public void setProduct() {
 		productDao = new ProductDao(jdbcTemplate);
-		product = new Product(null, "name", "image", 10000, null, null);
+		productCreateDTO = new ProductCreateDTO("name", "image", 10000);
 	}
 
 	@Test
@@ -52,36 +56,36 @@ class ProductDaoTest {
 	@Test
 	void saveTest() {
 		// when
-		productDao.save(product);
+		productDao.save(productCreateDTO);
 		List<Product> products = jdbcTemplate.query("SELECT * FROM PRODUCT", productRowMapper);
 		Product savedProduct = products.get(0);
 
 		// then
-		assertThat(savedProduct.getName()).isEqualTo(this.product.getName());
-		assertThat(savedProduct.getImage()).isEqualTo(this.product.getImage());
-		assertThat(savedProduct.getPrice()).isEqualTo(this.product.getPrice());
+		assertThat(savedProduct.getName()).isEqualTo(productCreateDTO.getName());
+		assertThat(savedProduct.getImage()).isEqualTo(productCreateDTO.getImage());
+		assertThat(savedProduct.getPrice()).isEqualTo(productCreateDTO.getPrice());
 	}
 
 	@Test
 	void updateByIdTest() {
 		// given
-		long id = productDao.save(product);
+		long id = productDao.save(productCreateDTO);
 
 		// when
-		Product newProduct = new Product(null, "newName", "newImage", 0, null, null);
-		productDao.updateById(id, newProduct);
+		final ProductUpdateDTO productUpdateDTO = new ProductUpdateDTO(id, "newName", "newImage", 0);
+		productDao.updateById(productUpdateDTO);
 
 		// then
 		Product findProduct = jdbcTemplate.queryForObject("SELECT * FROM PRODUCT WHERE id = ?", productRowMapper, id);
-		assertThat(findProduct.getName()).isEqualTo(newProduct.getName());
-		assertThat(findProduct.getImage()).isEqualTo(newProduct.getImage());
-		assertThat(findProduct.getPrice()).isEqualTo(newProduct.getPrice());
+		assertThat(findProduct.getName()).isEqualTo(productUpdateDTO.getName());
+		assertThat(findProduct.getImage()).isEqualTo(productUpdateDTO.getImage());
+		assertThat(findProduct.getPrice()).isEqualTo(productUpdateDTO.getPrice());
 	}
 
 	@Test
 	void deleteById() {
 		//given
-		long id = productDao.save(product);
+		long id = productDao.save(productCreateDTO);
 
 		//when
 		productDao.deleteById(id);

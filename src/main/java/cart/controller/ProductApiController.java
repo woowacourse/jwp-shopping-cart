@@ -21,6 +21,9 @@ import cart.controller.dto.ExceptionResponse;
 import cart.controller.dto.ProductRequest;
 import cart.controller.dto.ProductResponse;
 import cart.service.product.ProductService;
+import cart.service.product.dto.ProductDto;
+import cart.service.product.dto.SaveProductDto;
+import cart.service.product.dto.UpdateProductDto;
 
 @RestController
 @RequestMapping("/products")
@@ -33,8 +36,10 @@ public class ProductApiController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ProductResponse> createProducts(@Valid @RequestBody final ProductRequest productRequest) {
-		final ProductResponse productResponse = productService.saveProducts(productRequest);
+	public ResponseEntity<ProductResponse> saveProducts(@Valid @RequestBody final ProductRequest productRequest) {
+		final SaveProductDto saveProductDto = new SaveProductDto(productRequest);
+		final ProductDto productDto = productService.saveProducts(saveProductDto);
+		final ProductResponse productResponse = new ProductResponse(productDto);
 
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(productResponse);
@@ -43,7 +48,9 @@ public class ProductApiController {
 	@PutMapping("/{id}")
 	public ResponseEntity<ProductResponse> updateProducts(@PathVariable final Long id,
 		@Valid @RequestBody final ProductRequest productRequest) {
-		final ProductResponse productResponse = productService.updateProducts(id, productRequest);
+		final UpdateProductDto updateProductDto = new UpdateProductDto(id, productRequest);
+		final ProductDto productDto = productService.updateProducts(updateProductDto);
+		final ProductResponse productResponse = new ProductResponse(productDto);
 
 		return ResponseEntity.ok()
 			.body(productResponse);

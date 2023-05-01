@@ -6,10 +6,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.controller.dto.ProductRequest;
-import cart.controller.dto.ProductResponse;
-import cart.dao.ProductDao;
+import cart.dao.product.ProductDao;
+import cart.dao.product.dto.ProductCreateDTO;
+import cart.dao.product.dto.ProductUpdateDTO;
 import cart.domain.product.Product;
+import cart.service.product.dto.ProductDto;
+import cart.service.product.dto.SaveProductDto;
+import cart.service.product.dto.UpdateProductDto;
 
 @Service
 @Transactional
@@ -17,34 +20,43 @@ public class ProductService {
 
 	private final ProductDao productDao;
 
-	public ProductService(ProductDao productDao) {
+	public ProductService(final ProductDao productDao) {
 		this.productDao = productDao;
 	}
 
 	@Transactional(readOnly = true)
-	public List<ProductResponse> findAll() {
+	public List<ProductDto> findAll() {
+
 		return productDao.findAll().stream()
-			.map(ProductResponse::new)
+			.map(this::mapProductToProductDto)
 			.collect(Collectors.toList());
 	}
 
-	public ProductResponse saveProducts(ProductRequest productRequest) {
-		Product product = new Product(null, productRequest.getName(), productRequest.getImage(),
-			productRequest.getPrice(), null, null);
-		long savedId = productDao.save(product);
+	public ProductDto saveProducts(final SaveProductDto saveProductDto) {
+		final ProductCreateDTO productCreateDTO = new ProductCreateDTO(saveProductDto.getName(),
+			saveProductDto.getImage(), saveProductDto.getPrice());
 
-		return new ProductResponse(savedId, product);
+		long savedId = productDao.save(productCreateDTO);
+
+		return new ProductDto(savedId, saveProductDto.getName(),
+			saveProductDto.getImage(), saveProductDto.getPrice());
 	}
 
-	public ProductResponse updateProducts(Long id, ProductRequest productRequest) {
-		Product product = new Product(null, productRequest.getName(), productRequest.getImage(),
-			productRequest.getPrice(), null, null);
-		long savedId = productDao.updateById(id, product);
+	public ProductDto updateProducts(final UpdateProductDto updateProductDto) {
+		final ProductUpdateDTO productUpdateDTO = new ProductUpdateDTO(updateProductDto.getId(),
+			updateProductDto.getName(), updateProductDto.getImage(), updateProductDto.getPrice());
 
-		return new ProductResponse(savedId, product);
+		long savedId = productDao.updateById(productUpdateDTO);
+
+		return new ProductDto(savedId, productUpdateDTO.getName(),
+			productUpdateDTO.getImage(), productUpdateDTO.getPrice());
 	}
 
-	public void deleteProductsById(Long id) {
+	public void deleteProductsById(final Long id) {
 		productDao.deleteById(id);
+	}
+
+	private ProductDto mapProductToProductDto(final Product product) {
+		return new ProductDto(product.getId(), product.getName(), product.getImage(), product.getPrice());
 	}
 }
