@@ -13,13 +13,13 @@
 
 
 - [x] 관리자 도구 페이지 상품 관리 CRUD API
-  - [x] 생성 (/admin/product POST)
+  - [x] 생성 (/admin/products POST)
     - 상품의 형식이 올바르지 않을 때: `BAD_REQUEST`
   - [x] 전체 상품 조회 (/admin)
-  - [x] 수정 (/admin/product/{id} PUT)
+  - [x] 수정 (/admin/products/{id} PUT)
     - 상품의 형식이 올바르지 않을 때: `BAD_REQUEST`
     - 요청된 id에 대한 데이터가 없을 시: `NOT_FOUND`
-  - [x] 삭제 (/admin/product/{id} DELETE)
+  - [x] 삭제 (/admin/products/{id} DELETE)
     - 요청된 id에 대한 데이터가 없을 시: `NOT_FOUND`
 
   - 이외의 예외가 발생했을 때: `INTERNAL_SERVER_ERROR`
