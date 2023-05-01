@@ -2,7 +2,6 @@ package cart.repository;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import cart.dao.ProductDao;
@@ -12,7 +11,7 @@ import cart.dao.ProductEntity;
 public class ProductRepository {
     private final ProductDao productDao;
 
-    public ProductRepository(@Qualifier("productJdbcDao") final ProductDao productDao) {
+    public ProductRepository(final ProductDao productDao) {
         this.productDao = productDao;
     }
 

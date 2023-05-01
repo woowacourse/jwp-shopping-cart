@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import cart.dao.ProductJdbcDao;
+import cart.dao.ProductDao;
 
 @JdbcTest
 class ProductRepositoryTest {
@@ -22,7 +22,7 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        this.productRepository = new ProductRepository(new ProductJdbcDao(jdbcTemplate));
+        this.productRepository = new ProductRepository(new ProductDao(jdbcTemplate));
 
         productRepository.save("땡칠", "https://avatars.githubusercontent.com/u/39221443", 1000L);
         productRepository.save("비버", "https://avatars.githubusercontent.com/u/109223081", 1000L);

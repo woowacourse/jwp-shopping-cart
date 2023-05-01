@@ -13,16 +13,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import cart.TestFixture;
 
 @JdbcTest
-class ProductJdbcDaoTest {
+class ProductDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private ProductJdbcDao productDao;
+    private ProductDao productDao;
 
     @BeforeEach
     void setUp() {
-        this.productDao = new ProductJdbcDao(jdbcTemplate);
+        this.productDao = new ProductDao(jdbcTemplate);
 
         productDao.insert("땡칠", TestFixture.IMAGE_0CHIL, 1000L);
         productDao.insert("비버", TestFixture.IMAGE_BEAVER, 1000L);
