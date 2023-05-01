@@ -20,7 +20,7 @@ public class AdminController {
 
     @PostMapping("/products")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductDto productDto) {
-        Long id = productManagementService.addProduct(productDto);
+        final Long id = productManagementService.addProduct(productDto);
         return ResponseEntity.created(URI.create("/admin/products/" + id)).build();
     }
 
