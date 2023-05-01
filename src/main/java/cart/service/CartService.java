@@ -2,6 +2,9 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
+import cart.domain.Price;
+import cart.domain.Product;
+import cart.domain.ProductName;
 import cart.service.dto.ProductRequest;
 import cart.service.dto.ProductResponse;
 import java.util.List;
@@ -24,9 +27,19 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public long save(ProductRequest productRequest) {
-        ProductEntity productEntity = productRequest.toEntity();
-        return productDao.insert(productEntity);
+    public long save(final ProductRequest productRequest) {
+        Product product = new Product(new ProductName(productRequest.getName()),
+                productRequest.getImgUrl(),
+                new Price(productRequest.getPrice()));
+        return productDao.insert(productToEntity(product));
+    }
+
+    private ProductEntity productToEntity(final Product product) {
+        return new ProductEntity.Builder()
+                .price(product.getPriceToValue())
+                .name(product.getNameToString())
+                .imgUrl(product.getImgUrl())
+                .build();
     }
 
     public void modifyById(ProductRequest productRequest, long id) {

@@ -124,11 +124,11 @@ class AdminControllerIntegrationTest {
         );
     }
 
-    @DisplayName("이름이 1자 미만이거나 50자 초과면 예외가 발생한다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"dskjgfdsvesvurevhjdsbvehsbvhjesbvhjesbvfhvsdhvhdsvhfdshv", ""})
-    void exceptionWhenNameWrongLength(String name) {
+    @DisplayName("이름이 50글자보다 크면 예외가 발생한다.")
+    @Test
+    void exceptionWhenNameWrongLength() {
         // when
+        String name = "dskjgfdsvesvurevhjdsbvehsbvhjesbvhjesbvfhvsdhvhdsvhfdshv";
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", name,
@@ -142,7 +142,7 @@ class AdminControllerIntegrationTest {
         // then
         assertAll(
                 () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.getBody().asString()).isEqualTo("이름은 1글자 이상 50글자 이하여야합니다.")
+                () -> assertThat(response.getBody().asString()).isEqualTo("상품명은 50글자 이하여야합니다.")
         );
     }
 
@@ -164,6 +164,27 @@ class AdminControllerIntegrationTest {
         assertAll(
                 () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(response.getBody().asString()).isEqualTo("이미지 URL은 필수입니다.")
+        );
+    }
+
+    @DisplayName("이름이 입력되지 않으면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    void exceptionWhenBlankName(String name) {
+        // when
+        Response response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new ProductRequest("tmpImg", name, 2000))
+                .when()
+                .post("/admin/product")
+                .then()
+                .log().all()
+                .extract().response();
+
+        // then
+        assertAll(
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.getBody().asString()).isEqualTo("상품명은 필수입니다.")
         );
     }
 }

@@ -105,49 +105,6 @@ public class AdminControllerUnitTest {
                 .andExpect(status().isNoContent());
     }
 
-    @DisplayName("가격이 0이하의 값이면 예외가 발생한다.")
-    @ParameterizedTest
-    @ValueSource(ints = {-1, 0})
-    void exceptionWhenPriceNotPositive(int price) throws Exception {
-        // given
-        ProductResponse wrongCuteSeonghaDoll =
-                new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
-                        "CuteSeonghaDoll", price);
-        String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRequest.class))).willReturn(1L);
-
-        // when then
-        mockMvc.perform(post("/admin/product")
-                        .accept(MediaType.APPLICATION_JSON_VALUE)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .content(requestString))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("가격은 0보다 커야합니다."))
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @DisplayName("이름이 1자 미만이거나 50자 초과면 예외가 발생한다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"dskjgfdsvesvurevhjdsbvehsbvhjesbvhjesbvfhvsdhvhdsvhfdshv", ""})
-    void exceptionWhenNameWrongLength(String name) throws Exception {
-        // given
-        ProductResponse wrongCuteSeonghaDoll =
-                new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
-                        name, 24000);
-        String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRequest.class))).willReturn(1L);
-
-        // when then
-        mockMvc.perform(post("/admin/product")
-                        .accept(MediaType.APPLICATION_JSON_VALUE)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .content(requestString))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("이름은 1글자 이상 50글자 이하여야합니다."))
-                .andDo(MockMvcResultHandlers.print());
-    }
 
     @DisplayName("이미지 URL이 없으면 예외가 발생한다.")
     @ParameterizedTest
@@ -167,6 +124,27 @@ public class AdminControllerUnitTest {
                         .content(requestString))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("이미지 URL은 필수입니다."))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @DisplayName("이름이 입력되지 않으면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    void exceptionWhenBlankName(String name) throws Exception {
+        // given
+        ProductResponse wrongCuteSeonghaDoll =
+                new ProductResponse(1, "tmpImg", name, 24000);
+        String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
+        given(cartService.save(any(ProductRequest.class))).willReturn(1L);
+
+        // when then
+        mockMvc.perform(post("/admin/product")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .content(requestString))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("상품명은 필수입니다."))
                 .andDo(MockMvcResultHandlers.print());
     }
 

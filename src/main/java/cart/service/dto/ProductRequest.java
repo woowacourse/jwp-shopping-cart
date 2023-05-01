@@ -2,15 +2,14 @@ package cart.service.dto;
 
 import cart.dao.entity.ProductEntity;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.NotNull;
 
 public class ProductRequest {
 
-    @Length(min = 1, max = 50, message = "이름은 1글자 이상 50글자 이하여야합니다.")
+    @NotBlank(message = "상품명은 필수입니다.")
     private String name;
 
-    @Positive(message = "가격은 0보다 커야합니다.")
+    @NotNull(message = "가격은 필수입니다.")
     private int price;
 
     @NotBlank(message = "이미지 URL은 필수입니다.")
@@ -22,12 +21,7 @@ public class ProductRequest {
         this.price = price;
     }
 
-    public ProductEntity toEntity() {
-        return new ProductEntity.Builder()
-                .name(name)
-                .imgUrl(imgUrl)
-                .price(price)
-                .build();
+    public ProductRequest() {
     }
 
     public ProductEntity toEntityBy(long id) {
@@ -49,17 +43,5 @@ public class ProductRequest {
 
     public int getPrice() {
         return price;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
     }
 }
