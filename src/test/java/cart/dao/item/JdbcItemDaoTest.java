@@ -1,6 +1,5 @@
-package cart.dao;
+package cart.dao.item;
 
-import cart.dao.item.ItemDao;
 import cart.entity.ItemEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
