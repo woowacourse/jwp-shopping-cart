@@ -6,19 +6,24 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/admin")
-public class AdminController {
+public class PageController {
 
     private final ProductService productService;
 
-    public AdminController(final ProductService productService) {
+    public PageController(final ProductService productService) {
         this.productService = productService;
     }
 
-    @GetMapping
+    @GetMapping("/")
+    public String main(Model model) {
+        List<ProductResponse> products = productService.findAll();
+        model.addAttribute("products", products);
+        return "index";
+    }
+
+    @GetMapping("/admin")
     public String admin(Model model) {
         List<ProductResponse> products = productService.findAll();
         model.addAttribute("products", products);

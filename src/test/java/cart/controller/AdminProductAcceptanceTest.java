@@ -21,7 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ProductAcceptanceTest {
+class AdminProductAcceptanceTest {
 
     @LocalServerPort
     private int port;
@@ -41,7 +41,7 @@ class ProductAcceptanceTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequest)
             .when()
-            .post("/products")
+            .post("admin/products")
             .then()
             .extract();
 
@@ -70,7 +70,7 @@ class ProductAcceptanceTest {
         ExtractableResponse<Response> add = given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequest)
-            .post("/products")
+            .post("admin/products")
             .then()
             .extract();
 
@@ -82,7 +82,7 @@ class ProductAcceptanceTest {
             .queryParam("id", id)
             .body(productUpdateDto)
             .when()
-            .patch("/products/" + id)
+            .patch("admin/products/" + id)
             .then()
             .extract();
 
@@ -111,14 +111,14 @@ class ProductAcceptanceTest {
         given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequest)
-            .post("/products");
+            .post("admin/products");
 
         // when
         ExtractableResponse<Response> result = given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("id", id)
             .when()
-            .delete("/products/" + id)
+            .delete("admin/products/" + id)
             .then()
             .extract();
 
