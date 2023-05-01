@@ -20,8 +20,14 @@ public class ProductQueryService {
     }
 
     public List<ProductSearchResponse> searchAllProducts() {
-        List<ProductEntity> productEntities = productDao.findAll();
+        return mapToProductSearchResponses(productDao.findAll());
+    }
 
+    public List<ProductSearchResponse> searchProductsByIds(final List<Long> productIds) {
+        return mapToProductSearchResponses(productDao.findProductsByIds(productIds));
+    }
+
+    private List<ProductSearchResponse> mapToProductSearchResponses(final List<ProductEntity> productEntities) {
         return productEntities.stream()
                               .map(entity -> new ProductSearchResponse(
                                       entity.getId(),
