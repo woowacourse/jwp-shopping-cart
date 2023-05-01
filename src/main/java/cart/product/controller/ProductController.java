@@ -27,7 +27,6 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    @ResponseBody
     public ResponseEntity<Product> product(@PathVariable final long id) {
         Product product = productRepository.findById(id);
         return ResponseEntity.ok(product);
