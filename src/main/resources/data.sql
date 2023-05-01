@@ -1,16 +1,2 @@
-CREATE TABLE IF NOT EXISTS `product`
-(
-    `id`         BIGINT      NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `name`       VARCHAR(20) NOT NULL,
-    `price`      INTEGER     NOT NULL,
-    `img_url`    TEXT        NOT NULL,
-    `created_at` DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS `users`
-(
-    `id` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `email` VARCHAR(255) NOT NULL,
-    `password` TEXT NOT NULL,
-    `created_at` DATETIME NOT NULL DEFAULT  CURRENT_TIMESTAMP
-);
+INSERT INTO users (email, password) VALUES ('test@test.com', 'test');
+INSERT INTO users (email, password) VALUES ('user@user.com', 'user');

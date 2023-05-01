@@ -7,8 +7,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 @JdbcTest
+@Transactional
+@Sql("classpath:/dataTruncator.sql")
 public abstract class JdbcSaveUser {
 
     @Autowired

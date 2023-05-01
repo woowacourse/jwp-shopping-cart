@@ -1,0 +1,2 @@
+TRUNCATE TABLE product;
+TRUNCATE TABLE users;
