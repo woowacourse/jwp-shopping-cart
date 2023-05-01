@@ -37,10 +37,8 @@ import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 @WebMvcTest(controllers = CartController.class)
-@Transactional
 class CartControllerTest {
 
     @MockBean
