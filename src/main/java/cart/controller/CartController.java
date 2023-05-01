@@ -2,9 +2,11 @@ package cart.controller;
 
 import cart.controller.dto.ProductResponse;
 import cart.dao.CartRepository;
+import cart.domain.Member;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +27,8 @@ public class CartController {
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getProducts(HttpServletRequest request) {
-        List<ProductResponse> cart=cartRepository.getProducts(request);
+        Member member= extractMember(request);
+        List<ProductResponse> cart=cartRepository.getProducts(member);
 
         return ResponseEntity.ok().body(cart);
     }
@@ -33,13 +36,22 @@ public class CartController {
     @PostMapping("/{product_id}")
     public long create(@PathVariable("product_id") Long productId,
         HttpServletRequest request) {
-        return cartRepository.add(productId, request);
+        Member member= extractMember(request);
+        return cartRepository.add(productId, member);
     }
 
     @DeleteMapping("/{product_id}")
     public int remove(@PathVariable("product_id") Long productId, HttpServletRequest request) {
-        return cartRepository.remove(productId, request);
+        Member member= extractMember(request);
+        return cartRepository.remove(productId, member);
     }
 
-
+    public Member extractMember(HttpServletRequest request) {
+        String credentials = request.getHeader("authorization").substring("Basic ".length());
+        String[] decoded = new String(Base64Utils.decode(credentials.getBytes())).split(":");
+        if (decoded.length != 2) {
+            throw new IllegalArgumentException(); //TODO
+        }
+        return new Member(decoded[0], decoded[1]);
+    }
 }

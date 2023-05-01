@@ -4,51 +4,54 @@ import cart.controller.dto.ProductResponse;
 import cart.dao.entity.ProductEntity;
 import cart.domain.Member;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import java.util.NoSuchElementException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Base64Utils;
 
 @Repository
 public class CartRepository {
 
+    private static final String MEMBER_NOT_FOUND_MESSAGE = "존재하지 않는 회원 정보입니다.";
+    private static final String PRODUCT_NOT_FOUND_MESSAGE = "존재하지 않는 상품 정보입니다.";
+    private static final String ALREADY_EXIST_MESSAGE = "장바구니에 해당 제품이 이미 존재합니다.";
+
     private final CartDao mySQLCartDao;
     private final MemberDao mySQLMemberDao;
+    private final ProductDao mySQLProductDao;
 
-    public CartRepository(CartDao mySQLCartDao, MemberDao mySQLMemberDao) {
+    public CartRepository(CartDao mySQLCartDao, MemberDao mySQLMemberDao,
+        ProductDao mySQLProductDao) {
         this.mySQLCartDao = mySQLCartDao;
         this.mySQLMemberDao = mySQLMemberDao;
+        this.mySQLProductDao = mySQLProductDao;
     }
 
-    public List<ProductResponse> getProducts(HttpServletRequest request) {
+    public List<ProductResponse> getProducts(Member member) {
         final List<ProductEntity> productEntities = mySQLCartDao.findByMember(
-            extractMember(request));
+            member);
 
         return ProductResponse.from(productEntities);
     }
 
-    public long add(Long productId, HttpServletRequest request) {
-        Member member = extractMember(request);
-        Long memberId = mySQLMemberDao.findIdByMember(member);
+    public long add(Long productId, Member member) {
+        Long memberId = mySQLMemberDao.findIdByMember(member)
+            .orElseThrow(() -> new NoSuchElementException(MEMBER_NOT_FOUND_MESSAGE));
         if (mySQLCartDao.isExistEntity(memberId, productId)) {
-            throw new DataIntegrityViolationException("");
+            throw new DataIntegrityViolationException(ALREADY_EXIST_MESSAGE);
+        }
+        if (mySQLProductDao.findById(productId).isEmpty()) {
+            throw new NoSuchElementException(PRODUCT_NOT_FOUND_MESSAGE);
         }
         return mySQLCartDao.add(memberId, productId);
     }
 
-    public int remove(Long productId, HttpServletRequest request){
-        Member member = extractMember(request);
-        Long memberId = mySQLMemberDao.findIdByMember(member);
-        return mySQLCartDao.deleteById(memberId, productId);
-    }
-
-    public Member extractMember(HttpServletRequest request) {
-        String credentials = request.getHeader("authorization").substring("Basic ".length());
-        String[] decoded = new String(Base64Utils.decode(credentials.getBytes())).split(":");
-        if (decoded.length != 2) {
-            throw new IllegalArgumentException();
+    public int remove(Long productId, Member member) {
+        Long memberId = mySQLMemberDao.findIdByMember(member).orElseThrow(() -> new
+            NoSuchElementException(MEMBER_NOT_FOUND_MESSAGE));
+        if (mySQLProductDao.findById(productId).isEmpty()) {
+            throw new NoSuchElementException(PRODUCT_NOT_FOUND_MESSAGE);
         }
-        return new Member(decoded[0], decoded[1]);
+        return mySQLCartDao.deleteById(memberId, productId);
     }
 
 }
