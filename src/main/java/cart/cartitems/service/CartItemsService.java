@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,16 +38,31 @@ public class CartItemsService {
                                  .collect(Collectors.toUnmodifiableList());
     }
 
-    public void addItemToCart(AuthInfo authInfo, ProductAddRequest productAddRequest) {
+    public CartItemDto addItemToCart(AuthInfo authInfo, ProductAddRequest productAddRequest) {
         final long productIdToAdd = productAddRequest.getProductId();
 
         productService.validateProductExist(productIdToAdd);
 
         try {
-            cartItemDao.saveItemOfMember(new CartItemDto(getIdOfMember(authInfo), productIdToAdd));
+            return cartItemDao.saveItemOfMember(new CartItemDto(getIdOfMember(authInfo), productIdToAdd));
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("이미 카트에 존재하는 상품입니다");
         }
+    }
+
+    public long deleteItemFromCart(AuthInfo authInfo, Long productId) {
+        if (Objects.isNull(productId)) {
+            throw new IllegalArgumentException("잘못된 상품번호입니다");
+        }
+
+        final CartItemDto cartItemDto = new CartItemDto(getIdOfMember(authInfo), productId);
+        final int deletedItemsCount = cartItemDao.deleteItem(cartItemDto);
+
+        if (deletedItemsCount != 1) {
+            throw new IllegalArgumentException("잘못된 상품 번호입니다");
+        }
+
+        return cartItemDto.getProductId();
     }
 
     private long getIdOfMember(AuthInfo authInfo) {

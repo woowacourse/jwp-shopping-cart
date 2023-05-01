@@ -3,6 +3,7 @@ package cart.cartitems.dao;
 import cart.cartitems.dto.CartItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -38,5 +39,12 @@ public class CartItemDao {
         final Map<String, Long> params = Map.of("memberId", memberId);
 
         return namedParameterJdbcTemplate.queryForList(sql, params, Long.class);
+    }
+
+    public int deleteItem(CartItemDto cartItemDto) {
+        final String sql = "DELETE FROM cart_items WHERE member_id = :memberId AND product_id = :productId";
+        final BeanPropertySqlParameterSource beanPropertySqlParameterSource = new BeanPropertySqlParameterSource(cartItemDto);
+
+        return namedParameterJdbcTemplate.update(sql, beanPropertySqlParameterSource);
     }
 }

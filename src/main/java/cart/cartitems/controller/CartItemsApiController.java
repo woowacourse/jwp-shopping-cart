@@ -1,5 +1,6 @@
 package cart.cartitems.controller;
 
+import cart.cartitems.dto.CartItemDto;
 import cart.cartitems.dto.request.ProductAddRequest;
 import cart.cartitems.service.CartItemsService;
 import cart.infrastructure.AuthInfo;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @Slf4j
@@ -38,8 +40,17 @@ public class CartItemsApiController {
     public ResponseEntity<Void> addItemToCart(HttpServletRequest request, @RequestBody @Valid ProductAddRequest productAddRequest) {
         final AuthInfo authInfo = (AuthInfo) request.getAttribute("authInfo");
 
-        cartItemsService.addItemToCart(authInfo, productAddRequest);
+        final CartItemDto cartItemDto = cartItemsService.addItemToCart(authInfo, productAddRequest);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(URI.create("/cart/items/" + cartItemDto.getProductId())).build();
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteItemFromCart(HttpServletRequest request, @PathVariable Long productId) {
+        final AuthInfo authInfo = (AuthInfo) request.getAttribute("authInfo");
+
+        cartItemsService.deleteItemFromCart(authInfo, productId);
+
+        return ResponseEntity.noContent().build();
     }
 }
