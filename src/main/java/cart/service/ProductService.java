@@ -52,4 +52,11 @@ public class ProductService {
         validateAffectedRowsCount(affectedRows);
         return affectedRows;
     }
+
+    public List<ResponseProductDto> findByIds(final List<Long> productIds) {
+        return productIds.stream()
+                .map(productDao::findById)
+                .map(ResponseProductDto::new)
+                .collect(Collectors.toUnmodifiableList());
+    }
 }
