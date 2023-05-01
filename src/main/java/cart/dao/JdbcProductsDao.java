@@ -70,9 +70,7 @@ public class JdbcProductsDao implements ProductsDao {
                 imageUrlToUpdate,
                 product.getId()
         );
-        product.setName(nameToUpdate);
-        product.setPrice(priceToUpdate);
-        product.setImageUrl(imageUrlToUpdate);
+        product.update(new Product(product.getId(), nameToUpdate, priceToUpdate, imageUrlToUpdate));
     }
 
     @Override

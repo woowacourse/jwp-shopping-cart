@@ -11,14 +11,18 @@ public class Product {
     private String imageUrl;
 
     public Product(final Long id, final String name, final int price, final String imageUrl) {
-        validateId(id);
-        validateName(name);
-        validatePrice(price);
-        validateImageUrl(imageUrl);
+        validateFields(id, name, price, imageUrl);
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    private void validateFields(final Long id, final String name, final int price, final String imageUrl) {
+        validateId(id);
+        validateName(name);
+        validatePrice(price);
+        validateImageUrl(imageUrl);
     }
 
     private void validateId(final Long id) {
@@ -45,19 +49,10 @@ public class Product {
         }
     }
 
-    public void setName(final String name) {
-        validateName(name);
-        this.name = name;
-    }
-
-    public void setPrice(final int price) {
-        validatePrice(price);
-        this.price = price;
-    }
-
-    public void setImageUrl(final String imageUrl) {
-        validateImageUrl(imageUrl);
-        this.imageUrl = imageUrl;
+    public void update(final Product product) {
+        this.name = product.name;
+        this.price = product.price;
+        this.imageUrl = product.imageUrl;
     }
 
     public Long getId() {
