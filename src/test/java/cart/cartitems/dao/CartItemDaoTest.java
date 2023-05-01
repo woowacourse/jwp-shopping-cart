@@ -1,10 +1,12 @@
 package cart.cartitems.dao;
 
+import cart.cartitems.dto.CartItemDto;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.product.dao.H2ProductDao;
 import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +32,27 @@ class CartItemDaoTest {
         this.cartItemDao = new CartItemDao(namedParameterJdbcTemplate);
     }
 
+    Member withIdMember1;
+    Member withIdMember2;
+    Product withIdProduct1;
+    Product withIdProduct2;
+    Product withIdProduct3;
+
+    @BeforeAll
+    void beforeAll() {
+        withIdMember1 = memberDao.save(NO_ID_MEMBER1);
+        withIdMember2 = memberDao.save(NO_ID_MEMBER2);
+        withIdProduct1 = productDao.save(NO_ID_PRODUCT1);
+        withIdProduct2 = productDao.save(NO_ID_PRODUCT2);
+        withIdProduct3 = productDao.save(NO_ID_PRODUCT3);
+    }
+
     @Test
     @DisplayName("유저가 담은 모든 상품의 아이디를 가져온다")
     void findProductIdsByMemberId() {
-        final Member withIdMember1 = memberDao.save(NO_ID_MEMBER1);
-        final Member withIdMember2 = memberDao.save(NO_ID_MEMBER2);
-        final Product withIdProduct1 = productDao.save(NO_ID_PRODUCT1);
-        final Product withIdProduct2 = productDao.save(NO_ID_PRODUCT2);
-        final Product withIdProduct3 = productDao.save(NO_ID_PRODUCT3);
-        cartItemDao.saveItemOfMember(withIdMember1.getId(), withIdProduct1.getId());
-        cartItemDao.saveItemOfMember(withIdMember1.getId(), withIdProduct2.getId());
-        cartItemDao.saveItemOfMember(withIdMember2.getId(), withIdProduct3.getId());
+        cartItemDao.saveItemOfMember(new CartItemDto(withIdMember1.getId(), withIdProduct1.getId()));
+        cartItemDao.saveItemOfMember(new CartItemDto(withIdMember1.getId(), withIdProduct2.getId()));
+        cartItemDao.saveItemOfMember(new CartItemDto(withIdMember2.getId(), withIdProduct3.getId()));
 
         final List<Long> itemsIds = cartItemDao.findProductIdsByMemberId(withIdMember1.getId());
 

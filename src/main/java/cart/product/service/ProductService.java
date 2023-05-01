@@ -31,6 +31,12 @@ public class ProductService {
                          .collect(Collectors.toUnmodifiableList());
     }
 
+    public void validateProductExist(long id) {
+        final Optional<Product> optionalProduct = productDao.findById(id);
+
+        optionalProduct.orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다"));
+    }
+
     public ProductDto getById(long id) {
         final Optional<Product> optionalProduct = productDao.findById(id);
 

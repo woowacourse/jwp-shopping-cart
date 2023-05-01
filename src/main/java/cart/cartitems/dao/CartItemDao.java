@@ -1,5 +1,6 @@
 package cart.cartitems.dao;
 
+import cart.cartitems.dto.CartItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,13 +20,14 @@ public class CartItemDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    // TODO: 2023/05/01 테스트 용도
-    public void saveItemOfMember(long memberId, long productId) {
+    public CartItemDto saveItemOfMember(CartItemDto cartItemDto) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate()).withTableName("cart_items");
-        try {
-            final Map<String, Long> params = Map.of("member_id", memberId, "product_id", productId);
 
+        try {
+            final Map<String, Long> params = Map.of("member_id", cartItemDto.getMemberId(), "product_id", cartItemDto.getProductId());
             simpleJdbcInsert.execute(params);
+
+            return cartItemDto;
         } catch (DuplicateKeyException e) {
             throw new IllegalArgumentException("중복 키입니다");
         }
