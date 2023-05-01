@@ -42,7 +42,6 @@ public class ProductViewController {
         return "product.html";
     }
 
-
     @ModelAttribute("categorys")
     public List<ProductCategory> productCategories() {
         return List.of(ProductCategory.values());

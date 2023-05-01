@@ -1,12 +1,11 @@
 package cart.domain.product.service;
 
-import cart.dao.ProductDaoImpl;
-import cart.dao.ProductEntity;
-import cart.domain.product.ProductRepository;
-import cart.exception.ErrorCode;
-import cart.exception.GlobalException;
+import cart.domain.product.Product;
+import cart.domain.product.ProductDao;
 import cart.web.controller.dto.ProductRequest;
 import cart.web.controller.dto.ProductResponse;
+import cart.web.exception.ErrorCode;
+import cart.web.exception.GlobalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,32 +19,38 @@ public class ProductService {
 
     public final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final ProductRepository productRepository;
+    private final ProductDao productDao;
 
-    public ProductService(final ProductDaoImpl productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(final ProductDao productDao) {
+        this.productDao = productDao;
     }
 
     public List<ProductResponse> getProducts() {
-        final List<ProductEntity> productEntities = productRepository.findAll();
-        return productEntities.stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getImageUrl(), product.getPrice(), product.getCategory()))
+        final List<Product> products = productDao.findAll();
+        return products.stream()
+                .map(product -> new ProductResponse(product.getId(), product.getProductNameValue(), product.getImageUrlValue(), product.getPriceValue(), product.getCategory()))
                 .collect(Collectors.toList());
     }
 
     public Long save(final ProductRequest productRequest) {
-        return productRepository.insert(productRequest.toEntity());
+        final Product product = new Product(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice(), productRequest.getCategory());
+        return productDao.insert(product);
     }
 
     public void update(final Long id, final ProductRequest productRequest) {
-        int updatedCount = productRepository.update(id, productRequest.toEntity());
+        final Product product = new Product(
+                productRequest.getName(),
+                productRequest.getImageUrl(),
+                productRequest.getPrice(),
+                productRequest.getCategory());
+        int updatedCount = productDao.update(id, product);
         if (updatedCount != 1) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }
     }
 
     public void delete(final Long id) {
-        int deletedCount = productRepository.deleteById(id);
+        int deletedCount = productDao.deleteById(id);
         if (deletedCount == 0) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }
@@ -56,12 +61,11 @@ public class ProductService {
     }
 
     public ProductRequest getById(final Long id) {
-        final Optional<ProductEntity> productById = productRepository.findById(id);
+        final Optional<Product> productById = productDao.findById(id);
         if (productById.isEmpty()) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }
-        final ProductEntity productEntity = productById.get();
-        return new ProductRequest(productEntity.getName(), productEntity.getImageUrl(),
-                productEntity.getPrice(), productEntity.getCategory());
+        final Product product = productById.get();
+        return new ProductRequest(product.getProductNameValue(), product.getImageUrlValue(), product.getPriceValue(), product.getCategory());
     }
 }

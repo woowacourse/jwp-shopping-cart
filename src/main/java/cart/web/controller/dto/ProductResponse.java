@@ -1,7 +1,7 @@
 package cart.web.controller.dto;
 
 import cart.dao.ProductCategory;
-import cart.dao.ProductEntity;
+import cart.domain.product.Product;
 
 public class ProductResponse {
 
@@ -43,7 +43,7 @@ public class ProductResponse {
         return category;
     }
 
-    public ProductEntity toEntity() {
-        return new ProductEntity(name, imageUrl, price, category);
+    public Product toEntity() {
+        return new Product(name, imageUrl, price, category);
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductEntityIntegrationTest {
+public class ProductIntegrationTest {
 
     @LocalServerPort
     private int port;

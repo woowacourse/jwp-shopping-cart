@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductRestController.class)
-class ProductEntityRestControllerTest {
+class ProductRestControllerTest {
 
     private ProductRequest productRequest;
 
@@ -75,9 +75,7 @@ class ProductEntityRestControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorMessage",
                         containsInAnyOrder(
-                                "상품 이름의 길이는 1 ~ 25글자여야 합니다.",
-                                "상품 가격은 비어있을 수 없습니다.",
-                                "상품 카테고리는 비어있을 수 없습니다."
+                                "상품 이름은 비어있을 수 없습니다.", "상품 가격은 비어있을 수 없습니다.", "상품 카테고리는 비어있을 수 없습니다."
                         )
                 ));
     }
@@ -113,9 +111,7 @@ class ProductEntityRestControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorMessage",
                         containsInAnyOrder(
-                                "상품 이름의 길이는 1 ~ 25글자여야 합니다.",
-                                "상품 가격은 비어있을 수 없습니다.",
-                                "상품 카테고리는 비어있을 수 없습니다."
+                                "상품 이름은 비어있을 수 없습니다.", "상품 가격은 비어있을 수 없습니다.", "상품 카테고리는 비어있을 수 없습니다."
                         )
                 ));
     }

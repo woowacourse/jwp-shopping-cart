@@ -1,4 +1,4 @@
-package cart.exception;
+package cart.web.exception;
 
 public enum ErrorCode {
     INVALID_CATEGORY("유효하지 않은 카테고리입니다."),

@@ -2,11 +2,11 @@ package cart.service;
 
 import cart.dao.ProductCategory;
 import cart.dao.ProductDaoImpl;
-import cart.dao.ProductEntity;
+import cart.domain.product.Product;
 import cart.domain.product.service.ProductService;
-import cart.exception.GlobalException;
 import cart.web.controller.dto.ProductRequest;
 import cart.web.controller.dto.ProductResponse;
+import cart.web.exception.GlobalException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(ProductService.class)
-class ProductEntityServiceTest {
+class ProductServiceTest {
 
     private ProductRequest productRequest;
 
@@ -46,7 +46,7 @@ class ProductEntityServiceTest {
     @Test
     void save() {
         // given
-        final List<ProductEntity> productEntities = List.of(new ProductEntity("스테이크", "steakUrl", 40000, ProductCategory.WESTERN));
+        final List<Product> productEntities = List.of(new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN));
         when(productDao.insert(any())).thenReturn(1L);
         when(productDao.findAll()).thenReturn(productEntities);
 
@@ -65,7 +65,7 @@ class ProductEntityServiceTest {
     @Test
     void findProduct_success() {
         // given
-        final ProductEntity productEntity = new ProductEntity("스테이크", "steakUrl", 40000, ProductCategory.WESTERN);
+        final Product productEntity = new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN);
         when(productDao.findById(any())).thenReturn(Optional.of(productEntity));
 
         // when
@@ -95,10 +95,10 @@ class ProductEntityServiceTest {
     @Test
     void getProducts() {
         // given
-        final List<ProductEntity> productEntities = List.of(
-                new ProductEntity("치킨", "chickenUrl", 20000, ProductCategory.KOREAN),
-                new ProductEntity("초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
-                new ProductEntity("스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
+        final List<Product> productEntities = List.of(
+                new Product("치킨", "chickenUrl", 20000, ProductCategory.KOREAN),
+                new Product("초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
+                new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
         );
         when(productDao.findAll()).thenReturn(productEntities);
 

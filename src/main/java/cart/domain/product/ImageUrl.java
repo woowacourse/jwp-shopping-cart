@@ -1,6 +1,6 @@
 package cart.domain.product;
 
-public class ImageUrl {
+public final class ImageUrl {
 
     private final String imageUrl;
 

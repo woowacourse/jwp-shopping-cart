@@ -26,7 +26,6 @@ public class ProductRestController {
 
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody @Valid final ProductRequest productRequest) {
-
         final Long productId = productService.save(productRequest);
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }

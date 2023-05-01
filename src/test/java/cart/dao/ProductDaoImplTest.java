@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.domain.product.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Import(ProductDaoImpl.class)
-class ProductEntityDaoTest {
+class ProductDaoImplTest {
 
     private static final String IMAGE_URL = "https://barunchicken.com/wp-content/uploads/2022/07/%EA%B3%A8%EB%93%9C%EC%B9%98%ED%82%A8-2-1076x807.jpg";
 
     @Autowired
     private ProductDaoImpl productDao;
 
-    private final ProductEntity productEntity = new ProductEntity("치킨", IMAGE_URL, 20000, ProductCategory.KOREAN);
+    private final Product productEntity = new Product("치킨", IMAGE_URL, 20000, ProductCategory.KOREAN);
 
     @DisplayName("존재하는 상품을 조회하면, 성공적으로 가져온다")
     @Test
@@ -30,19 +31,19 @@ class ProductEntityDaoTest {
         final Long productId = productDao.insert(productEntity);
 
         // when
-        final ProductEntity findProductEntity = productDao.findById(productId).get();
+        final Product findProductEntity = productDao.findById(productId).get();
 
         // then
-        assertAll(() -> assertThat(findProductEntity.getName()).isEqualTo("치킨"),
-                () -> assertThat(findProductEntity.getPrice()).isEqualTo(20000),
-                () -> assertThat(findProductEntity.getImageUrl()).isEqualTo(IMAGE_URL),
+        assertAll(() -> assertThat(findProductEntity.getProductNameValue()).isEqualTo("치킨"),
+                () -> assertThat(findProductEntity.getPriceValue()).isEqualTo(20000),
+                () -> assertThat(findProductEntity.getImageUrlValue()).isEqualTo(IMAGE_URL),
                 () -> assertThat(findProductEntity.getCategory()).isEqualTo(ProductCategory.KOREAN));
     }
 
     @DisplayName("존재하지 않는 상품을 조회하면 Optional을 반환한다")
     @Test
     void findById_fail() {
-        final Optional<ProductEntity> productOptional = productDao.findById(1L);
+        final Optional<Product> productOptional = productDao.findById(1L);
         assertThat(productOptional.isPresent()).isFalse();
     }
 
@@ -53,12 +54,12 @@ class ProductEntityDaoTest {
         final Long productId = productDao.insert(productEntity);
 
         // when
-        final ProductEntity findProductEntity = productDao.findById(productId).get();
+        final Product findProductEntity = productDao.findById(productId).get();
 
         // then
-        assertAll(() -> assertThat(findProductEntity.getName()).isEqualTo("치킨"),
-                () -> assertThat(findProductEntity.getPrice()).isEqualTo(20000),
-                () -> assertThat(findProductEntity.getImageUrl()).isEqualTo(IMAGE_URL),
+        assertAll(() -> assertThat(findProductEntity.getProductNameValue()).isEqualTo("치킨"),
+                () -> assertThat(findProductEntity.getPriceValue()).isEqualTo(20000),
+                () -> assertThat(findProductEntity.getImageUrlValue()).isEqualTo(IMAGE_URL),
                 () -> assertThat(findProductEntity.getCategory()).isEqualTo(ProductCategory.KOREAN));
     }
 
@@ -70,7 +71,7 @@ class ProductEntityDaoTest {
         productDao.insert(productEntity);
 
         // when
-        final List<ProductEntity> productEntities = productDao.findAll();
+        final List<Product> productEntities = productDao.findAll();
 
         // then
         assertThat(productEntities).hasSize(2);
@@ -81,18 +82,18 @@ class ProductEntityDaoTest {
     void update() {
         // given
         final Long productId = productDao.insert(productEntity);
-        final ProductEntity updateProductEntity = new ProductEntity(productId, "탕수육", "imageUrl", 30000, ProductCategory.CHINESE);
+        final Product updateProductEntity = new Product(productId, "탕수육", "imageUrl", 30000, ProductCategory.CHINESE);
         int updatedCount = productDao.update(productId, updateProductEntity);
 
         // when
-        final ProductEntity findProductEntity = productDao.findById(productId).get();
+        final Product findProductEntity = productDao.findById(productId).get();
 
         // then
         assertAll(
                 () -> assertThat(updatedCount).isEqualTo(1),
-                () -> assertThat(findProductEntity.getName()).isEqualTo("탕수육"),
-                () -> assertThat(findProductEntity.getPrice()).isEqualTo(30000),
-                () -> assertThat(findProductEntity.getImageUrl()).isEqualTo("imageUrl"),
+                () -> assertThat(findProductEntity.getProductNameValue()).isEqualTo("탕수육"),
+                () -> assertThat(findProductEntity.getPriceValue()).isEqualTo(30000),
+                () -> assertThat(findProductEntity.getImageUrlValue()).isEqualTo("imageUrl"),
                 () -> assertThat(findProductEntity.getCategory()).isEqualTo(ProductCategory.CHINESE));
     }
 
