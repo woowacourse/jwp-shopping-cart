@@ -165,9 +165,11 @@
 ## 🎯 3-3. 장바구니 기능 구현
 
 ### ⚙️ 공통 상황
+  - 사용자 인증
+    - [x] 인증 과정에서 커스텀 Inteceptor를 구현한다.
+      - [x] [exception] 요청 Header에 `Authorization` 필드 값이 존재하지 않으면 예외가 발생한다.
   - 사용자 정보 추출
     - [ ] 요청 Header에 `Authorization` 필드 값으로 사용자의 정보를 추출하여 파라미터로 담는다.
-      - [ ] [exception] 요청 Header에 `Authorization` 필드 값이 존재하지 않으면 예외가 발생한다.
       - 추출한 값은 email:password를 base64로 인코딩한 문자열이다.
       - [ ] 추출 값을 decoding & parsing 하여 이메일과 비밀번호를 추출한다.
       - [ ] 파라미터로 담는 과정에서 커스텀 ArgumentResolver를 구현한다.
@@ -195,7 +197,8 @@
 
 ## 📘 4. DB 설계
 
-<img width="801" alt="장바구니 ERD 설계" src="https://user-images.githubusercontent.com/95729738/235354560-46ba18c6-84e2-4896-8587-4c3dabc75870.png">
+<img width="801" alt="장바구니 ERD 설계" src="https://user-images.githubusercontent.com/95729738/235427514-54aadb04-72af-41fc-a0eb-27449882c878.png">
+
 
 
 
