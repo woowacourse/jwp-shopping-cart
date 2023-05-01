@@ -2,7 +2,6 @@ package cart.mvcconfig;
 
 import cart.infrastructure.AuthInfo;
 import cart.infrastructure.AuthorizationExtractor;
-import cart.infrastructure.BasicAuthorizationExtractor;
 import cart.infrastructure.UnauthorizedMemberException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -13,9 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
 
+    private final AuthorizationExtractor<AuthInfo> authorizationExtractor;
+
+    public LoginInterceptor(AuthorizationExtractor<AuthInfo> authorizationExtractor) {
+        this.authorizationExtractor = authorizationExtractor;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        final AuthorizationExtractor<AuthInfo> authorizationExtractor = new BasicAuthorizationExtractor();
         final AuthInfo authInfo = authorizationExtractor.extract(request);
 
         if (authInfo == null) {

@@ -1,5 +1,6 @@
 package cart.mvcconfig;
 
+import cart.infrastructure.BasicAuthorizationExtractor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -17,7 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        final HandlerInterceptor interceptor = new LoginInterceptor();
+        final HandlerInterceptor interceptor = new LoginInterceptor(new BasicAuthorizationExtractor());
 
         registry.addInterceptor(interceptor)
                 .addPathPatterns("/cart/items/**");
