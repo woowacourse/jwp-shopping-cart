@@ -2,7 +2,11 @@ package cart.dto.cart;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotNull;
+
 public class CartSaveRequest {
+
+    @NotNull
     @JsonProperty("productId")
     private Long id;
 
