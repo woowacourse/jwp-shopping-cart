@@ -74,7 +74,7 @@
 - [ ] 사용자 기본 정보: email, password
   - [x] DB 테이블 설계
     - ```sql
-      CREATE TABLE USERS
+      CREATE TABLE MEMBERS
       (
         id          INT     NOT NULL AUTO_INCREMENT,
         email       VARCHAR NOT NULL UNIQUE,
