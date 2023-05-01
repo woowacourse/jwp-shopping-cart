@@ -1,5 +1,7 @@
 package cart.entity;
 
+import cart.dto.MemberRequest;
+
 import java.sql.Timestamp;
 
 public class MemberEntity {
@@ -20,7 +22,7 @@ public class MemberEntity {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -39,5 +41,13 @@ public class MemberEntity {
 
     public String getPhone() {
         return phone;
+    }
+
+    public void replace(MemberRequest memberRequest) {
+        this.name = memberRequest.getName();
+        this.phone = memberRequest.getPhone();
+        this.email = memberRequest.getEmail();
+        // TODO : password 정책
+        this.password = memberRequest.getPassword();
     }
 }
