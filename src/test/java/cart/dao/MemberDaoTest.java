@@ -1,13 +1,12 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.*;
+import static cart.fixture.MemberFixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
 import cart.entity.MemberEntity;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,12 +21,6 @@ public class MemberDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     private MemberDao memberDao;
-    private final MemberEntity insertMemberEntity =
-            new MemberEntity.Builder()
-                    .nickname("SeongHa")
-                    .email("seongha111@gmail.com")
-                    .password("1234")
-                    .build();
 
     @BeforeEach
     void setUp() {
@@ -38,7 +31,7 @@ public class MemberDaoTest {
     @DisplayName("멤버를 저장한다.")
     void insert() {
         // when
-        long insertedId = memberDao.insert(insertMemberEntity);
+        long insertedId = memberDao.insert(INSERT_MEMBER_ENTITY);
 
         // then
         assertThat(insertedId).isNotNull();
@@ -48,7 +41,7 @@ public class MemberDaoTest {
     @DisplayName("저장된 멤버를 모두 조회한다.")
     void selectAll() {
         // given
-        long insertedId = memberDao.insert(insertMemberEntity);
+        long insertedId = memberDao.insert(INSERT_MEMBER_ENTITY);
 
         // when
         List<MemberEntity> members = memberDao.selectAll();
@@ -59,5 +52,25 @@ public class MemberDaoTest {
                 () -> assertThat(members).hasSize(1),
                 () -> assertThat(member1.getMemberId()).isEqualTo(insertedId)
         );
+    }
+
+    @Test
+    @DisplayName("닉네임으로 멤버 조회 시 행이 존재하면 TRUE를 반환한다.")
+    void isExistByNickname() {
+        // given
+        memberDao.insert(INSERT_MEMBER_ENTITY);
+
+        // when, then
+        assertThat(memberDao.isExistByNickname(DUMMY_NICKNAME)).isTrue();
+    }
+
+    @Test
+    @DisplayName("이메일으로 멤버 조회 시 행이 존재하면 TRUE를 반환한다.")
+    void isExistByEmail() {
+        // given
+        memberDao.insert(INSERT_MEMBER_ENTITY);
+
+        // when, then
+        assertThat(memberDao.isExistByEmail(DUMMY_EMAIL)).isTrue();
     }
 }

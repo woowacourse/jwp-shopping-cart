@@ -22,6 +22,8 @@ public class MemberService {
     }
 
     public long register(MemberRegisterRequest memberRegisterRequest) {
+        validateDuplicate(memberRegisterRequest);
+
         Nickname nickname = new Nickname(memberRegisterRequest.getNickname());
         Password password = new Password(memberRegisterRequest.getPassword());
         Member member = new Member(nickname, memberRegisterRequest.getEmail(), password);
@@ -33,6 +35,15 @@ public class MemberService {
                 .build();
 
         return memberDao.insert(registerMemberEntity);
+    }
+
+    private void validateDuplicate(MemberRegisterRequest memberRegisterRequest) {
+        if (memberDao.isExistByNickname(memberRegisterRequest.getNickname())) {
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다. 다시 입력해주세요.");
+        }
+        if (memberDao.isExistByEmail(memberRegisterRequest.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다. 다시 입력해주세요.");
+        }
     }
 
     public List<MemberFindResponse> findAll() {

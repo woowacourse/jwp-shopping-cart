@@ -155,9 +155,9 @@
       - nickname
         - [x] [validation] 닉네임은 한글, 영어, 숫자만 가능하다.
         - [x] [validation] 닉네임은 2자 이상 8자 이하여야한다.
-        - [ ] [exception] 이미 있는 닉네임이면 에외가 발생한다.
+        - [x] [exception] 이미 있는 닉네임이면 에외가 발생한다.
       - email
-        - [ ] [exception] 이미 있는 이메일이면 예외가 발생한다.
+        - [x] [exception] 이미 있는 이메일이면 예외가 발생한다.
       - password
         - [x] [validation] 비밀번호는 4자 이상이어야 한다.
 

@@ -1,5 +1,6 @@
 package cart.controller;
 
+import static cart.fixture.MemberFixtures.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -28,10 +29,6 @@ import org.springframework.http.MediaType;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MemberControllerTest {
 
-    private static final String DUMMY_NICKNAME = "SeongHa";
-    private static final String DUMMY_EMAIL = "seongha@gmail.com";
-    private static final String DUMMY_PASSWORD = "1234";
-
     @LocalServerPort
     int port;
 
@@ -39,9 +36,6 @@ public class MemberControllerTest {
     void setUp() {
         RestAssured.port = port;
     }
-
-    private final MemberRegisterRequest memberRegisterRequest =
-            new MemberRegisterRequest(DUMMY_NICKNAME, DUMMY_EMAIL, DUMMY_PASSWORD);
 
     @Autowired
     private MemberDao memberDao;
@@ -52,7 +46,7 @@ public class MemberControllerTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(memberRegisterRequest)
+                .body(MEMBER_REGISTER_REQUEST)
                 .post("/member/register")
                 .then()
                 .log().all()
@@ -68,6 +62,60 @@ public class MemberControllerTest {
                 () -> assertThat(memberEntity1.getNickname()).isEqualTo(DUMMY_NICKNAME),
                 () -> assertThat(memberEntity1.getEmail()).isEqualTo(DUMMY_EMAIL),
                 () -> assertThat(memberEntity1.getPassword()).isEqualTo(DUMMY_PASSWORD)
+        );
+    }
+
+    @Test
+    @DisplayName("이미 존재하는 닉네임으로 사용자 등록 API를 호출하면 400을 반환한다.")
+    void register_400_duplicate_nickname() {
+        // given
+        given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(MEMBER_REGISTER_REQUEST)
+                .post("/member/register");
+        MemberRegisterRequest duplicateNicknameMemberRequest =
+                new MemberRegisterRequest(DUMMY_NICKNAME, "new" + DUMMY_EMAIL, DUMMY_PASSWORD);
+
+        // when
+        Response response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(duplicateNicknameMemberRequest)
+                .post("/member/register")
+                .then()
+                .log().all()
+                .extract().response();
+
+        // then
+        assertAll(
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.getBody().asString()).isEqualTo("이미 존재하는 닉네임입니다. 다시 입력해주세요.")
+        );
+    }
+
+    @Test
+    @DisplayName("이미 존재하는 이메일으로 사용자 등록 API를 호출하면 400을 반환한다.")
+    void register_400_duplicate_email() {
+        // given
+        given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(MEMBER_REGISTER_REQUEST)
+                .post("/member/register");
+        MemberRegisterRequest duplicateEmailMemberRequest =
+                new MemberRegisterRequest("new" + DUMMY_NICKNAME, DUMMY_EMAIL, DUMMY_PASSWORD);
+
+        // when
+        Response response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(duplicateEmailMemberRequest)
+                .post("/member/register")
+                .then()
+                .log().all()
+                .extract().response();
+
+        // then
+        assertAll(
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.getBody().asString()).isEqualTo("이미 존재하는 이메일입니다. 다시 입력해주세요.")
         );
     }
 
@@ -173,7 +221,7 @@ public class MemberControllerTest {
         // given
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(memberRegisterRequest)
+                .body(MEMBER_REGISTER_REQUEST)
                 .post("/member/register");
 
         // when

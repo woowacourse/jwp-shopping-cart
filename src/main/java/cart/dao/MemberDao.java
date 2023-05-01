@@ -47,4 +47,14 @@ public class MemberDao {
                     .build()
             );
     }
+
+    public Boolean isExistByNickname(String nickname) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM MEMBER WHERE nickname = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, nickname);
+    }
+
+    public Boolean isExistByEmail(String email) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM MEMBER WHERE email = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, email);
+    }
 }
