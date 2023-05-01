@@ -2,13 +2,13 @@ package cart.entity;
 
 public class ProductEntity {
 
-    private Long id;
+    private Long productId;
     private String name;
     private String imgUrl;
     private int price;
 
-    private ProductEntity(Long id, String name, String imgUrl, int price) {
-        this.id = id;
+    private ProductEntity(Long productId, String name, String imgUrl, int price) {
+        this.productId = productId;
         this.name = name;
         this.imgUrl = imgUrl;
         this.price = price;
@@ -16,13 +16,13 @@ public class ProductEntity {
 
     public static class Builder {
 
-        private Long id;
+        private Long productId;
         private String name;
         private String imgUrl;
         private int price;
 
-        public Builder id(final Long id) {
-            this.id = id;
+        public Builder productId(final Long productId) {
+            this.productId = productId;
             return this;
         }
 
@@ -42,12 +42,12 @@ public class ProductEntity {
         }
 
         public ProductEntity build() {
-            return new ProductEntity(id, name, imgUrl, price);
+            return new ProductEntity(productId, name, imgUrl, price);
         }
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductId() {
+        return productId;
     }
 
     public String getName() {

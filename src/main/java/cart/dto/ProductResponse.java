@@ -17,7 +17,7 @@ public class ProductResponse {
     }
 
     public static ProductResponse fromEntity(final ProductEntity productEntity) {
-        return new ProductResponse(productEntity.getId(), productEntity.getImgUrl(), productEntity.getName(),
+        return new ProductResponse(productEntity.getProductId(), productEntity.getImgUrl(), productEntity.getName(),
                 productEntity.getPrice());
     }
 

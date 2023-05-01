@@ -16,14 +16,14 @@ public class ProductDao {
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("product").usingGeneratedKeyColumns("id");
+                .withTableName("product").usingGeneratedKeyColumns("product_id");
     }
 
     public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) ->
                 new ProductEntity.Builder()
-                        .id(rs.getLong("id"))
+                        .productId(rs.getLong("product_id"))
                         .name(rs.getString("name"))
                         .imgUrl(rs.getString("img_url"))
                         .price(rs.getInt("price"))
@@ -41,21 +41,21 @@ public class ProductDao {
     }
 
     public void update(ProductEntity productEntity) {
-        String sql = "UPDATE product SET name = ?, img_url = ?, price = ? WHERE id = ?";
+        String sql = "UPDATE product SET name = ?, img_url = ?, price = ? WHERE product_id = ?";
         jdbcTemplate.update(sql,
                 productEntity.getName(),
                 productEntity.getImgUrl(),
                 productEntity.getPrice(),
-                productEntity.getId());
+                productEntity.getProductId());
     }
 
     public void delete(long id) {
-        String sql = "DELETE FROM product WHERE id = ?";
+        String sql = "DELETE FROM product WHERE product_id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     public Boolean isNotExistBy(long id) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM product WHERE id = ?)";
+        String sql = "SELECT EXISTS(SELECT 1 FROM product WHERE product_id =  ?)";
         return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 }

@@ -48,7 +48,7 @@ class ProductDaoTest {
         long savedId = productDao.insert(productEntity);
 
         // then
-        assertThat(productDao.findAll().get(0).getId()).isEqualTo(savedId);
+        assertThat(productDao.findAll().get(0).getProductId()).isEqualTo(savedId);
     }
 
     @DisplayName("상품 정보를 수정한다.")
@@ -57,7 +57,7 @@ class ProductDaoTest {
         // given
         long savedId = productDao.insert(productEntity);
         ProductEntity updateProductEntity = new Builder()
-                .id(savedId)
+                .productId(savedId)
                 .name("cuteBaronDoll")
                 .price(100000)
                 .imgUrl("https://avatars.githubusercontent.com/u/70891072?v=4")

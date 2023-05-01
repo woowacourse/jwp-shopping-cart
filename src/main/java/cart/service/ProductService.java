@@ -46,7 +46,7 @@ public class ProductService {
         checkProductExistBy(id);
 
         ProductEntity productEntity = new ProductEntity.Builder()
-                .id(id)
+                .productId(id)
                 .name(product.getName())
                 .imgUrl(product.getImgUrl())
                 .price(product.getPrice())
