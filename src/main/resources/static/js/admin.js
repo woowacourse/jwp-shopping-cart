@@ -73,7 +73,7 @@ const createProduct = (product) => {
             "categoryIds": Object.values(categoryIds).map(Number)
         }
     }).then((response) => {
-        window.location = "/admin"
+        window.location.reload();
     }).catch((error) => {
         console.error(error);
     });
