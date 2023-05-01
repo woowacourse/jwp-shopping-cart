@@ -29,3 +29,6 @@ CREATE TABLE IF NOT EXISTS `cart`
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
+
+INSERT INTO `cart` (user_id, product_id)
+VALUES (1, 1);
