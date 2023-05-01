@@ -1,20 +1,17 @@
 package cart.domain.cart;
 
 import cart.domain.member.MemberId;
-import cart.domain.product.Product;
-
-import java.util.ArrayList;
-import java.util.List;
+import cart.domain.product.ProductId;
 
 public class Cart {
     private CartId id;
     private MemberId memberId;
-    private List<Product> products = new ArrayList<>();
+    private ProductId productId;
 
-    public Cart(final CartId id, final MemberId memberId, final List<Product> products) {
-        this(memberId);
+    public Cart(final CartId id, final MemberId memberId, final ProductId productId) {
         this.id = id;
-        this.products = products;
+        this.memberId = memberId;
+        this.productId = productId;
     }
 
     public Cart(final MemberId memberId) {
@@ -29,7 +26,7 @@ public class Cart {
         return memberId;
     }
 
-    public List<Product> getProducts() {
-        return new ArrayList<>(products);
+    public ProductId getProductId() {
+        return productId;
     }
 }
