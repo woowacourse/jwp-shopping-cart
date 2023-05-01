@@ -69,7 +69,7 @@ class ProductDaoTest {
         final ProductEntity modifiedProductEntity = new ProductEntity(id, name, price, imageUrl);
 
         //when
-        productDao.modify(modifiedProductEntity);
+        productDao.update(modifiedProductEntity);
 
         final ProductEntity savedProductEntity = productDao.findAll()
                                                            .stream()

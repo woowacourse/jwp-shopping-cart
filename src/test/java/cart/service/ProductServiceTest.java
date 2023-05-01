@@ -92,10 +92,10 @@ class ProductServiceTest {
         productService.modifyProduct(id, productModifyRequest);
 
         final ProductSearchResponse productSearchResponse = productService.searchAllProducts()
-                                                                          .stream()
-                                                                          .filter(it -> it.getId().equals(id))
-                                                                          .findFirst()
-                                                                          .orElseThrow();
+                .stream()
+                .filter(it -> it.getId().equals(id))
+                .findFirst()
+                .orElseThrow();
 
         //then
         assertAll(
