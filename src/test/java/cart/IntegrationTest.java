@@ -3,7 +3,7 @@ package cart;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.notNullValue;
 
-import cart.service.dto.ProductHttpRequest;
+import cart.service.dto.ProductRequest;
 import io.restassured.RestAssured;
 import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,11 +38,11 @@ class IntegrationTest {
     @Test
     @DisplayName("상품 추가 테스트")
     void createProduct() {
-        final ProductHttpRequest productHttpRequest = new ProductHttpRequest("TEST",
+        final ProductRequest productRequest = new ProductRequest("TEST",
                 "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", 4000);
 
         given()
-                .body(productHttpRequest).log().all()
+                .body(productRequest).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/admin/create")
@@ -69,11 +69,11 @@ class IntegrationTest {
     @DisplayName("상품 수정 테스트")
     @Sql({"/test-fixture.sql"})
     void editProduct() {
-        final ProductHttpRequest productHttpRequest = new ProductHttpRequest(1L, "TEST787",
+        final ProductRequest productRequest = new ProductRequest(1L, "TEST787",
                 "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", 4000);
 
         given()
-                .body(productHttpRequest).log().all()
+                .body(productRequest).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .patch("/admin/edit")

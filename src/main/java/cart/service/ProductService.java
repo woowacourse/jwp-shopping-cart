@@ -3,8 +3,8 @@ package cart.service;
 import cart.entity.Product;
 import cart.exception.ProductNotFoundException;
 import cart.repository.ProductRepository;
-import cart.service.dto.ProductHttpRequest;
-import cart.service.dto.ProductHttpResponse;
+import cart.service.dto.ProductRequest;
+import cart.service.dto.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -18,19 +18,19 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductHttpResponse> findAll() {
+    public List<ProductResponse> findAll() {
         return productRepository.findAll().stream()
                 .map(ProductService::toResponse)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public long createProduct(final ProductHttpRequest httpRequest) {
+    public long createProduct(final ProductRequest httpRequest) {
         final Product savedProduct = productRepository.save(toProduct(httpRequest));
         return savedProduct.getId();
     }
 
-    public void updateProduct(final ProductHttpRequest productHttpRequest) {
-        final int updatedCount = productRepository.update(toProduct(productHttpRequest));
+    public void updateProduct(final ProductRequest productRequest) {
+        final int updatedCount = productRepository.update(toProduct(productRequest));
         validateProductNotFound(updatedCount);
     }
 
@@ -44,13 +44,13 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    private static ProductHttpResponse toResponse(final Product product) {
-        return new ProductHttpResponse(product.getId(), product.getName(), product.getImageUrl(),
+    private static ProductResponse toResponse(final Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getImageUrl(),
                 product.getPrice());
     }
 
-    private static Product toProduct(final ProductHttpRequest productHttpRequest) {
-        return new Product(productHttpRequest.getId(), productHttpRequest.getName(), productHttpRequest.getImageUrl(),
-                productHttpRequest.getPrice());
+    private static Product toProduct(final ProductRequest productRequest) {
+        return new Product(productRequest.getId(), productRequest.getName(), productRequest.getImageUrl(),
+                productRequest.getPrice());
     }
 }

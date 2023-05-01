@@ -3,7 +3,7 @@ package cart.service.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class ProductHttpRequest {
+public class ProductRequest {
 
     private Long id;
     @NotBlank(message = "이름이 비어있을 수는 없습니다.")
@@ -13,17 +13,17 @@ public class ProductHttpRequest {
     @NotNull(message = "가격은 비어있을 수 없습니다.")
     private Integer price;
 
-    private ProductHttpRequest() {
+    private ProductRequest() {
     }
 
-    public ProductHttpRequest(final Long id, final String name, final String imageUrl, final Integer price) {
+    public ProductRequest(final Long id, final String name, final String imageUrl, final Integer price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
     }
 
-    public ProductHttpRequest(final String name, final String imageUrl, final Integer price) {
+    public ProductRequest(final String name, final String imageUrl, final Integer price) {
         this(null, name, imageUrl, price);
     }
 
