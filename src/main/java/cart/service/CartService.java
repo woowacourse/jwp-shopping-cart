@@ -10,6 +10,7 @@ import cart.entity.MemberEntity;
 import cart.entity.product.ProductEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +49,9 @@ public class CartService {
         final List<Long> productIds = cartEntities.stream()
                 .map(CartEntity::getProductId)
                 .collect(Collectors.toList());
+        if (productIds.isEmpty()) {
+            return Collections.emptyList();
+        }
         return productDao.findAllIn(productIds).stream()
                 .map(CartProductResponseDto::from)
                 .collect(Collectors.toList());

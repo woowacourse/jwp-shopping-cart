@@ -68,4 +68,37 @@ class CartApiControllerTest {
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
     }
+
+    @Nested
+    @DisplayName("장바구니 목록 조회 시")
+    class FindCartProductsByMember {
+
+        @Test
+        @DisplayName("멤버 정보가 유효하다면 장바구니 목록을 조회한다.")
+        void findCartProductsByMember() {
+            final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password1".getBytes()));
+
+            RestAssured.given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header("Authorization", "Basic " + encodedAuth)
+                    .when()
+                    .get("/carts")
+                    .then()
+                    .statusCode(HttpStatus.OK.value());
+        }
+
+        @Test
+        @DisplayName("멤버 정보가 유효하지 않으면 예외를 던진다.")
+        void findCartProductsByInvalidMember() {
+            final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com".getBytes()));
+
+            RestAssured.given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header("Authorization", "Basic " + encodedAuth)
+                    .when()
+                    .get("/carts")
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+    }
 }
