@@ -64,7 +64,7 @@ class ProductDaoTest {
         // given
         final Product product = new Product(null, "홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 10_000_000);
         long id = productDao.save(product);
-        final Product updatedProduct = new Product(id, "아벨", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 20_000_000);
+        final Product updatedProduct = new Product(id, "아벨", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 10_000_000);
         productDao.update(updatedProduct);
         
         // when

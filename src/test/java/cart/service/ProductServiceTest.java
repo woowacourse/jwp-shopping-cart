@@ -39,8 +39,8 @@ class ProductServiceTest {
     void setUp() {
         inOrder = inOrder(productDao);
         // given
-        firstProduct = new Product(1L, "홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 1_000_000_000);
-        secondProduct = new Product(2L, "아벨", "https://ca.slack-edge.com/TFELTJB7V-U04LMNLQ78X-a7ef923d5391-512", 1_000_000_000);
+        firstProduct = new Product(1L, "홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 10_000_000);
+        secondProduct = new Product(2L, "아벨", "https://ca.slack-edge.com/TFELTJB7V-U04LMNLQ78X-a7ef923d5391-512", 10_000_000);
         given(productDao.findAll()).willReturn(List.of(firstProduct, secondProduct));
     }
     
@@ -63,7 +63,7 @@ class ProductServiceTest {
         // expect
         assertAll(
                 () -> assertThatNoException()
-                        .isThrownBy(() -> productService.save(new ProductRequest())),
+                        .isThrownBy(() -> productService.save(new ProductRequest("product", "abel.com", 1000))),
                 () -> then(productDao).should(only()).save(any())
         );
     }
@@ -73,7 +73,7 @@ class ProductServiceTest {
         // expect
         assertAll(
                 () -> assertThatNoException()
-                        .isThrownBy(() -> productService.update(2L, new ProductRequest())),
+                        .isThrownBy(() -> productService.update(2L, new ProductRequest("product", "abel.com", 1000))),
                 () -> then(productDao).should(inOrder).findAll(),
                 () -> then(productDao).should(inOrder).update(any())
         );

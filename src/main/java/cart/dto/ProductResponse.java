@@ -1,5 +1,8 @@
 package cart.dto;
 
+import cart.domain.ImageUrl;
+import cart.domain.Name;
+import cart.domain.Price;
 import cart.domain.Product;
 import lombok.*;
 
@@ -21,6 +24,9 @@ public class ProductResponse {
     }
     
     public static ProductResponse from(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
+        final Name name = product.getName();
+        final Price price = product.getPrice();
+        final ImageUrl imageUrl = product.getImageUrl();
+        return new ProductResponse(product.getId(), name.getName(), imageUrl.getUrl(), price.getPrice());
     }
 }

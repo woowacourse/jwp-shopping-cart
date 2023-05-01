@@ -26,7 +26,7 @@ public class ProductService {
     }
     
     public Long save(final ProductRequest productRequest) {
-        Product product = new Product(null, productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        Product product = new Product(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
         return productDao.save(product);
     }
     

@@ -51,12 +51,16 @@ public class ProductDao {
     }
     
     public Long save(final Product product) {
-        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
-        return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", product.getName().getName())
+                .addValue("imageUrl", product.getImageUrl().getUrl())
+                .addValue("price", product.getPrice().getPrice());
+        
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
     
     public void update(final Product product) {
-        String sql = "UPDATE PRODUCT SET NAME=:name,IMAGE_URL=:imageUrl, PRICE=:price WHERE ID=:id";
+        String sql = "UPDATE PRODUCT SET NAME=:name.name,IMAGE_URL=:imageUrl.url, PRICE=:price.price WHERE ID=:id";
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
