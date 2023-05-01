@@ -1,23 +1,17 @@
 package cart.controller.admin;
 
+import static cart.fixture.ProductFixtures.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import cart.dto.ProductModifyRequest;
-import cart.service.ProductService;
-import cart.dto.ProductRegisterRequest;
-import cart.dto.ProductResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import cart.dto.ProductRegisterRequest;
+import cart.service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,17 +29,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 @WebMvcTest(ProductController.class)
 public class ProductControllerUnitTest {
-
-    private final ProductResponse cuteSeonghaDoll =
-            new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
-                    "CuteSeonghaDoll", 25000);
-
-    private final ProductResponse cuteBaronDoll =
-            new ProductResponse(2, "https://avatars.githubusercontent.com/u/95729738?v=4",
-                    "CuteBaronDoll", 250000);
-
-    private final ProductModifyRequest cuteModifySeonghaDoll =
-            new ProductModifyRequest("CuteSeonghaDoll", 2500000, "https://avatars.githubusercontent.com/u/95729738?v=4");
 
     @Autowired
     private WebApplicationContext context;
@@ -66,7 +49,7 @@ public class ProductControllerUnitTest {
     @DisplayName("전체 상품 조회 API 호출 시 전체 상품이 반환된다.")
     @Test
     void showAllProducts() throws Exception {
-        given(productService.findAllProducts()).willReturn(List.of(cuteSeonghaDoll, cuteBaronDoll));
+        given(productService.findAllProducts()).willReturn(List.of(DUMMY_SEONGHA_RESPONSE, DUMMY_BARON_RESPONSE));
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin"));
@@ -76,7 +59,7 @@ public class ProductControllerUnitTest {
     @Test
     void registerProduct() throws Exception {
         // given
-        String requestString = objectMapper.writeValueAsString(cuteSeonghaDoll);
+        String requestString = objectMapper.writeValueAsString(DUMMY_SEONGHA_RESPONSE);
         given(productService.save(any(ProductRegisterRequest.class))).willReturn(1L);
 
         // when then
@@ -92,7 +75,7 @@ public class ProductControllerUnitTest {
     @Test
     void modifyProduct() throws Exception {
         // given
-        String requestString = objectMapper.writeValueAsString(cuteModifySeonghaDoll);
+        String requestString = objectMapper.writeValueAsString(DUMMY_SEONGHA_MODIFY_REQUEST);
 
         mockMvc.perform(put("/admin/product/1")
                         .accept(MediaType.APPLICATION_JSON_VALUE)

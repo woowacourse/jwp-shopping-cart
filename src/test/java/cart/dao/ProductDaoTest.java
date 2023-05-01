@@ -1,5 +1,6 @@
 package cart.dao;
 
+import static cart.fixture.ProductFixtures.INSERT_PRODUCT_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.entity.ProductEntity;
@@ -19,11 +20,6 @@ class ProductDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     private ProductDao productDao;
-    private ProductEntity productEntity = new ProductEntity.Builder()
-            .name("cuteSeongHaDoll")
-            .imgUrl("https://avatars.githubusercontent.com/u/95729738?v=4")
-            .price(25000)
-            .build();
 
     @BeforeEach
     void setUp() {
@@ -34,7 +30,7 @@ class ProductDaoTest {
     @Test
     void findAll() {
         //given
-        productDao.insert(productEntity);
+        productDao.insert(INSERT_PRODUCT_ENTITY);
         //when
         List<ProductEntity> products = productDao.findAll();
         //then
@@ -45,7 +41,7 @@ class ProductDaoTest {
     @Test
     void save() {
         // when
-        long savedId = productDao.insert(productEntity);
+        long savedId = productDao.insert(INSERT_PRODUCT_ENTITY);
 
         // then
         assertThat(productDao.findAll().get(0).getProductId()).isEqualTo(savedId);
@@ -55,7 +51,7 @@ class ProductDaoTest {
     @Test
     void update() {
         // given
-        long savedId = productDao.insert(productEntity);
+        long savedId = productDao.insert(INSERT_PRODUCT_ENTITY);
         ProductEntity updateProductEntity = new Builder()
                 .productId(savedId)
                 .name("cuteBaronDoll")
@@ -76,7 +72,7 @@ class ProductDaoTest {
     @Test
     void delete() {
         // given
-        long savedId = productDao.insert(productEntity);
+        long savedId = productDao.insert(INSERT_PRODUCT_ENTITY);
 
         // when
         productDao.delete(savedId);
@@ -97,7 +93,7 @@ class ProductDaoTest {
     @DisplayName("삭제 상품 ID에 해당하는 상품 행이 존재하면 FALSE를 반환한다.")
     void isNotExistBy_False() {
         // given
-        long savedId = productDao.insert(productEntity);
+        long savedId = productDao.insert(INSERT_PRODUCT_ENTITY);
 
         // when, then
         assertThat(productDao.isNotExistBy(savedId)).isFalse();

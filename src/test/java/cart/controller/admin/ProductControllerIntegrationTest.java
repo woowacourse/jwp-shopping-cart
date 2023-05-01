@@ -1,10 +1,11 @@
 package cart.controller.admin;
 
+import static cart.fixture.ProductFixtures.DUMMY_SEONGHA_MODIFY_REQUEST;
+import static cart.fixture.ProductFixtures.DUMMY_SEONGHA_REGISTER_REQUEST;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dto.ProductModifyRequest;
 import cart.dto.ProductRegisterRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -48,8 +49,7 @@ class ProductControllerIntegrationTest {
     void registerProduct() {
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDollFromController",
-                        25000))
+                .body(DUMMY_SEONGHA_REGISTER_REQUEST)
                 .when()
                 .post("/admin/product")
                 .then()
@@ -63,8 +63,7 @@ class ProductControllerIntegrationTest {
         String baseUrl = "/admin/product/";
         //given
         String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
-                        25000))
+                .body(DUMMY_SEONGHA_REGISTER_REQUEST)
                 .when()
                 .post(baseUrl)
                 .then()
@@ -73,7 +72,7 @@ class ProductControllerIntegrationTest {
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductModifyRequest("CuteBaronDollFromController", 2500, "https://avatars.githubusercontent.com/u/70891072?v=4"))
+                .body(DUMMY_SEONGHA_MODIFY_REQUEST)
                 .when()
                 .put("/admin/product/" + savedId)
                 .then()
@@ -90,7 +89,7 @@ class ProductControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductModifyRequest("CuteBaronDollFromController", 2500, "https://avatars.githubusercontent.com/u/70891072?v=4"))
+                .body(DUMMY_SEONGHA_MODIFY_REQUEST)
                 .when()
                 .put("/admin/product/" + updateProductId)
                 .then()
@@ -111,8 +110,7 @@ class ProductControllerIntegrationTest {
         String baseUrl = "/admin/product/";
         //given
         String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
-                        "CuteSeonghaDoll", 25000))
+                .body(DUMMY_SEONGHA_REGISTER_REQUEST)
                 .when()
                 .post(baseUrl)
                 .then()
