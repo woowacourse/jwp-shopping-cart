@@ -1,7 +1,7 @@
 package cart.domain.product;
 
-import cart.web.controller.dto.ProductRequest;
-import cart.web.controller.dto.ProductResponse;
+import cart.web.controller.product.dto.ProductRequest;
+import cart.web.controller.product.dto.ProductResponse;
 import cart.web.exception.ErrorCode;
 import cart.web.exception.GlobalException;
 import org.slf4j.Logger;

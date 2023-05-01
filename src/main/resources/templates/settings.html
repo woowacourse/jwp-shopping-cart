@@ -23,8 +23,8 @@
     <div class="cart-items">
         <div class="cart-item" th:each="member : ${members}">
             <div class="cart-item-info">
-                <div class="cart-item-name">[[${member.getUserEmailValue()}]]</div> <!-- 사용자 이메일 -->
-                <div class="cart-item-price">[[${member.getUserPasswordValue()}]]</div> <!-- 사용자 비밀번호 -->
+                <div class="cart-item-name">[[${member.getEmail()}]]</div> <!-- 사용자 이메일 -->
+                <div class="cart-item-price">[[${member.getPassword()}]]</div> <!-- 사용자 비밀번호 -->
                 <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">
                     Select
                 </button>

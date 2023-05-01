@@ -2,9 +2,9 @@ package cart.controller;
 
 import cart.dao.ProductCategory;
 import cart.domain.product.ProductService;
-import cart.web.controller.ProductViewController;
-import cart.web.controller.dto.ProductRequest;
-import cart.web.controller.dto.ProductResponse;
+import cart.web.controller.product.ProductViewController;
+import cart.web.controller.product.dto.ProductRequest;
+import cart.web.controller.product.dto.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

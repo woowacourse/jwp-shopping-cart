@@ -1,4 +1,4 @@
-package cart.web.controller.dto;
+package cart.web.controller.product.dto;
 
 import cart.dao.ProductCategory;
 import cart.domain.product.Product;

@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.dao.ProductCategory;
 import cart.domain.product.ProductService;
-import cart.web.controller.ProductRestController;
-import cart.web.controller.dto.ProductRequest;
+import cart.web.controller.product.ProductRestController;
+import cart.web.controller.product.dto.ProductRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
