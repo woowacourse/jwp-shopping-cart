@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -28,27 +27,21 @@ public class CartItemsApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getCartItems(HttpServletRequest request) {
-        final AuthInfo authInfo = (AuthInfo) request.getAttribute("authInfo");
-
+    public ResponseEntity<List<ProductDto>> getCartItems(AuthInfo authInfo) {
         List<ProductDto> items = cartItemsService.findItemsOfCart(authInfo);
 
         return ResponseEntity.ok(items);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addItemToCart(HttpServletRequest request, @RequestBody @Valid CartItemAddRequest cartItemAddRequest) {
-        final AuthInfo authInfo = (AuthInfo) request.getAttribute("authInfo");
-
+    public ResponseEntity<Void> addItemToCart(AuthInfo authInfo, @RequestBody @Valid CartItemAddRequest cartItemAddRequest) {
         final CartItemDto cartItemDto = cartItemsService.addItemToCart(authInfo, cartItemAddRequest);
 
         return ResponseEntity.created(URI.create("/cart/items/" + cartItemDto.getProductId())).build();
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteItemFromCart(HttpServletRequest request, @PathVariable Long productId) {
-        final AuthInfo authInfo = (AuthInfo) request.getAttribute("authInfo");
-
+    public ResponseEntity<Void> deleteItemFromCart(AuthInfo authInfo, @PathVariable Long productId) {
         cartItemsService.deleteItemFromCart(authInfo, productId);
 
         return ResponseEntity.noContent().build();
