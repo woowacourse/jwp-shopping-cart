@@ -18,6 +18,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
     private final AuthorizationExtractor<MemberLoginRequestDto> authorizationExtractor;
     private final MemberRepository memberRepository;
 
@@ -48,16 +50,16 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     }
 
     private MemberLoginRequestDto getMemberLoginRequestDto(final NativeWebRequest webRequest) {
-        String authorization = webRequest.getHeader("Authorization");
+        String authorization = webRequest.getHeader(AUTHORIZATION_HEADER);
         return authorizationExtractor.extractHeader(authorization);
     }
 
     private static void validateMemberLogin(final MemberLoginRequestDto memberLoginRequestDto, final Member member) {
-        if (!memberLoginRequestDto.getEmail().equals(member.getEmail())) {
+        if (!member.isEmailCorrect(memberLoginRequestDto.getEmail())) {
             throw new MemberNotFoundException();
         }
 
-        if (!memberLoginRequestDto.getPassword().equals(member.getPassword())) {
+        if (!member.isPasswordCorrect(memberLoginRequestDto.getPassword())) {
             throw new PasswordInvalidException();
         }
     }

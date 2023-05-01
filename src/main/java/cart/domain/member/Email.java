@@ -2,6 +2,8 @@ package cart.domain.member;
 
 import cart.exception.EmailCreateFailException;
 
+import java.util.Objects;
+
 public class Email {
 
     private static final String EMAIL_REGEX = "[0-9a-zA-Z]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
@@ -21,6 +23,10 @@ public class Email {
         if (!email.matches(EMAIL_REGEX)) {
             throw new EmailCreateFailException();
         }
+    }
+
+    public boolean isSameEmail(final String email) {
+        return Objects.equals(this.email, email);
     }
 
     public String getEmail() {

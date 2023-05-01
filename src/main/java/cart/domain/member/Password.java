@@ -2,6 +2,8 @@ package cart.domain.member;
 
 import cart.exception.PasswordCreateFailException;
 
+import java.util.Objects;
+
 public class Password {
 
     private static final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
@@ -21,6 +23,10 @@ public class Password {
         if (!password.matches(PASSWORD_REGEX)) {
             throw new PasswordCreateFailException();
         }
+    }
+
+    public boolean isSamePassword(final String password) {
+        return Objects.equals(this.password, password);
     }
 
     public String getPassword() {
