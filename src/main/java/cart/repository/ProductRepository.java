@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import cart.dao.ProductDao;
-import cart.entity.ProductEntity;
+import cart.dao.ProductDto;
+import cart.dao.ProductEntity;
 
 @Repository
 public class ProductRepository {

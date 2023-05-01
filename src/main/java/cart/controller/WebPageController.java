@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import cart.controller.dto.ProductResponse;
-import cart.entity.ProductEntity;
+import cart.dao.ProductEntity;
 import cart.repository.ProductRepository;
 
 @Controller

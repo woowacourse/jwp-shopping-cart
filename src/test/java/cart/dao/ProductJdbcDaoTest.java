@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import cart.entity.ProductEntity;
-import cart.repository.ProductDto;
-
 @JdbcTest
 class ProductJdbcDaoTest {
 

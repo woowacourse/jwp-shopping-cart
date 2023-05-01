@@ -1,8 +1,5 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
-import cart.repository.ProductDto;
-
 import java.util.List;
 
 public interface ProductDao {

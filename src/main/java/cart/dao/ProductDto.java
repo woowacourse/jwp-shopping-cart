@@ -1,22 +1,14 @@
-package cart.entity;
+package cart.dao;
 
-import java.util.Objects;
-
-public class ProductEntity {
-    private final Integer id;
+public class ProductDto {
     private final String name;
     private final String image;
     private final Long price;
 
-    public ProductEntity(final Integer id, final String name, final String image, final Long price) {
-        this.id = id;
+    public ProductDto(final String name, final String image, final Long price) {
         this.name = name;
         this.image = image;
         this.price = price;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getName() {
