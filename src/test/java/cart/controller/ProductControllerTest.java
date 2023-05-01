@@ -1,6 +1,5 @@
 package cart.controller;
 
-import cart.DummyData;
 import cart.dao.ProductDao;
 import cart.dto.ProductCreationRequest;
 import cart.dto.ProductModificationRequest;
@@ -18,9 +17,11 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
-import static cart.DummyData.*;
+import static cart.DummyData.dummyId;
+import static cart.DummyData.dummyImage;
+import static cart.DummyData.dummyName;
+import static cart.DummyData.dummyPrice;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
@@ -183,7 +184,6 @@ class ProductControllerTest {
     }
 
     @DisplayName("상품을 삭제하면 상태코드 204를 반환하는지 확인한다")
-    @Transactional
     @Test
     void deleteProductsTest() {
         final long id = 1L;
