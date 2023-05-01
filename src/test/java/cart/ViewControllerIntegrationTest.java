@@ -13,14 +13,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IndexIntegrationTest {
+class ViewControllerIntegrationTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+    }
+
+    @Test
+    @DisplayName("/admin으로 get 요청을 보내면 ok 상태코드를 반환한다")
+    void adminTest() {
+        RestAssured.given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/admin")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -34,5 +45,16 @@ public class IndexIntegrationTest {
                 .extract();
 
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("/settings로 get 요청을 보내면 ok 상태코드를 반환한다.")
+    void settingsTest() {
+        RestAssured.given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/settings")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     }
 }
