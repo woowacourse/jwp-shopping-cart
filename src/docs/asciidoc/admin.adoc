@@ -1,0 +1,22 @@
+[[Admin-API]]
+= *Admin API*
+
+[[상품-정보-어드민-API]]
+== *1. 상품 정보 추가 API*
+
+=== *1-1 성공*
+operation::admin-rest-controller-test/add-product[snippets='http-request,http-response,request-body,request-fields,response-headers']
+
+=== *1-2 실패 - 잘못된 형식의 입력*
+operation::admin-rest-controller-test/add-product_fail[snippets='http-request,http-response,request-body,request-fields']
+
+== *2. 상품 정보 수정 API*
+=== *2-1 성공*
+operation::admin-rest-controller-test/update-product[snippets='http-request,http-response,request-body,request-fields']
+
+=== *2-2 실패 - 잘못된 형식의 입력*
+operation::admin-rest-controller-test/update-product_fail[snippets='http-request,http-response,request-body,request-fields']
+
+== *3. 상품 정보 삭제 API*
+=== *3-1 성공*
+operation::admin-rest-controller-test/delete-product[snippets='http-request,http-response']

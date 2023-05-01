@@ -1,0 +1,26 @@
+[[Cart-API]]
+= *Cart API*
+
+[[장바구니-API]]
+== *1. 장바구니 추가 API*
+
+=== *1-1 성공*
+operation::cart-rest-controller-test/add-cart_success[snippets='http-request,http-response,response-headers']
+
+=== *1-2 실패 - 인증 정보 없음*
+operation::cart-rest-controller-test/add-cart_fail[snippets='http-request,http-response']
+
+== *2. 장바구니 삭제 API*
+=== *2-1 성공*
+operation::cart-rest-controller-test/delete-cart_success[snippets='http-request,http-response']
+
+=== *2-2 실패 - 인증 정보 없음*
+operation::cart-rest-controller-test/delete-cart_unauthorized[snippets='http-request,http-response']
+
+=== *2-2 실패 - 권한 없음*
+operation::cart-rest-controller-test/delete-cart_forbidden[snippets='http-request,http-response']
+
+== *3. 장바구니 조회 API*
+=== *3-1 성공*
+operation::cart-rest-controller-test/get-cart-by-member[snippets='http-request,http-response,response-fields']
+

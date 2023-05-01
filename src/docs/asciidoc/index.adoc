@@ -1,0 +1,19 @@
+= JWP-Cart API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+ifndef::page[]
+:page: src/docs/asciidoc
+endif::[]
+
+include::admin.adoc[]
+
+include::cart.adoc[]
+
+include::member.adoc[]
