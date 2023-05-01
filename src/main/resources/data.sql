@@ -5,3 +5,10 @@ CREATE TABLE IF NOT EXISTS products
     image TEXT        NOT NULL,
     price INT         NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS members
+(
+    id       BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    email    VARCHAR(21) NOT NULL,
+    password VARCHAR(21) NOT NULL
+);
