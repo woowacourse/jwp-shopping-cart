@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import cart.service.ProductService;
+import cart.product.dto.ProductRequest;
+import cart.product.dto.ProductResponse;
+import cart.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

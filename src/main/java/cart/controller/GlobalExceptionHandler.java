@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ExceptionResponse;
+import cart.exception.dto.ExceptionResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

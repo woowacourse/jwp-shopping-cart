@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.exception.dto;
 
 import lombok.Getter;
 import lombok.ToString;

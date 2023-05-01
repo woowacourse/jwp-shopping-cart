@@ -1,9 +1,9 @@
-package cart.dto;
+package cart.product.dto;
 
-import cart.domain.ImageUrl;
-import cart.domain.Name;
-import cart.domain.Price;
-import cart.domain.Product;
+import cart.product.domain.ImageUrl;
+import cart.product.domain.Name;
+import cart.product.domain.Price;
+import cart.product.domain.Product;
 import lombok.*;
 
 @Getter

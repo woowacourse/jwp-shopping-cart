@@ -1,6 +1,6 @@
-package cart.dao;
+package cart.product.dao;
 
-import cart.domain.Product;
+import cart.product.domain.Product;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -40,7 +40,7 @@ public class ProductDao {
     }
     
     public Product findById(Long id) {
-        final String sql = "SELECT * FROM PRODUCT WHERE ID=:id";
+        final String sql = "SELECT * FROM PRODUCT WHERE id=:id";
         final SqlParameterSource params = new MapSqlParameterSource("id", id);
         return namedParameterJdbcTemplate.queryForObject(sql, params, rowMapper);
     }
@@ -60,13 +60,13 @@ public class ProductDao {
     }
     
     public void update(final Product product) {
-        String sql = "UPDATE PRODUCT SET NAME=:name.name,IMAGE_URL=:imageUrl.url, PRICE=:price.price WHERE ID=:id";
+        String sql = "UPDATE PRODUCT SET name=:name.name,image_url=:imageUrl.url, price=:price.price WHERE id=:id";
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
     
     public void delete(final Long id) {
-        final String sql = "DELETE FROM PRODUCT WHERE ID=:id";
+        final String sql = "DELETE FROM PRODUCT WHERE id=:id";
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", id);
         namedParameterJdbcTemplate.update(sql, params);

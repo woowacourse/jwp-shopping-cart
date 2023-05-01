@@ -37,7 +37,7 @@ CREATE TABLE PRODUCT
 
 
 ## step2
-- [ ] /settings url로 접근할 경우 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있는 기능
+- [x] /settings url로 접근할 경우 모든 사용자의 정보를 가져오는 기능
 - [ ] 사용자를 선택하는 기능
 
 - [ ] 장바구니

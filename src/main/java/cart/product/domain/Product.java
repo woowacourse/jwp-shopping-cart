@@ -1,11 +1,8 @@
-package cart.domain;
+package cart.product.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-
-import java.io.Serializable;
 
 @Getter
 @ToString

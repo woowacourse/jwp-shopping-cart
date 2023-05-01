@@ -46,4 +46,16 @@ class ViewControllerIntegratedTest {
                 .body(containsString("관리자 페이지"))
                 .header("Content-Type", "text/html;charset=UTF-8");
     }
+    
+    @Test
+    void 모든_회원_정보를_가져온_후_설정_페이지로_이동한다() {
+        // expect
+        RestAssured.given().log().all()
+                .when().get("/settings")
+                .then().log().all()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body(containsString("설정"))
+                .header("Content-Type", "text/html;charset=UTF-8");
+    }
 }

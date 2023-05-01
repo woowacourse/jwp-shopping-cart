@@ -1,9 +1,9 @@
-package cart.service;
+package cart.product.service;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.product.dao.ProductDao;
+import cart.product.domain.Product;
+import cart.product.dto.ProductRequest;
+import cart.product.dto.ProductResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

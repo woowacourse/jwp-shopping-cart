@@ -1,7 +1,8 @@
 package cart.controller;
 
-import cart.dto.ProductResponse;
-import cart.service.ProductService;
+import cart.member.service.MemberService;
+import cart.product.dto.ProductResponse;
+import cart.product.service.ProductService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -30,6 +31,8 @@ import static org.mockito.Mockito.*;
 class ViewControllerTest {
     @MockBean
     private ProductService productService;
+    @MockBean
+    private MemberService memberService;
     
     @BeforeEach
     void setUp() {
@@ -38,18 +41,13 @@ class ViewControllerTest {
         viewResolver.setSuffix(".html");
         
         RestAssuredMockMvc.standaloneSetup(
-                MockMvcBuilders.standaloneSetup(new ViewController(productService))
+                MockMvcBuilders.standaloneSetup(new ViewController(productService, memberService))
                         .setViewResolvers(viewResolver)
         );
     }
     
     @Test
     void 모든_상품_목록을_가져온_후_index_페이지로_이동한다() {
-        // given
-        final ProductResponse firstProductResponse = new ProductResponse(1L, "홍고", "aa", 1_000_000_000);
-        final ProductResponse secondProductResponse = new ProductResponse(2L, "아벨", "bb", 1_000_000_000);
-        given(productService.findAll()).willReturn(List.of(firstProductResponse, secondProductResponse));
-        
         // when
         final MvcResult mvcResult = RestAssuredMockMvc.given().log().all()
                 .when().get("/")
@@ -87,6 +85,27 @@ class ViewControllerTest {
         assertAll(
                 () -> then(productService).should(only()).findAll(),
                 () -> assertThat(Objects.requireNonNull(modelAndView).getViewName()).isEqualTo("admin")
+        );
+    }
+    
+    @Test
+    void 모든_회원_정보를_가져온_후_설정_페이지로_이동한다() {
+        // when
+        final MvcResult mvcResult = RestAssuredMockMvc.given().log().all()
+                .when().get("/settings")
+                .then().log().all()
+                .assertThat()
+                .status(HttpStatus.OK)
+                .extract()
+                .response()
+                .getMvcResult();
+        
+        final ModelAndView modelAndView = mvcResult.getModelAndView();
+        
+        // then
+        assertAll(
+                () -> then(memberService).should(only()).findAll(),
+                () -> assertThat(Objects.requireNonNull(modelAndView).getViewName()).isEqualTo("settings")
         );
     }
 }

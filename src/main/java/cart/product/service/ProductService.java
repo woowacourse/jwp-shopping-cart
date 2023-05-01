@@ -1,9 +1,9 @@
-package cart.service;
+package cart.product.service;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.product.dao.ProductDao;
+import cart.product.domain.Product;
+import cart.product.dto.ProductRequest;
+import cart.product.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
 @Transactional
+@Service
 public class ProductService {
     private final ProductDao productDao;
     

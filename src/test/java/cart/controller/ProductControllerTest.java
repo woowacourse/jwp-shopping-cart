@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.service.ProductService;
+import cart.product.service.ProductService;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
