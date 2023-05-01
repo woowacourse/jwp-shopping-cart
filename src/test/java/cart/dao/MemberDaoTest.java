@@ -75,12 +75,12 @@ public class MemberDaoTest {
     }
 
     @Test
-    @DisplayName("이메일과 비밀번호로 멤버 조회 시 행이 존재하면 TRUE를 반환한다.")
+    @DisplayName("이메일과 비밀번호로 멤버 조회 시 행이 존재하지 않으면 TRUE를 반환한다.")
     void isExistByEmailAndPassword() {
         // given
         memberDao.insert(INSERT_MEMBER_ENTITY);
 
         // when, then
-        assertThat(memberDao.isExistByEmailAndPassword(DUMMY_EMAIL, DUMMY_PASSWORD)).isTrue();
+        assertThat(memberDao.isNotExistByEmailAndPassword("new" + DUMMY_EMAIL, "new" + DUMMY_PASSWORD)).isTrue();
     }
 }
