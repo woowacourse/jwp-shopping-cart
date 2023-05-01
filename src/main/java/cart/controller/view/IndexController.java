@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.view;
 
 import cart.dto.response.ProductResponse;
 import cart.service.CartService;
@@ -9,21 +9,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
-public class ProductController {
+public class IndexController {
 
     private final CartService cartService;
 
-    public ProductController(CartService cartService) {
+    public IndexController(CartService cartService) {
         this.cartService = cartService;
     }
 
     @GetMapping("/")
     public String index() {
-        return "redirect:/products";
+        return "redirect:/index";
     }
 
-    @GetMapping("/products")
-    public String products(Model model) {
+    @GetMapping("/index")
+    public String index(Model model) {
         List<ProductResponse> productsResponse = cartService.readAll();
         model.addAttribute("products", productsResponse);
         return "index";
