@@ -31,24 +31,24 @@ public final class ViewController {
 
     @GetMapping
     public ModelAndView indexPage(final ModelAndView modelAndView) {
-        final List<ProductResponseDto> productResponseDtos = productService.findProducts();
-        modelAndView.addObject("products", productResponseDtos);
+        final List<ProductResponseDto> products = productService.findProducts();
+        modelAndView.addObject("products", products);
         modelAndView.setViewName("index");
         return modelAndView;
     }
 
     @GetMapping("/admin")
     public ModelAndView adminPage(final ModelAndView modelAndView) {
-        final List<ProductResponseDto> productResponseDtos = productService.findProducts();
+        final List<ProductResponseDto> products = productService.findProducts();
         final List<CategoryResponseDto> categories = categoryService.findCategories();
-        modelAndView.addObject("products", productResponseDtos);
+        modelAndView.addObject("products", products);
         modelAndView.addObject("categories", categories);
         modelAndView.setViewName("admin");
         return modelAndView;
     }
 
     @GetMapping("/settings")
-    public ModelAndView settingPage(final ModelAndView modelAndView) {
+    public ModelAndView settingsPage(final ModelAndView modelAndView) {
         final List<MemberResponseDto> members = memberService.findMembers();
         modelAndView.addObject("members", members);
         modelAndView.setViewName("settings");

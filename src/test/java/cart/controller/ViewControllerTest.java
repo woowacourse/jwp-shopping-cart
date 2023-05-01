@@ -45,7 +45,7 @@ class ViewControllerTest {
 
     @Test
     @DisplayName("세팅 페이지를 생성한다.")
-    void settingPage() {
+    void settingsPage() {
         RestAssured.given()
                 .accept(MediaType.TEXT_HTML_VALUE)
                 .when()
