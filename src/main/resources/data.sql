@@ -70,4 +70,6 @@ VALUES (9, '샐러드');
 INSERT INTO CATEGORY (id, name)
 VALUES (10, '없음');
 INSERT INTO CUSTOMER (password, email)
-VALUES (HASH('SHA-256', 'password', 2), 'voicesplit@daum.net');
+VALUES ('dazzle', 'split@wooteco.com');
+INSERT INTO CUSTOMER (password, email)
+VALUES ('split', 'dazzle@wooteco.com');
