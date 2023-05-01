@@ -1,4 +1,4 @@
-package cart.web.controller.cart;
+package cart.web.controller.auth;
 
 import cart.web.controller.user.dto.UserRequest;
 import org.apache.tomcat.util.codec.binary.Base64;

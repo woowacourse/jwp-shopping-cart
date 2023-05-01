@@ -42,4 +42,14 @@ public class CartService {
         final User user = userOptional.get();
         return cartDao.findAllByUser(user);
     }
+
+    @Transactional
+    public void delete(final UserRequest userRequest, final Long productId) {
+        final Optional<User> userOptional = userDao.findUserByEmail(userRequest.getEmail());
+        if (userOptional.isEmpty()) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+        final User user = userOptional.get();
+        cartDao.delete(user, productId);
+    }
 }

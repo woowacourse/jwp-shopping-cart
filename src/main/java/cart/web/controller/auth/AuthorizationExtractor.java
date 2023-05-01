@@ -1,4 +1,4 @@
-package cart.web.controller.cart;
+package cart.web.controller.auth;
 
 import javax.servlet.http.HttpServletRequest;
 

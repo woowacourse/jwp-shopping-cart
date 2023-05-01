@@ -12,4 +12,6 @@ public interface CartDao {
     Long insert(User user, Long productId);
 
     List<Product> findAllByUser(User user);
+
+    void delete(User user, Long productId);
 }

@@ -58,4 +58,10 @@ public class CartDaoImpl implements CartDao {
         }
         return products;
     }
+
+    @Override
+    public void delete(final User user, final Long productId) {
+        final String query = "DELETE FROM cart c WHERE c.product_id = ?";
+        jdbcTemplate.update(query, productId);
+    }
 }

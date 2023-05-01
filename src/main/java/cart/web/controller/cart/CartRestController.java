@@ -2,8 +2,10 @@ package cart.web.controller.cart;
 
 import cart.domain.cart.CartService;
 import cart.domain.product.Product;
+import cart.web.controller.auth.BasicAuthorizationExtractor;
 import cart.web.controller.user.dto.UserRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,13 +27,23 @@ public class CartRestController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<String> addCart(final HttpServletRequest request,
+    public ResponseEntity<String> addProduct(final HttpServletRequest request,
                                           @PathVariable Long productId) {
         final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor();
         final UserRequest userRequest = extractor.extract(request);
         cartService.add(userRequest, productId);
 
         return ResponseEntity.created(URI.create("/cart")).build();
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<String> deleteProduct(final HttpServletRequest request,
+                                          @PathVariable Long productId) {
+        final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor();
+        final UserRequest userRequest = extractor.extract(request);
+        cartService.delete(userRequest, productId);
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/all")
