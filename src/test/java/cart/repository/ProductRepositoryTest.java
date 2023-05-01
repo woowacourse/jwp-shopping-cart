@@ -1,6 +1,7 @@
 package cart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -10,10 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import cart.TestFixture;
 import cart.dao.ProductDao;
+import cart.repository.exception.NoSuchIdException;
 
 @JdbcTest
 class ProductRepositoryTest {
+
+    private static final int INVALID_ID = Integer.MIN_VALUE;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -24,9 +29,9 @@ class ProductRepositoryTest {
     void setUp() {
         this.productRepository = new ProductRepository(new ProductDao(jdbcTemplate));
 
-        productRepository.save("땡칠", "https://avatars.githubusercontent.com/u/39221443", 1000L);
-        productRepository.save("비버", "https://avatars.githubusercontent.com/u/109223081", 1000L);
-        productRepository.save("코다", "https://avatars.githubusercontent.com/u/63405904", 1000000L);
+        productRepository.save("땡칠", TestFixture.IMAGE_0CHIL, 1000L);
+        productRepository.save("비버", TestFixture.IMAGE_BEAVER, 1000L);
+        productRepository.save("코다", TestFixture.IMAGE_KODA, 1000000L);
     }
 
     @Test
@@ -35,7 +40,7 @@ class ProductRepositoryTest {
         assertThat(productRepository.getAll())
                 .extracting("name", "image", "price")
                 .contains(
-                        tuple("비버", "https://avatars.githubusercontent.com/u/109223081", 1000L)
+                        tuple("비버", TestFixture.IMAGE_BEAVER, 1000L)
                 );
     }
 
@@ -65,10 +70,24 @@ class ProductRepositoryTest {
         assertThat(productRepository.getAll())
                 .extracting("name", "image", "price")
                 .containsExactlyInAnyOrder(
-                        tuple("땡칠", "https://avatars.githubusercontent.com/u/39221443", 1000L),
-                        tuple("비버", "https://avatars.githubusercontent.com/u/109223081", 1000L),
-                        tuple("코다", "https://avatars.githubusercontent.com/u/63405904", 1000000L)
+                        tuple("땡칠", TestFixture.IMAGE_0CHIL, 1000L),
+                        tuple("비버", TestFixture.IMAGE_BEAVER, 1000L),
+                        tuple("코다", TestFixture.IMAGE_KODA, 1000000L)
                 );
+    }
+
+    @DisplayName("수정된 대상이 없으면 예외를 던진다")
+    @Test
+    void noUpdateCountThrows() {
+        assertThatThrownBy(() -> productRepository.update(INVALID_ID, "땡칠", TestFixture.IMAGE_KODA, 1000L))
+                .isInstanceOf(NoSuchIdException.class);
+    }
+
+    @DisplayName("제거된 대상이 없으면 예외를 던진다")
+    @Test
+    void noDeleteCountThrows() {
+        assertThatThrownBy(() -> productRepository.delete(INVALID_ID))
+                .isInstanceOf(NoSuchIdException.class);
     }
 
     private Integer getGreatestId() {
