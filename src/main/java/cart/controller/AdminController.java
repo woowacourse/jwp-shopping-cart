@@ -4,7 +4,6 @@ import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;
 import cart.dto.response.ProductResponse;
 import cart.service.CartService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -61,8 +59,8 @@ public class AdminController {
     }
 
     @DeleteMapping("/products/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable @NotNull Long id) {
+    public ResponseEntity<Void> delete(@PathVariable @NotNull Long id) {
         cartService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
