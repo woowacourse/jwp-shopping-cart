@@ -4,7 +4,7 @@ import cart.dao.ProductDao;
 import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.entity.Product;
-import cart.exception.product.NotFoundException;
+import cart.exception.notfound.ProductNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,7 +44,7 @@ public class ProductService {
     private void validateProductExist(final Long id) {
         Optional<Product> product = productDao.findById(id);
         if (!product.isPresent()) {
-            throw new NotFoundException();
+            throw new ProductNotFoundException();
         }
     }
 }
