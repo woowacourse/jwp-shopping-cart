@@ -61,7 +61,7 @@ class JdbcMemberRepositoryTest {
         // when
         assertThatThrownBy(() -> repository.findByEmail("notExist@gmail.com"))
                 .isInstanceOf(MemberPersistenceFailedException.class)
-                .hasMessage("주어진 ID로 Member를 찾을 수 없습니다.");
+                .hasMessage("주어진 id로 Member를 찾을 수 없습니다.");
     }
 
     @Test

@@ -1,4 +1,4 @@
-package cart.config;
+package cart.common;
 
 import cart.authentication.AuthenticationArgumentResolver;
 import org.springframework.context.annotation.Configuration;

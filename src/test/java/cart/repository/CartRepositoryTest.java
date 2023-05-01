@@ -52,7 +52,7 @@ class CartRepositoryTest {
 
         assertThatThrownBy(() -> cartRepository.save(new Cart("invalid@gmail.com", product.getId())))
                 .isInstanceOf(CartPersistenceFailedException.class)
-                .hasMessage("존재하지 않는 멤버 또는 상품으로 장바구니에 담을 수 없습니다.");
+                .hasMessage("존재하지 않는 Member 또는 Product로 Cart를 저장할 수 없습니다.");
     }
 
     @Test
@@ -62,7 +62,7 @@ class CartRepositoryTest {
 
         assertThatThrownBy(() -> cartRepository.save(new Cart(member.getEmail(), 99L)))
                 .isInstanceOf(CartPersistenceFailedException.class)
-                .hasMessage("존재하지 않는 멤버 또는 상품으로 장바구니에 담을 수 없습니다.");
+                .hasMessage("존재하지 않는 Member 또는 Product로 Cart를 저장할 수 없습니다.");
     }
 
     @Test
@@ -92,7 +92,7 @@ class CartRepositoryTest {
         // when & then
         assertThatThrownBy(() -> cartRepository.save(new Cart(member.getEmail(), product.getId())))
                 .isInstanceOf(CartPersistenceFailedException.class)
-                .hasMessage("동일한 회원이 동일한 상품을 중복해서 장바구니에 담을 수 없습니다.");
+                .hasMessage("동일한 Member와 동일한 Product 정보가 담긴 Cart를 저장할 수 없습니다.");
     }
 
     @Test

@@ -1,13 +1,14 @@
 package cart.cart.exception;
 
-import cart.config.PersistenceException;
+import cart.common.PersistenceException;
+import cart.common.PersistenceExceptionMessages;
 
 public class CartPersistenceFailedException extends PersistenceException {
-    public CartPersistenceFailedException(String message) {
+    public CartPersistenceFailedException(PersistenceExceptionMessages message) {
         super(message);
     }
 
-    public CartPersistenceFailedException(String message, Throwable cause) {
+    public CartPersistenceFailedException(PersistenceExceptionMessages message, Throwable cause) {
         super(message, cause);
     }
 }

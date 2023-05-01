@@ -1,9 +1,10 @@
 package cart.authentication.exception;
 
-import cart.config.PersistenceException;
+import cart.common.PersistenceException;
+import cart.common.PersistenceExceptionMessages;
 
 public class MemberPersistenceFailedException extends PersistenceException {
-    public MemberPersistenceFailedException(String message) {
+    public MemberPersistenceFailedException(PersistenceExceptionMessages message) {
         super(message);
     }
 }

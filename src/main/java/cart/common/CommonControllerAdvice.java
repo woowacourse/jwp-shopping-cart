@@ -1,4 +1,4 @@
-package cart.config;
+package cart.common;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;

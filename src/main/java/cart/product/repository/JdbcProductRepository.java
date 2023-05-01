@@ -1,5 +1,6 @@
 package cart.product.repository;
 
+import cart.common.PersistenceExceptionMessages;
 import cart.product.entity.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -63,7 +64,7 @@ public class JdbcProductRepository implements ProductRepository {
         try {
             return jdbcTemplate.queryForObject(sql, paramSource, PRODUCT_ROW_MAPPER);
         } catch (EmptyResultDataAccessException exception) {
-            throw new ProductPersistenceException("Id에 해당하는 Product를 찾지 못했습니다.", exception);
+            throw new ProductPersistenceException(PersistenceExceptionMessages.PRODUCT_NOTFOUND, exception);
         }
     }
 

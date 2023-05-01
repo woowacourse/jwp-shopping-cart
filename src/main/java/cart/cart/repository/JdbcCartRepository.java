@@ -2,6 +2,7 @@ package cart.cart.repository;
 
 import cart.cart.entity.Cart;
 import cart.cart.exception.CartPersistenceFailedException;
+import cart.common.PersistenceExceptionMessages;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -28,13 +29,13 @@ public class JdbcCartRepository implements CartRepository {
         try {
             int updateCount = namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(cart));
             if (updateCount == 0) {
-                throw new CartPersistenceFailedException("장바구니 정보를 저장하는 데에 실패했습니다.");
+                throw new CartPersistenceFailedException(PersistenceExceptionMessages.CART_SAVING_FAILED);
             }
         } catch (DuplicateKeyException exception) {
-            throw new CartPersistenceFailedException("동일한 회원이 동일한 상품을 중복해서 장바구니에 담을 수 없습니다.");
+            throw new CartPersistenceFailedException(PersistenceExceptionMessages.CART_DUPLICATED_SAVING);
         } catch (DataIntegrityViolationException exception) {
             exception.printStackTrace();
-            throw new CartPersistenceFailedException("존재하지 않는 멤버 또는 상품으로 장바구니에 담을 수 없습니다.", exception);
+            throw new CartPersistenceFailedException(PersistenceExceptionMessages.CART_SAVING_WITH_INVALID_VALUES, exception);
         }
 
         return cart;
@@ -59,7 +60,7 @@ public class JdbcCartRepository implements CartRepository {
 
         int deletedCount = namedParameterJdbcTemplate.update(sql, paramSource);
         if (deletedCount == 0) {
-            throw new CartPersistenceFailedException("삭제할 대상이 데이터베이스에 존재하지 않습니다.");
+            throw new CartPersistenceFailedException(PersistenceExceptionMessages.CART_DELETING_FAILED);
         }
     }
 }

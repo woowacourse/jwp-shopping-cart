@@ -104,7 +104,7 @@ class IntegrationTest {
                 .get(locationInformation.getLocation())
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(equalTo("Id에 해당하는 Product를 찾지 못했습니다."));
+                .body(equalTo("id에 해당하는 Product를 찾지 못했습니다."));
     }
 
     @Test

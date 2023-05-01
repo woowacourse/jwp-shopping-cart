@@ -2,6 +2,7 @@ package cart.authentication.repository;
 
 import cart.authentication.entity.Member;
 import cart.authentication.exception.MemberPersistenceFailedException;
+import cart.common.PersistenceExceptionMessages;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -27,11 +28,11 @@ public class JdbcMemberRepository implements MemberRepository {
         try {
             int updateCount = namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(member));
             if (updateCount == 0) {
-                throw new MemberPersistenceFailedException("Member가 정상적으로 저장되지 않았습니다.");
+                throw new MemberPersistenceFailedException(PersistenceExceptionMessages.MEMBER_SAVING_FAILED);
             }
             return member;
         } catch (DuplicateKeyException exception) {
-            throw new MemberPersistenceFailedException("이미 등록된 email입니다.");
+            throw new MemberPersistenceFailedException(PersistenceExceptionMessages.MEMBER_DUPLICATED_EMAIL);
         }
     }
 
@@ -47,7 +48,7 @@ public class JdbcMemberRepository implements MemberRepository {
                             rs.getString("password")
                     ));
         } catch (EmptyResultDataAccessException exception) {
-            throw new MemberPersistenceFailedException("주어진 ID로 Member를 찾을 수 없습니다.");
+            throw new MemberPersistenceFailedException(PersistenceExceptionMessages.MEMBER_NOTFOUND);
         }
     }
 
