@@ -30,4 +30,4 @@
   - [x] 장바구니 상품 제거 API
   - [x] 장바구니 목록 조회 API
   - [x] 뷰 렌더링 구현
-- [ ] (optional) REST-DOCS 연동
+- [x] REST-DOCS 연동
