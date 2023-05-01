@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private ProductService productService;
+    private final ProductService productService;
 
     public AdminController(final ProductService productService) {
         this.productService = productService;
