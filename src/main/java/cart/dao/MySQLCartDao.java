@@ -31,7 +31,7 @@ public class MySQLCartDao implements CartDao {
     }
 
     @Override
-    public List<ProductEntity> findByMeber(Member member) {
+    public List<ProductEntity> findByMember(Member member) {
         String query = "SELECT * FROM cart "
             + "LEFT OUTER JOIN product ON cart.product_id = product.id "
             + "LEFT OUTER JOIN member ON cart.member_id = member.id "
@@ -44,6 +44,14 @@ public class MySQLCartDao implements CartDao {
                 resultSet.getInt("price"),
                 resultSet.getString("image_url")), member.getEmail(), member.getPassword());
 
+    }
+
+    @Override
+    public boolean isExistEntity(Long memberId, Long productId) {
+        String query = "SELECT EXISTS (SELECT id FROM cart WHERE cart.member_id = ? AND cart.product_id = ?)";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query,
+            (resultSet, rowNum) -> resultSet.getBoolean("EXISTS"), memberId, productId));
     }
 
     @Override

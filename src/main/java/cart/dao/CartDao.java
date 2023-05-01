@@ -8,7 +8,9 @@ public interface CartDao {
 
     long add(Long memberId, Long productId);
 
-    List<ProductEntity> findByMeber(Member member);
+    List<ProductEntity> findByMember(Member member);
+
+    boolean isExistEntity(Long memberId, Long productId);
 
     int deleteById(Long memberId, Long productId);
 }
