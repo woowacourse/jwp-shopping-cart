@@ -4,13 +4,13 @@ public class ProductResponse {
 
     private final Long id;
     private final String name;
-    private final String imageUrl;
+    private final String image;
     private final Integer price;
 
     private ProductResponse(final Long id, final String name, final String imageUrl, final Integer price) {
         this.id = id;
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.image = imageUrl;
         this.price = price;
     }
 
@@ -27,7 +27,7 @@ public class ProductResponse {
     }
 
     public String getImage() {
-        return imageUrl;
+        return image;
     }
 
     public Integer getPrice() {

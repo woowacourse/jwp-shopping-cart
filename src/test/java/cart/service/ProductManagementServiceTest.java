@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.JdbcProductDao;
-import cart.dto.ProductDto;
+import cart.dto.ProductResponse;
 import cart.entity.ProductEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,26 +38,26 @@ class ProductManagementServiceTest {
         );
         when(productDao.selectAll()).thenReturn(data);
 
-        final List<ProductDto> productDtos = managementService.findAll();
+        final List<ProductResponse> productResponses = managementService.findAll();
 
         assertAll(
-                () -> assertThat(productDtos.size()).isEqualTo(data.size()),
-                () -> assertThat(productDtos.get(0).getName()).isEqualTo("chicken"),
-                () -> assertThat(productDtos.get(0).getImageUrl()).isEqualTo("https://image"),
-                () -> assertThat(productDtos.get(0).getPrice()).isEqualTo(10_000),
-                () -> assertThat(productDtos.get(1).getName()).isEqualTo("pizza"),
-                () -> assertThat(productDtos.get(1).getImageUrl()).isEqualTo("https://image2"),
-                () -> assertThat(productDtos.get(1).getPrice()).isEqualTo(20_000)
+                () -> assertThat(productResponses.size()).isEqualTo(data.size()),
+                () -> assertThat(productResponses.get(0).getName()).isEqualTo("chicken"),
+                () -> assertThat(productResponses.get(0).getImage()).isEqualTo("https://image"),
+                () -> assertThat(productResponses.get(0).getPrice()).isEqualTo(10_000),
+                () -> assertThat(productResponses.get(1).getName()).isEqualTo("pizza"),
+                () -> assertThat(productResponses.get(1).getImage()).isEqualTo("https://image2"),
+                () -> assertThat(productResponses.get(1).getPrice()).isEqualTo(20_000)
         );
     }
 
     @DisplayName("상품 데이터가 등록되는지 확인한다")
     @Test
     void saveTest() {
-        final ProductDto productDto = ProductDto.of("pobi_doll", "https://image", 10_000_000);
+        final ProductEntity productEntity = ProductEntity.of("pobi_doll", "https://image", 10_000_000);
         doNothing().when(productDao).insert(any());
 
-        managementService.add(productDto);
+        managementService.add(productEntity);
 
         verify(productDao, times(1)).insert(any());
     }
@@ -66,10 +66,10 @@ class ProductManagementServiceTest {
     @Test
     void updateTest() {
         final Long id = 1L;
-        final ProductDto productDto = ProductDto.of(1L, "pobi_doll", "https://image", 10_000_000);
+        final ProductEntity productEntity = ProductEntity.of(1L, "pobi_doll", "https://image", 10_000_000);
         doNothing().when(productDao).updateById(any(), any());
 
-        managementService.updateById(id, productDto);
+        managementService.updateById(id, productEntity);
 
         verify(productDao, times(1)).updateById(any(), any());
     }
