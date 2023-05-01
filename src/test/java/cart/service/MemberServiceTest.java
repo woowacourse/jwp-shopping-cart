@@ -1,5 +1,11 @@
 package cart.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.util.List;
+
+import cart.domain.member.Member;
 import cart.dto.MemberRegisterRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -24,5 +30,24 @@ class MemberServiceTest {
     void register() {
         // when, then
         Assertions.assertDoesNotThrow(() -> memberService.register(memberRegisterRequest));
+    }
+
+    @Test
+    @DisplayName("모든 사용자를 조회한다.")
+    void findAll() {
+        // given
+        memberService.register(memberRegisterRequest);
+
+        // when
+        List<Member> members = memberService.findAll();
+        Member member1 = members.get(0);
+
+        // then
+        assertAll(
+                () -> assertThat(members).hasSize(1),
+                () -> assertThat(member1.getNickname()).isEqualTo(memberRegisterRequest.getNickname()),
+                () -> assertThat(member1.getEmail()).isEqualTo(memberRegisterRequest.getEmail()),
+                () -> assertThat(member1.getPassword()).isEqualTo(memberRegisterRequest.getPassword())
+        );
     }
 }

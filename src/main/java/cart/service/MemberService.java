@@ -1,5 +1,8 @@
 package cart.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
 import cart.domain.member.Nickname;
@@ -29,5 +32,15 @@ public class MemberService {
                 .build();
 
         return memberDao.insert(registerMemberEntity);
+    }
+
+    public List<Member> findAll() {
+        List<MemberEntity> memberEntities = memberDao.selectAll();
+        return memberEntities.stream()
+                .map(memberEntity ->
+                        new Member(new Nickname(memberEntity.getNickname()), memberEntity.getEmail(),
+                                new Password(memberEntity.getPassword()))
+                )
+                .collect(Collectors.toUnmodifiableList());
     }
 }

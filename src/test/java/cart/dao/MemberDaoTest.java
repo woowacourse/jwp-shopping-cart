@@ -1,8 +1,13 @@
 package cart.dao;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.util.List;
 
 import cart.entity.MemberEntity;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,5 +42,22 @@ public class MemberDaoTest {
 
         // then
         assertThat(insertedId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("저장된 멤버를 모두 조회한다.")
+    void selectAll() {
+        // given
+        long insertedId = memberDao.insert(insertMemberEntity);
+
+        // when
+        List<MemberEntity> members = memberDao.selectAll();
+        MemberEntity member1 = members.get(0);
+
+        // then
+        assertAll(
+                () -> assertThat(members).hasSize(1),
+                () -> assertThat(member1.getMemberId()).isEqualTo(insertedId)
+        );
     }
 }

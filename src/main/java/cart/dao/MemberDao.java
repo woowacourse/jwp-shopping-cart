@@ -1,9 +1,11 @@
 package cart.dao;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 
 import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
@@ -27,5 +29,22 @@ public class MemberDao {
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    public List<MemberEntity> selectAll() {
+        String sql = "SELECT * FROM MEMBER";
+        return jdbcTemplate.query(sql, memberRowMapper());
+    }
+
+    private RowMapper<MemberEntity> memberRowMapper() {
+        return ((rs, rowNum) ->
+            new MemberEntity.Builder()
+                    .memberId(rs.getLong("member_id"))
+                    .nickname(rs.getString("nickname"))
+                    .email(rs.getString("email"))
+                    .password(rs.getString("password"))
+                    .cartId(rs.getLong("cart_id"))
+                    .build()
+            );
     }
 }
