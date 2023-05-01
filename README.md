@@ -24,8 +24,8 @@
   - [x] 테이블 구조 설계
 
 ## ✔ 2단계 기능 요구사항
-- [ ] 사용자(User) 기능 구현
-  - [ ] email과 password를 가짐
+- [x] 사용자(User) 기능 구현
+  - [x] email과 password를 가짐
 - [ ] 사용자 설정 페이지 연동
   - [ ] settings.html 파일을 수정
   - [ ] `/settings` url로 접근할 경우 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있다.
