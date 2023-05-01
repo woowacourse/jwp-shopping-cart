@@ -2,7 +2,7 @@ package cart;
 
 import static org.hamcrest.core.Is.is;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;
 import cart.persistence.ProductDao;

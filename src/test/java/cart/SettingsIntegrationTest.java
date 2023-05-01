@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AdminIntegrationTest {
+public class SettingsIntegrationTest {
 
     @LocalServerPort
     int port;
@@ -21,12 +21,12 @@ class AdminIntegrationTest {
     }
 
     @Test
-    @DisplayName("/admin으로 get 요청을 보내면 ok 상태코드를 반환한다")
-    void adminTest() {
+    @DisplayName("")
+    void settingsTest() {
         RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/admin")
+                .get("/settings")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
