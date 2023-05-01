@@ -87,17 +87,21 @@
             - [ ] 요청 : Post
                 - [ ] 상품 id
             - [ ] 응답 : 201
-  
+
+        - [x] Read : 장바구니 품목 읽기
+            - [x] 요청 : Get
+            - [x] 응답 : 200
+
         - [ ] Delete : 장바구니에 담긴 상품 제거
             - [ ] 요청 : Delete
                 - [ ] 상품 id
             - [ ] 응답 : 200
 
-- [ ] 사용자 선택
-    - [ ] 사용자 인증 정보
-        - [ ] Header : Authorization
-        - [ ] type : Basic
-        - [ ] credentials : email:password (encoded with base64)
+- [x] 사용자 선택
+    - [x] 사용자 인증 정보
+        - [x] Header : Authorization
+        - [x] type : Basic
+        - [x] credentials : email:password (encoded with base64)
 
 ## DB 테이블
 
@@ -133,3 +137,7 @@ CREATE TABLE cart
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 )
 ```
+
+## 기록
+
+- email이 중복되는 것은 어디에서 봐줘야 하는가?
