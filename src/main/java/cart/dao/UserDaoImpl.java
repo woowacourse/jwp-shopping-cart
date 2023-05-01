@@ -40,6 +40,5 @@ public class UserDaoImpl implements UserDao {
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
-
     }
 }

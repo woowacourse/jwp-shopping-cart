@@ -33,7 +33,7 @@ public class CartRestController {
         final UserRequest userRequest = extractor.extract(request);
         final Long addedProductId = cartService.add(userRequest, productId);
 
-        return ResponseEntity.created(URI.create("/cart")).build();
+        return ResponseEntity.created(URI.create("/cart/" + addedProductId)).build();
     }
 
     @DeleteMapping("/{productId}")
