@@ -4,6 +4,10 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -12,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.controller.dto.ProductDto;
+import cart.controller.helper.RestDocsHelper;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
@@ -21,13 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.restdocs.snippet.Attributes;
 
 @WebMvcTest(AdminRestController.class)
-class AdminRestControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
+class AdminRestControllerTest extends RestDocsHelper {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -46,10 +48,26 @@ class AdminRestControllerTest {
         mockMvc.perform(post("/admin")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(productDto))
-                .characterEncoding(StandardCharsets.UTF_8)
-            )
-            .andExpect(status().isCreated())
-            .andExpect(header().string("Location", "/1"));
+                .characterEncoding(StandardCharsets.UTF_8))
+            .andExpectAll(
+                status().isCreated(),
+                header().string("Location", "/1"))
+            .andDo(
+                documentationResultHandler.document(
+                    requestFields(
+                        fieldWithPath("id").description("상품 아이디").ignored(),
+                        fieldWithPath("name").description("상품 이름")
+                            .attributes(new Attributes.Attribute(RANGE, "1-25")),
+                        fieldWithPath("imageUrl").description("상품 이미지 URL").optional(),
+                        fieldWithPath("price").description("상품 가격")
+                            .attributes(new Attributes.Attribute(RANGE, "0-10,000,000")),
+                        fieldWithPath("category").description(
+                            "상품 카테고리(KOREAN, JAPANESE, CHINESE, WESTERN, SNACK, DESSERT)")),
+                    responseHeaders(
+                        headerWithName("Location").description("상품 세부 정보 URI")
+                    )
+                )
+            );
     }
 
     @DisplayName("상품 정보를 추가 시 잘못된 정보 형식으로 들어오면 예외가 발생한다")
@@ -64,14 +82,23 @@ class AdminRestControllerTest {
                 .content(objectMapper.writeValueAsString(productDto))
                 .characterEncoding(StandardCharsets.UTF_8)
             )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.errorMessage",
-                containsInAnyOrder(
-                    "상품 이름은 비어있을 수 없습니다.",
-                    "상품 가격은 비어있을 수 없습니다.",
-                    "상품 카테고리는 비어있을 수 없습니다."
+            .andExpectAll(
+                status().isBadRequest(),
+                jsonPath("$.errorMessage",
+                    containsInAnyOrder(
+                        "상품 이름은 비어있을 수 없습니다.",
+                        "상품 가격은 비어있을 수 없습니다.",
+                        "상품 카테고리는 비어있을 수 없습니다.")))
+            .andDo(
+                documentationResultHandler.document(
+                    requestFields(
+                        fieldWithPath("id").description("상품 아이디").ignored(),
+                        fieldWithPath("name").description("잘못된 상품 이름"),
+                        fieldWithPath("imageUrl").description("상품 이미지 URL").optional(),
+                        fieldWithPath("price").description("잘못된 상품 가격"),
+                        fieldWithPath("category").description("잘못된 상품 카테고리"))
                 )
-            ));
+            );
     }
 
     @DisplayName("상품 정보를 수정한다")
@@ -87,7 +114,20 @@ class AdminRestControllerTest {
                 .content(objectMapper.writeValueAsString(productDto))
                 .characterEncoding(StandardCharsets.UTF_8)
             )
-            .andExpect(status().isNoContent());
+            .andExpect(status().isNoContent())
+            .andDo(
+                documentationResultHandler.document(
+                    requestFields(
+                        fieldWithPath("id").description("상품 아이디").ignored(),
+                        fieldWithPath("name").description("상품 이름")
+                            .attributes(new Attributes.Attribute(RANGE, "1-25")),
+                        fieldWithPath("imageUrl").description("상품 이미지 URL").optional(),
+                        fieldWithPath("price").description("상품 가격")
+                            .attributes(new Attributes.Attribute(RANGE, "0-10,000,000")),
+                        fieldWithPath("category").description(
+                            "상품 카테고리(KOREAN, JAPANESE, CHINESE, WESTERN, SNACK, DESSERT)"))
+                )
+            );
     }
 
     @DisplayName("상품 수정 시 잘못된 정보 형식으로 들어오면 예외가 발생한다")
@@ -102,14 +142,24 @@ class AdminRestControllerTest {
                 .content(objectMapper.writeValueAsString(productDto))
                 .characterEncoding(StandardCharsets.UTF_8)
             )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.errorMessage",
-                containsInAnyOrder(
-                    "상품 이름은 비어있을 수 없습니다.",
-                    "상품 가격은 비어있을 수 없습니다.",
-                    "상품 카테고리는 비어있을 수 없습니다."
+            .andExpectAll(
+                status().isBadRequest(),
+                jsonPath("$.errorMessage",
+                    containsInAnyOrder(
+                        "상품 이름은 비어있을 수 없습니다.",
+                        "상품 가격은 비어있을 수 없습니다.",
+                        "상품 카테고리는 비어있을 수 없습니다."
+                    )))
+            .andDo(
+                documentationResultHandler.document(
+                    requestFields(
+                        fieldWithPath("id").description("상품 아이디").ignored(),
+                        fieldWithPath("name").description("잘못된 상품 이름"),
+                        fieldWithPath("imageUrl").description("상품 이미지 URL").optional(),
+                        fieldWithPath("price").description("잘못된 상품 가격"),
+                        fieldWithPath("category").description("잘못된 상품 카테고리"))
                 )
-            ));
+            );
     }
 
     @DisplayName("상품 정보를 삭제한다")
@@ -120,7 +170,7 @@ class AdminRestControllerTest {
 
         // when, then
         mockMvc.perform(delete("/admin/{id}", 1L)
-                .contentType(MediaType.TEXT_HTML))
+                .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
     }
 }
