@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,9 +63,10 @@ class ProductCategoryDaoTest {
         assertThat(productCategoryDao.saveAll(productCategoryEntities)).isEqualTo(2);
     }
 
+
     @Test
-    @DisplayName("ID에 해당하는 상품 카테고리를 모두 삭제한다.")
-    void deleteAll() {
+    @DisplayName("특정 상품 카테고리를 모두 삭제한다.")
+    void deleteAllByProductId() {
         final ProductEntity productEntity = new ProductEntity(
                 1L,
                 "name",
@@ -75,14 +75,14 @@ class ProductCategoryDaoTest {
                 "description"
         );
         final Long savedProductId = productDao.save(productEntity);
-        productCategoryDao.saveAll(List.of(new ProductCategoryEntity(savedProductId, 1L)));
-        final List<ProductCategoryEntity> savedProductCategories = productCategoryDao.findAll(savedProductId);
-        final List<Long> savedProductCategoryIds = savedProductCategories.stream()
-                .map(ProductCategoryEntity::getId)
-                .collect(Collectors.toList());
+        final List<ProductCategoryEntity> productCategoryEntities = List.of(
+                new ProductCategoryEntity(savedProductId, 1L),
+                new ProductCategoryEntity(savedProductId, 2L)
+        );
+        productCategoryDao.saveAll(productCategoryEntities);
 
-        productCategoryDao.deleteAll(savedProductCategoryIds);
+        productCategoryDao.deleteAllByProductId(productEntity.getId());
 
-        assertThat(productCategoryDao.findAll(savedProductId)).hasSize(0);
+        assertThat(productCategoryDao.findAll(productEntity.getId())).isEmpty();
     }
 }

@@ -49,18 +49,8 @@ public class ProductCategoryDao {
         return Arrays.stream(rowsAffected).sum();
     }
 
-    public void deleteAll(final List<Long> productCategoryIds) {
-        final String sql = "DELETE FROM product_category WHERE id = ?";
-        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setLong(1, productCategoryIds.get(i));
-            }
-
-            @Override
-            public int getBatchSize() {
-                return productCategoryIds.size();
-            }
-        });
+    public void deleteAllByProductId(final Long productId) {
+        final String sql = "DELETE FROM product_category where product_id = ?";
+        jdbcTemplate.update(sql, productId);
     }
 }

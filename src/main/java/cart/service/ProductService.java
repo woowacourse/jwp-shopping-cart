@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.dao.CartDao;
 import cart.dao.CategoryDao;
 import cart.dao.ProductCategoryDao;
 import cart.dao.ProductDao;
@@ -21,45 +22,30 @@ public class ProductService {
     private final ProductDao productDao;
     private final CategoryDao categoryDao;
     private final ProductCategoryDao productCategoryDao;
+    private final CartDao cartDao;
 
     public ProductService(
             final ProductDao productDao,
             final CategoryDao categoryDao,
-            final ProductCategoryDao productCategoryDao
+            final ProductCategoryDao productCategoryDao,
+            final CartDao cartDao
     ) {
         this.productDao = productDao;
         this.categoryDao = categoryDao;
         this.productCategoryDao = productCategoryDao;
-    }
-
-    @Transactional
-    public Long registerProduct(final ProductRequestDto productRequestDto) {
-        final ProductEntity product = new ProductEntity(
-                productRequestDto.getName(),
-                productRequestDto.getImageUrl(),
-                productRequestDto.getPrice(),
-                productRequestDto.getDescription()
-        );
-        final Long savedProductId = productDao.save(product);
-
-        final List<Long> categoryIds = productRequestDto.getCategoryIds();
-        final List<ProductCategoryEntity> productCategoryEntities = categoryIds.stream()
-                .map(categoryId -> new ProductCategoryEntity(savedProductId, categoryId))
-                .collect(Collectors.toList());
-        productCategoryDao.saveAll(productCategoryEntities);
-
-        return savedProductId;
+        this.cartDao = cartDao;
     }
 
     @Transactional(readOnly = true)
     public List<ProductResponseDto> findProducts() {
-        return productDao.findAll().stream()
+        return productDao.findAll()
+                .stream()
                 .map(product -> {
                     final List<Long> categoryIds = getCategoryIds(product);
                     if (categoryIds.isEmpty()) {
                         return ProductResponseDto.of(product, Collections.emptyList());
                     }
-                    final List<CategoryEntity> categories = categoryDao.findAllInId(categoryIds);
+                    final List<CategoryEntity> categories = categoryDao.findAllInIds(categoryIds);
                     return ProductResponseDto.of(product, categories);
                 })
                 .collect(Collectors.toList());
@@ -73,42 +59,54 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProduct(final Long id, final ProductRequestDto productRequestDto) {
-        final ProductEntity savedProduct = getSavedProductEntity(id);
-        savedProduct.update(
+    public Long registerProduct(final ProductRequestDto productRequestDto) {
+        final ProductEntity product = new ProductEntity(
                 productRequestDto.getName(),
                 productRequestDto.getImageUrl(),
                 productRequestDto.getPrice(),
                 productRequestDto.getDescription()
         );
-        productDao.update(savedProduct);
-
-        final List<ProductCategoryEntity> productCategories = productCategoryDao.findAll(savedProduct.getId());
-        final List<Long> productCategoryIds = productCategories.stream()
-                .map(ProductCategoryEntity::getId)
-                .collect(Collectors.toList());
-        productCategoryDao.deleteAll(productCategoryIds);
+        final Long savedProductId = productDao.save(product);
 
         final List<Long> categoryIds = productRequestDto.getCategoryIds();
-        final List<ProductCategoryEntity> productCategoryEntities = categoryIds.stream()
-                .map(categoryId -> new ProductCategoryEntity(savedProduct.getId(), categoryId))
+        final List<ProductCategoryEntity> productCategories = categoryIds.stream()
+                .map(categoryId -> new ProductCategoryEntity(savedProductId, categoryId))
                 .collect(Collectors.toList());
-        productCategoryDao.saveAll(productCategoryEntities);
-    }
+        productCategoryDao.saveAll(productCategories);
 
-    private ProductEntity getSavedProductEntity(final Long id) {
-        return productDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+        return savedProductId;
     }
 
     @Transactional
-    public void removeProduct(final Long id) {
-        final ProductEntity savedProduct = getSavedProductEntity(id);
-        final List<ProductCategoryEntity> productCategories = productCategoryDao.findAll(savedProduct.getId());
-        final List<Long> productCategoryIds = productCategories.stream()
-                .map(ProductCategoryEntity::getId)
+    public void updateProduct(final Long productId, final ProductRequestDto productRequestDto) {
+        final ProductEntity product = getProduct(productId);
+        product.update(
+                productRequestDto.getName(),
+                productRequestDto.getImageUrl(),
+                productRequestDto.getPrice(),
+                productRequestDto.getDescription()
+        );
+        productDao.update(product);
+
+        productCategoryDao.deleteAllByProductId(product.getId());
+
+        final List<ProductCategoryEntity> productCategories = productRequestDto.getCategoryIds()
+                .stream()
+                .map(categoryId -> new ProductCategoryEntity(product.getId(), categoryId))
                 .collect(Collectors.toList());
-        productCategoryDao.deleteAll(productCategoryIds);
-        productDao.delete(savedProduct.getId());
+        productCategoryDao.saveAll(productCategories);
+    }
+
+    private ProductEntity getProduct(final Long productId) {
+        return productDao.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 상품입니다."));
+    }
+
+    @Transactional
+    public void removeProduct(final Long productId) {
+        final ProductEntity product = getProduct(productId);
+        productCategoryDao.deleteAllByProductId(product.getId());
+        cartDao.deleteAllByProductId(product.getId());
+        productDao.delete(product.getId());
     }
 }

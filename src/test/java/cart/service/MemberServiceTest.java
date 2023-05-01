@@ -42,7 +42,6 @@ class MemberServiceTest {
                 MemberResponseDto.from(memberA),
                 MemberResponseDto.from(memberB)
         );
-
         assertThat(objectMapper.writeValueAsString(result)).isEqualTo(objectMapper.writeValueAsString(expected));
     }
 }
