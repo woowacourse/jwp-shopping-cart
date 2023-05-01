@@ -52,13 +52,13 @@ public class MemberDaoImpl {
     }
 
     public MemberEntity update(MemberEntity entity) {
-        String sql = "UPDATE product SET email = ?, password = ?, name = ?, phone = ? WHERE id = ?";
+        String sql = "UPDATE member SET email = ?, password = ?, name = ?, phone = ? WHERE id = ?";
         jdbcTemplate.update(sql, entity.getEmail(), entity.getPassword(), entity.getName(), entity.getPhone());
         return entity;
     }
 
     public Optional<MemberEntity> findById(Long id) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+        String sql = "SELECT * FROM member WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberEntityRowMapper, id));
         } catch (EmptyResultDataAccessException e) {
@@ -67,12 +67,12 @@ public class MemberDaoImpl {
     }
 
     public List<MemberEntity> findAll() {
-        String sql = "SELECT * FROM product";
+        String sql = "SELECT * FROM member";
         return jdbcTemplate.query(sql, memberEntityRowMapper);
     }
 
     public void deleteById(Long id) {
-        String sql = "DELETE FROM product WHERE id = ?";
+        String sql = "DELETE FROM member WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }
