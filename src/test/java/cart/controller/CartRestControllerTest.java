@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.common.annotation.MemberEmailArgumentResolver;
 import cart.controller.dto.CartDto;
+import cart.exception.ForbiddenException;
 import cart.service.CartService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,8 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.contains;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,20 +38,14 @@ class CartRestControllerTest {
     @MockBean
     private CartService cartService;
 
-    @MockBean
-    private MemberEmailArgumentResolver memberEmailArgumentResolver;
-
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         authorization = "Basic am91cm5leUBnbWFpbC5jb206cGFzc3dvcmQ=";
-        when(memberEmailArgumentResolver.supportsParameter(any())).thenReturn(true);
-        when(memberEmailArgumentResolver.resolveArgument(any(), any(), any(), any()))
-                .thenReturn("journey@gmail.com");
     }
 
     @Test
     @DisplayName("장바구니에 상품을 추가한다.")
-    void addCart() throws Exception {
+    void addCart_successs() throws Exception {
         // given
         when(cartService.addCart(any(), any())).thenReturn(1L);
 
@@ -60,6 +56,17 @@ class CartRestControllerTest {
                 .andExpectAll(
                         status().isCreated(),
                         header().string("Location", "/cart/me"));
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 추가 시 인증되지 않은 사용자면 예외가 발생한다.")
+    void addCart_fail() throws Exception {
+        mockMvc.perform(post("/cart/{productId}", 1L)
+                        .header("Authorization", "")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(
+                        status().isUnauthorized(),
+                        jsonPath("$.errorMessage", contains("인증되지 않은 사용자입니다.")));
     }
 
     @Test
@@ -96,7 +103,7 @@ class CartRestControllerTest {
 
     @Test
     @DisplayName("사용자의 장바구니 상품을 제거한다.")
-    void deleteCart() throws Exception {
+    void deleteCart_success() throws Exception {
         // given
         doNothing().when(cartService).deleteCart(any(), any(), any());
 
@@ -105,5 +112,31 @@ class CartRestControllerTest {
                         .header("Authorization", authorization)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 제거 시 인증되지 않은 사용자면 예외가 발생한다.")
+    void deleteCart_unauthorized() throws Exception {
+        mockMvc.perform(delete("/cart/{targetMemberId}/{productId}", 1L, 1L)
+                        .header("Authorization", "")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(
+                        status().isUnauthorized(),
+                        jsonPath("$.errorMessage", contains("인증되지 않은 사용자입니다.")));
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 제거 시 권한이 없는 사용자면 예외가 발생한다.")
+    void deleteCart_forbidden() throws Exception {
+        // given
+        doThrow(ForbiddenException.class).when(cartService).deleteCart(any(), any(), any());
+
+        // when, then
+        mockMvc.perform(delete("/cart/{targetMemberId}/{productId}", 1L, 1L)
+                        .header("Authorization", "Basic dGVzdEBnbWFpbC5jb206dGVzdDEyMzQ=")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(
+                        status().isForbidden(),
+                        jsonPath("$.errorMessage", contains("권한이 없습니다.")));
     }
 }

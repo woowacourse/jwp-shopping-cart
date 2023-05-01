@@ -20,7 +20,7 @@ public class MemberEmailArgumentResolver implements HandlerMethodArgumentResolve
     public String resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
                                   final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
         final String authorization = webRequest.getHeader("Authorization");
-        if (authorization == null) {
+        if (authorization == null || authorization.length() < 6) {
             throw new UnAuthorizedException();
         }
         final String token = authorization.substring(6);

@@ -4,10 +4,10 @@ import cart.controller.dto.ProductDto;
 import cart.domain.ProductCategory;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -22,10 +22,12 @@ public class AdminController {
     }
 
     @GetMapping
-    public String getProducts(final Model model) {
+    public ModelAndView getProducts() {
         final List<ProductDto> products = productService.getProducts();
-        model.addAttribute("products", products);
-        return "admin";
+        final ModelAndView mv = new ModelAndView();
+        mv.setViewName("admin");
+        mv.addObject("products", products);
+        return mv;
     }
 
     @ModelAttribute("categories")
