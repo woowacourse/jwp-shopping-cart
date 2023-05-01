@@ -103,7 +103,7 @@ class ProductControllerTest {
                 .andDo(print());
 
         // then
-        assertThat(productDao.findAll()).isEmpty();
+        assertThat(productDao.findById(id).isEmpty()).isTrue();
     }
 
     @Test
