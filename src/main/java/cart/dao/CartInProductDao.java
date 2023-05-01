@@ -37,4 +37,10 @@ public class CartInProductDao {
 
         return jdbcTemplate.query(sql, rowMapper, cartEntity.getId());
     }
+
+    public void deleteProductByCartAndProductId(final CartEntity cartEntity, final Long productId) {
+        final String sql = "DELETE FROM CART_IN_PRODUCT CIP WHERE CIP.cart_id = ? and CIP.product_id = ?";
+
+        jdbcTemplate.update(sql, cartEntity.getId(), productId);
+    }
 }

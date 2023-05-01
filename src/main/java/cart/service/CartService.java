@@ -56,4 +56,12 @@ public class CartService {
 
         return productQueryService.searchProductsByIds(productIds);
     }
+
+    public void deleteProductInCart(final AuthAccount authAccount, final Long productId) {
+        final AccountEntity accountEntity = accountService.searchByEmailAndPassword(authAccount);
+
+        final CartEntity cartEntity = new CartEntity(accountEntity.getCartId());
+
+        cartInProductDao.deleteProductByCartAndProductId(cartEntity, productId);
+    }
 }

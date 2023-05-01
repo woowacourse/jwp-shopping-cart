@@ -5,6 +5,7 @@ import cart.service.CartService;
 import cart.service.dto.ProductSearchResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +45,18 @@ public class CartController {
 
     @GetMapping("/cart")
     public String showCartForm() {
+        return "cart";
+    }
+
+    @DeleteMapping("/carts/products/{product-id}")
+    public String deleteProductInCart(final HttpServletRequest httpServletRequest,
+                                      @PathVariable("product-id") final Long productId) {
+
+        cartService.deleteProductInCart(
+                BasicAuthorizationDecoder.decode(httpServletRequest),
+                productId
+        );
+
         return "cart";
     }
 }
