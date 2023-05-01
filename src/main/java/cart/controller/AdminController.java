@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 
-@Controller
+@RestController
 @RequestMapping("/admin")
 public class AdminController {
 

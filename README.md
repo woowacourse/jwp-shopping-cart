@@ -4,11 +4,11 @@
 - [ ] view의 객체(ProductRequest) 가 Service 에 그대로 전달되었을 때 생기는 문제점
 - [ ] 컨트롤러에서 Service 에서 사용되는 값들을 알게 되면 안 좋은 점
 - [x] View 를 반환하는 컨트롤러와 API 작업을 하는 컨트롤러 분리하기
-- [ ] Model이 반환되는 과정
-- [ ] ModelAndView 학습
+- [x] Model이 반환되는 과정
+- [x] ModelAndView 학습
 - [x] 아무것도 반환하지 않을 때 200을 반환한 이유 / 어떤 값을 반환해야 하는지 학습
 - [x] Dao 에 제네릭 적용해보기
-- [ ] update, delete 시 해당하는 id 가 없을 때 예외 핸들링
+- [x] update, delete 시 해당하는 id 가 없을 때 예외 핸들링
 - [ ] Service layer 테스트 추가
 - [ ] 테스트 DB 분리
 - [ ] 테스트 픽스처 적용해보기
