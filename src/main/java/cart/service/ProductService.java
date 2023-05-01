@@ -22,8 +22,11 @@ public class ProductService {
     private final CategoryDao categoryDao;
     private final ProductCategoryDao productCategoryDao;
 
-    public ProductService(final ProductDao productDao, final CategoryDao categoryDao,
-        final ProductCategoryDao productCategoryDao) {
+    public ProductService(
+        final ProductDao productDao,
+        final CategoryDao categoryDao,
+        final ProductCategoryDao productCategoryDao
+    ) {
         this.productDao = productDao;
         this.categoryDao = categoryDao;
         this.productCategoryDao = productCategoryDao;

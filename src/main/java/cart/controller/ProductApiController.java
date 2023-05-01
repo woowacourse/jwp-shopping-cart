@@ -41,7 +41,7 @@ public final class ProductApiController {
     @PutMapping(path = "/{id}")
     public ResponseEntity<Void> update(
         @PathVariable(name = "id") Long productId,
-        @RequestBody ProductRequestDto productRequestDto
+        @Valid @RequestBody ProductRequestDto productRequestDto
     ) {
         productService.update(productId, productRequestDto);
         return ResponseEntity.ok().build();
