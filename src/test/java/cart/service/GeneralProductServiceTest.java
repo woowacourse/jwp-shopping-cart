@@ -1,7 +1,9 @@
 package cart.service;
 
-import cart.domain.Product;
-import cart.repository.ProductRepository;
+import cart.domain.product.Product;
+import cart.domain.product.ProductId;
+import cart.repository.product.ProductRepository;
+import cart.service.product.GeneralProductService;
 import cart.service.request.ProductCreateRequest;
 import cart.service.request.ProductUpdateRequest;
 import cart.service.response.ProductResponse;
@@ -15,7 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 class GeneralProductServiceTest {
@@ -29,7 +32,7 @@ class GeneralProductServiceTest {
     @Test
     void findAll() {
         // given
-        final List<Product> products = List.of(new Product(1L, "KIARA", 1000, "이미지"));
+        final List<Product> products = List.of(new Product(ProductId.from(1L), "KIARA", 1000, "이미지"));
 
         given(productRepository.findAll()).willReturn(products);
 
@@ -46,40 +49,40 @@ class GeneralProductServiceTest {
     @Test
     void save() {
         // given
-        given(productRepository.save(any())).willReturn(1L);
+        given(productRepository.save(any())).willReturn(ProductId.from(1L));
 
         // when
         final ProductCreateRequest request = new ProductCreateRequest("KIARA", 1000, "이미지");
-        final long saveId = generalProductService.save(request);
+        final ProductId saveId = generalProductService.save(request);
 
         // then
-        assertThat(saveId).isEqualTo(1L);
+        assertThat(saveId.getId()).isEqualTo(1L);
     }
 
     @DisplayName("상품 삭제 테스트")
     @Test
     void deleteByProductId() {
         // given
-        given(productRepository.deleteByProductId(anyLong())).willReturn(1L);
+        given(productRepository.deleteByProductId(any())).willReturn(ProductId.from(1L));
 
         // when
-        final long deleteProductId = generalProductService.deleteByProductId(1L);
+        final ProductId deleteProductId = generalProductService.deleteByProductId(ProductId.from(1L));
 
         // then
-        assertThat(deleteProductId).isEqualTo(1L);
+        assertThat(deleteProductId.getId()).isEqualTo(1L);
     }
 
     @DisplayName("상품 갱신 후 조회 테스트")
     @Test
     void updateProduct() {
         // given
-        given(productRepository.updateByProductId(anyLong(), any())).willReturn(1L);
-        given(productRepository.findByProductId(anyLong()))
-                .willReturn(Optional.ofNullable(new Product(1L, "hyena", 400, "이미지")));
+        given(productRepository.updateByProductId(any(), any())).willReturn(ProductId.from(1L));
+        given(productRepository.findByProductId(any()))
+                .willReturn(Optional.ofNullable(new Product(ProductId.from(1L), "hyena", 400, "이미지")));
 
         // when
         final ProductUpdateRequest request = new ProductUpdateRequest("hyena", 400, "이미지");
-        final ProductResponse updateProduct = generalProductService.update(1L, request);
+        final ProductResponse updateProduct = generalProductService.update(ProductId.from(1L), request);
 
         // then
         assertThat(updateProduct)

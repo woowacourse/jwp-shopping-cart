@@ -1,7 +1,8 @@
-package cart.service;
+package cart.service.product;
 
-import cart.domain.Product;
-import cart.repository.ProductRepository;
+import cart.domain.product.Product;
+import cart.domain.product.ProductId;
+import cart.repository.product.ProductRepository;
 import cart.service.request.ProductCreateRequest;
 import cart.service.request.ProductUpdateRequest;
 import cart.service.response.ProductResponse;
@@ -23,31 +24,32 @@ public class GeneralProductService implements ProductService {
     public List<ProductResponse> findAll() {
         return productRepository.findAll()
                 .stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(),
+                .map(product -> new ProductResponse(product.getId().getId(), product.getName(), product.getPrice(),
                         product.getImage()))
                 .collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public long save(final ProductCreateRequest request) {
-        return productRepository.save(request);
+    public ProductId save(final ProductCreateRequest request) {
+        final Product product = new Product(request.getName(), request.getPrice(), request.getImage());
+        return productRepository.save(product);
     }
 
     @Transactional
     @Override
-    public long deleteByProductId(final long productId) {
+    public ProductId deleteByProductId(final ProductId productId) {
         return productRepository.deleteByProductId(productId);
     }
 
     @Transactional
     @Override
-    public ProductResponse update(final long productId, final ProductUpdateRequest request) {
-        final long updateProductId = productRepository.updateByProductId(productId, request);
+    public ProductResponse update(final ProductId productId, final ProductUpdateRequest request) {
+        final ProductId updateProductId = productRepository.updateByProductId(productId, request);
         final Product findProduct = productRepository.findByProductId(updateProductId)
                 .orElseThrow(() -> new IllegalStateException("갱신된 상품 조회에 실패했습니다."));
 
-        return new ProductResponse(findProduct.getId(), findProduct.getName(), findProduct.getPrice(),
+        return new ProductResponse(findProduct.getId().getId(), findProduct.getName(), findProduct.getPrice(),
                 findProduct.getImage());
     }
 }

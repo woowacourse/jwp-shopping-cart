@@ -1,6 +1,7 @@
-package cart.controller;
+package cart.controller.api;
 
-import cart.service.ProductService;
+import cart.domain.product.ProductId;
+import cart.service.product.ProductService;
 import cart.service.request.ProductCreateRequest;
 import cart.service.request.ProductUpdateRequest;
 import cart.service.response.ProductResponse;
@@ -28,14 +29,14 @@ public class ProductApi {
 
 	@PostMapping
 	public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductCreateRequest request) {
-		final long save = productService.save(request);
-		final URI uri = URI.create("/products/" + save);
+		final ProductId saveProductId = productService.save(request);
+		final URI uri = URI.create("/products/" + saveProductId.getId());
 		return ResponseEntity.created(uri).build();
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") long productId) {
-		productService.deleteByProductId(productId);
+		productService.deleteByProductId(ProductId.from(productId));
 		return ResponseEntity.noContent().build();
 	}
 
@@ -44,7 +45,7 @@ public class ProductApi {
 			@PathVariable(value = "id") long productId,
 			@RequestBody @Valid ProductUpdateRequest request
 	) {
-		final ProductResponse productResponse = productService.update(productId, request);
+		final ProductResponse productResponse = productService.update(ProductId.from(productId), request);
 		return ResponseEntity.ok(productResponse);
 	}
 }

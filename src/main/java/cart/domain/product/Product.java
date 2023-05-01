@@ -1,16 +1,20 @@
-package cart.domain;
+package cart.domain.product;
 
 import java.util.Objects;
 
 public class Product {
-	private final long id;
+	private ProductId id;
 	private final String name;
 	private final double price;
 	private final String image;
 
-	public Product(long id, String name, double price, String image) {
-		validate(name, price, image);
+	public Product(final ProductId id, final String name, final double price, final String image) {
+		this(name, price, image);
 		this.id = id;
+	}
+
+	public Product(final String name, final double price, final String image) {
+		validate(name, price, image);
 		this.name = name;
 		this.price = price;
 		this.image = image;
@@ -28,7 +32,7 @@ public class Product {
 		}
 	}
 
-	public long getId() {
+	public ProductId getId() {
 		return id;
 	}
 

@@ -1,6 +1,6 @@
-package cart.controller;
+package cart.controller.view;
 
-import cart.service.ProductService;
+import cart.service.product.ProductService;
 import cart.service.response.ProductResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

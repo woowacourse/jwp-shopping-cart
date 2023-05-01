@@ -1,7 +1,7 @@
-package cart.repository;
+package cart.repository.product;
 
-import cart.domain.Product;
-import cart.service.request.ProductCreateRequest;
+import cart.domain.product.Product;
+import cart.domain.product.ProductId;
 import cart.service.request.ProductUpdateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class ProductJdbcRepositoryTest {
@@ -23,7 +24,7 @@ class ProductJdbcRepositoryTest {
 	@Test
 	void findAll() {
 		// given
-		final List<Product> products = List.of(new Product(1L, "사과", 10000, "사과.png"));
+		final List<Product> products = List.of(new Product(ProductId.from(1L), "사과", 10000, "사과.png"));
 
 		given(productJdbcRepository.findAll()).willReturn(products);
 
@@ -38,15 +39,15 @@ class ProductJdbcRepositoryTest {
 	@Test
 	void save() {
 		// given
-		final ProductCreateRequest request = new ProductCreateRequest("사과", 10000, "사과.png");
+		final Product product = new Product("사과", 10000, "사과.png");
 
-		given(productJdbcRepository.save(request)).willReturn(1L);
+		given(productJdbcRepository.save(product)).willReturn(ProductId.from(1L));
 
 		// when
-		final long saveId = productJdbcRepository.save(request);
+		final ProductId saveId = productJdbcRepository.save(product);
 
 		// then
-		assertThat(saveId).isEqualTo(1L);
+		assertThat(saveId.getId()).isEqualTo(1L);
 	}
 
 	@DisplayName("상품 삭제 테스트")
@@ -54,26 +55,26 @@ class ProductJdbcRepositoryTest {
 	@Test
 	void deleteByProductId() {
 		// given
-		given(productJdbcRepository.deleteByProductId(anyLong())).willReturn(1L);
+		given(productJdbcRepository.deleteByProductId(any())).willReturn(ProductId.from(1L));
 
 		// when
-		final long deleteProductId = productJdbcRepository.deleteByProductId(1L);
+		final ProductId deleteProductId = productJdbcRepository.deleteByProductId(ProductId.from(1L));
 
 		// then
-		assertThat(deleteProductId).isEqualTo(1L);
+		assertThat(deleteProductId.getId()).isEqualTo(1L);
 	}
 
 	@DisplayName("상품 갱신 테스트")
 	@Test
 	void updateProduct(){
 		// given
-		given(productJdbcRepository.updateByProductId(anyLong(), any())).willReturn(1L);
+		given(productJdbcRepository.updateByProductId(any(), any())).willReturn(ProductId.from(1L));
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("kiara", 300.0, "이미지2");
-		final long updateProductId = productJdbcRepository.updateByProductId(1L, request);
+		final ProductId updateProductId = productJdbcRepository.updateByProductId(ProductId.from(1L), request);
 
 		// then
-		assertThat(updateProductId).isEqualTo(1L);
+		assertThat(updateProductId.getId()).isEqualTo(1L);
 	}
 }
