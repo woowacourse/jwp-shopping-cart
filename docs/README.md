@@ -59,5 +59,21 @@
 - [x] `DELETE` 시 전체 product를 통해 삭제하는 것이 아닌, id를 통해 삭제하도록 변경
 - [x] Repository에 `findByName` 메소드 추가, 쿼리 최적화
   - [x] Repository에 이런 기능이 들어가는 것을 두려워하지 말자! 성능 최적화를 위해. Repo에는 보편적인 기능만 들어갈 필요는 없다.
-
+- [x] CRUD service 통합
+  - [x] 자원이 아닌 비즈니스 중심으로 서비스를 구성해야 한다는 생각은 있지만, CRUD 분리는 너무 과하다는 생각이 들음.
+  - [x] 따라서 이런 철학은 유지하되, 상황에 따라 trade-off를 계산해 자원 중심으로도 service를 만들 수 있어야 할듯.
+- [x] request DTO 검증로직 추가
+  - [x] 어디까지 검증할 것인지? 는 카프카와 함께 더 이야기 해 보아야 할 듯.
+  - [x] 일단은 데이터 자체에 대한 검증 (notNull, Positive 등)만 수행함.
+- [x] Application 계층을 위한 커스텀 어노테이션 `@Application` 생성
+  - [x] `@Component`와 동일한 역할을 하지만 명시적인 효과
+- [x] SpringBootTest -> WebMvcTest로 개선
+  - [x] Mockito, MockMVC 사용
+- [x] CRUD -> GET, POST, PUT, DELETE에 각각 매핑
+  - [x] URL에서 method 관련 정보가 사라짐, 자원만 명시(`/product`)
+- [x] Optional을 stream처럼 다루기
+  - [x] 기본 null check 스타일에서 벗어나 깔끔한 코드 구성 가능
+  - [x] 구현한 사람에 의도에 맞는 사용법
+  - [x] https://www.daleseo.com/java8-optional-effective/
+- [x] 
 ### 고민사항 
