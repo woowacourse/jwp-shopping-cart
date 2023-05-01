@@ -3,6 +3,7 @@ package cart.controller.view;
 import cart.controller.ViewController;
 import cart.dto.member.MembersResponseDto;
 import cart.dto.product.ProductsResponseDto;
+import cart.repository.member.MemberRepository;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +35,9 @@ class ViewControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @MockBean
+    MemberRepository memberRepository;
 
     @Test
     @DisplayName("Home을 반환한다.")

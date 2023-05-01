@@ -3,7 +3,6 @@ package cart.service;
 import cart.domain.cart.Cart;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.dto.member.MemberLoginRequestDto;
 import cart.dto.product.ProductsResponseDto;
 import cart.exception.ProductNotFoundException;
 import cart.repository.cart.CartRepository;
@@ -18,19 +17,16 @@ import java.util.stream.Collectors;
 public class CartService {
 
     private final CartRepository cartRepository;
-    private final MemberService memberService;
     private final ProductService productService;
 
     @Autowired
-    public CartService(final CartRepository cartRepository, final MemberService memberService, final ProductService productService) {
+    public CartService(final CartRepository cartRepository, final ProductService productService) {
         this.cartRepository = cartRepository;
-        this.memberService = memberService;
         this.productService = productService;
     }
 
     @Transactional(readOnly = true)
-    public ProductsResponseDto findAll(final MemberLoginRequestDto memberLoginRequestDto) {
-        Member member = memberService.findMember(memberLoginRequestDto);
+    public ProductsResponseDto findAll(final Member member) {
         List<Cart> carts = cartRepository.findAllByMember(member);
         return getProductsResponseDto(carts);
     }
@@ -44,8 +40,7 @@ public class CartService {
     }
 
     @Transactional
-    public void addCart(final MemberLoginRequestDto memberLoginRequestDto, final Long productId) {
-        Member member = memberService.findMember(memberLoginRequestDto);
+    public void addCart(final Member member, final Long productId) {
         Product product = productService.findById(productId);
 
         Cart cart = Cart.from(member, product);
@@ -53,8 +48,7 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCart(final MemberLoginRequestDto memberLoginRequestDto, final Long productId) {
-        Member member = memberService.findMember(memberLoginRequestDto);
+    public void deleteCart(final Member member, final Long productId) {
         Product product = productService.findById(productId);
         List<Cart> memberCarts = cartRepository.findAllByMember(member);
 

@@ -3,7 +3,6 @@ package cart.service.cart;
 import cart.domain.cart.Cart;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.dto.member.MemberLoginRequestDto;
 import cart.dto.product.ProductsResponseDto;
 import cart.repository.cart.CartRepository;
 import cart.service.CartService;
@@ -45,16 +44,14 @@ public class CartServiceMockTest {
     @DisplayName("장바구니를 조회한다.")
     void returns_all_carts() {
         // given
-        MemberLoginRequestDto req = MemberLoginRequestDto.from("test1@test", "!!abc123");
         Member member = createMember();
         Product product = createProduct();
 
-        given(memberService.findMember(req)).willReturn(member);
         given(cartRepository.findAllByMember(member)).willReturn(List.of(Cart.from(member, product)));
         given(productService.findById(any())).willReturn(product);
 
         // when
-        ProductsResponseDto result = cartService.findAll(req);
+        ProductsResponseDto result = cartService.findAll(member);
 
         // then
         assertAll(
@@ -67,17 +64,14 @@ public class CartServiceMockTest {
     @DisplayName("장바구니에 상품을 추가한다.")
     void add_cart() {
         // given
-        MemberLoginRequestDto req = MemberLoginRequestDto.from("test1@test", "!!abc123");
         Long productId = 1L;
-
         Member member = createMember();
         Product product = createProduct();
 
-        given(memberService.findMember(req)).willReturn(member);
         given(productService.findById(productId)).willReturn(product);
 
         // when
-        cartService.addCart(req, productId);
+        cartService.addCart(member, productId);
 
         // then
         verify(cartRepository).save(any(Cart.class));
@@ -87,22 +81,20 @@ public class CartServiceMockTest {
     @DisplayName("장바구니에서 상품을 삭제한다.")
     void delete_cart() {
         // given
-        MemberLoginRequestDto req = MemberLoginRequestDto.from("test1@test", "!!abc123");
         Long productId = 1L;
 
         Member member = createMember();
         Product product = createProduct();
         List<Cart> memberCart = List.of(Cart.from(member, product));
 
-        given(memberService.findMember(req)).willReturn(member);
         given(productService.findById(productId)).willReturn(product);
         given(cartRepository.findAllByMember(member)).willReturn(memberCart);
         given(productService.findById(memberCart.get(0).getProductId())).willReturn(product);
 
         // when
-        cartService.deleteCart(req, productId);
+        cartService.deleteCart(member, productId);
 
         // then
-        verify(cartRepository).delete(member ,product);
+        verify(cartRepository).delete(member, product);
     }
 }

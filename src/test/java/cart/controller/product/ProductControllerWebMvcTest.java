@@ -4,6 +4,7 @@ import cart.controller.ProductController;
 import cart.dto.product.ProductCreateRequestDto;
 import cart.dto.product.ProductEditRequestDto;
 import cart.dto.product.ProductsResponseDto;
+import cart.repository.member.MemberRepository;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +21,8 @@ import static cart.factory.product.ProductFactory.createProduct;
 import static cart.factory.product.ProductRequestDtoFactory.createProductCreateRequest;
 import static cart.factory.product.ProductRequestDtoFactory.createProductEditRequest;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -33,6 +35,9 @@ public class ProductControllerWebMvcTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private MemberRepository memberRepository;
 
     @Autowired
     private MockMvc mockMvc;

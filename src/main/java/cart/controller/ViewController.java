@@ -1,6 +1,5 @@
 package cart.controller;
 
-import cart.dto.member.MembersResponseDto;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
