@@ -25,15 +25,16 @@ public class GlobalExceptionHandler {
 	private ResponseEntity<ErrorResponse> info(final Exception e) {
 		log.info("", e);
 		return ResponseEntity
-			.badRequest()
-			.body(new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value()));
+			.internalServerError()
+			.body(new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
 	}
 
 	private ResponseEntity<ErrorResponse> error(final Exception e) {
 		log.error("", e);
 		return ResponseEntity
 			.internalServerError()
-			.body(new ErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value()));
+			.body(new ErrorResponse("서버 내 오류가 발생하였습니다. 재시도 후 오류 발생시 관리자에게 문의바랍니다.", LocalDateTime.now(),
+				HttpStatus.INTERNAL_SERVER_ERROR.value()));
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
