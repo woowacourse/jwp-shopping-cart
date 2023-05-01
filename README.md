@@ -19,7 +19,7 @@
 
 - 설정 페이지에서 사용자 설정을 한다.
     - 어떤 사용자의 장바구니에 상품을 추가하거나 제거할 것 인지는 Basic Auth 를 이용하여 인증한다
-        - [ ] Request Header의 Authorization 필드를 사용하여 인증 처리를 한다.
+    - Request Header의 Authorization 필드를 사용하여 인증 처리를 한다.
 
 ## ⚙️ 기능 목록
 
@@ -31,7 +31,7 @@
     - Response Body : 모든 상품의 정보 ( ID, 이름, 가격, 이미지URL, 카테고리 이름 목록)
 - [x]  상품 목록 페이지를 반환한다. ( GET “/” )
     - Response Body : 모든 상품의 정보 ( ID, 이름, 가격, 이미지URL, 카테고리 이름 목록)
-- [ ] 모든 사용자의 정보를 확인한다. ( GET "/settings" )
+- [x] 모든 사용자의 정보를 확인한다. ( GET "/settings" )
     - Request Body : 없음
     - Response Body : 모든 사용자들의 정보
 - [ ] 장바구니 목록을 조회한다. ( GET "/cart" )
