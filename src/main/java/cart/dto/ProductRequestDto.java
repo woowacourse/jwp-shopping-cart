@@ -2,6 +2,7 @@ package cart.dto;
 
 import org.hibernate.validator.constraints.URL;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
@@ -11,6 +12,7 @@ public class ProductRequestDto {
     private final String name;
 
     @Min(value = 100, message = "가격은 100원 이상이어야 합니다.")
+    @Max(value = 100000000, message = "가격은 100,000,000원 이하여야 합니다.")
     private final int price;
 
     @URL(message = "이미지는 Url 형식으로 입력해 주어야 합니다.")
