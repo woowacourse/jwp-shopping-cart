@@ -145,6 +145,63 @@ Authorization: Basic {auth}
 Location: /carts/{id}
 ```
 
+--- 
+
+```http
+GET /carts
+```
+
+### Request Header
+
+```http
+Authorization: Basic {auth}
+```
+
+### Response
+
+```javascript
+{
+    [
+        {
+            "id": 1,
+            "productId": 1,
+            "name": "치킨",
+            "imageUrl": "/chicken.png",
+            "price": 15000,
+            "description": "맛있는 치킨",
+        },
+        {
+            "id": 2,
+            "productId": 2,
+            "name": "피자",
+            "imageUrl": "/pizza.png",
+            "price": 15000,
+            "description": "맛있는 피자",
+        }
+    ]
+}
+```
+
+---
+
+```http
+DELETE /carts/{id}
+```
+
+### Request Header
+
+```http
+Authorization: Basic {auth}
+```
+
+### Path Parameter
+
+| Parameter | Description           |
+|:----------|:----------------------|
+| `id`      | **Required**. 장바구니 ID |
+
+---
+
 ## 기능 목록
 
 ### DB
@@ -162,7 +219,7 @@ src/main/resources/data.sql
 - 멤버
     - 조회
 - 카트
-    - 생성, 조회
+    - 생성, 조회, 삭제
 
 ### DAO
 
@@ -175,4 +232,4 @@ src/main/resources/data.sql
 - 멤버
     - 조회
 - 카트
-    - 생성, 조회
+    - 생성, 조회, 삭제
