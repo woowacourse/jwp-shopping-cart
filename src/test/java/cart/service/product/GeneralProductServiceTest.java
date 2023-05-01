@@ -1,17 +1,17 @@
-package cart.service;
+package cart.service.product;
 
+import cart.config.ServiceTestConfig;
 import cart.domain.product.Product;
 import cart.domain.product.ProductId;
 import cart.repository.product.ProductRepository;
-import cart.service.product.GeneralProductService;
 import cart.service.request.ProductCreateRequest;
 import cart.service.request.ProductUpdateRequest;
 import cart.service.response.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 
-@SpringBootTest
-class GeneralProductServiceTest {
+@Import(GeneralProductService.class)
+class GeneralProductServiceTest extends ServiceTestConfig {
     @MockBean
     ProductRepository productRepository;
 

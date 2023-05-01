@@ -24,8 +24,12 @@ public class GeneralProductService implements ProductService {
     public List<ProductResponse> findAll() {
         return productRepository.findAll()
                 .stream()
-                .map(product -> new ProductResponse(product.getId().getId(), product.getName(), product.getPrice(),
-                        product.getImage()))
+                .map(product -> new ProductResponse(
+                        product.getId().getId(),
+                        product.getName(),
+                        product.getPrice(),
+                        product.getImage()
+                ))
                 .collect(Collectors.toList());
     }
 
@@ -38,18 +42,22 @@ public class GeneralProductService implements ProductService {
 
     @Transactional
     @Override
-    public ProductId deleteByProductId(final ProductId productId) {
-        return productRepository.deleteByProductId(productId);
-    }
-
-    @Transactional
-    @Override
     public ProductResponse update(final ProductId productId, final ProductUpdateRequest request) {
         final ProductId updateProductId = productRepository.updateByProductId(productId, request);
         final Product findProduct = productRepository.findByProductId(updateProductId)
                 .orElseThrow(() -> new IllegalStateException("갱신된 상품 조회에 실패했습니다."));
 
-        return new ProductResponse(findProduct.getId().getId(), findProduct.getName(), findProduct.getPrice(),
-                findProduct.getImage());
+        return new ProductResponse(
+                findProduct.getId().getId(),
+                findProduct.getName(),
+                findProduct.getPrice(),
+                findProduct.getImage()
+        );
+    }
+
+    @Transactional
+    @Override
+    public ProductId deleteByProductId(final ProductId productId) {
+        return productRepository.deleteByProductId(productId);
     }
 }

@@ -14,7 +14,7 @@ public interface ProductRepository {
 
     Optional<Product> findByProductId(final ProductId productId);
 
-    ProductId deleteByProductId(final ProductId productId);
-
     ProductId updateByProductId(final ProductId productId, final ProductUpdateRequest request);
+
+    ProductId deleteByProductId(final ProductId productId);
 }

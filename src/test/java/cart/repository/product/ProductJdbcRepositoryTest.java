@@ -1,80 +1,86 @@
 package cart.repository.product;
 
+import cart.config.RepositoryTestConfig;
 import cart.domain.product.Product;
 import cart.domain.product.ProductId;
 import cart.service.request.ProductUpdateRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
 
-@ExtendWith(MockitoExtension.class)
-class ProductJdbcRepositoryTest {
-	@Mock
-	ProductJdbcRepository productJdbcRepository;
+class ProductJdbcRepositoryTest extends RepositoryTestConfig {
+    private static final Product CHICKEN = new Product("치킨", 10000, "image-url");
 
-	@DisplayName("전체 상품 조회 테스트")
-	@Test
-	void findAll() {
-		// given
-		final List<Product> products = List.of(new Product(ProductId.from(1L), "사과", 10000, "사과.png"));
+    ProductJdbcRepository productJdbcRepository;
 
-		given(productJdbcRepository.findAll()).willReturn(products);
+    @BeforeEach
+    void setUp() {
+        productJdbcRepository = new ProductJdbcRepository(jdbcTemplate);
+    }
 
-		// when
-		final List<Product> findProducts = productJdbcRepository.findAll();
+    @DisplayName("전체 상품 조회 테스트")
+    @Test
+    void findAll() {
+        // given
+        productJdbcRepository.save(CHICKEN);
 
-		// then
-		assertThat(findProducts).isEqualTo(products);
-	}
+        // when
+        final List<Product> findProducts = productJdbcRepository.findAll();
 
-	@DisplayName("상품 저장 테스트")
-	@Test
-	void save() {
-		// given
-		final Product product = new Product("사과", 10000, "사과.png");
 
-		given(productJdbcRepository.save(product)).willReturn(ProductId.from(1L));
+        // then
+        assertThat(findProducts).hasSize(1);
+    }
 
-		// when
-		final ProductId saveId = productJdbcRepository.save(product);
+    @DisplayName("상품 저장 테스트")
+    @Test
+    void save() {
+        // when
+        final ProductId saveId = productJdbcRepository.save(CHICKEN);
 
-		// then
-		assertThat(saveId.getId()).isEqualTo(1L);
-	}
+        final Optional<Product> maybeProduct = productJdbcRepository.findByProductId(saveId);
+        assertThat(maybeProduct).isPresent();
 
-	@DisplayName("상품 삭제 테스트")
+        final Product product = maybeProduct.get();
 
-	@Test
-	void deleteByProductId() {
-		// given
-		given(productJdbcRepository.deleteByProductId(any())).willReturn(ProductId.from(1L));
+        // then
+        assertThat(product)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(CHICKEN);
+    }
 
-		// when
-		final ProductId deleteProductId = productJdbcRepository.deleteByProductId(ProductId.from(1L));
+    @DisplayName("상품 삭제 테스트")
+    @Test
+    void deleteByProductId() {
+        // given
+        final ProductId productId = productJdbcRepository.save(CHICKEN);
 
-		// then
-		assertThat(deleteProductId.getId()).isEqualTo(1L);
-	}
+        // when
+        productJdbcRepository.deleteByProductId(productId);
 
-	@DisplayName("상품 갱신 테스트")
-	@Test
-	void updateProduct(){
-		// given
-		given(productJdbcRepository.updateByProductId(any(), any())).willReturn(ProductId.from(1L));
+        final Optional<Product> maybeProduct = productJdbcRepository.findByProductId(productId);
 
-		// when
-		final ProductUpdateRequest request = new ProductUpdateRequest("kiara", 300.0, "이미지2");
-		final ProductId updateProductId = productJdbcRepository.updateByProductId(ProductId.from(1L), request);
+        // then
+        assertThat(maybeProduct).isNotPresent();
+    }
 
-		// then
-		assertThat(updateProductId.getId()).isEqualTo(1L);
-	}
+    @DisplayName("상품 갱신 테스트")
+    @Test
+    void updateProduct() {
+        // given
+        final ProductId productId = productJdbcRepository.save(CHICKEN);
+        final ProductUpdateRequest request = new ProductUpdateRequest("kiara", 300.0, "이미지2");
+
+        // when
+        final ProductId updateProductId = productJdbcRepository.updateByProductId(productId, request);
+
+        // then
+        assertThat(updateProductId).isEqualTo(productId);
+    }
 }

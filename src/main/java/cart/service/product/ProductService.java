@@ -12,7 +12,7 @@ public interface ProductService {
 
     ProductId save(final ProductCreateRequest request);
 
-    ProductId deleteByProductId(final ProductId productId);
-
     ProductResponse update(final ProductId productId, final ProductUpdateRequest request);
+
+    ProductId deleteByProductId(final ProductId productId);
 }
