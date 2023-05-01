@@ -1,4 +1,4 @@
-package cart.web;
+package cart.web.controller.product;
 
 import cart.domain.product.ProductCategory;
 import cart.domain.product.ProductService;
