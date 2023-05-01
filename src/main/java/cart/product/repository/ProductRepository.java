@@ -1,8 +1,7 @@
-package cart.repository;
+package cart.product.repository;
 
-import cart.entity.Product;
+import cart.product.entity.Product;
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductRepository {
 

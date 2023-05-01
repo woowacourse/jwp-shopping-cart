@@ -1,7 +1,7 @@
-package cart.repository;
+package cart.authentication.repository;
 
-import cart.entity.Member;
-import cart.repository.exception.MemberPersistanceFailedException;
+import cart.authentication.entity.Member;
+import cart.authentication.exception.MemberPersistanceFailedException;
 
 import java.util.List;
 

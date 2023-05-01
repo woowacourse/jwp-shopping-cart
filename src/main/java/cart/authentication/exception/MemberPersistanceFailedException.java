@@ -1,4 +1,4 @@
-package cart.repository.exception;
+package cart.authentication.exception;
 
 public class MemberPersistanceFailedException extends Exception {
     public MemberPersistanceFailedException(String message) {

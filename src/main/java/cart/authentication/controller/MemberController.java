@@ -1,15 +1,15 @@
-package cart.controller;
+package cart.authentication.controller;
 
-import cart.repository.MemberRepository;
+import cart.authentication.repository.MemberRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class UserSettingController {
+public class MemberController {
     private final MemberRepository memberRepository;
 
-    public UserSettingController(MemberRepository memberRepository) {
+    public MemberController(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 

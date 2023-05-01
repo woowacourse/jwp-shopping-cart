@@ -1,7 +1,8 @@
 package cart.controller;
 
-import cart.entity.Member;
-import cart.repository.MemberRepository;
+import cart.authentication.controller.MemberController;
+import cart.authentication.entity.Member;
+import cart.authentication.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,8 +16,8 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@WebMvcTest(controllers = UserSettingController.class)
-class UserSettingControllerTest {
+@WebMvcTest(controllers = MemberController.class)
+class MemberControllerTest {
     @Autowired
     MockMvc mockMvc;
 

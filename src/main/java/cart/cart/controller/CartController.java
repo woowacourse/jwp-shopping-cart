@@ -1,12 +1,12 @@
-package cart.controller;
+package cart.cart.controller;
 
 import cart.authentication.Authentication;
-import cart.entity.Cart;
-import cart.entity.Member;
-import cart.entity.Product;
-import cart.repository.CartRepository;
-import cart.repository.ProductRepository;
-import cart.repository.exception.CartPersistanceFailedException;
+import cart.cart.entity.Cart;
+import cart.authentication.entity.Member;
+import cart.product.entity.Product;
+import cart.cart.repository.CartRepository;
+import cart.product.repository.ProductRepository;
+import cart.cart.exception.CartPersistanceFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

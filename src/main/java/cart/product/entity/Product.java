@@ -1,4 +1,4 @@
-package cart.entity;
+package cart.product.entity;
 
 import org.hibernate.validator.constraints.Length;
 

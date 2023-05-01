@@ -1,6 +1,6 @@
-package cart.controller;
+package cart.cart.controller;
 
-import cart.repository.ProductRepository;
+import cart.product.repository.ProductRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

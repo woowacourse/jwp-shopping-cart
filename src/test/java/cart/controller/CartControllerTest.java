@@ -1,9 +1,10 @@
 package cart.controller;
 
-import cart.entity.Cart;
-import cart.entity.Product;
-import cart.repository.CartRepository;
-import cart.repository.ProductRepository;
+import cart.cart.controller.CartController;
+import cart.cart.entity.Cart;
+import cart.product.entity.Product;
+import cart.cart.repository.CartRepository;
+import cart.product.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

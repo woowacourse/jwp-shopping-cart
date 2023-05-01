@@ -1,6 +1,6 @@
-package cart.repository;
+package cart.product.repository;
 
-import cart.entity.Product;
+import cart.product.entity.Product;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

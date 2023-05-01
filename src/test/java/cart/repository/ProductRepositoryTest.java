@@ -1,6 +1,8 @@
 package cart.repository;
 
-import cart.entity.Product;
+import cart.product.entity.Product;
+import cart.product.repository.JdbcProductRepository;
+import cart.product.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

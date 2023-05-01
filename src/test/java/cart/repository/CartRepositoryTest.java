@@ -1,10 +1,13 @@
 package cart.repository;
 
-import cart.entity.Cart;
-import cart.entity.Member;
-import cart.entity.Product;
-import cart.repository.exception.CartPersistanceFailedException;
-import cart.repository.exception.MemberPersistanceFailedException;
+import cart.authentication.repository.MemberRepository;
+import cart.cart.entity.Cart;
+import cart.cart.repository.CartRepository;
+import cart.authentication.entity.Member;
+import cart.product.entity.Product;
+import cart.product.repository.ProductRepository;
+import cart.cart.exception.CartPersistanceFailedException;
+import cart.authentication.exception.MemberPersistanceFailedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
-package cart.controller;
+package cart.product.controller;
 
-import cart.entity.Product;
-import cart.repository.ProductRepository;
+import cart.product.entity.Product;
+import cart.product.repository.ProductRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +12,11 @@ import java.net.URI;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class ProductController {
 
     private final ProductRepository productRepository;
 
-    public AdminController(ProductRepository productRepository) {
+    public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

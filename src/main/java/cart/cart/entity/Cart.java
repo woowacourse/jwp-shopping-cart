@@ -1,4 +1,4 @@
-package cart.entity;
+package cart.cart.entity;
 
 import java.util.Objects;
 

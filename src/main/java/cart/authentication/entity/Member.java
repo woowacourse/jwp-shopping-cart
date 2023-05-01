@@ -1,4 +1,4 @@
-package cart.entity;
+package cart.authentication.entity;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

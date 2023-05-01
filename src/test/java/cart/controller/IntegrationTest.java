@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.entity.Product;
+import cart.product.entity.Product;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;

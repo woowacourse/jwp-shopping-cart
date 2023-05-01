@@ -1,4 +1,4 @@
-package cart.repository.exception;
+package cart.cart.exception;
 
 public class CartPersistanceFailedException extends Exception {
     public CartPersistanceFailedException(String message) {

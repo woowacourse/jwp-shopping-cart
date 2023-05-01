@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.product.controller;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.EmptyResultDataAccessException;

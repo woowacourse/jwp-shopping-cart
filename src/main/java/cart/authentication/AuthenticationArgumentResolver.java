@@ -1,6 +1,7 @@
 package cart.authentication;
 
-import cart.entity.Member;
+import cart.authentication.entity.Member;
+import cart.authentication.exception.MemberAuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
