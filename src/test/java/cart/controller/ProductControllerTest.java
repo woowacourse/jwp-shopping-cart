@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.ProductRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;

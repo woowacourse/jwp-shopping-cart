@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.ProductsResponse;
 import cart.service.ProductService;
 import java.util.List;

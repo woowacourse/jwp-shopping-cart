@@ -1,5 +1,6 @@
 package cart.domain;
 
+import cart.domain.product.ProductPrice;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -9,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class ProductPriceTest {
-    
+
     @Test
     @DisplayName("가격이 음수일 경우 예외 발생")
     void priceNegative() {

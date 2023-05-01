@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.product;
 
 import java.util.Objects;
 
@@ -6,7 +6,8 @@ public class ProductName {
 
     public static final int MIN_NAME_LENGTH = 1;
     public static final int MAX_NAME_LENGTH = 64;
-    public static final String NAME_LENGTH_ERROR_MESSAGE = "이름의 길이는 " + MIN_NAME_LENGTH + "자 이상 " + MAX_NAME_LENGTH + "자 이하입니다.";
+    public static final String NAME_LENGTH_ERROR_MESSAGE =
+            "이름의 길이는 " + MIN_NAME_LENGTH + "자 이상 " + MAX_NAME_LENGTH + "자 이하입니다.";
 
     private final String name;
 
@@ -32,8 +33,12 @@ public class ProductName {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ProductName that = (ProductName) o;
         return Objects.equals(name, that.name);
     }
