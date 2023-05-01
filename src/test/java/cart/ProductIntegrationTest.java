@@ -79,7 +79,7 @@ public class ProductIntegrationTest {
                 .post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/products/1");
+                .header("Location", "/products/2");
     }
 
     @DisplayName("관리자 상품 수정 모달 - 상품을 수정한다")

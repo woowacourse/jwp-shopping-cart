@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.dao.ProductCategory;
-import cart.domain.product.service.ProductService;
+import cart.domain.product.ProductService;
 import cart.web.controller.ProductRestController;
 import cart.web.controller.dto.ProductRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;

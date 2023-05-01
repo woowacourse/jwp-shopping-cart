@@ -7,4 +7,8 @@ public final class UserPassword {
     public UserPassword(final String userPassword) {
         this.userPassword = userPassword;
     }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
 }

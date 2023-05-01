@@ -1,6 +1,6 @@
 package cart.web.controller;
 
-import cart.domain.product.service.ProductService;
+import cart.domain.product.ProductService;
 import cart.web.controller.dto.ProductRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

@@ -1,7 +1,5 @@
-package cart.domain.product.service;
+package cart.domain.product;
 
-import cart.domain.product.Product;
-import cart.domain.product.ProductDao;
 import cart.web.controller.dto.ProductRequest;
 import cart.web.controller.dto.ProductResponse;
 import cart.web.exception.ErrorCode;
