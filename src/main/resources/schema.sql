@@ -31,5 +31,6 @@ CREATE TABLE CART_IN_PRODUCT
     id         BIGINT NOT NULL AUTO_INCREMENT,
     cart_id    BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    primary key (id)
+    primary key (id),
+    UNIQUE KEY (cart_id, product_id)
 );
