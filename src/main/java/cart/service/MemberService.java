@@ -7,6 +7,7 @@ import cart.dao.MemberDao;
 import cart.domain.member.Member;
 import cart.domain.member.Nickname;
 import cart.domain.member.Password;
+import cart.dto.MemberFindResponse;
 import cart.dto.MemberRegisterRequest;
 import cart.entity.MemberEntity;
 import org.springframework.stereotype.Service;
@@ -34,13 +35,11 @@ public class MemberService {
         return memberDao.insert(registerMemberEntity);
     }
 
-    public List<Member> findAll() {
+    public List<MemberFindResponse> findAll() {
         List<MemberEntity> memberEntities = memberDao.selectAll();
         return memberEntities.stream()
-                .map(memberEntity ->
-                        new Member(new Nickname(memberEntity.getNickname()), memberEntity.getEmail(),
-                                new Password(memberEntity.getPassword()))
-                )
+                .map(memberEntity -> new MemberFindResponse(memberEntity.getNickname(),
+                        memberEntity.getEmail(), memberEntity.getPassword()))
                 .collect(Collectors.toUnmodifiableList());
     }
 }

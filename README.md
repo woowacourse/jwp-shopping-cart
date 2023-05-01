@@ -82,7 +82,7 @@
 <br>
 
 ### ✅ 사용자 목록 조회 API
-  - [ ] GET `/members` uri 맵핑
+  - [x] GET `/members` uri 맵핑
     - 사용자 목록의 조회될 사용자 정보
       - nickname
       - email

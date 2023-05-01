@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
-import cart.domain.member.Member;
+import cart.dto.MemberFindResponse;
 import cart.dto.MemberRegisterRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -39,15 +39,15 @@ class MemberServiceTest {
         memberService.register(memberRegisterRequest);
 
         // when
-        List<Member> members = memberService.findAll();
-        Member member1 = members.get(0);
+        List<MemberFindResponse> memberFindResponses = memberService.findAll();
+        MemberFindResponse memberFindResponse1 = memberFindResponses.get(0);
 
         // then
         assertAll(
-                () -> assertThat(members).hasSize(1),
-                () -> assertThat(member1.getNickname()).isEqualTo(memberRegisterRequest.getNickname()),
-                () -> assertThat(member1.getEmail()).isEqualTo(memberRegisterRequest.getEmail()),
-                () -> assertThat(member1.getPassword()).isEqualTo(memberRegisterRequest.getPassword())
+                () -> assertThat(memberFindResponses).hasSize(1),
+                () -> assertThat(memberFindResponse1.getNickname()).isEqualTo(memberRegisterRequest.getNickname()),
+                () -> assertThat(memberFindResponse1.getEmail()).isEqualTo(memberRegisterRequest.getEmail()),
+                () -> assertThat(memberFindResponse1.getPassword()).isEqualTo(memberRegisterRequest.getPassword())
         );
     }
 }
