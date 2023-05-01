@@ -1,14 +1,14 @@
 package cart.service.dto;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class ProductHttpRequest {
 
     private Long id;
-    @NotEmpty(message = "이름이 비어있을 수는 없습니다.")
+    @NotBlank(message = "이름이 비어있을 수는 없습니다.")
     private String name;
-    @NotEmpty(message = "imageUrl이 비어있을 수 없습니다.")
+    @NotBlank(message = "imageUrl이 비어있을 수 없습니다.")
     private String imageUrl;
     @NotNull(message = "가격은 비어있을 수 없습니다.")
     private Integer price;
