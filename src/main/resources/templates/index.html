@@ -22,14 +22,14 @@
     <ul class="product-grid">
         <li class="product" th:each="product : ${products}">
             <div class="product-image">
-                <img th:src="${product.imageUrl}" alt="상품 이미지"> <!-- 상품 이미지 -->
+                <img alt="상품 이미지" th:src="${product.imageUrl}"> <!-- 상품 이미지 -->
             </div>
             <div class="product-info">
                 <div class="product-desc">
                     <p class="product-name" th:text="${product.name}"></p> <!-- 상품 이름 -->
                     <p class="product-price" th:text="${product.price}"></p> <!-- 상품 가격 -->
                 </div>
-                <button type="submit" class="product-btn" th:onclick="addCartItem([[${product.id}]])">담기</button>
+                <button class="product-btn" th:onclick="addCartItem([[${product.id}]])" type="submit">담기</button>
             </div>
         </li>
     </ul>

@@ -37,13 +37,13 @@ public class ProductService {
         List<ProductEntity> productEntities = productDao.findAll();
 
         return productEntities.stream()
-                              .map(entity -> new ProductSearchResponse(
-                                      entity.getId(),
-                                      entity.getName(),
-                                      entity.getPrice(),
-                                      entity.getImageUrl())
-                              )
-                              .collect(Collectors.toList());
+                .map(entity -> new ProductSearchResponse(
+                        entity.getId(),
+                        entity.getName(),
+                        entity.getPrice(),
+                        entity.getImageUrl())
+                )
+                .collect(Collectors.toList());
     }
 
     public void modifyProduct(final Long productId, final ProductModifyRequest productModifyRequest) {
@@ -62,14 +62,14 @@ public class ProductService {
                 );
 
         int affectedRowCount = productDao.update(modifiedProductEntity);
-        if(affectedRowCount == 0) {
+        if (affectedRowCount == 0) {
             throw new ProductNotFoundException();
         }
     }
 
     public void deleteProduct(final Long productId) {
         int affectedRowCount = productDao.deleteById(productId);
-        if(affectedRowCount == 0) {
+        if (affectedRowCount == 0) {
             throw new ProductNotFoundException();
         }
     }

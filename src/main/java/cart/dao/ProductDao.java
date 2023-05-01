@@ -10,8 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductDao implements Dao<ProductEntity> {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
     final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
             new ProductEntity(
                     rs.getLong("id"),
@@ -19,6 +17,8 @@ public class ProductDao implements Dao<ProductEntity> {
                     rs.getInt("price"),
                     rs.getString("image_url")
             );
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

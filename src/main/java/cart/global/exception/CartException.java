@@ -1,6 +1,6 @@
 package cart.global.exception;
 
-public class CartException extends RuntimeException{
+public class CartException extends RuntimeException {
     private final String message;
 
     public CartException(final String message) {
