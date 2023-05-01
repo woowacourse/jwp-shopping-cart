@@ -32,11 +32,11 @@ public class CartItemsService {
     }
 
     public List<ProductDto> findItemsOfCart(AuthInfo authInfo) {
-        final List<Long> memberCartItemsIds = cartItemDao.findProductIdsByMemberId(getIdOfMember(authInfo));
+        final List<Long> itemsIds = cartItemDao.findProductIdsByMemberId(getIdOfMember(authInfo));
 
-        return memberCartItemsIds.stream()
-                                 .map(productService::getById)
-                                 .collect(Collectors.toUnmodifiableList());
+        return itemsIds.stream()
+                       .map(productService::getById)
+                       .collect(Collectors.toUnmodifiableList());
     }
 
     public CartItemDto addItemToCart(AuthInfo authInfo, CartItemAddRequest cartItemAddRequest) {
@@ -45,7 +45,8 @@ public class CartItemsService {
         productService.validateProductExist(productIdToAdd);
 
         try {
-            return cartItemDao.saveItemOfMember(new CartItemDto(getIdOfMember(authInfo), productIdToAdd));
+            final CartItemDto toAdd = new CartItemDto(getIdOfMember(authInfo), productIdToAdd);
+            return cartItemDao.saveItemOfMember(toAdd);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("이미 카트에 존재하는 상품입니다");
         }
@@ -56,14 +57,14 @@ public class CartItemsService {
             throw new IllegalArgumentException("잘못된 상품번호입니다");
         }
 
-        final CartItemDto cartItemDto = new CartItemDto(getIdOfMember(authInfo), productId);
-        final int deletedItemsCount = cartItemDao.deleteItem(cartItemDto);
+        final CartItemDto toDelete = new CartItemDto(getIdOfMember(authInfo), productId);
+        final int deletedItemsCount = cartItemDao.deleteItem(toDelete);
 
         if (deletedItemsCount != 1) {
             throw new NoSuchElementException("잘못된 상품 번호입니다");
         }
 
-        return cartItemDto.getProductId();
+        return toDelete.getProductId();
     }
 
     private long getIdOfMember(AuthInfo authInfo) {
