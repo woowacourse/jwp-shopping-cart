@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.controller.dto.response.ItemResponse;
 import cart.controller.dto.response.UserResponse;
-import cart.service.CartService;
 import cart.service.ItemService;
 import cart.service.UserService;
 import java.util.List;
@@ -16,12 +15,10 @@ public class ViewController {
 
     private final ItemService itemService;
     private final UserService userService;
-    private final CartService cartService;
 
-    public ViewController(final ItemService itemService, final UserService userService, final CartService cartService) {
+    public ViewController(final ItemService itemService, final UserService userService) {
         this.itemService = itemService;
         this.userService = userService;
-        this.cartService = cartService;
     }
 
     @GetMapping
