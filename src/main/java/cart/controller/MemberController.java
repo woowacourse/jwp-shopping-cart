@@ -9,6 +9,7 @@ import cart.service.MemberService;
 import cart.validation.ValidationSequence;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,5 +34,12 @@ public class MemberController {
     public ResponseEntity<List<MemberFindResponse>> findAll() {
         List<MemberFindResponse> findMemberResponses = memberService.findAll();
         return ResponseEntity.ok(findMemberResponses);
+    }
+
+    @GetMapping("/member/settings")
+    public String settings(Model model) {
+        List<MemberFindResponse> findMemberResponses = memberService.findAll();
+        model.addAttribute("members", findMemberResponses);
+        return "settings";
     }
 }
