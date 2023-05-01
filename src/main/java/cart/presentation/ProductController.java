@@ -5,12 +5,7 @@ import cart.application.ProductCRUDApplication;
 import cart.presentation.dto.ProductDto;
 import cart.presentation.dto.ProductIdDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -25,23 +20,23 @@ public class ProductController {
         this.productCRUDApplication = productCRUDApplication;
     }
 
-    @PostMapping(path = "/create")
+    @PostMapping
     public void productCreate(@RequestBody @Valid ProductDto request) {
         productCRUDApplication.create(request);
     }
 
-    @GetMapping(path = "/read")
+    @GetMapping
     public ResponseEntity<List<ProductDto>> productRead() {
         List<ProductDto> response = productCRUDApplication.readAll();
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(path = "/update")
+    @PutMapping
     public void productUpdate(@RequestBody @Valid ProductDto request) {
         productCRUDApplication.update(request);
     }
 
-    @DeleteMapping(path = "/delete")
+    @DeleteMapping
     public void productDelete(@RequestBody @Valid ProductIdDto request) {
         productCRUDApplication.delete(request);
     }
