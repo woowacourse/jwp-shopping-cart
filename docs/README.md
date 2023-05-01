@@ -24,7 +24,11 @@
     - [x] /admin url로 접근할 경우 관리자 도구 페이지를 조회할 수 있다
     - [x] 상품 추가, 수정, 삭제 기능이 동작한다
 
-## 테오와 주디가 했던 고민들
+
+# 기록 📕
+<details>
+<summary>미션 중 고민했던 것들</summary>
+<div>
 
 1. domain 객체의 생성자에서(domain 객체를 생성할 때) 항상 null을 체크해줘야하는가?
     - 테오: null 체크를 하지 않는 것이 관례라고 알고있음. 또, 어짜피 NPE가 발생되면 프로그램이 정상 작동하지 않을 것.
@@ -46,34 +50,38 @@
       사용해야한다고 생각한다
     - 테오: 개발자가 예외처리를 해줬고 시스템에 영향이 가지 않으면 정상적인 흐름이라고 생각한다. 따라서 logger.info() 혹은 logger.debug()가 맞는 것 같다.
 
+</div>
+</details>
 
----
+<details>
+<summary>무엇을 리팩토링했는지</summary>
+<div>
 
-### 리팩토링 기록
 - [x] Service에 DTO 개념을 붙이고 싶지 않다. 반면 Controller에서도 도메인에 대한 결합도를 높이고 싶지는 않다. 두 방식은 모두 극단적이라 생각. 따라서 새로운 레이어 생성.
-  - [x] Application Layer를 중간에 생성함으로써 DTO <-> 도메인 변환작업을 전담. 
-  - [x] `Open Layer`로 둠으로써 표현 계층에서 선택적으로 접근할 수 있게 하면 어떨까.
-  - [x] 이것이 좋은 방향인지는 카프카와 논의해봐야 할 듯!
+    - [x] Application Layer를 중간에 생성함으로써 DTO <-> 도메인 변환작업을 전담.
+    - [x] `Open Layer`로 둠으로써 표현 계층에서 선택적으로 접근할 수 있게 하면 어떨까.
+    - [x] 이것이 좋은 방향인지는 카프카와 논의해봐야 할 듯!
 - [x] `IdSequencer`를 통해 DB 아이디와 Product ID 두 개념을 분리
-  - [x] 이제 도메인 엔티티와 DB 엔티티는 완전히 독립적임
+    - [x] 이제 도메인 엔티티와 DB 엔티티는 완전히 독립적임
 - [x] `DELETE` 시 전체 product를 통해 삭제하는 것이 아닌, id를 통해 삭제하도록 변경
 - [x] Repository에 `findByName` 메소드 추가, 쿼리 최적화
-  - [x] Repository에 이런 기능이 들어가는 것을 두려워하지 말자! 성능 최적화를 위해. Repo에는 보편적인 기능만 들어갈 필요는 없다.
+    - [x] Repository에 이런 기능이 들어가는 것을 두려워하지 말자! 성능 최적화를 위해. Repo에는 보편적인 기능만 들어갈 필요는 없다.
 - [x] CRUD service 통합
-  - [x] 자원이 아닌 비즈니스 중심으로 서비스를 구성해야 한다는 생각은 있지만, CRUD 분리는 너무 과하다는 생각이 들음.
-  - [x] 따라서 이런 철학은 유지하되, 상황에 따라 trade-off를 계산해 자원 중심으로도 service를 만들 수 있어야 할듯.
+    - [x] 자원이 아닌 비즈니스 중심으로 서비스를 구성해야 한다는 생각은 있지만, CRUD 분리는 너무 과하다는 생각이 들음.
+    - [x] 따라서 이런 철학은 유지하되, 상황에 따라 trade-off를 계산해 자원 중심으로도 service를 만들 수 있어야 할듯.
 - [x] request DTO 검증로직 추가
-  - [x] 어디까지 검증할 것인지? 는 카프카와 함께 더 이야기 해 보아야 할 듯.
-  - [x] 일단은 데이터 자체에 대한 검증 (notNull, Positive 등)만 수행함.
+    - [x] 어디까지 검증할 것인지? 는 카프카와 함께 더 이야기 해 보아야 할 듯.
+    - [x] 일단은 데이터 자체에 대한 검증 (notNull, Positive 등)만 수행함.
 - [x] Application 계층을 위한 커스텀 어노테이션 `@Application` 생성
-  - [x] `@Component`와 동일한 역할을 하지만 명시적인 효과
+    - [x] `@Component`와 동일한 역할을 하지만 명시적인 효과
 - [x] SpringBootTest -> WebMvcTest로 개선
-  - [x] Mockito, MockMVC 사용
+    - [x] Mockito, MockMVC 사용
 - [x] CRUD -> GET, POST, PUT, DELETE에 각각 매핑
-  - [x] URL에서 method 관련 정보가 사라짐, 자원만 명시(`/product`)
+    - [x] URL에서 method 관련 정보가 사라짐, 자원만 명시(`/product`)
 - [x] Optional을 stream처럼 다루기
-  - [x] 기본 null check 스타일에서 벗어나 깔끔한 코드 구성 가능
-  - [x] 구현한 사람에 의도에 맞는 사용법
-  - [x] https://www.daleseo.com/java8-optional-effective/
-- [x] 
-### 고민사항 
+    - [x] 기본 null check 스타일에서 벗어나 깔끔한 코드 구성 가능
+    - [x] 구현한 사람에 의도에 맞는 사용법
+    - [x] https://www.daleseo.com/java8-optional-effective/
+
+</div>
+</details>
