@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,8 +31,16 @@ public class ProductService {
                          .collect(Collectors.toUnmodifiableList());
     }
 
+    public ProductDto getById(long id) {
+        final Optional<Product> optionalProduct = productDao.findById(id);
+
+        final Product foundProduct = optionalProduct.orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다"));
+
+        return DtoMapper.toProductDto(foundProduct);
+    }
+
     public long register(ProductAddRequest productAddRequest) {
-        final Product inserted = productDao.insert(DtoMapper.toProduct(productAddRequest));
+        final Product inserted = productDao.save(DtoMapper.toProduct(productAddRequest));
         return inserted.getId();
     }
 

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,8 +15,8 @@ class H2ProductDaoTest {
     private final ProductDao productDao;
 
     @Autowired
-    H2ProductDaoTest(final JdbcTemplate jdbcTemplate) {
-        this.productDao = new H2ProductDao(jdbcTemplate);
+    H2ProductDaoTest(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.productDao = new H2ProductDao(namedParameterJdbcTemplate);
     }
 
     @Test
@@ -26,7 +26,7 @@ class H2ProductDaoTest {
         Product product = new Product("도이치킨", "image1", 1000);
 
         // when
-        Product inserted = productDao.insert(product);
+        Product inserted = productDao.save(product);
 
         // then
         assertThat(productDao.findAll()).contains(inserted);
@@ -37,7 +37,7 @@ class H2ProductDaoTest {
     void update() {
         // given
         Product product = new Product("도이치킨", "image1", 1000);
-        Product inserted = productDao.insert(product);
+        Product inserted = productDao.save(product);
 
         // when
         Product updated = new Product(inserted.getId(), "에밀치킨", "image2", 10000);
@@ -54,7 +54,7 @@ class H2ProductDaoTest {
         Product product = new Product("도이치킨", "image1", 1000);
 
         // when
-        Product inserted = productDao.insert(product);
+        Product inserted = productDao.save(product);
 
         // then
         assertThat(productDao.findById(inserted.getId()).get()).isEqualTo(inserted);

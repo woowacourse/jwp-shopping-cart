@@ -2,7 +2,6 @@ package cart.product.dao;
 
 import cart.product.domain.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -25,12 +24,12 @@ public class H2ProductDao implements ProductDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public H2ProductDao(final JdbcTemplate jdbcTemplate) {
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+    public H2ProductDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     @Override
-    public Product insert(final Product product) {
+    public Product save(final Product product) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate()).withTableName("products")
                                                                                                                     .usingGeneratedKeyColumns("id");
         final Number key = simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(product));

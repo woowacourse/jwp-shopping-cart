@@ -11,7 +11,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -57,6 +59,21 @@ public class MemberDao {
     public Optional<Member> findById(long id) {
         String sql = "SELECT id, email, password, phone_number FROM members WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+
+        try {
+            Member member = namedParameterJdbcTemplate.queryForObject(sql, params, memberRowMapper);
+            return Optional.ofNullable(member);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Member> findByEmailWithPassword(String email, String password) {
+        String sql = "SELECT id, email, password, phone_number FROM members WHERE email = :email AND password = :password";
+        final Map<String, String> map = new HashMap<>();
+        map.put("email", email);
+        map.put("password", password);
+        MapSqlParameterSource params = new MapSqlParameterSource(map);
 
         try {
             Member member = namedParameterJdbcTemplate.queryForObject(sql, params, memberRowMapper);

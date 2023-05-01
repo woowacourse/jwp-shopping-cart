@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ProductDao {
 
-    Product insert(Product product);
+    Product save(Product product);
 
     int update(Product product);
 

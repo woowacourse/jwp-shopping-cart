@@ -1,6 +1,6 @@
+DROP TABLE IF EXISTS cart_items;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS members;
-DROP TABLE IF EXISTS carts;
 
 CREATE TABLE IF NOT EXISTS products
 (
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS members
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS carts
+CREATE TABLE IF NOT EXISTS cart_items
 (
     member_id  BIGINT NOT NULL,
     product_id BIGINT NOT NULL,

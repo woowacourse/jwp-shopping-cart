@@ -1,5 +1,6 @@
 package cart.exception;
 
+import cart.infrastructure.UnauthorizedMemberException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class ExceptionAdvice {
                              .body(errors);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({IllegalArgumentException.class, UnauthorizedMemberException.class})
     public ResponseEntity<ErrorDto> handleException(IllegalArgumentException exception, HttpServletRequest request) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         return handleException(exception, httpStatus, request.getRequestURI());

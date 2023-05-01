@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS members
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS carts
+CREATE TABLE IF NOT EXISTS cart_items
 (
     member_id  BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
