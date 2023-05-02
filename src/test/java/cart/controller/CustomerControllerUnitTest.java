@@ -2,13 +2,17 @@ package cart.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.service.CustomerService;
+import cart.service.dto.CustomerResponse;
 import cart.service.dto.SignUpRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +46,20 @@ class CustomerControllerUnitTest {
                         .content(requestString))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/settings/users/1"));
+    }
+
+    @DisplayName("전체 회원 조회 API 호출 시, 전체 회원 정보가 조회된다.")
+    @Test
+    void viewAllCustomers() throws Exception {
+        // given
+        CustomerResponse baron = new CustomerResponse(1L, "baron@gmail.com", "password");
+        CustomerResponse journey = new CustomerResponse(2L, "journey@gmail.com", "password");
+        given(customerService.findAll()).willReturn(List.of(baron, journey));
+
+        // when, then
+        mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings"));
     }
 
 }

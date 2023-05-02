@@ -41,11 +41,12 @@
       - password
       - 이메일 중복 불가
     - [x] POST `/settings/users` url 맵핑
-  - [ ] 사용자 전체 조회 API 구현
-    - [ ] 전체 사용자 조회 기능 구현
+  - [x] 사용자 전체 조회 API 구현
+    - [x] 전체 사용자 조회 기능 구현
+      - id 
       - email
       - password
-    - [ ] GET  `/settings/users` url 맵핑
+    - [x] GET  `/settings` url 맵핑
   - [ ] 요청 헤더의 `Authorization` 필드에서 사용자 정보 조회 기능 구현
     - [ ] 로그인이 안되었다면 `/` 만 접근 가능, 다른 url은 모두 401 예외 반환
 - [ ] 사용자 설정 페이지 연동
