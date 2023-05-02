@@ -1,69 +1,79 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>설정</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/base.css}">
-    <link rel="stylesheet" th:href="@{/css/admin.css}">
-    <link rel="stylesheet" th:href="@{/css/member.css}">
-    <link rel="icon" href="data:,">
+  <meta charset="UTF-8">
+  <title>설정</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap"
+        rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/base.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+  <link rel="stylesheet" th:href="@{/css/member.css}">
+  <link rel="icon" href="data:,">
 </head>
 <body>
 <header class="gnb">
-    <nav>
-        <ul class="gnb-group">
-            <li><a href="/">상품목록</a></li>
-            <li><a href="/cart">장바구니</a></li>
-            <li><a href="/settings">설정</a></li>
-            <li class="nav-admin"><a href="/admin">관리자</a></li>
-        </ul>
-    </nav>
+  <nav>
+    <ul class="gnb-group">
+      <li><a href="/">상품목록</a></li>
+      <li><a href="/cart">장바구니</a></li>
+      <li><a href="/settings">설정</a></li>
+      <li class="nav-admin"><a onclick="addAuthorizationHeader()">관리자</a></li>
+    </ul>
+  </nav>
 </header>
 
 <div class="container">
-    <div class="member-container">
-        <h1 class="member-select">사용자 선택</h1>
-        <button class="member-button" onclick="showUserAddModal()">사용자 추가</button>
-    </div>
+  <div class="member-container">
+    <h1 class="member-select">사용자 선택</h1>
+    <button class="member-button" onclick="showUserAddModal()">사용자 추가</button>
+  </div>
 
-    <div class="member-items">
-        <div class="member-item" th:each="member : ${members}">
-            <div class="member-item-info">
-                <div th:onclick="showMemberInfo([[${member.id}]])">
-                    <div class="member-item-email" th:text="${member.getEmail()}"></div>
-                    <div class="member-item-password" th:text="${member.getPassword()}"></div>
-                </div>
-                <button type="submit" id="delete-btn" class="member-item-select"
-                        th:onclick="selectMember([[${member}]])">
-                    Select
-                </button>
-            </div>
+  <div class="member-items">
+    <div class="member-item" th:each="member : ${members}">
+      <div class="member-item-info">
+        <div th:onclick="showMemberInfo([[${member.id}]])">
+          <div th:if="${member.getRole().equals('ADMIN')}">👑</div>
+          <div class="member-item-email" th:text="${member.getEmail()}"></div>
+          <div class="member-item-password" th:text="${member.getPassword()}"></div>
         </div>
+        <button type="submit" id="delete-btn" class="member-item-select"
+                th:onclick="selectMember([[${member}]])">
+          Select
+        </button>
+      </div>
     </div>
+  </div>
 
-    <div id="modal" class="modal" data-form-type="add">
-        <div class="modal-content">
-            <span class="close" onclick="hideUserAddModal()">&times;</span>
-            <form id="form">
-                <label for="email">이메일</label><br>
-                <input type="text" id="email" name="email"><br>
+  <div id="modal" class="modal" data-form-type="add">
+    <div class="modal-content">
+      <span class="close" onclick="hideUserAddModal()">&times;</span>
+      <form id="form">
+        <label>권한</label>
+        <select name="role" class="form-select">
+          <option th:each="role : ${roles}"
+                  th:value="${role.name()}"
+                  th:text="${role.name()}">
+          </option>
+        </select>
+        <label for="email">이메일</label><br>
+        <input type="text" id="email" name="email"><br>
 
-                <label for="nickname">닉네임</label><br>
-                <input type="text" id="nickname" name="nickname"><br>
+        <label for="nickname">닉네임</label><br>
+        <input type="text" id="nickname" name="nickname"><br>
 
-                <label for="password">비밀번호</label><br>
-                <input type="password" id="password" name="password"><br>
+        <label for="password">비밀번호</label><br>
+        <input type="password" id="password" name="password"><br>
 
-                <label for="telephone">전화번호</label><br>
-                <input type="text" id="telephone" name="telephone"><br>
+        <label for="telephone">전화번호</label><br>
+        <input type="text" id="telephone" name="telephone"><br>
 
-                <button type="submit">제출</button>
-            </form>
-        </div>
+        <button type="submit">제출</button>
+      </form>
     </div>
+  </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/header.js}"></script>
 <script th:src="@{/js/settings.js}"></script>
 </body>
 </html>

@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Product Detail Page</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/base.css}">
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <link rel="icon" href="data:,">
+  <meta charset="UTF-8">
+  <title>Product Detail Page</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap"
+        rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/base.css}">
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="icon" href="data:,">
 </head>
 <body>
 <header class="gnb">
-    <nav>
-        <ul class="gnb-group">
-            <li><a href="/">상품목록</a></li>
-            <li><a href="/cart">장바구니</a></li>
-            <li><a href="/settings">설정</a></li>
-            <li class="nav-admin"><a href="/admin">관리자</a></li>
-        </ul>
-    </nav>
+  <nav>
+    <ul class="gnb-group">
+      <li><a href="/">상품목록</a></li>
+      <li><a href="/cart">장바구니</a></li>
+      <li><a href="/settings">설정</a></li>
+      <li class="nav-admin"><a onclick="addAuthorizationHeader()">관리자</a></li>
+    </ul>
+  </nav>
 </header>
 <div class="container" style="text-align: center">
-    <div>
-        <div class="product-image" style="margin-bottom: 20px">
-            <img alt="상품 이미지" th:src="${product.getImageUrl()}"> <!-- 상품 이미지 -->
-        </div>
-        <div id="product-detail">
-            <p class="product-category" th:text="${product.getCategory()}" style="font-weight: bold"></p>
-            <!-- 상품 카테고리 -->
-            <p class="product-name" th:text="${product.getName()}"></p> <!-- 상품 이름 -->
-            <p class="product-price" th:text="${product.getPrice()} + '원'" style="color: black"></p> <!-- 상품 가격 -->
-        </div>
+  <div>
+    <div class="product-image" style="margin-bottom: 20px">
+      <img alt="상품 이미지" th:src="${product.getImageUrl()}"> <!-- 상품 이미지 -->
     </div>
+    <div id="product-detail">
+      <p class="product-category" th:text="${product.getCategory()}" style="font-weight: bold"></p>
+      <!-- 상품 카테고리 -->
+      <p class="product-name" th:text="${product.getName()}"></p> <!-- 상품 이름 -->
+      <p class="product-price" th:text="${product.getPrice()} + '원'" style="color: black"></p>
+      <!-- 상품 가격 -->
+    </div>
+  </div>
 </div>
+<script th:src="@{/js/header.js}"></script>
 </body>
 </html>
