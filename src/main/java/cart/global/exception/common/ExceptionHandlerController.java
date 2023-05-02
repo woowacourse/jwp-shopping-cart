@@ -42,6 +42,13 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(exceptionResponse, httpStatus);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleUnexpectedException(Exception exception) {
+        errorLogging(exception);
+
+        return ResponseEntity.internalServerError().body("전화 주세요");
+    }
+
     private void errorLogging(Exception e) {
         log.info("클래스 이름 = {} 메시지 = {}", e.getClass().getSimpleName(), e.getMessage());
     }
