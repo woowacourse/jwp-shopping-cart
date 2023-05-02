@@ -1,5 +1,7 @@
 package cart.controller;
 
+import cart.service.AuthService;
+import cart.service.CartSearchService;
 import cart.service.ProductCreateService;
 import cart.service.ProductDeleteService;
 import cart.service.ProductSearchService;
@@ -13,6 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest
 public class AbstractProductControllerTest {
 
+    @MockBean
+    protected AuthService authService;
+    @MockBean
+    protected CartSearchService cartSearchService;
     @MockBean
     protected ProductSearchService productSearchService;
     @MockBean
