@@ -14,12 +14,6 @@ CREATE TABLE IF NOT EXISTS `users`
     `password` VARCHAR(20) NOT NULL
 );
 
-INSERT INTO `users` (email, password)
-VALUES ('ahdjd5@gmail.com', 'qwer1234');
-
-INSERT INTO `users` (email, password)
-VALUES ('ahdjd5@naver.com', 'qwer1234');
-
 CREATE TABLE IF NOT EXISTS `cart`
 (
     `id`         BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
