@@ -57,8 +57,8 @@
 - [x] db 구성
   - [x] Products
     - ID, 이름, 이미지, 가격
-  - [ ] Users
-    - ID, password
+  - [x] Users
+    - ID(email), password
   - [ ] Cart
     - ID, user_id, product_id
 

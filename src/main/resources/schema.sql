@@ -1,7 +1,15 @@
 create table products
 (
-    id bigint auto_increment primary key,
-    product_name varchar(100) not null ,
-    product_price int not null ,
-    product_image varchar(max) not null
+    id            BIGINT       NOT NULL AUTO_INCREMENT,
+    product_name  VARCHAR(100) NOT NULL,
+    product_price INT          NOT NULL,
+    product_image VARCHAR(max) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+create table users
+(
+    email    VARCHAR(20) NOT NULL,
+    password VARCHAR(10) NOT NULL,
+    PRIMARY KEY (email)
 );
