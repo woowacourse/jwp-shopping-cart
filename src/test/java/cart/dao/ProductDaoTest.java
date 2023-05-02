@@ -21,8 +21,7 @@ class ProductDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private ProductDao productDao;
-
-    private ProductRequest request;
+    private Product product;
     private String name;
     private String imageUrl;
     private int price;
@@ -35,14 +34,15 @@ class ProductDaoTest {
         imageUrl = "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg";
         price = 10000;
 
-        request = new ProductRequest(name, imageUrl, price);
+        ProductRequest request = new ProductRequest(name, imageUrl, price);
+        product = Product.from(request.getName(), request.getImageUrl(), request.getPrice());
     }
 
     @DisplayName("상품을 정상적으로 추가한다.")
     @Test
     void save() {
         // when
-        Long savedId = productDao.save(request);
+        Long savedId = productDao.save(product);
 
         // then
         assertThat(savedId).isInstanceOf(Long.class);
@@ -52,7 +52,7 @@ class ProductDaoTest {
     @Test
     void findAll() {
         // given
-        productDao.save(request);
+        productDao.save(product);
 
         // when
         List<Product> products = productDao.findAll();
@@ -72,26 +72,28 @@ class ProductDaoTest {
     @Test
     void updateById() {
         // given
-        Long savedId = productDao.save(request);
+        Long savedId = productDao.save(product);
+        ProductRequest newProductRequest = new ProductRequest("업데이트치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
+        Product newProduct = Product.from(savedId, newProductRequest.getName(), newProductRequest.getImageUrl(), newProductRequest.getPrice());
 
         // when
-        productDao.updateById(savedId, request);
+        productDao.updateById(savedId, newProduct);
 
         // then
         Product product = productDao.findById(savedId)
                 .orElseThrow(IllegalArgumentException::new);
 
         assertThat(product)
-                .hasFieldOrPropertyWithValue("name", name)
+                .hasFieldOrPropertyWithValue("name", "업데이트치킨")
                 .hasFieldOrPropertyWithValue("imageUrl", imageUrl)
-                .hasFieldOrPropertyWithValue("price", price);
+                .hasFieldOrPropertyWithValue("price", 10000);
     }
 
     @DisplayName("상품의 ID를 받아 상품을 삭제한다.")
     @Test
     void deleteById() {
         // given
-        Long savedId = productDao.save(request);
+        Long savedId = productDao.save(product);
 
         // when
         productDao.deleteById(savedId);

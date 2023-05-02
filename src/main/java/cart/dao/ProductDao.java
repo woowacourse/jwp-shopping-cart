@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.controller.dto.ProductRequest;
 import cart.domain.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,11 +32,11 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(final ProductRequest productRequest) {
+    public Long save(final Product product) {
         Map<String, Object> params = new HashMap<>();
-        params.put("name", productRequest.getName());
-        params.put("price", productRequest.getPrice());
-        params.put("image_url", productRequest.getImageUrl());
+        params.put("name", product.getName());
+        params.put("price", product.getPrice());
+        params.put("image_url", product.getImageUrl());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
@@ -59,13 +58,13 @@ public class ProductDao {
         }
     }
 
-    public int updateById(final Long id, final ProductRequest productRequest) {
+    public int updateById(final Long id, final Product product) {
         String sql = "UPDATE product SET name = ?, image_url = ?, price = ? WHERE id = ?";
 
         return jdbcTemplate.update(sql, ps -> {
-            ps.setString(1, productRequest.getName());
-            ps.setString(2, productRequest.getImageUrl());
-            ps.setInt(3, productRequest.getPrice());
+            ps.setString(1, product.getName());
+            ps.setString(2, product.getImageUrl());
+            ps.setInt(3, product.getPrice());
             ps.setLong(4, id);
         });
     }

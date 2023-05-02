@@ -15,6 +15,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
@@ -32,7 +34,7 @@ class ProductServiceTest {
     void save() {
         // given
         ProductRequest productRequest = new ProductRequest("치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
-        given(productDao.save(productRequest)).willReturn(1L);
+        given(productDao.save(any(Product.class))).willReturn(1L);
 
         // when, then
         assertThat(productService.save(productRequest)).isEqualTo(1L);
@@ -43,8 +45,10 @@ class ProductServiceTest {
     void update_success() {
         // given
         ProductRequest productRequest = new ProductRequest("치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
-        given(productDao.findById(1L)).willReturn(Optional.of(new Product(1L, "치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 1000)));
-        given(productDao.updateById(1L, productRequest)).willReturn(1);
+        Product product = Product.from(1L, productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+
+        given(productDao.findById(anyLong())).willReturn(Optional.of(product));
+        given(productDao.updateById(anyLong(), any(Product.class))).willReturn(1);
 
         // when, then
         assertThat(productService.update(1L, productRequest)).isEqualTo(1);

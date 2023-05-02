@@ -18,12 +18,20 @@ public class Product {
     private final String imageUrl;
     private final Integer price;
 
-    public Product(final long id, final String name, final String imageUrl, final Integer price) {
+    public Product(final Long id, final String name, final String imageUrl, final Integer price) {
         validate(name, imageUrl, price);
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
+    }
+
+    public static Product from(final String name, final String imageUrl, final Integer price) {
+        return new Product(null, name, imageUrl, price);
+    }
+
+    public static Product from(final Long id, final String name, final String imageUrl, final Integer price) {
+        return new Product(id, name, imageUrl, price);
     }
 
     private void validate(final String name, final String imageUrl, final Integer price) {

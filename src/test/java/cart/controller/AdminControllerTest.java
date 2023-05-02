@@ -30,7 +30,7 @@ class AdminControllerTest {
     @Test
     void findAllProducts() throws Exception {
         // given
-        Product product = new Product(1, "치킨", "image.url", 10000);
+        Product product = new Product(1L, "치킨", "image.url", 10000);
         given(productService.findAll()).willReturn(List.of(ProductDto.from(product)));
 
         // when, then

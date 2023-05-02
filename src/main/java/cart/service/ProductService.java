@@ -19,7 +19,8 @@ public class ProductService {
     }
 
     public Long save(final ProductRequest productRequest) {
-        return productDao.save(productRequest);
+        Product product = Product.from(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        return productDao.save(product);
     }
 
     public List<ProductDto> findAll() {
@@ -30,10 +31,15 @@ public class ProductService {
     }
 
     public int update(final Long id, final ProductRequest productRequest) {
-        productDao.findById(id)
+        Product product = productDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 id 값이 없습니다."));
-
-        return productDao.updateById(id, productRequest);
+        Product newProduct = Product.from(
+                product.getId(),
+                productRequest.getName(),
+                productRequest.getImageUrl(),
+                productRequest.getPrice()
+        );
+        return productDao.updateById(id, newProduct);
     }
 
     public void delete(final Long id) {
