@@ -3,6 +3,7 @@ package cart.controller;
 import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
 
@@ -31,12 +33,13 @@ public class AdminController {
         return "admin";
     }
 
-    @PostMapping
+    @PostMapping("/product")
+    @ResponseStatus(HttpStatus.CREATED)
     public void createProduct(@RequestBody @Valid final ProductCreateRequest request) {
         productService.create(request);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public String update(
             @PathVariable final Long id,
             @RequestBody @Valid final ProductUpdateRequest request
