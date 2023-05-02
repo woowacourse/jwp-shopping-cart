@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import cart.domain.Product;
 import cart.service.dto.ProductUpdateRequest;
@@ -18,10 +19,13 @@ class ProductRepositoryTest {
 	ProductUpdateRequest request;
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 	@BeforeEach
 	void setUp() {
 		request = new ProductUpdateRequest("사과", 10000, "사과.png");
+		jdbcTemplate.execute("TRUNCATE TABLE products RESTART IDENTITY");
 	}
 
 	@DisplayName("전체 상품 조회 테스트")
@@ -43,7 +47,6 @@ class ProductRepositoryTest {
 	@Test
 	void save() {
 		// given
-		productRepository.clear();
 
 		// when
 		final long saveId = productRepository.save(request);
