@@ -1,6 +1,6 @@
 package cart.entity;
 
-public class Product {
+public final class Product {
     private static final int MAX_NAME_LENGTH = 20;
     private static final int MAX_PRICE = 100000000;
     private static final int MIN_PRICE = 0;
