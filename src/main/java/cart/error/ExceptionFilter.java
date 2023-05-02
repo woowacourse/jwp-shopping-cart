@@ -28,10 +28,14 @@ public class ExceptionFilter extends OncePerRequestFilter {
             writerErrorCode(response, e.getErrorCode());
         } catch (Exception e) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             writerErrorCode(response, new ErrorCode(500, "SERVER-500-1", "Internal Server Error"));
 =======
             writerErrorCode(response, new ErrorCode(400, "PRODUCT-400-1", "Internal Server Error"));
 >>>>>>> 39f685c2 (refactor: Exception 클래스에서 에러 반환 값 선언)
+=======
+            writerErrorCode(response, new ErrorCode(500, "SERVER-500-1", "Internal Server Error"));
+>>>>>>> 2c4cb820 (refactor: 예외 수정 및 변수 추출)
         }
     }
 
