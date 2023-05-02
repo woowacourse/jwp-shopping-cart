@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.auth.UnauthorizedException;
 import cart.dao.CustomerDao;
 import cart.dao.entity.CustomerEntity;
 import cart.domain.Email;
@@ -44,6 +45,12 @@ public class CustomerService {
         return customerDao.findByEmail(email)
                 .map(CustomerResponse::fromEntity)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일 입니다."));
+    }
+
+    public long findIdByEmail(final String email) {
+        return customerDao.findByEmail(email)
+                .map(CustomerEntity::getId)
+                .orElseThrow(UnauthorizedException::new);
     }
 
     public List<CustomerResponse> findAll() {

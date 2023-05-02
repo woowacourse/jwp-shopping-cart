@@ -70,4 +70,16 @@ class CustomerServiceTest {
         assertThat(Ids).containsExactly(savedId1, savedId2);
     }
 
+    @DisplayName("이메일로 사용자 id를 조회할 수 있다.")
+    @Test
+    void findIdByEmail() {
+        // given
+        long savedId = customerService.save(new SignUpRequest("baron@gmail.com", "password"));
+
+        // when
+        long id = customerService.findIdByEmail("baron@gmail.com");
+
+        // then
+        assertThat(id).isEqualTo(savedId);
+    }
 }

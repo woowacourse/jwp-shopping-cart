@@ -1,18 +1,27 @@
 package cart.auth;
 
+import cart.service.CustomerService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Component
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
     private static final int EMAIL_INDEX = 0;
+
+    private final CustomerService customerService;
+
+    public AuthenticationArgumentResolver(final CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -34,7 +43,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
             byte[] decodedBytes = Base64.decodeBase64(authValue);
             String decodedString = new String(decodedBytes);
             String[] credentials = decodedString.split(DELIMITER);
-            return credentials[EMAIL_INDEX];
+            return customerService.findIdByEmail(credentials[EMAIL_INDEX]);
         }
         throw new UnauthorizedException();
     }
