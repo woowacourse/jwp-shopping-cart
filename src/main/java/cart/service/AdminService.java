@@ -18,7 +18,7 @@ public class AdminService {
         this.productDao = productDao;
     }
 
-    public void add(final ProductCreationDto productCreationDto) {
+    public void save(final ProductCreationDto productCreationDto) {
         final Product product = Product.from(productCreationDto);
 
         final ProductEntity productEntity = new ProductEntity(product);

@@ -33,7 +33,7 @@ class AdminServiceTest {
     @Test
     void add() {
         final ProductCreationDto productCreationDto = new ProductCreationDto("땡칠", "asdf", 100);
-        adminService.add(productCreationDto);
+        adminService.save(productCreationDto);
 
         final List<ProductDto> productDtos = productService.getAll();
         assertAll(
@@ -47,7 +47,7 @@ class AdminServiceTest {
     @Test
     void delete() {
         final ProductCreationDto productCreationDto = new ProductCreationDto("땡칠", "asdf", 100);
-        adminService.add(productCreationDto);
+        adminService.save(productCreationDto);
 
         adminService.delete(1);
 
@@ -59,7 +59,7 @@ class AdminServiceTest {
     @Test
     void update() {
         final ProductCreationDto productCreationDto = new ProductCreationDto("땡칠", "asdf", 100);
-        adminService.add(productCreationDto);
+        adminService.save(productCreationDto);
 
         final ProductUpdateDto productUpdateDto = new ProductUpdateDto(1, "비버", "VERY_BIG_IMAGE", 10000);
         adminService.update(productUpdateDto);
@@ -78,8 +78,8 @@ class AdminServiceTest {
         final ProductCreationDto productCreationDto1 = new ProductCreationDto("비버", "SMALL_IMAGE", 100);
         final ProductCreationDto productCreationDto2 = new ProductCreationDto("땡칠", "asdf", 100);
 
-        adminService.add(productCreationDto1);
-        adminService.add(productCreationDto2);
+        adminService.save(productCreationDto1);
+        adminService.save(productCreationDto2);
 
         final List<ProductDto> productDtos = productService.getAll();
 

@@ -1,4 +1,6 @@
-package cart.domain.dto;
+package cart.controller.dto;
+
+import cart.domain.dto.ProductDto;
 
 import java.util.List;
 import java.util.stream.Collectors;

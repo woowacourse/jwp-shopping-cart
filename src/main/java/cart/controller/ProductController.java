@@ -29,7 +29,7 @@ public class ProductController {
                 request.getPrice()
         );
 
-        adminService.add(productCreationDto);
+        adminService.save(productCreationDto);
         return ResponseEntity.ok().build();
     }
 
