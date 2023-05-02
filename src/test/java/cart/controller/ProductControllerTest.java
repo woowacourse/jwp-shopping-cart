@@ -55,8 +55,9 @@ class ProductControllerTest {
                     .post("/products")
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .body(equalTo("" + 1));
+                    .assertThat()
+                    .body("status", equalTo(HttpStatus.OK.name()))
+                    .body("data.id", equalTo(1));
         }
 
         @DisplayName("상품 가격이 음수일 경우 예외가 발생한다.")
@@ -77,8 +78,9 @@ class ProductControllerTest {
                     .post("/products")
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body(equalTo("상품가격은 0 이상이어야 합니다."));
+                    .assertThat()
+                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
+                    .body("data.error", equalTo("상품가격은 0 이상이어야 합니다."));
         }
 
         @DisplayName("상품명이 비어있을 경우 예외가 발생한다.")
@@ -99,8 +101,9 @@ class ProductControllerTest {
                     .post("/products")
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body(equalTo("상품명은 필수 입력 값입니다."));
+                    .assertThat()
+                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
+                    .body("data.error", equalTo("상품명은 필수 입력 값입니다."));
         }
     }
 
@@ -162,8 +165,9 @@ class ProductControllerTest {
                     .put("/products/{id}", 1)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body(equalTo("해당하는 ID가 없습니다."));
+                    .assertThat()
+                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
+                    .body("data.error", equalTo("해당하는 ID가 없습니다."));
         }
 
         @DisplayName("상품 가격이 음수일 경우 예외가 발생한다.")
@@ -185,8 +189,9 @@ class ProductControllerTest {
                     .put("/products/{id}", 1)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body(equalTo("상품가격은 0 이상이어야 합니다."));
+                    .assertThat()
+                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
+                    .body("data.error", equalTo("상품가격은 0 이상이어야 합니다."));
         }
 
         @DisplayName("상품명이 비어있을 경우 예외가 발생한다.")
@@ -207,8 +212,9 @@ class ProductControllerTest {
                     .put("/products/{id}", 1)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body(equalTo("상품명은 필수 입력 값입니다."));
+                    .assertThat()
+                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
+                    .body("data.error", equalTo("상품명은 필수 입력 값입니다."));
         }
     }
 
@@ -244,15 +250,15 @@ class ProductControllerTest {
         @DisplayName("실패")
         @Test
         void Should_Exception_When_DeleteProduct() {
-            RestAssured
-                    .given()
+            RestAssured.given()
                     .log().all()
                     .when()
                     .delete("/products/{id}", 1)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body(equalTo("해당하는 ID가 없습니다."));
+                    .assertThat()
+                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
+                    .body("data.error", equalTo("해당하는 ID가 없습니다."));
         }
     }
 }
