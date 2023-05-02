@@ -10,11 +10,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductDaoImpl implements ProductDao {
+public class ProductJdbcDao implements ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDaoImpl(final JdbcTemplate jdbcTemplate) {
+    public ProductJdbcDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
