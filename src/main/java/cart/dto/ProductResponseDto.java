@@ -6,7 +6,7 @@ public class ProductResponseDto {
 
     private final int id;
     private final String name;
-    private final int price;
+    private final Integer price;
     private final String imageUrl;
 
     public ProductResponseDto(Product product) {

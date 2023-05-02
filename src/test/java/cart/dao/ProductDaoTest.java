@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import cart.entity.Product;
 import java.util.List;
 
+import cart.vo.Name;
+import cart.vo.Price;
+import cart.vo.Url;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,9 +44,9 @@ class ProductDaoTest {
         assertDoesNotThrow(
                 () -> productDao.save(
                         new Product.Builder()
-                                .name("샐러드")
-                                .price(10000)
-                                .imageUrl("밋엉씨")
+                                .name(Name.of("샐러드"))
+                                .price(Price.of(10000))
+                                .imageUrl(Url.of("밋엉씨"))
                                 .build()
                 )
         );
@@ -62,16 +65,11 @@ class ProductDaoTest {
     void updateById() {
         assertDoesNotThrow(
                 () -> productDao.updateById(1, new Product.Builder()
-                        .name("치킨")
-                        .price(10000)
-                        .imageUrl("밋엉")
+                        .name(Name.of("치킨"))
+                        .price(Price.of(10000))
+                        .imageUrl(Url.of("밋엉"))
                         .build())
         );
     }
-
-//    @AfterEach
-//    void afterEach() {
-//        jdbcTemplate.update("TRUNCATE TABLE product");
-//    }
 
 }

@@ -8,6 +8,10 @@ import cart.dao.ProductDao;
 import cart.dto.ProductResponseDto;
 import cart.entity.Product;
 import java.util.List;
+
+import cart.vo.Name;
+import cart.vo.Price;
+import cart.vo.Url;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,9 +49,9 @@ public class ProductServiceTest {
     private Product buildProduct(int id, String name, int price, String imageUrl) {
         return new Product.Builder()
                 .id(id)
-                .name(name)
-                .price(price)
-                .imageUrl(imageUrl)
+                .name(Name.of(name))
+                .price(Price.of(price))
+                .imageUrl(Url.of(imageUrl))
                 .build();
     }
 

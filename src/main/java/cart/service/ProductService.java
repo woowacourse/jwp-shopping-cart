@@ -7,6 +7,10 @@ import cart.entity.Product;
 import cart.entity.Product.Builder;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import cart.vo.Name;
+import cart.vo.Price;
+import cart.vo.Url;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,9 +45,9 @@ public class ProductService {
 
     private Product toEntity(ProductRequestDto productRequestDto) {
         return new Builder()
-                .name(productRequestDto.getName())
-                .price(productRequestDto.getPrice())
-                .imageUrl(productRequestDto.getImageUrl())
+                .name(Name.of(productRequestDto.getName()))
+                .price(Price.of(productRequestDto.getPrice()))
+                .imageUrl(Url.of(productRequestDto.getImageUrl()))
                 .build();
     }
 

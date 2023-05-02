@@ -1,13 +1,17 @@
 package cart.entity;
 
+import cart.vo.Name;
+import cart.vo.Price;
+import cart.vo.Url;
+
 public class Product {
 
     private final int id;
-    private final String name;
-    private final int price;
-    private final String imageUrl;
+    private final Name name;
+    private final Price price;
+    private final Url imageUrl;
 
-    public Product(int id, String name, int price, String imageUrl) {
+    public Product(int id, Name name, Price price, Url imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -19,40 +23,40 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     public int getPrice() {
-        return price;
+        return price.getValue();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl.getValue();
     }
 
     public static class Builder {
 
         private int id;
-        private String name;
-        private int price;
-        private String imageUrl;
+        private Name name;
+        private Price price;
+        private Url imageUrl;
 
         public Builder id(int id) {
             this.id = id;
             return this;
         }
 
-        public Builder name(String name) {
+        public Builder name(Name name) {
             this.name = name;
             return this;
         }
 
-        public Builder price(int price) {
+        public Builder price(Price price) {
             this.price = price;
             return this;
         }
 
-        public Builder imageUrl(String imageUrl) {
+        public Builder imageUrl(Url imageUrl) {
             this.imageUrl = imageUrl;
             return this;
         }

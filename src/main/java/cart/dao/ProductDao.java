@@ -2,6 +2,10 @@ package cart.dao;
 
 import cart.entity.Product;
 import java.util.List;
+
+import cart.vo.Name;
+import cart.vo.Price;
+import cart.vo.Url;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -20,9 +24,9 @@ public class ProductDao {
                 sqlForSelectAll,
                 (resultSet, rowNum) ->
                         new Product.Builder().id(resultSet.getInt("id"))
-                                .price(resultSet.getInt("price"))
-                                .name(resultSet.getString("name"))
-                                .imageUrl(resultSet.getString("image_url"))
+                                .price(Price.of(resultSet.getInt("price")))
+                                .name(Name.of(resultSet.getString("name")))
+                                .imageUrl(Url.of(resultSet.getString("image_url")))
                                 .build()
         );
     }
