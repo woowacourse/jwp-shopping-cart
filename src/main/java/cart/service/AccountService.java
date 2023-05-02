@@ -3,7 +3,6 @@ package cart.service;
 import cart.auth.AuthAccount;
 import cart.dao.AccountDao;
 import cart.dao.AccountEntity;
-import cart.global.exception.account.CanNotFoundAccountException;
 import cart.service.dto.AccountSearchResponse;
 import org.springframework.stereotype.Service;
 
