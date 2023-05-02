@@ -11,9 +11,11 @@ CREATE TABLE IF NOT EXISTS product
 
 CREATE TABLE IF NOT EXISTS member
 (
-    id       BIGINT       NOT NULL AUTO_INCREMENT,
-    email    VARCHAR(100) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    id         BIGINT       NOT NULL AUTO_INCREMENT,
+    email      VARCHAR(100) NOT NULL,
+    password   VARCHAR(255) NOT NULL,
+    created_at DATETIME     NOT NULL default current_timestamp,
+    updated_at DATETIME     NOT NULL default current_timestamp on update current_timestamp,
     PRIMARY KEY (id)
     );
 

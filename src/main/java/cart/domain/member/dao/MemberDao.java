@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -53,7 +54,8 @@ public class MemberDao {
     }
 
     public Optional<Member> findByEmail(final String email) {
-        final String sql = "SELECT member.email, member.password, member.created_at, member.updated_at FROM member WHERE email = ?";
+        final String sql = "SELECT member.email, member.password, member.created_at, member.updated_at "
+            + "FROM member WHERE email = ?";
         final Member member = jdbcTemplate.queryForObject(sql, rowMapper, email);
         try {
             return Optional.of(member);
@@ -62,4 +64,9 @@ public class MemberDao {
         }
     }
 
+    public List<Member> findAll() {
+        final String sql = "SELECT member.id, member.email, member.password, member.created_at, member.updated_at "
+            + "FROM member ORDER BY member.created_at";
+        return jdbcTemplate.query(sql, rowMapper);
+    }
 }
