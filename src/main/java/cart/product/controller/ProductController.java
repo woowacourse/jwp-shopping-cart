@@ -26,25 +26,25 @@ public class ProductController {
         return "admin";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/product/{id}")
     public ResponseEntity<Product> product(@PathVariable final long id) {
         Product product = productRepository.findById(id);
         return ResponseEntity.ok(product);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/product")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid Product product) {
         long id = productRepository.save(product).getId();
-        return ResponseEntity.created(URI.create("/admin/" + id)).build();
+        return ResponseEntity.created(URI.create("/admin/product/" + id)).build();
     }
 
-    @PutMapping("/edit")
+    @PutMapping("/product")
     public ResponseEntity<Void> editProduct(@RequestBody Product product) {
         productRepository.update(product);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/product/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
         productRepository.deleteById(id);
         return ResponseEntity.ok().build();

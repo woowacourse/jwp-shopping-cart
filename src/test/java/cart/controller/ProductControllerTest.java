@@ -66,12 +66,12 @@ class ProductControllerTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        mockMvc.perform(post("/admin/create")
+        mockMvc.perform(post("/admin/product")
                         .content(objectMapper.writeValueAsString(product))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("location"))
-                .andExpect(header().string("location", "/admin/1"));
+                .andExpect(header().string("location", "/admin/product/1"));
     }
 }

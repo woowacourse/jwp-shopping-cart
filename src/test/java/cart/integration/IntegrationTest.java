@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
 
@@ -67,7 +66,7 @@ class IntegrationTest {
                 .body(product).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/admin/create");
+                .post("/admin/product");
 
         String location = response.getHeader("location");
 
@@ -91,7 +90,7 @@ class IntegrationTest {
                 .body(updateProduct).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/admin/edit")
+                .put("/admin/product")
                 .then().log().all()
                 .statusCode(200);
 
@@ -110,7 +109,7 @@ class IntegrationTest {
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/admin/delete/" + locationInformation.getId())
+                .delete("/admin/product/" + locationInformation.getId())
                 .then().log().all()
                 .statusCode(200);
 
@@ -131,7 +130,7 @@ class IntegrationTest {
                 .body(jsonStr).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/admin/create")
+                .post("/admin/product")
                 .then()
                 .statusCode(400)
                 .body(equalTo("유효한 이미지 확장자가 아닙니다."));
@@ -144,11 +143,11 @@ class IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(product)
                 .when()
-                .post("/admin/create");
+                .post("/admin/product");
 
         String location = response.getHeader("location");
         long productId = Long.parseLong(location
-                .replace("/admin/", ""));
+                .replace("/admin/product/", ""));
         return new LocationInformation(location, productId);
     }
 
