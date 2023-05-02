@@ -6,3 +6,10 @@ CREATE TABLE IF NOT EXISTS PRODUCT (
     image_url VARCHAR NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS `USER` (
+    id bigint NOT NULL AUTO_INCREMENT,
+    email VARCHAR NOT NULL,
+    password int NOT NULL,
+    PRIMARY KEY (id)
+);
