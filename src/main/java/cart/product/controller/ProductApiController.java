@@ -32,7 +32,8 @@ public class ProductApiController {
         final ProductEntity savedProduct = productService.addProduct(product);
         final int savedId = savedProduct.getId();
 
-        return ResponseEntity.created(URI.create("/products/" + savedId)).build();
+        return ResponseEntity.created(URI.create("/products/" + savedId))
+                .body(savedProduct);
     }
 
     @GetMapping("/products/{id}")
