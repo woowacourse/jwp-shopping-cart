@@ -1,6 +1,6 @@
 package cart;
 
-import cart.dao.ProductEntity;
+import cart.domain.ProductEntity;
 import cart.dto.ProductDto;
 import cart.service.ProductService;
 import io.restassured.RestAssured;

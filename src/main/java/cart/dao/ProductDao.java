@@ -1,5 +1,7 @@
 package cart.dao;
 
+import cart.domain.ProductEntity;
+
 import java.util.List;
 import java.util.Optional;
 
