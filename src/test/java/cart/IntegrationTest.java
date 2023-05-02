@@ -4,15 +4,14 @@ import static io.restassured.RestAssured.given;
 
 import cart.service.dto.ProductRequest;
 import io.restassured.RestAssured;
-import org.apache.catalina.connector.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class IntegrationTest {
@@ -32,7 +31,7 @@ class IntegrationTest {
                 .when()
                 .get("/admin")
                 .then()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -45,9 +44,9 @@ class IntegrationTest {
                 .body(productRequest).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/product")
+                .post("/products")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
@@ -59,12 +58,11 @@ class IntegrationTest {
                 .body(jsonStrNameEmpty)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/product")
+                .post("/products")
                 .then()
-                .statusCode(Response.SC_BAD_REQUEST);
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Sql("/test-fixture.sql")
     @Test
     @DisplayName("상품 수정 테스트")
     void editProduct() {
@@ -75,12 +73,11 @@ class IntegrationTest {
                 .body(productRequest).log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/product/1")
+                .put("/products/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
     }
 
-    @Sql("/test-fixture.sql")
     @Test
     @DisplayName("상품 삭제 테스트")
     void deleteProduct() {
@@ -88,9 +85,9 @@ class IntegrationTest {
                 .log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/product/2")
+                .delete("/products/2")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -102,8 +99,8 @@ class IntegrationTest {
                 .body(jsonStr)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .post("/product")
+                .post("/products")
                 .then()
-                .statusCode(400);
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }
