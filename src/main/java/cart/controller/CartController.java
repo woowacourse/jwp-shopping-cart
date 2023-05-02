@@ -47,4 +47,10 @@ public class CartController {
         final Long cartId = cartService.addCart(productId, memberRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CartResponse(cartId, memberRequest.getId(), productId));
     }
+    
+    @DeleteMapping("{cartId}")
+    public ResponseEntity<Void> delete(@PathVariable final Long cartId, @AuthSubject MemberRequest memberRequest) {
+        cartService.deleteByCartIdAndMemberId(cartId, memberRequest.getId());
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -1,13 +1,16 @@
 package cart.cart.dao;
 
 import cart.cart.domain.Cart;
+import cart.config.DBTransactionExecutor;
 import cart.member.dao.MemberDao;
 import cart.member.dao.MemberMemoryDao;
 import cart.member.domain.Member;
 import cart.product.dao.ProductDao;
 import cart.product.dao.ProductMemoryDao;
 import cart.product.domain.Product;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -16,17 +19,24 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.List;
 
-import static cart.constant.TestConstant.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @JdbcTest
 class CartMemoryDaoTest {
+    @RegisterExtension
+    private DBTransactionExecutor dbTransactionExecutor;
+    
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    
     private CartDao cartDao;
+    
+    @Autowired
+    public CartMemoryDaoTest(final JdbcTemplate jdbcTemplate) {
+        this.dbTransactionExecutor = new DBTransactionExecutor(jdbcTemplate);
+    }
     
     @BeforeEach
     void setUp() {
@@ -71,11 +81,20 @@ class CartMemoryDaoTest {
         );
     }
     
-    @AfterEach
-    void tearDown() {
-        final JdbcTemplate jdbcTemplate = namedParameterJdbcTemplate.getJdbcTemplate();
-        jdbcTemplate.execute(CART_ID_INIT_SQL);
-        jdbcTemplate.execute(PRODUCT_ID_INIT_SQL);
-        jdbcTemplate.execute(MEMBER_ID_INIT_SQL);
+    @Test
+    void carId와_memberId를_전달하면_해당_카트_품목을_삭제한다() {
+        //given
+        cartDao.save(1L, 1L);
+        cartDao.save(2L, 1L);
+        cartDao.save(4L, 1L);
+        
+        // when
+        cartDao.deleteByCartIdAndMemberId(1L, 1L);
+        
+        // then
+        final List<Cart> carts = cartDao.findByMemberId(1L);
+        final Cart expectFirstCart = new Cart(2L, 1L, 2L);
+        final Cart expectSecondCart = new Cart(3L, 1L, 4L);
+        assertThat(carts).containsExactly(expectFirstCart, expectSecondCart);
     }
 }

@@ -24,7 +24,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @WebMvcTest(ViewController.class)
 class ViewControllerTest {
     @MockBean

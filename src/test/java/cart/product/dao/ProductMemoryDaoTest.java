@@ -1,27 +1,38 @@
 package cart.product.dao;
 
+import cart.config.DBTransactionExecutor;
 import cart.product.domain.Product;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.List;
 
-import static cart.constant.TestConstant.PRODUCT_ID_INIT_SQL;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @JdbcTest
 class ProductMemoryDaoTest {
+    @RegisterExtension
+    private DBTransactionExecutor dbTransactionExecutor;
+    
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    
     private ProductDao productDao;
+    
+    @Autowired
+    public ProductMemoryDaoTest(final JdbcTemplate jdbcTemplate) {
+        dbTransactionExecutor = new DBTransactionExecutor(jdbcTemplate);
+    }
     
     @BeforeEach
     void setUp() {
@@ -82,10 +93,5 @@ class ProductMemoryDaoTest {
                 () -> assertThatThrownBy(() -> productDao.findById(id))
                         .isInstanceOf(EmptyResultDataAccessException.class)
         );
-    }
-    
-    @AfterEach
-    void tearDown() {
-        namedParameterJdbcTemplate.getJdbcTemplate().execute(PRODUCT_ID_INIT_SQL);
     }
 }

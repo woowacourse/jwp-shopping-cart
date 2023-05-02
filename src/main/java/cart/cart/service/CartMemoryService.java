@@ -1,12 +1,10 @@
 package cart.cart.service;
 
 import cart.cart.dao.CartDao;
-import cart.cart.domain.Cart;
 import cart.cart.dto.CartResponse;
 import cart.member.dto.MemberRequest;
 import cart.member.dto.MemberResponse;
 import cart.member.service.MemberService;
-import cart.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,5 +34,10 @@ public class CartMemoryService implements CartService {
         return cartDao.findByMemberId(member.getId()).stream()
                 .map(CartResponse::new)
                 .collect(Collectors.toUnmodifiableList());
+    }
+    
+    @Override
+    public void deleteByCartIdAndMemberId(final Long cartId, final Long memberId) {
+        cartDao.deleteByCartIdAndMemberId(cartId, memberId);
     }
 }

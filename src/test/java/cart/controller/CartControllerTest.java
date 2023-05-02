@@ -9,8 +9,6 @@ import cart.product.dto.ProductResponse;
 import cart.product.service.ProductService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,10 +29,10 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.only;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @WebMvcTest(CartController.class)
 class CartControllerTest {
     private static final String DEFAULT_PATH = "/carts/";
+    private static final String AUTH_HEADER = "Basic " + Base64.getEncoder().encodeToString(("a@a.com" + ":" + "password1").getBytes());
     
     @MockBean
     private CartService cartService;
@@ -58,14 +56,13 @@ class CartControllerTest {
     @Test
     void 멤버_정보의_인증을_진행한_뒤_장바구니를_저장한다() {
         // given
-        String authHeader = "Basic " + Base64.getEncoder().encodeToString(("a@a.com" + ":" + "password1").getBytes());
         given(resolver.supportsParameter(any())).willReturn(true);
         given(resolver.resolveArgument(any(), any(), any(), any())).willReturn(new MemberRequest(1L, "a@a.com", "password1"));
         given(cartService.addCart(anyLong(), any())).willReturn(1L);
         
         // when
         CartResponse cart = RestAssuredMockMvc.given().log().all()
-                .header("Authorization", authHeader)
+                .header("Authorization", AUTH_HEADER)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post(DEFAULT_PATH + 1)
                 .then().log().all()
@@ -83,7 +80,6 @@ class CartControllerTest {
     @Test
     void MemberRequest를_전달하면_장바구니_상품들을_가져온다() {
         // given
-        String authHeader = "Basic " + Base64.getEncoder().encodeToString(("a@a.com" + ":" + "password1").getBytes());
         final ProductResponse firstProduct = new ProductResponse(2L, "product2", "b.com", 2000);
         final ProductResponse secondProduct = new ProductResponse(3L, "product3", "c.com", 3000);
         final CartResponse firstCartResponse = new CartResponse(2L, 1L, 1L);
@@ -93,7 +89,7 @@ class CartControllerTest {
         
         // when
         final List<CartProductResponse> products = RestAssuredMockMvc.given().log().all()
-                .header("Authorization", authHeader)
+                .header("Authorization", AUTH_HEADER)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get(DEFAULT_PATH)
                 .then().log().all()
@@ -108,5 +104,19 @@ class CartControllerTest {
                 () -> then(cartService).should(inOrder).findByMemberRequest(any()),
                 () -> then(productService).should(inOrder).findByProductIds(anyList())
         );
+    }
+    
+    @Test
+    void carId와_memberId를_전달하면_해당_카트_품목을_삭제한다() {
+        // expect
+        RestAssuredMockMvc.given().log().all()
+                .header("Authorization", AUTH_HEADER)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete(DEFAULT_PATH + 1)
+                .then().log().all()
+                .assertThat()
+                .status(HttpStatus.NO_CONTENT);
+        
+        then(cartService).should(only()).deleteByCartIdAndMemberId(any(), any());
     }
 }

@@ -4,10 +4,6 @@ import cart.auth.AuthSubjectArgumentResolver;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.member.dto.MemberResponse;
-import cart.product.service.ProductMemoryService;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,14 +11,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @WebMvcTest(MemberMemoryService.class)
 class MemberMemoryServiceTest {
     @Autowired

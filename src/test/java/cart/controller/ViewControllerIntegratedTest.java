@@ -1,31 +1,30 @@
 package cart.controller;
 
-import cart.member.dao.MemberDao;
+import cart.config.DBTransactionExecutor;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static cart.constant.TestConstant.MEMBER_ID_INIT_SQL;
 import static org.hamcrest.Matchers.containsString;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ViewControllerIntegratedTest {
     @LocalServerPort
     private int port;
     
-    private final MemberDao memberDao;
-    private final JdbcTemplate jdbcTemplate;
+    @RegisterExtension
+    private DBTransactionExecutor dbTransactionExecutor;
     
     @Autowired
-    public ViewControllerIntegratedTest(final MemberDao memberDao, final JdbcTemplate jdbcTemplate) {
-        this.memberDao = memberDao;
-        this.jdbcTemplate = jdbcTemplate;
+    public ViewControllerIntegratedTest(final JdbcTemplate jdbcTemplate) {
+        dbTransactionExecutor = new DBTransactionExecutor(jdbcTemplate);
     }
     
     @BeforeEach
@@ -79,11 +78,5 @@ class ViewControllerIntegratedTest {
                 .statusCode(HttpStatus.OK.value())
                 .body(containsString("<title>장바구니</title>"))
                 .header("Content-Type", "text/html;charset=UTF-8");
-    }
-    
-    @AfterEach
-    void tearDown() {
-        memberDao.deleteAll();
-        jdbcTemplate.execute(MEMBER_ID_INIT_SQL);
     }
 }

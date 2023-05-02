@@ -5,8 +5,6 @@ import cart.product.service.ProductMemoryService;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -26,7 +24,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
     private static final String DEFAULT_PATH = "/products/";

@@ -1,8 +1,6 @@
 package cart.cart.dao;
 
 import cart.cart.domain.Cart;
-import cart.cart.dto.CartResponse;
-import cart.member.domain.Member;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -44,6 +42,15 @@ public class CartMemoryDao implements CartDao {
         final String sql = "SELECT * FROM CART WHERE member_id=:member_id";
         final SqlParameterSource params = new MapSqlParameterSource("member_id", memberId);
         return namedParameterJdbcTemplate.query(sql, params, rowMapper);
+    }
+    
+    @Override
+    public void deleteByCartIdAndMemberId(final Long cartId, final Long memberId) {
+        final String sql = "DELETE FROM CART WHERE id=:cart_id AND member_id=:member_id";
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("cart_id", cartId)
+                .addValue("member_id", memberId);
+        namedParameterJdbcTemplate.update(sql, params);
     }
     
     @Override

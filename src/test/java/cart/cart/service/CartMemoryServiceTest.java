@@ -4,13 +4,10 @@ import cart.auth.AuthSubjectArgumentResolver;
 import cart.cart.dao.CartDao;
 import cart.cart.domain.Cart;
 import cart.cart.dto.CartResponse;
-import cart.member.domain.Member;
 import cart.member.dto.MemberRequest;
 import cart.member.dto.MemberResponse;
 import cart.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +26,6 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.only;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @WebMvcTest(CartMemoryService.class)
 class CartMemoryServiceTest {
     @Autowired
@@ -91,5 +87,14 @@ class CartMemoryServiceTest {
                 () -> then(memberService).should(inOrder).findByEmailAndPassword(anyString(), anyString()),
                 () -> then(cartDao).should(inOrder).findByMemberId(anyLong())
         );
+    }
+    
+    @Test
+    void carId와_memberId를_전달하면_해당_카트_품목을_삭제한다() {
+        // when
+        cartService.deleteByCartIdAndMemberId(1L, 1L);
+        
+        // then
+        then(cartDao).should(only()).deleteByCartIdAndMemberId(1L, 1L);
     }
 }

@@ -1,25 +1,36 @@
 package cart.member.dao;
 
+import cart.config.DBTransactionExecutor;
 import cart.member.domain.Member;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.List;
 
-import static cart.constant.TestConstant.MEMBER_ID_INIT_SQL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @JdbcTest
 class MemberMemoryDaoTest {
+    @RegisterExtension
+    private DBTransactionExecutor dbTransactionExecutor;
+    
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    
     private MemberDao memberDao;
+    
+    @Autowired
+    public MemberMemoryDaoTest(final JdbcTemplate jdbcTemplate) {
+        this.dbTransactionExecutor = new DBTransactionExecutor(jdbcTemplate);
+    }
     
     @BeforeEach
     void setUp() {
@@ -68,10 +79,5 @@ class MemberMemoryDaoTest {
         
         // then
         assertThat(member).isEqualTo(new Member(2L, "b@b.com", "password2"));
-    }
-    
-    @AfterEach
-    void tearDown() {
-        namedParameterJdbcTemplate.getJdbcTemplate().execute(MEMBER_ID_INIT_SQL);
     }
 }

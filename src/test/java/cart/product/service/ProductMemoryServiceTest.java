@@ -6,8 +6,6 @@ import cart.product.domain.Product;
 import cart.product.dto.ProductRequest;
 import cart.product.dto.ProductResponse;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @WebMvcTest(ProductMemoryService.class)
 class ProductMemoryServiceTest {
     @Autowired
