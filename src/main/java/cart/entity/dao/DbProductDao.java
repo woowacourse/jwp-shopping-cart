@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.entity.dao;
 
 import cart.entity.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Component
 public class DbProductDao implements ProductDao {
-    public static final RowMapper<Product> productRowMapper = (resultSet, rowMapper) -> new Product(
+    private static final RowMapper<Product> productRowMapper = (resultSet, rowMapper) -> new Product(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("img_url"),

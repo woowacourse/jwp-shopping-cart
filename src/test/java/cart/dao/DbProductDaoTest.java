@@ -1,6 +1,8 @@
 package cart.dao;
 
 import cart.entity.Product;
+import cart.entity.dao.DbProductDao;
+import cart.entity.dao.ProductDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.entity.dao;
 
 import cart.entity.Product;
 import org.springframework.boot.ApplicationArguments;
