@@ -6,13 +6,17 @@ import javax.validation.constraints.NotNull;
 public class ProductDto {
 
     @NotBlank
-    private final String name;
+    private String name;
 
     @NotBlank
-    private final String image;
+    private String image;
 
     @NotNull
-    private final Integer price;
+    private Integer price;
+
+
+    public ProductDto() {
+    }
 
     public ProductDto(final String name, final String image, final Integer price) {
         this.name = name;
