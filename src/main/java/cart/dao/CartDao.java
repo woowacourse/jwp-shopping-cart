@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.dao.exception.ProductNotFoundException;
 import cart.domain.product.Product;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -37,4 +38,19 @@ public class CartDao {
                 new MapSqlParameterSource(Map.of("user_id", userId, "product_id", productId));
         jdbcTemplate.update(sql, sqlParameterSource);
     }
+
+    public void deleteProduct(final long userId, final long productId) {
+        final String sql = "DELETE FROM cart " +
+                "WHERE user_id = :user_id " +
+                "AND product_id = :product_id " +
+                "LIMIT 1";
+        final var sqlParameterSource =
+                new MapSqlParameterSource(Map.of("user_id", userId, "product_id", productId));
+        final int affecedRow = jdbcTemplate.update(sql, sqlParameterSource);
+
+        if (affecedRow == 0) {
+            throw new ProductNotFoundException();
+        }
+    }
+
 }
