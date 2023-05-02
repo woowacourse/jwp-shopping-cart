@@ -1,5 +1,6 @@
-package cart.dao;
+package cart.dao.product;
 
+import cart.dao.Dao;
 import cart.global.exception.ProductNotFoundException;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductDao implements Dao<ProductEntity> {
 
-    final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
+    private final RowMapper<ProductEntity> rowMapper = (rs, rowNum) ->
             new ProductEntity(
                     rs.getLong("id"),
                     rs.getString("name"),

@@ -1,8 +1,8 @@
 package cart.service;
 
-import cart.dao.ProductDao;
-import cart.dao.ProductEntity;
-import cart.domain.Product;
+import cart.dao.product.ProductDao;
+import cart.dao.product.ProductEntity;
+import cart.domain.product.Product;
 import cart.global.exception.ProductNotFoundException;
 import cart.service.dto.ProductModifyRequest;
 import cart.service.dto.ProductRegisterRequest;
