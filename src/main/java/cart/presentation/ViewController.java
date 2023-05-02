@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-public class WebController {
+public class ViewController {
 
     private final ReadProductService readProductService;
 
-    public WebController(ReadProductService readProductService) {
+    public ViewController(ReadProductService readProductService) {
         this.readProductService = readProductService;
     }
 
