@@ -5,7 +5,6 @@ import cart.dto.ProductDto;
 import cart.dto.ProductModificationRequest;
 import cart.mapper.ProductDtoMapper;
 import cart.service.ProductManagementService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,11 +19,11 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/admin/products")
-public class ProductController {
+public class AdminProductController {
 
     private final ProductManagementService managementService;
 
-    public ProductController(final ProductManagementService managementService) {
+    public AdminProductController(final ProductManagementService managementService) {
         this.managementService = managementService;
     }
 
