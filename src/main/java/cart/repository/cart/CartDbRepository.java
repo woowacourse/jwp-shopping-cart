@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -67,10 +68,11 @@ public class CartDbRepository implements CartRepository {
     }
 
     @Override
-    public void save(final Cart cart) {
+    public Long save(final Cart cart) {
         CartDbResponseDto cartDbResponseDto = CartDbResponseDto.from(cart.getId(), cart.getMemberId(), cart.getProductId());
         BeanPropertySqlParameterSource source = new BeanPropertySqlParameterSource(cartDbResponseDto);
-        simpleJdbcInsert.executeAndReturnKeyHolder(source);
+        KeyHolder keyHolder = simpleJdbcInsert.executeAndReturnKeyHolder(source);
+        return keyHolder.getKeyAs(Long.class);
     }
 
     @Override

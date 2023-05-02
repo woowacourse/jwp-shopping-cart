@@ -72,11 +72,11 @@ public class ProductServiceTest {
     void edit_product_success() {
         // given
         Product product = createProduct();
-        productRepository.add(product);
+        Long productId = productRepository.add(product);
         ProductEditRequestDto req = createProductEditRequest();
 
         // when
-        productService.editProduct(product.getId(), req);
+        productService.editProduct(productId, req);
 
         // then
         Product result = productRepository.findAll().get(0);

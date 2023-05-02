@@ -33,18 +33,18 @@ public class ProductService {
     }
 
     @Transactional
-    public void createProduct(final ProductCreateRequestDto productCreateRequestDto) {
+    public Long createProduct(final ProductCreateRequestDto productCreateRequestDto) {
         Product product = Product.from(productCreateRequestDto.getName(), productCreateRequestDto.getImgUrl(), productCreateRequestDto.getPrice());
 
-        productRepository.add(product);
+        return productRepository.add(product);
     }
 
     @Transactional
-    public void editProduct(final Long id, final ProductEditRequestDto productEditRequestDto) {
+    public Long editProduct(final Long id, final ProductEditRequestDto productEditRequestDto) {
         Product product = findProductById(id);
         product.edit(productEditRequestDto.getName(), productEditRequestDto.getImgUrl(), productEditRequestDto.getPrice());
 
-        productRepository.update(product);
+        return productRepository.update(product);
     }
 
     @Transactional

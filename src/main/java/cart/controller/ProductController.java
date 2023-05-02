@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/products")
@@ -27,17 +28,18 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductCreateRequestDto productCreateRequestDto) {
-        productService.createProduct(productCreateRequestDto);
+        Long productId = productService.createProduct(productCreateRequestDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.created(URI.create("/products/" + productId))
                 .build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> editProduct(@PathVariable final Long id, @RequestBody @Valid final ProductEditRequestDto productEditRequestDto) {
-        productService.editProduct(id, productEditRequestDto);
+        Long productId = productService.editProduct(id, productEditRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK)
+                .location(URI.create("/products/" + productId))
                 .build();
     }
 

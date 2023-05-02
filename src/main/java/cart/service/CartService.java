@@ -40,11 +40,11 @@ public class CartService {
     }
 
     @Transactional
-    public void addCart(final Member member, final Long productId) {
+    public Long addCart(final Member member, final Long productId) {
         Product product = productService.findById(productId);
-
         Cart cart = Cart.from(member, product);
-        cartRepository.save(cart);
+
+        return cartRepository.save(cart);
     }
 
     @Transactional

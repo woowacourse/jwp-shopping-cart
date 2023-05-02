@@ -82,9 +82,9 @@ class ProductDbRepositoryTest {
     void edit_product_success() {
         // given
         Product product = createProduct();
-        productDbRepository.add(product);
+        Long productId = productDbRepository.add(product);
         Product otherProduct = createOtherProduct();
-        otherProduct.setId(product.getId());
+        otherProduct.setId(productId);
 
         // when
         productDbRepository.update(otherProduct);

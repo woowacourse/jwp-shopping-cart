@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RequestMapping("/carts")
 @RestController
 public class CartController {
@@ -26,8 +28,9 @@ public class CartController {
     @PostMapping("/{productId}")
     public ResponseEntity<Void> addCart(@PathVariable final Long productId,
                                         @LoginBasic Member member) {
-        cartService.addCart(member, productId);
-        return ResponseEntity.status(HttpStatus.CREATED)
+        Long cartId = cartService.addCart(member, productId);
+
+        return ResponseEntity.created(URI.create("/carts/" + cartId))
                 .build();
     }
 

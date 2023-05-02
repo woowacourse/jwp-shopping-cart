@@ -10,7 +10,7 @@ public interface CartRepository {
 
     List<Cart> findAllByMember(Member member);
 
-    void save(Cart cart);
+    Long save(Cart cart);
 
     void delete(Member member, Product product);
 }

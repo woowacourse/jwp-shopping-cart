@@ -45,17 +45,17 @@ public class ProductDbRepository implements ProductRepository {
     }
 
     @Override
-    public void add(final Product product) {
+    public Long add(final Product product) {
         BeanPropertySqlParameterSource source = new BeanPropertySqlParameterSource(product);
         KeyHolder keyHolder = simpleJdbcInsert.executeAndReturnKeyHolder(source);
-        Long generatedId = keyHolder.getKeyAs(Long.class);
-        product.setId(generatedId);
+        return keyHolder.getKeyAs(Long.class);
     }
 
     @Override
-    public void update(final Product updateProduct) {
+    public Long update(final Product updateProduct) {
         String sql = "UPDATE product SET name = ?, price = ?, img_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, updateProduct.getName(), updateProduct.getPrice(), updateProduct.getImgUrl(), updateProduct.getId());
+        return updateProduct.getId();
     }
 
     @Override

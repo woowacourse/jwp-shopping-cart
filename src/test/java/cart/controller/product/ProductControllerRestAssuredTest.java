@@ -89,7 +89,7 @@ public class ProductControllerRestAssuredTest {
     void edit_product_success() {
         // given
         Product product = createProduct();
-        productRepository.add(product);
+        Long productId = productRepository.add(product);
 
         ProductEditRequestDto req = createProductEditRequest();
 
@@ -97,13 +97,13 @@ public class ProductControllerRestAssuredTest {
         Response result = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(req)
-                .when().put("/products/" + product.getId());
+                .when().put("/products/" + productId);
 
         // then
         result.then()
                 .statusCode(HttpStatus.OK.value());
 
-        Product editedProduct = productRepository.findById(product.getId()).get();
+        Product editedProduct = productRepository.findById(productId).get();
 
         assertAll(
                 () -> assertThat(editedProduct.getName()).isEqualTo(req.getName()),
@@ -117,12 +117,12 @@ public class ProductControllerRestAssuredTest {
     void delete_product_success() {
         // given
         Product product = createProduct();
-        productRepository.add(product);
+        Long productId = productRepository.add(product);
         List<Product> givenProducts = productRepository.findAll();
 
         // when
         Response result = given().log().all()
-                .when().delete("/products/" + product.getId());
+                .when().delete("/products/" + productId);
 
         // then
         result.then()
