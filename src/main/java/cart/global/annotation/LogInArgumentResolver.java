@@ -1,6 +1,8 @@
 package cart.global.annotation;
 
 import cart.auth.AuthAccount;
+import cart.global.exception.auth.CanNotFountHeaderException;
+import cart.global.exception.auth.InvalidAuthorizationTypeException;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -33,7 +35,7 @@ public class LogInArgumentResolver implements HandlerMethodArgumentResolver {
         final String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (hasNotHeader(header)) {
-            throw new IllegalStateException("인증 정보 존재하지 않습니다.");
+            throw new CanNotFountHeaderException();
         }
 
         if (isBasicAuthFrom(header)) {
@@ -46,7 +48,7 @@ public class LogInArgumentResolver implements HandlerMethodArgumentResolver {
             return new AuthAccount(email, password);
         }
 
-        throw new IllegalStateException("인증 형태가 올바르지 않습니다.");
+        throw new InvalidAuthorizationTypeException();
     }
 
     private String decodingByBase64(final String header) {
