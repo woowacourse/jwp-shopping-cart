@@ -1,32 +1,26 @@
 package cart.controller;
 
 import cart.controller.dto.ProductDto;
-import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class AdminController {
 
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public AdminController(final ProductDao productDao) {
-        this.productDao = productDao;
+    public AdminController(final ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/admin")
     public String findAllProducts(final Model model) {
-        List<Product> products = productDao.findAll();
-        List<ProductDto> productDtos = products.stream()
-                .map(ProductDto::from)
-                .collect(Collectors.toList());
+        List<ProductDto> productDtos = productService.findAll();
         model.addAttribute("products", productDtos);
-
         return "admin";
     }
 }

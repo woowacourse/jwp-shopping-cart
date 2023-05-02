@@ -1,7 +1,8 @@
 package cart.controller;
 
-import cart.dao.ProductDao;
+import cart.controller.dto.ProductDto;
 import cart.domain.Product;
+import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CartControllerTest {
 
     @MockBean
-    private ProductDao productDao;
+    private ProductService productService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -30,7 +31,7 @@ class CartControllerTest {
     void findAllProducts() throws Exception {
         // given
         Product product = new Product(1, "치킨", "image.url", 10000);
-        given(productDao.findAll()).willReturn(List.of(product));
+        given(productService.findAll()).willReturn(List.of(ProductDto.from(product)));
 
         // when, then
         mockMvc.perform(get("/"))
