@@ -1,37 +1,37 @@
 package cart.dto.entity;
 
 public class MemberCartEntity {
-    private final Long product_id;
-    private final Long member_id;
-    private final String product_name;
-    private final String product_image;
-    private final Integer product_price;
+    private final Long productId;
+    private final Long memberId;
+    private final String productName;
+    private final String productImage;
+    private final Integer productPrice;
 
-    public MemberCartEntity(Long product_id, Long member_id, String product_name, String product_image, Integer product_price) {
-        this.product_id = product_id;
-        this.member_id = member_id;
-        this.product_name = product_name;
-        this.product_image = product_image;
-        this.product_price = product_price;
+    public MemberCartEntity(Long productId, Long memberId, String productName, String productImage, Integer product_price) {
+        this.productId = productId;
+        this.memberId = memberId;
+        this.productName = productName;
+        this.productImage = productImage;
+        this.productPrice = product_price;
     }
 
-    public Long getProduct_id() {
-        return product_id;
+    public Long getProductId() {
+        return productId;
     }
 
-    public Long getMember_id() {
-        return member_id;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public String getProduct_name() {
-        return product_name;
+    public String getProductName() {
+        return productName;
     }
 
-    public String getProduct_image() {
-        return product_image;
+    public String getProductImage() {
+        return productImage;
     }
 
-    public Integer getProduct_price() {
-        return product_price;
+    public Integer getProductPrice() {
+        return productPrice;
     }
 }

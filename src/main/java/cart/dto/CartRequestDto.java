@@ -1,31 +1,19 @@
 package cart.dto;
 
 public class CartRequestDto {
-    private final Long id;
-    private final String name;
-    private final String image;
-    private final int price;
+    private final String email;
+    private final Long productId;
 
-    public CartRequestDto(Long id, String name, String image, int price) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.price = price;
+    public CartRequestDto(String email, Long productId) {
+        this.email = email;
+        this.productId = productId;
     }
 
-    public Long getId() {
-        return id;
+    public String getEmail() {
+        return email;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public int getPrice() {
-        return price;
+    public Long getProductId() {
+        return productId;
     }
 }

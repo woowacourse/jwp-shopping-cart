@@ -1,5 +1,6 @@
 package cart.common;
 
+import cart.domain.Member;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -19,7 +20,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String header = webRequest.getHeader("Authorization");
-
         if (header == null) {
             return null;
         }
@@ -33,7 +33,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             String email = credentials[0];
             String password = credentials[1];
 
-            return new cart.domain.Member(email, password);
+            return new Member(email, password);
         }
 
         return null;

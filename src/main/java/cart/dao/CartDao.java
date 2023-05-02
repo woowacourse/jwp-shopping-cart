@@ -27,5 +27,11 @@ public class CartDao {
                 ), id
         );
     }
+
+    public void save(Long productID, Long memberId) {
+        String sql = "INSERT INTO carts (product_id, member_id) VALUES(?,?)";
+        System.out.println(productID + " " + memberId);
+        jdbcTemplate.update(sql, productID, memberId);
+    }
 }
 
