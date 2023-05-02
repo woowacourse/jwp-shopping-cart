@@ -2,6 +2,7 @@ package cart.controller;
 
 import static org.hamcrest.Matchers.containsString;
 
+import cart.dto.ProductRequestDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql(scripts = {"classpath:sql/initProducts.sql"})
-public class ProductControllerTest {
+class ProductControllerTest {
 
     @LocalServerPort
     private int port;
@@ -32,14 +33,41 @@ public class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("상품 목록 조회 확인")
-    void productList() {
+    @DisplayName("/admin/products 로 요청을 보내 상품을 추가하는 경우, Status Created 를 반환")
+    void addProduct() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("밋엉", 10000, "미성씨");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequestDto)
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when().post("/admin/products")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("/admin/products/{id} 로 요청을 보내 상품을 수정하는 경우, Status Ok 를 반환")
+    void modifyProduct() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("샐러드", 10000, "밋밋엉");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequestDto)
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when().put("/admin/products/2")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("/admin/products/{id} 로 요청을 보내 상품을 삭제하는 경우, Status noContent 를 반환")
+    void removeProduct() {
         RestAssured.given().log().all()
                 .accept(MediaType.TEXT_HTML_VALUE)
-                .when().get("/")
+                .when().delete("/admin/products/2")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body(containsString("상품목록"));
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @AfterEach
