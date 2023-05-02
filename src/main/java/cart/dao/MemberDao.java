@@ -60,4 +60,9 @@ public class MemberDao {
         String sql = "SELECT EXISTS(SELECT 1 FROM MEMBER WHERE email = ? and password = ?)";
         return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, email, password));
     }
+
+    public MemberEntity selectByEmailAndPassword(String email, String password) {
+        String sql = "SELECT * FROM MEMBER WHERE email = ? and password = ?";
+        return jdbcTemplate.queryForObject(sql, memberRowMapper(), email, password);
+    }
 }

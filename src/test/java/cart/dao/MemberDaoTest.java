@@ -83,4 +83,22 @@ public class MemberDaoTest {
         // when, then
         assertThat(memberDao.isNotExistByEmailAndPassword("new" + DUMMY_EMAIL, "new" + DUMMY_PASSWORD)).isTrue();
     }
+
+    @Test
+    @DisplayName("이메일과 비밀번호로 멤버를 조회한다.")
+    void selectByEmailAndPassword() {
+        // given
+        long insertedId = memberDao.insert(INSERT_MEMBER_ENTITY);
+
+        // when
+        MemberEntity insertedMemberEntity = memberDao.selectByEmailAndPassword(DUMMY_EMAIL, DUMMY_PASSWORD);
+
+        // then
+        assertAll(
+                () -> assertThat(insertedMemberEntity.getMemberId()).isEqualTo(insertedId),
+                () -> assertThat(insertedMemberEntity.getNickname()).isEqualTo(DUMMY_NICKNAME),
+                () -> assertThat(insertedMemberEntity.getEmail()).isEqualTo(DUMMY_EMAIL),
+                () -> assertThat(insertedMemberEntity.getPassword()).isEqualTo(DUMMY_PASSWORD)
+        );
+    }
 }
