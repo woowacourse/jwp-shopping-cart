@@ -1,36 +1,28 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminApiController {
 
     private final ProductService productService;
 
-    public AdminController(final ProductService productService) {
+    public AdminApiController(final ProductService productService) {
         this.productService = productService;
-    }
-
-    @GetMapping("/products")
-    public String admin(Model model) {
-        model.addAttribute("products", productService.findAll());
-        return "admin";
     }
 
     @PostMapping("/product")
@@ -40,18 +32,16 @@ public class AdminController {
     }
 
     @PutMapping("/product/{id}")
-    public String update(
+    public void update(
             @PathVariable final Long id,
             @RequestBody @Valid final ProductUpdateRequest request
     ) {
         productService.update(id, request);
-        return "admin";
     }
 
     @DeleteMapping("/product/{id}")
-    public String delete(@PathVariable final Long id) {
+    public void delete(@PathVariable final Long id) {
         productService.delete(id);
-        return "admin";
     }
 
 }

@@ -1,23 +1,25 @@
-package cart.controller;
+package cart.controller.view;
 
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class IndexController {
+@RequestMapping("/admin")
+public class AdminController {
 
     private final ProductService productService;
 
-    public IndexController(final ProductService productService) {
+    public AdminController(ProductService productService) {
         this.productService = productService;
     }
 
-    @GetMapping
-    public String index(final Model model) {
+    @GetMapping("/products")
+    public String admin(Model model) {
         model.addAttribute("products", productService.findAll());
-        return "index";
+        return "admin";
     }
 
 }
