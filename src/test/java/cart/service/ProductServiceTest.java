@@ -3,8 +3,8 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.dto.ProductCategoryDto;
 import cart.dto.request.ProductRequestDto;
-import cart.dto.response.ProductResponseDto;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -29,20 +29,20 @@ class ProductServiceTest {
         );
 
         //when
-        final List<ProductResponseDto> productResponseDtos = productService.findProducts();
-        final ProductResponseDto productResponseDto = productResponseDtos.get(0);
+        final List<ProductCategoryDto> productCategoryDtos = productService.findAll();
+        final ProductCategoryDto productCategoryDto = productCategoryDtos.get(0);
 
         //then
         assertAll(
-            () -> assertThat(productResponseDtos).hasSize(1),
-            () -> assertThat(productResponseDto.getId()).isEqualTo(id),
-            () -> assertThat(productResponseDto.getName()).isEqualTo("name"),
-            () -> assertThat(productResponseDto.getImageUrl()).isEqualTo("imageUrl"),
-            () -> assertThat(productResponseDto.getPrice()).isEqualTo(1000),
-            () -> assertThat(productResponseDto.getDescription()).isEqualTo("description"),
-            () -> assertThat(productResponseDto.getCategoryResponseDtos()).hasSize(2),
-            () -> assertThat(productResponseDto.getCategoryResponseDtos().get(0).getId()).isEqualTo(1L),
-            () -> assertThat(productResponseDto.getCategoryResponseDtos().get(1).getId()).isEqualTo(2L)
+            () -> assertThat(productCategoryDtos).hasSize(1),
+            () -> assertThat(productCategoryDto.getId()).isEqualTo(id),
+            () -> assertThat(productCategoryDto.getName()).isEqualTo("name"),
+            () -> assertThat(productCategoryDto.getImageUrl()).isEqualTo("imageUrl"),
+            () -> assertThat(productCategoryDto.getPrice()).isEqualTo(1000),
+            () -> assertThat(productCategoryDto.getDescription()).isEqualTo("description"),
+            () -> assertThat(productCategoryDto.getCategoryEntities()).hasSize(2),
+            () -> assertThat(productCategoryDto.getCategoryEntities().get(0).getId()).isEqualTo(1L),
+            () -> assertThat(productCategoryDto.getCategoryEntities().get(1).getId()).isEqualTo(2L)
         );
     }
 
@@ -58,19 +58,19 @@ class ProductServiceTest {
         productService.update(id, new ProductRequestDto("name2", "imageUrl2", 2000, "description2", List.of(3L, 4L)));
 
         //then
-        final List<ProductResponseDto> productResponseDtos = productService.findProducts();
-        final ProductResponseDto productResponseDto = productResponseDtos.get(0);
+        final List<ProductCategoryDto> productCategoryDtos = productService.findAll();
+        final ProductCategoryDto productCategoryDto = productCategoryDtos.get(0);
 
         assertAll(
-            () -> assertThat(productResponseDtos).hasSize(1),
-            () -> assertThat(productResponseDto.getId()).isEqualTo(id),
-            () -> assertThat(productResponseDto.getName()).isEqualTo("name2"),
-            () -> assertThat(productResponseDto.getImageUrl()).isEqualTo("imageUrl2"),
-            () -> assertThat(productResponseDto.getPrice()).isEqualTo(2000),
-            () -> assertThat(productResponseDto.getDescription()).isEqualTo("description2"),
-            () -> assertThat(productResponseDto.getCategoryResponseDtos()).hasSize(2),
-            () -> assertThat(productResponseDto.getCategoryResponseDtos().get(0).getId()).isEqualTo(3L),
-            () -> assertThat(productResponseDto.getCategoryResponseDtos().get(1).getId()).isEqualTo(4L)
+            () -> assertThat(productCategoryDtos).hasSize(1),
+            () -> assertThat(productCategoryDto.getId()).isEqualTo(id),
+            () -> assertThat(productCategoryDto.getName()).isEqualTo("name2"),
+            () -> assertThat(productCategoryDto.getImageUrl()).isEqualTo("imageUrl2"),
+            () -> assertThat(productCategoryDto.getPrice()).isEqualTo(2000),
+            () -> assertThat(productCategoryDto.getDescription()).isEqualTo("description2"),
+            () -> assertThat(productCategoryDto.getCategoryEntities()).hasSize(2),
+            () -> assertThat(productCategoryDto.getCategoryEntities().get(0).getId()).isEqualTo(3L),
+            () -> assertThat(productCategoryDto.getCategoryEntities().get(1).getId()).isEqualTo(4L)
         );
     }
 
@@ -86,7 +86,7 @@ class ProductServiceTest {
         productService.delete(id);
 
         //then
-        final List<ProductResponseDto> productResponseDtos = productService.findProducts();
-        Assertions.assertThat(productResponseDtos).hasSize(0);
+        final List<ProductCategoryDto> productCategoryDtos = productService.findAll();
+        Assertions.assertThat(productCategoryDtos).hasSize(0);
     }
 }

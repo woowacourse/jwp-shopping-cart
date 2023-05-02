@@ -1,7 +1,7 @@
 package cart.controller.view;
 
+import cart.dto.ProductCategoryDto;
 import cart.dto.response.CategoryResponseDto;
-import cart.dto.response.ProductResponseDto;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -21,9 +21,9 @@ public final class AdminViewController {
 
     @GetMapping
     public ModelAndView adminPage(final ModelAndView modelAndView) {
-        final List<ProductResponseDto> productResponseDtos = productService.findProducts();
+        final List<ProductCategoryDto> productCategoryDtos = productService.findAll();
         final List<CategoryResponseDto> categories = productService.findCategories();
-        modelAndView.addObject("products", productResponseDtos);
+        modelAndView.addObject("products", productCategoryDtos);
         modelAndView.addObject("categories", categories);
         modelAndView.setViewName("admin");
         return modelAndView;

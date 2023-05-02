@@ -1,6 +1,6 @@
 package cart.controller.view;
 
-import cart.dto.response.ProductResponseDto;
+import cart.dto.ProductCategoryDto;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -18,8 +18,8 @@ public final class MainViewController {
 
     @GetMapping
     public ModelAndView indexPage(final ModelAndView modelAndView) {
-        final List<ProductResponseDto> productResponseDtos = productService.findProducts();
-        modelAndView.addObject("products", productResponseDtos);
+        final List<ProductCategoryDto> productCategoryDtos = productService.findAll();
+        modelAndView.addObject("products", productCategoryDtos);
         modelAndView.setViewName("index");
         return modelAndView;
     }

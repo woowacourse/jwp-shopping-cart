@@ -3,9 +3,9 @@ package cart.service;
 import cart.dao.CategoryDao;
 import cart.dao.ProductCategoryDao;
 import cart.dao.ProductDao;
+import cart.dto.ProductCategoryDto;
 import cart.dto.request.ProductRequestDto;
 import cart.dto.response.CategoryResponseDto;
-import cart.dto.response.ProductResponseDto;
 import cart.entity.CategoryEntity;
 import cart.entity.ProductCategoryEntity;
 import cart.entity.product.ProductEntity;
@@ -47,12 +47,12 @@ public class ProductService {
         return savedProductId;
     }
 
-    public List<ProductResponseDto> findProducts() {
+    public List<ProductCategoryDto> findAll() {
         return productDao.findAll().stream()
             .map(productEntity -> {
                 final List<Long> categoryIds = getCategoryIds(productEntity);
                 final List<CategoryEntity> categoryEntities = categoryDao.findAllInId(categoryIds);
-                return ProductResponseDto.of(productEntity, categoryEntities);
+                return ProductCategoryDto.of(productEntity, categoryEntities);
             })
             .collect(Collectors.toList());
     }

@@ -1,7 +1,9 @@
 package cart.controller.api;
 
+import cart.dto.ProductCategoryDto;
 import cart.dto.request.ProductRequestDto;
 import cart.dto.response.ProductResponseDto;
+import cart.dtomapper.ProductResponseDtoMapper;
 import cart.service.ProductService;
 import java.net.URI;
 import java.util.List;
@@ -28,8 +30,8 @@ public final class ProductApiController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponseDto>> findProducts() {
-        final List<ProductResponseDto> productResponseDtos = productService.findProducts();
-        return ResponseEntity.ok(productResponseDtos);
+        final List<ProductCategoryDto> productCategoryDtos = productService.findAll();
+        return ResponseEntity.ok(ProductResponseDtoMapper.mapTo(productCategoryDtos));
     }
 
     @PostMapping
