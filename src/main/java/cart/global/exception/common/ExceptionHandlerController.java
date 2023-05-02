@@ -49,6 +49,14 @@ public class ExceptionHandlerController {
         return ResponseEntity.internalServerError().body("전화 주세요");
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleDomainException(IllegalArgumentException exception) {
+        errorLogging(exception);
+
+        return ExceptionResponse.convertFrom(ExceptionStatus.INVALID_INPUT_VALUE_EXCEPTION);
+    }
+
     private void errorLogging(Exception e) {
         log.info("클래스 이름 = {} 메시지 = {}", e.getClass().getSimpleName(), e.getMessage());
     }
