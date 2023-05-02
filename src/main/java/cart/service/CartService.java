@@ -22,4 +22,8 @@ public class CartService {
                 .map(CartEntity::getProductId)
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    public Long insert(final Long userId, final Long productId) {
+        return cartDao.insert(new CartEntity(userId, productId));
+    }
 }
