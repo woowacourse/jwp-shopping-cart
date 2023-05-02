@@ -34,7 +34,8 @@ class CartDaoTest {
 
     @BeforeEach
     void setUp() {
-        memberEntity = new MemberEntity("journey@gmail.com", "password", "져니", "010-1234-5678");
+        memberEntity = new MemberEntity("journey@gmail.com", "USER", "password", "져니",
+            "010-1234-5678");
         productEntity = new ProductEntity("치킨", "chicken_image_url", 20000, "KOREAN");
     }
 

@@ -15,19 +15,20 @@ import cart.persistence.repository.MemberCartRepository;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@WebMvcTest(CartService.class)
+@ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
-    @MockBean
+    @Mock
     private MemberCartRepository memberProductRepository;
 
-    @Autowired
+    @InjectMocks
     private CartService cartService;
 
     @Test

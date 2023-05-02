@@ -16,19 +16,20 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@WebMvcTest(ProductService.class)
+@ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 
-    @MockBean
+    @Mock
     private ProductDao productDao;
 
-    @Autowired
+    @InjectMocks
     private ProductService productService;
 
     @DisplayName("전체 상품을 조회한다.")

@@ -2,7 +2,6 @@ package cart.service;
 
 import cart.controller.dto.ProductDto;
 import cart.domain.Product;
-import cart.domain.ProductCategory;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.dao.ProductDao;
@@ -58,7 +57,7 @@ public class ProductService {
 
     private ProductEntity convertToEntity(final ProductDto productDto) {
         final Product product = Product.create(productDto.getName(), productDto.getImageUrl(),
-            productDto.getPrice(), ProductCategory.from(productDto.getCategory()));
+            productDto.getPrice(), productDto.getCategory());
         return new ProductEntity(product.getName(), product.getImageUrl(), product.getPrice(),
             product.getCategory().name());
     }
