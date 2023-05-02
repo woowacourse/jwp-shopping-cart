@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.generic;
 
 import cart.ErrorCode;
 import cart.exception.BusinessIllegalArgumentException;
