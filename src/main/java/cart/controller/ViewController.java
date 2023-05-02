@@ -1,9 +1,9 @@
 package cart.controller;
 
+import cart.dto.ResponseMemberDto;
 import cart.dto.ResponseProductDto;
-import cart.dto.ResponseUserDto;
+import cart.service.MemberService;
 import cart.service.ProductService;
-import cart.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +14,11 @@ import java.util.List;
 public class ViewController {
 
     private final ProductService productService;
-    private final UserService userService;
+    private final MemberService memberService;
 
-    public ViewController(final ProductService productService, final UserService userService) {
+    public ViewController(final ProductService productService, final MemberService memberService) {
         this.productService = productService;
-        this.userService = userService;
+        this.memberService = memberService;
     }
 
     @GetMapping("/")
@@ -37,8 +37,8 @@ public class ViewController {
 
     @GetMapping("/settings")
     public String settings(final Model model) {
-        final List<ResponseUserDto> responseUserDtos = userService.findAll();
-        model.addAttribute("members", responseUserDtos);
+        final List<ResponseMemberDto> responseMemberDtos = memberService.findAll();
+        model.addAttribute("members", responseMemberDtos);
         return "settings";
     }
 

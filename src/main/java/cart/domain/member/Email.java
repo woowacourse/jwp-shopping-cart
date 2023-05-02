@@ -1,4 +1,4 @@
-package cart.domain.user;
+package cart.domain.member;
 
 import java.util.regex.Pattern;
 

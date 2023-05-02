@@ -1,11 +1,11 @@
-package cart.domain.user;
+package cart.domain.member;
 
-public class User {
+public class Member {
 
     private final Email email;
     private final Password password;
 
-    public User(final String address, final String password) {
+    public Member(final String address, final String password) {
         this.email = new Email(address);
         this.password = new Password(password);
     }

@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.dao.entity.UserEntity;
-import cart.domain.user.User;
+import cart.dao.entity.MemberEntity;
+import cart.domain.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class UserDao {
+public class MemberDao {
 
-    private static final RowMapper<UserEntity> USER_ENTITY_ROW_MAPPER = (resultSet, rowNum) -> new UserEntity(
+    private static final RowMapper<MemberEntity> USER_ENTITY_ROW_MAPPER = (resultSet, rowNum) -> new MemberEntity(
             resultSet.getLong("id"),
             resultSet.getString("email"),
             resultSet.getString("password")
@@ -24,39 +24,39 @@ public class UserDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public UserDao(final JdbcTemplate jdbcTemplate) {
+    public MemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<UserEntity> findAll() {
-        final String sql = "SELECT * FROM users";
+    public List<MemberEntity> findAll() {
+        final String sql = "SELECT * FROM member";
         return jdbcTemplate.query(sql, USER_ENTITY_ROW_MAPPER);
     }
 
-    public Long insert(final User user) {
-        final String sql = "INSERT INTO users (email, password) VALUES (?, ?)";
+    public Long insert(final Member member) {
+        final String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(sql, GENERATED_ID_COLUMN);
-            preparedStatement.setString(1, user.getEmail());
-            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(1, member.getEmail());
+            preparedStatement.setString(2, member.getPassword());
             return preparedStatement;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public void deleteAll() {
-        final String sql = "DELETE FROM users";
+        final String sql = "DELETE FROM member";
         jdbcTemplate.update(sql);
     }
 
-    public UserEntity findById(Long id) {
-        final String sql = "SELECT * FROM users WHERE id = ?";
+    public MemberEntity findById(Long id) {
+        final String sql = "SELECT * FROM member WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, USER_ENTITY_ROW_MAPPER, id);
     }
 
-    public UserEntity findByEmail(String email) {
-        final String sql = "SELECT * FROM users WHERE email = ?";
+    public MemberEntity findByEmail(String email) {
+        final String sql = "SELECT * FROM member WHERE email = ?";
         return jdbcTemplate.queryForObject(sql, USER_ENTITY_ROW_MAPPER, email);
     }
 }

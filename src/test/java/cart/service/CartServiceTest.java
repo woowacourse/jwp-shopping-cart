@@ -31,11 +31,11 @@ class CartServiceTest {
     @Test
     void 사용자_id로_장바구니_상품_id_목록을_찾는다() {
         //given
-        when(cartDao.findAllByUserId(any(Long.class)))
+        when(cartDao.findAllByMemberId(any(Long.class)))
                 .thenReturn(List.of(new CartEntity(1L, 1L)));
 
         //when
-        final List<Long> productIds = cartService.findProductIdsByUserId(1L);
+        final List<Long> productIds = cartService.findProductIdsByMemberId(1L);
 
         //then
         assertSoftly(softly -> {

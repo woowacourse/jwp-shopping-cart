@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.dto.ResponseProductDto;
 import cart.service.CartService;
+import cart.service.MemberService;
 import cart.service.ProductService;
-import cart.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +15,12 @@ import java.util.List;
 @RestController
 public class CartApiController {
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final CartService cartService;
     private final ProductService productService;
 
-    public CartApiController(final UserService userService, final CartService cartService, final ProductService productService) {
-        this.userService = userService;
+    public CartApiController(final MemberService memberService, final CartService cartService, final ProductService productService) {
+        this.memberService = memberService;
         this.cartService = cartService;
         this.productService = productService;
     }
@@ -28,8 +28,8 @@ public class CartApiController {
     @GetMapping("/carts")
     public List<ResponseProductDto> readCartItem(@RequestHeader("authorization") final String authorization) {
         final Credentials credentials = getCredentials(authorization);
-        final Long userId = userService.findIdByEmail(credentials.getEmail());
-        final List<Long> productIds = cartService.findProductIdsByUserId(userId);
+        final Long memberId = memberService.findIdByEmail(credentials.getEmail());
+        final List<Long> productIds = cartService.findProductIdsByMemberId(memberId);
         return productService.findByIds(productIds);
     }
 
@@ -51,16 +51,16 @@ public class CartApiController {
     @PostMapping("/carts/{productId}")
     public ResponseEntity<Void> createCartItem(@RequestHeader("authorization") final String authorization, @PathVariable("productId") final Long productId) {
         final Credentials credentials = getCredentials(authorization);
-        final Long userId = userService.findIdByEmail(credentials.getEmail());
-        cartService.insert(userId, productId);
+        final Long memberId = memberService.findIdByEmail(credentials.getEmail());
+        cartService.insert(memberId, productId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/carts/{productId}")
     public ResponseEntity<Void> deleteCartItem(@RequestHeader("authorization") final String authorization, @PathVariable final Long productId) {
         final Credentials credentials = getCredentials(authorization);
-        final Long userId = userService.findIdByEmail(credentials.getEmail());
-        cartService.delete(userId, productId);
+        final Long memberId = memberService.findIdByEmail(credentials.getEmail());
+        cartService.delete(memberId, productId);
         return ResponseEntity.ok().build();
     }
 }

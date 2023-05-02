@@ -81,7 +81,7 @@ class ProductIntegrationTest {
                 .extract().response();
 
         // when
-        final Response userResponse = given()
+        final Response memberResponse = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .get("/")
@@ -100,8 +100,8 @@ class ProductIntegrationTest {
         // then
         assertSoftly(softly -> {
             softly.assertThat(createResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-            softly.assertThat(userResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(userResponse.body().asString()).contains("치킨", "10000", "치킨 사진");
+            softly.assertThat(memberResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(memberResponse.body().asString()).contains("치킨", "10000", "치킨 사진");
             softly.assertThat(adminResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(adminResponse.body().asString()).contains("치킨", "10000", "치킨 사진");
         });
@@ -121,7 +121,7 @@ class ProductIntegrationTest {
                 .extract().response();
 
         // when
-        final Response userResponse = given()
+        final Response memberResponse = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .get("/")
@@ -140,8 +140,8 @@ class ProductIntegrationTest {
         // then
         assertSoftly(softly -> {
             softly.assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(userResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(userResponse.body().asString()).doesNotContain("치킨", "10000", "치킨 사진");
+            softly.assertThat(memberResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(memberResponse.body().asString()).doesNotContain("치킨", "10000", "치킨 사진");
             softly.assertThat(adminResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(adminResponse.body().asString()).doesNotContain("치킨", "10000", "치킨 사진");
         });
@@ -175,7 +175,7 @@ class ProductIntegrationTest {
                 .extract().response();
 
         // when
-        final Response userResponse = given()
+        final Response memberResponse = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .get("/")
@@ -194,8 +194,8 @@ class ProductIntegrationTest {
         // then
         assertSoftly(softly -> {
             softly.assertThat(updateResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(userResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(userResponse.body().asString()).contains("피자", "1000", "피자 사진");
+            softly.assertThat(memberResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(memberResponse.body().asString()).contains("피자", "1000", "피자 사진");
             softly.assertThat(adminResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(adminResponse.body().asString()).contains("피자", "1000", "피자 사진");
         });

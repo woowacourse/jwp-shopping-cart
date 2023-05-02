@@ -3,25 +3,25 @@ package cart.dao.entity;
 public class CartEntity {
 
     private final Long id;
-    private final Long userId;
+    private final Long memberId;
     private final Long productId;
 
-    public CartEntity(final Long id, final Long userId, final Long productId) {
+    public CartEntity(final Long id, final Long memberId, final Long productId) {
         this.id = id;
-        this.userId = userId;
+        this.memberId = memberId;
         this.productId = productId;
     }
 
-    public CartEntity(final Long userId, final Long productId) {
-        this(null, userId, productId);
+    public CartEntity(final Long memberId, final Long productId) {
+        this(null, memberId, productId);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public Long getProductId() {

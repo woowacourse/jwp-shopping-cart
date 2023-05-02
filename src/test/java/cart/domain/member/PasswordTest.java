@@ -1,4 +1,4 @@
-package cart.domain.user;
+package cart.domain.member;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

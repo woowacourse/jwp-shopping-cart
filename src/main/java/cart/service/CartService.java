@@ -16,18 +16,18 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public List<Long> findProductIdsByUserId(final Long userId) {
-        final List<CartEntity> cartEntities = cartDao.findAllByUserId(userId);
+    public List<Long> findProductIdsByMemberId(final Long memberId) {
+        final List<CartEntity> cartEntities = cartDao.findAllByMemberId(memberId);
         return cartEntities.stream()
                 .map(CartEntity::getProductId)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public Long insert(final Long userId, final Long productId) {
-        return cartDao.insert(new CartEntity(userId, productId));
+    public Long insert(final Long memberId, final Long productId) {
+        return cartDao.insert(new CartEntity(memberId, productId));
     }
 
-    public int delete(final Long userId, final Long productId) {
-        return cartDao.delete(userId, productId);
+    public int delete(final Long memberId, final Long productId) {
+        return cartDao.delete(memberId, productId);
     }
 }

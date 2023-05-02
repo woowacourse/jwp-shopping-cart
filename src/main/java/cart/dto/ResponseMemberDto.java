@@ -1,17 +1,17 @@
 package cart.dto;
 
-import cart.dao.entity.UserEntity;
+import cart.dao.entity.MemberEntity;
 
-public class ResponseUserDto {
+public class ResponseMemberDto {
 
     private final Long id;
     private final String email;
     private final String password;
 
-    public ResponseUserDto(final UserEntity userEntity) {
-        this.id = userEntity.getId();
-        this.email = userEntity.getEmail();
-        this.password = userEntity.getPassword();
+    public ResponseMemberDto(final MemberEntity memberEntity) {
+        this.id = memberEntity.getId();
+        this.email = memberEntity.getEmail();
+        this.password = memberEntity.getPassword();
     }
 
     public Long getId() {

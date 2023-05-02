@@ -7,7 +7,7 @@
     - [x] 가격 : 0 미만 10억 초과인 경우 예외를 던진다.
     - [x] 이미지 : 2000자 초과일 경우 예외를 던진다.
 
-- User
+- Member
     - [x] email
         - 이메일 형식
             - [x] 이메일은 계정@도메인 형식을 갖는다.
@@ -28,7 +28,7 @@
         - 이미지
         - 가격
 
-- UserEntity
+- MemberEntity
     - 사용자
         - id
         - 이메일
@@ -107,7 +107,7 @@
 
 ### 특이사항
 
-- h2 데이터베이스 예약어 user로 인해 사용자 테이블을 users로 설정함
+- h2 데이터베이스 예약어 member로 인해 사용자 테이블을 members로 설정함
 
 ```sql
 CREATE TABLE product
@@ -119,7 +119,7 @@ CREATE TABLE product
     PRIMARY KEY (id)
 );
 
-CREATE TABLE users
+CREATE TABLE members
 (
     id       INT          NOT NULL AUTO_INCREMENT,
     email    VARCHAR(320) NOT NULL,
@@ -130,10 +130,10 @@ CREATE TABLE users
 CREATE TABLE cart
 (
     id         INT NOT NULL AUTO_INCREMENT,
-    user_id    INT NOT NULL,
+    member_id  INT NOT NULL,
     product_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (member_id) REFERENCES members (id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 )
 ```

@@ -1,18 +1,18 @@
 package cart.dao.entity;
 
-public class UserEntity {
+public class MemberEntity {
 
     private final Long id;
     private final String email;
     private final String password;
 
-    public UserEntity(final Long id, final String email, final String password) {
+    public MemberEntity(final Long id, final String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public UserEntity(final String email, final String password) {
+    public MemberEntity(final String email, final String password) {
         this(null, email, password);
     }
 
