@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.jdbc.Sql;
-import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 @Sql("classpath:schema.sql")
@@ -32,10 +32,10 @@ class ProductServiceTest {
     @Test
     void 모든_상품_목록_조회() {
         Mockito.when(productRepository.findAll())
-                .thenReturn(List.of(
-                        new Product("item1", 1000, "https://"),
-                        new Product("item1", 1000, "https://"),
-                        new Product("item1", 1000, "https://")
+                .thenReturn(Map.of(
+                        1L, new Product("name1", 1000, "image1"),
+                        2L, new Product("name2", 2000, "image2"),
+                        3L, new Product("name3", 3000, "image3")
                 ));
 
         final var products = productService.findAll();
