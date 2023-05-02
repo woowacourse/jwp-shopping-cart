@@ -29,10 +29,7 @@ public final class CartApiController {
 
     @GetMapping("/items")
     public ResponseEntity<List<ProductEntity>> showCart(@BasicAuthorization BasicAuthInfo basicAuthInfo) {
-        final Long customerId = customerService.findIdByEmailAndPassword(
-            basicAuthInfo.getEmail(),
-            basicAuthInfo.getPassword()
-        );
+        final Long customerId = customerService.findIdByBasicAuthInfo(basicAuthInfo);
         final List<ProductEntity> cartItems = cartService.findAllById(customerId);
         return ResponseEntity.ok().body(cartItems);
     }
@@ -42,10 +39,7 @@ public final class CartApiController {
         @PathVariable(name = "productId") Long productId,
         @BasicAuthorization BasicAuthInfo basicAuthInfo
     ) {
-        final Long customerId = customerService.findIdByEmailAndPassword(
-            basicAuthInfo.getEmail(),
-            basicAuthInfo.getPassword()
-        );
+        final Long customerId = customerService.findIdByBasicAuthInfo(basicAuthInfo);
         cartService.add(new CartEntity(customerId, productId));
         return ResponseEntity.ok().build();
     }
@@ -55,10 +49,7 @@ public final class CartApiController {
         @PathVariable(name = "productId") Long productId,
         @BasicAuthorization BasicAuthInfo basicAuthInfo
     ) {
-        final Long customerId = customerService.findIdByEmailAndPassword(
-            basicAuthInfo.getEmail(),
-            basicAuthInfo.getPassword()
-        );
+        final Long customerId = customerService.findIdByBasicAuthInfo(basicAuthInfo);
         final Long cartId = cartService.findFirstIdBy(customerId, productId);
         cartService.delete(cartId);
         return ResponseEntity.noContent().build();

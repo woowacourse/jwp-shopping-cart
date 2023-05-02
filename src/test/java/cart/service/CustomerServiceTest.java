@@ -3,6 +3,7 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.argumentresolver.basicauthorization.BasicAuthInfo;
 import cart.entity.customer.CustomerEntity;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,8 +46,12 @@ class CustomerServiceTest {
     void findByEmailAndPassword() {
         //given
         //when
-        final Long firstCustomerId = customerService.findIdByEmailAndPassword("split@wooteco.com", "dazzle");
-        final Long secondCustomerId = customerService.findIdByEmailAndPassword("dazzle@wooteco.com", "split");
+        final Long firstCustomerId = customerService.findIdByBasicAuthInfo(
+            new BasicAuthInfo("split@wooteco.com", "dazzle")
+        );
+        final Long secondCustomerId = customerService.findIdByBasicAuthInfo(
+            new BasicAuthInfo("dazzle@wooteco.com", "split")
+        );
 
         //then
         final List<CustomerEntity> customerEntities = customerService.findAll();

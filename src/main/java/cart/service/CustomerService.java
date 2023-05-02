@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.argumentresolver.basicauthorization.BasicAuthInfo;
 import cart.dao.CustomerDao;
 import cart.entity.customer.CustomerEntity;
 import java.util.List;
@@ -20,8 +21,8 @@ public class CustomerService {
         return customerDao.findAll();
     }
 
-    public Long findIdByEmailAndPassword(final String email, final String password) {
-        return customerDao.findIdByEmailAndPassword(email, password)
+    public Long findIdByBasicAuthInfo(final BasicAuthInfo basicAuthInfo) {
+        return customerDao.findIdByEmailAndPassword(basicAuthInfo.getEmail(), basicAuthInfo.getPassword())
             .orElseThrow(() -> new IllegalArgumentException("해당 인증에 부합하는 고객이 없습니다."));
     }
 }
