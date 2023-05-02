@@ -3,7 +3,7 @@ CREATE TABLE member
     id       BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email    VARCHAR(50) NOT NULL,
     password VARCHAR(30) NOT NULL
-)ENGINE=InnoDB;
+);
 
 CREATE TABLE product
 (
@@ -11,7 +11,7 @@ CREATE TABLE product
     `name`    VARCHAR(255) NOT NULL,
     image_url TEXT         NOT NULL,
     price     INT          NOT NULL
-)ENGINE=InnoDB;
+);
 
 CREATE TABLE cart_product
 (
@@ -20,5 +20,5 @@ CREATE TABLE cart_product
     product_id BIGINT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (product_id) REFERENCES product (id),
-    UNIQUE (member_id, product_id);
-)ENGINE=InnoDB;
+    UNIQUE (member_id, product_id)
+);
