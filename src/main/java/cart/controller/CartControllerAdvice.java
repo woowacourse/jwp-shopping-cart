@@ -28,8 +28,7 @@ public class CartControllerAdvice {
 
     @ExceptionHandler(CartCustomException.class)
     public ResponseEntity<String> handleCustomException(final CartCustomException cartCustomException) {
-        final ExceptionInfo info = ExceptionInfo.from(cartCustomException.getClass());
-        return ResponseEntity.status(info.getErrorCode()).body(info.getMessage());
+        return ResponseEntity.status(cartCustomException.getHttpStatus()).body(cartCustomException.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
