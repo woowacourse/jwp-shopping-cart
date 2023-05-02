@@ -11,11 +11,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
 @JdbcTest
-@Import(MemberRepository.class)
+@Import(JdbcMemberRepository.class)
 class MemberRepositoryTest {
 
     @Autowired
-    private MemberRepository memberRepository;
+    private JdbcMemberRepository memberRepository;
 
     @Test
     @DisplayName("repository에 저장된 모든 Member를 반환하는 기능 테스트")
