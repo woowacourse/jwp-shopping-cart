@@ -5,6 +5,7 @@ import cart.controller.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/java/cart/controller/api/AdminApiController.java
 import org.springframework.http.ResponseEntity;
 =======
@@ -13,6 +14,9 @@ import org.springframework.ui.Model;
 >>>>>>> 640c9e43 (refactor: 상품을 생성한다는 의미를 url에 포함):src/main/java/cart/controller/AdminController.java
 =======
 >>>>>>> 0606d2cf (refactor: View Controller와 ApiController 분리)
+=======
+import org.springframework.http.ResponseEntity;
+>>>>>>> 365da9ae (refactor: 반환 값에 상태코드 포함)
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,12 +80,17 @@ public class AdminApiController {
     }
 
     @PutMapping("/product/{id}")
+<<<<<<< HEAD
     public void update(
 >>>>>>> 0606d2cf (refactor: View Controller와 ApiController 분리)
+=======
+    public ResponseEntity<Void> update(
+>>>>>>> 365da9ae (refactor: 반환 값에 상태코드 포함)
             @PathVariable final Long id,
             @RequestBody @Valid final ProductUpdateRequest request
     ) {
         productService.update(id, request);
+<<<<<<< HEAD
 <<<<<<< HEAD
         return ResponseEntity.ok().build();
     }
@@ -93,12 +102,19 @@ public class AdminApiController {
         productService.delete(id);
         return ResponseEntity.ok().build();
 =======
+=======
+        return ResponseEntity.ok().build();
+>>>>>>> 365da9ae (refactor: 반환 값에 상태코드 포함)
     }
 
     @DeleteMapping("/product/{id}")
-    public void delete(@PathVariable final Long id) {
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
         productService.delete(id);
+<<<<<<< HEAD
 >>>>>>> 0606d2cf (refactor: View Controller와 ApiController 분리)
+=======
+        return ResponseEntity.ok().build();
+>>>>>>> 365da9ae (refactor: 반환 값에 상태코드 포함)
     }
 
 }
