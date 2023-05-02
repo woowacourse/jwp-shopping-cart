@@ -33,7 +33,7 @@ public class H2ProductRepository implements ProductRepository {
     }
 
     @Override
-    public Integer insert(final Product product) {
+    public Integer insert(Product product) {
         final String sql = "INSERT INTO PRODUCT (name, url, price) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -47,7 +47,7 @@ public class H2ProductRepository implements ProductRepository {
     }
 
     @Override
-    public Optional<Product> findById(final Integer productId) {
+    public Optional<Product> findById(Integer productId) {
         final String sql = "SELECT * FROM PRODUCT WHERE id = (?)";
         return jdbcTemplate.query(sql, productRowMapper, productId)
                 .stream()
@@ -55,7 +55,7 @@ public class H2ProductRepository implements ProductRepository {
     }
 
     @Override
-    public Optional<Product> findByName(final String name) {
+    public Optional<Product> findByName(String name) {
         final String sql = "SELECT * FROM PRODUCT WHERE name = (?)";
         return jdbcTemplate.query(sql, productRowMapper, name)
                 .stream()
@@ -69,14 +69,14 @@ public class H2ProductRepository implements ProductRepository {
     }
 
     @Override
-    public Product update(final Product product) {
+    public Product update(Product product) {
         final String sql = "UPDATE PRODUCT SET name = (?), url = (?), price = (?) WHERE id = (?)";
         jdbcTemplate.update(sql, product.getName(), product.getUrl(), product.getPrice(), product.getId());
         return product;
     }
 
     @Override
-    public Product remove(final Integer productId) {
+    public Product remove(Integer productId) {
         final String sql = "DELETE FROM PRODUCT WHERE id = (?)";
         Optional<Product> product = findById(productId);
         jdbcTemplate.update(sql, productId);
