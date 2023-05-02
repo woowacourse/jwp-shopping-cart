@@ -46,7 +46,11 @@ form.addEventListener('submit', (event) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
+<<<<<<< HEAD
         url: '/admin/product',
+=======
+        url: 'http://localhost:8080/admin/product',
+>>>>>>> 640c9e43 (refactor: 상품을 생성한다는 의미를 url에 포함)
         method: 'POST',
         data: product
     }).then((response) => {
