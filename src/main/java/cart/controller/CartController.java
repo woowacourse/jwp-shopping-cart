@@ -3,17 +3,15 @@ package cart.controller;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cart.auth.Extractor;
+import cart.controller.argumentresolver.AuthenticationPrincipal;
 import cart.dto.product.ProductResponse;
 import cart.dto.user.UserRequest;
 import cart.service.CartService;
@@ -22,11 +20,9 @@ import cart.service.CartService;
 @RequestMapping("/cart")
 public class CartController {
 
-    private final Extractor extractor;
     private final CartService cartService;
 
-    public CartController(Extractor extractor, CartService cartService) {
-        this.extractor = extractor;
+    public CartController(CartService cartService) {
         this.cartService = cartService;
     }
 
@@ -36,27 +32,24 @@ public class CartController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductResponse>> products(@RequestHeader HttpHeaders header) {
-        final UserRequest userRequest = extractor.extractUser(header);
+    public ResponseEntity<List<ProductResponse>> products(@AuthenticationPrincipal UserRequest userRequest) {
         return ResponseEntity.ok(cartService.findAllProductsInCart(userRequest));
     }
 
     @PostMapping("/product/{productId}")
     public ResponseEntity<Void> addProductToCart(
-            @RequestHeader HttpHeaders header,
+            @AuthenticationPrincipal UserRequest userRequest,
             @PathVariable Long productId
     ) {
-        final UserRequest userRequest = extractor.extractUser(header);
         final Long cartId = cartService.addProduct(userRequest, productId);
         return ResponseEntity.created(URI.create("/cart/product/" + cartId)).build();
     }
 
     @DeleteMapping("/product/{productId}")
     public ResponseEntity<Void> removeProductInCart(
-            @RequestHeader HttpHeaders header,
+            @AuthenticationPrincipal UserRequest userRequest,
             @PathVariable Long productId
     ) {
-        final UserRequest userRequest = extractor.extractUser(header);
         cartService.removeProductInCart(userRequest, productId);
         return ResponseEntity.noContent().build();
     }
