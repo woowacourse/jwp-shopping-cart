@@ -1,5 +1,6 @@
-package cart.dao;
+package cart.dao.dummyData;
 
+import cart.dao.ProductDao;
 import cart.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
