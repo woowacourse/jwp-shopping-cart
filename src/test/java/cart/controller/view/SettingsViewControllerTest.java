@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.view;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class SettingControllerTest {
+class SettingsViewControllerTest {
 
     @LocalServerPort
     int port;

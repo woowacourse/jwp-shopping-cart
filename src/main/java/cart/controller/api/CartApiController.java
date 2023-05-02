@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.authorization.BasicAuthInfo;
 import cart.authorization.BasicAuthorization;
@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class CartApiController {
+@RequestMapping("/cart")
+public final class CartApiController {
 
     private final CartService cartService;
     private final CustomerService customerService;
@@ -26,10 +28,8 @@ public class CartApiController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/cart/items")
-    public ResponseEntity<List<ProductEntity>> showCart(
-        @BasicAuthorization BasicAuthInfo basicAuthInfo
-    ) {
+    @GetMapping("/items")
+    public ResponseEntity<List<ProductEntity>> showCart(@BasicAuthorization BasicAuthInfo basicAuthInfo) {
         final Long customerId = customerService.findIdByEmailAndPassword(
             basicAuthInfo.getEmail(),
             basicAuthInfo.getPassword()
@@ -39,7 +39,7 @@ public class CartApiController {
         return ResponseEntity.ok().body(cartItems);
     }
 
-    @PostMapping("/cart/{productId}")
+    @PostMapping("/{productId}")
     public ResponseEntity<Void> addItem(
         @PathVariable(name = "productId") Long productId,
         @BasicAuthorization BasicAuthInfo basicAuthInfo
@@ -52,7 +52,7 @@ public class CartApiController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/cart/{productId}")
+    @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteItem(
         @PathVariable(name = "productId") Long productId,
         @BasicAuthorization BasicAuthInfo basicAuthInfo

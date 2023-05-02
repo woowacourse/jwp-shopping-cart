@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -104,7 +104,7 @@ class CartApiControllerTest {
             )
         );
         cartService.add(new CartEntity(1L, savedProductId));
-        
+
         //when
         //then
         RestAssured.given()

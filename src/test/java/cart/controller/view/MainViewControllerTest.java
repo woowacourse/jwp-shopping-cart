@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.view;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,22 +11,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class CartViewControllerTest {
+class MainViewControllerTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
     }
 
-    @DisplayName("장바구니 페이지를 생성한다.")
     @Test
-    void showCart() {
+    @DisplayName("진입 페이지를 생성한다.")
+    void indexPage() {
         RestAssured.given()
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/cart")
+            .accept(MediaType.TEXT_HTML_VALUE)
+            .when().get("/")
             .then()
             .statusCode(HttpStatus.OK.value());
     }
