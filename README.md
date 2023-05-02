@@ -21,16 +21,15 @@
   - [x] 상품은 이름을 가진다.
   - [x] 상품은 이미지를 가진다.
   - [x] 상품은 가격을 가진다.
-- [ ] 사용자
-  - [ ] 사용자는 이메일을 가진다.
-  - [ ] 사용자는 비밀번호를 가진다.
-  - [ ] 사용자는 접근 권한을 가진다.
+- [x] 사용자
+  - [x] 사용자는 이메일을 가진다.
+  - [x] 사용자는 비밀번호를 가진다.
 - [ ] 장바구니
   - [ ] 장바구니는 상품 목록을 가진다.
 
 ## admin api
 
-POST admin/items/add
+POST admin/items/new
 POST admin/items/edit/{id}
 POST admin/items/delete/{id}
 GET  admin/
