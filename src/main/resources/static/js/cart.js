@@ -6,16 +6,17 @@ const addCartItem = (productId) => {
         return;
     }
     // TODO: 장바구니 담을 때 개수 포함하도록 요청 수정하기.
-    let requestData = {
+    var requestData = {
         'productId': productId,
-        'count': 0
+        'count': 1
     }
     axios.request({
         url: '/carts',
         method: 'post',
         data: JSON.stringify(requestData),
         headers: {
-            'Authorization': `Basic ${credentials}`
+            'Authorization': `Basic ${credentials}`,
+            'Content-Type': `application/json`
         }
     }).then((response) => {
         alert('장바구니에 담았습니다.');
@@ -31,7 +32,7 @@ const removeCartItem = (id) => {
         window.location.href = '/settings';
         return;
     }
-    
+
     axios.request({
         url: '/carts/' + id,
         method: 'delete',
