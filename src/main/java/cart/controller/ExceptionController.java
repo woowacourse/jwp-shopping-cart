@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.dto.response.ExceptionResponse;
-import cart.exception.AuthorizationException;
+import cart.exception.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -53,8 +53,8 @@ public class ExceptionController {
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
-    @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<ExceptionResponse> handleAuthorizationException(AuthorizationException exception) {
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ExceptionResponse> handleAuthenticationException(AuthenticationException exception) {
         log.error(exception.getMessage());
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
