@@ -4,7 +4,7 @@ import cart.entity.Product;
 
 public class ProductResponseDto {
 
-    private final int id;
+    private final Integer id;
     private final String name;
     private final Integer price;
     private final String imageUrl;
@@ -16,7 +16,7 @@ public class ProductResponseDto {
         this.imageUrl = product.getImageUrl();
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -24,7 +24,7 @@ public class ProductResponseDto {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 

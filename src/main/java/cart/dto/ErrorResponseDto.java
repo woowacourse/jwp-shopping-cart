@@ -2,7 +2,7 @@ package cart.dto;
 
 public class ErrorResponseDto {
 
-    private String exceptionMessage;
+    private final String exceptionMessage;
 
     public ErrorResponseDto(Exception exception) {
         this.exceptionMessage = exception.getMessage();

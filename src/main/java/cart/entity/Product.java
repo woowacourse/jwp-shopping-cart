@@ -6,7 +6,7 @@ import cart.vo.Url;
 
 public class Product {
 
-    private final int id;
+    private final Integer id;
     private final Name name;
     private final Price price;
     private final Url imageUrl;
@@ -18,7 +18,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -26,7 +26,7 @@ public class Product {
         return name.getValue();
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price.getValue();
     }
 
@@ -41,7 +41,7 @@ public class Product {
         private Price price;
         private Url imageUrl;
 
-        public Builder id(int id) {
+        public Builder id(Integer id) {
             this.id = id;
             return this;
         }
