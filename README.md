@@ -6,6 +6,12 @@
 - [x] 사용자 설정 페이지 연동
 - [x] 장바구니 페이지 연동
 
+### 공통
+
+- [x] 어노테이션
+- [x] ArgumentResolver
+-
+
 ### 도메인
 
 - [x] 상품
@@ -74,7 +80,7 @@
     - DELETE "/product/{id}"
     - Response: 200 OK
 
-사용자
+### 사용자
 
 - [x] 사용자 Create
     - POST "/member"
