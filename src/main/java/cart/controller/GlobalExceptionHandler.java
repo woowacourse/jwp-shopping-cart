@@ -2,6 +2,7 @@ package cart.controller;
 
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +24,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<String> handleException(final Exception exception) {
         log.error("예상치 못한 예외가 발생했습니다.", exception);
         return ResponseEntity.internalServerError().body("예상치 못한 예외가 발생했습니다.");
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<String> handleLoginFailException(final LoginFailException exception) {
+        log.debug("email과 password가 일치하지 않습니다", exception);
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
     @ExceptionHandler
