@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.dto.MemberResponse;
 import cart.dto.ProductResponse;
 import cart.service.ProductFindService;
 import org.springframework.stereotype.Controller;
@@ -12,15 +13,17 @@ import java.util.stream.Collectors;
 @Controller
 public class ViewController {
 
-    private final ProductFindService findService;
+    private final ProductFindService productFindService;
+    private final MemberFindService memberFindService;
 
-    public ViewController(final ProductFindService findService) {
-        this.findService = findService;
+    public ViewController(final ProductFindService findService, final MemberFindService memberFindService) {
+        this.productFindService = findService;
+        this.memberFindService = memberFindService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        List<ProductResponse> products = findService.findProducts().stream()
+        List<ProductResponse> products = productFindService.findProducts().stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
         model.addAttribute("products", products);
@@ -29,10 +32,24 @@ public class ViewController {
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        List<ProductResponse> products = findService.findProducts().stream()
+        List<ProductResponse> products = productFindService.findProducts().stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
         model.addAttribute("products", products);
         return "admin.html";
+    }
+
+    @GetMapping("/settings")
+    public String settings(Model model) {
+        final List<MemberResponse> members = memberFindService.findAll().stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
+        model.addAttribute("members", members);
+        return "settings.html";
+    }
+
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart.html";
     }
 }
