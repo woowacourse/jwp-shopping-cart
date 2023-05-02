@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import cart.entity.ProductEntity;
+import cart.entity.Product;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
@@ -20,8 +20,8 @@ public class JdbcProductDao implements ProductDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<ProductEntity> productMapper
-        = (resultSet, rowNum) -> new ProductEntity(
+    private final RowMapper<Product> productMapper
+        = (resultSet, rowNum) -> new Product(
         resultSet.getInt("id"),
         resultSet.getString("name"),
         resultSet.getInt("price"),
@@ -37,29 +37,29 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public int insertProduct(ProductEntity productEntity) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(productEntity);
+    public int insertProduct(Product product) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(product);
         Number id = simpleJdbcInsert.executeAndReturnKey(parameterSource);
         return id.intValue();
     }
 
     @Override
-    public List<ProductEntity> selectAllProducts() {
+    public List<Product> selectAllProducts() {
         String sql = "select id, name, price, image from product";
         return jdbcTemplate.query(sql, productMapper);
     }
 
     @Override
-    public void updateProduct(ProductEntity productEntity) {
+    public int updateProduct(Product product) {
         String sql = "update product set name = ?, price =? , image = ?  where id = ?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImage(),
-            productEntity.getId());
+        return jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(),
+            product.getId());
     }
 
     @Override
-    public void deleteProduct(int productId) {
+    public int deleteProduct(int productId) {
         String sql = "delete from product where id = ?";
-        jdbcTemplate.update(sql, productId);
+        return jdbcTemplate.update(sql, productId);
     }
 
 }
