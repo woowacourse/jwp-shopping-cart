@@ -57,7 +57,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson).log().all()
                     .when()
-                    .post("/admin/product")
+                    .post("/product")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_CREATED);
         }
@@ -73,7 +73,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .post("/admin/product")
+                    .post("/product")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -88,7 +88,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .post("/admin/product")
+                    .post("/product")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -104,7 +104,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .post("/admin/product")
+                    .post("/product")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -123,7 +123,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .patch("/admin/product/1")
+                    .patch("/product/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_OK);
         }
@@ -137,7 +137,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .patch(String.format("/admin/product/%d", Long.MAX_VALUE))
+                    .patch(String.format("/product%d", Long.MAX_VALUE))
                     .then().log().all()
                     .statusCode(HttpStatus.SC_NOT_FOUND);
         }
@@ -153,7 +153,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .patch("/admin/product/1")
+                    .patch("/product/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -168,7 +168,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .patch("/admin/product/1")
+                    .patch("/product/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -184,7 +184,7 @@ class AdminProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .patch("/admin/product/1")
+                    .patch("/product/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -200,7 +200,7 @@ class AdminProductControllerTest {
         void shouldResponseStatusOkWhenRequestDeleteToAdminProductId() throws JsonProcessingException {
             given().log().all()
                     .when()
-                    .delete("/admin/product/1")
+                    .delete("/product/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_OK);
         }
@@ -210,7 +210,7 @@ class AdminProductControllerTest {
         void shouldResponseStatusBadRequestWhenRequestProductNotExists() {
             given().log().all()
                     .when()
-                    .delete(String.format("/admin/product/%d", Long.MAX_VALUE))
+                    .delete(String.format("/product/%d", Long.MAX_VALUE))
                     .then().log().all()
                     .statusCode(HttpStatus.SC_NOT_FOUND);
         }

@@ -37,7 +37,7 @@ CREATE TABLE product
     - [x] index.html 반환
 
 - 상품 추가
-    - [x] POST /admin/product
+    - [x] POST /product
     - [x] admin 페이지에서 상품을 추가한다.
         - [x] 추가 성공 시 status created
     - [x] 상품 추가 요청을 유효성 검증한다.
@@ -51,7 +51,7 @@ CREATE TABLE product
     - [x] admin.html 반환
 
 - 상품 수정
-    - [x] PATCH /admin/product/id
+    - [x] PATCH /product/id
     - [x] admin 페이지에서 상품을 수정한다.
         - [x] 해당 id에 상품이 없을 시 status not found
         - [x] update 성공 시 status ok
@@ -61,7 +61,7 @@ CREATE TABLE product
         - [x] URL이 공백일 수 없다.
 
 - 상품 삭제
-    - [x] DELETE /admin/product/id
+    - [x] DELETE /product/id
     - [x] admin 페이지에서 상품을 삭제한다.
         - [x] 해당 id에 상품이 없을 시 status not found
         - [x] delete 성공 시 status ok

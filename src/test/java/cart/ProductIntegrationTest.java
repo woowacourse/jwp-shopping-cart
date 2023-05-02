@@ -46,13 +46,13 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest1)
                 .when()
-                .post("/admin/product");
+                .post("/product");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest2)
                 .when()
-                .post("/admin/product");
+                .post("/product");
 
         // 1개의 상품 수정
         ModifyRequest request3 = new ModifyRequest("애플", 1000, "super.com");
@@ -61,12 +61,12 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest3)
                 .when()
-                .patch("admin/product/1");
+                .patch("/product/1");
 
         // 1개의 상품 삭제
         given()
                 .when()
-                .delete("admin/product/2");
+                .delete("/product/2");
 
         // 상품 리스트 조회
         ExtractableResponse<Response> result = given().log().all()
