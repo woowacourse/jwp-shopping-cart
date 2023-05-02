@@ -16,12 +16,14 @@ CREATE TABLE product
     image_url TEXT        NOT NULL,
     PRIMARY KEY (id)
 );
+
 CREATE TABLE user
 (
-    id   BIGINT       NOT NULL AUTO_INCREMENT,
-    code VARCHAR(100) NOT NULL,
+    id       BIGINT       NOT NULL AUTO_INCREMENT,
+    email    VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
     PRIMARY KEY (id)
-)
+);
 
 CREATE TABLE cart
 (
