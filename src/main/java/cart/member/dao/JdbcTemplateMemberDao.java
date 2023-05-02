@@ -2,6 +2,7 @@ package cart.member.dao;
 
 import cart.member.entity.MemberEntity;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,4 +32,12 @@ public class JdbcTemplateMemberDao implements MemberDao {
         );
         return memberEntity;
     };
+
+    @Override
+    public Optional<MemberEntity> findByEmail(final String memberEmail) {
+        String sql = "select * from members where email = ?";
+
+        final MemberEntity member = jdbcTemplate.queryForObject(sql, memberEntityRowMapper, memberEmail);
+        return Optional.ofNullable(member);
+    }
 }
