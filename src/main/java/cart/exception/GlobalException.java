@@ -1,4 +1,4 @@
-package cart.web.exception;
+package cart.exception;
 
 public class GlobalException extends RuntimeException {
 

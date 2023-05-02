@@ -1,7 +1,7 @@
 package cart.domain.product;
 
-import cart.web.exception.ErrorCode;
-import cart.web.exception.GlobalException;
+import cart.exception.ErrorCode;
+import cart.exception.GlobalException;
 
 import java.util.Arrays;
 
