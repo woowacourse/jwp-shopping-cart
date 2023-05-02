@@ -35,9 +35,9 @@
   - [x] 응답 : admin.html
     - [x] 모델 추가 : List\<ProductResponse>
 
-- [ ] 설정 페이지 연동
-  - [ ] 요청 : GET `/settings`
-  - [ ] 응답 : settings.html
+- [x] 설정 페이지 연동
+  - [x] 요청 : GET `/settings`
+  - [x] 응답 : settings.html
 
 - [ ] 장바구니 목록 페이지 연동
   - [ ] 요청 : GET `/cart`
