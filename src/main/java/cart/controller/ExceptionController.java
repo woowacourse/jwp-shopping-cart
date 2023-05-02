@@ -45,7 +45,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionResponse> handleConstraintViolationException(IllegalArgumentException exception) {
+    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
         log.error(exception.getMessage());
 
         final String errorMessage = exception.getMessage();
