@@ -78,8 +78,8 @@ class JdbcProductDaoTest {
     }
 
     private void resetTable() {
-        final String truncateSql = "TRUNCATE TABLE product";
-        jdbcTemplate.update(truncateSql);
+        final String deleteSql = "DELETE FROM product";
+        jdbcTemplate.update(deleteSql);
 
         final String initializeIdSql = "ALTER TABLE product ALTER COLUMN ID RESTART WITH 1";
         jdbcTemplate.update(initializeIdSql);
