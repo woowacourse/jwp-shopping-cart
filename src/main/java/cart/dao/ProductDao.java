@@ -29,6 +29,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
+                .usingColumns("name", "image", "price")
                 .usingGeneratedKeyColumns("id");
     }
 

@@ -16,11 +16,11 @@ public class Product {
     private final LocalDateTime updatedAt;
 
     public Product(final String name, final String image, final long price) {
-        this(null, name, image, price, LocalDateTime.now(), LocalDateTime.now());
+        this(null, name, image, price, null, null);
     }
 
     public Product(final Long id, final String name, final String image, final long price) {
-        this(id, name, image, price, LocalDateTime.now(), LocalDateTime.now());
+        this(id, name, image, price, null, null);
     }
 
     public Product(
@@ -53,7 +53,7 @@ public class Product {
     }
 
     private void validateImage(final String image) {
-        if (image.isBlank()) {
+        if (image == null || image.isBlank()) {
             throw new ProductNotValidException("이미지는 공백일 수 없습니다.");
         }
     }
