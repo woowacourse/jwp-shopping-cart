@@ -26,10 +26,16 @@
     width: 100%;
 }
 
-.cart-item-name {
+.cart-item-memberName {
     font-weight: 600;
     font-size: 18px;
     margin: 0 20px 0 0;
+}
+
+.cart-item-name {
+    font-weight: 600;
+    font-size: 18px;
+    margin: 20px 20px 0 0;
 }
 
 .cart-item-price {

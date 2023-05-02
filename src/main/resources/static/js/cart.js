@@ -1,4 +1,4 @@
-const addCartItem = (productId) => {
+const addCartItem = (itemId) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
@@ -8,7 +8,8 @@ const addCartItem = (productId) => {
 
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
-        url: '',
+        url: 'http://localhost:8080/carts/' + itemId,
+        method: 'POST',
         headers: {
             'Authorization': `Basic ${credentials}`
         }
@@ -29,7 +30,8 @@ const removeCartItem = (id) => {
 
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
-        url: '',
+        url: 'http://localhost:8080/carts/' + id,
+        method: 'DELETE',
         headers: {
             'Authorization': `Basic ${credentials}`
         }
