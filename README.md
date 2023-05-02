@@ -47,7 +47,7 @@
       - email
       - password
     - [x] GET  `/settings` url 맵핑
-  - [ ] 요청 헤더의 `Authorization` 필드에서 사용자 정보 조회 기능 구현
+  - [x] 요청 헤더의 `Authorization` 필드에서 사용자 정보 조회 기능 구현
     - [ ] 로그인이 안되었다면 `/` 만 접근 가능, 다른 url은 모두 401 예외 반환
 - [ ] 사용자 설정 페이지 연동
   - [x] `/settings` 에 접근하면 전체 사용자 목록 페이지로 접속하도록 연동한다.
