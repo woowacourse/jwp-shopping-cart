@@ -12,14 +12,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final AdminAuthInterceptor adminAuthInterceptor;
+    private final MemberEmailArgumentResolver memberEmailArgumentResolver;
 
-    public WebMvcConfig(final AdminAuthInterceptor adminAuthInterceptor) {
+    public WebMvcConfig(AdminAuthInterceptor adminAuthInterceptor,
+                        MemberEmailArgumentResolver memberEmailArgumentResolver) {
         this.adminAuthInterceptor = adminAuthInterceptor;
+        this.memberEmailArgumentResolver = memberEmailArgumentResolver;
     }
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberEmailArgumentResolver());
+        resolvers.add(memberEmailArgumentResolver);
     }
 
     @Override
