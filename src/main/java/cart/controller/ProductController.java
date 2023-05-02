@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.dto.ApiDataResponse;
 import cart.dto.ApiResponse;
 import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductEditRequestDto;
@@ -30,8 +31,8 @@ public class ProductController {
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public ApiResponse<ProductsResponseDto> findProducts() {
-        return ApiResponse.of(HttpStatus.OK, productService.findAll());
+    public ApiDataResponse<ProductsResponseDto> findProducts() {
+        return ApiDataResponse.of(HttpStatus.OK, productService.findAll());
     }
 
     @PostMapping

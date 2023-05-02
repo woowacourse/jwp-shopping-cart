@@ -5,50 +5,31 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import org.springframework.http.HttpStatus;
 
 @JsonInclude(Include.NON_NULL)
-public class ApiResponse<T> {
+public class ApiResponse {
     private final int status;
-    private T data;
-    private String error;
+    private final boolean success;
+
 
     public ApiResponse(int status) {
         this.status = status;
+        this.success = true;
     }
 
-    public ApiResponse(int status, T data) {
+    public ApiResponse(int status, boolean success) {
         this.status = status;
-        this.data = data;
-    }
-
-    public ApiResponse(int status, String error) {
-        this.status = status;
-        this.error = error;
+        this.success = success;
     }
 
     public static ApiResponse from(HttpStatus httpStatus) {
         return new ApiResponse(httpStatus.value());
     }
 
-    public static <T> ApiResponse<T> of(HttpStatus httpStatus, T result) {
-        return new ApiResponse(httpStatus.value(), result);
-    }
-
-    public static ApiResponse of(HttpStatus httpStatus, Exception exception) {
-        return new ApiResponse(httpStatus.value(), exception.getMessage());
-    }
-
-    public static ApiResponse of(HttpStatus httpStatus, String exceptionMessage) {
-        return new ApiResponse(httpStatus.value(), exceptionMessage);
-    }
 
     public int getStatus() {
         return status;
     }
 
-    public T getData() {
-        return data;
-    }
-
-    public String getError() {
-        return error;
+    public boolean getSuccess() {
+        return success;
     }
 }

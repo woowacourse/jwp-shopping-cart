@@ -1,5 +1,6 @@
 package cart.advice;
 
+import cart.dto.ApiErrorResponse;
 import cart.dto.ApiResponse;
 import cart.exception.ProductNotFoundException;
 import java.util.Objects;
@@ -16,15 +17,15 @@ public class CustomControllerAdvice {
 
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public ApiResponse handleProductNotFoundException(final ProductNotFoundException exception) {
-        return ApiResponse.of(HttpStatus.BAD_REQUEST, exception);
+    public ApiErrorResponse handleProductNotFoundException(final ProductNotFoundException exception) {
+        return ApiErrorResponse.of(HttpStatus.BAD_REQUEST, exception);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public ApiResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
+    public ApiErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         String defaultMessage = Objects.requireNonNull(exception.getBindingResult().getFieldError()).getDefaultMessage();
 
-        return ApiResponse.of(HttpStatus.BAD_REQUEST, defaultMessage);
+        return ApiErrorResponse.of(HttpStatus.BAD_REQUEST, defaultMessage);
     }
 }
