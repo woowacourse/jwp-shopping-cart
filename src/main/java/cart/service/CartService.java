@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartService {
+    private final int MINAFFECTEDROW = 1;
 
     private final ProductDao productDao;
 
@@ -37,10 +38,16 @@ public class CartService {
     }
 
     public void updateProduct(final UpdateRequestDto updateRequestDto) {
-        productDao.update(updateRequestDto.toEntity());
+        int affectedRow = productDao.update(updateRequestDto.toEntity());
+        if (affectedRow < MINAFFECTEDROW) {
+            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
+        }
     }
 
     public void deleteProduct(final int productId) {
-        productDao.delete(productId);
+        int affectedRow = productDao.delete(productId);
+        if (affectedRow < MINAFFECTEDROW) {
+            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
+        }
     }
 }

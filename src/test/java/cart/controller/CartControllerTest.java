@@ -36,7 +36,6 @@ public class CartControllerTest {
                 .andExpect(view().name("index"));
     }
 
-    @DisplayName("")
     @Test
     void adminTest() throws Exception {
         when(cartService.getProducts()).thenReturn(List.of(
