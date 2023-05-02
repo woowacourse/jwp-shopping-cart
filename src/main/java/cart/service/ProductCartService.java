@@ -32,4 +32,11 @@ public class ProductCartService {
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
+
+    public ProductCart addCart(Long productId, Member member) {
+        Product product = productDao.findById(productId)
+                .orElseThrow();
+        ProductCart productCart = productCartDao.save(new ProductCart(product.getId(), member.getId()));
+        return productCart;
+    }
 }
