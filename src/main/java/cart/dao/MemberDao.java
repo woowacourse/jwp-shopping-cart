@@ -1,9 +1,9 @@
 package cart.dao;
 
-import cart.entity.Member;
+import cart.entity.MemberEntity;
 import java.util.List;
 
 public interface MemberDao {
 
-  List<Member> findAll();
+  List<MemberEntity> findAll();
 }

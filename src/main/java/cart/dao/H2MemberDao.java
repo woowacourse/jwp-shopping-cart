@@ -16,13 +16,13 @@ public class H2MemberDao implements MemberDao {
   }
 
   @Override
-  public List<Member> findAll() {
+  public List<MemberEntity> findAll() {
     final String sql = "select * from member";
     return namedParameterjdbcTemplate.query(sql, getMemberRowMapper());
   }
 
-  private static RowMapper<Member> getMemberRowMapper() {
+  private RowMapper<MemberEntity> getMemberRowMapper() {
     return (resultSet, count) ->
-        new Member(resultSet.getString("email"), resultSet.getString("password"));
+        new MemberEntity(resultSet.getString("email"), resultSet.getString("password"));
   }
 }

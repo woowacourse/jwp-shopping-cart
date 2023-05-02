@@ -1,11 +1,11 @@
 package cart.entity;
 
-public class Member {
+public class MemberEntity {
 
   private final String email;
   private final String password;
 
-  public Member(String email, String password) {
+  public MemberEntity(String email, String password) {
     this.email = email;
     this.password = password;
   }
