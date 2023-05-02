@@ -42,12 +42,12 @@
   - [x] email, password로 사용자 조회 구현
     - [x] repository 구현
     - [x] service 구현
-  - [ ] 전체 사용자 조회 api 구현
-    - [ ] repository 구현
-    - [ ] service 구현
-    - [ ] controller 구현
+  - [x] 전체 사용자 조회 api 구현
+    - [x] repository 구현
+    - [x] service 구현
+    - [x] controller 구현
   - [ ] 로그인 된 사용자 정보 조회 기능 구현
-  - [ ] 사용자 설정 페이지 연동
+  - [x] 사용자 설정 페이지 연동
 
 - [ ] 장바구니 설정
   - [ ] 장바구니에 상품 추가 api 구현

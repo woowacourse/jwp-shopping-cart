@@ -1,7 +1,9 @@
 package cart.controller;
 
 import cart.entity.ProductEntity;
+import cart.entity.UserEntity;
 import cart.service.ProductService;
+import cart.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ class MainControllerTest {
     @MockBean
     private ProductService productService;
 
+    @MockBean
+    private UserService userService;
+
     @Test
     @DisplayName("root directory 로 요청을 보내면 홈 html 화면을 보내준다")
     void rootPage() throws Exception {
@@ -44,7 +49,7 @@ class MainControllerTest {
     @Test
     @DisplayName("'/admin' directory 로 요청을 보내면 admin html 화면을 보내준다")
     void admin() throws Exception {
-        // expect
+        // given
         List<ProductEntity> allProducts = new ArrayList<>();
         given(productService.findAll())
                 .willReturn(allProducts);
@@ -56,4 +61,18 @@ class MainControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    @DisplayName("'/settings' directory 로 요청을 보내면 settings html 화면을 보내준다")
+    void settings() throws Exception {
+        // given
+        List<UserEntity> allUsers = new ArrayList<>();
+        given(userService.findAll())
+                .willReturn(allUsers);
+
+        // expect
+        mockMvc.perform(get("/settings"))
+                .andExpect(model().attributeExists("members"))
+                .andExpect(model().attribute("members", allUsers))
+                .andExpect(status().isOk());
+    }
 }

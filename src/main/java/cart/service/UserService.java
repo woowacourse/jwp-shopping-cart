@@ -1,8 +1,11 @@
 package cart.service;
 
 import cart.dto.UserAuthenticationDto;
+import cart.entity.UserEntity;
 import cart.repository.UserDao;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -15,5 +18,9 @@ public class UserService {
 
     public int findByAuthenticationDto(final UserAuthenticationDto authenticationDto) {
         return userDao.findIdByEmailAndPassword(authenticationDto.getEmail(), authenticationDto.getPassword());
+    }
+
+    public List<UserEntity> findAll() {
+        return userDao.findAll();
     }
 }
