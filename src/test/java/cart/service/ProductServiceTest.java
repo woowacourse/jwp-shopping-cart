@@ -49,7 +49,11 @@ class ProductServiceTest {
     @Test
     void createFail() {
         // when, then
+<<<<<<< HEAD
         Assertions.assertThrows(NegativeQuantityCantSellException.class, () -> new ProductCreateRequest("베베 상품", -1000, "bebe_img"));
+=======
+        Assertions.assertThrows(CantSellNegativeQuantity.class, () -> new ProductCreateRequest("베베 상품", -1000, "bebe_img"));
+>>>>>>> fa3073d5 (fix: Exception 발생 위치에 맞게 수정)
     }
 
     @DisplayName("상품을 전체 조회한다.")
@@ -93,7 +97,11 @@ class ProductServiceTest {
     @Test
     void updateFail() {
         // when, then
+<<<<<<< HEAD
         Assertions.assertThrows(NegativeQuantityCantSellException.class, () -> new ProductUpdateRequest("베베 상품 가격 폭락", -6000, "bebe_img"));
+=======
+        Assertions.assertThrows(CantSellNegativeQuantity.class, () -> new ProductUpdateRequest("베베 상품 가격 폭락", -6000, "bebe_img"));
+>>>>>>> fa3073d5 (fix: Exception 발생 위치에 맞게 수정)
     }
 
     @DisplayName("상품을 삭제할 수 있다.")
