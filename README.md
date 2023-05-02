@@ -50,24 +50,6 @@ Product
         }
         ```
 
-- Read
-    - GET /product
-    - Response Body
-
-        ```json
-        {
-          "products": [
-            {
-              "id":0,
-              "name":"",
-              "price":0,
-              "image":""
-            },
-            ...
-          ]
-        }
-        ```
-
 - Update
     - PUT /product/:productId
     - Request Body
@@ -93,7 +75,7 @@ Product
     - [x]  사용자 테이블
     - [x]  장바구니 테이블
 - [ ]  사용자 기능 구현
-    - [ ]  사용자 목록 표시
+    - [x]  사용자 목록 표시
     - [ ]  사용자 선택
 - [ ]  사용자 설정 페이지 연동
     - [ ]  API 연동
