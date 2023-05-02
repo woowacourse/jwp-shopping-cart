@@ -7,4 +7,22 @@ CREATE TABLE IF NOT EXISTS product
     created_at DATETIME     NOT NULL default current_timestamp,
     updated_at DATETIME     NOT NULL default current_timestamp on update current_timestamp,
     PRIMARY KEY (id)
-);
+    );
+
+CREATE TABLE IF NOT EXISTS member
+(
+    id       BIGINT       NOT NULL AUTO_INCREMENT,
+    email    VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+    );
+
+CREATE TABLE IF NOT EXISTS cart
+(
+    id         BIGINT       NOT NULL AUTO_INCREMENT,
+    product_id BIGINT       NOT NULL,
+    member_id  VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (product_id) REFERENCES product (id),
+    FOREIGN KEY (member_id) REFERENCES member (id)
+    );
