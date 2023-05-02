@@ -5,6 +5,7 @@ import cart.entity.CartEntity;
 import cart.entity.product.ProductEntity;
 import cart.service.CartService;
 import cart.service.CustomerService;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,7 +33,9 @@ public class CartApiController {
             basicAuthorizationParser.getEmail(),
             basicAuthorizationParser.getPassword()
         );
-        return ResponseEntity.ok().body(cartService.findAllById(customerId));
+        final List<ProductEntity> cartItems = cartService.findAllById(customerId);
+        cartItems.sort(Comparator.comparing(ProductEntity::getName).reversed());
+        return ResponseEntity.ok().body(cartItems);
     }
 
     @PostMapping("/cart/{productId}")
@@ -59,8 +62,8 @@ public class CartApiController {
             basicAuthorizationParser.getEmail(),
             basicAuthorizationParser.getPassword()
         );
-        cartService.deleteByCustomerIdAndProductId(customerId, productId);
+        final Long cartId = cartService.findFirstIdBy(customerId, productId);
+        cartService.delete(cartId);
         return ResponseEntity.noContent().build();
     }
-
 }

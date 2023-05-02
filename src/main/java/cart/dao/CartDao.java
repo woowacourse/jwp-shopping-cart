@@ -45,4 +45,15 @@ public class CartDao {
             customerId
         );
     }
+
+    public List<Long> findIdsBy(final Long customerId, final Long productId) {
+        final String sql = "SELECT (id) FROM CART WHERE customer_id = ? AND product_id = ?";
+        final List<Long> cartIds = jdbcTemplate.query(
+            sql,
+            (rs, rowNum) -> rs.getLong("id"),
+            customerId,
+            productId
+        );
+        return cartIds;
+    }
 }
