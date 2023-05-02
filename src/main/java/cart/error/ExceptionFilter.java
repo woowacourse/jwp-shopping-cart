@@ -27,7 +27,7 @@ public class ExceptionFilter extends OncePerRequestFilter {
         } catch (CartException e) {
             writerErrorCode(response, e.getErrorCode());
         } catch (Exception e) {
-            writerErrorCode(response, new ErrorCode(400, "PRODUCT-400-1", "Internal Server Error"));
+            writerErrorCode(response, new ErrorCode(500, "SERVER-500-1", "Internal Server Error"));
         }
     }
 
