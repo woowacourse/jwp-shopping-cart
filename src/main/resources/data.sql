@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS MEMBER (
     PRIMARY KEY (id)
 );
 
+<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS CART(
     id BIGINT NOT NULL AUTO_INCREMENT,
     member_id VARCHAR(255) NOT NULL,
@@ -23,5 +24,7 @@ CREATE TABLE IF NOT EXISTS CART(
     FOREIGN KEY (product_id) REFERENCES PRODUCT(id) ON DELETE CASCADE
 );
 
+=======
+>>>>>>> 1eb8f466 (feat: 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있다.)
 INSERT INTO MEMBER(email, password) values('a@a.com', 'password1');
 INSERT INTO MEMBER(email, password) values('b@b.com', 'password2');

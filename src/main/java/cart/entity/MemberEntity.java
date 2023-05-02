@@ -1,5 +1,10 @@
 package cart.entity;
 
+<<<<<<< HEAD
+=======
+import java.lang.reflect.Member;
+
+>>>>>>> 1eb8f466 (feat: 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있다.)
 public class MemberEntity {
 
     private final Long id;
