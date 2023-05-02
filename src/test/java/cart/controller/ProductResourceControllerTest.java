@@ -3,7 +3,6 @@ package cart.controller;
 import cart.request.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,7 +45,9 @@ class ProductResourceControllerTest {
                 .body(new ProductRequest("족발", 5000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin/products");
+                .post("/admin/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
 
         RestAssured.given()
                 .body(new ProductRequest("피자", 3000, "https://image.com"))
@@ -65,7 +66,9 @@ class ProductResourceControllerTest {
                 .body(new ProductRequest("족발", 5000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/admin/products");
+                .post("/admin/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
 
         RestAssured.given()
                 .when()
@@ -77,48 +80,53 @@ class ProductResourceControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     @NullSource
-    void 상품의_이름에_빈값_널_공백이_들어가면_예외_발생(final String name) {
-        Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                    new ProductRequest(name, 1234, "https://image.url");
-                }
-        );
+    void 상품의_이름이_빈값_널_공백이면_Bad_Request_발생(final String name) {
+        RestAssured.given()
+                .body(new ProductRequest(name, 1234, "https://image.url"))
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/admin/products")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 100_000_001})
-    void 범위가_벗어난_가격을_입력하면_예외_발생(final int price) {
-        Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                    new ProductRequest("name", price, "https://image.url");
-                }
-        );
+    void 범위가_벗어난_가격을_입력시_Bad_Request_발생(final int price) {
+        RestAssured.given()
+                .body(new ProductRequest("name", price, "https://image.url"))
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/admin/products")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"http", "", " ", "asdfasdf", "smtp", "ssh"})
+    @ValueSource(strings = {"", " ", "github.com", "ssh://git@github.com"})
     @NullSource
-    void 유효하지_않은_URL을_입력하면_예외_발생(final String imageUrl) {
-        Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                    new ProductRequest("name", 1234, imageUrl);
-                }
-        );
+    void 유효하지_않은_URL_입력시_Bad_Request_발생(final String imageUrl) {
+        RestAssured.given()
+                .body(new ProductRequest("name", 1234, imageUrl))
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/admin/products")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {2072, 2073, 2345})
-    void 길이_제한을_벗어난_URL을_입력하면_예외_발생(final int repeatCount) {
+    @ValueSource(ints = {2084, 2085, 2086})
+    void 길이_제한을_벗어난_URL을_입력하면_Bad_Request_발생(final int length) {
+        final int repeatCount = length - 12;
         final String url = "https://" + "a".repeat(repeatCount) + ".com";
 
-        Assertions.assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                    new ProductRequest("name", 1234, url);
-                }
-        );
+        RestAssured.given()
+                .body(new ProductRequest("name", 1234, url))
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/admin/products")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

@@ -1,40 +1,35 @@
 package cart.response;
 
-import cart.domain.Id;
-import cart.domain.ImageUrl;
-import cart.domain.Name;
-import cart.domain.Price;
-import cart.domain.Product;
 import java.util.Objects;
 
 public class ProductResponse {
 
-    private final Id id;
-    private final Name name;
-    private final Price price;
-    private final ImageUrl imageUrl;
+    private final long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
-    public ProductResponse(final Product product) {
-        this.id = new Id(product.getId());
-        this.name = new Name(product.getName());
-        this.price = new Price(product.getPrice());
-        this.imageUrl = new ImageUrl(product.getImageUrl());
+    public ProductResponse(final long id, final String name, final int price, final String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public long getId() {
-        return id.getValue();
+        return id;
     }
 
     public String getName() {
-        return name.getValue();
+        return name;
     }
 
     public int getPrice() {
-        return price.getValue();
+        return price;
     }
 
     public String getImageUrl() {
-        return imageUrl.getValue();
+        return imageUrl;
     }
 
     @Override

@@ -1,32 +1,34 @@
 package cart.request;
 
-import cart.domain.ImageUrl;
-import cart.domain.Name;
-import cart.domain.Price;
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.URL;
 
 public class ProductRequest {
 
-    private final Name name;
-    private final Price price;
-    private final ImageUrl imageUrl;
+    @NotBlank(message = "이름은 공백일 수 없습니다.")
+    private final String name;
+    private final int price;
+    @NotBlank(message = "이미지 URL은 공백일 수 없습니다.")
+    @URL(message = "유효한 url을 입력해 주세요.")
+    private final String imageUrl;
 
     public ProductRequest(final String name, final int price, final String imageUrl) {
-        this.name = new Name(name);
-        this.price = new Price(price);
-        this.imageUrl = new ImageUrl(imageUrl);
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
-        return name.getValue();
+        return name;
     }
 
     public int getPrice() {
-        return price.getValue();
+        return price;
     }
 
     public String getImageUrl() {
-        return imageUrl.getValue();
+        return imageUrl;
     }
 
     @Override

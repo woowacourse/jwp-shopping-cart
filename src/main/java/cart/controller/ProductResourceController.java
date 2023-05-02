@@ -33,15 +33,15 @@ public class ProductResourceController {
                 productRequest.getImageUrl()
         );
         final Product product = productService.register(productDto);
-        return new ProductResponse(product);
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     @PutMapping("/admin/products/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public ProductResponse updateProduct(@PathVariable final long id,
-                                         final @RequestBody @Valid ProductRequest productRequest) {
+                                         @RequestBody @Valid final ProductRequest productRequest) {
         final Product product = productService.updateProduct(id, new ProductDto(productRequest));
-        return new ProductResponse(product);
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     @DeleteMapping("/admin/products/{id}")

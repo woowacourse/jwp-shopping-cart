@@ -3,6 +3,8 @@ package cart.domain;
 import java.util.Objects;
 
 public class Name {
+    private static final int MAX_NAME_LENGTH = 20;
+
     private final String value;
 
     public Name(final String name) {
@@ -15,8 +17,8 @@ public class Name {
     }
 
     private void validateName(final String name) {
-        if (name == null || name.isBlank() || name.isEmpty()) {
-            throw new IllegalArgumentException("상품의 이름을 입력해주세요.");
+        if (name.length() > MAX_NAME_LENGTH) {
+            throw new IllegalArgumentException(MAX_NAME_LENGTH + "자 이하의 이름을 입력해 주세요.");
         }
     }
 
