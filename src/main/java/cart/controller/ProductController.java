@@ -1,7 +1,11 @@
 package cart.controller;
 
 import cart.dto.ProductRequest;
+import cart.response.ApiResponse;
 import cart.service.ProductService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,21 +27,31 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity<Integer> productAdd(@Validated @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<ApiResponse<?>> productAdd(@Validated @RequestBody ProductRequest productRequest) {
         int productId = productService.save(productRequest);
-        return new ResponseEntity<>(productId, HttpStatus.OK);
+
+        Map<String, Integer> result = new HashMap<>();
+        result.put("id", productId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.createSuccess(result));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> productModify(@Validated @RequestBody ProductRequest productRequest,
-                                                @PathVariable int id) {
+    public ResponseEntity<ApiResponse<?>> productModify(@Validated @RequestBody ProductRequest productRequest,
+                                                        @PathVariable int id) {
         productService.update(productRequest, id);
-        return new ResponseEntity<>("ok", HttpStatus.OK);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.createSuccess(List.of()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> productRemove(@PathVariable int id) {
+    public ResponseEntity<ApiResponse<?>> productRemove(@PathVariable int id) {
         productService.delete(id);
-        return new ResponseEntity<>("ok", HttpStatus.OK);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.createSuccess(List.of()));
     }
 }
