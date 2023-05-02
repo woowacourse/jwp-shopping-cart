@@ -29,3 +29,8 @@ CREATE TABLE CART
     FOREIGN KEY (user_id) REFERENCES ACCOUNT (id),
     FOREIGN KEY (product_id) REFERENCES PRODUCT (id)
 );
+
+INSERT INTO ACCOUNT (username, password)
+VALUES ('user1@email.com', 'password1');
+INSERT INTO ACCOUNT (username, password)
+VALUES ('user2@email.com', 'password2');
