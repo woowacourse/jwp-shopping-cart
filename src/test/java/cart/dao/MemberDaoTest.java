@@ -28,24 +28,22 @@ class MemberDaoTest {
     @BeforeEach
     void setUp() {
         memberDao = new MemberDao(dataSource);
-        jdbcTemplate.update("delete from member");
     }
 
     @DisplayName("저장된 모든 유저를 가져온다.")
     @Test
     void find_all() {
         //given
-        saveUser();
-        saveUser();
+        saveByEmail("email@naver.com");
+        saveByEmail("email@kakao.com");
         //when
         List<Member> actual = memberDao.findAll();
         //then
         assertThat(actual.size()).isEqualTo(2);
     }
 
-
-    private void saveUser() {
+    private void saveByEmail(String email) {
         String sql = "insert into member(email, password) values (?,?)";
-        jdbcTemplate.update(sql, "email", "password");
+        jdbcTemplate.update(sql, email, "password");
     }
 }
