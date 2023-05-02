@@ -3,6 +3,7 @@ package cart.domain.member.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 import cart.domain.member.dao.MemberDao;
@@ -25,6 +26,8 @@ class MemberServiceTest {
 
     @Mock
     private MemberDao memberDao;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private MemberService memberService;
@@ -40,6 +43,8 @@ class MemberServiceTest {
             .willReturn(Optional.empty());
         given(memberDao.save(any()))
             .willReturn(member);
+        given(passwordEncoder.encode(anyString()))
+            .willReturn("encoded password");
 
         //when
         final MemberCreateResponse response = memberService.create(request);

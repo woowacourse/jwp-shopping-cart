@@ -7,7 +7,7 @@ public class Member {
 
     private final Long id;
     private final String email;
-    private final String password;
+    private String password;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
@@ -18,6 +18,10 @@ public class Member {
         this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
     }
 
     public Long getId() {

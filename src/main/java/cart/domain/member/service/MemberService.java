@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
     private final MemberDao memberDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public MemberService(final MemberDao memberDao) {
+    public MemberService(final MemberDao memberDao, final PasswordEncoder passwordEncoder) {
         this.memberDao = memberDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public MemberCreateResponse create(final MemberCreateRequest request) {
@@ -23,7 +25,9 @@ public class MemberService {
             .ifPresent(member -> {
                 throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
             });
-        final Member member = memberDao.save(request.makeMember());
+        final Member madeMember = request.makeMember();
+        madeMember.setPassword(passwordEncoder.encode(madeMember.getPassword()));
+        final Member member = memberDao.save(madeMember);
         return MemberCreateResponse.of(member);
     }
 
