@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequestMapping("/products")
 @RestController
 public class ProductController {
 
@@ -22,13 +24,13 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping("/products")
+    @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequest productRequest) {
         Product createdProduct = productService.createProduct(productRequest.toEntity());
         return ResponseEntity.created(URI.create("/products/" + createdProduct.getId())).body(createdProduct);
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable Long id,
                                               @Valid @RequestBody ProductRequest productRequest) {
         Product product = new Product(id, productRequest.getName(), productRequest.getImgUrl(),
@@ -37,7 +39,7 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProductBy(id);
         return ResponseEntity.noContent().build();
