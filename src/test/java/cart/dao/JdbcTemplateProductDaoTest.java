@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import cart.entity.ProductEntity;
+import cart.product.entity.ProductEntity;
+import cart.product.dao.JdbcTemplateProductDao;
+import cart.product.dao.ProductDao;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

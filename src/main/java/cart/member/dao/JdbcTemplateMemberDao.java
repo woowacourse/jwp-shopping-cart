@@ -1,6 +1,6 @@
-package cart.dao;
+package cart.member.dao;
 
-import cart.entity.MemberEntity;
+import cart.member.entity.MemberEntity;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;

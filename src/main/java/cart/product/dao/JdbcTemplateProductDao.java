@@ -1,6 +1,6 @@
-package cart.dao;
+package cart.product.dao;
 
-import cart.entity.ProductEntity;
+import cart.product.entity.ProductEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

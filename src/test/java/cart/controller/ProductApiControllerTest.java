@@ -10,9 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dto.ProductResponseDto;
-import cart.entity.ProductEntity;
-import cart.service.CartService;
+import cart.product.dto.ProductResponseDto;
+import cart.product.entity.ProductEntity;
+import cart.product.service.ProductService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +22,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest
-public class CartApiControllerTest {
+public class ProductApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private CartService cartService;
+    private ProductService productService;
 
     @Test
     void insertTest() throws Exception {
         int savedId = 1;
-        when(cartService.addProduct(any())).thenReturn(new ProductEntity(savedId, "name", 1000, "image"));
+        when(productService.addProduct(any())).thenReturn(new ProductEntity(savedId, "name", 1000, "image"));
         final String imageUrl = "http://www.test.image.png";
 
         this.mockMvc.perform(post("/products")
@@ -62,7 +62,7 @@ public class CartApiControllerTest {
 
     @Test
     void getTest() throws Exception {
-        when(cartService.getProducts()).thenReturn(List.of(
+        when(productService.getProducts()).thenReturn(List.of(
                 new ProductResponseDto(1, "image1", "name1", 1000),
                 new ProductResponseDto(2, "image2", "name2", 2000)));
 

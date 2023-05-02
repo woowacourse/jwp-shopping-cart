@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import cart.dto.ProductResponseDto;
-import cart.service.CartService;
+import cart.product.dto.ProductResponseDto;
+import cart.product.service.ProductService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +16,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest
-public class CartControllerTest {
+public class ViewControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private CartService cartService;
+    private ProductService productService;
 
     @Test
     void indexTest() throws Exception {
-        when(cartService.getProducts()).thenReturn(List.of(
+        when(productService.getProducts()).thenReturn(List.of(
                 new ProductResponseDto(1, "image1", "name1", 1000),
                 new ProductResponseDto(2, "image2", "name2", 2000)
         ));
@@ -38,7 +38,7 @@ public class CartControllerTest {
 
     @Test
     void adminTest() throws Exception {
-        when(cartService.getProducts()).thenReturn(List.of(
+        when(productService.getProducts()).thenReturn(List.of(
                 new ProductResponseDto(1, "image1", "name1", 1000),
                 new ProductResponseDto(2, "image2", "name2", 2000)
         ));

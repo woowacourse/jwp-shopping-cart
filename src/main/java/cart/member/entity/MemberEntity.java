@@ -1,4 +1,4 @@
-package cart.entity;
+package cart.member.entity;
 
 public class MemberEntity {
 

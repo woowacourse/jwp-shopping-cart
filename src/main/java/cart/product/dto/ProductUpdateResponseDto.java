@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.product.dto;
 
 public class ProductUpdateResponseDto {
     private final int updatedRowCount;

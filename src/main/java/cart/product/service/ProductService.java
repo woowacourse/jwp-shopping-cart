@@ -1,20 +1,20 @@
-package cart.service;
+package cart.product.service;
 
-import cart.dao.ProductDao;
-import cart.dto.ProductInsertRequestDto;
-import cart.dto.ProductResponseDto;
-import cart.dto.ProductUpdateRequestDto;
-import cart.entity.ProductEntity;
+import cart.product.dao.ProductDao;
+import cart.product.dto.ProductInsertRequestDto;
+import cart.product.dto.ProductResponseDto;
+import cart.product.dto.ProductUpdateRequestDto;
+import cart.product.entity.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CartService {
+public class ProductService {
 
     private final ProductDao productDao;
 
-    public CartService(ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 

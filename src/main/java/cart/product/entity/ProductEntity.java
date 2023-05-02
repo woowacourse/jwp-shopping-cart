@@ -1,4 +1,4 @@
-package cart.entity;
+package cart.product.entity;
 
 public class ProductEntity {
     private final Integer id;

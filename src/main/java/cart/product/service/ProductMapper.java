@@ -1,9 +1,9 @@
-package cart.service;
+package cart.product.service;
 
-import cart.dto.ProductInsertRequestDto;
-import cart.dto.ProductResponseDto;
-import cart.dto.ProductUpdateRequestDto;
-import cart.entity.ProductEntity;
+import cart.product.dto.ProductInsertRequestDto;
+import cart.product.dto.ProductResponseDto;
+import cart.product.dto.ProductUpdateRequestDto;
+import cart.product.entity.ProductEntity;
 
 public class ProductMapper {
 

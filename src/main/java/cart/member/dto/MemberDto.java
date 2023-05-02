@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.member.dto;
 
 public class MemberDto {
 

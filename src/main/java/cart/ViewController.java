@@ -1,35 +1,35 @@
-package cart.controller;
+package cart;
 
-import cart.dto.MemberDto;
-import cart.dto.ProductResponseDto;
-import cart.service.CartService;
-import cart.service.MemberService;
+import cart.member.dto.MemberDto;
+import cart.product.dto.ProductResponseDto;
+import cart.product.service.ProductService;
+import cart.member.service.MemberService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class CartController {
+public class ViewController {
 
-    private final CartService cartService;
+    private final ProductService productService;
     private final MemberService memberService;
 
-    public CartController(CartService cartService, MemberService memberService) {
-        this.cartService = cartService;
+    public ViewController(ProductService productService, MemberService memberService) {
+        this.productService = productService;
         this.memberService = memberService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        final List<ProductResponseDto> products = cartService.getProducts();
+        final List<ProductResponseDto> products = productService.getProducts();
         model.addAttribute("products", products);
         return "index";
     }
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        final List<ProductResponseDto> products = cartService.getProducts();
+        final List<ProductResponseDto> products = productService.getProducts();
         model.addAttribute("products", products);
         return "admin";
     }

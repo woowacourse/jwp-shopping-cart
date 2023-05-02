@@ -1,7 +1,7 @@
-package cart.service;
+package cart.member.service;
 
-import cart.dto.MemberDto;
-import cart.entity.MemberEntity;
+import cart.member.dto.MemberDto;
+import cart.member.entity.MemberEntity;
 
 public class MemberMapper {
 

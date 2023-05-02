@@ -1,11 +1,11 @@
-package cart.controller;
+package cart.product.controller;
 
-import cart.dto.ProductInsertRequestDto;
-import cart.dto.ProductResponseDto;
-import cart.dto.ProductUpdateRequestDto;
-import cart.dto.ProductUpdateResponseDto;
-import cart.entity.ProductEntity;
-import cart.service.CartService;
+import cart.product.dto.ProductInsertRequestDto;
+import cart.product.dto.ProductResponseDto;
+import cart.product.dto.ProductUpdateRequestDto;
+import cart.product.dto.ProductUpdateResponseDto;
+import cart.product.entity.ProductEntity;
+import cart.product.service.ProductService;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class CartApiController {
+public class ProductApiController {
 
-    private final CartService cartService;
+    private final ProductService productService;
 
-    public CartApiController(CartService cartService) {
-        this.cartService = cartService;
+    public ProductApiController(ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping("/products")
     public ResponseEntity<ProductEntity> insertProduct(@RequestBody @Valid ProductInsertRequestDto product) {
-        final ProductEntity savedProduct = cartService.addProduct(product);
+        final ProductEntity savedProduct = productService.addProduct(product);
         final int savedId = savedProduct.getId();
 
         return ResponseEntity.created(URI.create("/products/" + savedId)).build();
@@ -37,17 +37,17 @@ public class CartApiController {
 
     @GetMapping("/products/{id}")
     public ProductEntity findProductById(@PathVariable int id) {
-        return cartService.findProductById(id);
+        return productService.findProductById(id);
     }
 
     @GetMapping("/products")
     public List<ProductResponseDto> getProducts() {
-        return cartService.getProducts();
+        return productService.getProducts();
     }
 
     @PutMapping("/products")
     public ResponseEntity<ProductUpdateResponseDto> updateProduct(@RequestBody @Valid ProductUpdateRequestDto product) {
-        final int updatedRowCount = cartService.updateProduct(product);
+        final int updatedRowCount = productService.updateProduct(product);
         final ProductUpdateResponseDto productUpdateResponseDto = new ProductUpdateResponseDto(updatedRowCount);
 
         return ResponseEntity.ok(productUpdateResponseDto);
@@ -55,7 +55,7 @@ public class CartApiController {
 
     @DeleteMapping("/products/{id}")
     public ResponseEntity<ProductUpdateResponseDto> deleteProduct(@PathVariable int id) {
-        final int deletedRowCount = cartService.deleteProduct(id);
+        final int deletedRowCount = productService.deleteProduct(id);
         final ProductUpdateResponseDto productUpdateResponseDto = new ProductUpdateResponseDto(deletedRowCount);
 
         return ResponseEntity.ok(productUpdateResponseDto);
