@@ -1,6 +1,7 @@
 package cart.domain.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -8,9 +9,10 @@ import cart.domain.member.dao.MemberDao;
 import cart.domain.member.entity.Member;
 import cart.dto.MemberCreateRequest;
 import cart.dto.MemberCreateResponse;
+import cart.dto.MemberResponse;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,7 +63,28 @@ class MemberServiceTest {
 
         //when
         //then
-        Assertions.assertThatThrownBy(() -> memberService.create(request))
+        assertThatThrownBy(() -> memberService.create(request))
             .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("모든 회원을 조회한다.")
+    public void testFindAll() {
+        //given
+        final List<Member> members = List.of(
+            new Member(1L, "test1@test.com", "password1", LocalDateTime.now(), LocalDateTime.now()),
+            new Member(2L, "test2@test.com", "password2", LocalDateTime.now(), LocalDateTime.now())
+        );
+        given(memberDao.findAll())
+            .willReturn(members);
+
+        //when
+        final List<MemberResponse> result = memberService.findAll();
+
+        //then
+        for (int i = 0; i < result.size(); i++) {
+            assertThat(result.get(i).getEmail()).isEqualTo(members.get(i).getEmail());
+            assertThat(result.get(i).getPassword()).isEqualTo(members.get(i).getPassword());
+        }
     }
 }
