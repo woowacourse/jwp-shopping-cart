@@ -13,12 +13,12 @@ CREATE TABLE member
     password varchar(255) NOT NULL
 );
 
-CREATE TABLE cart
+CREATE TABLE cart_item
 (
     id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
     member_id bigint NOT NULL,
     product_id bigint NOT NULL
 );
 
-ALTER TABLE cart ADD CONSTRAINT fk_member_id FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE;
-ALTER TABLE cart ADD CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE;
+ALTER TABLE cart_item ADD CONSTRAINT fk_member_id FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE;
+ALTER TABLE cart_item ADD CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE;
