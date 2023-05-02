@@ -1,7 +1,8 @@
 package cart.service;
 
 import cart.dao.CartDao;
-import cart.dao.entity.Cart;
+import cart.dao.JdbcCartProductDao;
+import cart.dao.dto.CartProductResultMap;
 import cart.dto.CartResponse;
 import cart.dto.CartResponses;
 import cart.dto.CartSaveRequest;
@@ -9,16 +10,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class CartService {
 
     private final CartDao cartDao;
+    private final JdbcCartProductDao cartProductDao;
     private final CartMapper cartMapper;
 
-    public CartService(final CartDao cartDao, final CartMapper cartMapper) {
+    public CartService(final CartDao cartDao, final JdbcCartProductDao cartProductDao, final CartMapper cartMapper) {
         this.cartDao = cartDao;
+        this.cartProductDao = cartProductDao;
         this.cartMapper = cartMapper;
     }
 
@@ -27,11 +31,11 @@ public class CartService {
     }
 
     public CartResponses findAllByUserId(final Long userId) {
-        final List<Cart> carts = cartDao.findAllByUserId(userId);
+        final List<CartProductResultMap> carts = cartProductDao.findAllByUserId(userId);
 
         final List<CartResponse> cartResponses = carts.stream()
                 .map(CartResponse::new)
-                .collect(Collectors.toList());
+                .collect(toList());
         return new CartResponses(cartResponses);
     }
 

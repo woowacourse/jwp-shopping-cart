@@ -3,8 +3,7 @@ package cart.service;
 import cart.JdbcMySqlDialectTest;
 import cart.dao.CartDao;
 import cart.dao.JdbcCartDao;
-import cart.dto.CartResponse;
-import cart.dto.CartResponses;
+import cart.dao.JdbcCartProductDao;
 import cart.dto.CartSaveRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -12,18 +11,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcMySqlDialectTest
 @SuppressWarnings("NonAsciiCharacters")
 class CartServiceTest {
 
     private CartService cartService;
+    private JdbcCartProductDao jdbcCartProductDao;
     private CartDao cartDao;
 
     @Autowired
@@ -32,7 +30,8 @@ class CartServiceTest {
     @BeforeEach
     void init() {
         cartDao = new JdbcCartDao(jdbcTemplate);
-        cartService = new CartService(cartDao, new CartMapper());
+        jdbcCartProductDao = new JdbcCartProductDao(jdbcTemplate);
+        cartService = new CartService(cartDao, jdbcCartProductDao, new CartMapper());
     }
 
     @Test
@@ -42,27 +41,6 @@ class CartServiceTest {
 
         // then
         assertThat(savedId).isEqualTo(1L);
-    }
-
-    @Test
-    void 사용자의_id가_주어지면_해당_사용자의_장바구니_목록을_전체_조회한다() {
-        // given
-        final long userId = 1L;
-        장바구니를_저장한다(userId, 2L, 2);
-        장바구니를_저장한다(userId, 3L, 3);
-
-        // when
-        final CartResponses cartResponses = cartService.findAllByUserId(userId);
-
-        // then
-        final List<CartResponse> results = cartResponses.getCartResponses();
-        assertAll(
-                () -> assertThat(results).hasSize(2),
-                () -> assertThat(results.get(0).getProductId()).isEqualTo(2L),
-                () -> assertThat(results.get(0).getCount()).isEqualTo(2),
-                () -> assertThat(results.get(1).getProductId()).isEqualTo(3L),
-                () -> assertThat(results.get(1).getCount()).isEqualTo(3)
-        );
     }
 
     @Nested

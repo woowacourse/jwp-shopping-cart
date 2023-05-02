@@ -15,6 +15,6 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 @Retention(RetentionPolicy.RUNTIME)
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("classpath:/dataTruncator.sql")
+@Sql(value = "classpath:/dataTruncator.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public @interface JdbcMySqlDialectTest {
 }

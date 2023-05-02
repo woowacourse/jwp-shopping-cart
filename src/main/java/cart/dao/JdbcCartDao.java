@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.dao.entity.Cart;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
-import java.util.List;
 
 @Repository
 public class JdbcCartDao implements CartDao {
@@ -36,26 +34,9 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    public List<Cart> findAllByUserId(final Long userId) {
-        final String sql = "SELECT id, user_id, product_id, count, created_at FROM cart WHERE user_id = :userId";
-
-        return jdbcTemplate.query(sql, Collections.singletonMap("userId", userId), createCartRowMapper());
-    }
-
-    @Override
     public int delete(final Long id) {
         final String sql = "DELETE FROM cart WHERE id = :id";
 
         return jdbcTemplate.update(sql, Collections.singletonMap("id", id));
-    }
-
-    private RowMapper<Cart> createCartRowMapper() {
-        return (rs, rowNum) -> new Cart(
-                rs.getLong("id"),
-                rs.getLong("user_id"),
-                rs.getLong("product_id"),
-                rs.getInt("count"),
-                rs.getTimestamp("created_at").toLocalDateTime()
-        );
     }
 }

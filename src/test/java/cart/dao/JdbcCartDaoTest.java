@@ -5,12 +5,14 @@ import cart.dao.entity.Cart;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcMySqlDialectTest
 @SuppressWarnings("NonAsciiCharacters")
@@ -36,29 +38,6 @@ class JdbcCartDaoTest {
     }
 
     @Test
-    void 장바구니_전체_조회를_한다() {
-        // given
-        final long firstUserId = 1L;
-        장바구니를_저장한다(firstUserId, 3L, 5);
-        장바구니를_저장한다(firstUserId, 4L, 3);
-
-        final long secondUserId = 2L;
-        장바구니를_저장한다(secondUserId, 1L, 2);
-        장바구니를_저장한다(secondUserId, 2L, 1);
-        장바구니를_저장한다(secondUserId, 3L, 3);
-
-        // when
-        final List<Cart> firstUserCart = cartDao.findAllByUserId(firstUserId);
-        final List<Cart> secondUserCart = cartDao.findAllByUserId(secondUserId);
-
-        // then
-        assertAll(
-                () -> assertThat(firstUserCart).hasSize(2),
-                () -> assertThat(secondUserCart).hasSize(3)
-        );
-    }
-
-    @Test
     void 장바구니를_삭제한다() {
         // given
         final long userId = 1L;
@@ -68,11 +47,31 @@ class JdbcCartDaoTest {
         cartDao.delete(savedId);
 
         // then
-        assertThat(cartDao.findAllByUserId(1L)).isEmpty();
+        assertThat(장바구니_단건_조회_한다(savedId)).isNotPresent();
     }
 
     private Long 장바구니를_저장한다(final long userId, final long productId, final int count) {
         final Cart cart = new Cart(userId, productId, count);
         return cartDao.save(cart);
+    }
+
+    private Optional<Cart> 장바구니_단건_조회_한다(final long cartId) {
+        final String sql = "select * from cart where id =:id";
+
+        RowMapper<Cart> cartRowMapper = (rs, rowNum) -> new Cart(
+                rs.getLong("id"),
+                rs.getLong("user_id"),
+                rs.getLong("product_id"),
+                rs.getInt("count"),
+                rs.getTimestamp("created_at").toLocalDateTime()
+        );
+
+
+        try {
+            final Cart cart = jdbcTemplate.queryForObject(sql, Map.of("id", cartId), cartRowMapper);
+            return Optional.of(cart);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }
