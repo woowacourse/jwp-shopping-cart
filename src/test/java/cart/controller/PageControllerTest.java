@@ -13,6 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
+import cart.fixture.ProductFixture.BLACKCAT;
+import cart.fixture.ProductFixture.HERB;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -52,8 +54,8 @@ class PageControllerTest {
     @Test
     void 메인_페이지에_접근한다() throws Exception {
         // given
-        final Product product1 = new Product("허브티", "tea.jpg", 1000L);
-        final Product product2 = new Product("고양이", "cat.jpg", 1000000L);
+        final Product product1 = HERB.PRODUCT;
+        final Product product2 = BLACKCAT.PRODUCT;
         final Long id1 = productDao.saveAndGetId(product1).get();
         final Long id2 = productDao.saveAndGetId(product2).get();
 
@@ -62,11 +64,17 @@ class PageControllerTest {
                 .andExpect(model().attribute("products", hasSize(2)))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generatePropertiesMatcher(id1, "허브티", "tea.jpg", 1000L))
+                        hasItem(generatePropertiesMatcher(id1,
+                                product1.getName().name(),
+                                product1.getImage().imageUrl(),
+                                product1.getPrice().price()))
                 ))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generatePropertiesMatcher(id2, "고양이", "cat.jpg", 1000000L))
+                        hasItem(generatePropertiesMatcher(id2,
+                                product2.getName().name(),
+                                product2.getImage().imageUrl(),
+                                product2.getPrice().price()))
                 ))
                 .andDo(print());
     }
@@ -74,8 +82,8 @@ class PageControllerTest {
     @Test
     void 관리자_페이지에_접근한다() throws Exception {
         // given
-        final Product product1 = new Product("허브티", "tea.jpg", 1000L);
-        final Product product2 = new Product("고양이", "cat.jpg", 1000000L);
+        final Product product1 = HERB.PRODUCT;
+        final Product product2 = BLACKCAT.PRODUCT;
         final Long id1 = productDao.saveAndGetId(product1).get();
         final Long id2 = productDao.saveAndGetId(product2).get();
 
@@ -84,11 +92,17 @@ class PageControllerTest {
                 .andExpect(model().attribute("products", hasSize(2)))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generatePropertiesMatcher(id1, "허브티", "tea.jpg", 1000L))
+                        hasItem(generatePropertiesMatcher(id1,
+                                product1.getName().name(),
+                                product1.getImage().imageUrl(),
+                                product1.getPrice().price()))
                 ))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generatePropertiesMatcher(id2, "고양이", "cat.jpg", 1000000L))
+                        hasItem(generatePropertiesMatcher(id2,
+                                product2.getName().name(),
+                                product2.getImage().imageUrl(),
+                                product2.getPrice().price()))
                 ))
                 .andDo(print());
     }
@@ -96,14 +110,17 @@ class PageControllerTest {
     @Test
     void 단일_조회_페이지에_접근한다() throws Exception {
         // given
-        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Product product = HERB.PRODUCT;
         final Long id = productDao.saveAndGetId(product).get();
 
         // expect
         mockMvc.perform(get("/products/" + id))
                 .andExpect(model().attribute(
                         "product",
-                        is(generatePropertiesMatcher(id, "허브티", "tea.jpg", 1000L))
+                        generatePropertiesMatcher(id,
+                                product.getName().name(),
+                                product.getImage().imageUrl(),
+                                product.getPrice().price())
                 ))
                 .andDo(print());
     }

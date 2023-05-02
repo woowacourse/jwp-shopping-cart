@@ -9,6 +9,8 @@ import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequestDto;
 import cart.dto.ProductUpdateRequestDto;
+import cart.fixture.ProductFixture.BLACKCAT;
+import cart.fixture.ProductFixture.HERB;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -93,9 +95,9 @@ class ProductServiceTest {
     @Test
     void 상품을_수정한다() {
         // given
-        final ProductSaveRequestDto product = new ProductSaveRequestDto("허브티", "tea.jpg", 99L);
+        final ProductSaveRequestDto product = BLACKCAT.SAVE_REQUEST;
         final Long id = productService.save(product);
-        final ProductUpdateRequestDto request = new ProductUpdateRequestDto("블랙캣", "cat.jpg", 100L);
+        final ProductUpdateRequestDto request = HERB.UPDATE_REQUEST;
 
         // when
         productService.update(id, request);
@@ -104,9 +106,9 @@ class ProductServiceTest {
         final Product result = productDao.findAll().get(0);
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(id),
-                () -> assertThat(result.getName()).isEqualTo("블랙캣"),
-                () -> assertThat(result.getImage()).isEqualTo("cat.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(100L)
+                () -> assertThat(result.getName().name()).isEqualTo(request.getName()),
+                () -> assertThat(result.getImage().imageUrl()).isEqualTo(request.getImage()),
+                () -> assertThat(result.getPrice().price()).isEqualTo(request.getPrice())
         );
     }
 

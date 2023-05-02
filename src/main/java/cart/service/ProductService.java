@@ -3,6 +3,9 @@ package cart.service;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
 import cart.dao.ProductDao;
+import cart.domain.ImageUrl;
+import cart.domain.Name;
+import cart.domain.Price;
 import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequestDto;
@@ -23,8 +26,11 @@ public class ProductService {
     }
 
     public Long save(final ProductSaveRequestDto request) {
-        final Product product = new Product(request.getName(), request.getImage(), request.getPrice());
+        final Name name = new Name(request.getName());
+        final Price price = new Price(request.getPrice());
+        final ImageUrl imageUrl = new ImageUrl(request.getImage());
 
+        final Product product = new Product(name, imageUrl, price);
         return productDao.saveAndGetId(product)
                 .orElseThrow(() -> new IllegalStateException("상품을 저장할 수 없습니다."));
     }
@@ -44,7 +50,12 @@ public class ProductService {
     public void update(final Long id, final ProductUpdateRequestDto request) {
         productDao.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
-        final Product savedProduct = new Product(id, request.getName(), request.getImage(), request.getPrice());
+
+        final Name name = new Name(request.getName());
+        final Price price = new Price(request.getPrice());
+        final ImageUrl imageUrl = new ImageUrl(request.getImage());
+
+        final Product savedProduct = new Product(id, name, imageUrl, price);
         productDao.update(savedProduct);
     }
 

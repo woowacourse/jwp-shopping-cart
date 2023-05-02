@@ -12,6 +12,8 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductSaveRequestDto;
 import cart.dto.ProductUpdateRequestDto;
+import cart.fixture.ProductFixture.BLACKCAT;
+import cart.fixture.ProductFixture.HERB;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -44,7 +46,7 @@ class ProductControllerTest {
     @Test
     void 상품을_저장한다() throws Exception {
         // given
-        final ProductSaveRequestDto dto = new ProductSaveRequestDto("허브티", "tea.jpg", 1000L);
+        final ProductSaveRequestDto dto = HERB.SAVE_REQUEST;
         final String request = objectMapper.writeValueAsString(dto);
 
         // when
@@ -56,12 +58,13 @@ class ProductControllerTest {
                 .andReturn();
 
         // then
-        final Product result = productDao.findById(1L).get();
         final String location = mvcResult.getResponse().getHeader("Location");
+        final Long resultID = Long.parseLong(location.substring(10));
+        final Product result = productDao.findById(resultID).get();
         assertAll(
-                () -> assertThat(result.getName()).isEqualTo("허브티"),
-                () -> assertThat(result.getImage()).isEqualTo("tea.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(1000L),
+                () -> assertThat(result.getName().name()).isEqualTo(dto.getName()),
+                () -> assertThat(result.getImage().imageUrl()).isEqualTo(dto.getImage()),
+                () -> assertThat(result.getPrice().price()).isEqualTo(dto.getPrice()),
                 () -> assertThat(location).isEqualTo("/products/" + result.getId())
         );
     }
@@ -69,9 +72,9 @@ class ProductControllerTest {
     @Test
     void 상품을_수정한다() throws Exception {
         // given
-        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Product product = HERB.PRODUCT;
         final Long id = productDao.saveAndGetId(product).get();
-        final ProductUpdateRequestDto updateRequestDto = new ProductUpdateRequestDto("고양이", "cat.jpg", 1000000L);
+        final ProductUpdateRequestDto updateRequestDto = BLACKCAT.UPDATE_REQUEST;
         final String request = objectMapper.writeValueAsString(updateRequestDto);
 
         // when
@@ -82,19 +85,19 @@ class ProductControllerTest {
                 .andDo(print());
 
         // then
-        final Product result = productDao.findAll().get(0);
+        final Product result = productDao.findById(id).get();
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(id),
-                () -> assertThat(result.getName()).isEqualTo("고양이"),
-                () -> assertThat(result.getImage()).isEqualTo("cat.jpg"),
-                () -> assertThat(result.getPrice()).isEqualTo(1000000L)
+                () -> assertThat(result.getName().name()).isEqualTo(updateRequestDto.getName()),
+                () -> assertThat(result.getImage().imageUrl()).isEqualTo(updateRequestDto.getImage()),
+                () -> assertThat(result.getPrice().price()).isEqualTo(updateRequestDto.getPrice())
         );
     }
 
     @Test
     void 상품을_삭제한다() throws Exception {
         // given
-        final Product product = new Product("허브티", "tea.jpg", 1000L);
+        final Product product = BLACKCAT.PRODUCT;
         final Long id = productDao.saveAndGetId(product).get();
 
         // when
@@ -138,7 +141,7 @@ class ProductControllerTest {
     @Test
     void 등록되지_않은_상품_수정을_요청하면_404_BadRequest_를_응답한다() throws Exception {
         // given
-        final ProductUpdateRequestDto updateRequestDto = new ProductUpdateRequestDto("고양이", "cat.jpg", 1000000L);
+        final ProductUpdateRequestDto updateRequestDto = BLACKCAT.UPDATE_REQUEST;
         final String request = objectMapper.writeValueAsString(updateRequestDto);
 
         // expect
