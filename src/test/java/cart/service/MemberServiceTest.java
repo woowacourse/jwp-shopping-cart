@@ -1,6 +1,7 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 import cart.dao.MemberDao;
 import cart.entity.Member;
@@ -8,7 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 
 class MemberServiceTest {
@@ -25,7 +25,7 @@ class MemberServiceTest {
     @DisplayName("회원을 전체 조회한다")
     @Test
     void findMembers() {
-        BDDMockito.given(memberDao.findAll()).willReturn(
+        given(memberDao.findAll()).willReturn(
                 List.of(new Member("boxster@email.com", "boxster"),
                         new Member("gitchan@email.com", "gitchan"))
         );
