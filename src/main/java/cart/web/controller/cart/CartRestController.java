@@ -30,7 +30,7 @@ public class CartRestController {
 
     @PostMapping("/{productId}")
     public ResponseEntity<Void> addProduct(final HttpServletRequest request,
-                                             @PathVariable Long productId) {
+                                           @PathVariable Long productId) {
         final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor();
         final UserRequest userRequest = extractor.extract(request);
 
@@ -41,7 +41,7 @@ public class CartRestController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(final HttpServletRequest request,
-                                                @PathVariable Long productId) {
+                                              @PathVariable Long productId) {
         final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor();
         final UserRequest userRequest = extractor.extract(request);
 

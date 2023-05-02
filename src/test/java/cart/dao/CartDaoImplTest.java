@@ -2,7 +2,6 @@ package cart.dao;
 
 import cart.domain.product.Product;
 import cart.domain.user.User;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,8 +11,9 @@ import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
 @Import(CartDaoImpl.class)
@@ -30,6 +30,7 @@ class CartDaoImplTest {
         cartDao.insert(user, 1L);
         cartDao.insert(user, 2L);
     }
+
     @DisplayName("유저의 카트에 정상적으로 상품을 추가할 수 있다.")
     @Test
     void insert() {

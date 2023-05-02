@@ -40,5 +40,7 @@ VALUES ('파스타',
         25000, 'WESTERN');
 
 
-INSERT INTO _user(`email`, `password`) VALUES ('a@a.com', 'password1');
-INSERT INTO _user(`email`, `password`) VALUES ('b@b.com', 'password2');
+INSERT INTO _user(`email`, `password`)
+VALUES ('a@a.com', 'password1');
+INSERT INTO _user(`email`, `password`)
+VALUES ('b@b.com', 'password2');
