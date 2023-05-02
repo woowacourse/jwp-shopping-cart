@@ -13,7 +13,6 @@ public class ViewController {
     private final ProductService productService;
     private final MemberService memberService;
 
-    @Autowired
     public ViewController(final ProductService productService, final MemberService memberService) {
         this.productService = productService;
         this.memberService = memberService;
