@@ -1,8 +1,8 @@
 package cart.controller;
 
 
-import cart.entity.User;
 import cart.service.ProductService;
+import cart.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,26 +10,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class CartController {
     private final ProductService productService;
+    private final UserService userService;
 
-    public CartController(ProductService productService) {
+    public CartController(final ProductService productService, final UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
-    public String showProductsList(Model model) {
+    public String showProductsList(final Model model) {
         model.addAttribute("products", productService.findProducts());
         return "index";
     }
 
     @GetMapping("/admin")
-    public String showAdmin(Model model) {
+    public String showAdmin(final Model model) {
         model.addAttribute("products", productService.findProducts());
         return "admin";
     }
 
     @GetMapping("/settings")
-    public String showUsers(Model model) {
-        model.addAttribute("members", new User("jaehyun@naver.com", "비밀번호입니당"));
+    public String showUsers(final Model model) {
+        model.addAttribute("members", userService.findAllUsers());
         return "settings";
     }
 }
