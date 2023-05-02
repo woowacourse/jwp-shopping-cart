@@ -1,12 +1,12 @@
 package cart.domain.user;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class EmailTest {
 
@@ -22,9 +22,8 @@ class EmailTest {
     @ValueSource(strings = {"@test.com", "test@test", "test.com"})
     @DisplayName("유효하지 않은 이메일 형식일 경우 예외가 발생한다")
     void throwExceptionWhenInvalidEmail(final String input) {
-        Assertions.assertThatThrownBy(() -> new Email(input))
+        assertThatThrownBy(() -> new Email(input))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 이메일 형식입니다");
     }
-
 }
