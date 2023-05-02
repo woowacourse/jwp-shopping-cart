@@ -1,6 +1,7 @@
-package cart.entity.dao;
+package cart.config;
 
 import cart.entity.Product;
+import cart.entity.dao.ProductDao;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ public class ProductInitializer implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         // 더미 데이터 작성
         Product pizza = new Product(
                 "피자",
