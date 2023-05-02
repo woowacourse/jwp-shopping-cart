@@ -1,12 +1,12 @@
-package cart.domain.user;
+package cart.domain.member;
 
-public class User {
+public class Member {
 
     private final Long id;
     private final Email email;
     private final Password password;
 
-    public User(final Long id, final Email email, final Password password) {
+    public Member(final Long id, final Email email, final Password password) {
         this.id = id;
         this.email = email;
         this.password = password;

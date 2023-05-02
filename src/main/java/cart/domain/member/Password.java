@@ -1,4 +1,4 @@
-package cart.domain.user;
+package cart.domain.member;
 
 import org.springframework.util.StringUtils;
 
