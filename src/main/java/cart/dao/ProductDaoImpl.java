@@ -1,9 +1,12 @@
 package cart.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,19 +25,21 @@ public class ProductDaoImpl implements ProductDao {
         return jdbcTemplate.query(sql, productEntityRowMapper());
     }
 
-    private RowMapper<ProductEntity> productEntityRowMapper() {
-        return (rs, rowNum) -> new ProductEntity(
-                rs.getInt("id"),
-                rs.getString("name"),
-                rs.getString("image"),
-                rs.getInt("price")
-        );
-    }
-
     @Override
-    public void insert(ProductEntity productEntity) {
+    public long insert(ProductEntity productEntity) {
         final String sql = "INSERT INTO PRODUCT(name, image, price) values (?, ?, ?)";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            final PreparedStatement preparedStatement = con.prepareStatement(
+                    sql, new String[]{"ID"}
+            );
+            preparedStatement.setString(1, productEntity.getName());
+            preparedStatement.setString(2, productEntity.getImage());
+            preparedStatement.setInt(3, productEntity.getPrice());
+            return preparedStatement;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
+
     }
 
     @Override
@@ -45,6 +50,15 @@ public class ProductDaoImpl implements ProductDao {
             return Optional.empty();
         }
         return Optional.of(productEntity);
+    }
+
+    private RowMapper<ProductEntity> productEntityRowMapper() {
+        return (rs, rowNum) -> new ProductEntity(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("image"),
+                rs.getInt("price")
+        );
     }
 
     @Override
