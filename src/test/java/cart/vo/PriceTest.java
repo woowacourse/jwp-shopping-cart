@@ -14,7 +14,7 @@ class PriceTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1_000_000_001})
     void createPriceFail(int input) {
-        assertThatThrownBy(() -> of(input))
+        assertThatThrownBy(() -> Price.of(input))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("올바르지 않은 가격입니다.");
     }

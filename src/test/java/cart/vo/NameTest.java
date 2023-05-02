@@ -16,10 +16,10 @@ class NameTest {
         String length0 = "";
         String length101 = "a".repeat(101);
 
-        assertThatThrownBy(() -> of(length0))
+        assertThatThrownBy(() -> Name.of(length0))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("올바르지 않은 이름입니다.");
-        assertThatThrownBy(() -> of(length101))
+        assertThatThrownBy(() -> Name.of(length101))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("올바르지 않은 이름입니다.");
     }
