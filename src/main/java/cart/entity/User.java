@@ -46,4 +46,16 @@ public final class User {
                     String.format("비밀번호는 %d ~ %d 길이여야 합니다.", MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH));
         }
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }
