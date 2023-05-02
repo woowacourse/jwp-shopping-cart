@@ -14,10 +14,14 @@
 - [x] 사용자 기능 구현 
 - [x] 사용자 설정 페이지 연동
 - [ ] 장바구니 기능 구현
+  - [x] 장바구니에 상품 추가
+  - [ ] 장바구니에 담긴 상품 제거
+  - [ ] 장바구니 목록 조회
 - [ ] 장바구니 페이지 연동
 
+## API
 
-### API
+### PRODUCT
 
 #### 생성
 
@@ -41,3 +45,11 @@
 | HTTP METHOD |  DELETE   |
 | BODY |  int: Id  |
 
+### CART
+
+#### 생성
+
+|     URL     |                    /cart                    |
+|:---:|:-------------------------------------------:|
+| HTTP METHOD |                    POST                     |
+| BODY | String: Name,  int: Price, String: ImageUrl |
