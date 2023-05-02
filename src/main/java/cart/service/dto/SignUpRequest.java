@@ -1,7 +1,5 @@
 package cart.service.dto;
 
-import cart.domain.Email;
-import cart.domain.Password;
 import javax.validation.constraints.NotBlank;
 
 public class SignUpRequest {
@@ -19,11 +17,11 @@ public class SignUpRequest {
     public SignUpRequest() {
     }
 
-    public Email getEmail() {
-        return new Email(email);
+    public String getEmail() {
+        return email;
     }
 
-    public Password getPassword() {
-        return new Password(password);
+    public String getPassword() {
+        return password;
     }
 }

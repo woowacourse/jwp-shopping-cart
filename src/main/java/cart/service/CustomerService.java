@@ -17,8 +17,8 @@ public class CustomerService {
     }
 
     public long save(final SignUpRequest signUpRequest) {
-        Email email = signUpRequest.getEmail();
-        Password password = signUpRequest.getPassword();
+        Email email = new Email(signUpRequest.getEmail());
+        Password password = new Password(signUpRequest.getPassword());
         validateEmailExistence(email);
         return customerDao.insert(toCustomerEntity(email, password));
     }

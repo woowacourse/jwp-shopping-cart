@@ -35,13 +35,13 @@
   - [x] admin.html에 조회된 정보 표시
 - [ ] 사용자 기능 구현
   - [x] Email, Password 가지는 사용자 DB 설계
-  - [ ] 사용자 등록 API 구현
+  - [x] 사용자 등록 API 구현
     - [x] 사용자 등록 기능 구현
       - email
       - password
       - 이메일 중복 불가
-    - [ ] POST `/settings/users` url 맵핑
-  - [ ] 사용자 전체 조회 API 구현 
+    - [x] POST `/settings/users` url 맵핑
+  - [ ] 사용자 전체 조회 API 구현
     - [ ] 전체 사용자 조회 기능 구현
       - email
       - password
