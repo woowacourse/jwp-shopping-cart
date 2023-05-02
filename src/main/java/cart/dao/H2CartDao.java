@@ -14,7 +14,7 @@ public class H2CartDao implements CartDao{
   private final SimpleJdbcInsert simpleJdbcInsert;
   private final NamedParameterJdbcTemplate namedParameterjdbcTemplate;
 
-  public H2CartDao(NamedParameterJdbcTemplate namedParameterjdbcTemplate) {
+  public H2CartDao(final NamedParameterJdbcTemplate namedParameterjdbcTemplate) {
     this.simpleJdbcInsert = new SimpleJdbcInsert(namedParameterjdbcTemplate.getJdbcTemplate())
         .withTableName("cart")
         .usingGeneratedKeyColumns("id");
@@ -22,13 +22,13 @@ public class H2CartDao implements CartDao{
   }
 
   @Override
-  public Long save(CartEntity cartEntity) {
+  public Long save(final CartEntity cartEntity) {
     final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cartEntity);
     return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
   }
 
   @Override
-  public List<CartEntity> findCartByMemberId(long memberId) {
+  public List<CartEntity> findCartByMemberId(final long memberId) {
     final String sql = "select * from cart where member_id=?";
     return namedParameterjdbcTemplate.getJdbcTemplate().query(sql, (resultSet, count) ->
         new CartEntity(
@@ -40,7 +40,7 @@ public class H2CartDao implements CartDao{
   }
 
   @Override
-  public void deleteByMemberIdAndProductId(long memberId, long productId) {
+  public void deleteByMemberIdAndProductId(final long memberId, final long productId) {
     final String sql = "delete from cart where member_id=? and product_id=?";
     namedParameterjdbcTemplate.getJdbcOperations().update(sql, memberId, productId);
   }

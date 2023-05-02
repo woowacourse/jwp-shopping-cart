@@ -17,17 +17,17 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
   private final MemberDao memberDao;
 
-  public LoginArgumentResolver(MemberDao memberDao) {
+  public LoginArgumentResolver(final MemberDao memberDao) {
     this.memberDao = memberDao;
   }
 
   @Override
-  public boolean supportsParameter(MethodParameter parameter) {
+  public boolean supportsParameter(final MethodParameter parameter) {
     return parameter.hasParameterAnnotation(Login.class);
   }
 
   @Override
-  public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+  public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
       NativeWebRequest webRequest, WebDataBinderFactory binderFactory)  {
     final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
     final String header = request.getHeader("Authorization");
