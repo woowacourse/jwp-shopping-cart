@@ -43,6 +43,20 @@ class MemberDaoTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 회원을 찾는다.")
+    public void testFindByEmailNull() {
+        //given
+        final MemberDao memberDao = new MemberDao(jdbcTemplate);
+        final String email = "email@email.com";
+
+        //when
+        final Optional<Member> memberOptional = memberDao.findByEmail(email);
+
+        //then
+        assertThat(memberOptional.isPresent()).isFalse();
+    }
+
+    @Test
     @DisplayName("모든 회원을 찾아온다.")
     public void testFindAll() {
         //given

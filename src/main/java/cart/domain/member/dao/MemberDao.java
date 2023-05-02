@@ -56,10 +56,10 @@ public class MemberDao {
     public Optional<Member> findByEmail(final String email) {
         final String sql = "SELECT member.email, member.password, member.created_at, member.updated_at "
             + "FROM member WHERE email = ?";
-        final Member member = jdbcTemplate.queryForObject(sql, rowMapper, email);
         try {
-            return Optional.of(member);
-        } catch (EmptyResultDataAccessException e) {
+            final Member member = jdbcTemplate.queryForObject(sql, rowMapper, email);
+            return Optional.ofNullable(member);
+        } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
