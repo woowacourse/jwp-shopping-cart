@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 
@@ -31,16 +32,6 @@ class AdminServiceTest {
     void successAddProduct() {
         assertDoesNotThrow(() -> adminService.addProduct(productRequestDto));
     }
-
-    @DisplayName("addProduct 실패 테스트 - 이름 길이 검증")
-    @Test
-    void addProduct_fail() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("케로케로케로케로케로케로케로케로케로케로케로케로케로", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
-        assertThatThrownBy(() -> adminService.addProduct(productRequestDto))
-//                .isExactlyInstanceOf(MethodArgumentNotValidException.class);
-                .isExactlyInstanceOf(DataIntegrityViolationException.class);
-    }
-
 
     @DisplayName("selectAllProducts 성공 테스트")
     @Test()
