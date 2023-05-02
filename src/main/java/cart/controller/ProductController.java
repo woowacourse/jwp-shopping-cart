@@ -4,8 +4,8 @@ import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequestDto;
 import cart.dto.ProductUpdateRequestDto;
 import cart.service.ProductService;
+import java.net.URI;
 import java.util.List;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,26 +30,25 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductDto>> findAllProducts() {
         List<ProductDto> products = productService.findAllProducts();
-        return ResponseEntity.ok().body(products);
+        return ResponseEntity.ok(products);
     }
 
-    //todo (질문3) : responseEntity의 status를 넘겨줄 때, uri 넘겨줘야하나?
+    //todo (질문3) : responseEntity의 status를 넘겨줄 때, uri 넘겨줘야하는 이유? 넘겨준 uri 정보로 리다이렉트 가능하다.
     @PostMapping
     public ResponseEntity<Void> saveProduct(@RequestBody ProductSaveRequestDto productSaveRequestDto) {
-        productService.saveProduct(productSaveRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-//        return ResponseEntity.status(HttpStatus.CREATED).location("여기에 뭐가 들어가야하나?");
+        long productId = productService.saveProduct(productSaveRequestDto);
+        return ResponseEntity.created(URI.create("products"+ productId)).build();
     }
 
     @PutMapping
     public ResponseEntity<Void> updateProduct(@RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
         productService.updateProduct(productUpdateRequestDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable long productId) {
         productService.deleteProduct(productId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
