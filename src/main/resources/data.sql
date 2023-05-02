@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS PRODUCT;
+
 CREATE TABLE PRODUCT (
     id          INT           NOT NULL AUTO_INCREMENT,
     `name`      VARCHAR(50)   NOT NULL,
