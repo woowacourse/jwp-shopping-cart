@@ -12,10 +12,11 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 class H2ProductDaoTestEntity {
+
+    private final ProductEntity productEntity = new ProductEntity(1L, "포이", "poi", 30000);
 
     private H2ProductDao h2ProductDao;
 
@@ -30,21 +31,17 @@ class H2ProductDaoTestEntity {
 
     @Test
     void save() {
-        //given
-        final ProductEntity productEntity = new ProductEntity(1L, "포이", "poi", 30000);
-
         //when
         h2ProductDao.save(productEntity);
 
         //then
         final List<ProductEntity> productEntities = getProducts();
         final ProductEntity actual = productEntities.get(0);
-        assertAll(
-                () -> assertThat(productEntities).hasSize(1),
-                () -> assertThat(actual.getName()).isEqualTo("포이"),
-                () -> assertThat(actual.getImageUrl()).isEqualTo("poi"),
-                () -> assertThat(actual.getPrice()).isEqualTo(30000)
-        );
+
+        assertThat(productEntities).hasSize(1);
+        assertThat(actual)
+            .usingRecursiveComparison()
+            .isEqualTo(productEntity);
     }
 
     private List<ProductEntity> getProducts() {
@@ -69,16 +66,13 @@ class H2ProductDaoTestEntity {
 
         //then
         final ProductEntity actual = productEntities.get(0);
-        assertAll(
-                () -> assertThat(productEntities).hasSize(1),
-                () -> assertThat(actual.getName()).isEqualTo("포이"),
-                () -> assertThat(actual.getImageUrl()).isEqualTo("poi"),
-                () -> assertThat(actual.getPrice()).isEqualTo(30000)
-        );
+        assertThat(productEntities).hasSize(1);
+        assertThat(actual)
+            .usingRecursiveComparison()
+            .isEqualTo(productEntity);
     }
 
     private void saveProduct() {
-        final ProductEntity productEntity = new ProductEntity(1L, "포이", "poi", 30000);
         final String sql = "insert into product (name, image_url, price) values(:name, :imageUrl, :price)";
         final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(productEntity);
         jdbcTemplate.update(sql, parameterSource);
@@ -96,12 +90,11 @@ class H2ProductDaoTestEntity {
         //then
         final List<ProductEntity> productEntities = getProducts();
         final ProductEntity actual = productEntities.get(0);
-        assertAll(
-                () -> assertThat(productEntities).hasSize(1),
-                () -> assertThat(actual.getName()).isEqualTo("포이2"),
-                () -> assertThat(actual.getImageUrl()).isEqualTo("poi2"),
-                () -> assertThat(actual.getPrice()).isEqualTo(50000)
-        );
+
+        assertThat(productEntities).hasSize(1);
+        assertThat(actual)
+            .usingRecursiveComparison()
+            .isEqualTo(productEntity);
     }
 
     @Test
@@ -114,6 +107,6 @@ class H2ProductDaoTestEntity {
 
         //then
         final List<ProductEntity> productEntities = getProducts();
-        assertThat(productEntities).hasSize(0);
+        assertThat(productEntities).isEmpty();
     }
 }
