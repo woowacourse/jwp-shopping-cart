@@ -1,4 +1,4 @@
-package cart.exception;
+package cart.controller.error;
 
 import cart.controller.ProductApiController;
 import cart.controller.dto.response.ErrorResponse;
@@ -13,7 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice(assignableTypes = {ProductApiController.class})
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException exception,
