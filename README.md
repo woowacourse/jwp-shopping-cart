@@ -38,10 +38,10 @@
 - [x] 설정 페이지 연동
   - [x] 요청 : GET `/settings`
   - [x] 응답 : settings.html
+    - [x] 모델 추가 : List\<MemberResponse>
 
 - [ ] 장바구니 목록 페이지 연동
   - [ ] 요청 : GET `/cart`
-    - [ ] header : Basic 형식의 토큰
   - [ ] 응답 : cart.html
 
 ----
@@ -70,18 +70,23 @@
     - [x] 응답 : 202
     - [x] 예외 :
       - [x] DB 관련 예외가 생긴 경우
+  - 장바구니 조회
+    - URI : `/carts`
+        - [ ] 요청 : get
+            - header : Basic 형식의 토큰
+        - [ ] 응답 : 200 List\<CartResponse>
   - 장바구니 추가
     - URI : `/carts/{productId}`
       - [ ] 요청 : post
         - header : Basic 형식의 토큰 
         - path variable : 상품 id 전송
-    - [ ] 응답 : 201
+      - [ ] 응답 : 201
   - 장바구니 삭제
     - URI : `/carts/{cartId}`
       - [ ] 요청 : delete
         - header : Basic 형식의 토큰
         - path variable : 카트 id 전송
-    - [ ] 응답 : 202
+      - [ ] 응답 : 202
 
 ----
 #### DB 테이블
