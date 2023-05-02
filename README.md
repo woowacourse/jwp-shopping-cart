@@ -38,7 +38,7 @@
   - [x] data.sql 수정
 
 - [ ] 사용자 설정
-  - [ ] basic authorization 구현
+  - [x] basic authorization 구현
   - [ ] 로그인 된 사용자 정보 조회 기능 구현
   - [ ] 사용자 설정 페이지 연동
 

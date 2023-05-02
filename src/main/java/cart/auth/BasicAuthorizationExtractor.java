@@ -8,10 +8,12 @@ public class BasicAuthorizationExtractor {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
+    private static final int CREDENTIALS_LENGTH = 2;
 
     public static UserAuthenticationDto extract(final String authorizationHeader) {
         if (authorizationHeader.startsWith(BASIC_TYPE)) {
             final String[] credentials = decode(authorizationHeader).split(DELIMITER);
+            validateCredentials(credentials);
             final String email = credentials[0];
             final String password = credentials[1];
             return new UserAuthenticationDto(email, password);
@@ -23,5 +25,11 @@ public class BasicAuthorizationExtractor {
         final String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
         final byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
         return new String(decodedBytes);
+    }
+
+    private static void validateCredentials(final String[] credentials) {
+        if (credentials.length != CREDENTIALS_LENGTH) {
+            throw new AuthorizationException("잘못된 Authorization 값입니다.");
+        }
     }
 }

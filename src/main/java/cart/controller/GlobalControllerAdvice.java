@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class CartControllerAdvice {
+public class GlobalControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handle(IllegalArgumentException e) {
