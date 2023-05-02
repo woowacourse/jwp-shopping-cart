@@ -1,8 +1,8 @@
 package cart.dto;
 
-import cart.domain.ProductImage;
-import cart.domain.ProductName;
-import cart.domain.ProductPrice;
+import cart.domain.product.ProductImage;
+import cart.domain.product.ProductName;
+import cart.domain.product.ProductPrice;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Size;

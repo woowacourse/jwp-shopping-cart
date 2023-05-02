@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +24,7 @@ class HomeControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    
+
     @BeforeEach
     void setUp(@LocalServerPort final int port) {
         RestAssured.port = port;
