@@ -9,6 +9,12 @@
 - 관리자 페이지
   - GET
   - `/admin`
+- 설정 페이지
+  - GET
+  - `/settings`
+- 장바구니 페이지
+  - GET
+  - `/cart`
 
 ### 상품 API
 - 상품 추가
