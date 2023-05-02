@@ -4,6 +4,7 @@ import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,16 +33,18 @@ public class AdminApiController {
     }
 
     @PutMapping("/product/{id}")
-    public void update(
+    public ResponseEntity<Void> update(
             @PathVariable final Long id,
             @RequestBody @Valid final ProductUpdateRequest request
     ) {
         productService.update(id, request);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/product/{id}")
-    public void delete(@PathVariable final Long id) {
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
         productService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
 }
