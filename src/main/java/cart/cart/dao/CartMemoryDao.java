@@ -1,6 +1,7 @@
 package cart.cart.dao;
 
 import cart.cart.domain.Cart;
+import cart.cart.dto.CartResponse;
 import cart.member.domain.Member;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class CartMemoryDao implements CartDao {
@@ -35,6 +37,13 @@ public class CartMemoryDao implements CartDao {
                 rs.getLong("member_id"),
                 rs.getLong("product_id")
         );
+    }
+    
+    @Override
+    public List<Cart> findByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM CART WHERE member_id=:member_id";
+        final SqlParameterSource params = new MapSqlParameterSource("member_id", memberId);
+        return namedParameterJdbcTemplate.query(sql, params, rowMapper);
     }
     
     @Override

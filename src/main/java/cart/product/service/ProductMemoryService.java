@@ -20,6 +20,15 @@ public class ProductMemoryService implements ProductService {
     
     @Override
     @Transactional(readOnly = true)
+    public List<ProductResponse> findByProductIds(final List<Long> productIds) {
+        return productIds.stream()
+                .map(productDao::findById)
+                .map(ProductResponse::from)
+                .collect(Collectors.toUnmodifiableList());
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
         return productDao.findAll().stream()
                 .map(ProductResponse::from)

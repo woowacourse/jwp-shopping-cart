@@ -41,7 +41,7 @@ class ViewControllerIntegratedTest {
                 .then().log().all()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body(containsString("상품목록"))
+                .body(containsString("<title>상품목록</title>"))
                 .header("Content-Type", "text/html;charset=UTF-8");
     }
     
@@ -53,7 +53,7 @@ class ViewControllerIntegratedTest {
                 .then().log().all()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body(containsString("관리자 페이지"))
+                .body(containsString("<title>관리자 페이지</title>"))
                 .header("Content-Type", "text/html;charset=UTF-8");
     }
     
@@ -65,7 +65,19 @@ class ViewControllerIntegratedTest {
                 .then().log().all()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body(containsString("설정"))
+                .body(containsString("<title>설정</title>"))
+                .header("Content-Type", "text/html;charset=UTF-8");
+    }
+    
+    @Test
+    void 장바구니_페이지로_이동한다() {
+        // expect
+        RestAssured.given().log().all()
+                .when().get("/cart")
+                .then().log().all()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body(containsString("<title>장바구니</title>"))
                 .header("Content-Type", "text/html;charset=UTF-8");
     }
     

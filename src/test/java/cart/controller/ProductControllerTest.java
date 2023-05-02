@@ -35,6 +35,7 @@ class ProductControllerTest {
     private ProductMemoryService productMemoryService;
     @MockBean
     private AuthSubjectArgumentResolver resolver;
+    
     private HashMap<Object, Object> productRequestMapper;
     
     @BeforeEach

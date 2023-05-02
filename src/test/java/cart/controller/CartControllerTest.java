@@ -3,12 +3,18 @@ package cart.controller;
 import cart.auth.AuthSubjectArgumentResolver;
 import cart.cart.dto.CartResponse;
 import cart.cart.service.CartService;
+import cart.member.domain.Member;
 import cart.member.dto.MemberRequest;
+import cart.product.domain.Product;
+import cart.product.dto.ProductResponse;
+import cart.product.service.ProductService;
+import io.restassured.RestAssured;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -16,13 +22,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Base64;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.only;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -34,14 +41,20 @@ class CartControllerTest {
     @MockBean
     private CartService cartService;
     @MockBean
+    private ProductService productService;
+    @MockBean
     private AuthSubjectArgumentResolver resolver;
+    
+    private InOrder inOrder;
     
     @BeforeEach
     void setUp() {
         RestAssuredMockMvc.standaloneSetup(
-                MockMvcBuilders.standaloneSetup(new CartController(cartService))
+                MockMvcBuilders.standaloneSetup(new CartController(cartService, productService))
                         .setCustomArgumentResolvers(resolver)
         );
+        
+        inOrder = inOrder(cartService, productService);
     }
     
     @Test
@@ -58,7 +71,7 @@ class CartControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post(DEFAULT_PATH + 1)
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value())
+                .status(HttpStatus.CREATED)
                 .extract()
                 .as(CartResponse.class);
 
@@ -66,6 +79,31 @@ class CartControllerTest {
         assertAll(
                 () -> assertThat(cart).isEqualTo(new CartResponse(1L, 1L, 1L)),
                 () -> then(cartService).should(only()).addCart(anyLong(), any())
+        );
+    }
+    
+    @Test
+    void MemberRequest를_전달하면_장바구니_상품들을_가져온다() {
+        // given
+        String authHeader = "Basic " + Base64.getEncoder().encodeToString(("a@a.com" + ":" + "password1").getBytes());
+        final ProductResponse firstProduct = new ProductResponse(2L, "product2", "b.com", 2000);
+        final ProductResponse secondProduct = new ProductResponse(3L, "product3", "c.com", 3000);
+        given(productService.findByProductIds(anyList())).willReturn(List.of(firstProduct, secondProduct));
+        
+        // when
+        final List<ProductResponse> products = RestAssuredMockMvc.given().log().all()
+                .header("Authorization", authHeader)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get(DEFAULT_PATH)
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .extract().jsonPath().getList("", ProductResponse.class);
+        
+        // then
+        assertAll(
+                () -> assertThat(products).containsExactly(firstProduct, secondProduct),
+                () -> then(cartService).should(inOrder).findByMemberRequest(any()),
+                () -> then(productService).should(inOrder).findByProductIds(anyList())
         );
     }
 }

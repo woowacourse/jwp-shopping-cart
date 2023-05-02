@@ -1,7 +1,13 @@
 package cart.cart.dao;
 
+import cart.cart.domain.Cart;
+
+import java.util.List;
+
 public interface CartDao {
-    Long save(final Long productId, final Long id);
+    Long save(final Long productId, final Long memberId);
     
     void deleteAll();
+    
+    List<Cart> findByMemberId(final Long memberId);
 }

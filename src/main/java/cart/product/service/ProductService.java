@@ -13,4 +13,6 @@ public interface ProductService {
     void update(final Long id, final ProductRequest productRequest);
     
     void delete(final Long id);
+    
+    List<ProductResponse> findByProductIds(final List<Long> productIds);
 }

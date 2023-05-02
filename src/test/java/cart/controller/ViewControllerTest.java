@@ -21,7 +21,7 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.only;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -107,5 +107,23 @@ class ViewControllerTest {
                 () -> then(memberService).should(only()).findAll(),
                 () -> assertThat(Objects.requireNonNull(modelAndView).getViewName()).isEqualTo("settings")
         );
+    }
+    
+    @Test
+    void 장바구니_페이지로_이동한다() {
+        // when
+        final MvcResult mvcResult = RestAssuredMockMvc.given().log().all()
+                .when().get("/cart")
+                .then().log().all()
+                .assertThat()
+                .status(HttpStatus.OK)
+                .extract()
+                .response()
+                .getMvcResult();
+        
+        final ModelAndView modelAndView = mvcResult.getModelAndView();
+        
+        // then
+        assertThat(Objects.requireNonNull(modelAndView).getViewName()).isEqualTo("cart");
     }
 }

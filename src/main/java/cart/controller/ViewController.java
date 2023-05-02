@@ -33,4 +33,10 @@ public class ViewController {
         modelAndView.addObject("members", memberService.findAll());
         return modelAndView;
     }
+    
+    @GetMapping("/cart")
+    public ModelAndView cart(ModelAndView modelAndView) {
+        modelAndView.setViewName("cart");
+        return modelAndView;
+    }
 }

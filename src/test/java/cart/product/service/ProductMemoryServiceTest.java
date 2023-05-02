@@ -30,10 +30,12 @@ import static org.mockito.Mockito.*;
 class ProductMemoryServiceTest {
     @Autowired
     private ProductService productService;
+    
     @MockBean
     private ProductDao productDao;
     @MockBean
     private AuthSubjectArgumentResolver resolver;
+    
     private InOrder inOrder;
     private Product firstProduct;
     private Product secondProduct;
@@ -58,6 +60,32 @@ class ProductMemoryServiceTest {
         assertAll(
                 () -> then(productDao).should(only()).findAll(),
                 () -> assertThat(productResponses).containsExactly(firstProductResponse, secondProductResponse)
+        );
+    }
+    
+    @Test
+    void productIds를_전달하면_해당_id들에_해당하는_상품들을_가져온다() {
+        // given
+        final Product firstProduct = new Product("product1", "a.com", 1000);
+        final Product secondProduct = new Product("product2", "b.com", 2000);
+        final Product thirdProduct = new Product("product3", "c.com", 3000);
+        given(productDao.findById(1L)).willReturn(firstProduct);
+        given(productDao.findById(2L)).willReturn(secondProduct);
+        given(productDao.findById(3L)).willReturn(thirdProduct);
+        
+        // when
+        final List<ProductResponse> products = productService.findByProductIds(List.of(1L, 2L, 3L));
+        
+        // then
+        final ProductResponse expectFirstProduct = ProductResponse.from(firstProduct);
+        final ProductResponse expectSecondProduct = ProductResponse.from(secondProduct);
+        final ProductResponse expectThirdProduct = ProductResponse.from(thirdProduct);
+        
+        assertAll(
+                () -> assertThat(products).containsExactly(expectFirstProduct, expectSecondProduct, expectThirdProduct),
+                () -> then(productDao).should(inOrder).findById(1L),
+                () -> then(productDao).should(inOrder).findById(2L),
+                () -> then(productDao).should(inOrder).findById(3L)
         );
     }
     
