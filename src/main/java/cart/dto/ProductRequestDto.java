@@ -1,5 +1,10 @@
 package cart.dto;
 
+import cart.entity.Product;
+import cart.vo.Name;
+import cart.vo.Price;
+import cart.vo.Url;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -30,6 +35,14 @@ public class ProductRequestDto {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public Product toEntity() {
+        return new Product.Builder()
+                .name(Name.of(name))
+                .price(Price.of(price))
+                .imageUrl(Url.of(imageUrl))
+                .build();
     }
 
 }

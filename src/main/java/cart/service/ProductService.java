@@ -34,21 +34,11 @@ public class ProductService {
     }
 
     public void add(ProductRequestDto productRequestDto) {
-        Product product = toEntity(productRequestDto);
-        productDao.save(product);
+        productDao.save(productRequestDto.toEntity());
     }
 
     public void modifyById(int id, ProductRequestDto productRequestDto) {
-        Product product = toEntity(productRequestDto);
-        productDao.updateById(id, product);
-    }
-
-    private Product toEntity(ProductRequestDto productRequestDto) {
-        return new Builder()
-                .name(Name.of(productRequestDto.getName()))
-                .price(Price.of(productRequestDto.getPrice()))
-                .imageUrl(Url.of(productRequestDto.getImageUrl()))
-                .build();
+        productDao.updateById(id, productRequestDto.toEntity());
     }
 
     public void removeById(int id) {
