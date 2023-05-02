@@ -16,6 +16,20 @@ CREATE TABLE product
     image_url TEXT        NOT NULL,
     PRIMARY KEY (id)
 );
+CREATE TABLE user
+(
+    id   BIGINT       NOT NULL AUTO_INCREMENT,
+    code VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
+)
+
+CREATE TABLE cart
+(
+    id         BIGINT NOT NULL AUTO_INCREMENT,
+    product_id BIGINT NOT NULL,
+    user_id    BIGINT NOT NULL,
+    PRIMARY KEY (id)
+)
 
 ```
 
@@ -38,6 +52,7 @@ CREATE TABLE product
 
 - 상품 추가
     - [x] POST /product
+        - [x] body : name, price, imageUrl
     - [x] admin 페이지에서 상품을 추가한다.
         - [x] 추가 성공 시 status created
     - [x] 상품 추가 요청을 유효성 검증한다.
@@ -52,6 +67,7 @@ CREATE TABLE product
 
 - 상품 수정
     - [x] PATCH /product/id
+        - [x] body : name, price, imageUrl
     - [x] admin 페이지에서 상품을 수정한다.
         - [x] 해당 id에 상품이 없을 시 status not found
         - [x] update 성공 시 status ok
@@ -65,3 +81,23 @@ CREATE TABLE product
     - [x] admin 페이지에서 상품을 삭제한다.
         - [x] 해당 id에 상품이 없을 시 status not found
         - [x] delete 성공 시 status ok
+
+### 사용자
+
+- [ ] GET /settings
+    - [ ] 유저 전체 조회
+- [ ] Basic Authorization을 통해 인증
+
+### 장바구니
+
+- [ ] GET /cart
+    - [ ] 장바구니의 상품 조회
+
+- [ ] POST /cart
+    - [ ] 장바구니에 상품 추가
+    - [ ] body : id, name, price, imageUrl
+
+- [ ] DELETE /cart/id
+    - [ ] 장바구니의 상품 삭제
+        - [ ] 성공 시 status ok
+        - [ ] 상품 없을 시 status not found
