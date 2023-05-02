@@ -21,29 +21,10 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql("/testData.sql")
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class AdminProductControllerTest {
 
     @LocalServerPort
     int port;
-
-    @Nested
-    @DisplayName("관리자 페이지를 조회하는 admin 메서드 테스트")
-    class SelectTest {
-
-        @BeforeEach
-        void setUp() {
-            RestAssured.port = port;
-        }
-
-        @DisplayName("정상 조회가 되었다면 상태코드 200을 반환하는지 확인한다")
-        @Test
-        void successTest() {
-            RestAssured.given().log().all()
-                    .when().get("/admin")
-                    .then().log().all()
-                    .statusCode(HttpStatus.OK.value());
-        }
-    }
 
     @Nested
     @DisplayName("상품을 등록하는 postProducts 메서드 테스트")
