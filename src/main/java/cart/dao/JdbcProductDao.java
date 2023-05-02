@@ -26,7 +26,6 @@ public class JdbcProductDao implements ProductDao {
             resultSet.getString("image")
     );
 
-    @Autowired
     public JdbcProductDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("product")
