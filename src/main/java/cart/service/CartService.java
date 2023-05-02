@@ -42,9 +42,20 @@ public class CartService {
                 .build();
     }
 
-    public void modifyById(ProductRequest productRequest, long id) {
-        ProductEntity productEntity = productRequest.toEntityBy(id);
-        productDao.update(productEntity);
+    public void modifyById(final ProductRequest productRequest, final long id) {
+        Product product = new Product(new ProductName(productRequest.getName()), productRequest.getImgUrl(), new Price(
+                productRequest.getPrice()));
+        // TODO: 2023-05-02 도메인으로의 변환을 DTO에서 수행하는 것에 대해 생각해보기
+        productDao.update(productToEntityWithId(product, id));
+    }
+
+    private ProductEntity productToEntityWithId(final Product product, final long id) {
+        return new ProductEntity.Builder()
+                .id(id)
+                .price(product.getPriceToValue())
+                .name(product.getNameToString())
+                .imgUrl(product.getImgUrl())
+                .build();
     }
 
     public void removeById(long id) {
