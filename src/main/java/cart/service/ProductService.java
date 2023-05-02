@@ -1,6 +1,8 @@
 package cart.service;
 
 import cart.dao.ProductDao;
+import cart.dto.CartItemResponse;
+import cart.dto.CartResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.entity.ProductEntity;
@@ -47,5 +49,13 @@ public class ProductService {
                         productEntity.getImageUrl(),
                         productEntity.getPrice()))
                 .collect(Collectors.toList());
+    }
+
+    public List<CartItemResponse> findById(List<CartResponse> cartsByMemberId) {
+        return cartsByMemberId.stream()
+                .map(cartResponse -> new CartItemResponse(cartResponse.getCartCount(),
+                    productDao.findById(cartResponse.getProductId())
+                        .orElseThrow(() -> new IllegalStateException("없는 상품입니다."))))
+            .collect(Collectors.toList());
     }
 }

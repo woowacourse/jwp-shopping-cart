@@ -1,6 +1,8 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
+import java.util.Optional;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -32,14 +34,18 @@ public class H2ProductDao implements ProductDao {
     public List<ProductEntity> findAll() {
         final String sql = "select * from product";
 
-        return namedParameterjdbcTemplate.query(sql, (resultSet, count) ->
-                new ProductEntity(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("image_url"),
-                        resultSet.getInt("price")
-                )
+        return namedParameterjdbcTemplate.query(sql, getRowMapper()
         );
+    }
+
+    private static RowMapper<ProductEntity> getRowMapper() {
+        return (resultSet, count) ->
+            new ProductEntity(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getString("image_url"),
+                resultSet.getInt("price")
+            );
     }
 
     @Override
@@ -53,5 +59,11 @@ public class H2ProductDao implements ProductDao {
     public void delete(final long id) {
         final String sql = "delete from product where id=?";
         namedParameterjdbcTemplate.getJdbcOperations().update(sql, id);
+    }
+
+    @Override
+    public Optional<ProductEntity> findById(final long id) {
+        final String sql = "select * from product where id=?";
+        return Optional.of(namedParameterjdbcTemplate.getJdbcTemplate().queryForObject(sql, getRowMapper(), id));
     }
 }
