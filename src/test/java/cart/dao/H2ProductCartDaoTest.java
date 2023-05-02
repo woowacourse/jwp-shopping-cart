@@ -61,4 +61,14 @@ class H2ProductCartDaoTest {
         );
     }
 
+    @DisplayName("member와 product를 받아 cart를 지운다")
+    @Test
+    void deleteByMemberAndProduct() {
+        ProductCart productCart = new ProductCart(product.getId(), member.getId());
+        productCartDao.save(productCart);
+
+        productCartDao.deleteByMemberAndProduct(member, product);
+
+        assertThat(productCartDao.findAllByMember(member)).isEmpty();
+    }
 }
