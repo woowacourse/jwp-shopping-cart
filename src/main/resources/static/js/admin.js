@@ -60,7 +60,7 @@ const createProduct = (product) => {
 const updateProduct = (product) => {
     const { id } = product;
     axios.request({
-        url: 'http://localhost:8080/admin/' + id,
+        url: 'http://localhost:8080/admin/product/' + id,
         method: 'PUT',
         data: product
     }).then((response) => {
@@ -73,7 +73,7 @@ const updateProduct = (product) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: 'http://localhost:8080/admin/' + id,
+        url: 'http://localhost:8080/admin/product/' + id,
         method: 'DELETE',
     }).then((response) => {
         window.location.reload();
