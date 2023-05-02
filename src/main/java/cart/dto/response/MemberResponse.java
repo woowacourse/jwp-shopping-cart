@@ -1,4 +1,6 @@
-package cart.dto;
+package cart.dto.response;
+
+import cart.dto.MemberDto;
 
 import java.util.List;
 import java.util.stream.Collectors;

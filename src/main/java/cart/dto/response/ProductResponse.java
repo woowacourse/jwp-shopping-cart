@@ -1,4 +1,9 @@
-package cart.dto;
+package cart.dto.response;
+
+import cart.dto.ProductDto;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductResponse {
 
@@ -12,6 +17,16 @@ public class ProductResponse {
         this.name = name;
         this.image = image;
         this.price = price;
+    }
+
+    public static ProductResponse from(final ProductDto productDto) {
+        return new ProductResponse(productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice());
+    }
+
+    public static List<ProductResponse> from(final List<ProductDto> productDtos) {
+        return productDtos.stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public static ProductResponse of(final Long id, final String name, final String image, final Integer price) {

@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.entity.MemberEntity;
-import cart.entity.ProductEntity;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;

@@ -1,5 +1,10 @@
 package cart.dto;
 
+import cart.entity.ProductEntity;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ProductDto {
 
     private final Long id;
@@ -18,12 +23,26 @@ public class ProductDto {
         return new ProductDto(id, null, null, null);
     }
 
+    public static ProductDto from(final ProductEntity productEntity) {
+        return new ProductDto(productEntity.getId(), productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
+    }
+
+    public static List<ProductDto> from(final List<ProductEntity> productEntities) {
+        return productEntities.stream()
+                .map(ProductDto::from)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
     public static ProductDto of(final String name, final String image, final Integer price) {
         return new ProductDto(null, name, image, price);
     }
 
     public static ProductDto of(final Long id, final String name, final String image, final Integer price) {
         return new ProductDto(id, name, image, price);
+    }
+
+    public static ProductEntity toEntity(final ProductDto productDto) {
+        return ProductEntity.of(productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice());
     }
 
     public Long getId() {

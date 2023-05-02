@@ -1,17 +1,14 @@
-package cart.dto;
+package cart.dto.request;
 
+import cart.dto.ProductDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-public class ProductModificationRequest {
-
-    @NotNull
-    private final Long id;
+public class ProductCreationRequest {
 
     @NotBlank
     private final String name;
@@ -24,20 +21,17 @@ public class ProductModificationRequest {
     private final Integer price;
 
     @JsonCreator
-    public ProductModificationRequest(
-            @JsonProperty(value = "id") final Long id,
+    public ProductCreationRequest(
             @JsonProperty(value = "name") final String name,
             @JsonProperty(value = "image") final String image,
-            @JsonProperty(value = "price") final Integer price
-    ) {
-        this.id = id;
+            @JsonProperty(value = "price") final Integer price) {
         this.name = name;
         this.image = image;
         this.price = price;
     }
 
-    public Long getId() {
-        return id;
+    public static ProductDto toProductDto(final ProductCreationRequest request) {
+        return ProductDto.of(request.getName(), request.getImage(), request.getPrice());
     }
 
     public String getName() {

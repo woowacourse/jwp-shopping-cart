@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.dto.MemberResponse;
-import cart.mapper.ProductResponseMapper;
+import cart.dto.response.MemberResponse;
+import cart.dto.response.ProductResponse;
 import cart.service.MemberManagementService;
 import cart.service.ProductManagementService;
 import org.springframework.stereotype.Controller;
@@ -21,14 +21,14 @@ public class ViewController {
 
     @GetMapping("/")
     public ModelAndView home(ModelAndView modelAndView) {
-        modelAndView.addObject("products", ProductResponseMapper.from(productManagementService.findAll()));
+        modelAndView.addObject("products", ProductResponse.from(productManagementService.findAll()));
         modelAndView.setViewName("index");
         return modelAndView;
     }
 
     @GetMapping("/admin")
     public ModelAndView admin(ModelAndView modelAndView) {
-        modelAndView.addObject("products", ProductResponseMapper.from(productManagementService.findAll()));
+        modelAndView.addObject("products", ProductResponse.from(productManagementService.findAll()));
         modelAndView.setViewName("admin");
         return modelAndView;
     }

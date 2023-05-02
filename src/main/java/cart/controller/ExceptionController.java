@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ExceptionResponse;
+import cart.dto.response.ExceptionResponse;
 import cart.exception.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
