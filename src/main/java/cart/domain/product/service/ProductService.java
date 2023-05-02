@@ -1,9 +1,9 @@
 package cart.domain.product.service;
 
 import cart.domain.product.dao.ProductDao;
-import cart.domain.product.dto.ProductCreateRequest;
-import cart.domain.product.dto.ProductResponse;
-import cart.domain.product.dto.ProductUpdateRequest;
+import cart.dto.ProductCreateRequest;
+import cart.dto.ProductResponse;
+import cart.dto.ProductUpdateRequest;
 import cart.domain.product.entity.Product;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.domain.product.dto.ProductCreateRequest;
-import cart.domain.product.dto.ProductResponse;
-import cart.domain.product.dto.ProductUpdateRequest;
+import cart.dto.ProductCreateRequest;
+import cart.dto.ProductResponse;
+import cart.dto.ProductUpdateRequest;
 import cart.domain.product.service.ProductService;
 import java.net.URI;
 import java.util.List;

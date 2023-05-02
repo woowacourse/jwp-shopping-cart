@@ -8,8 +8,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.product.dto.ProductCreateRequest;
-import cart.domain.product.dto.ProductUpdateRequest;
+import cart.dto.ProductCreateRequest;
+import cart.dto.ProductUpdateRequest;
 import cart.domain.product.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;

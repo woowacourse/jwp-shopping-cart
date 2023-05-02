@@ -1,23 +1,26 @@
-package cart.domain.member.entity;
+package cart.dto;
 
+import cart.domain.member.entity.Member;
 import java.time.LocalDateTime;
-import org.springframework.lang.Nullable;
 
-public class Member {
+public class MemberCreateResponse {
 
     private final Long id;
     private final String email;
-    private final String password;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public Member(@Nullable final Long id, final String email, final String password,
-        @Nullable final LocalDateTime createdAt, @Nullable final LocalDateTime updatedAt) {
+    public MemberCreateResponse(final Long id, final String email, final LocalDateTime createdAt,
+        final LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
-        this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public static MemberCreateResponse of(final Member member) {
+        return new MemberCreateResponse(member.getId(), member.getEmail(), member.getCreatedAt(),
+            member.getUpdatedAt());
     }
 
     public Long getId() {
@@ -26,10 +29,6 @@ public class Member {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public LocalDateTime getCreatedAt() {
