@@ -2,6 +2,7 @@ package cart.cart.controller;
 
 import cart.auth.AuthInfo;
 import cart.auth.BasicAuthorizationExtractor;
+import cart.cart.dto.CartDeleteResponseDto;
 import cart.cart.dto.CartInsertRequestDto;
 import cart.cart.dto.CartInsertResponseDto;
 import cart.cart.dto.CartSelectResponseDto;
@@ -13,7 +14,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,9 +37,9 @@ public class CartApiController {
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<CartInsertResponseDto> addProduct(
-            HttpServletRequest request,
-            @RequestBody CartInsertRequestDto cartInsertRequestDto) {
+    public ResponseEntity<CartInsertResponseDto> addProduct(HttpServletRequest request,
+                                                            @RequestBody CartInsertRequestDto insertRequestDto) {
+
         final AuthInfo authInfo = authorizationExtractor.extract(request);
         if (authInfo == null) {
             throw new IllegalArgumentException("사용자가 선택되지 않았습니다.");
@@ -47,7 +50,7 @@ public class CartApiController {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        final int productId = cartInsertRequestDto.getProductId();
+        final int productId = insertRequestDto.getProductId();
         final CartInsertResponseDto cartInsertResponseDto = cartService.addCart(member, productId);
         final int savedId = cartInsertResponseDto.getId();
 
@@ -69,5 +72,21 @@ public class CartApiController {
 
         final List<CartSelectResponseDto> cartSelectResponse = cartService.getCartByMemberID(member.getId());
         return ResponseEntity.ok(cartSelectResponse);
+    }
+
+    @DeleteMapping("/cart/{id}")
+    public ResponseEntity<CartDeleteResponseDto> removeCart(HttpServletRequest request, @PathVariable int id) {
+        final AuthInfo authInfo = authorizationExtractor.extract(request);
+        if (authInfo == null) {
+            throw new IllegalArgumentException("사용자가 선택되지 않았습니다.");
+        }
+
+        final MemberEntity member = memberService.findMemberByEmail(authInfo.getEmail());
+        if (!member.getPassword().equals(authInfo.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        final CartDeleteResponseDto deleteResponseDto = cartService.removeCart(id);
+        return ResponseEntity.ok(deleteResponseDto);
     }
 }

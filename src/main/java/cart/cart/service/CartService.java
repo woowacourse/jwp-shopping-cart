@@ -1,6 +1,7 @@
 package cart.cart.service;
 
 import cart.cart.dao.CartDao;
+import cart.cart.dto.CartDeleteResponseDto;
 import cart.cart.dto.CartInsertResponseDto;
 import cart.cart.dto.CartSelectResponseDto;
 import cart.cart.entity.CartEntity;
@@ -30,5 +31,10 @@ public class CartService {
         return cartProducts.stream()
                 .map(CartMapper::toDto)
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public CartDeleteResponseDto removeCart(final int cartId) {
+        final int updatedRowCount = cartDao.delete(cartId);
+        return new CartDeleteResponseDto(updatedRowCount);
     }
 }

@@ -68,4 +68,10 @@ public class JdbcTemplateCartDao implements CartDao{
                 resultSet.getString("image"));
         return cartProductEntity;
     };
+
+    @Override
+    public int delete(final int cartId) {
+        String sql = "delete from cart where id = ?";
+        return jdbcTemplate.update(sql, cartId);
+    }
 }
