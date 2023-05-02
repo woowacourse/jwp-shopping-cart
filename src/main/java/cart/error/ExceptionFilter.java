@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static cart.error.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Component
@@ -28,7 +27,7 @@ public class ExceptionFilter extends OncePerRequestFilter {
         } catch (CartException e) {
             writerErrorCode(response, e.getErrorCode());
         } catch (Exception e) {
-            writerErrorCode(response, INTERNAL_SERVER_ERROR);
+            writerErrorCode(response, new ErrorCode(400, "PRODUCT-400-1", "Internal Server Error"));
         }
     }
 
