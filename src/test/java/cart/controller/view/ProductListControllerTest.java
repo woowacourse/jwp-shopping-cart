@@ -1,21 +1,19 @@
-package cart;
+package cart.controller.view;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductIntegrationTest {
+class ProductListControllerTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @BeforeEach
     void setUp() {
@@ -23,15 +21,13 @@ public class ProductIntegrationTest {
     }
 
     @Test
-    public void getProducts() {
-        var result = given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+    @DisplayName("get / 요청을 보내면 ok 상태코드를 반환한다")
+    void getProductListViewTest() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/products")
-                .then()
-                .extract();
-
-        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+                .get()
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
-
 }
