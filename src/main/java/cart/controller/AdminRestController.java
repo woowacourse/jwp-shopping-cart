@@ -23,7 +23,7 @@ public class AdminRestController {
         this.productService = productService;
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<Void> addProduct(@RequestBody @Valid final ProductDto productDto) {
         final long productId = productService.save(productDto);
         return ResponseEntity.created(URI.create("/" + productId)).build();

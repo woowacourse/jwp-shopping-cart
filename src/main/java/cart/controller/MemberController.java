@@ -1,10 +1,12 @@
 package cart.controller;
 
 import cart.controller.dto.MemberDto;
+import cart.domain.MemberRole;
 import cart.service.MemberService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,5 +35,10 @@ public class MemberController {
         mv.setViewName("member");
         mv.addObject("member", memberDto);
         return mv;
+    }
+
+    @ModelAttribute("roles")
+    public List<MemberRole> getRoles() {
+        return List.of(MemberRole.values());
     }
 }

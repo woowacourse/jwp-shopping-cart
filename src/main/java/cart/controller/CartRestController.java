@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.common.auth.MemberEmail;
 import cart.controller.dto.CartDto;
+import cart.controller.dto.CartResponse;
 import cart.service.CartService;
 import java.net.URI;
 import java.util.List;
@@ -31,9 +32,10 @@ public class CartRestController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<List<CartDto>> getCartByMember(@MemberEmail String memberEmail) {
+    public ResponseEntity<CartResponse> getCartByMember(@MemberEmail String memberEmail) {
         final List<CartDto> cartDtos = cartService.getProductsByMemberEmail(memberEmail);
-        return ResponseEntity.ok().body(cartDtos);
+        final CartResponse cartResponse = new CartResponse(cartDtos);
+        return ResponseEntity.ok().body(cartResponse);
     }
 
     @DeleteMapping("/{targetMemberId}/{productId}")

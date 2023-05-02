@@ -12,6 +12,8 @@ public enum ErrorCode {
     MEMBER_PASSWORD_LENGTH("비밀번호 길이는 8 ~ 50자까지 가능합니다"),
     MEMBER_NICKNAME_LENGTH("닉네임 길이는 1 ~ 30자까지 가능합니다."),
     MEMBER_NOT_FOUND("사용자 정보를 찾을 수 없습니다."),
+    MEMBER_INVALID_ROLE("유효하지 않은 멤버 권한 정보입니다."),
+    MEMBER_DUPLICATE_EMAIL("이미 등록된 사용자 이메일입니다."),
     CART_NOT_FOUND("장바구니 정보를 찾을 수 없습니다"),
     CART_INVALID_DELETE("장바구니 정보 삭제 중 예기치 못한 오류가 발생하였습니다."),
     UNAUTHORIZED("인증되지 않은 사용자입니다."),

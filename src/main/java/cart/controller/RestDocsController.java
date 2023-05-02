@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class RestDocsController {
-    
+
     private final RestDocsProperties restDocsProperties;
 
     public RestDocsController(RestDocsProperties restDocsProperties) {

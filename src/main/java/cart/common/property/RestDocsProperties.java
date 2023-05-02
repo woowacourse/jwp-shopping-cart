@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ConstructorBinding
 @ConfigurationProperties(prefix = "api-docs")
 public class RestDocsProperties {
+
     private final String filePath;
 
     public RestDocsProperties(final String filePath) {
