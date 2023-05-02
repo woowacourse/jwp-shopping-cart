@@ -36,6 +36,18 @@ public class GlobalExceptionHandler {
                 .body(exceptionResponse);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                LocalDateTime.now(),
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .badRequest()
+                .body(exceptionResponse);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleCommonException(Exception exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
