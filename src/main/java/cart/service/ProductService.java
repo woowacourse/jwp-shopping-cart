@@ -38,10 +38,17 @@ public class ProductService {
     public void updateProduct(ProductUpdateRequestDto productUpdateRequestDto) {
         Product product = new Product(productUpdateRequestDto.getProductId(), productUpdateRequestDto.getName(),
                 productUpdateRequestDto.getImage(), productUpdateRequestDto.getPrice());
+
+        if(productDao.findProductById(productUpdateRequestDto.getProductId()).isEmpty()) {
+            throw new IllegalArgumentException("상품 정보를 수정하는 데 오류가 발생하였습니다.");
+        }
         productDao.updateProduct(product);
     }
 
     public void deleteProduct(long productId) {
+        if(productDao.findProductById(productId).isEmpty()) {
+            throw new IllegalArgumentException("상품 정보를 삭제하는 데 오류가 발생하였습니다.");
+        }
         productDao.deleteProduct(productId);
     }
 }

@@ -2,6 +2,8 @@ package cart.dao;
 
 import cart.domain.Product;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -46,11 +48,15 @@ public class ProductDao {
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
-    public Product findProductById(long id) {
+    public Optional<Product> findProductById(long id) {
         String sql = "select * from PRODUCT where product_id = :product_id";
 
         SqlParameterSource paramSource = new MapSqlParameterSource().addValue("product_id", id);
-        return jdbcTemplate.queryForObject(sql, paramSource, productRowMapper);
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, paramSource, productRowMapper));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void updateProduct(Product after) {
